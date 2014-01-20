@@ -4,6 +4,7 @@
       
     <item android:id="@+id/formFragment_action_save"
           android:title="@string/app_action_save"
+          android:icon="@drawable/ic_action_save"
           hoyoji:showAsAction="always" /> 
           
 </menu>

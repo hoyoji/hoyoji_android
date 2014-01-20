@@ -4,6 +4,7 @@
         <item
         android:id="@+id/mainActivity_action_money_addnew"
         android:title="@string/mainActivity_action_money_addnew"
+        android:icon="@drawable/ic_action_edit"
         hoyoji:showAsAction="always">
         <menu>
             <item

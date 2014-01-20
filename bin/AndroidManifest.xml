@@ -47,7 +47,11 @@
             android:name="com.hoyoji.hoyoji.SettingsActivity"
             android:label="@string/settingsActivity_title" >
         </activity>
-
+        <activity
+            android:name="com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        
         <provider
             android:name="com.activeandroid.content.ContentProvider"
             android:authorities="com.hoyoji.hoyoji"
@@ -55,9 +59,6 @@
             android:grantUriPermissions="true"
             android:label="HoYoJiContentProvider" />
 
-        <activity
-            android:name="com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity">
-        </activity>
     </application>
 
 </manifest>

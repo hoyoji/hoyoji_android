@@ -10,13 +10,11 @@
     <ListView android:id="@id/android:list"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#FFFFFF"
               android:drawSelectorOnTop="false"/>
 
     <TextView android:id="@id/android:empty"
         	  android:gravity="center_horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#FFFFFF"
               android:text="@string/app_listview_no_content"/>
 </FrameLayout>

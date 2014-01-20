@@ -2,12 +2,19 @@
     xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/homeListFragment_action_sync"
+        android:title="@string/homeListFragment_action_sync"
+        android:icon="@drawable/ic_action_refresh"
+        hoyoji:showAsAction="always"/>
+    <item
         android:id="@+id/homeListFragment_action_report"
         android:title="@string/homeListFragment_action_report"
+        android:icon="@drawable/ic_action_data_usage"
         hoyoji:showAsAction="always"/>
     <item
         android:id="@+id/homeListFragment_action_display_transaction_type"
         android:title="@string/homeListFragment_action_display_transaction_type"
+        android:icon="@drawable/ic_action_dock"
         hoyoji:showAsAction="always">
         <menu>
             <item
