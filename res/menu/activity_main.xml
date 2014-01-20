@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
+
+        <item
+        android:id="@+id/mainActivity_action_money_addnew"
+        android:title="@string/mainActivity_action_money_addnew"
+        hoyoji:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_expense"
+                android:title="支出"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_income"
+                android:title="收入"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_transfer"
+                android:title="转账"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_debt"
+                android:title="借贷"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_topup"
+                android:title="充值"
+                hoyoji:showAsAction="never"/>
+        </menu>
+    </item>
+
+</menu>

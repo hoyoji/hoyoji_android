@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">好友记</string>
+    
+    
+    <string name="app_action_more">更多</string>
+    <string name="app_action_search">查找</string>
+    <string name="app_action_save">保存</string>
+    
+    <string name="app_validation_error">表单中包含错误</string>
+    <string name="app_save_success">保存成功</string>
+    
+    <string name="app_listview_no_content">无内容</string>
+	
+	<string name="server_connection_disconnected">您尚未连接到网络</string>
+    <string name="server_connection_error">无法连接到服务器</string>
+    <string name="server_dataparse_error">无法解析服务器返回的数据</string>
+    
+</resources>

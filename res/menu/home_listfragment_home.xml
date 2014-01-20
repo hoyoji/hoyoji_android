@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/homeListFragment_action_report"
+        android:title="@string/homeListFragment_action_report"
+        hoyoji:showAsAction="always"/>
+    <item
+        android:id="@+id/homeListFragment_action_display_transaction_type"
+        android:title="@string/homeListFragment_action_display_transaction_type"
+        hoyoji:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/homeListFragment_action_display_transaction_type_personal"
+                android:title="@string/homeListFragment_action_display_transaction_type_personal"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_display_transaction_type_project"
+                android:title="@string/homeListFragment_action_display_transaction_type_project"
+                hoyoji:showAsAction="never"/>
+        </menu>
+	</item>
+
+</menu>

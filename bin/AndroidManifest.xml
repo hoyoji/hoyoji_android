@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hoyoji.hoyoji"
+    android:versionCode="1"
+    android:versionName="1.2" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name="com.hoyoji.android.hyjframework.HyjApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="hoyoji.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
+
+        <activity
+            android:name="com.hoyoji.hoyoji.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.hoyoji.hoyoji.LoginActivity"
+            android:label="@string/loginActivity_title"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.hoyoji.hoyoji.RegisterActivity"
+            android:label="@string/registerActivity_title"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.hoyoji.hoyoji.SettingsActivity"
+            android:label="@string/settingsActivity_title" >
+        </activity>
+
+        <provider
+            android:name="com.activeandroid.content.ContentProvider"
+            android:authorities="com.hoyoji.hoyoji"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:label="HoYoJiContentProvider" />
+
+        <activity
+            android:name="com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity">
+        </activity>
+    </application>
+
+</manifest>
