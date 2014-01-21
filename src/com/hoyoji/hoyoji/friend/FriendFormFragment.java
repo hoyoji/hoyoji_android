@@ -26,7 +26,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	public Integer useContentView() {
 		return R.layout.friend_formfragment_friend;
 	}
-	
+	 
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
