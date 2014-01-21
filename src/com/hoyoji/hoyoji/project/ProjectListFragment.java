@@ -58,7 +58,7 @@ public class ProjectListFragment extends HyjUserListFragment{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.projectListFragment_action_project_addnew){
-			((HyjActivity)getActivity()).openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, null);
+			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -74,7 +74,7 @@ public class ProjectListFragment extends HyjUserListFragment{
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			((HyjActivity)getActivity()).openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
 		}
     }  
 

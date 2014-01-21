@@ -10,40 +10,35 @@ import com.hoyoji.hoyoji.R;
 
 import android.provider.BaseColumns;
 
-@Table(name = "User", id = BaseColumns._ID)
-public class User extends HyjModel {
+@Table(name = "Friend", id = BaseColumns._ID)
+public class Friend extends HyjModel {
+	
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
 	
-	@Column(name = "userDataId", index = true, unique = true)
-	private String mUserDataId;
-	
-	@Column(name = "userName", index = true, unique = true)
-	private String mUserName;
-	
 	@Column(name = "nickName")
 	private String mNickName;
+	
+	@Column(name = "friendUserId")
+	private String mFriendUserId;
+	
+	@Column(name = "friendCategory")
+	private String mFriendCategory;
 
-	@Column(name = "isMerchant")
-	private boolean mIsMerchant;
-	
-	@Column(name = "messageBoxId")
-	private String mMessageBoxId;
-	
-	@Column(name = "newFriendAuthentication")
-	private String mNewFriendAuthentication;
-	
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
-	
+
 	@Column(name = "lastServerUpdateTime")
 	private String mLastServerUpdateTime;
 
 	@Column(name = "lastClientUpdateTime")
 	private String mLastClientUpdateTime;
-	
-	@Column(name = "pictureId")
-	private String mPictureId;
+
+	@Column(name = "lastSyncTime")
+	private String mLastSyncTime;
+
+	@Column(name = "ownerUserId")
+	private String mOwnerUserId;
 
 	@Column(name = "location")
 	private String mLocation;
@@ -57,21 +52,18 @@ public class User extends HyjModel {
 	@Column(name = "address")
 	private String mAddress;
 	
-	public User(){
+	
+	public Friend(){
 		super();
 		mId = UUID.randomUUID().toString();
 	}
 
-	public UserData getUserData(){
-		return (UserData) getModel(UserData.class, mUserDataId);
-	}
-
-	public void setUserData(UserData userData){
-		mUserDataId = userData.getId();
+	public User getFriendUser(){
+		return (User) getModel(User.class, mFriendUserId);
 	}
 	
-	public boolean getIsMerchant(){
-		return mIsMerchant;
+	public void setFriendUser(User user){
+		mFriendUserId = user.getId();
 	}
 
 	@Override
@@ -83,52 +75,21 @@ public class User extends HyjModel {
 		this.mId = mId;
 	}
 
-	public String getUserDataId() {
-		return mUserDataId;
+	public String getFriendUserId() {
+		return mFriendUserId;
 	}
 
-	public void setUserDataId(String mUserDataId) {
-		this.mUserDataId = mUserDataId;
+	public void setFriendUserId(String mFriendUserId) {
+		this.mFriendUserId = mFriendUserId;
 	}
 
-	public String getUserName() {
-		return mUserName;
+
+	public String getFriendCategory() {
+		return mFriendCategory;
 	}
 
-	public void setUserName(String mUserName) {
-		this.mUserName = mUserName.trim();
-	}
-
-	public String getNickName() {
-		return mNickName;
-	}
-
-	public void setNickName(String mNickName) {
-		this.mNickName = mNickName;
-	}
-
-	public boolean ismIsMerchant() {
-		return mIsMerchant;
-	}
-
-	public void setIsMerchant(boolean mIsMerchant) {
-		this.mIsMerchant = mIsMerchant;
-	}
-
-	public String getMessageBoxId() {
-		return mMessageBoxId;
-	}
-
-	public void setMessageBoxId(String mMessageBoxId) {
-		this.mMessageBoxId = mMessageBoxId;
-	}
-
-	public String getNewFriendAuthentication() {
-		return mNewFriendAuthentication;
-	}
-
-	public void setNewFriendAuthentication(String mNewFriendAuthentication) {
-		this.mNewFriendAuthentication = mNewFriendAuthentication;
+	public void setFriendCategory(String mFriendCategory) {
+		this.mFriendCategory = mFriendCategory;
 	}
 
 	public String getServerRecordHash() {
@@ -155,12 +116,20 @@ public class User extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
-	public String getPictureId() {
-		return mPictureId;
+	public String getLastSyncTime() {
+		return mLastSyncTime;
 	}
 
-	public void setPictureId(String mPictureId) {
-		this.mPictureId = mPictureId;
+	public void setLastSyncTime(String mLastSyncTime) {
+		this.mLastSyncTime = mLastSyncTime;
+	}
+
+	public String getOwnerUserId() {
+		return mOwnerUserId;
+	}
+
+	public void setOwnerUserId(String mOwnerUserId) {
+		this.mOwnerUserId = mOwnerUserId;
 	}
 
 	public String getLocation() {
@@ -194,15 +163,16 @@ public class User extends HyjModel {
 	public void setAddress(String mAddress) {
 		this.mAddress = mAddress;
 	}
-
+	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getUserName().length() == 0){
-			modelEditor.setValidationError("userName", R.string.registerActivity_editText_hint_username);
-		} else if(this.getUserName().length() < 3){
-			modelEditor.setValidationError("userName", R.string.registerActivity_validation_username_too_short);
+		if(this.getFriendCategory().length() == 0){
+			modelEditor.setValidationError("friendCategory", R.string.friendFormFragment_editText_hint_friend_category);
 		} else {
-			modelEditor.removeValidationError("userName");
-		}		
-	}	
+			modelEditor.removeValidationError("friendCategory");
+		}
+		
+	}
+
+	
 }

@@ -176,7 +176,7 @@ public class LoginActivity extends HyjActivity {
 						loginFromServer(true);
 					}	
 				}
-
+				
 				@Override
 				public Object doInBackground(String... string) {
 					final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(LoginActivity.this);
@@ -238,7 +238,7 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 	private void loginFromServer(final boolean createUserDatabaseEntry){
-		//浠庢湇鍔″櫒涓婁笅杞界敤鎴锋暟鎹�		
+		//从服务器上下载用户数据
 		JSONObject postData = new JSONObject();
 		try {
 			postData.put("userName", mUserName);

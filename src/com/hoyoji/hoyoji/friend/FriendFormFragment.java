@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.friend;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,61 +12,49 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 
 
-public class ProjectFormFragment extends HyjUserFormFragment {
+public class FriendFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	
-	private HyjModelEditor mProjectEditor = null;
-	private EditText mEditTextProjectName = null;
-	private EditText mEditTextParentProject = null;
+	private HyjModelEditor mFriendEditor = null;
+	private EditText mEditTextFriendCategory = null;
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_formfragment_project;
+		return R.layout.friend_formfragment_friend;
 	}
 	
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		Project project;
+		Friend friend;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
+			friend =  new Select().from(Friend.class).where("_id=?", modelId).executeSingle();
 		} else {
-			project = new Project();
+			friend = new Friend();
 		}
-		mProjectEditor = project.newModelEditor();
+		mFriendEditor = friend.newModelEditor();
 		
-		mEditTextProjectName = (EditText) getView().findViewById(R.id.projectFormFragment_editText_projectName);
-		mEditTextProjectName.setText(project.getName());
-		
-		mEditTextParentProject = (EditText) getView().findViewById(R.id.projectFormFragment_editText_parentProject);
-		mEditTextParentProject.setText("");
-		mEditTextParentProject.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				ProjectFormFragment.this
-				.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_parent_project, null, GET_PARENT_PROJECT_ID);
-			}
-		});
-		
+		mEditTextFriendCategory = (EditText) getView().findViewById(R.id.friendFormFragment_editText_friend_category);
+		mEditTextFriendCategory.setText(friend.getFriendCategory());
 		
 	}
 	
 	private void fillData(){
-		Project modelCopy = (Project) mProjectEditor.getModelCopy();
-		modelCopy.setName(mEditTextProjectName.getText().toString().trim());
+		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
+		modelCopy.setFriendCategory(mEditTextFriendCategory.getText().toString().trim());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		
-		mEditTextProjectName.setError(mProjectEditor.getValidationError("name"));
-		
+		mEditTextFriendCategory.setError(mFriendEditor.getValidationError("friendCategory"));
 	}
 
 	 @Override
@@ -75,12 +63,12 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		mProjectEditor.validate();
+		mFriendEditor.validate();
 		
-		if(mProjectEditor.hasValidationErrors()){
+		if(mFriendEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
-			mProjectEditor.save();
+			mFriendEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 			getActivity().finish();
 		}

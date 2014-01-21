@@ -107,7 +107,7 @@ public class RegisterActivity extends HyjActivity {
 		if(mPassword1.length() == 0){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_editText_hint_password1));
 	   		valiatePass = false;
-		} else if(mPassword1.length() < 3){
+		} else if(mPassword1.length() < 6){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_validation_password_too_short));
 	   		valiatePass = false;
 		} else {
@@ -131,7 +131,7 @@ public class RegisterActivity extends HyjActivity {
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {
-			final ProgressDialog progressDialog = this.displayProgressDialog("注册新用户", "正在注册，请稍后...");  
+			final ProgressDialog progressDialog = this.displayProgressDialog("注册用户", "正在注册，请稍后...");  
 			Currency currency = Currency.getInstance(Locale.getDefault());
 			String currencyId = currency.getCurrencyCode();
 			String currencySymbol = currency.getSymbol();
@@ -151,7 +151,7 @@ public class RegisterActivity extends HyjActivity {
 				@Override
 				public void finishCallback(Object object) {
 					progressDialog.dismiss();
-					HyjUtil.displayToast("娉ㄥ唽鎴愬姛锛�");
+					HyjUtil.displayToast("注册成功！");
 					RegisterActivity.this.finish();
 				}
 				@Override
