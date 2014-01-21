@@ -107,7 +107,7 @@ public class RegisterActivity extends HyjActivity {
 		if(mPassword1.length() == 0){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_editText_hint_password1));
 	   		valiatePass = false;
-		} else if(mPassword1.length() < 3){
+		} else if(mPassword1.length() < 6){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_validation_password_too_short));
 	   		valiatePass = false;
 		} else {

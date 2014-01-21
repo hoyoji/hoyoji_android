@@ -176,7 +176,7 @@ public class LoginActivity extends HyjActivity {
 						loginFromServer(true);
 					}	
 				}
-
+				
 				@Override
 				public Object doInBackground(String... string) {
 					final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(LoginActivity.this);

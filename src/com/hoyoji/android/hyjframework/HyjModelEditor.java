@@ -24,6 +24,10 @@ public class HyjModelEditor {
 	public HyjModel getModelCopy(){
 		return this.mModelCopy;
 	}
+
+	public HyjModel getModel() {
+		return this.mModel;
+	}
 	
 	public void save(){
 		for (Field field : this.mModel.getClass().getDeclaredFields()) {
@@ -63,9 +67,5 @@ public class HyjModelEditor {
 	
 	public String getValidationError(String field){
 		return mValidationErrors.get(field);
-	}
-
-	public HyjModel getModel() {
-		return this.mModel;
 	}
 }

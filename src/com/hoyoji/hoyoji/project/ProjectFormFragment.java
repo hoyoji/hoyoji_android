@@ -68,13 +68,15 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		mEditTextProjectName.setError(mProjectEditor.getValidationError("name"));
 		
 	}
-	
+
+	 @Override
 	public void onSave(View v){
 		super.onSave(v);
 		
 		fillData();
 		
 		mProjectEditor.validate();
+		
 		if(mProjectEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {

@@ -1,18 +1,14 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.HashMap;
 import java.util.UUID;
 
-import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
 import android.provider.BaseColumns;
-import android.util.Log;
 
 @Table(name = "User", id = BaseColumns._ID)
 public class User extends HyjModel {
