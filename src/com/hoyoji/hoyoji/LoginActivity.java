@@ -238,7 +238,7 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 	private void loginFromServer(final boolean createUserDatabaseEntry){
-		//从服务器上下载用户数据
+		//浠庢湇鍔″櫒涓婁笅杞界敤鎴锋暟鎹�		
 		JSONObject postData = new JSONObject();
 		try {
 			postData.put("userName", mUserName);
