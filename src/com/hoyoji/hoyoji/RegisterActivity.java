@@ -131,7 +131,7 @@ public class RegisterActivity extends HyjActivity {
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {
-			final ProgressDialog progressDialog = this.displayProgressDialog("娉ㄥ唽鐢ㄦ埛", "姝ｅ湪娉ㄥ唽锛岃绋嶅悗...");  
+			final ProgressDialog progressDialog = this.displayProgressDialog("注册新用户", "正在注册，请稍后...");  
 			Currency currency = Currency.getInstance(Locale.getDefault());
 			String currencyId = currency.getCurrencyCode();
 			String currencySymbol = currency.getSymbol();
