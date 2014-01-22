@@ -96,5 +96,10 @@ public class FriendListFragment extends HyjUserListFragment {
 			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_edit, bundle);
 		}
     }  
-	
+
+	@Override 
+	public void onDeleteListItem(Long id){
+		Friend friend = Friend.load(Friend.class, id);
+		friend.delete();
+	}
 }

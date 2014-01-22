@@ -1,6 +1,7 @@
 package com.hoyoji.android.hyjframework.fragment;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
 
@@ -12,15 +13,19 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+	public final static int DELETE_LIST_ITEM = 1024;
 	private boolean mIsViewInited = false;
 	
 	@Override
@@ -38,6 +43,7 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
+		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
 			setListAdapter(useListViewAdapter()); 
 		}
@@ -91,7 +97,6 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	}
 	
 
-
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
 		((SimpleCursorAdapter) this.getListAdapter()).swapCursor(cursor);
@@ -102,7 +107,6 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
           //  setListShownNoAnimation(true);  
         }  
 	}
-
 
 
 	@Override
@@ -131,6 +135,30 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 		} else {
 			startActivity(intent);
 		}
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if(!getUserVisibleHint()){
+			return super.onContextItemSelected(item);
+		}
+		switch (item.getItemId()) {
+			case DELETE_LIST_ITEM:
+			    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			    Long itemId = getListAdapter().getItemId(info.position);
+				onDeleteListItem(itemId);
+				break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
+	}	
+	
+	public void onDeleteListItem(Long id){
 	}
 }
 

@@ -7,18 +7,25 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
 
 public class ProjectListFragment extends HyjUserListFragment{
+	public final static int ADD_SUB_PROJECT = 0;
+	public final static int VIEW_PROJECT_MEMBERS = 1;
 	
 	@Override
 	public Integer useContentView() {
@@ -78,6 +85,34 @@ public class ProjectListFragment extends HyjUserListFragment{
 		}
     }  
 
-
+	@Override 
+	public void onDeleteListItem(Long id){
+		Project project = Project.load(Project.class, id);
+		project.delete();
+	}
 	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if(!getUserVisibleHint()){
+			return super.onContextItemSelected(item);
+		}
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    Long itemId = getListAdapter().getItemId(info.position);
+		switch (item.getItemId()) {
+			case ADD_SUB_PROJECT:
+			    HyjUtil.displayToast("创建子项目" + itemId);
+				break;
+			case VIEW_PROJECT_MEMBERS:
+			    HyjUtil.displayToast("项目成员" + itemId);
+				break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
+		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+	}
 }
