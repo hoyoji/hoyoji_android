@@ -67,7 +67,7 @@ public abstract class Model {
 	public abstract String getId();
 
 	public final void delete() {
-		Cache.openDatabase().delete(mTableInfo.getTableName(), idName+"=?", new String[] { getId().toString() });
+		Cache.openDatabase().delete(mTableInfo.getTableName(), "id=?", new String[] { getId() });
 		Cache.removeEntity(this);
 
 		Cache.getContext().getContentResolver()
@@ -398,6 +398,6 @@ public abstract class Model {
 		final Model other = (Model) obj;
 
 		return this.mId != null && (this.mTableInfo.getTableName().equals(other.mTableInfo.getTableName()))
-				&& (this.mId.equals(other.mId));
+				&& (this.mId.equals(other.mId)) && (this.getId().equals(other.getId()));
 	}
 }

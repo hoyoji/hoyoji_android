@@ -15,6 +15,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
@@ -80,5 +81,10 @@ public class ProjectListFragment extends HyjUserListFragment{
 		}
     }  
 
+	@Override 
+	public void onDeleteListItem(Long id){
+		Project project = Project.load(Project.class, id);
+		project.delete();
+	}
 	
 }
