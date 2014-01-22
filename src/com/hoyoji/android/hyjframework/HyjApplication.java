@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Cache;
 import com.activeandroid.Configuration;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
@@ -15,6 +16,8 @@ import com.hoyoji.hoyoji.models.UserData;
 import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 
 public class HyjApplication extends Application {
@@ -27,6 +30,13 @@ public class HyjApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
+
+        SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+        String userId = userInfo.getString("userId", "");  
+        String password = userInfo.getString("password", "");  
+        if(userId.length() > 0 && password.length() > 0){
+        	login(userId, password);
+        }
 	}
 
 	@Override
@@ -67,6 +77,9 @@ public class HyjApplication extends Application {
 		
 		currentUser = authenticateUser(userId, password);
 		if(currentUser != null){
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -111,6 +124,9 @@ public class HyjApplication extends Application {
 		
 		currentUser = authenticateUser(userId, password);
 		if(currentUser != null){
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -125,8 +141,17 @@ public class HyjApplication extends Application {
 		}
 	}
 	
+	public void switchUser(){
+		logout();
+		 Intent i = getPackageManager()
+		 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
+	
+		 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+		 startActivity(i);
+	}
+	
 	private User authenticateUser(String userId, String password){
-		return new Select().from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
+		return new Select("User.*").from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
 	}
 
 	public void addFragmentClassMap(String className,

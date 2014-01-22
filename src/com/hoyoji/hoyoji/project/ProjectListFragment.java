@@ -89,6 +89,7 @@ public class ProjectListFragment extends HyjUserListFragment{
 	public void onDeleteListItem(Long id){
 		Project project = Project.load(Project.class, id);
 		project.delete();
+	    HyjUtil.displayToast("项目删除成功");
 	}
 	
 	@Override

@@ -101,5 +101,6 @@ public class FriendListFragment extends HyjUserListFragment {
 	public void onDeleteListItem(Long id){
 		Friend friend = Friend.load(Friend.class, id);
 		friend.delete();
+	    HyjUtil.displayToast("好友删除成功");
 	}
 }
