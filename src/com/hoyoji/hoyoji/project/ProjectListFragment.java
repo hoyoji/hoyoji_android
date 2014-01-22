@@ -2,7 +2,6 @@ package com.hoyoji.hoyoji.project;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,9 +15,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.activeandroid.content.ContentProvider;
-import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
@@ -49,11 +46,12 @@ public class ProjectListFragment extends HyjUserListFragment{
 
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(getActivity(),
+	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
 				null, null, null, null
 			);
+		return (Loader<Object>)loader;
 	}
 
 
