@@ -140,7 +140,7 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if(!getUserVisibleHint()){
-			return false;
+			return super.onContextItemSelected(item);
 		}
 		switch (item.getItemId()) {
 			case DELETE_LIST_ITEM:
