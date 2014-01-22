@@ -44,15 +44,19 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 //	    }
 //	};
 
-	
 	    private List<JSONObject> mJSONList;
 //	    private String mSortByField;
 	    private String mTarget = "post";
 	    private String mPostData = "";
 	    
-	    public HyjHttpPostJSONLoader(Context context, String target) {
+	    public HyjHttpPostJSONLoader(Context context, String target, String postData) {
 	    	super(context);
-	    	mTarget = target;
+	    	if(target != null){
+	    		mTarget = target;
+	    	}
+	    	if(postData != null){
+		    	mPostData = postData;
+	    	}
 	    }
 	    
 //	    public HyjHttpPostJsonLoader(Context context, String target, String sortByField) {
@@ -91,7 +95,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 					return list;
 				}
 		    } else {
-				HyjUtil.displayToast(R.string.server_connection_disconnected);
+				//HyjUtil.displayToast(R.string.server_connection_disconnected);
 		    }
 			return new ArrayList<JSONObject>();
 		}
@@ -138,7 +142,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 					Log.i("Server", s);
 				}
 			} catch (IOException e) {
-				HyjUtil.displayToast(HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage());
+				e.printStackTrace();
+				//HyjUtil.displayToast(HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -158,6 +163,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				//HyjUtil.displayToast(R.string.server_dataparse_error);
 				return null;
 			}
 	    }

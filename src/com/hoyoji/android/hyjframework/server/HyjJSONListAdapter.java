@@ -14,7 +14,7 @@ public class HyjJSONListAdapter extends ArrayAdapter<JSONObject> {
     private int[] mViewIds;
     private String[] mFields;
     
-    public HyjJSONListAdapter(Context context, int layoutResource, int[] viewIds, String[] fields) {
+    public HyjJSONListAdapter(Context context, int layoutResource, String[] fields, int[] viewIds) {
         super(context, layoutResource);
         mViewIds = viewIds;
         mFields = fields;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="friendListFragment_action_friend_addnew">添加好友</string>
+    <string name="friendListFragment_action_friend_add">添加好友</string>
     <string name="friendListFragment_action_friend_create">创建好友</string>
     
 </resources>

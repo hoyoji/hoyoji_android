@@ -52,8 +52,11 @@ public class FriendListFragment extends HyjUserListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.friendListFragment_action_friend_addnew){
-			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_addnew, null);
+		if(item.getItemId() == R.id.friendListFragment_action_friend_create){
+			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_create, null);
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
+			openActivityWithFragment(AddFriendListFragment.class, R.string.AddFriendListFragment_title_add, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
