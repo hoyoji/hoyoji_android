@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".FriendFormFragment" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/friendAddRequestMessageFormFragment_textView_toUser"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/friendAddRequestMessageFormFragment_textView_toUser" />
+
+        <EditText
+            android:id="@+id/friendAddRequestMessageFormFragment_editText_toUser"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:hint="@string/friendAddRequestMessageFormFragment_editText_hint_toUser" 
+            android:maxLines="1"
+            android:singleLine="true">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/friendAddRequestMessageFormFragment_textView_detail"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/friendAddRequestMessageFormFragment_textView_detail" />
+
+        <EditText
+            android:id="@+id/friendAddRequestMessageFormFragment_editText_detail"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:hint="@string/friendAddRequestMessageFormFragment_editText_hint_detail" 
+            android:maxLines="1"
+            android:singleLine="true"
+            android:focusable="false">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    
+	<Button
+	    android:id="@id/button_save"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/app_action_save"/>
+	
+</LinearLayout>

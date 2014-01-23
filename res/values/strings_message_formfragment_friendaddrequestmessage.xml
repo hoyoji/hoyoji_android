@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   
+   <string name="friendAddRequestMessageFormFragment_textView_toUser">好友</string>
+   <string name="friendAddRequestMessageFormFragment_editText_hint_toUser">请输入好友名称</string>
+   
+   <string name="friendAddRequestMessageFormFragment_textView_detail">请求消息</string>
+   <string name="friendAddRequestMessageFormFragment_editText_hint_detail">请输入请求消息</string>
+    
+    
+</resources>

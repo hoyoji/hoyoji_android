@@ -34,6 +34,9 @@ public class Message extends HyjModel {
 
 	@Column(name = "messageData")
 	private String mMessageData;
+	
+	@Column(name = "detail")
+	private String mDetail;
 
 	@Column(name = "type")
 	private String mType;
@@ -75,56 +78,64 @@ public class Message extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getmMessageState() {
+	public String getMessageState() {
 		return mMessageState;
 	}
 
-	public void setmMessageState(String mMessageState) {
+	public void setMessageState(String mMessageState) {
 		this.mMessageState = mMessageState;
 	}
 
-	public String getmFromUserId() {
+	public String getFromUserId() {
 		return mFromUserId;
 	}
 
-	public void setmFromUserId(String mFromUserId) {
+	public void setFromUserId(String mFromUserId) {
 		this.mFromUserId = mFromUserId;
 	}
 
-	public String getmToUserId() {
+	public String getToUserId() {
 		return mToUserId;
 	}
 
-	public void setmToUserId(String mToUserId) {
+	public void setToUserId(String mToUserId) {
 		this.mToUserId = mToUserId;
 	}
 
-	public String getmMessageTitle() {
+	public String getMessageTitle() {
 		return mMessageTitle;
 	}
 
-	public void setmMessageTitle(String mMessageTitle) {
+	public void setMessageTitle(String mMessageTitle) {
 		this.mMessageTitle = mMessageTitle;
 	}
 
-	public String getmMessageData() {
+	public String getMessageData() {
 		return mMessageData;
 	}
 
-	public void setmMessageData(String mMessageData) {
+	public void setMessageData(String mMessageData) {
 		this.mMessageData = mMessageData;
 	}
 
-	public String getmType() {
+	public String getDetail() {
+		return mDetail;
+	}
+
+	public void setDetail(String mDetail) {
+		this.mDetail = mDetail;
+	}
+
+	public String getType() {
 		return mType;
 	}
 
-	public void setmType(String mType) {
+	public void setType(String mType) {
 		this.mType = mType;
 	}
 
-	public String getmMessageBoxId() {
-		return mMessageBoxId;
+	public MessageBox getmMessageBoxId() {
+		return (MessageBox) getModel(MessageBox.class, mMessageBoxId);
 	}
 
 	public void setmMessageBoxId(String mMessageBoxId) {
