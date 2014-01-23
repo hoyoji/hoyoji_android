@@ -49,11 +49,12 @@ public class FriendAddRequestMessageListFragment extends HyjUserListFragment{
 
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(getActivity(),
+	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
 				null, null, null, null
 			);
+		return (Loader<Object>)loader;
 	}
 
 

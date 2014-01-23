@@ -58,7 +58,7 @@ public class HomeListFragment extends HyjUserListFragment {
 
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		// TODO Auto-generated method stub
 		return null;
 	}

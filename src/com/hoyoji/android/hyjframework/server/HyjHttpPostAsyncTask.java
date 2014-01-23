@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 	}	
 	
 	@Override
-	protected JSONObject doInBackground(String... params) {
+	protected Object doInBackground(String... params) {
 		ConnectivityManager connMgr = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 	    String target = "post";
@@ -62,7 +63,7 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 		return null;
 	}
 	
-	private JSONObject doHttpPost(String serverUrl, String postData){
+	private Object doHttpPost(String serverUrl, String postData){
     	User currentUser = HyjApplication.getInstance().getCurrentUser();
 		Context appContext = HyjApplication.getInstance().getApplicationContext();
 
@@ -116,7 +117,11 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 		}
 
 		try {
-			return new JSONObject(s);
+			if(s.startsWith("{")){
+				return new JSONObject(s);
+			} else {
+				return new JSONArray(s);
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,13 +132,17 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
     // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(Object result) {
-    	JSONObject jsonResult = (JSONObject)result;
     	if(mServerCallback != null){
-    		if(jsonResult != null){
-    			if(jsonResult.isNull("__summary")){
-    				mServerCallback.finishCallback(jsonResult);
+    		if(result != null){
+    			if(result instanceof JSONObject){
+    				JSONObject jsonResult = (JSONObject)result;
+        			if(jsonResult.isNull("__summary")){
+        				mServerCallback.finishCallback(result);
+        			} else {
+        				mServerCallback.errorCallback(result);
+        			}		
     			} else {
-    				mServerCallback.errorCallback(jsonResult);
+    				mServerCallback.errorCallback(result);
     			}
             } else {
             	try {

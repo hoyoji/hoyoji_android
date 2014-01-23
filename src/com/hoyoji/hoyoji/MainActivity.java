@@ -2,7 +2,10 @@ package com.hoyoji.hoyoji;
 
 import java.util.Locale;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -21,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -28,7 +32,7 @@ import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
-    private String[] mDrawerListerTitles = {"查找流水", "消息管理", "账户管理", "汇率管理", "货币管理", "设置"};
+    private String[] mDrawerListerTitles = null;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;  
@@ -65,6 +69,7 @@ public class MainActivity extends HyjUserActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);  
         
         // Set the adapter for the list view
+        mDrawerListerTitles = getResources().getStringArray(R.array.mainActivity_drawer_list_titles);
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.main_drawer_list_item, mDrawerListerTitles));
         // Set the list's click listener
@@ -116,21 +121,16 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	/** Swaps fragments in the main content view */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void selectItem(int position) {
-	    // Create a new fragment and specify the planet to show based on position
-//	    Fragment fragment = new DummySectionFragment();
-//	    Bundle args = new Bundle();
-//	    args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
-//	    fragment.setArguments(args);
-//
-//	    // Insert the fragment by replacing any existing fragment
-//	    FragmentManager fragmentManager = getSupportFragmentManager();
-//	    fragmentManager.beginTransaction()
-//	    				.show(fragment)
-//	                   .commit();
-
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
+	    switch(position){
+	    	case 6 :
+	    		HyjApplication.getInstance().switchUser();
+	    	break;
+	    }
+	    
 	    mDrawerLayout.closeDrawer(mDrawerList);
 	}
 

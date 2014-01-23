@@ -52,8 +52,11 @@ public class FriendListFragment extends HyjUserListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.friendListFragment_action_friend_addnew){
-			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_addnew, null);
+		if(item.getItemId() == R.id.friendListFragment_action_friend_create){
+			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_create, null);
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
+			openActivityWithFragment(AddFriendListFragment.class, R.string.AddFriendListFragment_title_add, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -62,11 +65,12 @@ public class FriendListFragment extends HyjUserListFragment {
 
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(getActivity(),
+	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Friend.class, null),
 				null, null, null, null
 			);
+		return (Loader<Object>)loader;
 	}
 
 
@@ -101,5 +105,6 @@ public class FriendListFragment extends HyjUserListFragment {
 	public void onDeleteListItem(Long id){
 		Friend friend = Friend.load(Friend.class, id);
 		friend.delete();
+	    HyjUtil.displayToast("好友删除成功");
 	}
 }

@@ -24,7 +24,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListAdapter;
 
-public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>{
 	public final static int DELETE_LIST_ITEM = 1024;
 	private boolean mIsViewInited = false;
 	
@@ -98,8 +98,8 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		((SimpleCursorAdapter) this.getListAdapter()).swapCursor(cursor);
+	public void onLoadFinished(Loader<Object> arg0, Object cursor) {
+		((SimpleCursorAdapter) this.getListAdapter()).swapCursor((Cursor)cursor);
 		// The list should now be shown. 
         if (isResumed()) {
           //  setListShown(true);  
@@ -110,7 +110,7 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
+	public void onLoaderReset(Loader<Object> arg0) {
 		((SimpleCursorAdapter) this.getListAdapter()).swapCursor(null);
 	}	
 
