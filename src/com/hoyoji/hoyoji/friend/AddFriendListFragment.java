@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.friend;
 
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.database.Cursor;
@@ -22,7 +23,7 @@ import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji.R;
 
 public class AddFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
-
+	SearchView mSearchView;
 	@Override
 	public Integer useContentView() {
 		return R.layout.friend_listfragment_add_friend;
@@ -36,15 +37,13 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	
 	@Override
 	public void onInitViewData(){
-		SearchView searchView = (SearchView)getView().findViewById(R.id.friendListFragment_addFriend_searchView);
-		searchView.setOnQueryTextListener(this);
+		mSearchView = (SearchView)getView().findViewById(R.id.friendListFragment_addFriend_searchView);
+		mSearchView.setOnQueryTextListener(this);
 	}
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		Object loader = new HyjHttpPostJSONLoader(getActivity(),
-				"findData", null
-			);
+		Object loader = new HyjHttpPostJSONLoader(getActivity(), arg1);
 		return (Loader<Object>)loader;
 	}
 
@@ -94,11 +93,35 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 
 
 	@Override
-	public boolean onQueryTextSubmit(String arg0) {
-//		Loader<Object> loader = getActivity().getSupportLoaderManager().getLoader(0);
-//		if(loader.isStarted()){
-//			loader.forceLoad();
-//		}
+	public boolean onQueryTextSubmit(String searchText) {
+		searchText = searchText.trim();
+		if(searchText.length() == 0){
+			HyjUtil.displayToast("请输入查询条件");
+			return true;
+		}
+//		userName : searchCriteria,
+//		nickName : searchCriteria,
+//		__dataType : "User",
+//		__offset : offset,
+//		__limit : limit,
+//		__orderBy : orderBy
+		JSONObject data = new JSONObject();
+		try {
+			data.put("userName", searchText);
+			data.put("nickName", searchText);
+			data.put("__dataType", "User");
+			data.put("__limit", 10);
+			data.put("__offset", 0);
+			data.put("__orderBy", "userName ASC");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Bundle bundle = new Bundle();
+		bundle.putString("target", "findData");
+		bundle.putString("postData", data.toString());
+		this.getLoaderManager().restartLoader(0, bundle, this);
 		HyjUtil.displayToast("正在查找好友...");
 		return true;
 	}  

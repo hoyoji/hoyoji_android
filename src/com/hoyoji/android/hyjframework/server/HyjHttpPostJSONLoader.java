@@ -26,6 +26,7 @@ import com.hoyoji.hoyoji.models.User;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Base64;
 import android.util.Log;
@@ -45,17 +46,14 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 //	};
 
 	    private List<JSONObject> mJSONList;
-//	    private String mSortByField;
-	    private String mTarget = "post";
+	    private String mTarget = null;
 	    private String mPostData = "";
 	    
-	    public HyjHttpPostJSONLoader(Context context, String target, String postData) {
+	    public HyjHttpPostJSONLoader(Context context, Bundle arg1) {
 	    	super(context);
-	    	if(target != null){
-	    		mTarget = target;
-	    	}
-	    	if(postData != null){
-		    	mPostData = postData;
+	    	if(arg1 != null){
+	    		mTarget = arg1.getString("target");
+	    		mPostData = arg1.getString("postData");
 	    	}
 	    }
 	    
@@ -75,8 +73,11 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	        ConnectivityManager connMgr = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		    if (networkInfo != null && networkInfo.isConnected()) {
-		        Object object = doHttpPost(HyjApplication.getServerUrl()+mTarget+".php", mPostData);
-
+		    	Object object = null;
+		    	if(mTarget != null){
+		    		object = doHttpPost(HyjApplication.getServerUrl()+mTarget+".php", mPostData);
+		    	}
+		    	
 				List<JSONObject> list = new ArrayList<JSONObject>();
 		        if(object == null){
 		        	return list;
@@ -112,7 +113,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 				post.setEntity(new StringEntity(postData, HTTP.UTF_8));
 				post.setHeader("Accept", "application/json");
 				post.setHeader("Content-type", "application/json; charset=UTF-8");
-				post.setHeader("Accept-Encoding", "gzip");
+				//post.setHeader("Accept-Encoding", "gzip");
 				post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
 				if (currentUser != null) {
 					String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
