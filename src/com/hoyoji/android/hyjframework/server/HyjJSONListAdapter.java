@@ -5,17 +5,22 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
 public class HyjJSONListAdapter extends ArrayAdapter<JSONObject> {
     private int[] mViewIds;
     private String[] mFields;
+    private int mLayoutResource;
+    private ViewBinder mViewBinder;
     
     public HyjJSONListAdapter(Context context, int layoutResource, String[] fields, int[] viewIds) {
         super(context, layoutResource);
+        mLayoutResource = layoutResource;
         mViewIds = viewIds;
         mFields = fields;
     }
@@ -29,21 +34,31 @@ public class HyjJSONListAdapter extends ArrayAdapter<JSONObject> {
         }
     }
 
+    public void setViewBinder(ViewBinder viewBinder){
+    	mViewBinder = viewBinder;
+    }
+    
+    public ViewBinder setViewBinder(){
+    	return mViewBinder;
+    }
+    
+    
     /**
      * Populate new items in the list.
      */
     @Override public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = super.getView(position, convertView, parent);
-        } else {
-            view = convertView;
+        View view = convertView;
+        if (view == null) {
+        	LayoutInflater vi = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = vi.inflate(mLayoutResource, null);
         }
 
         JSONObject item = getItem(position);
-       // ((ImageView)view.findViewById(mIconView)).setImageDrawable(item.getString(name));
         for(int i=0; i<mViewIds.length; i++){
-        	((TextView)view.findViewById(mViewIds[i])).setText(item.optString(mFields[i]));
+        	View v = view.findViewById(mViewIds[i]);
+        	if(this.mViewBinder != null || !mViewBinder.setViewValue(v, item, mFields[i])){
+        		((TextView)v).setText(item.optString(mFields[i]));
+            }
         }
         
         return view;

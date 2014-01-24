@@ -51,11 +51,10 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 	    	target = params[1];
 	    }
 	    if (networkInfo != null && networkInfo.isConnected()) {
-	        return doHttpPost(HyjApplication.getServerUrl()+target+".php", params[0]);
+	        return HyjServer.doHttpPost(this, HyjApplication.getServerUrl()+target+".php", params[0], true);
 	    } else {
-			String sErr = "{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_connection_disconnected)+"'}}";
 	    	try {
-				return new JSONObject(sErr);
+				return new JSONObject("{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_connection_disconnected)+"'}}");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -63,70 +62,9 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 		return null;
 	}
 	
-	private Object doHttpPost(String serverUrl, String postData){
-    	User currentUser = HyjApplication.getInstance().getCurrentUser();
-		Context appContext = HyjApplication.getInstance().getApplicationContext();
 
-		InputStream is = null;
-		String s = null;
-		try {
-			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost(serverUrl);
-			post.setEntity(new StringEntity(postData, HTTP.UTF_8));
-			post.setHeader("Accept", "application/json");
-			post.setHeader("Content-type", "application/json; charset=UTF-8");
-			post.setHeader("Accept-Encoding", "gzip");
-			post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
-			if (currentUser != null) {
-				String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
-				//post.setHeader("Cookie", "authentication=" + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT).replace("\r\n", "").replace("=", "%$09"));
-				post.setHeader("Authorization", "BASIC " + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT));
-			}
-			
-			HttpResponse response = client.execute(post);
-			HttpEntity entity = response.getEntity();
-			long length = entity.getContentLength();
-			is = entity.getContent();
-			if (is != null) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buf = new byte[128];
-				int ch = -1;
-				int count = 0;
-
-				while ((ch = is.read(buf)) != -1) {
-					baos.write(buf, 0, ch);
-					count += ch;
-					if (length > 0) {
-						publishProgress((int) ((count / (float) length) * 100));
-					}
-					Thread.sleep(100);
-				}
-				s = new String(baos.toByteArray());
-				Log.i("Server", s);
-			}
-		} catch (IOException e) {
-			s = "{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage()+"'}}";
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (is != null)
-					is.close();
-			} catch (Exception squish) {
-			}
-		}
-
-		try {
-			if(s.startsWith("{")){
-				return new JSONObject(s);
-			} else {
-				return new JSONArray(s);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+    public void doPublishProgress(Integer progress){
+    	this.publishProgress(progress);
     }
     
     // onPostExecute displays the results of the AsyncTask.

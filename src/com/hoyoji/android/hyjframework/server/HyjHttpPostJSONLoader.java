@@ -26,6 +26,7 @@ import com.hoyoji.hoyoji.models.User;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Base64;
 import android.util.Log;
@@ -45,17 +46,14 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 //	};
 
 	    private List<JSONObject> mJSONList;
-//	    private String mSortByField;
-	    private String mTarget = "post";
+	    private String mTarget = null;
 	    private String mPostData = "";
 	    
-	    public HyjHttpPostJSONLoader(Context context, String target, String postData) {
+	    public HyjHttpPostJSONLoader(Context context, Bundle arg1) {
 	    	super(context);
-	    	if(target != null){
-	    		mTarget = target;
-	    	}
-	    	if(postData != null){
-		    	mPostData = postData;
+	    	if(arg1 != null){
+	    		mTarget = arg1.getString("target");
+	    		mPostData = arg1.getString("postData");
 	    	}
 	    }
 	    
@@ -65,6 +63,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 //	    	mTarget = target;
 //	    }
 
+	    
 	    /**
 	     * This is where the bulk of our work is done.  This function is
 	     * called in a background thread and should generate a new set of
@@ -75,8 +74,11 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	        ConnectivityManager connMgr = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		    if (networkInfo != null && networkInfo.isConnected()) {
-		        Object object = doHttpPost(HyjApplication.getServerUrl()+mTarget+".php", mPostData);
-
+		    	Object object = null;
+		    	if(mTarget != null){
+		    		object = HyjServer.doHttpPost(this, HyjApplication.getServerUrl()+mTarget+".php", mPostData, false);
+		    	}
+		    	
 				List<JSONObject> list = new ArrayList<JSONObject>();
 		        if(object == null){
 		        	return list;
@@ -84,14 +86,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 		        	list.add((JSONObject) object);
 				} else {
 					JSONArray array = ((JSONArray)object);
-					for (int i = 0; i < array.length(); i++) {
-			            try {
-							list.add((JSONObject) array.get(i));
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-			        }
+					HyjUtil.flattenJSONArray(array, list);
 					return list;
 				}
 		    } else {
@@ -100,73 +95,73 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 			return new ArrayList<JSONObject>();
 		}
 		
-		private Object doHttpPost(String serverUrl, String postData){
-	    	User currentUser = HyjApplication.getInstance().getCurrentUser();
-			Context appContext = HyjApplication.getInstance().getApplicationContext();
-
-			InputStream is = null;
-			String s = null;
-			try {
-				HttpClient client = new DefaultHttpClient();
-				HttpPost post = new HttpPost(serverUrl);
-				post.setEntity(new StringEntity(postData, HTTP.UTF_8));
-				post.setHeader("Accept", "application/json");
-				post.setHeader("Content-type", "application/json; charset=UTF-8");
-				post.setHeader("Accept-Encoding", "gzip");
-				post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
-				if (currentUser != null) {
-					String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
-					//post.setHeader("Cookie", "authentication=" + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT).replace("\r\n", "").replace("=", "%$09"));
-					post.setHeader("Authorization", "BASIC " + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT));
-				}
-				
-				HttpResponse response = client.execute(post);
-				HttpEntity entity = response.getEntity();
-				long length = entity.getContentLength();
-				is = entity.getContent();
-				if (is != null) {
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					byte[] buf = new byte[128];
-					int ch = -1;
-					int count = 0;
-
-					while ((ch = is.read(buf)) != -1) {
-						baos.write(buf, 0, ch);
-						count += ch;
-//						if (length > 0) {
-//								publishProgress((int) ((count / (float) length) * 100));
-//						}
-						Thread.sleep(100);
-					}
-					s = new String(baos.toByteArray());
-					Log.i("Server", s);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				//HyjUtil.displayToast(HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage());
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (is != null)
-						is.close();
-				} catch (Exception squish) {
-				}
-			}
-
-			try {
-				if(s.startsWith("{")){
-					return new JSONObject(s);
-				} else {
-					return new JSONArray(s);
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				//HyjUtil.displayToast(R.string.server_dataparse_error);
-				return null;
-			}
-	    }
+//		private Object doHttpPost(String serverUrl, String postData){
+//	    	User currentUser = HyjApplication.getInstance().getCurrentUser();
+//			Context appContext = HyjApplication.getInstance().getApplicationContext();
+//
+//			InputStream is = null;
+//			String s = null;
+//			try {
+//				HttpClient client = new DefaultHttpClient();
+//				HttpPost post = new HttpPost(serverUrl);
+//				post.setEntity(new StringEntity(postData, HTTP.UTF_8));
+//				post.setHeader("Accept", "application/json");
+//				post.setHeader("Content-type", "application/json; charset=UTF-8");
+//				//post.setHeader("Accept-Encoding", "gzip");
+//				post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
+//				if (currentUser != null) {
+//					String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
+//					//post.setHeader("Cookie", "authentication=" + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT).replace("\r\n", "").replace("=", "%$09"));
+//					post.setHeader("Authorization", "BASIC " + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT | Base64.NO_WRAP));
+//				}
+//				
+//				HttpResponse response = client.execute(post);
+//				HttpEntity entity = response.getEntity();
+//				long length = entity.getContentLength();
+//				is = entity.getContent();
+//				if (is != null) {
+//					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//					byte[] buf = new byte[128];
+//					int ch = -1;
+//					int count = 0;
+//
+//					while ((ch = is.read(buf)) != -1) {
+//						baos.write(buf, 0, ch);
+//						count += ch;
+////						if (length > 0) {
+////								publishProgress((int) ((count / (float) length) * 100));
+////						}
+//						Thread.sleep(100);
+//					}
+//					s = new String(baos.toByteArray());
+//					Log.i("Server", s);
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				//HyjUtil.displayToast(HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			} finally {
+//				try {
+//					if (is != null)
+//						is.close();
+//				} catch (Exception squish) {
+//				}
+//			}
+//
+//			try {
+//				if(s.startsWith("{")){
+//					return new JSONObject(s);
+//				} else {
+//					return new JSONArray(s);
+//				}
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				//HyjUtil.displayToast(R.string.server_dataparse_error);
+//				return null;
+//			}
+//	    }
 
 		  /**
 	     * Called when there is new data to deliver to the client.  The
