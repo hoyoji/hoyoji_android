@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="exchangeListFragment_action_exchange_addnew">创建汇率</string>
+    <string name="exchangeListFragment_title_update_all_exchange">更新全部汇率</string>
+    <string name="exchangeListFragment_title_select_foreign_currency">选择外币账户</string>
+    
+</resources>

@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".FriendFormFragment" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/currencyFormFragment_textView_name"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/currencyFormFragment_textView_name" />
+
+        <EditText
+            android:id="@+id/currencyFormFragment_editText_name"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:hint="@string/currencyFormFragment_editText_hint_name" 
+            android:maxLines="1"
+            android:singleLine="true">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/currencyFormFragment_textView_symbol"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/currencyFormFragment_textView_symbol" />
+
+        <EditText
+            android:id="@+id/currencyFormFragment_editText_symbol"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:hint="@string/currencyFormFragment_editText_hint_symbol" 
+            android:maxLines="1"
+            android:singleLine="true"
+            android:focusable="false">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/currencyFormFragment_textView_code"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/currencyFormFragment_textView_code" />
+
+        <EditText
+            android:id="@+id/currencyFormFragment_editText_code"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:hint="@string/currencyFormFragment_editText_hint_code" 
+            android:maxLines="1"
+            android:singleLine="true"
+            android:focusable="false">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    
+	<Button
+	    android:id="@id/button_save"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/app_action_save"/>
+	
+</LinearLayout>
