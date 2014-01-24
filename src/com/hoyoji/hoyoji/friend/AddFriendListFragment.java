@@ -18,6 +18,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
@@ -26,7 +27,9 @@ import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji.R;
 
 public class AddFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
-	SearchView mSearchView;
+	protected SearchView mSearchView;
+	protected String mSearchText = "";
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.friend_listfragment_add_friend;
@@ -46,27 +49,23 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		super.onCreateLoader(arg0, arg1);
 		Object loader = new HyjHttpPostJSONLoader(getActivity(), arg1);
 		return (Loader<Object>)loader;
 	}
 
     @Override 
     public void onLoadFinished(Loader<Object> loader, Object data) {
+    	super.onLoadFinished(loader, data);
         // Set the new data in the adapter.
-    	((HyjJSONListAdapter)this.getListAdapter()).setData((List<JSONObject>) data);
-
-        // The list should now be shown.
-        if (isResumed()) {
-        //    setListShown(true);
-        } else {
-        //    setListShownNoAnimation(true);
-        }
+    	((HyjJSONListAdapter)this.getListAdapter()).addData((List<JSONObject>) data);
     }
 
     @Override 
     public void onLoaderReset(Loader<Object> loader) {
+    	super.onLoaderReset(loader);
         // Clear the data in the adapter.
-    	((HyjJSONListAdapter)this.getListAdapter()).setData(null);
+    	((HyjJSONListAdapter)this.getListAdapter()).clear();
     }
     
     
@@ -81,8 +80,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 
 
 	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
-		HyjUtil.displayToast("adding friend " + position + " : " + id);
+    public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		if(id > 0){
+			HyjUtil.displayToast("adding friend " + position + " : " + id);
+		}
     }
 
 	@Override
@@ -92,7 +94,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 
 	@Override
 	public boolean onQueryTextChange(String arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -100,23 +101,17 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 
 	@Override
 	public boolean onQueryTextSubmit(String searchText) {
-		searchText = searchText.trim();
+		mSearchText = searchText.trim();
 		if(searchText.length() == 0){
 			HyjUtil.displayToast("请输入查询条件");
 			return true;
 		}
-//		userName : searchCriteria,
-//		nickName : searchCriteria,
-//		__dataType : "User",
-//		__offset : offset,
-//		__limit : limit,
-//		__orderBy : orderBy
 		JSONObject data = new JSONObject();
 		try {
-			data.put("userName", searchText);
-			data.put("nickName", searchText);
+			data.put("userName", mSearchText);
+			data.put("nickName", mSearchText);
 			data.put("__dataType", "User");
-			data.put("__limit", 10);
+			data.put("__limit", mListPageSize);
 			data.put("__offset", 0);
 			data.put("__orderBy", "userName ASC");
 		} catch (JSONException e) {
@@ -127,8 +122,31 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		Bundle bundle = new Bundle();
 		bundle.putString("target", "findData");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		this.getLoaderManager().restartLoader(0, bundle, this);
-		HyjUtil.displayToast("正在查找好友...");
+		getLoaderManager().destroyLoader(0);
+		getLoaderManager().restartLoader(0, bundle, this);
 		return true;
+	}
+	
+	@Override
+	public void doFetchMore(int offset, int pageSize){
+		this.setFooterLoadStart();
+		JSONObject data = new JSONObject();
+		try {
+			data.put("userName", mSearchText);
+			data.put("nickName", mSearchText);
+			data.put("__dataType", "User");
+			data.put("__limit", pageSize);
+			data.put("__offset", offset);
+			data.put("__orderBy", "userName ASC");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Bundle bundle = new Bundle();
+		bundle.putString("target", "findData");
+		bundle.putString("postData", (new JSONArray()).put(data).toString());
+		Loader loader = getLoaderManager().getLoader(0);
+		((HyjHttpPostJSONLoader)loader).changePostQuery(bundle);		
 	}
 }

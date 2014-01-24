@@ -2,5 +2,6 @@
 <resources>
 
     <item name="button_save" type="id"/>
+    <item name="app_listview_footer_fetch_more" type="id"/>
 
 </resources>

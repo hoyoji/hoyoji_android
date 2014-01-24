@@ -66,6 +66,7 @@ public class FriendListFragment extends HyjUserListFragment {
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Friend.class, null),
 				null, null, null, null
@@ -89,6 +90,10 @@ public class FriendListFragment extends HyjUserListFragment {
 
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(id < 0){
+			super.onListItemClick(l, v, position, id);
+			return;
+		}
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);

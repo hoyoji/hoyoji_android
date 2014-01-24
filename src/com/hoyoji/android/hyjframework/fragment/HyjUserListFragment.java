@@ -1,11 +1,15 @@
 package com.hoyoji.android.hyjframework.fragment;
 
+import java.util.List;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.friend.FriendFormFragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -24,11 +29,15 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>, SimpleCursorAdapter.ViewBinder, SimpleAdapter.ViewBinder{
 	public final static int DELETE_LIST_ITEM = 1024;
 	private boolean mIsViewInited = false;
+	protected View mFooterView;
+	protected int mListPageSize = 10;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -41,9 +50,14 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 			return rootView;
 	}
 	
+	
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+		getListView().setFooterDividersEnabled(true);
+	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		getListView().addFooterView(mFooterView);
 		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
@@ -107,22 +121,62 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	}
 	
 
+	public void setFooterLoadStart(){
+        if(getListView().getItemAtPosition(0) == null){
+        	((TextView)getListView().getEmptyView()).setText(R.string.app_listview_footer_fetching_more);
+        } else {
+            ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
+        }
+        ((TextView)mFooterView).setEnabled(false);
+	}
+	
+	public void setFooterLoadFinished(int count){
+        ((TextView)mFooterView).setEnabled(true);
+        ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
+		if(count >= mListPageSize){
+	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+		} else {
+		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+		}
+	}
+
 	@Override
 	public void onLoadFinished(Loader<Object> arg0, Object cursor) {
-		((SimpleCursorAdapter) this.getListAdapter()).swapCursor((Cursor)cursor);
+		if(this.getListAdapter() instanceof CursorAdapter){
+			((SimpleCursorAdapter) this.getListAdapter()).swapCursor((Cursor)cursor);
+		}
 		// The list should now be shown. 
         if (isResumed()) {
           //  setListShown(true);  
         } else {  
           //  setListShownNoAnimation(true);  
-        }  
+        } 
+        int count = 0;
+        if(cursor != null){
+	        if(cursor instanceof Cursor){
+	        	count = ((Cursor) cursor).getCount();
+	        } else if(cursor instanceof List){
+	        	count = ((List)cursor).size();
+	        }
+        }
+        setFooterLoadFinished(count);
+	}
+	
+	
+	@Override
+	public void onLoaderReset(Loader<Object> arg0) {
+		if(this.getListAdapter() instanceof CursorAdapter){
+			((SimpleCursorAdapter) this.getListAdapter()).swapCursor(null);
+		}
+	}	
+
+	@Override
+	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		setFooterLoadStart();
+		return null;
 	}
 
 
-	@Override
-	public void onLoaderReset(Loader<Object> arg0) {
-		((SimpleCursorAdapter) this.getListAdapter()).swapCursor(null);
-	}	
 
 	public void openActivityWithFragment(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle){
 		openActivityWithFragment(fragmentClass, getString(titleRes), bundle, false, null);
@@ -161,7 +215,17 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 		}
 		return super.onContextItemSelected(item);
 	}
-
+	
+	@Override  
+    public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(v == mFooterView){
+			doFetchMore(l.getAdapter().getCount(), this.mListPageSize);
+		}
+    }  
+	
+	public void doFetchMore(int offset, int pageSize){
+	}
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -180,7 +244,6 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 
 	@Override
 	public boolean setViewValue(View arg0, Object arg1, String arg2) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
