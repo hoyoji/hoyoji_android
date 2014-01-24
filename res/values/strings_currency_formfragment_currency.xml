@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    
+   <string name="currencyFormFragment_title_addnew">添加币种</string>
+   <string name="currencyFormFragment_title_edit">币种详细</string>
+   
+   <string name="currencyFormFragment_textView_name">币种名称</string>
+   <string name="currencyFormFragment_editText_hint_name">请输入币种名称</string>
+   
+   <string name="currencyFormFragment_textView_symbol">币种符号</string>
+   <string name="currencyFormFragment_editText_hint_symbol">请输入币种符号</string>
+    
+   <string name="currencyFormFragment_textView_code">币种代号</string>
+   <string name="currencyFormFragment_editText_hint_code">请输入币种代号</string>
+    
+</resources>
