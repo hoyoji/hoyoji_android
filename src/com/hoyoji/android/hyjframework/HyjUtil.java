@@ -2,6 +2,12 @@ package com.hoyoji.android.hyjframework;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +22,22 @@ public class HyjUtil {
 	
 	public static void displayToast(String msg){
 		Toast.makeText(HyjApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
+	}
+	
+	public static void flattenJSONArray(JSONArray array, List<JSONObject> list){
+		for (int i = 0; i < array.length(); i++) {
+            try {
+            	Object o = array.get(i); 
+            	if(o instanceof JSONArray){
+            		flattenJSONArray((JSONArray) o, list);
+            	} else {
+            		list.add((JSONObject) o);
+            	}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
 	}
 	
 	 public static String getSHA1(String s) {

@@ -2,6 +2,7 @@ package com.hoyoji.android.hyjframework.fragment;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
 
@@ -23,8 +24,9 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 
-public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>{
+public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>, SimpleCursorAdapter.ViewBinder, SimpleAdapter.ViewBinder{
 	public final static int DELETE_LIST_ITEM = 1024;
 	private boolean mIsViewInited = false;
 	
@@ -45,7 +47,15 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
-			setListAdapter(useListViewAdapter()); 
+			ListAdapter adapter = useListViewAdapter();
+			if(adapter instanceof SimpleCursorAdapter){
+				((SimpleCursorAdapter)adapter).setViewBinder(this);
+			} else if(adapter instanceof SimpleAdapter){
+				((SimpleAdapter) adapter).setViewBinder(this);
+			} else if(adapter instanceof HyjJSONListAdapter){
+				((HyjJSONListAdapter) adapter).setViewBinder(this);
+			}
+			setListAdapter(adapter); 
 		}
 	}
 	
@@ -159,6 +169,19 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	}	
 	
 	public void onDeleteListItem(Long id){
+	}
+	
+
+	@Override
+	public boolean setViewValue(View arg0, Cursor arg1, int arg2) {
+		return false;
+	}  	
+	
+
+	@Override
+	public boolean setViewValue(View arg0, Object arg1, String arg2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
 

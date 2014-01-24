@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.friend;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +12,9 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.view.ContextMenu;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -71,7 +74,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	public ListAdapter useListViewAdapter() {
 		return new HyjJSONListAdapter(getActivity(),
 				R.layout.friend_listitem_add_friend,
-				new String[] { "nickName" },
+				new String[] { "userName" },
 				new int[] { R.id.friendListItem_nickName }); 
 	}
 
@@ -82,7 +85,10 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		HyjUtil.displayToast("adding friend " + position + " : " + id);
     }
 
-
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		// do nothing, clear the delete item from super class 
+	}	
 
 	@Override
 	public boolean onQueryTextChange(String arg0) {
@@ -120,10 +126,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		
 		Bundle bundle = new Bundle();
 		bundle.putString("target", "findData");
-		bundle.putString("postData", data.toString());
+		bundle.putString("postData", (new JSONArray()).put(data).toString());
 		this.getLoaderManager().restartLoader(0, bundle, this);
 		HyjUtil.displayToast("正在查找好友...");
 		return true;
-	}  
-
+	}
 }
