@@ -49,11 +49,11 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    private String mTarget = null;
 	    private String mPostData = "";
 	    
-	    public HyjHttpPostJSONLoader(Context context, Bundle arg1) {
+	    public HyjHttpPostJSONLoader(Context context, Bundle queryParams) {
 	    	super(context);
-	    	if(arg1 != null){
-	    		mTarget = arg1.getString("target");
-	    		mPostData = arg1.getString("postData");
+	    	if(queryParams != null){
+	    		mTarget = queryParams.getString("target");
+	    		mPostData = queryParams.getString("postData");
 	    	}
 	    }
 	    
@@ -63,6 +63,14 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 //	    	mTarget = target;
 //	    }
 
+	    public void changePostQuery(Bundle queryParams){
+	    	if(queryParams != null){
+	    		mTarget = queryParams.getString("target");
+	    		mPostData = queryParams.getString("postData");
+	    	}
+	    	this.onContentChanged();
+	    }
+	    
 	    
 	    /**
 	     * This is where the bulk of our work is done.  This function is
@@ -81,7 +89,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 		    	
 				List<JSONObject> list = new ArrayList<JSONObject>();
 		        if(object == null){
-		        	return list;
+		        	return null;
 		        } else if(object instanceof JSONObject){
 		        	list.add((JSONObject) object);
 				} else {
@@ -89,79 +97,9 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 					HyjUtil.flattenJSONArray(array, list);
 					return list;
 				}
-		    } else {
-				//HyjUtil.displayToast(R.string.server_connection_disconnected);
 		    }
-			return new ArrayList<JSONObject>();
+			return null;
 		}
-		
-//		private Object doHttpPost(String serverUrl, String postData){
-//	    	User currentUser = HyjApplication.getInstance().getCurrentUser();
-//			Context appContext = HyjApplication.getInstance().getApplicationContext();
-//
-//			InputStream is = null;
-//			String s = null;
-//			try {
-//				HttpClient client = new DefaultHttpClient();
-//				HttpPost post = new HttpPost(serverUrl);
-//				post.setEntity(new StringEntity(postData, HTTP.UTF_8));
-//				post.setHeader("Accept", "application/json");
-//				post.setHeader("Content-type", "application/json; charset=UTF-8");
-//				//post.setHeader("Accept-Encoding", "gzip");
-//				post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
-//				if (currentUser != null) {
-//					String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
-//					//post.setHeader("Cookie", "authentication=" + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT).replace("\r\n", "").replace("=", "%$09"));
-//					post.setHeader("Authorization", "BASIC " + Base64.encodeToString(auth.getBytes(), Base64.DEFAULT | Base64.NO_WRAP));
-//				}
-//				
-//				HttpResponse response = client.execute(post);
-//				HttpEntity entity = response.getEntity();
-//				long length = entity.getContentLength();
-//				is = entity.getContent();
-//				if (is != null) {
-//					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//					byte[] buf = new byte[128];
-//					int ch = -1;
-//					int count = 0;
-//
-//					while ((ch = is.read(buf)) != -1) {
-//						baos.write(buf, 0, ch);
-//						count += ch;
-////						if (length > 0) {
-////								publishProgress((int) ((count / (float) length) * 100));
-////						}
-//						Thread.sleep(100);
-//					}
-//					s = new String(baos.toByteArray());
-//					Log.i("Server", s);
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				//HyjUtil.displayToast(HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage());
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			} finally {
-//				try {
-//					if (is != null)
-//						is.close();
-//				} catch (Exception squish) {
-//				}
-//			}
-//
-//			try {
-//				if(s.startsWith("{")){
-//					return new JSONObject(s);
-//				} else {
-//					return new JSONArray(s);
-//				}
-//			} catch (JSONException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//				//HyjUtil.displayToast(R.string.server_dataparse_error);
-//				return null;
-//			}
-//	    }
 
 		  /**
 	     * Called when there is new data to deliver to the client.  The
@@ -181,7 +119,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    /**
 	     * Handles a request to start the Loader.
 	     */
-	    @Override protected void onStartLoading() {
+	    @Override 
+	    protected void onStartLoading() {
 	        if (mJSONList != null) {
 	            // If we currently have a result available, deliver it
 	            // immediately.
@@ -198,7 +137,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    /**
 	     * Handles a request to stop the Loader.
 	     */
-	    @Override protected void onStopLoading() {
+	    @Override 
+	    protected void onStopLoading() {
 	        // Attempt to cancel the current load task if possible.
 	        cancelLoad();
 	    }
@@ -206,7 +146,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    /**
 	     * Handles a request to completely reset the Loader.
 	     */
-	    @Override protected void onReset() {
+	    @Override 
+	    protected void onReset() {
 	        super.onReset();
 
 	        // Ensure the loader is stopped

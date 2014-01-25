@@ -80,13 +80,11 @@ public class HyjServer {
 				s = new String(baos.toByteArray());
 				Log.i("Server", s);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			if(returnJSONError){
 				s = "{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_connection_error)+":\\n"+e.getLocalizedMessage()+"'}}";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			}			
 		} finally {
 			try {
 				if (is != null)
@@ -96,7 +94,9 @@ public class HyjServer {
 		}
 
 		try {
-			if(s.startsWith("{")){
+			if(s == null){
+				return null;
+			} else if(s.startsWith("{")){
 				return new JSONObject(s);
 			} else if(s.startsWith("[")){
 				return new JSONArray(s);

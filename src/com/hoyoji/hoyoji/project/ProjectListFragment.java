@@ -47,6 +47,7 @@ public class ProjectListFragment extends HyjUserListFragment{
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
 				null, null, null, null
