@@ -12,6 +12,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 
 
 public class HomeListFragment extends HyjUserListFragment {
@@ -50,6 +51,9 @@ public class HomeListFragment extends HyjUserListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project){
 			HyjUtil.displayToast(R.string.homeListFragment_action_display_transaction_type);
+			return true;
+		}else if(item.getItemId() == R.id.homeListFragment_action_display_exchangeAll){
+			openActivityWithFragment(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

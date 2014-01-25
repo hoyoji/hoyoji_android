@@ -25,6 +25,10 @@
                 android:id="@+id/homeListFragment_action_display_transaction_type_project"
                 android:title="@string/homeListFragment_action_display_transaction_type_project"
                 hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_display_exchangeAll"
+                android:title="@string/homeListFragment_action_display_exchangeAll"
+                hoyoji:showAsAction="always"/>
         </menu>
 	</item>
 
