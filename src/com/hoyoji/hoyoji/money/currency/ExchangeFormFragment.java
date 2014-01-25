@@ -48,14 +48,8 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		mEditTextExchangeLoaclhostCurrency.setText(exchange.getLocalCurrencyId());
 		
 		mEditTextExchangeForeignCurrency = (EditText) getView().findViewById(R.id.exchangeFormFragment_editText_foreignCurrency);
-		mEditTextExchangeForeignCurrency.setText("");
-		mEditTextExchangeForeignCurrency.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				ExchangeFormFragment.this
-				.openActivityWithFragmentForResult(ExchangeListFragment.class, R.string.exchangeListFragment_title_select_foreign_currency, null, GET_FOREIGN_CURRENCY_ID);
-			}
-		});
+		mEditTextExchangeForeignCurrency.setText(exchange.getForeignCurrencyId());
+		
 		mEditTextExchangeRate = (EditText) getView().findViewById(R.id.exchangeFormFragment_editText_rate);
 		mEditTextExchangeRate.setText(exchange.getRate());
 		

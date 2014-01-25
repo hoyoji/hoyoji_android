@@ -6,5 +6,6 @@
     <string name="homeListFragment_action_display_transaction_type">显示</string>
     <string name="homeListFragment_action_display_transaction_type_personal">个人流水</string>
     <string name="homeListFragment_action_display_transaction_type_project">项目流水</string>
+    <string name="homeListFragment_action_display_exchangeAll">汇率</string>
 
 </resources>

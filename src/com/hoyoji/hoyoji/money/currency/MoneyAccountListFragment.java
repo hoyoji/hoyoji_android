@@ -18,29 +18,29 @@ import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Project;
 
-public class ExchangeListFragment extends HyjUserListFragment{
+public class MoneyAccountListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.exchange_listfragment_exchange;
+		return R.layout.project_listfragment_project;
 	}
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.exchange_listfragment_exchange;
+		return R.menu.project_listfragment_project;
 	}
 
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
-				R.layout.exchange_listitem_exchange,
+				R.layout.project_listitem_project,
 				null,
 				new String[] { "name" },
-				new int[] { R.id.exchangeListItem_name },
+				new int[] { R.id.projectListItem_name },
 				0); 
 	}	
 
@@ -48,7 +48,7 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Exchange.class, null),
+				ContentProvider.createUri(Project.class, null),
 				null, null, null, null
 			);
 		return (Loader<Object>)loader;
@@ -62,8 +62,8 @@ public class ExchangeListFragment extends HyjUserListFragment{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.exchangeListFragment_action_exchange_addnew){
-			openActivityWithFragment(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, null);
+		if(item.getItemId() == R.id.projectListFragment_action_project_addnew){
+			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.projectFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -79,15 +79,15 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_edit, bundle);
+			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
 		}
     }  
 
 	@Override 
 	public void onDeleteListItem(Long id){
-		Exchange exchange = Exchange.load(Exchange.class, id);
-		exchange.delete();
-	    HyjUtil.displayToast("汇率删除成功");
+		Project project = Project.load(Project.class, id);
+		project.delete();
+	    HyjUtil.displayToast("项目删除成功");
 	}
 	
 	@Override
