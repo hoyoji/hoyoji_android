@@ -121,7 +121,6 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	/** Swaps fragments in the main content view */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void selectItem(int position) {
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
