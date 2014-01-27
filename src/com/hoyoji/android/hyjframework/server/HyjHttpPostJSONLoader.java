@@ -1,35 +1,18 @@
 package com.hoyoji.android.hyjframework.server;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.User;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Base64;
-import android.util.Log;
 
 
 public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
@@ -109,7 +92,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    @Override public void deliverResult(List<JSONObject> objects) {
 	        mJSONList = objects;
 
-	        if (isStarted()) {
+	        if (isStarted() && mJSONList != null) {
 	            // If the Loader is currently started, we can immediately
 	            // deliver its results.
 	            super.deliverResult(objects);
@@ -141,6 +124,13 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    protected void onStopLoading() {
 	        // Attempt to cancel the current load task if possible.
 	        cancelLoad();
+	    }
+	    /**
+	     * Handles a request to cancel a load.
+	     */
+	    @Override 
+	    public void onCanceled(List<JSONObject> objects) {
+	        super.onCanceled(objects);
 	    }
 
 	    /**

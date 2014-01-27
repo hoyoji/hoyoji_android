@@ -46,6 +46,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		mSearchView = (SearchView)getView().findViewById(R.id.friendListFragment_addFriend_searchView);
 		mSearchView.setOnQueryTextListener(this);
 	}
+	
+	@Override
+	public void initLoader(int loaderId){
+		// do not init loader... wait for the user to start search
+	}
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
@@ -122,7 +127,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		Bundle bundle = new Bundle();
 		bundle.putString("target", "findData");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		getLoaderManager().destroyLoader(0);
+		if(getLoaderManager().getLoader(0) != null){
+			getLoaderManager().destroyLoader(0);
+		}
 		getLoaderManager().restartLoader(0, bundle, this);
 		return true;
 	}

@@ -80,11 +80,15 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		if(HyjApplication.getInstance().isLoggedIn()) {
 	        //setListShown(false);  
 			if(!mIsViewInited){
-				getLoaderManager().initLoader(-1, null,this);
+				initLoader(-1);
 				onInitViewData();
 				mIsViewInited = true;
 			}
 		}
+	}
+	
+	public void initLoader(int loaderId){
+		getLoaderManager().initLoader(loaderId, null,this);
 	}
 	
 	@Override

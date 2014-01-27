@@ -75,11 +75,15 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 		if(HyjApplication.getInstance().isLoggedIn()) {
 	        //setListShown(false);  
 			if(!mIsViewInited){
-				getLoaderManager().initLoader(0, null,this);
+				initLoader(0);
 				onInitViewData();
 				mIsViewInited = true;
 			}
 		}
+	}
+	
+	public void initLoader(int loaderId){
+		getLoaderManager().initLoader(loaderId, null,this);
 	}
 	
 	@Override
