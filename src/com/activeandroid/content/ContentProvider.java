@@ -130,12 +130,19 @@ public class ContentProvider extends android.content.ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		final Class<? extends Model> type = getModelType(uri);
+		String groupBy = null;
+		String tableName = Cache.getTableName(type);
+		if(uri.toString().equalsIgnoreCase("content://com.hoyoji.hoyoji/friendCategory")){
+			groupBy = "FriendCategory";
+			tableName = "Friend";
+			projection = new String[]{"rowid as _id", "friendCategory"};
+		}
 		final Cursor cursor = Cache.openDatabase().query(
-				Cache.getTableName(type),
+				tableName,
 				projection,
 				selection,
 				selectionArgs,
-				null,
+				groupBy,
 				null,
 				sortOrder);
 

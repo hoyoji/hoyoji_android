@@ -6,23 +6,20 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.SimpleCursorTreeAdapter;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
+import com.hoyoji.hoyoji.models.FriendCategory;
 
-public class FriendListFragment extends HyjUserListFragment {
+public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	@Override
 	public Integer useContentView() {
@@ -65,44 +62,55 @@ public class FriendListFragment extends HyjUserListFragment {
 
 
 	@Override
-	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		super.onCreateLoader(arg0, arg1);
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Friend.class, null),
-				null, null, null, null
-			);
+	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
+		super.onCreateLoader(groupPos, arg1);
+		Object loader;
+		if(groupPos < 0){
+			loader = new CursorLoader(getActivity(),
+					ContentProvider.createUri(FriendCategory.class, null),
+					null, null, null, null
+				);
+		} else {
+			loader = new CursorLoader(getActivity(),
+					ContentProvider.createUri(Friend.class, null),
+					null, "friendCategory=?", new String[]{arg1.getString("friendCategory")}, null
+				);
+		}
 		return (Loader<Object>)loader;
 	}
 
 
 
 	@Override
-	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
-				R.layout.friend_listitem_friend,
-				null,
+	public SimpleCursorTreeAdapter useListViewAdapter() {
+		HyjSimpleCursorTreeAdapter adapter =  new HyjSimpleCursorTreeAdapter(getActivity(),
+				null, 
+				R.layout.friend_listitem_friend_category, 
 				new String[] { "friendCategory" },
-				new int[] { R.id.friendListItem_friend_category },
-				0); 
+				new int[] { R.id.friendListItem_friend_category }, 
+				R.layout.friend_listitem_friend,
+				new String[] { "nickName" },
+				new int[] { R.id.friendListItem_nickName });
+		adapter.setGetChildrenCursorListener(this);
+		return adapter;
 	}
 
 
 
 	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
-		if(id < 0){
-			super.onListItemClick(l, v, position, id);
-			return;
-		}
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
+			return true;
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_edit, bundle);
+			return true;
 		}
     }  
 
@@ -112,4 +120,14 @@ public class FriendListFragment extends HyjUserListFragment {
 		friend.delete();
 	    HyjUtil.displayToast("好友删除成功");
 	}
+
+
+
+	@Override
+	public void onGetChildrenCursor(Cursor groupCursor) {
+		Bundle bundle = new Bundle();
+		bundle.putString("friendCategory", groupCursor.getString(1));
+		getLoaderManager().restartLoader(groupCursor.getPosition(), bundle, this);
+	}
+
 }

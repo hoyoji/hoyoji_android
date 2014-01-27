@@ -1285,19 +1285,20 @@ containing a value of this type.
         public static final int friend_listfragment_friend=0x7f030022;
         public static final int friend_listitem_add_friend=0x7f030023;
         public static final int friend_listitem_friend=0x7f030024;
-        public static final int home_listfragment_home=0x7f030025;
-        public static final int list_view_footer_fetch_more=0x7f030026;
-        public static final int main_drawer_list_item=0x7f030027;
-        public static final int message_formfragment_friendaddrequestmessage=0x7f030028;
-        public static final int message_fragment_message=0x7f030029;
-        public static final int message_listfragment_friendaddrequestmessage=0x7f03002a;
-        public static final int moneyaccount_formfragment_moneyaccount=0x7f03002b;
-        public static final int moneyaccount_listfragment_moneyaccount=0x7f03002c;
-        public static final int moneyaccount_listitem_moneyaccount=0x7f03002d;
-        public static final int project_formfragment_project=0x7f03002e;
-        public static final int project_listfragment_project=0x7f03002f;
-        public static final int project_listitem_project=0x7f030030;
-        public static final int support_simple_spinner_dropdown_item=0x7f030031;
+        public static final int friend_listitem_friend_category=0x7f030025;
+        public static final int home_listfragment_home=0x7f030026;
+        public static final int list_view_footer_fetch_more=0x7f030027;
+        public static final int main_drawer_list_item=0x7f030028;
+        public static final int message_formfragment_friendaddrequestmessage=0x7f030029;
+        public static final int message_fragment_message=0x7f03002a;
+        public static final int message_listfragment_friendaddrequestmessage=0x7f03002b;
+        public static final int moneyaccount_formfragment_moneyaccount=0x7f03002c;
+        public static final int moneyaccount_listfragment_moneyaccount=0x7f03002d;
+        public static final int moneyaccount_listitem_moneyaccount=0x7f03002e;
+        public static final int project_formfragment_project=0x7f03002f;
+        public static final int project_listfragment_project=0x7f030030;
+        public static final int project_listitem_project=0x7f030031;
+        public static final int support_simple_spinner_dropdown_item=0x7f030032;
     }
     public static final class menu {
         public static final int activity_login=0x7f0e0000;
