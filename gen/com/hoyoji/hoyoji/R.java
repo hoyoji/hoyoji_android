@@ -1535,8 +1535,6 @@ containing a value of this type.
         public static final int settingsActivity_title=0x7f0b003c;
     }
     public static final class style {
-        public static final int ActionBarTabBarStyle=0x7f0c0087;
-        public static final int ActionBarTabStyle=0x7f0c0085;
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -1558,10 +1556,12 @@ containing a value of this type.
          */
         public static final int AppBaseTheme=0x7f0c0083;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0c0084;
-        public static final int HoYoJiDrawerMenu=0x7f0c0088;
-        public static final int LoginFormContainer=0x7f0c0086;
+        public static final int HoYoJiDrawerMenu=0x7f0c0086;
+        public static final int LoginFormContainer=0x7f0c0085;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0c0063;

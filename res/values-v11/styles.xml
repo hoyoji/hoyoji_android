@@ -18,20 +18,6 @@
   
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle</item>
-        <item name="android:actionBarTabBarStyle">@style/ActionBarTabBarStyle</item>
-    </style>
-
-	<style name="ActionBarTabStyle" parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
-	    <item name="android:height">10dp</item>
-	    <item name="android:padding">0dp</item>
-    </style>
-  <style name="ActionBarTabBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.TabBar">
-	    <item name="android:showDividers">none</item>
-	    <item name="android:dividerPadding">0dp</item>
-	    <item name="android:padding">0dp</item>
-	    <item name="android:dividerHeight">0dp</item>
-	    <item name="android:height">10dp</item>
     </style>
   
   <style name="HoYoJiDrawerMenu">  
