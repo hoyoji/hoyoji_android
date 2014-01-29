@@ -13,4 +13,10 @@
     <attr name="hoyoji_textAppearanceListItemSmall" format="reference" />  
 	
 	</declare-styleable>  
+	
+     <declare-styleable name="HyjTextField">
+       <attr name="labelText" format="string" />
+       <attr name="editText" format="string" />
+       <attr name="hintText" format="string" />
+   </declare-styleable>
 </resources>  

@@ -63,6 +63,9 @@ public class User extends HyjModel {
 	}
 
 	public UserData getUserData(){
+		if(mUserDataId == null){
+			return null;
+		}
 		return (UserData) getModel(UserData.class, mUserDataId);
 	}
 

@@ -16,8 +16,8 @@ public class FriendCategory extends HyjModel {
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
 	
-	@Column(name = "friendCategory")
-	private String mFriendCategory;
+	@Column(name = "name")
+	private String mName;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -34,18 +34,6 @@ public class FriendCategory extends HyjModel {
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
-	@Column(name = "location")
-	private String mLocation;
-	
-	@Column(name = "geoLon")
-	private String mGeoLon;
-	
-	@Column(name = "geoLat")
-	private String mGeoLat;
-	
-	@Column(name = "address")
-	private String mAddress;
-	
 	
 	public FriendCategory(){
 		super();
@@ -61,12 +49,12 @@ public class FriendCategory extends HyjModel {
 		this.mId = mId;
 	}
 
-	public String getFriendCategory() {
-		return mFriendCategory;
+	public String getName() {
+		return mName;
 	}
 
-	public void setFriendCategory(String mFriendCategory) {
-		this.mFriendCategory = mFriendCategory;
+	public void setName(String name) {
+		this.mName = name;
 	}
 
 	public String getServerRecordHash() {
@@ -108,45 +96,13 @@ public class FriendCategory extends HyjModel {
 	public void setOwnerUserId(String mOwnerUserId) {
 		this.mOwnerUserId = mOwnerUserId;
 	}
-
-	public String getLocation() {
-		return mLocation;
-	}
-
-	public void setLocation(String mLocation) {
-		this.mLocation = mLocation;
-	}
-
-	public String getGeoLon() {
-		return mGeoLon;
-	}
-
-	public void setGeoLon(String mGeoLon) {
-		this.mGeoLon = mGeoLon;
-	}
-
-	public String getGeoLat() {
-		return mGeoLat;
-	}
-
-	public void setGeoLat(String mGeoLat) {
-		this.mGeoLat = mGeoLat;
-	}
-
-	public String getAddress() {
-		return mAddress;
-	}
-
-	public void setAddress(String mAddress) {
-		this.mAddress = mAddress;
-	}
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getFriendCategory().length() == 0){
-			modelEditor.setValidationError("friendCategory", R.string.friendFormFragment_editText_hint_friend_category);
+		if(this.getName().length() == 0){
+			modelEditor.setValidationError("name", R.string.friendCategoryFormFragment_editText_hint_name);
 		} else {
-			modelEditor.removeValidationError("friendCategory");
+			modelEditor.removeValidationError("name");
 		}
 		
 	}

@@ -73,7 +73,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else {
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(Friend.class, null),
-					null, "friendCategory=?", new String[]{arg1.getString("friendCategory")}, null
+					null, "friendCategoryId=?", new String[]{arg1.getString("friendCategoryId")}, null
 				);
 		}
 		return (Loader<Object>)loader;
@@ -85,9 +85,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public SimpleCursorTreeAdapter useListViewAdapter() {
 		HyjSimpleCursorTreeAdapter adapter =  new HyjSimpleCursorTreeAdapter(getActivity(),
 				null, 
-				R.layout.friend_listitem_friend_category, 
-				new String[] { "friendCategory" },
-				new int[] { R.id.friendListItem_friend_category }, 
+				R.layout.friend_listitem_friend_group, 
+				new String[] { "name" },
+				new int[] { R.id.friendListItem_category_name }, 
 				R.layout.friend_listitem_friend,
 				new String[] { "nickName" },
 				new int[] { R.id.friendListItem_nickName });
@@ -126,7 +126,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	@Override
 	public void onGetChildrenCursor(Cursor groupCursor) {
 		Bundle bundle = new Bundle();
-		bundle.putString("friendCategory", groupCursor.getString(1));
+		bundle.putString("friendCategoryId", groupCursor.getString(groupCursor.getColumnIndex("id")));
 		getLoaderManager().restartLoader(groupCursor.getPosition(), bundle, this);
 	}
 

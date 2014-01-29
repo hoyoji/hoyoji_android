@@ -11,16 +11,21 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 
 
 public class FriendFormFragment extends HyjUserFormFragment {
-	private final static int GET_PARENT_PROJECT_ID = 1;
+	private final static int GET_FRIEND_CATEGORY_ID = 1;
 	
 	private HyjModelEditor mFriendEditor = null;
-	private EditText mEditTextFriendCategory = null;
+	private HyjSelectorField mSelectorFieldFriendCategory = null;
+	private HyjTextField mTextFieldNickName = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -41,20 +46,33 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		}
 		mFriendEditor = friend.newModelEditor();
 		
-		mEditTextFriendCategory = (EditText) getView().findViewById(R.id.friendFormFragment_editText_friend_category);
-		mEditTextFriendCategory.setText(friend.getFriendCategory());
+		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
+		mTextFieldNickName.setText(friend.getNickName());
 		
+		FriendCategory friendCategory = friend.getFriendCategory();
+		mSelectorFieldFriendCategory = (HyjSelectorField) getView().findViewById(R.id.friendFormFragment_selectorField_friend_category);
+		if(friendCategory != null){
+			mSelectorFieldFriendCategory.setText(friendCategory.getName());
+		}
+		mSelectorFieldFriendCategory.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				FriendFormFragment.this
+				.openActivityWithFragmentForResult(FriendCategoryListFragment.class, R.string.friendCategoryListFragment_title_select_friend_category, null, GET_FRIEND_CATEGORY_ID);
+			}
+		});		
 	}
 	
 	private void fillData(){
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
-		modelCopy.setFriendCategory(mEditTextFriendCategory.getText().toString().trim());
+		modelCopy.setNickName(mTextFieldNickName.getText().toString().trim());
+		modelCopy.setFriendCategoryId(mSelectorFieldFriendCategory.getModelId());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
-		
-		mEditTextFriendCategory.setError(mFriendEditor.getValidationError("friendCategory"));
+		mTextFieldNickName.setError(mFriendEditor.getValidationError("nickName"));
+		mSelectorFieldFriendCategory.setError(mFriendEditor.getValidationError("friendCategory"));
 	}
 
 	 @Override
@@ -77,10 +95,12 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
-             case GET_PARENT_PROJECT_ID:
+             case GET_FRIEND_CATEGORY_ID:
             	 if(resultCode == Activity.RESULT_OK){
-            		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
-            	//	 ((Project)mProjectEditor.getModelCopy()).s
+            		long _id = data.getLongExtra("MODEL_ID", -1);
+            		FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, _id);
+            		mSelectorFieldFriendCategory.setText(friendCategory.getName());
+            		mSelectorFieldFriendCategory.setModelId(friendCategory.getId());
             	 }
              case 2:
 

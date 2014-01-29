@@ -22,8 +22,8 @@ public class Friend extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 	
-	@Column(name = "friendCategory")
-	private String mFriendCategory;
+	@Column(name = "friendCategoryId")
+	private String mFriendCategoryId;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -74,7 +74,15 @@ public class Friend extends HyjModel {
 	public void setId(String mId) {
 		this.mId = mId;
 	}
+	
+	public String getNickName() {
+		return mNickName;
+	}
 
+	public void setNickName(String nickName) {
+		this.mNickName = nickName;
+	}
+	
 	public String getFriendUserId() {
 		return mFriendUserId;
 	}
@@ -83,13 +91,23 @@ public class Friend extends HyjModel {
 		this.mFriendUserId = mFriendUserId;
 	}
 
-
-	public String getFriendCategory() {
-		return mFriendCategory;
+	public FriendCategory getFriendCategory() {
+		if(mFriendCategoryId == null){
+			return null;
+		}
+		return (FriendCategory) getModel(FriendCategory.class, mFriendCategoryId);
 	}
 
-	public void setFriendCategory(String mFriendCategory) {
-		this.mFriendCategory = mFriendCategory;
+	public void setFriendCategory(FriendCategory mFriendCategory) {
+		this.mFriendCategoryId = mFriendCategory.getId();
+	}
+	
+	public String getFriendCategoryId() {
+		return mFriendCategoryId;
+	}
+
+	public void setFriendCategoryId(String mFriendCategoryId) {
+		this.mFriendCategoryId = mFriendCategoryId;
 	}
 
 	public String getServerRecordHash() {
@@ -166,13 +184,16 @@ public class Friend extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getFriendCategory().length() == 0){
+		if(this.getFriendCategoryId() == null){
 			modelEditor.setValidationError("friendCategory", R.string.friendFormFragment_editText_hint_friend_category);
 		} else {
 			modelEditor.removeValidationError("friendCategory");
 		}
-		
+		if(this.getNickName().length() == 0){
+			modelEditor.setValidationError("nickName", R.string.friendFormFragment_editText_hint_nickName);
+		} else {
+			modelEditor.removeValidationError("nickName");
+		}		
 	}
 
-	
 }

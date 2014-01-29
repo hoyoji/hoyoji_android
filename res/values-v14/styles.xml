@@ -10,6 +10,6 @@
            <item name="hoyoji_listPreferredItemHeightSmall">?android:attr/listPreferredItemHeightSmall</item>  
            <item name="hoyoji_textAppearanceListItemSmall">?android:attr/textAppearanceListItemSmall</item>  
            <item name="hoyoji_activatedBackgroundIndicator">?android:attr/activatedBackgroundIndicator</item>  
-       </style>  
-
+       </style> 
+        
 </resources>

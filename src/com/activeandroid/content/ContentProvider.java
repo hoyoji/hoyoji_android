@@ -132,11 +132,11 @@ public class ContentProvider extends android.content.ContentProvider {
 		final Class<? extends Model> type = getModelType(uri);
 		String groupBy = null;
 		String tableName = Cache.getTableName(type);
-		if(uri.toString().equalsIgnoreCase("content://com.hoyoji.hoyoji/friendCategory")){
-			groupBy = "FriendCategory";
-			tableName = "Friend";
-			projection = new String[]{"rowid as _id", "friendCategory"};
-		}
+//		if(uri.toString().equalsIgnoreCase("content://com.hoyoji.hoyoji/friendCategory")){
+//			groupBy = "FriendCategory";
+//			tableName = "Friend";
+//			projection = new String[]{"rowid as _id", "friendCategory"};
+//		}
 		final Cursor cursor = Cache.openDatabase().query(
 				tableName,
 				projection,
