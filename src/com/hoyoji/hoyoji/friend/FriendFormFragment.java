@@ -46,12 +46,15 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		}
 		mFriendEditor = friend.newModelEditor();
 		
+				
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
 		mTextFieldNickName.setText(friend.getNickName());
 		
 		FriendCategory friendCategory = friend.getFriendCategory();
 		mSelectorFieldFriendCategory = (HyjSelectorField) getView().findViewById(R.id.friendFormFragment_selectorField_friend_category);
+		
 		if(friendCategory != null){
+			mSelectorFieldFriendCategory.setModelId(friendCategory.getId());
 			mSelectorFieldFriendCategory.setText(friendCategory.getName());
 		}
 		mSelectorFieldFriendCategory.setOnClickListener(new OnClickListener(){
@@ -71,8 +74,8 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
-		mTextFieldNickName.setError(mFriendEditor.getValidationError("nickName"));
 		mSelectorFieldFriendCategory.setError(mFriendEditor.getValidationError("friendCategory"));
+		mTextFieldNickName.setError(mFriendEditor.getValidationError("nickName"));
 	}
 
 	 @Override
