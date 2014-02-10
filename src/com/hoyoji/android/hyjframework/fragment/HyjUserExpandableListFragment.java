@@ -88,7 +88,12 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 	
 	public void initLoader(int loaderId){
-		getLoaderManager().initLoader(loaderId, null,this);
+		Loader<Object> loader = getLoaderManager().getLoader(loaderId);
+		if(loader != null && !loader.isReset()){
+			getLoaderManager().restartLoader(loaderId, null,this);
+		} else {
+			getLoaderManager().initLoader(loaderId, null,this);
+		}
 	}
 	
 	@Override
@@ -128,10 +133,16 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Object> loader, Object cursor) {
+		SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter) getListView().getExpandableListAdapter();
 		if(loader.getId() < 0){
-			((SimpleCursorTreeAdapter) getListView().getExpandableListAdapter()).changeCursor((Cursor)cursor);
+			adapter.setGroupCursor((Cursor)cursor);
 		} else {
-			((SimpleCursorTreeAdapter) getListView().getExpandableListAdapter()).setChildrenCursor(loader.getId(), (Cursor)cursor);
+			// 
+			if(adapter.getGroupCount() > loader.getId()){
+				adapter.setChildrenCursor(loader.getId(), (Cursor)cursor);
+			} else {
+				getLoaderManager().destroyLoader(loader.getId());
+			}
 		}
 		// The list should now be shown. 
         if (isResumed()) {
@@ -144,18 +155,23 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	
 	@Override
 	public void onLoaderReset(Loader<Object> loader) {
+		SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter) getListView().getExpandableListAdapter();
 		if(loader.getId() < 0){
-			((SimpleCursorTreeAdapter) getListView().getExpandableListAdapter()).changeCursor(null);
+			adapter.setGroupCursor(null);
 		} else {
-			((SimpleCursorTreeAdapter) getListView().getExpandableListAdapter()).setChildrenCursor(loader.getId(), null);
+			if(adapter.getGroupCount() > loader.getId()){
+				adapter.setChildrenCursor(loader.getId(), null);
+			} else {
+				getLoaderManager().destroyLoader(loader.getId());
+			}
 		}
 	}	
 
+	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		return null;
 	}
-
 
 
 	public void openActivityWithFragment(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle){
@@ -191,17 +207,19 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
 				int type = ExpandableListView
 			            .getPackedPositionType(info.packedPosition);
-
-			    if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-			        int groupPos = ExpandableListView
+				   int groupPos = ExpandableListView
 			                .getPackedPositionGroup(info.packedPosition);
+			     
+			    if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 			        int childPos = ExpandableListView
 			                .getPackedPositionChild(info.packedPosition);
 				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
 					onDeleteListItem(itemId);
 					return true;
 			    } else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-			        return true;
+			    	 Long itemId = getListView().getExpandableListAdapter().getGroupId(groupPos);
+					onDeleteListGroup(groupPos, itemId);
+					return true;
 			    }
 				break;
 		}
@@ -212,13 +230,15 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
-		getListView();
-		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
+		//if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
 			menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
-		}
+		//}
 	}	
 	
 	public void onDeleteListItem(Long id){
+	}
+	
+	public void onDeleteListGroup(int groupPos, Long id){
 	}
 	
 

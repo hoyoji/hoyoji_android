@@ -6,12 +6,16 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
@@ -20,7 +24,8 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
-
+	public final static int EDIT_CATEGORY_ITEM = 1;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.friend_listfragment_friend;
@@ -65,7 +70,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 		super.onCreateLoader(groupPos, arg1);
 		Object loader;
-		if(groupPos < 0){
+		if(groupPos < 0){ // 这个是分类
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(FriendCategory.class, null),
 					null, null, null, null
@@ -95,7 +100,56 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		return adapter;
 	}
 
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if(!getUserVisibleHint()){
+			return super.onContextItemSelected(item);
+		}
+		switch (item.getItemId()) {
+			case EDIT_CATEGORY_ITEM:
+				ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+				int type = ExpandableListView
+			            .getPackedPositionType(info.packedPosition);
 
+			    if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+			        int groupPos = ExpandableListView
+			                .getPackedPositionGroup(info.packedPosition);
+				    Long itemId = getListView().getExpandableListAdapter().getGroupId(groupPos);
+				    Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", itemId);
+					openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_edit, bundle);
+					return true;
+			    } 
+				break;
+		}
+		return super.onContextItemSelected(item);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
+		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
+			menu.add(EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, R.string.friendCategoryFormFragment_title_edit);
+		}
+	}		
+	
+//	@Override  
+//	public boolean onGroupClick(ExpandableListView parent, View v,
+//			int groupPosition, long id) {
+////		if(getActivity().getCallingActivity() != null){
+////			Intent intent = new Intent();
+////			intent.putExtra("MODEL_ID", id);
+////			getActivity().setResult(Activity.RESULT_OK, intent);
+////			getActivity().finish();
+////			return true;
+////		} else {
+////			Bundle bundle = new Bundle();
+////			bundle.putLong("MODEL_ID", id);
+////			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_edit, bundle);
+////			return true;
+////		}
+//    } 
 
 	@Override  
 	public boolean onChildClick(ExpandableListView parent, View v,
@@ -121,13 +175,30 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	    HyjUtil.displayToast("好友删除成功");
 	}
 
+	@Override 
+	public void onDeleteListGroup(int groupPos, Long id){
+		if(getListView().getExpandableListAdapter().getChildrenCount(groupPos) > 0){
+			//new Select().from(Friend.class).where("friendCategoryId=?", id);
+			HyjUtil.displayToast("该好友分类下包含好友，不能被删除");
+		} else {
+			FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
+			friendCategory.delete();
+		    HyjUtil.displayToast("好友分类删除成功");
+		}
+	}
 
 
 	@Override
 	public void onGetChildrenCursor(Cursor groupCursor) {
 		Bundle bundle = new Bundle();
 		bundle.putString("friendCategoryId", groupCursor.getString(groupCursor.getColumnIndex("id")));
-		getLoaderManager().restartLoader(groupCursor.getPosition(), bundle, this);
+		int groupPos = groupCursor.getPosition();
+		Loader<Object> loader = getLoaderManager().getLoader(groupPos);
+	    if (loader != null && !loader.isReset() ) { 
+	    	getLoaderManager().restartLoader(groupPos, bundle, this);
+	    } else {
+	    	getLoaderManager().initLoader(groupPos, bundle, this);
+	    }
 	}
 
 }
