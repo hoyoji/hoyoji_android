@@ -21,13 +21,31 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "amount")
 	private Double mAmount;
 	
-	@Column(name = "data")
+	@Column(name = "pictureId")
+	private Double mPictureId;
+	
+	@Column(name = "date")
 	private String mDate;
 
 	@Column(name = "expenseType")
 	private String mExpenseType;
 
+	@Column(name = "friendUserId")
+	private String mFriendUserId;
+
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+
 	
+	
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private String mLastClientUpdateTime;
 
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
