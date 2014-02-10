@@ -21,8 +21,6 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "amount")
 	private Double mAmount;
 	
-	
-	
 	@Override
 	public void validate(HyjModelEditor hyjModelEditor) {
 		// TODO Auto-generated method stub
