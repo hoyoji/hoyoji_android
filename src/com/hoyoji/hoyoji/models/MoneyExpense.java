@@ -21,6 +21,32 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "amount")
 	private Double mAmount;
 	
+	@Column(name = "data")
+	private String mDate;
+
+	@Column(name = "expenseType")
+	private String mExpenseType;
+
+	
+
+	@Column(name = "lastSyncTime")
+	private String mLastSyncTime;
+
+	@Column(name = "ownerUserId")
+	private String mOwnerUserId;
+
+	@Column(name = "location")
+	private String mLocation;
+	
+	@Column(name = "geoLon")
+	private String mGeoLon;
+	
+	@Column(name = "geoLat")
+	private String mGeoLat;
+	
+	@Column(name = "address")
+	private String mAddress;
+	
 	@Override
 	public void validate(HyjModelEditor hyjModelEditor) {
 		// TODO Auto-generated method stub
