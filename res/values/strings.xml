@@ -3,6 +3,7 @@
 
     <string name="app_name">好友记</string>
     
+    <string name="app_please_select">请选择</string>
     
     <string name="app_action_more">更多</string>
     <string name="app_action_search">查找</string>
@@ -14,8 +15,8 @@
     
     <string name="app_listview_no_content">无内容</string>
     <string name="app_listview_footer_fetch_no_more">无更多</string>
-    <string name="app_listview_footer_fetch_more">更多...</string>
-    <string name="app_listview_footer_fetching_more">加载中...</string>
+    <string name="app_listview_footer_fetch_more">更多&#8230;</string>
+    <string name="app_listview_footer_fetching_more">加载中&#8230;</string>
 	
 	<string name="server_connection_disconnected">您尚未连接到网络</string>
     <string name="server_connection_error">无法连接到服务器</string>

@@ -11,6 +11,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
@@ -26,6 +27,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldNickName = null;
+	private HyjDateTimeField mDateTimeDate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -63,13 +65,19 @@ public class FriendFormFragment extends HyjUserFormFragment {
 				FriendFormFragment.this
 				.openActivityWithFragmentForResult(FriendCategoryListFragment.class, R.string.friendCategoryListFragment_title_select_friend_category, null, GET_FRIEND_CATEGORY_ID);
 			}
-		});		
+		});
+		
+		
+		mDateTimeDate = (HyjDateTimeField) getView().findViewById(R.id.friendFormFragment_textField_datetime);
+		
 	}
 	
 	private void fillData(){
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText().toString().trim());
 		modelCopy.setFriendCategoryId(mSelectorFieldFriendCategory.getModelId());
+
+		HyjUtil.displayToast(this.mDateTimeDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){

@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework.activity;
 
+import java.util.Date;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -57,6 +59,7 @@ public abstract class HyjActivity extends ActionBarActivity {
 		mDialogFragment = HyjDialogFragment.newInstance(title, R.string.alert_dialog_ok, -1, -1);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
+	
 	public void displayDialog(int title) {
 		if(mDialogFragment != null){
 			mDialogFragment.dismiss();
@@ -65,6 +68,7 @@ public abstract class HyjActivity extends ActionBarActivity {
 		mDialogFragment = HyjDialogFragment.newInstance(title, R.string.alert_dialog_ok, -1, -1);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
+
 	public void displayDialog(int title, int positiveButton, int negativeButton, int NeutralButton, DialogCallbackListener dialogCallback) {
 		this.mDialogCallback = dialogCallback;
 		
@@ -81,14 +85,17 @@ public abstract class HyjActivity extends ActionBarActivity {
 	} 
 
 	
-	public class DialogCallbackListener {
-		public void doPositiveClick() {}
+	public static class DialogCallbackListener {
 		public void doNegativeClick() {}
 		public void doNeutralClick() {}
+		public void doPositiveClick(Object object) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
-	private DialogCallbackListener mDialogCallback;
-	private DialogFragment mDialogFragment;
+	public DialogCallbackListener mDialogCallback;
+	public DialogFragment mDialogFragment;
 	private boolean mIsViewInited = false;
 	
 	@Override
@@ -137,11 +144,11 @@ public abstract class HyjActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 	
-	public void dialogDoPositiveClick() {
+	public void dialogDoPositiveClick(Object object) {
 		mDialogFragment.dismiss();
 		mDialogFragment = null;
 		if(mDialogCallback != null){
-			mDialogCallback.doPositiveClick();
+			mDialogCallback.doPositiveClick(object);
 		}
 	}
 	
@@ -199,4 +206,5 @@ public abstract class HyjActivity extends ActionBarActivity {
 			e.printStackTrace();
 		}
 	}
+
 }

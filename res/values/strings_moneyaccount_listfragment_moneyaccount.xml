@@ -2,6 +2,7 @@
 <resources>
 
     <string name="moneyAccountListFragment_action_moneyAccount_addnew">创建账户</string>
+    <string name="moneyAccountListFragment_title_select_moneyAccount">选择账户</string>
     <string name="moneyAccountListFragment_title_select_currency">选择币种</string>
     
 </resources>

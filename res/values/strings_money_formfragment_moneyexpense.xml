@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    
+   <string name="moneyExpenseFormFragment_title_addnew">新增支出</string>
+   <string name="moneyExpenseFormFragment_title_edit">修改支出</string>
+   
+   <string name="moneyExpenseFormFragment_textView_picture">图片</string>
+   <string name="moneyExpenseFormFragment_editText_hint_picture">请导入图片</string>
+   
+   <string name="moneyExpenseFormFragment_textView_datetime">时间</string>
+   <string name="moneyExpenseFormFragment_editText_hint_datetime">请选择时间</string>
+   
+   <string name="moneyExpenseFormFragment_textView_amount">金额</string>
+   <string name="moneyExpenseFormFragment_editText_hint_amount">请输入金额</string>
+   
+   <string name="moneyExpenseFormFragment_textView_moneyAccount">账户</string>
+   <string name="moneyExpenseFormFragment_editText_hint_moneyAccount">请选择账户</string>
+   
+   <string name="moneyExpenseFormFragment_textView_project">项目</string>
+   <string name="moneyExpenseFormFragment_editText_hint_project">请选择项目</string>
+   
+   <string name="moneyExpenseFormFragment_textView_moneyExpenseCategory">分类</string>
+   <string name="moneyExpenseFormFragment_editText_hint_moneyExpenseCategory">请选择分类</string>
+   
+   <string name="moneyExpenseFormFragment_textView_friend">收款方</string>
+   <string name="moneyExpenseFormFragment_editText_hint_friend">无收款方</string>
+   
+   <string name="moneyExpenseFormFragment_textView_remark">备注</string>
+   <string name="moneyExpenseFormFragment_editText_hint_remark">无备注</string>
+    
+    
+</resources>

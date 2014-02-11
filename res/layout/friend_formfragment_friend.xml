@@ -25,6 +25,21 @@
             hyj:labelText="@string/friendFormFragment_textView_nickName"
             hyj:hintText="@string/friendFormFragment_editText_hint_nickName"
         />
+       
+    <com.hoyoji.android.hyjframework.view.HyjDateTimeField 
+            android:id="@+id/friendFormFragment_textField_datetime"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="日期"
+            hyj:hintText="请输入日期"
+        />
+    <com.hoyoji.android.hyjframework.view.HyjNumericField 
+            android:id="@+id/friendFormFragment_textField_money"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="金额"
+            hyj:hintText="请输入金额"
+        />
     
 	<Button
 	    android:id="@id/button_save"

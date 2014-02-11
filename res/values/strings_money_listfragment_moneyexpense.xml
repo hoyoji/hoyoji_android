@@ -2,7 +2,6 @@
 <resources>
 
     <string name="projectListFragment_action_project_addnew">创建项目</string>
-    <string name="projectListFragment_title_select_project">选择项目</string>
     <string name="projectListFragment_title_select_parent_project">选择上级项目</string>
     
 </resources>

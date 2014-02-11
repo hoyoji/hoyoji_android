@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.List;
 import java.util.UUID;
 
 import android.provider.BaseColumns;
@@ -20,8 +19,8 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "pictureId")
 	private String mPictureId;
 	
-	@Column(name = "date")
-	private String mDate;
+	@Column(name = "datetime")
+	private String mDatetime;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -80,13 +79,17 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "address")
 	private String mAddress;	
 	
+	public MoneyExpense(){
+		super();
+		mId = UUID.randomUUID().toString();
+	}
+	
 	@Override
 	public void validate(HyjModelEditor hyjModelEditor) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public String getId() {
 		return mId;
 	}
@@ -95,171 +98,211 @@ public class MoneyExpense extends HyjModel{
 		this.mId = mId;
 	}
 
-	public String getmPictureId() {
+	public String getPictureId() {
 		return mPictureId;
 	}
 
-	public void setmPictureId(String mPictureId) {
+	public void setPictureId(String mPictureId) {
 		this.mPictureId = mPictureId;
 	}
 
-	public String getmDate() {
-		return mDate;
+	public String getDatetime() {
+		return mDatetime;
 	}
 
-	public void setmDate(String mDate) {
-		this.mDate = mDate;
+	public void setDatetime(String mDatetime) {
+		this.mDatetime = mDatetime;
 	}
 
-	public Double getmAmount() {
+	public Double getAmount() {
 		return mAmount;
 	}
 
-	public void setmAmount(Double mAmount) {
+	public void setAmount(Double mAmount) {
 		this.mAmount = mAmount;
 	}
 	
-	public String getmExpenseType() {
+	public String getExpenseType() {
 		return mExpenseType;
 	}
 
-	public void setmExpenseType(String mExpenseType) {
+	public void setExpenseType(String mExpenseType) {
 		this.mExpenseType = mExpenseType;
 	}
 
-	public String getmFriendUserId() {
+	public Friend getFriend(){
+		if(mFriendUserId != null){
+			return (Friend) getModel(Friend.class, mFriendUserId);
+		}else if(mLocalFriendId != null){
+			return (Friend) getModel(Friend.class, mLocalFriendId);
+		}
+		return null;
+	}
+	
+	public void setFriend(Friend mFriend) {
+		if(mFriend.getFriendUserId() != null){
+			this.mFriendUserId = mFriend.getId();
+		}
+		else{
+			this.mLocalFriendId = mFriend.getId();
+		}
+	}
+	
+	public String getFriendUserId() {
 		return mFriendUserId;
 	}
 
-	public void setmFriendUserId(String mFriendUserId) {
+	public void setFriendUserId(String mFriendUserId) {
 		this.mFriendUserId = mFriendUserId;
 	}
 
-	public String getmLocalFriendId() {
+	public String getLocalFriendId() {
 		return mLocalFriendId;
 	}
 
-	public void setmLocalFriendId(String mLocalFriendId) {
+	public void setLocalFriendId(String mLocalFriendId) {
 		this.mLocalFriendId = mLocalFriendId;
 	}
 
-	public String getmFriendAccountId() {
+	public String getFriendAccountId() {
 		return mFriendAccountId;
 	}
 
-	public void setmFriendAccountId(String mFriendAccountId) {
+	public void setFriendAccountId(String mFriendAccountId) {
 		this.mFriendAccountId = mFriendAccountId;
 	}
 
-	public String getmMoneyAccountId() {
+	public MoneyAccount getMoneyAccount(){
+		if(mMoneyAccountId == null){
+			return null;
+		}
+		return (MoneyAccount) getModel(MoneyAccount.class, mMoneyAccountId);
+	}
+	
+	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
+		this.mMoneyAccountId = mMoneyAccount.getId();
+	}
+	
+	public String getMoneyAccountId() {
 		return mMoneyAccountId;
 	}
 
-	public void setmMoneyAccountId(String mMoneyAccountId) {
+	public void setMoneyAccountId(String mMoneyAccountId) {
 		this.mMoneyAccountId = mMoneyAccountId;
 	}
 
-	public String getmProjectId() {
+	public Project getProject(){
+		if(mProjectId == null){
+			return null;
+		}
+		return (Project) getModel(Project.class, mProjectId);
+	}
+	
+	public void setProject(Project mProject) {
+		this.mProjectId = mProject.getId();
+	}
+	
+	public String getProjectId() {
 		return mProjectId;
 	}
 
-	public void setmProjectId(String mProjectId) {
+	public void setProjectId(String mProjectId) {
 		this.mProjectId = mProjectId;
 	}
 
-	public String getmMoneyExpenseCategory() {
+	public String getMoneyExpenseCategory() {
 		return mMoneyExpenseCategory;
 	}
 
-	public void setmMoneyExpenseCategory(String mMoneyExpenseCategory) {
+	public void setMoneyExpenseCategory(String mMoneyExpenseCategory) {
 		this.mMoneyExpenseCategory = mMoneyExpenseCategory;
 	}
 
-	public Double getmExchangeRate() {
+	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
 
-	public void setmExchangeRate(Double mExchangeRate) {
+	public void setExchangeRate(Double mExchangeRate) {
 		this.mExchangeRate = mExchangeRate;
 	}
 
-	public String getmRemark() {
+	public String getRemark() {
 		return mRemark;
 	}
 
-	public void setmRemark(String mRemark) {
+	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
 
-	public String getmServerRecordHash() {
+	public String getServerRecordHash() {
 		return mServerRecordHash;
 	}
 
-	public void setmServerRecordHash(String mServerRecordHash) {
+	public void setServerRecordHash(String mServerRecordHash) {
 		this.mServerRecordHash = mServerRecordHash;
 	}
 
-	public String getmLastServerUpdateTime() {
+	public String getLastServerUpdateTime() {
 		return mLastServerUpdateTime;
 	}
 
-	public void setmLastServerUpdateTime(String mLastServerUpdateTime) {
+	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
 		this.mLastServerUpdateTime = mLastServerUpdateTime;
 	}
 
-	public String getmLastClientUpdateTime() {
+	public String getLastClientUpdateTime() {
 		return mLastClientUpdateTime;
 	}
 
-	public void setmLastClientUpdateTime(String mLastClientUpdateTime) {
+	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
-	public String getmLastSyncTime() {
+	public String getLastSyncTime() {
 		return mLastSyncTime;
 	}
 
-	public void setmLastSyncTime(String mLastSyncTime) {
+	public void setLastSyncTime(String mLastSyncTime) {
 		this.mLastSyncTime = mLastSyncTime;
 	}
 
-	public String getmOwnerUserId() {
+	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
 
-	public void setmOwnerUserId(String mOwnerUserId) {
+	public void setOwnerUserId(String mOwnerUserId) {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getmLocation() {
+	public String getLocation() {
 		return mLocation;
 	}
 
-	public void setmLocation(String mLocation) {
+	public void setLocation(String mLocation) {
 		this.mLocation = mLocation;
 	}
 
-	public String getmGeoLon() {
+	public String getGeoLon() {
 		return mGeoLon;
 	}
 
-	public void setmGeoLon(String mGeoLon) {
+	public void setGeoLon(String mGeoLon) {
 		this.mGeoLon = mGeoLon;
 	}
 
-	public String getmGeoLat() {
+	public String getGeoLat() {
 		return mGeoLat;
 	}
 
-	public void setmGeoLat(String mGeoLat) {
+	public void setGeoLat(String mGeoLat) {
 		this.mGeoLat = mGeoLat;
 	}
 
-	public String getmAddress() {
+	public String getAddress() {
 		return mAddress;
 	}
 
-	public void setmAddress(String mAddress) {
+	public void setAddress(String mAddress) {
 		this.mAddress = mAddress;
 	}
 
