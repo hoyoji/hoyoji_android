@@ -27,7 +27,7 @@ public abstract class HyjUserActivity extends HyjActivity {
 				displayDialog(R.string.loginActivity_alert_require_login, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 						new DialogCallbackListener() {
 							@Override
-							public void doPositiveClick() {
+							public void doPositiveClick(Object object) {
 								Intent intent = new Intent(
 										HyjUserActivity.this,
 										LoginActivity.class);

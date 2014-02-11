@@ -54,7 +54,7 @@ public class HyjDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((HyjActivity) getActivity())
-										.dialogDoPositiveClick();
+										.dialogDoPositiveClick(null);
 							}
 						});
 		if(negativeButton != -1){
