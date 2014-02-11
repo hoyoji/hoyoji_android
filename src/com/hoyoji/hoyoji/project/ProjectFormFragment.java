@@ -11,6 +11,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
 
@@ -19,7 +20,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	
 	private HyjModelEditor mProjectEditor = null;
-	private EditText mEditTextProjectName = null;
+	private HyjTextField mTextFieldProjectName = null;
 	private EditText mEditTextParentProject = null;
 	
 	@Override
@@ -41,8 +42,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		}
 		mProjectEditor = project.newModelEditor();
 		
-		mEditTextProjectName = (EditText) getView().findViewById(R.id.projectFormFragment_editText_projectName);
-		mEditTextProjectName.setText(project.getName());
+		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectName);
+		mTextFieldProjectName.setText(project.getName());
 		
 		mEditTextParentProject = (EditText) getView().findViewById(R.id.projectFormFragment_editText_parentProject);
 		mEditTextParentProject.setText("");
@@ -59,13 +60,13 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		Project modelCopy = (Project) mProjectEditor.getModelCopy();
-		modelCopy.setName(mEditTextProjectName.getText().toString().trim());
+		modelCopy.setName(mTextFieldProjectName.getText().toString().trim());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		
-		mEditTextProjectName.setError(mProjectEditor.getValidationError("name"));
+		mTextFieldProjectName.setError(mProjectEditor.getValidationError("name"));
 		
 	}
 

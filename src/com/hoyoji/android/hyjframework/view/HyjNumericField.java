@@ -55,5 +55,11 @@ public class HyjNumericField extends LinearLayout {
 		return mEditTextEdit.getText();
 	}
 	
+	public void setNumber(Double number){
+		mEditTextEdit.setText(number.toString());
+	}
 	
+	public Double getNumber(){
+		return Double.parseDouble(getText().toString());
+	}
 }
