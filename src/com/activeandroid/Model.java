@@ -157,7 +157,7 @@ public abstract class Model {
 		if (mId == null) {
 			mId = db.insert(mTableInfo.getTableName(), null, values);
 			if(mId == -1){
-				db.update(mTableInfo.getTableName(), values, "id=" + values.getAsString("id"), null);
+				db.update(mTableInfo.getTableName(), values, "id=?",  new String[]{values.getAsString("id")} );
 			}
 		}
 		else {

@@ -17,7 +17,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 			entity = new Select().from(modelClass).where("id=?", id).executeSingle();
 		}
 		return (HyjModel) entity;
-	}
+	}	
 	
 	@Override
 	protected HyjModel clone() {

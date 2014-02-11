@@ -75,7 +75,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		fillData();
-		
+
 		mProjectEditor.validate();
 		
 		if(mProjectEditor.hasValidationErrors()){

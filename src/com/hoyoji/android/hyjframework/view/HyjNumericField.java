@@ -1,7 +1,5 @@
 package com.hoyoji.android.hyjframework.view;
 
-import java.math.BigDecimal;
-
 import com.hoyoji.hoyoji.R;
 
 import android.content.Context;
