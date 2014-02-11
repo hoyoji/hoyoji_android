@@ -21,9 +21,12 @@ public class HyjBlankUserActivity extends HyjUserActivity {
 		Intent intent = getIntent();
 		String title = intent.getStringExtra("TITLE");
 		this.getSupportActionBar().setTitle(title);
-		String fragmentClassName = getIntent().getStringExtra("FRAGMENT_NAME");
-		Class<? extends Fragment> fragmentClass = HyjApplication.getInstance().getFragmentClassMap(fragmentClassName);
-		addFragment(fragmentClass);
+		
+	    if(getSupportFragmentManager().getFragments() == null){
+			String fragmentClassName = getIntent().getStringExtra("FRAGMENT_NAME");
+			Class<? extends Fragment> fragmentClass = HyjApplication.getInstance().getFragmentClassMap(fragmentClassName);
+			addFragment(fragmentClass);
+	    }
 	}
 	
 	

@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework.view;
 
+import java.math.BigDecimal;
+
 import com.hoyoji.hoyoji.R;
 
 import android.content.Context;
@@ -55,5 +57,11 @@ public class HyjNumericField extends LinearLayout {
 		return mEditTextEdit.getText();
 	}
 	
+	public void setNumber(Double number){
+		mEditTextEdit.setText(number.toString());
+	}
 	
+	public Double getNumber(){
+		return Double.valueOf(getText().toString());
+	}
 }

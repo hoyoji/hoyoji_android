@@ -41,7 +41,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		}
 		mProjectEditor = project.newModelEditor();
 		
-		mEditTextProjectName = (EditText) getView().findViewById(R.id.projectFormFragment_editText_projectName);
+		mEditTextProjectName = (EditText) getView().findViewById(R.id.projectFormFragment_textField_projectName);
 		mEditTextProjectName.setText(project.getName());
 		
 		mEditTextParentProject = (EditText) getView().findViewById(R.id.projectFormFragment_editText_parentProject);
