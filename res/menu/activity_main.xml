@@ -10,7 +10,7 @@
             <item
                 android:id="@+id/mainActivity_action_money_addnew_expense"
                 android:title="支出"
-                hoyoji:showAsAction="never"/>
+                hoyoji:showAsAction="always"/>
             <item
                 android:id="@+id/mainActivity_action_money_addnew_income"
                 android:title="收入"

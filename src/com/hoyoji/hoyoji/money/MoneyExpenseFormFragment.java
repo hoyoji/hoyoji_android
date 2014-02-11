@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
+import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
@@ -22,17 +22,18 @@ import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
-import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
 public class MoneyExpenseFormFragment extends HyjUserFormFragment {
-	private final static int GET_FRIEND_CATEGORY_ID = 1;
+	private final static int GET_MONEYACCOUNT_ID = 1;
+	private final static int GET_PROJECT_ID = 2;
+	private final static int GET_FRIEND_ID = 3;
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
 	private HyjTextField mTextFieldpicture = null;
 	private HyjDateTimeField mDateTimeFieldDatetime = null;
-	private HyjTextField mTextFieldAmount = null;
+	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
@@ -60,8 +61,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDatetime = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_datetime);		
 		
-		mTextFieldAmount = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
-		mTextFieldAmount.setNumber(moneyExpense.getAmount());
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
+		mNumericAmount.setNumber(moneyExpense.getAmount());
 		
 		MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_moneyAccount);
@@ -73,8 +74,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseFormFragment.this
-				.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_FRIEND_CATEGORY_ID);
+				MoneyExpenseFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -88,8 +88,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseFormFragment.this
-				.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_FRIEND_CATEGORY_ID);
+				MoneyExpenseFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -104,7 +103,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyExpenseFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_CATEGORY_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
 			}
 		});
 		
@@ -116,13 +115,22 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private void fillData(){
 		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
 		modelCopy.setDatetime(mDateTimeFieldDatetime.getText());
-		modelCopy.setAmount(mTextFieldAmount.getNumber());
+		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
-		modelCopy.setFriend(mSelectorFieldFriend.getModelId());
+		
+		Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+		
+		if(friend != null){
+			if(friend.getFriendUserId() != null){
+				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
+			}
+			else{
+				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
+			}
+		}
 		
 		modelCopy.setRemark(mTextFieldRemark.getText().toString().trim());
-		
 		
 		HyjUtil.displayToast(this.mDateTimeFieldDatetime.getText().toString());
 	}
@@ -130,9 +138,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDatetime.setError(mMoneyExpenseEditor.getValidationError("datetime"));
-		mTextFieldAmount.setError(mMoneyExpenseEditor.getValidationError("amount"));
-		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
-		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
+		mNumericAmount.setError(mMoneyExpenseEditor.getValidationError("amount"));
+		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor.getValidationError("moneyAccount"));
+		mSelectorFieldProject.setError(mMoneyExpenseEditor.getValidationError("project"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
 		mTextFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
 	}
@@ -157,14 +165,28 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
-             case GET_FRIEND_CATEGORY_ID:
+             case GET_MONEYACCOUNT_ID:
+	        	 if(resultCode == Activity.RESULT_OK){
+	         		long _id = data.getLongExtra("MODEL_ID", -1);
+	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
+	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName());
+	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
+	         	 }
+             case GET_PROJECT_ID:
+	        	 if(resultCode == Activity.RESULT_OK){
+	         		long _id = data.getLongExtra("MODEL_ID", -1);
+	         		Project project = Project.load(Project.class, _id);
+	         		mSelectorFieldProject.setText(project.getName());
+	         		mSelectorFieldProject.setModelId(project.getId());
+	         	 }
+             case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
-            		FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, _id);
-            		mSelectorFieldFriend.setText(friendCategory.getName());
-            		mSelectorFieldFriend.setModelId(friendCategory.getId());
+            		Friend friend = Friend.load(Friend.class, _id);
+            		mSelectorFieldFriend.setText(friend.getNickName());
+            		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
-             case 2:
+            
 
           }
     }
