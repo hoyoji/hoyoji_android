@@ -72,6 +72,9 @@ public class ProjectListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(id == -1) {
+			 return;
+		}
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
