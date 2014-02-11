@@ -57,11 +57,11 @@ public class HyjNumericField extends LinearLayout {
 		return mEditTextEdit.getText();
 	}
 	
-	public void setNumber(BigDecimal number){
+	public void setNumber(Double number){
 		mEditTextEdit.setText(number.toString());
 	}
 	
-	public BigDecimal getNumber(){
-		return new BigDecimal(getText().toString());
+	public Double getNumber(){
+		return Double.valueOf(getText().toString());
 	}
 }
