@@ -29,17 +29,17 @@ public class Project extends HyjModel {
 	@Column(name = "autoApportion")
 	private String mAutoApportion;
 
-	@Column(name = "defaultIncomeCategoryId")
-	private String mDefaultIncomeCategoryId;
+	@Column(name = "defaultIncomeCategory")
+	private String mDefaultIncomeCategory;
 
-	@Column(name = "defaultExpenseCategoryId")
-	private String mDefaultExpenseCategoryId;
+	@Column(name = "defaultExpenseCategory")
+	private String mDefaultExpenseCategory;
 
-	@Column(name = "depositeIncomeCategoryId")
-	private String mDepositeIncomeCategoryId;
+	@Column(name = "depositeIncomeCategory")
+	private String mDepositeIncomeCategory;
 
-	@Column(name = "depositeExpenseCategoryId")
-	private String mDepositeExpenseCategoryId;
+	@Column(name = "depositeExpenseCategory")
+	private String mDepositeExpenseCategory;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -112,36 +112,36 @@ public class Project extends HyjModel {
 		this.mAutoApportion = mAutoApportion;
 	}
 
-	public String getDefaultIncomeCategoryId() {
-		return mDefaultIncomeCategoryId;
+	public String getDefaultIncomeCategory() {
+		return mDefaultIncomeCategory;
 	}
 
-	public void setDefaultIncomeCategoryId(String mDefaultIncomeCategoryId) {
-		this.mDefaultIncomeCategoryId = mDefaultIncomeCategoryId;
+	public void setDefaultIncomeCategory(String mDefaultIncomeCategory) {
+		this.mDefaultIncomeCategory = mDefaultIncomeCategory;
 	}
 
-	public String getDefaultExpenseCategoryId() {
-		return mDefaultExpenseCategoryId;
+	public String getDefaultExpenseCategory() {
+		return mDefaultExpenseCategory;
 	}
 
-	public void setDefaultExpenseCategoryId(String mDefaultExpenseCategoryId) {
-		this.mDefaultExpenseCategoryId = mDefaultExpenseCategoryId;
+	public void setDefaultExpenseCategory(String mDefaultExpenseCategory) {
+		this.mDefaultExpenseCategory = mDefaultExpenseCategory;
 	}
 
-	public String getDepositeIncomeCategoryId() {
-		return mDepositeIncomeCategoryId;
+	public String getDepositeIncomeCategory() {
+		return mDepositeIncomeCategory;
 	}
 
-	public void setDepositeIncomeCategoryId(String mDepositeIncomeCategoryId) {
-		this.mDepositeIncomeCategoryId = mDepositeIncomeCategoryId;
+	public void setDepositeIncomeCategoryId(String mDepositeIncomeCategory) {
+		this.mDepositeIncomeCategory = mDepositeIncomeCategory;
 	}
 
-	public String getDepositeExpenseCategoryId() {
-		return mDepositeExpenseCategoryId;
+	public String getDepositeExpenseCategory() {
+		return mDepositeExpenseCategory;
 	}
 
-	public void setDepositeExpenseCategoryId(String mDepositeExpenseCategoryId) {
-		this.mDepositeExpenseCategoryId = mDepositeExpenseCategoryId;
+	public void setDepositeExpenseCategory(String mDepositeExpenseCategory) {
+		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
 	}
 
 	public String getServerRecordHash() {
