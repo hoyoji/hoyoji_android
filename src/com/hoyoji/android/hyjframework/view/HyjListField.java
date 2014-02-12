@@ -34,7 +34,7 @@ public class HyjListField extends LinearLayout {
 		
 		final LayoutInflater inflater = (LayoutInflater)
 			       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			inflater.inflate(R.layout.text_field, this);
+			inflater.inflate(R.layout.list_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
 		
