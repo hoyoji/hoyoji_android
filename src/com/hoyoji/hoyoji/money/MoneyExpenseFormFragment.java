@@ -39,7 +39,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjTextField mTextFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private HyjRemarkField mRemarkfieldRemark = null;
+	private HyjRemarkField mRemarkFieldRemark = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -114,8 +114,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		}); 
 		
-		mRemarkfieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
-		mRemarkfieldRemark.setText(moneyExpense.getRemark());
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
+		mRemarkFieldRemark.setText(moneyExpense.getRemark());
 		
 	}
 	
@@ -138,7 +138,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		}
 		
-		modelCopy.setRemark(mRemarkfieldRemark.getText().toString().trim());
+		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 		
 		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
@@ -152,7 +152,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate.setError(mMoneyExpenseEditor.getValidationError("exchangeRate"));
 		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor.getValidationError("moneyExpenseCategory"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
-		mRemarkfieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
+		mRemarkFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
 	}
 
 	 @Override

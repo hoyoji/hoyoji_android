@@ -5,7 +5,7 @@
      android:orientation="vertical"
      android:descendantFocusability="blocksDescendants">
 
-<TextView android:id="@+id/currencyListItem_name"  
+<TextView android:id="@+id/moneyAccountListItem_name"  
     android:layout_width="match_parent"  
     android:layout_height="wrap_content"  
     android:gravity="center_vertical"  

@@ -16,6 +16,7 @@ import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
 
 public class HomeListFragment extends HyjUserListFragment {
@@ -63,7 +64,7 @@ public class HomeListFragment extends HyjUserListFragment {
 			return true;
 		}
 		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
-			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+			openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

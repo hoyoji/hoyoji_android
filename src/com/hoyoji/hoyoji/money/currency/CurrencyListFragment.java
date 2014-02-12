@@ -20,7 +20,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
 
-public class MoneyAccountListFragment extends HyjUserListFragment{
+public class CurrencyListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	
@@ -63,7 +63,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.projectListFragment_action_project_addnew){
-			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.projectFormFragment_title_addnew, null);
+			openActivityWithFragment(CurrencyFormFragment.class, R.string.projectFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -79,7 +79,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+			openActivityWithFragment(CurrencyFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
 		}
     }  
 
