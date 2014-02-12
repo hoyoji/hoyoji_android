@@ -9,6 +9,7 @@
     <string name="app_action_search">查找</string>
     <string name="app_action_save">保存</string>
     <string name="app_action_delete_list_item">删除</string>
+    <string name="app_action_cancel_list_item">取消</string>
     
     <string name="app_validation_error">表单中包含错误</string>
     <string name="app_save_success">保存成功</string>

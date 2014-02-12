@@ -7,6 +7,8 @@ import android.content.res.TypedArray;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +43,15 @@ public class HyjNumericField extends LinearLayout {
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
+		
+		mEditTextEdit.setOnFocusChangeListener(new OnFocusChangeListener(){
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus){
+					mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
+				}
+			}
+		});
 	}
 
 	public void setError(String error){
@@ -69,6 +80,5 @@ public class HyjNumericField extends LinearLayout {
 		} catch (NumberFormatException e){
 			return null;
 		}
-
 	}
 }
