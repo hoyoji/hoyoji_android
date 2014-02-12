@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.activeandroid.query.Select;
@@ -22,6 +23,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
 	private EditText mEditTextParentProject = null;
+	private CheckBox mCheckBoxAutoApportion = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -55,12 +57,14 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		
+		mCheckBoxAutoApportion = (CheckBox)getView().findViewById(R.id.projectFormFragment_checkBox_autoApportion);
+		mCheckBoxAutoApportion.setChecked(project.getAutoApportion());
 	}
 	
 	private void fillData(){
 		Project modelCopy = (Project) mProjectEditor.getModelCopy();
 		modelCopy.setName(mTextFieldProjectName.getText().toString().trim());
+		modelCopy.setAutoApportion(mCheckBoxAutoApportion.isChecked());
 	}
 	
 	private void showValidatioErrors(){

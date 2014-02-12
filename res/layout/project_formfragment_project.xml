@@ -43,11 +43,22 @@
         </EditText>
     </LinearLayout>
 
+	<CheckBox
+	    android:id="@+id/projectFormFragment_checkBox_autoApportion"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/projectFormFragment_checkBox_autoApportion" />
+
+    <TextView
+        android:id="@+id/projectFormFragment_checkBox_hint_autoApportion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/projectFormFragment_checkBox_hint_autoApportion" />
     
 	<Button
 	    android:id="@id/button_save"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/app_action_save"/>
+	    android:text="@string/app_action_save" />
 	
 </LinearLayout>

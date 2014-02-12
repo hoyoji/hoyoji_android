@@ -27,7 +27,7 @@ public class Project extends HyjModel {
 	private String mCurrencyId;
 
 	@Column(name = "autoApportion")
-	private String mAutoApportion;
+	private Boolean mAutoApportion;
 
 	@Column(name = "defaultIncomeCategory")
 	private String mDefaultIncomeCategory;
@@ -53,6 +53,7 @@ public class Project extends HyjModel {
 	public Project(){
 		super();
 		mId = UUID.randomUUID().toString();
+		setAutoApportion(false);
 	}
 	
 	@Override
@@ -104,11 +105,11 @@ public class Project extends HyjModel {
 		this.mCurrencyId = mCurrencyId;
 	}
 
-	public String getAutoApportion() {
+	public Boolean getAutoApportion() {
 		return mAutoApportion;
 	}
 
-	public void setAutoApportion(String mAutoApportion) {
+	public void setAutoApportion(Boolean mAutoApportion) {
 		this.mAutoApportion = mAutoApportion;
 	}
 
