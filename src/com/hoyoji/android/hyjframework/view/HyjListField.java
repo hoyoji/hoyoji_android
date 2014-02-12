@@ -7,17 +7,22 @@ import android.content.res.TypedArray;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class HyjListField extends LinearLayout {
 	private String mLabelText;
-	private String mEditText;
-	private String mHintText;
-	
 	private TextView mTextViewLabel;
-	private EditText mEditTextEdit;
+	private ListView mListView;
+	private Button mAddButton;
 
 	public HyjListField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -26,8 +31,6 @@ public class HyjListField extends LinearLayout {
 
 		try {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
-			mEditText = a.getString(R.styleable.HyjTextField_editText);
-			mHintText = a.getString(R.styleable.HyjTextField_hintText);
 		} finally {
 			a.recycle();
 		}
@@ -36,24 +39,29 @@ public class HyjListField extends LinearLayout {
 			       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			inflater.inflate(R.layout.list_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
-		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		
-		mEditTextEdit.setHint(mHintText);
-		mEditTextEdit.setText(mEditText);
+		mListView = (ListView)findViewById(R.id.list_field_listView);
+		mAddButton = (Button)findViewById(R.id.list_field_listViewHeader);
 		mTextViewLabel.setText(mLabelText);
+
+//		View emptyView = inflater.inflate(R.layout.list_field_emptyview, null);
+//		View headerView = inflater.inflate(R.layout.list_field_headerview, null);	
+//		mListView.setEmptyView(emptyView);
+//		mListView.addHeaderView(headerView, null, false);
 	}
 
 	public void setError(String error){
-		mEditTextEdit.setError(error);
 	}
 	
-	public void setText(String text){
-		mEditTextEdit.setText(text);
+	public void setOnAddItemListener(OnClickListener onClickListener){
+		mAddButton.setOnClickListener(onClickListener);
 	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getText();
+	public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+		mListView.setOnItemClickListener(onItemClickListener);
 	}
 	
+	public void setListAdapter(ListAdapter adapter){
+		mListView.setAdapter(adapter);
+	}
 	
 }
