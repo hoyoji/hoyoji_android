@@ -12,11 +12,11 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
+import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.Project;
@@ -32,13 +32,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
 	private HyjTextField mTextFieldpicture = null;
-	private HyjDateTimeField mDateTimeFieldDatetime = null;
+	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private HyjTextField mTextFieldRemark = null;
+	private HyjRemarkField mRemarkfieldRemark = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -59,7 +59,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
-		mDateTimeFieldDatetime = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_datetime);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);		
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyExpense.getAmount());
@@ -105,23 +105,22 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				MoneyExpenseFormFragment.this
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
 			}
-		});
+		}); 
 		
-		mTextFieldRemark = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
-		mTextFieldRemark.setText(moneyExpense.getRemark());
+		mRemarkfieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
+		mRemarkfieldRemark.setText(moneyExpense.getRemark());
 		
 	}
 	
 	private void fillData(){
 		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
-		modelCopy.setDatetime(mDateTimeFieldDatetime.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		
-		Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-		
-		if(friend != null){
+		if(mSelectorFieldFriend.getModelId() != null){
+			Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
 			if(friend.getFriendUserId() != null){
 				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			}
@@ -130,19 +129,19 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		}
 		
-		modelCopy.setRemark(mTextFieldRemark.getText().toString().trim());
+		modelCopy.setRemark(mRemarkfieldRemark.getText().toString().trim());
 		
-		HyjUtil.displayToast(this.mDateTimeFieldDatetime.getText().toString());
+		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
-		mDateTimeFieldDatetime.setError(mMoneyExpenseEditor.getValidationError("datetime"));
+		mDateTimeFieldDate.setError(mMoneyExpenseEditor.getValidationError("datetime"));
 		mNumericAmount.setError(mMoneyExpenseEditor.getValidationError("amount"));
 		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyExpenseEditor.getValidationError("project"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
-		mTextFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
+		mRemarkfieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
 	}
 
 	 @Override

@@ -56,10 +56,19 @@ public class HyjNumericField extends LinearLayout {
 	}
 	
 	public void setNumber(Double number){
-		mEditTextEdit.setText(number.toString());
+		if(number == null){
+			mEditTextEdit.setText("");
+		} else {
+			mEditTextEdit.setText(number.toString());
+		}
 	}
 	
 	public Double getNumber(){
-		return Double.valueOf(getText().toString());
+		try{
+			return Double.valueOf(getText().toString());
+		} catch (NumberFormatException e){
+			return null;
+		}
+
 	}
 }
