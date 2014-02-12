@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="projectListFragment_action_project_addnew">创建项目</string>
-    <string name="projectListFragment_title_select_parent_project">选择上级项目</string>
-    
+    <string name="moneyExpenseListFragment_action_moneyExpense_addnew">新增支出</string>
+    <string name="moneyExpenseListFragment_title_all">全部支出</string>
 </resources>

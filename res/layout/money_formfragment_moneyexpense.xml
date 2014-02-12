@@ -18,11 +18,11 @@
         hyj:labelText="@string/moneyExpenseFormFragment_textView_picture" />
 
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/moneyExpenseFormFragment_textField_datetime"
+        android:id="@+id/moneyExpenseFormFragment_textField_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_datetime"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_datetime" />
+        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_date"
+        hyj:labelText="@string/moneyExpenseFormFragment_textView_date" />
 
     <com.hoyoji.android.hyjframework.view.HyjNumericField
         android:id="@+id/moneyExpenseFormFragment_textField_amount"

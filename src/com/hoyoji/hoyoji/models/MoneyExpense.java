@@ -19,8 +19,8 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "pictureId")
 	private String mPictureId;
 	
-	@Column(name = "datetime")
-	private String mDatetime;
+	@Column(name = "date")
+	private String mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -106,12 +106,12 @@ public class MoneyExpense extends HyjModel{
 		this.mPictureId = mPictureId;
 	}
 
-	public String getDatetime() {
-		return mDatetime;
+	public String getDate() {
+		return mDate;
 	}
 
-	public void setDatetime(String mDatetime) {
-		this.mDatetime = mDatetime;
+	public void setDate(String mDate) {
+		this.mDate = mDate;
 	}
 
 	public Double getAmount() {

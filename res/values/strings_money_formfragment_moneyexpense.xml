@@ -8,8 +8,8 @@
    <string name="moneyExpenseFormFragment_textView_picture">图片</string>
    <string name="moneyExpenseFormFragment_editText_hint_picture">请导入图片</string>
    
-   <string name="moneyExpenseFormFragment_textView_datetime">时间</string>
-   <string name="moneyExpenseFormFragment_editText_hint_datetime">请选择时间</string>
+   <string name="moneyExpenseFormFragment_textView_date">时间</string>
+   <string name="moneyExpenseFormFragment_editText_hint_date">请选择时间</string>
    
    <string name="moneyExpenseFormFragment_textView_amount">金额</string>
    <string name="moneyExpenseFormFragment_editText_hint_amount">请输入金额</string>

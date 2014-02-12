@@ -13,6 +13,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 
@@ -58,7 +59,7 @@ public class HomeListFragment extends HyjUserListFragment {
 			openActivityWithFragment(ExchangeListFragment.class, R.string.exchangeFormFragment_title_addnew, null);
 			return true;
 		}else if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
-			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
