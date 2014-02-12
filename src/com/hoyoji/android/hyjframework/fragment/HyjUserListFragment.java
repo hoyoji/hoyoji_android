@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>, SimpleCursorAdapter.ViewBinder, SimpleAdapter.ViewBinder{
 	public final static int DELETE_LIST_ITEM = 1024;
+	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
 	protected View mFooterView;
 	protected int mListPageSize = 10;
@@ -212,6 +213,8 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 			    Long itemId = getListAdapter().getItemId(info.position);
 				onDeleteListItem(itemId);
 				break;
+			case CANCEL_LIST_ITEM:
+				break;
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -230,6 +233,7 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
+		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 	}	
 	
 	public void onDeleteListItem(Long id){

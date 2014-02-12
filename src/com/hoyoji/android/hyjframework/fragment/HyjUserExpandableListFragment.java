@@ -37,6 +37,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	OnGetChildrenCursorListener
 {
 	public final static int DELETE_LIST_ITEM = 1024;
+	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
 	private ExpandableListView mExpandableListView;
 	
@@ -222,6 +223,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 					return true;
 			    }
 				break;
+			case CANCEL_LIST_ITEM:
+				break;
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -232,7 +235,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
 		//if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
 			menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
-		//}
+			menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+			//}
 	}	
 	
 	public void onDeleteListItem(Long id){
