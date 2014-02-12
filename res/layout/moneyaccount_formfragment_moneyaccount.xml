@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,185 +10,55 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MoneyAccountFormFragment" >
 
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjTextField
+        android:id="@+id/moneyAccountFormFragment_textField_name"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_name"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_name" />
 
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_name"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_name" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_name"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_name" 
-            android:maxLines="1"
-            android:singleLine="true">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/moneyAccountFormFragment_selectorField_currency"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_currency"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_currency" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_currency"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_currency" 
-            android:maxLines="1"
-            android:singleLine="true"
-            android:focusable="false">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currency"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_currency" />
     
     
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjNumericField
+        android:id="@+id/moneyAccountFormFragment_textField_currentBalance"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currentBalance"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_currentBalance" />
 
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_currentBalance"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_currentBalance" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_currentBalance"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_currentBalance" 
-            android:maxLines="1"
-            android:singleLine="true">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjTextField
+        android:id="@+id/moneyAccountFormFragment_textField_accountType"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_accountType"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_accountType" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_accountType"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_accountType" 
-            android:maxLines="1"
-            android:singleLine="true"
-            android:focusable="false">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountType"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" />
     
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjRemarkField
+        android:id="@+id/moneyAccountFormFragment_textField_accountNumber"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountNumber"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_accountNumber" />
 
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_accountNumber"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_accountNumber" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_accountNumber"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_accountNumber" 
-            android:maxLines="1"
-            android:singleLine="true">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjRemarkField
+        android:id="@+id/moneyAccountFormFragment_textField_bankAddress"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_bankAddress"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_bankAddress" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_bankAddress"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_bankAddress" 
-            android:maxLines="1"
-            android:singleLine="true"
-            android:focusable="false">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_bankAddress"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_bankAddress" />
     
-    <LinearLayout
+    <com.hoyoji.android.hyjframework.view.HyjRemarkField
+        android:id="@+id/moneyAccountFormFragment_textField_remark"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/moneyAccountFormFragment_textView_detail"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/moneyAccountFormFragment_textView_detail" />
-
-        <EditText
-            android:id="@+id/moneyAccountFormFragment_editText_detail"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:hint="@string/moneyAccountFormFragment_editText_hint_detail" 
-            android:maxLines="1"
-            android:singleLine="true"
-            android:focusable="false">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_remark"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_remark" />
 
     
 	<Button

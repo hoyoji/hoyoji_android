@@ -83,12 +83,6 @@ public class MoneyExpense extends HyjModel{
 		super();
 		mId = UUID.randomUUID().toString();
 	}
-	
-	@Override
-	public void validate(HyjModelEditor hyjModelEditor) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public String getId() {
 		return mId;
@@ -304,6 +298,35 @@ public class MoneyExpense extends HyjModel{
 
 	public void setAddress(String mAddress) {
 		this.mAddress = mAddress;
+	}
+	
+	@Override
+	public void validate(HyjModelEditor modelEditor) {
+		if(this.getDate() == null){
+			modelEditor.setValidationError("date",R.string.moneyExpenseFormFragment_editText_hint_date);
+		}else{
+			modelEditor.removeValidationError("date");
+		}
+//		if(this.getAmount() == null){
+//			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
+//		}else{
+//			modelEditor.removeValidationError("amount");
+//		}
+//		if(this.getMoneyAccountId() == null){
+//			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
+//		}else{
+//			modelEditor.removeValidationError("moneyAccount");
+//		}
+//		if(this.getProjectId() == null){
+//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+//		}else{
+//			modelEditor.removeValidationError("project");
+//		}
+//		if(this.getFriend() == null){
+//			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
+//		}else{
+//			modelEditor.removeValidationError("friend");
+//		}
 	}
 
 }

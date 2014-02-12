@@ -44,9 +44,16 @@
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_project"
         hyj:labelText="@string/moneyExpenseFormFragment_textView_project" />
+    
+    <com.hoyoji.android.hyjframework.view.HyjNumericField
+        android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
+        hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
 
-    <com.hoyoji.android.hyjframework.view.HyjSelectorField
-        android:id="@+id/moneyExpenseFormFragment_selectorField_moneyExpenseCategory"
+    <com.hoyoji.android.hyjframework.view.HyjTextField
+        android:id="@+id/moneyExpenseFormFragment_textField_moneyExpenseCategory"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyExpenseCategory"

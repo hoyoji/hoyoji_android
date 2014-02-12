@@ -36,9 +36,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
-	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
+	private HyjNumericField mNumericExchangeRate = null;
+	private HyjTextField mTextFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private HyjRemarkField mRemarkfieldRemark = null;
+	private HyjRemarkField mRemarkFieldRemark = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -92,6 +93,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
+		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
+		
+		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
+		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
+		
 		Friend friend = moneyExpense.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_friend);
 		
@@ -107,8 +114,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		}); 
 		
-		mRemarkfieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
-		mRemarkfieldRemark.setText(moneyExpense.getRemark());
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
+		mRemarkFieldRemark.setText(moneyExpense.getRemark());
 		
 	}
 	
@@ -118,6 +125,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
+		modelCopy.setMoneyExpenseCategory(mTextFieldMoneyExpenseCategory.getText().toString().trim());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
@@ -129,7 +138,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		}
 		
-		modelCopy.setRemark(mRemarkfieldRemark.getText().toString().trim());
+		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 		
 		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
@@ -140,8 +149,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setError(mMoneyExpenseEditor.getValidationError("amount"));
 		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyExpenseEditor.getValidationError("project"));
+		mNumericExchangeRate.setError(mMoneyExpenseEditor.getValidationError("exchangeRate"));
+		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor.getValidationError("moneyExpenseCategory"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
-		mRemarkfieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
+		mRemarkFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
 	}
 
 	 @Override

@@ -20,6 +20,9 @@
    <string name="moneyExpenseFormFragment_textView_project">项目</string>
    <string name="moneyExpenseFormFragment_editText_hint_project">请选择项目</string>
    
+   <string name="moneyExpenseFormFragment_textView_exchangeRate">汇率</string>
+   <string name="moneyExpenseFormFragment_editText_hint_exchangeRate">请输入汇率</string>
+   
    <string name="moneyExpenseFormFragment_textView_moneyExpenseCategory">分类</string>
    <string name="moneyExpenseFormFragment_editText_hint_moneyExpenseCategory">请选择分类</string>
    

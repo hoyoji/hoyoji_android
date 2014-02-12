@@ -32,13 +32,12 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
-				R.layout.project_listitem_project,
+				R.layout.money_listitem_moneyexpense,
 				null,
-				new String[] { "name" },
-				new int[] { R.id.moneyExpenseListItem_name },
+				new String[] { "date" },
+				new int[] { R.id.moneyExpenseListItem_date },
 				0); 
 	}	
-
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {

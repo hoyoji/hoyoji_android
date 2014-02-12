@@ -13,6 +13,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
 
 public class MoneyAccountFormFragment extends HyjUserFormFragment {

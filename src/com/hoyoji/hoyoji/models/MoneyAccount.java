@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.List;
 import java.util.UUID;
 
 import android.provider.BaseColumns;
@@ -11,7 +10,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
-@Table(name = "Project", id = BaseColumns._ID)
+@Table(name = "MoneyAccount", id = BaseColumns._ID)
 public class MoneyAccount extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
@@ -20,14 +19,11 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "name")
 	private String mName;
 
-	@Column(name = "ownerUserId")
-	private String mOwnerUserId;
-
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 
-	@Column(name = "currencyBalance")
-	private String mCurrencyBalance;
+	@Column(name = "currentBalance")
+	private Double mCurrentBalance;
 
 	@Column(name = "remark")
 	private String mRemark;
@@ -43,9 +39,12 @@ public class MoneyAccount extends HyjModel {
 	
 	@Column(name = "bankAddress")
 	private String mBankAddress;
-
+	
 	@Column(name = "friendId")
 	private String mFriendId;
+	
+	@Column(name = "ownerUserId")
+	private String mOwnerUserId;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -85,15 +84,18 @@ public class MoneyAccount extends HyjModel {
 	public void setName(String mName) {
 		this.mName = mName;
 	}
+
+	public Currency getCurrency(){
+		if(mCurrencyId == null){
+			return null;
+		}
+		return (Currency) getModel(Currency.class, mCurrencyId);
+	}
 	
-	public String getOwnerUserId() {
-		return mOwnerUserId;
+	public void setCurrency(Currency mCurrency) {
+		this.mCurrencyId = mCurrency.getId();
 	}
-
-	public void setOwnerUserId(String mOwnerUserId) {
-		this.mOwnerUserId = mOwnerUserId;
-	}
-
+	
 	public String getCurrencyId() {
 		return mCurrencyId;
 	}
@@ -102,19 +104,19 @@ public class MoneyAccount extends HyjModel {
 		this.mCurrencyId = mCurrencyId;
 	}
 
-	public String getCurrencyBalance() {
-		return mCurrencyBalance;
+	public Double getCurrentBalance() {
+		return mCurrentBalance;
 	}
 
-	public void setCurrencyBalance(String mCurrencyBalance) {
-		this.mCurrencyBalance = mCurrencyBalance;
+	public void setCurrentBalance(Double mCurrentBalance) {
+		this.mCurrentBalance = mCurrentBalance;
 	}
 
 	public String getRemark() {
 		return mRemark;
 	}
 
-	public void setmRemark(String mRemark) {
+	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
 
@@ -158,6 +160,14 @@ public class MoneyAccount extends HyjModel {
 		this.mFriendId = mFriendId;
 	}
 
+	public String getOwnerUserId() {
+		return mOwnerUserId;
+	}
+
+	public void setOwnerUserId(String mOwnerUserId) {
+		this.mOwnerUserId = mOwnerUserId;
+	}
+	
 	public String getServerRecordHash() {
 		return mServerRecordHash;
 	}
