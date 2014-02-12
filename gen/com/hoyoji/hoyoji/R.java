@@ -1216,15 +1216,15 @@ containing a value of this type.
         public static final int moneyAccountFormFragment_textView_name=0x7f06007a;
         public static final int moneyExpenseFormFragment_selectorField_friend=0x7f060077;
         public static final int moneyExpenseFormFragment_selectorField_moneyAccount=0x7f060073;
-        public static final int moneyExpenseFormFragment_selectorField_moneyExpenseCategory=0x7f060076;
         public static final int moneyExpenseFormFragment_selectorField_project=0x7f060074;
         public static final int moneyExpenseFormFragment_textField_amount=0x7f060072;
         public static final int moneyExpenseFormFragment_textField_date=0x7f060071;
         public static final int moneyExpenseFormFragment_textField_exchangeRate=0x7f060075;
+        public static final int moneyExpenseFormFragment_textField_moneyExpenseCategory=0x7f060076;
         public static final int moneyExpenseFormFragment_textField_picture=0x7f060070;
         public static final int moneyExpenseFormFragment_textField_remark=0x7f060078;
         public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f0600a0;
-        public static final int moneyExpenseListItem_name=0x7f060079;
+        public static final int moneyExpenseListItem_date=0x7f060079;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;

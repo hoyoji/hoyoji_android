@@ -37,7 +37,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
-	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
+	private HyjTextField mTextFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkfieldRemark = null;
 	
@@ -96,6 +96,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
 		
+		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
+		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
+		
 		Friend friend = moneyExpense.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_friend);
 		
@@ -123,6 +126,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
+		modelCopy.setMoneyExpenseCategory(mTextFieldMoneyExpenseCategory.getText().toString().trim());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
@@ -146,6 +150,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyExpenseEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyExpenseEditor.getValidationError("exchangeRate"));
+		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor.getValidationError("moneyExpenseCategory"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
 		mRemarkfieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
 	}

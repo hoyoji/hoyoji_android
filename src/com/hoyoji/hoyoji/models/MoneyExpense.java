@@ -307,26 +307,26 @@ public class MoneyExpense extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("date");
 		}
-		if(this.getAmount() == null){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
-		}else{
-			modelEditor.removeValidationError("amount");
-		}
-		if(this.getMoneyAccountId() == null){
-			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
-		}else{
-			modelEditor.removeValidationError("moneyAccount");
-		}
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
-		}else{
-			modelEditor.removeValidationError("project");
-		}
-		if(this.getFriend() == null){
-			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
-		}else{
-			modelEditor.removeValidationError("friend");
-		}
+//		if(this.getAmount() == null){
+//			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
+//		}else{
+//			modelEditor.removeValidationError("amount");
+//		}
+//		if(this.getMoneyAccountId() == null){
+//			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
+//		}else{
+//			modelEditor.removeValidationError("moneyAccount");
+//		}
+//		if(this.getProjectId() == null){
+//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+//		}else{
+//			modelEditor.removeValidationError("project");
+//		}
+//		if(this.getFriend() == null){
+//			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
+//		}else{
+//			modelEditor.removeValidationError("friend");
+//		}
 	}
 
 }
