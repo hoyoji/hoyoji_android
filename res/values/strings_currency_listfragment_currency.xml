@@ -2,5 +2,6 @@
 <resources>
 
     <string name="currencyListFragment_action_currency_addnew">添加币种</string>
+    <string name="currencyListFragment_title_manage_currency">货币管理</string>
     
 </resources>
