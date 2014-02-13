@@ -30,6 +30,8 @@ import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
@@ -127,6 +129,9 @@ public class MainActivity extends HyjUserActivity {
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
 	    switch(position){
+	        case 2 :
+	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+	        	return;
 	    	case 6 :
 	    		HyjApplication.getInstance().switchUser();
 	    	break;
