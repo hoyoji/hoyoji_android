@@ -31,7 +31,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
-	private HyjTextField mTextFieldpicture = null;
+	private HyjTextField mTextFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
@@ -95,6 +95,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
+		//mNumericExchangeRate.setVisibility(View.GONE);
 		
 		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
 		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
@@ -182,6 +183,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName());
 	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
 	         	 }
+	        	 break;
              case GET_PROJECT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
@@ -189,6 +191,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setText(project.getName());
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         	 }
+	        	 break;
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
@@ -196,7 +199,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
             		mSelectorFieldFriend.setText(friend.getNickName());
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
-            
+            	 break;
 
           }
     }

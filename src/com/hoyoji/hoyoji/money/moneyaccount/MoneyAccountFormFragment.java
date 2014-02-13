@@ -133,6 +133,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
  	         		 mSelectorFieldCurrency.setText(currency.getName());
  	         		 mSelectorFieldCurrency.setModelId(currency.getId());
             	 }
+            	 break;
              case 2:
 
           }

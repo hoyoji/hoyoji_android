@@ -11,7 +11,6 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
-import com.hoyoji.hoyoji.models.Project;
 
 
 public class CurrencyFormFragment extends HyjUserFormFragment {
@@ -34,7 +33,7 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			currency =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
+			currency =  new Select().from(Currency.class).where("_id=?", modelId).executeSingle();
 		} else {
 			currency = new Currency();
 		}
