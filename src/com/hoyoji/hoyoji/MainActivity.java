@@ -31,6 +31,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
@@ -131,6 +132,9 @@ public class MainActivity extends HyjUserActivity {
 	    switch(position){
 	        case 2 :
 	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+	        	return;
+	        case 4 :
+	        	openActivityWithFragment(CurrencyListFragment.class, R.string.currencyListFragment_title_manage_currency, null);
 	        	return;
 	    	case 6 :
 	    		HyjApplication.getInstance().switchUser();

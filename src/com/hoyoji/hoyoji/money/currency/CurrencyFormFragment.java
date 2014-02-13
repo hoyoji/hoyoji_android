@@ -3,69 +3,67 @@ package com.hoyoji.hoyoji.money.currency;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
 
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Project;
 
 
 public class CurrencyFormFragment extends HyjUserFormFragment {
-	private final static int GET_PARENT_PROJECT_ID = 1;
 	
-	private HyjModelEditor mProjectEditor = null;
-	private EditText mEditTextProjectName = null;
-	private EditText mEditTextParentProject = null;
+	private HyjModelEditor mCurrencyEditor = null;
+	private HyjTextField mTextFieldName = null;
+	private HyjTextField mTextFieldSymbol = null;
+	private HyjTextField mTextFieldCode = null;
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_formfragment_project;
+		return R.layout.currency_formfragment_currency;
 	}
 	
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		Project project;
+		Currency currency;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
+			currency =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
 		} else {
-			project = new Project();
+			currency = new Currency();
 		}
-		mProjectEditor = project.newModelEditor();
+		mCurrencyEditor = currency.newModelEditor();
 		
-		mEditTextProjectName = (EditText) getView().findViewById(R.id.projectFormFragment_textField_projectName);
-		mEditTextProjectName.setText(project.getName());
+		mTextFieldName = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_name);
+		mTextFieldName.setText(currency.getName());
 		
-		mEditTextParentProject = (EditText) getView().findViewById(R.id.projectFormFragment_listField_parentProject);
-		mEditTextParentProject.setText("");
-		mEditTextParentProject.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				CurrencyFormFragment.this
-				.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.projectListFragment_title_select_parent_project, null, GET_PARENT_PROJECT_ID);
-			}
-		});
+		mTextFieldSymbol = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_symbol);
+		mTextFieldSymbol.setText(currency.getName());
 		
+		mTextFieldCode = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_code);
+		mTextFieldCode.setText(currency.getName());
 		
 	}
 	
 	private void fillData(){
-		Project modelCopy = (Project) mProjectEditor.getModelCopy();
-		modelCopy.setName(mEditTextProjectName.getText().toString().trim());
+		Currency modelCopy = (Currency) mCurrencyEditor.getModelCopy();
+		modelCopy.setName(mTextFieldName.getText().toString().trim());
+		modelCopy.setSymbol(mTextFieldSymbol.getText().toString().trim());
+		modelCopy.setCode(mTextFieldCode.getText().toString().trim());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		
-		mEditTextProjectName.setError(mProjectEditor.getValidationError("name"));
+		mTextFieldName.setError(mCurrencyEditor.getValidationError("name"));
+		mTextFieldSymbol.setError(mCurrencyEditor.getValidationError("symbol"));
+		mTextFieldCode.setError(mCurrencyEditor.getValidationError("code"));
 		
 	}
 
@@ -75,27 +73,14 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		mProjectEditor.validate();
+		mCurrencyEditor.validate();
 		
-		if(mProjectEditor.hasValidationErrors()){
+		if(mCurrencyEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
-			mProjectEditor.save();
+			mCurrencyEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 			getActivity().finish();
 		}
 	}	
-	
-	 @Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-         switch(requestCode){
-             case GET_PARENT_PROJECT_ID:
-            	 if(resultCode == Activity.RESULT_OK){
-            		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
-            	//	 ((Project)mProjectEditor.getModelCopy()).s
-            	 }
-             case 2:
-
-          }
-    }
 }
