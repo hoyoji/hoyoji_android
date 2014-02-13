@@ -37,13 +37,13 @@
         <activity
             android:name="com.hoyoji.hoyoji.LoginActivity"
             android:label="@string/loginActivity_title"
-            android:windowSoftInputMode="adjustPan|stateVisible" 
+            android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.hoyoji.hoyoji.RegisterActivity"
             android:label="@string/registerActivity_title"
-            android:windowSoftInputMode="adjustPan|stateVisible" 
+            android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -53,7 +53,7 @@
         </activity>
         <activity
             android:name="com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible" 
+            android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait">
         </activity>
         

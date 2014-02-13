@@ -24,7 +24,6 @@ public class HyjTextField extends LinearLayout {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
 				R.styleable.HyjTextField, 0, 0);
-
 		try {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
 			mEditText = a.getString(R.styleable.HyjTextField_editText);
@@ -51,6 +50,7 @@ public class HyjTextField extends LinearLayout {
 				}
 			}
 		});
+		
 	}
 
 	public void setError(String error){

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -82,9 +84,11 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		}
 		mParentProjectListAdapter = new PrentProjectListAdapter(this.getActivity(), R.layout.project_formfragment_parentproject_listitem, R.id.list_item_title, parentProjectList);
 		mListFieldParentProject.setListAdapter(mParentProjectListAdapter);
+		
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
-	private void fillData(){
+	private void fillData() {
 		Project modelCopy = (Project) mProjectEditor.getModelCopy();
 		modelCopy.setName(mTextFieldProjectName.getText().toString().trim());
 		modelCopy.setAutoApportion(mCheckBoxAutoApportion.isChecked());
@@ -217,37 +221,43 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						.findViewById(mTextViewResourceId);
 				holder.button = (ImageButton) convertView
 						.findViewById(R.id.list_item_delete);
+				holder.button.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						int position = (Integer) view.getTag();
+						ParentProjectListItem item = PrentProjectListAdapter.this
+								.getItem(position);
+						TextView tv = (TextView) ((ViewGroup) view.getParent())
+								.findViewById(mTextViewResourceId);
+						if (item.getState() == ParentProjectListItem.NEW) {
+							PrentProjectListAdapter.this
+									.remove(PrentProjectListAdapter.this
+											.getItem(position));
+						} else if (item.getState() == ParentProjectListItem.UNCHANGED) {
+							item.setState(ParentProjectListItem.DELETED);
+							((ImageButton) view)
+									.setImageResource(R.drawable.ic_action_undo);
+							tv.setPaintFlags(tv.getPaintFlags()
+									| Paint.STRIKE_THRU_TEXT_FLAG);
+						} else if (item.getState() == ParentProjectListItem.DELETED) {
+							item.setState(ParentProjectListItem.UNCHANGED);
+							((ImageButton) view)
+									.setImageResource(R.drawable.ic_action_remove);
+							tv.setPaintFlags(tv.getPaintFlags()
+									& (~Paint.STRIKE_THRU_TEXT_FLAG));
+						}
+					}
+				});
 
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			holder.text.setText(PrentProjectListAdapter.this
-					.getItem(position).toString());
+			holder.text.setText(PrentProjectListAdapter.this.getItem(position)
+					.toString());
 			holder.button.setTag(position);
 
-			holder.button.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					int position = (Integer) view.getTag();
-					ParentProjectListItem item = PrentProjectListAdapter.this.getItem(position);
-					TextView tv = (TextView)((ViewGroup)view.getParent()).findViewById(mTextViewResourceId);
-					if(item.getState() == ParentProjectListItem.NEW) {
-						PrentProjectListAdapter.this
-						.remove(PrentProjectListAdapter.this
-								.getItem(position));						
-					} else if(item.getState() == ParentProjectListItem.UNCHANGED) {
-						item.setState(ParentProjectListItem.DELETED);
-						((ImageButton)view).setImageResource(R.drawable.ic_action_undo);
-						tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-					} else if(item.getState() == ParentProjectListItem.DELETED) {
-						item.setState(ParentProjectListItem.UNCHANGED);
-						((ImageButton)view).setImageResource(R.drawable.ic_action_remove);
-						tv.setPaintFlags(tv.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-					}
-				}
-			});
 			return convertView;
 		}
 	}

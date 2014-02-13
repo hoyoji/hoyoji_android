@@ -2,6 +2,9 @@
 <resources>
 
     <item name="button_save" type="id"/>
+    
+    <item name="field_separator" type="id"/>
+    
     <item name="text_field_label" type="id"/>
     <item name="text_field_edit" type="id"/>
     
