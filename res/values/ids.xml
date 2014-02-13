@@ -5,6 +5,12 @@
     <item name="text_field_label" type="id"/>
     <item name="text_field_edit" type="id"/>
     
+    <item name="list_item_delete" type="id"/>
+    <item name="list_item_title" type="id"/>
+    
+    <item name="list_field_listView" type="id"/>
+    <item name="list_field_listViewHeader" type="id"/>
+    
     <item name="app_listview_footer_fetch_more" type="id"/>
 
 </resources>

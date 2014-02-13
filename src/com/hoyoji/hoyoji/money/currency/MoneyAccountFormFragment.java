@@ -13,9 +13,10 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
 
-public class CurrencyFormFragment extends HyjUserFormFragment {
+public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	
 	private HyjModelEditor mProjectEditor = null;
@@ -49,8 +50,8 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		mEditTextParentProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				CurrencyFormFragment.this
-				.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.projectListFragment_title_select_parent_project, null, GET_PARENT_PROJECT_ID);
+				MoneyAccountFormFragment.this
+				.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.projectListFragment_title_select_parent_project, null, GET_PARENT_PROJECT_ID);
 			}
 		});
 		
