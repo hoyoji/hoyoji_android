@@ -29,7 +29,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" />
+        hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
+    	<requestFocus />    
+    </com.hoyoji.android.hyjframework.view.HyjNumericField>
 
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
         android:id="@+id/moneyExpenseFormFragment_selectorField_moneyAccount"
