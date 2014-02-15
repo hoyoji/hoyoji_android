@@ -241,7 +241,7 @@ public abstract class HyjUserListFragment extends ListFragment implements Loader
 	
 
 	@Override
-	public boolean setViewValue(View arg0, Cursor arg1, int arg2) {
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		return false;
 	}  	
 	

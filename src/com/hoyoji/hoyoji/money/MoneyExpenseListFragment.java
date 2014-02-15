@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -10,10 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 
@@ -34,8 +38,8 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.money_listitem_moneyexpense,
 				null,
-				new String[] { "date" },
-				new int[] { R.id.moneyExpenseListItem_date },
+				new String[] { "date", "amount" },
+				new int[] { R.id.moneyExpenseListItem_date, R.id.moneyExpenseListItem_amount },
 				0); 
 	}	
 
@@ -86,5 +90,18 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 		MoneyExpense moneyExpense = MoneyExpense.load(MoneyExpense.class, id);
 		moneyExpense.delete();
 	    HyjUtil.displayToast("支出删除成功");
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.moneyExpenseListItem_date){
+			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.moneyExpenseListItem_amount){
+			((HyjNumericView)view).setNumber(cursor.getDouble(columnIndex));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

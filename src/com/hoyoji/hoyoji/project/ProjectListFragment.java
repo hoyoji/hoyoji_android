@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.project;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -118,4 +120,14 @@ public class ProjectListFragment extends HyjUserListFragment{
 		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 	}
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.projectListItem_name){
+			((TextView)view).setText(cursor.getString(columnIndex) + " (hi)");
+			return true;
+		} else {
+			return false;
+		}
+	}	
 }

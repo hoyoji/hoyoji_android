@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -86,6 +87,12 @@ public class LoginActivity extends HyjActivity {
 				});
 	}
 
+	@Override
+	protected void onInitViewData() {
+		// init view data here
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	}
+	
 	@Override
 	protected Integer getContentView() {
 		// TODO Auto-generated method stub
