@@ -98,7 +98,9 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.moneyExpenseListItem_amount){
-			((HyjNumericView)view).setNumber(cursor.getDouble(columnIndex));
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
 		} else {
 			return false;

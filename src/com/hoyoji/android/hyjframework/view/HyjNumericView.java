@@ -38,6 +38,7 @@ public class HyjNumericView extends TextView {
 	}
 
 	private Double mNumber;
+	private String mCurrencySymbol;
 	
 	public void setText(String number){
 		mNumber = Double.parseDouble(number);
@@ -46,11 +47,18 @@ public class HyjNumericView extends TextView {
 	
 	public void setNumber(Double number){
 		mNumber = number;
-		super.setText(String.valueOf(number));
+		if(mCurrencySymbol != null){
+			super.setText(mCurrencySymbol + String.valueOf(number));
+		} else {
+			super.setText(String.valueOf(number));
+		}
 	}
 	
 	public String getText(){
 		return String.valueOf(mNumber);
 	}
 	
+	public void setCurrencySymbol(String symbol){
+		mCurrencySymbol = symbol;
+	}
 }
