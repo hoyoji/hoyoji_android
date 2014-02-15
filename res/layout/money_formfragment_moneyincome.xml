@@ -8,14 +8,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MoneyExpenseFormFragment" >
+    tools:context=".MoneyIncomeFormFragment" >
 
     <com.hoyoji.android.hyjframework.view.HyjTextField
-        android:id="@+id/moneyExpenseFormFragment_textField_picture"
+        android:id="@+id/moneyIncomeFormFragment_textField_picture"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_picture"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_picture" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_picture"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_picture" />
     
         <View 
         android:id="@id/field_separator"
@@ -27,11 +27,11 @@
         />
 
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/moneyExpenseFormFragment_textField_date"
+        android:id="@+id/moneyIncomeFormFragment_textField_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_date"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_date" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_date"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_date" />
     
         <View 
         android:id="@id/field_separator"
@@ -43,11 +43,11 @@
         />
 
     <com.hoyoji.android.hyjframework.view.HyjNumericField
-        android:id="@+id/moneyExpenseFormFragment_textField_amount"
+        android:id="@+id/moneyIncomeFormFragment_textField_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_amount"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_amount" >
     	<requestFocus />    
     </com.hoyoji.android.hyjframework.view.HyjNumericField>
     
@@ -61,11 +61,11 @@
         />
 
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
-        android:id="@+id/moneyExpenseFormFragment_selectorField_moneyAccount"
+        android:id="@+id/moneyIncomeFormFragment_selectorField_moneyAccount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyAccount"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyAccount" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_moneyAccount"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_moneyAccount" />
     
         <View 
         android:id="@id/field_separator"
@@ -77,11 +77,11 @@
         />
 
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
-        android:id="@+id/moneyExpenseFormFragment_selectorField_project"
+        android:id="@+id/moneyIncomeFormFragment_selectorField_project"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_project"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_project" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_project"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_project" />
     
         <View 
         android:id="@id/field_separator"
@@ -93,11 +93,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjNumericField
-        android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
+        android:id="@+id/moneyIncomeFormFragment_textField_exchangeRate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_exchangeRate"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_exchangeRate" />
 
         <View 
         android:id="@id/field_separator"
@@ -109,11 +109,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjTextField
-        android:id="@+id/moneyExpenseFormFragment_textField_moneyExpenseCategory"
+        android:id="@+id/moneyIncomeFormFragment_textField_moneyIncomeCategory"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyExpenseCategory"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyExpenseCategory" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_moneyIncomeCategory"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_moneyIncomeCategory" />
 
        <View 
         android:id="@id/field_separator"
@@ -125,11 +125,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
-        android:id="@+id/moneyExpenseFormFragment_selectorField_friend"
+        android:id="@+id/moneyIncomeFormFragment_selectorField_friend"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_friend"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_friend" />
 
        <View 
         android:id="@id/field_separator"
@@ -141,11 +141,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
-        android:id="@+id/moneyExpenseFormFragment_textField_remark"
+        android:id="@+id/moneyIncomeFormFragment_textField_remark"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_remark"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_remark" />
+        hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_remark"
+        hyj:labelText="@string/moneyIncomeFormFragment_textView_remark" />
 
         <View 
         android:id="@id/field_separator"

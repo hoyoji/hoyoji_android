@@ -18,12 +18,30 @@
             hyj:hintText="@string/friendFormFragment_editText_hint_friend_category"
         />
           
+	    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
+	
     <com.hoyoji.android.hyjframework.view.HyjTextField 
             android:id="@+id/friendFormFragment_textField_nickName"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content" 
             hyj:labelText="@string/friendFormFragment_textView_nickName"
             hyj:hintText="@string/friendFormFragment_editText_hint_nickName"
+        />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
         />
        
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField 
@@ -32,6 +50,15 @@
 		    android:layout_height="wrap_content" 
             hyj:labelText="日期"
             hyj:hintText="请输入日期"
+        />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
         />
 
     <com.hoyoji.android.hyjframework.view.HyjNumericField 
@@ -42,12 +69,30 @@
             hyj:hintText="请输入金额"
         />
     
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
     <com.hoyoji.android.hyjframework.view.HyjRemarkField 
             android:id="@+id/friendFormFragment_textField_remark"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content" 
             hyj:labelText="备注"
             hyj:hintText="请输入备注"
+        />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
         />
         
 	<Button

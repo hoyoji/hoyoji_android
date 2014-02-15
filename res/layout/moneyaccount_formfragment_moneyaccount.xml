@@ -17,6 +17,15 @@
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_name"
         hyj:labelText="@string/moneyAccountFormFragment_textView_name" />
 
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
         android:id="@+id/moneyAccountFormFragment_selectorField_currency"
         android:layout_width="fill_parent"
@@ -24,6 +33,14 @@
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currency"
         hyj:labelText="@string/moneyAccountFormFragment_textView_currency" />
     
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
     
     <com.hoyoji.android.hyjframework.view.HyjNumericField
         android:id="@+id/moneyAccountFormFragment_textField_currentBalance"
@@ -32,12 +49,30 @@
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currentBalance"
         hyj:labelText="@string/moneyAccountFormFragment_textView_currentBalance" />
 
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/moneyAccountFormFragment_textField_accountType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountType"
         hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
     
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_accountNumber"
@@ -46,12 +81,30 @@
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountNumber"
         hyj:labelText="@string/moneyAccountFormFragment_textView_accountNumber" />
 
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_bankAddress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_bankAddress"
         hyj:labelText="@string/moneyAccountFormFragment_textView_bankAddress" />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
     
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_remark"
@@ -60,6 +113,14 @@
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_remark"
         hyj:labelText="@string/moneyAccountFormFragment_textView_remark" />
 
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="10dip"
+    	android:layout_marginBottom="10dip"
+        android:background="@android:color/darker_gray" 
+        />
     
 	<Button
 	    android:id="@id/button_save"
