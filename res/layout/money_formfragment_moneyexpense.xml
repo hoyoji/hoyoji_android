@@ -1,14 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+ 	xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"  
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MoneyExpenseFormFragment" >
+    android:paddingTop="@dimen/activity_vertical_margin"  
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+ 	tools:context=".MoneyExpenseFormFragment" >
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/moneyExpenseFormFragment_textField_picture"
@@ -163,3 +167,4 @@
         android:text="@string/app_action_save" />
 
 </LinearLayout>
+</ScrollView>
