@@ -14,6 +14,8 @@
     <item name="list_field_listView" type="id"/>
     <item name="list_field_listViewHeader" type="id"/>
     
+    <item name="image_field_gridView" type="id"/>
+    
     <item name="app_listview_footer_fetch_more" type="id"/>
 
 </resources>

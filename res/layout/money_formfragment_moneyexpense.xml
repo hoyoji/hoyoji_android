@@ -14,12 +14,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.hoyoji.android.hyjframework.view.HyjTextField
-        android:id="@+id/moneyExpenseFormFragment_textField_picture"
+    <com.hoyoji.android.hyjframework.view.HyjImageField
+        android:id="@+id/moneyExpenseFormFragment_imageField_picture"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_picture"
-        hyj:labelText="@string/moneyExpenseFormFragment_textView_picture" />
+        android:layout_height="wrap_content" />
     
         <View 
         android:id="@id/field_separator"
