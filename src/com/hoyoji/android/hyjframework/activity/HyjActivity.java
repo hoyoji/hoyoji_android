@@ -2,9 +2,11 @@ package com.hoyoji.android.hyjframework.activity;
 
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,8 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public abstract class HyjActivity extends ActionBarActivity {
+	public static final int REQUEST_TAKE_PHOTO = 1024;
+	
 	private ProgressDialog mProgressDialog;
 	protected abstract Integer getContentView();
 	
@@ -207,4 +211,14 @@ public abstract class HyjActivity extends ActionBarActivity {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == REQUEST_TAKE_PHOTO) {
+	    	Intent intent = new Intent("REQUEST_TAKE_PHOTO");
+	    	intent.putExtra("resultCode", resultCode);
+	    	this.sendBroadcast(intent);
+//	        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//	        mImageView.setImageBitmap(imageBitmap);
+	    }
+	}
 }

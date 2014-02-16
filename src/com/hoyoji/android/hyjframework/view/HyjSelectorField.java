@@ -62,7 +62,6 @@ public class HyjSelectorField extends LinearLayout {
 	}
 
 	public String getModelId() {
-		// TODO Auto-generated method stub
 		return mModelId;
 	}
 	

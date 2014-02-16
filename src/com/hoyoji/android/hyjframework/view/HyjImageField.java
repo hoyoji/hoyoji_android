@@ -1,28 +1,51 @@
 package com.hoyoji.android.hyjframework.view;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Picture;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.IBinder;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class HyjImageField extends GridView {
 	private ImageGridAdapter mImageGridAdapter;
+	private	Resources r = getResources();
 	
 	public HyjImageField(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.setColumnWidth(58);
+		int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
+		this.setColumnWidth(px);
 		this.setNumColumns(AUTO_FIT);
 		this.setGravity(Gravity.CENTER);
-		this.setVerticalSpacing(5);
-		this.setHorizontalSpacing(5);
-		this.setStretchMode(STRETCH_COLUMN_WIDTH);
+		px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
+		this.setVerticalSpacing(px);
+		this.setHorizontalSpacing(px);
+		//this.setStretchMode(STRETCH_COLUMN_WIDTH);
 		this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		mImageGridAdapter = new ImageGridAdapter(context, 0);
@@ -43,53 +66,196 @@ public class HyjImageField extends GridView {
 		return mImageGridAdapter;
 	}
 		
-	public static class ImageGridAdapter extends ArrayAdapter<Picture> {
-		private Picture mPictureCamera;
+	public static class ImageGridAdapter extends ArrayAdapter<PictureItem> {
+		private PictureItem mPictureCamera;
 		public ImageGridAdapter(Context context, int resource) {
 			super(context, resource);
-			mPictureCamera = new Picture();
+			mPictureCamera = new PictureItem(null);
 			this.add(mPictureCamera);
-			Picture picture1 = new Picture();
-			this.add(picture1);
-			Picture picture2 = new Picture();
-			this.add(picture2);
-			Picture picture3 = new Picture();
-			this.add(picture3);
-			Picture picture4 = new Picture();
-			this.add(picture4);
-			Picture picture5 = new Picture();
-			this.add(picture5);
-			Picture picture6 = new Picture();
-			this.add(picture6);
-			Picture picture7 = new Picture();
-			this.add(picture7);
-			Picture picture8 = new Picture();
-			this.add(picture8);
-			Picture picture9 = new Picture();
-			this.add(picture9);
-			Picture picture10 = new Picture();
-			this.add(picture10);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView iv;
-			if(convertView != null){
-				iv = (ImageView) convertView; 
+			final HyjImageField self = (HyjImageField) parent;
+			if (convertView != null) {
+				iv = (ImageView) convertView;
 			} else {
 				iv = new ImageView(this.getContext());
-				iv.setAdjustViewBounds(true);
-				iv.setBackgroundColor(this.getContext().getResources().getColor(android.R.color.darker_gray));
+				float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, self.r.getDisplayMetrics());
+				iv.setLayoutParams(new LayoutParams((int)px, (int)px));
+//				iv.setPadding(0, 0, 0, 0);
+				iv.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						PictureItem pic = (PictureItem) v.getTag();
+						if(pic ==  mPictureCamera){
+							self.dispatchTakePictureIntent();
+						} else {
+							HyjUtil.displayToast("Show large pic " + pic.getPicture().getId());
+						}
+					}
+				});
 			}
-			Picture pic = getItem(position);
-			if(pic == mPictureCamera){
+			PictureItem pic = getItem(position);
+			iv.setTag(pic);
+			if (pic == mPictureCamera) {
 				iv.setImageResource(R.drawable.ic_action_camera);
 			} else {
-				iv.setImageResource(R.drawable.ic_action_map);
+				File imageFile;
+				try {
+					imageFile = self.createImageFile(pic.getPicture().getId()+"_icon");
+					iv.setImageURI(Uri.fromFile(imageFile));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			return iv;
 		}
 
+	}
+	
+	static class PictureItem {
+		public static final int UNCHANGED = 0;
+		public static final int NEW = 1;
+		public static final int DELETED = 2;
 		
+		private int mState = UNCHANGED;
+		private Picture mPicture;
+		
+		PictureItem(Picture picture){
+			mPicture = picture;
+		}
+		
+		PictureItem(Picture picture, int state){
+			mPicture = picture;
+			mState = state;
+		}
+		
+		public void setState(int state){
+			mState = state;
+		}
+		
+		public int getState(){
+			return mState;
+		}
+		
+		public Picture getPicture() {
+			return mPicture;
+		}
+	}	
+	
+
+	public void dispatchTakePictureIntent() {
+		Picture newPicture = new Picture();
+	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    // Ensure that there's a camera activity to handle the intent
+	    if (takePictureIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
+	        // Create the File where the photo should go
+	        File photoFile = null;
+	        try {
+	            photoFile = createImageFile(newPicture.getId());
+		        // Continue only if the File was successfully created
+		        if (photoFile != null) {
+		            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+		           ((HyjActivity)getContext()).startActivityForResult(takePictureIntent, HyjActivity.REQUEST_TAKE_PHOTO);
+		           IntentFilter intentFilter = new IntentFilter("REQUEST_TAKE_PHOTO");
+		           BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(getContext(), photoFile, newPicture);
+		           getContext().registerReceiver(receiver,intentFilter); 
+		        }
+	        } catch (IOException ex) {
+	            // Error occurred while creating the File
+	        	HyjUtil.displayToast("无法创建图片文件");
+	        }
+	    }
+	}
+	
+	private File createImageFile(String imageFileName) throws IOException {
+	    // Create an image file name
+	    File image = new File(
+	    	this.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+	        imageFileName+".jpg"
+	    );
+
+	    return image;
+	}
+	
+	private Bitmap getScaledBitmap(String photoPath, int targetW, int targetH){
+	    // Get the dimensions of the bitmap
+	    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+	    bmOptions.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(photoPath, bmOptions);
+	    int photoW = bmOptions.outWidth;
+	    int photoH = bmOptions.outHeight;
+
+	    // Determine how much to scale down the image
+	    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+	    // Decode the image file into a Bitmap sized to fill the View
+	    bmOptions.inJustDecodeBounds = false;
+	    bmOptions.inSampleSize = scaleFactor;
+	    bmOptions.inPurgeable = true;
+
+	    return BitmapFactory.decodeFile(photoPath, bmOptions);
+	}
+	
+//	private void galleryAddPic(String picturePath) {
+//	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//	    File f = new File(picturePath);
+//	    Uri contentUri = Uri.fromFile(f);
+//	    mediaScanIntent.setData(contentUri);
+//	    this.getContext().sendBroadcast(mediaScanIntent);
+//	}
+	
+	private class TakePhotoBroadcastReceiver extends BroadcastReceiver {
+		File mPhotoFile;
+		Context mContext;
+		Picture mPicture;
+		
+		TakePhotoBroadcastReceiver(Context context, File photoFile, Picture picture){
+			mPhotoFile = photoFile;
+			mContext = context;
+			mPicture = picture;
+		}
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {  
+			if(intent.getAction().equals("REQUEST_TAKE_PHOTO")) {
+				int result = intent.getIntExtra("resultCode", Activity.RESULT_CANCELED);
+				if(result == Activity.RESULT_OK){
+					float pxW = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, r.getDisplayMetrics());
+					float pxH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 800, r.getDisplayMetrics());
+					FileOutputStream out = null;
+					Bitmap scaled = getScaledBitmap(mPhotoFile.getAbsolutePath(), (int)pxW, (int)pxH);
+					try {
+					    out = new FileOutputStream(mPhotoFile);
+					    scaled.compress(Bitmap.CompressFormat.JPEG, 90, out);
+					    out.close();
+					    out = null;
+					    
+					    int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
+					    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(scaled, px, px);
+					    
+					    out = new FileOutputStream(createImageFile(mPicture.getId()+"_icon"));
+					    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+					    out.close();
+					    out = null;
+					    thumbnail.recycle();
+					} catch (Exception e) {
+					    e.printStackTrace();
+					}
+					
+					scaled.recycle();
+					
+					PictureItem pi = new PictureItem(mPicture, PictureItem.NEW);
+					mImageGridAdapter.add(pi);
+				} else {
+					mPhotoFile.delete();
+				}
+				mContext.unregisterReceiver(this);
+				
+			}
+		}
 	}
 }
