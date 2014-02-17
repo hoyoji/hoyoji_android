@@ -17,19 +17,23 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 public class HyjDateTimeField extends LinearLayout {
 	private String mLabelText;
@@ -42,15 +46,27 @@ public class HyjDateTimeField extends LinearLayout {
 	private Date mDate;
 	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjDateTimeField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
 				R.styleable.HyjTextField, 0, 0);
 
+		String style;
+		String border;
 		try {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
 			mEditText = a.getString(R.styleable.HyjTextField_editText);
 			mHintText = a.getString(R.styleable.HyjTextField_hintText);
+			style  = a.getString(R.styleable.HyjTextField_style);
+			if(style == null){
+				style = "";
+			}
+			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+			if(border == null){
+				border = "";
+			}
 		} finally {
 			a.recycle();
 		}
@@ -60,7 +76,28 @@ public class HyjDateTimeField extends LinearLayout {
 			inflater.inflate(R.layout.datetime_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		
+		if(border.equals("none")){
+			if(android.os.Build.VERSION.SDK_INT >= 16){
+				mEditTextEdit.setBackground(null);
+			} else {
+				mEditTextEdit.setBackgroundDrawable(null);
+			}
+		}		
+		if(style.equals("no_label")){
+			mTextViewLabel.setVisibility(GONE);
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
+		} else if(style.equals("top_label")){
+			this.setOrientation(LinearLayout.VERTICAL);
+			this.setGravity(Gravity.CENTER_HORIZONTAL);
+			
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			
+			mTextViewLabel.setLayoutParams(layoutParams);
+			mEditTextEdit.setLayoutParams(layoutParams);
+			
+			mTextViewLabel.setTextSize(10);
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
+		}
 		mEditTextEdit.setHint(mHintText);
 		if(mEditText != null){
 			setText(mEditText);
