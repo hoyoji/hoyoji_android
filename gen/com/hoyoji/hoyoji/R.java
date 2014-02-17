@@ -1247,9 +1247,9 @@ containing a value of this type.
         public static final int moneyAccountListItem_name=0x7f060095;
         public static final int moneyExpenseFormFragment_imageField_picture=0x7f060073;
         public static final int moneyExpenseFormFragment_imageView_camera=0x7f060074;
-        public static final int moneyExpenseFormFragment_selectorField_friend=0x7f06007a;
+        public static final int moneyExpenseFormFragment_selectorField_friend=0x7f06007b;
         public static final int moneyExpenseFormFragment_selectorField_moneyAccount=0x7f060077;
-        public static final int moneyExpenseFormFragment_selectorField_project=0x7f06007b;
+        public static final int moneyExpenseFormFragment_selectorField_project=0x7f06007a;
         public static final int moneyExpenseFormFragment_textField_amount=0x7f060076;
         public static final int moneyExpenseFormFragment_textField_date=0x7f060075;
         public static final int moneyExpenseFormFragment_textField_exchangeRate=0x7f060078;
