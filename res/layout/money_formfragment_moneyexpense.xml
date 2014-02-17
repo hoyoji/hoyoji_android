@@ -19,12 +19,18 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
+            <ImageView
+                android:id="@+id/moneyExpenseFormFragment_imageView_camera"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_action_camera" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/imageView_camera"
+                android:id="@+id/moneyExpenseFormFragment_imageView_camera"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
@@ -46,6 +52,14 @@
                     hyj:style="no_label"
                     hyj:editTextBorder="none" />
 
+		        <View
+		            android:id="@id/field_separator"
+		            android:layout_width="match_parent"
+		            android:layout_height="1dip"
+		            android:layout_marginBottom="10dip"
+		            android:layout_marginTop="10dip"
+		            android:background="@android:color/darker_gray" />
+		        
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
                     android:id="@+id/moneyExpenseFormFragment_textField_amount"
                     android:layout_width="fill_parent"
