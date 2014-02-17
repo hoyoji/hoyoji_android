@@ -1217,7 +1217,6 @@ containing a value of this type.
         public static final int icon=0x7f060034;
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060031;
-        public static final int imageView_camera=0x7f060074;
         public static final int image_field_gridView=0x7f060022;
         public static final int imeAction_login=0x7f060049;
         public static final int imeAction_register=0x7f060055;
@@ -1247,6 +1246,7 @@ containing a value of this type.
         public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f0600b0;
         public static final int moneyAccountListItem_name=0x7f060095;
         public static final int moneyExpenseFormFragment_imageField_picture=0x7f060073;
+        public static final int moneyExpenseFormFragment_imageView_camera=0x7f060074;
         public static final int moneyExpenseFormFragment_selectorField_friend=0x7f060078;
         public static final int moneyExpenseFormFragment_selectorField_moneyAccount=0x7f060079;
         public static final int moneyExpenseFormFragment_selectorField_project=0x7f06007a;

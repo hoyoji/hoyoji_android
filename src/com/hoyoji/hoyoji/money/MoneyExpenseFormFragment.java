@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -65,6 +66,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
+
+		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
@@ -124,6 +127,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpense.getRemark());
+		
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);	
+		takePictureButton.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				mImageFieldPicture.addPicture();		
+			}
+			
+		});
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
