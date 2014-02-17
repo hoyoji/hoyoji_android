@@ -63,6 +63,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			moneyExpense =  new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyExpense = new MoneyExpense();
+			
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
@@ -210,7 +211,15 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						((MoneyExpense)mMoneyExpenseEditor.getModelCopy()).setPicture(pi.getPicture());
 					}
 				}
+				
 				mMoneyExpenseEditor.save();
+				
+				if(mSelectorFieldMoneyAccount.getModelId() != null){
+					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					moneyAccount.setCurrentBalance(moneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
+					moneyAccount.save();
+				}	
+				
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
 				getActivity().finish();
