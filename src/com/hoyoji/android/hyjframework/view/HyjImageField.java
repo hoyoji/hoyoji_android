@@ -77,13 +77,14 @@ public class HyjImageField extends GridView {
 	public ImageGridAdapter getAdapter(){
 		return mImageGridAdapter;
 	}
+	
+	public void addPicture(){
+		dispatchTakePictureIntent();
+	}
 		
 	public static class ImageGridAdapter extends ArrayAdapter<PictureItem> {
-		private PictureItem mPictureCamera;
 		public ImageGridAdapter(Context context, int resource) {
 			super(context, resource);
-			mPictureCamera = new PictureItem(null);
-			this.add(mPictureCamera);
 		}
 
 		@Override
@@ -101,28 +102,20 @@ public class HyjImageField extends GridView {
 					@Override
 					public void onClick(View v) {
 						PictureItem pic = (PictureItem) v.getTag();
-						if(pic ==  mPictureCamera){
-							self.dispatchTakePictureIntent();
-						} else {
-							HyjUtil.displayToast("Show large pic " + pic.getPicture().getId());
-						}
+						HyjUtil.displayToast("Show large pic " + pic.getPicture().getId());
 					}
 				});
 			}
 			
 			PictureItem pic = getItem(position);
 			iv.setTag(pic);
-			if (pic == mPictureCamera) {
-				iv.setImageResource(R.drawable.ic_action_camera);
-			} else {
-				File imageFile;
-				try {
-					imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
-					iv.setImageURI(Uri.fromFile(imageFile));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			File imageFile;
+			try {
+				imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
+				iv.setImageURI(Uri.fromFile(imageFile));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return iv;
 		}
