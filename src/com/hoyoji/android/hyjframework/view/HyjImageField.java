@@ -65,12 +65,13 @@ public class HyjImageField extends GridView {
     }
 	
 	public void setImages(List<Picture> pictures){
-		List<PictureItem> pis = new ArrayList<PictureItem>();
+		//List<PictureItem> pis = new ArrayList<PictureItem>();
 		for(int i=0; i < pictures.size(); i++){
 			PictureItem pi = new PictureItem(pictures.get(i));
-			pis.add(pi);
+			mImageGridAdapter.add(pi);
+			//pis.add(pi);
 		}
-		mImageGridAdapter.addAll(pis);
+		//mImageGridAdapter.addAll(pis);
 	}
 	
 	public ImageGridAdapter getAdapter(){
@@ -108,6 +109,7 @@ public class HyjImageField extends GridView {
 					}
 				});
 			}
+			
 			PictureItem pic = getItem(position);
 			iv.setTag(pic);
 			if (pic == mPictureCamera) {
@@ -172,6 +174,7 @@ public class HyjImageField extends GridView {
 		        if (photoFile != null) {
 		            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
 		           ((HyjActivity)getContext()).startActivityForResult(takePictureIntent, HyjActivity.REQUEST_TAKE_PHOTO);
+		           
 		           IntentFilter intentFilter = new IntentFilter("REQUEST_TAKE_PHOTO");
 		           BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(getContext(), photoFile, newPicture);
 		           getContext().registerReceiver(receiver,intentFilter); 

@@ -217,8 +217,6 @@ public abstract class HyjActivity extends ActionBarActivity {
 	    	Intent intent = new Intent("REQUEST_TAKE_PHOTO");
 	    	intent.putExtra("resultCode", resultCode);
 	    	this.sendBroadcast(intent);
-//	        Bitmap imageBitmap = (Bitmap) extras.get("data");
-//	        mImageView.setImageBitmap(imageBitmap);
 	    }
 	}
 }

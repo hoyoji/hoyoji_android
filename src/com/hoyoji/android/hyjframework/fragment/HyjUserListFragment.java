@@ -29,7 +29,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public abstract class HyjUserListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Object>, SimpleCursorAdapter.ViewBinder, SimpleAdapter.ViewBinder{
+public abstract class HyjUserListFragment extends ListFragment implements 
+	LoaderManager.LoaderCallbacks<Object>, 
+	SimpleCursorAdapter.ViewBinder, 
+	SimpleAdapter.ViewBinder{
+	
 	public final static int DELETE_LIST_ITEM = 1024;
 	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;

@@ -12,13 +12,14 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageButton;
 import android.widget.AbsListView.LayoutParams;
+import android.widget.ImageView;
 
-public class HyjImageView extends ImageButton {
+public class HyjImageView extends ImageView {
 	private Picture mPicture;
 	
 	public HyjImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.setScaleType(ScaleType.FIT_XY);
+//		this.setScaleType(ScaleType.FIT_XY);
 //		Resources r = context.getResources();
 //		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
 //		this.setLayoutParams(new LayoutParams((int)px, (int)px));
