@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -83,7 +84,13 @@ public class MoneyExpense extends HyjModel{
 	
 	public MoneyExpense(){
 		super();
+		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mId = UUID.randomUUID().toString();
+		mAmount = 0.00;
+		mExpenseType = "MoneyExpense";
+		mMoneyAccountId = userData.getActiveMoneyAccountId();
+		mProjectId = userData.getActiveProjectId();
+		mExchangeRate = 1.00;
 	}
 
 	public String getId() {

@@ -14,6 +14,8 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -66,6 +68,14 @@ public class HomeListFragment extends HyjUserListFragment {
 			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
 			return true;
 		}
+//		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
+//			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+//			return true;
+//		}
+//		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_topup){
+//			openActivityWithFragment(MoneyIncomeListFragment.class, R.string.moneyIncomeListFragment_title_all, null);
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 
