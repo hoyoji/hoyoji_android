@@ -1226,8 +1226,8 @@ containing a value of this type.
         public static final int moneyExpenseListItem_amount=0x7f06008a;
         public static final int moneyExpenseListItem_category=0x7f060087;
         public static final int moneyExpenseListItem_date=0x7f060089;
-        public static final int moneyExpenseListItem_image=0x7f060085;
         public static final int moneyExpenseListItem_owner=0x7f06008b;
+        public static final int moneyExpenseListItem_picture=0x7f060085;
         public static final int moneyExpenseListItem_project=0x7f060086;
         public static final int moneyExpenseListItem_remark=0x7f060088;
         public static final int moneyIncomeFormFragment_selectorField_friend=0x7f060083;

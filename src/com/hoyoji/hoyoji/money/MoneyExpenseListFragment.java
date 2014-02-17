@@ -17,6 +17,7 @@ import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -38,8 +39,8 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.money_listitem_moneyexpense,
 				null,
-				new String[] { "date", "amount" },
-				new int[] { R.id.moneyExpenseListItem_date, R.id.moneyExpenseListItem_amount },
+				new String[] {"pictureId", "date", "amount" },
+				new int[] { R.id.moneyExpenseListItem_picture, R.id.moneyExpenseListItem_date, R.id.moneyExpenseListItem_amount },
 				0); 
 	}	
 
@@ -101,6 +102,10 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setCurrencySymbol("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.moneyExpenseListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(cursor.getString(columnIndex));
 			return true;
 		} else {
 			return false;

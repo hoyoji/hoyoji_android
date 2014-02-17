@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Environment;
 import android.widget.Toast;
 
 import com.hoyoji.hoyoji.RegisterActivity;
@@ -67,4 +70,24 @@ public class HyjUtil {
 	        }
 	        return sb.toString();
 	    }
+	    
+		public static File createImageFile(String imageFileName) throws IOException {
+		    // Create an image file name
+		    File image = new File(
+		    	HyjApplication.getInstance().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		        imageFileName+".JPEG"
+		    );
+
+		    return image;
+		}
+		
+		public static File createImageFile(String imageFileName, String type) throws IOException {
+		    // Create an image file name
+		    File image = new File(
+		    	HyjApplication.getInstance().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		        imageFileName+"."+type
+		    );
+
+		    return image;
+		}
 }

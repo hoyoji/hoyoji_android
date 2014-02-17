@@ -53,9 +53,9 @@ public class ParentProject extends HyjModel {
 	}
 
 	
-	public List<ParentProject> getParentProjects() {
-		return getMany(ParentProject.class, "");
-	}
+//	public List<ParentProject> getParentProjects() {
+//		return getMany(ParentProject.class, "");
+//	}
 	
 	public String getOwnerUserId() {
 		return mOwnerUserId;

@@ -17,29 +17,29 @@ public class Picture extends HyjModel {
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
 
-	@Column(name = "name")
-	private String mName;
+	@Column(name = "title")
+	private String mTitle;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
-	@Column(name = "currencyId")
-	private String mCurrencyId;
+	@Column(name = "path")
+	private String mPath;
 
-	@Column(name = "autoApportion")
-	private Boolean mAutoApportion;
+	@Column(name = "pictureType")
+	private String mPictureType;
 
-	@Column(name = "defaultIncomeCategory")
-	private String mDefaultIncomeCategory;
+	@Column(name = "recordId")
+	private String mRecordId;
 
-	@Column(name = "defaultExpenseCategory")
-	private String mDefaultExpenseCategory;
+	@Column(name = "recordType")
+	private String mRecordType;
 
-	@Column(name = "depositeIncomeCategory")
-	private String mDepositeIncomeCategory;
+	@Column(name = "toBeUploaded")
+	private Boolean mToBeUploaded;
 
-	@Column(name = "depositeExpenseCategory")
-	private String mDepositeExpenseCategory;
+	@Column(name = "toBeDownloaded")
+	private Boolean mToBeDownloaded;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -53,15 +53,16 @@ public class Picture extends HyjModel {
 	public Picture(){
 		super();
 		mId = UUID.randomUUID().toString();
-		setAutoApportion(false);
+		this.setToBeUpaded(true);
+		this.setToBeDownloaded(false);
 	}
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getName().length() == 0){
-			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
+		if(this.getPath().length() == 0){
+			modelEditor.setValidationError("path", R.string.projectFormFragment_editText_hint_projectName);
 		} else {
-			modelEditor.removeValidationError("name");
+			modelEditor.removeValidationError("path");
 		}	
 	}
 
@@ -73,20 +74,12 @@ public class Picture extends HyjModel {
 		this.mId = mId;
 	}
 
-	public String getName() {
-		return mName;
+	public String getTitle() {
+		return mTitle;
 	}
 
-	public void setName(String mName) {
-		this.mName = mName;
-	}
-	
-	public List<ParentProject> getParentProjects() {
-		return getMany(ParentProject.class, "subProjectId");
-	}
-	
-	public List<ParentProject> getSubProjects() {
-		return getMany(ParentProject.class, "parentProjectId");
+	public void setTitle(String title) {
+		this.mTitle = title;
 	}
 	
 	public String getOwnerUserId() {
@@ -97,52 +90,52 @@ public class Picture extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getCurrencyId() {
-		return mCurrencyId;
+	public String getPath() {
+		return mPath;
 	}
 
-	public void setCurrencyId(String mCurrencyId) {
-		this.mCurrencyId = mCurrencyId;
+	public void setPath(String path) {
+		this.mPath = path;
 	}
 
-	public Boolean getAutoApportion() {
-		return mAutoApportion;
+	public String getPictureType() {
+		return mPictureType;
 	}
 
-	public void setAutoApportion(Boolean mAutoApportion) {
-		this.mAutoApportion = mAutoApportion;
+	public void setPictureType(String pictureType) {
+		this.mPictureType = pictureType;
 	}
 
-	public String getDefaultIncomeCategory() {
-		return mDefaultIncomeCategory;
+	public String getRecordId() {
+		return mRecordId;
 	}
 
-	public void setDefaultIncomeCategory(String mDefaultIncomeCategory) {
-		this.mDefaultIncomeCategory = mDefaultIncomeCategory;
+	public void setRecordId(String recordId) {
+		this.mRecordId = recordId;
 	}
 
-	public String getDefaultExpenseCategory() {
-		return mDefaultExpenseCategory;
+	public String getRecordType() {
+		return mRecordType;
 	}
 
-	public void setDefaultExpenseCategory(String mDefaultExpenseCategory) {
-		this.mDefaultExpenseCategory = mDefaultExpenseCategory;
+	public void setRecordType(String recordType) {
+		this.mRecordType = recordType;
 	}
 
-	public String getDepositeIncomeCategory() {
-		return mDepositeIncomeCategory;
+	public Boolean getToBeUploaded() {
+		return mToBeUploaded;
 	}
 
-	public void setDepositeIncomeCategoryId(String mDepositeIncomeCategory) {
-		this.mDepositeIncomeCategory = mDepositeIncomeCategory;
+	public void setToBeUpaded(Boolean toBeUploaded) {
+		this.mToBeUploaded = toBeUploaded;
 	}
 
-	public String getDepositeExpenseCategory() {
-		return mDepositeExpenseCategory;
+	public Boolean getToBeDownloaded() {
+		return mToBeDownloaded;
 	}
 
-	public void setDepositeExpenseCategory(String mDepositeExpenseCategory) {
-		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
+	public void setToBeDownloaded(boolean toBeDownloaded) {
+		this.mToBeDownloaded = toBeDownloaded;
 	}
 
 	public String getServerRecordHash() {

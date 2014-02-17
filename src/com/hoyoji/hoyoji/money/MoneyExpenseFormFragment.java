@@ -6,12 +6,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
+import com.hoyoji.android.hyjframework.view.HyjImageField;
+import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
@@ -20,6 +23,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -32,7 +36,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
-	private HyjTextField mTextFieldPicture = null;
+	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
@@ -61,6 +65,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
+		mImageFieldPicture.setImages(moneyExpense.getPictures());
+		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);		
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
@@ -80,9 +87,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
-		Project project = moneyExpense.getProject();
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_project);
-		
+		Project project = moneyExpense.getProject();
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
 			mSelectorFieldProject.setText(project.getName());
@@ -169,9 +175,35 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		if(mMoneyExpenseEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
-			mMoneyExpenseEditor.save();
-			HyjUtil.displayToast(R.string.app_save_success);
-			getActivity().finish();
+			try {
+				ActiveAndroid.beginTransaction();
+				HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
+				int count = adapter.getCount();
+				boolean mainPicSet = false;
+				for(int i = 0; i < count; i++){
+					PictureItem pi = adapter.getItem(i);
+					if(pi.getState() == PictureItem.NEW){
+						Picture newPic = pi.getPicture();
+						newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
+						newPic.setRecordType("Picture");
+						newPic.save();
+					} else if(pi.getState() == PictureItem.DELETED){
+						pi.getPicture().delete();
+					} else if(pi.getState() == PictureItem.CHANGED){
+
+					}
+					if(!mainPicSet && pi.getPicture() != null){
+						mainPicSet = true;
+						((MoneyExpense)mMoneyExpenseEditor.getModelCopy()).setPicture(pi.getPicture());
+					}
+				}
+				mMoneyExpenseEditor.save();
+				HyjUtil.displayToast(R.string.app_save_success);
+				ActiveAndroid.setTransactionSuccessful();
+				getActivity().finish();
+			} finally {
+			    ActiveAndroid.endTransaction();
+			}
 		}
 	}	
 	

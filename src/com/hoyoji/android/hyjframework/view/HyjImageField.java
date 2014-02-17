@@ -3,6 +3,8 @@ package com.hoyoji.android.hyjframework.view;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -62,6 +64,15 @@ public class HyjImageField extends GridView {
         params.height = getMeasuredHeight();
     }
 	
+	public void setImages(List<Picture> pictures){
+		List<PictureItem> pis = new ArrayList<PictureItem>();
+		for(int i=0; i < pictures.size(); i++){
+			PictureItem pi = new PictureItem(pictures.get(i));
+			pis.add(pi);
+		}
+		mImageGridAdapter.addAll(pis);
+	}
+	
 	public ImageGridAdapter getAdapter(){
 		return mImageGridAdapter;
 	}
@@ -104,7 +115,7 @@ public class HyjImageField extends GridView {
 			} else {
 				File imageFile;
 				try {
-					imageFile = self.createImageFile(pic.getPicture().getId()+"_icon");
+					imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
 					iv.setImageURI(Uri.fromFile(imageFile));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -116,10 +127,11 @@ public class HyjImageField extends GridView {
 
 	}
 	
-	static class PictureItem {
+	public static class PictureItem {
 		public static final int UNCHANGED = 0;
 		public static final int NEW = 1;
 		public static final int DELETED = 2;
+		public static final int CHANGED = 3;
 		
 		private int mState = UNCHANGED;
 		private Picture mPicture;
@@ -155,7 +167,7 @@ public class HyjImageField extends GridView {
 	        // Create the File where the photo should go
 	        File photoFile = null;
 	        try {
-	            photoFile = createImageFile(newPicture.getId());
+	            photoFile = HyjUtil.createImageFile(newPicture.getId());
 		        // Continue only if the File was successfully created
 		        if (photoFile != null) {
 		            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
@@ -171,15 +183,7 @@ public class HyjImageField extends GridView {
 	    }
 	}
 	
-	private File createImageFile(String imageFileName) throws IOException {
-	    // Create an image file name
-	    File image = new File(
-	    	this.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-	        imageFileName+".jpg"
-	    );
 
-	    return image;
-	}
 	
 	private Bitmap getScaledBitmap(String photoPath, int targetW, int targetH){
 	    // Get the dimensions of the bitmap
@@ -237,7 +241,7 @@ public class HyjImageField extends GridView {
 					    int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
 					    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(scaled, px, px);
 					    
-					    out = new FileOutputStream(createImageFile(mPicture.getId()+"_icon"));
+					    out = new FileOutputStream(HyjUtil.createImageFile(mPicture.getId()+"_icon"));
 					    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
 					    out.close();
 					    out = null;
@@ -248,6 +252,7 @@ public class HyjImageField extends GridView {
 					
 					scaled.recycle();
 					
+					mPicture.setPictureType("JPEG");
 					PictureItem pi = new PictureItem(mPicture, PictureItem.NEW);
 					mImageGridAdapter.add(pi);
 				} else {
