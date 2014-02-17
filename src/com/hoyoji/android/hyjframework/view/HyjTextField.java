@@ -6,6 +6,8 @@ import com.hoyoji.hoyoji.R;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -61,10 +63,10 @@ public class HyjTextField extends LinearLayout {
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
 		if(color != null){
-			//mEditTextEdit.setTextColor(color);
+			mEditTextEdit.setTextColor(Color.parseColor(color));
 		}
 		if(bold){
-			//mEditTextEdit.setText
+			mEditTextEdit.setTypeface(null, Typeface.BOLD);
 		}
 		if(border.equals("none")){
 			if(android.os.Build.VERSION.SDK_INT >= 16){
@@ -86,6 +88,7 @@ public class HyjTextField extends LinearLayout {
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
+			mTextViewLabel.setTextColor(Color.GRAY);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);

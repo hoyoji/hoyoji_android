@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -91,11 +92,11 @@ public class HyjDateTimeField extends LinearLayout {
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			
 			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			
 			mTextViewLabel.setLayoutParams(layoutParams);
-			mEditTextEdit.setLayoutParams(layoutParams);
+			//mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
+			mTextViewLabel.setTextColor(Color.GRAY);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
