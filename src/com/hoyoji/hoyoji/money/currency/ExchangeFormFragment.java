@@ -33,7 +33,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.exchange_formfragment_exchange;
+		return R.layout.currency_formfragment_exchange;
 	}
 
 	@Override
