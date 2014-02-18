@@ -5,6 +5,7 @@ import com.hoyoji.hoyoji.R;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -62,7 +63,7 @@ public class HyjRemarkField extends LinearLayout {
 		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
-			mEditTextEdit.setGravity(TEXT_ALIGNMENT_CENTER);
+//			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		} else if(style.equals("top_label")){
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -73,7 +74,8 @@ public class HyjRemarkField extends LinearLayout {
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
-			mEditTextEdit.setGravity(TEXT_ALIGNMENT_CENTER);
+			mTextViewLabel.setTextColor(Color.GRAY);
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);

@@ -5,6 +5,8 @@ import com.hoyoji.hoyoji.R;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -34,6 +36,8 @@ public class HyjNumericField extends LinearLayout {
 
 		String style;
 		String border;
+		String color;
+		boolean bold;
 		try {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
 			mEditText = a.getString(R.styleable.HyjTextField_editText);
@@ -42,6 +46,8 @@ public class HyjNumericField extends LinearLayout {
 			if(style == null){
 				style = "";
 			}
+			color  = a.getString(R.styleable.HyjTextField_editTextColor);
+			bold  = a.getBoolean(R.styleable.HyjTextField_editTextBold, false);
 			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
 			if(border == null){
 				border = "";
@@ -55,6 +61,15 @@ public class HyjNumericField extends LinearLayout {
 			inflater.inflate(R.layout.numeric_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
+		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
+		if(color != null){
+			int c = Color.parseColor(color);
+			mEditTextEdit.setTextColor(c);
+			mEditTextEdit.setHintTextColor(c);
+		}
+		if(bold){
+			mEditTextEdit.setTypeface(null, Typeface.BOLD);
+		}
 		if(border.equals("none")){
 			if(android.os.Build.VERSION.SDK_INT >= 16){
 				mEditTextEdit.setBackground(null);
@@ -72,13 +87,13 @@ public class HyjNumericField extends LinearLayout {
 		} else if(style.equals("top_label")){
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
-			
 			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
+			mTextViewLabel.setTextColor(Color.GRAY);
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);

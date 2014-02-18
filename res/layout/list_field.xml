@@ -5,14 +5,14 @@
         android:id="@id/text_field_label"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.7"
         android:gravity="center_vertical" 
         android:layout_gravity="center_vertical" />
 	<LinearLayout 
 	    android:orientation="vertical"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="2">
+        android:layout_weight="2.3">
 	    <ListView
 	        android:id="@id/list_field_listView"
 	        android:layout_width="match_parent"

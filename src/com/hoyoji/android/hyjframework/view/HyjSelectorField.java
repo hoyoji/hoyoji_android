@@ -5,6 +5,7 @@ import com.hoyoji.hoyoji.R;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -74,6 +75,7 @@ public class HyjSelectorField extends LinearLayout {
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
+			mTextViewLabel.setTextColor(Color.GRAY);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
