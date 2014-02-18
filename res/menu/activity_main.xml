@@ -25,8 +25,20 @@
                 hoyoji:showAsAction="never">
                 <menu>
 		            <item
-		                android:id="@id/mainActivity_action_money_addnew_expense"
-		                android:title="支出"
+		                android:id="@+id/mainActivity_action_money_addnew_borrow"
+		                android:title="借入"
+		                hoyoji:showAsAction="never"/>
+		            <item
+		                android:id="@+id/mainActivity_action_money_addnew_lend"
+		                android:title="借出"
+		                hoyoji:showAsAction="never"/>
+		            <item
+		                android:id="@+id/mainActivity_action_money_addnew_return"
+		                android:title="还款"
+		                hoyoji:showAsAction="never"/>
+		            <item
+		                android:id="@+id/mainActivity_action_money_addnew_payback"
+		                android:title="收款"
 		                hoyoji:showAsAction="never"/>
 		        </menu>
             </item>
