@@ -13,10 +13,11 @@ import android.os.Bundle;
 
 public class HyjDialogFragment extends DialogFragment {
     
-	public static HyjDialogFragment newInstance(int title, int positiveButton, int negativeButton, int neutralButton) {
+	public static HyjDialogFragment newInstance(int title, int msg, int positiveButton, int negativeButton, int neutralButton) {
 		HyjDialogFragment frag = new HyjDialogFragment();
 		Bundle args = new Bundle();
 		args.putInt("title", title);
+		args.putInt("message", msg);
 		args.putInt("positiveButton", positiveButton);
 		args.putInt("negativeButton", negativeButton);
 		args.putInt("neutralButton", neutralButton);
@@ -24,10 +25,11 @@ public class HyjDialogFragment extends DialogFragment {
 		return frag; 
 	}
 
-	public static HyjDialogFragment newInstance(String title, int positiveButton, int negativeButton, int neutralButton) {
+	public static HyjDialogFragment newInstance(String title, String msg, int positiveButton, int negativeButton, int neutralButton) {
 		HyjDialogFragment frag = new HyjDialogFragment();
 		Bundle args = new Bundle();
 		args.putString("title", title);
+		args.putString("message", msg);
 		args.putInt("positiveButton", positiveButton);
 		args.putInt("negativeButton", negativeButton);
 		args.putInt("neutralButton", neutralButton);
@@ -39,7 +41,14 @@ public class HyjDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString("title");
 		if(title == null){
-			title = getString(getArguments().getInt("title"));
+			int titleInt = getArguments().getInt("title");
+			if(titleInt != -1){
+				title = getString(titleInt);
+			}
+		}
+		String msg = getArguments().getString("message");
+		if(msg == null){
+			msg = getString(getArguments().getInt("message"));
 		}
 		int positiveButton = getArguments().getInt("positiveButton");
 		int negativeButton = getArguments().getInt("negativeButton");
@@ -47,8 +56,8 @@ public class HyjDialogFragment extends DialogFragment {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 				//.setIcon(R.drawable.alert_dialog_icon)
-				//.setTitle(R.string.alert_dialog_title)
-				.setMessage(title)
+				.setTitle(title)
+				.setMessage(msg)
 				.setPositiveButton(positiveButton,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,

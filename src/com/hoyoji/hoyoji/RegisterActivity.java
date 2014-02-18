@@ -131,7 +131,7 @@ public class RegisterActivity extends HyjActivity {
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {
-			final ProgressDialog progressDialog = this.displayProgressDialog("注册用户", "正在注册，请稍后...");  
+			final ProgressDialog progressDialog = this.displayProgressDialog(R.string.registerActivity_progress_register_title, R.string.registerActivity_progress_register_msg);  
 			Currency currency = Currency.getInstance(Locale.getDefault());
 			String currencyId = currency.getCurrencyCode();
 			String currencySymbol = currency.getSymbol();
@@ -151,16 +151,18 @@ public class RegisterActivity extends HyjActivity {
 				@Override
 				public void finishCallback(Object object) {
 					progressDialog.dismiss();
-					HyjUtil.displayToast("注册成功！");
+					HyjUtil.displayToast(R.string.registerActivity_toast_register_success);
 					RegisterActivity.this.finish();
 				}
 				@Override
 				public void errorCallback(Object object) {
 					progressDialog.dismiss();
+					JSONObject json = (JSONObject)object;
 					try {
-						RegisterActivity.this.displayDialog(((JSONObject)object).getJSONObject("__summary").getString("msg"));
+						RegisterActivity.this.displayDialog(json.getJSONObject("__summary").getString("msg"), json.getJSONObject("userName").getString("msg"));
 					} catch (Exception e) {
 						e.printStackTrace();
+						RegisterActivity.this.displayDialog(json.optJSONObject("__summary").optString("msg"), json.toString());
 					}
 				}
 			};

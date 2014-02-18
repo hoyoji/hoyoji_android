@@ -5,7 +5,11 @@
     
     <string name="registerActivity_action_register">注册</string>
     <string name="registerActivity_ime_sign_in_short">注册</string>
-    	
+    
+    <string name="registerActivity_toast_register_success">注册成功！</string>
+    <string name="registerActivity_progress_register_title">正在注册</string>
+    <string name="registerActivity_progress_register_msg">正在注册，请稍后&#8230;</string>
+    
  	<string name="registerActivity_textView_username">用户名</string>
     <string name="registerActivity_textView_password1">密码</string>
     <string name="registerActivity_textView_password2">确认密码</string>

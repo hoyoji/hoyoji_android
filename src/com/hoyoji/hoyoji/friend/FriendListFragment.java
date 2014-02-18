@@ -58,7 +58,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_create, null);
 			return true;
 		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
-			openActivityWithFragment(AddFriendListFragment.class, R.string.AddFriendListFragment_title_add, null);
+			openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

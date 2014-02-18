@@ -58,7 +58,7 @@ public class CurrencyListFragment extends HyjUserListFragment{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.currencyListFragment_action_currency_addnew){
-			openActivityWithFragment(CurrencyFormFragment.class, R.string.currencyFormFragment_title_addnew, null);
+			openActivityWithFragment(AddCurrencyListFragment.class, R.string.addCurrencyListFragment_title_add, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -83,6 +83,6 @@ public class CurrencyListFragment extends HyjUserListFragment{
 	public void onDeleteListItem(Long id){
 		Currency currency= Currency.load(Currency.class, id);
 		currency.delete();
-	    HyjUtil.displayToast("币种删除成功");
+	    HyjUtil.displayToast(R.string.currencyFormFragment_toast_delete_success);
 	}
 }

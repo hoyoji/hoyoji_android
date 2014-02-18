@@ -289,7 +289,8 @@ public class LoginActivity extends HyjActivity {
 			public void errorCallback(Object object) {
 				LoginActivity.this.dismissProgressDialog();
 				try {
-					LoginActivity.this.displayDialog(((JSONObject)object).getJSONObject("__summary").getString("msg"));
+					JSONObject json = (JSONObject)object;
+					LoginActivity.this.displayDialog(json.getJSONObject("__summary").getString("msg"), json.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
