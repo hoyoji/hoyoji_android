@@ -107,4 +107,8 @@ public class HyjSelectorField extends LinearLayout {
 	public void setOnClickListener(OnClickListener onClickListener){
 		mEditTextEdit.setOnClickListener(onClickListener);
 	}
+	
+	public void setEnabled(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+	}
 }

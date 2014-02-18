@@ -1,20 +1,32 @@
 package com.hoyoji.hoyoji.money.currency;
 
+import org.json.JSONObject;
+
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.RotateDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Currency;
@@ -30,6 +42,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mEditTextForeignCurrency = null;
 	private HyjNumericField mEditTextRate = null;
 	private CheckBox mEditTextAutoUpdate = null;
+	private ImageView mImageViewRefreshRate = null;
 
 	@Override
 	public Integer useContentView() {
@@ -58,6 +71,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			mEditTextLocalCurrency.setText(localCurrency.getName());
 			mEditTextLocalCurrency.setModelId(exchange.getLocalCurrencyId());
 		}
+		mEditTextLocalCurrency.setEnabled(modelId == -1);
 		mEditTextLocalCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -68,7 +82,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 								null, GET_LOCAL_CURRENCY_ID);
 			}
 		});
-
+		
 		mEditTextForeignCurrency = (HyjSelectorField) getView().findViewById(
 				R.id.exchangeFormFragment_editText_foreignCurrency);
 		Currency foreignCurrency = exchange.getForeignCurrency();
@@ -77,6 +91,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			mEditTextForeignCurrency
 					.setModelId(exchange.getForeignCurrencyId());
 		}
+		mEditTextForeignCurrency.setEnabled(modelId == -1);
 		mEditTextForeignCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -95,7 +110,39 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		mEditTextAutoUpdate = (CheckBox) getView().findViewById(
 				R.id.exchangeFormFragment_checkBox_autoUpdate);
 		mEditTextAutoUpdate.setChecked(exchange.getAutoUpdate());
+		
 
+		mImageViewRefreshRate = (ImageView) getView().findViewById(
+				R.id.exchangeFormFragment_imageView_refresh_rate);
+		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				String fromCurrency = mEditTextLocalCurrency.getModelId();
+				String toCurrency = mEditTextForeignCurrency.getModelId();
+				if(fromCurrency != null && toCurrency != null){
+					HyjUtil.startRoateView(mImageViewRefreshRate);
+					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
+						@Override
+						public void finishCallback(Object object) {
+							HyjUtil.stopRoateView(mImageViewRefreshRate);
+							mEditTextRate.setNumber((Double)object);
+						}
+						@Override
+						public void errorCallback(Object object) {
+							HyjUtil.stopRoateView(mImageViewRefreshRate);
+							if(object != null){
+								HyjUtil.displayToast(object.toString());
+							} else {
+								HyjUtil.displayToast("无法获取汇率，请手工输入。");
+							}
+						}
+					};
+					HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
+				} else {
+					HyjUtil.displayToast("请先选择本币和外币");
+				}
+			}
+		});
 	}
 
 	 private void fillData(){

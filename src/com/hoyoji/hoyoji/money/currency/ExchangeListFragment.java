@@ -20,6 +20,7 @@ import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjBooleanView;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
@@ -133,7 +134,7 @@ public class ExchangeListFragment extends HyjUserListFragment{
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.exchangeListItem_autoUpdate){
-			((TextView)view).setText(String.valueOf(cursor.getInt(columnIndex)));
+			((HyjBooleanView)view).setBoolean(cursor.getInt(columnIndex));
 			return true;
 		} else {
 			return false;

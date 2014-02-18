@@ -36,7 +36,7 @@ public class HyjNumericField extends LinearLayout {
 
 		String style;
 		String border;
-		String color;
+		int color = -1;
 		boolean bold;
 		try {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
@@ -46,7 +46,7 @@ public class HyjNumericField extends LinearLayout {
 			if(style == null){
 				style = "";
 			}
-			color  = a.getString(R.styleable.HyjTextField_editTextColor);
+			color  = a.getColor(R.styleable.HyjTextField_editTextColor, -1);
 			bold  = a.getBoolean(R.styleable.HyjTextField_editTextBold, false);
 			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
 			if(border == null){
@@ -62,10 +62,9 @@ public class HyjNumericField extends LinearLayout {
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		if(color != null){
-			int c = Color.parseColor(color);
-			mEditTextEdit.setTextColor(c);
-			mEditTextEdit.setHintTextColor(c);
+		if(color != -1){
+			mEditTextEdit.setTextColor(color);
+			mEditTextEdit.setHintTextColor(color);
 		}
 		if(bold){
 			mEditTextEdit.setTypeface(null, Typeface.BOLD);

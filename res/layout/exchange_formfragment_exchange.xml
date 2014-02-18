@@ -26,14 +26,24 @@
            hyj:hintText="@string/exchangeFormFragment_editText_hint_foreignCurrency"
        />
    	
+   	<FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
    	   	<com.hoyoji.android.hyjframework.view.HyjNumericField 
            android:id="@+id/exchangeFormFragment_editText_rate"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" 
+	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content" 
            hyj:labelText="@string/exchangeFormFragment_textView_rate"
            hyj:hintText="@string/exchangeFormFragment_editText_hint_rate"
-       />
-    
+        />
+
+   	   	<ImageView
+           	android:id="@+id/exchangeFormFragment_imageView_refresh_rate"
+   	   	    android:layout_width="wrap_content"
+   	   	    android:layout_height="wrap_content" 
+   	   	    android:src="@drawable/ic_action_refresh"
+   	   	    android:layout_gravity="right"/>
+     	   	</FrameLayout>
     <View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"
@@ -49,6 +59,11 @@
 	    android:layout_height="wrap_content"
 	    android:text="@string/exchangeFormFragment_textView_autoUpdate" />
 	
+    <TextView
+        android:id="@+id/projectFormFragment_checkBox_hint_autoApportion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/projectFormFragment_checkBox_hint_autoApportion" />
 	<View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"

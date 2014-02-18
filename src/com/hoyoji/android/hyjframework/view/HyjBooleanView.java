@@ -31,44 +31,47 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HyjDateTimeView extends TextView {
-	public HyjDateTimeView(Context context, AttributeSet attrs) {
+public class HyjBooleanView extends TextView {
+	public HyjBooleanView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
+				R.styleable.HyjTextField, 0, 0);
+
+		try {
+			mTrueText = a.getString(R.styleable.HyjTextField_trueText);
+			mFalseText = a.getString(R.styleable.HyjTextField_falseText);
+		} finally {
+			a.recycle();
+		}
 	}
 
-	private Date mDate;
-	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private Boolean mBoolean;
+	private String mTrueText;
+	private String mFalseText;
 	
-	public void setText(String dateString){
-		Date date;
-		try {
-			mDateFormat.setTimeZone(TimeZone.getDefault());
-			date = mDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
-			setDate(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			super.setText(dateString);
-			mDate = null;
-		}
+	public void setBoolean(Boolean value){
+		mBoolean = value;
+		this.setText(getText());
 	}
 	
-	public void setDate(Date date){
-		mDate = date;
-		if(date == null){
-			super.setText("");
+	public void setBoolean(int value){
+		if(value == 0){
+			mBoolean = false;
 		} else {
-			DateFormat df = DateFormat.getDateTimeInstance();
-			super.setText(df.format(date));
+			mBoolean = true;
 		}
+		this.setText(getText());
 	}
 	
 	public String getText(){
-		if(mDate == null){
-			return null;
-		} 
-		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return mDateFormat.format(mDate);
+		if(mBoolean){
+			return mTrueText;
+		} else {
+			return mFalseText;
+		}
 	}
 	
+	public Boolean getBoolean(){
+		return mBoolean;
+	}
 }

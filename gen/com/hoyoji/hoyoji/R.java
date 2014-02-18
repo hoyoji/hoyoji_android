@@ -330,7 +330,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int editTextBold=0x7f010072;
+        public static final int editTextBold=0x7f010074;
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -338,15 +338,16 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int editTextBorder=0x7f010071;
-        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+        public static final int editTextBorder=0x7f010073;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int editTextColor=0x7f010073;
+        public static final int editTextColor=0x7f010075;
         /**  The drawable to show in the button for expanding the activities overflow popup.
              <strong>Note:</strong> Clients would like to set this drawable
              as a clue about the action the chosen activity will perform. For
@@ -357,6 +358,10 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int expandActivityOverflowButtonDrawable=0x7f010067;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int falseText=0x7f010071;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -763,7 +768,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int style=0x7f010070;
+        public static final int style=0x7f010072;
         /**  Specifies subtitle text used for navigationMode="normal" 
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
@@ -834,6 +839,10 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int titleTextStyle=0x7f010026;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int trueText=0x7f010070;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -1115,26 +1124,27 @@ containing a value of this type.
         public static final int ic_action_place=0x7f020086;
         public static final int ic_action_read=0x7f020087;
         public static final int ic_action_refresh=0x7f020088;
-        public static final int ic_action_remove=0x7f020089;
-        public static final int ic_action_reply=0x7f02008a;
-        public static final int ic_action_reply_all=0x7f02008b;
-        public static final int ic_action_rotate_left=0x7f02008c;
-        public static final int ic_action_rotate_right=0x7f02008d;
-        public static final int ic_action_save=0x7f02008e;
-        public static final int ic_action_search=0x7f02008f;
-        public static final int ic_action_select_all=0x7f020090;
-        public static final int ic_action_send_now=0x7f020091;
-        public static final int ic_action_settings=0x7f020092;
-        public static final int ic_action_share=0x7f020093;
-        public static final int ic_action_sort_by_size=0x7f020094;
-        public static final int ic_action_time=0x7f020095;
-        public static final int ic_action_undo=0x7f020096;
-        public static final int ic_action_unread=0x7f020097;
-        public static final int ic_action_view_as_grid=0x7f020098;
-        public static final int ic_action_web_site=0x7f020099;
-        public static final int ic_drawer=0x7f02009a;
-        public static final int ic_drawer_am=0x7f02009b;
-        public static final int ic_launcher=0x7f02009c;
+        public static final int ic_action_refresh_progress=0x7f020089;
+        public static final int ic_action_remove=0x7f02008a;
+        public static final int ic_action_reply=0x7f02008b;
+        public static final int ic_action_reply_all=0x7f02008c;
+        public static final int ic_action_rotate_left=0x7f02008d;
+        public static final int ic_action_rotate_right=0x7f02008e;
+        public static final int ic_action_save=0x7f02008f;
+        public static final int ic_action_search=0x7f020090;
+        public static final int ic_action_select_all=0x7f020091;
+        public static final int ic_action_send_now=0x7f020092;
+        public static final int ic_action_settings=0x7f020093;
+        public static final int ic_action_share=0x7f020094;
+        public static final int ic_action_sort_by_size=0x7f020095;
+        public static final int ic_action_time=0x7f020096;
+        public static final int ic_action_undo=0x7f020097;
+        public static final int ic_action_unread=0x7f020098;
+        public static final int ic_action_view_as_grid=0x7f020099;
+        public static final int ic_action_web_site=0x7f02009a;
+        public static final int ic_drawer=0x7f02009b;
+        public static final int ic_drawer_am=0x7f02009c;
+        public static final int ic_launcher=0x7f02009d;
     }
     public static final class id {
         public static final int DatePicker=0x7f06005c;
@@ -1177,35 +1187,35 @@ containing a value of this type.
         public static final int editText_username=0x7f060047;
         public static final int edit_query=0x7f06003a;
         public static final int end=0x7f060013;
-        public static final int exchangeFormFragment_checkBox_autoUpdate=0x7f060061;
+        public static final int exchangeFormFragment_checkBox_autoUpdate=0x7f060062;
         public static final int exchangeFormFragment_editText_foreignCurrency=0x7f06005f;
         public static final int exchangeFormFragment_editText_localCurrency=0x7f06005e;
         public static final int exchangeFormFragment_editText_rate=0x7f060060;
+        public static final int exchangeFormFragment_imageView_refresh_rate=0x7f060061;
         public static final int exchangeListFragment_action_exchange_addnew=0x7f0600a4;
-        public static final int exchangeListItem_autoUpdate=0x7f060064;
-        public static final int exchangeListItem_exchange=0x7f060066;
-        public static final int exchangeListItem_foreignCurrency=0x7f060063;
-        public static final int exchangeListItem_localCurrency=0x7f060062;
-        public static final int exchangeListItem_rate=0x7f060065;
+        public static final int exchangeListItem_autoUpdate=0x7f060066;
+        public static final int exchangeListItem_foreignCurrency=0x7f060065;
+        public static final int exchangeListItem_localCurrency=0x7f060064;
+        public static final int exchangeListItem_rate=0x7f060067;
         public static final int expand_activities_button=0x7f060030;
         public static final int expanded_menu=0x7f060036;
         public static final int field_separator=0x7f06001b;
-        public static final int field_separator_exchange=0x7f06007a;
+        public static final int field_separator_exchange=0x7f06007b;
         public static final int formFragment_action_save=0x7f0600a5;
-        public static final int friendAddRequestMessageFormFragment_editText_detail=0x7f060071;
-        public static final int friendAddRequestMessageFormFragment_editText_toUser=0x7f06006f;
-        public static final int friendAddRequestMessageFormFragment_textView_detail=0x7f060070;
-        public static final int friendAddRequestMessageFormFragment_textView_toUser=0x7f06006e;
-        public static final int friendCategoryFormFragment_textField_name=0x7f06006a;
+        public static final int friendAddRequestMessageFormFragment_editText_detail=0x7f060072;
+        public static final int friendAddRequestMessageFormFragment_editText_toUser=0x7f060070;
+        public static final int friendAddRequestMessageFormFragment_textView_detail=0x7f060071;
+        public static final int friendAddRequestMessageFormFragment_textView_toUser=0x7f06006f;
+        public static final int friendCategoryFormFragment_textField_name=0x7f06006b;
         public static final int friendCategoryListFragment_action_create=0x7f0600a8;
-        public static final int friendFormFragment_selectorField_friend_category=0x7f060067;
-        public static final int friendFormFragment_textField_nickName=0x7f060068;
-        public static final int friendFormFragment_textField_remark=0x7f060069;
+        public static final int friendFormFragment_selectorField_friend_category=0x7f060068;
+        public static final int friendFormFragment_textField_nickName=0x7f060069;
+        public static final int friendFormFragment_textField_remark=0x7f06006a;
         public static final int friendListFragment_action_friend_add=0x7f0600a6;
         public static final int friendListFragment_action_friend_create=0x7f0600a7;
-        public static final int friendListFragment_addFriend_searchView=0x7f06006b;
-        public static final int friendListItem_category_name=0x7f06006d;
-        public static final int friendListItem_nickName=0x7f06006c;
+        public static final int friendListFragment_addFriend_searchView=0x7f06006c;
+        public static final int friendListItem_category_name=0x7f06006e;
+        public static final int friendListItem_nickName=0x7f06006d;
         public static final int home=0x7f060014;
         public static final int homeAsUp=0x7f060005;
         public static final int homeListFragment_action_display_exchangeAll=0x7f0600ae;
@@ -1236,45 +1246,45 @@ containing a value of this type.
         public static final int mainActivity_action_money_addnew_topup=0x7f0600a2;
         public static final int mainActivity_action_money_addnew_transfer=0x7f0600a0;
         public static final int middle=0x7f060012;
-        public static final int moneyAccountFormFragment_selectorField_currency=0x7f060090;
-        public static final int moneyAccountFormFragment_textField_accountNumber=0x7f060093;
-        public static final int moneyAccountFormFragment_textField_accountType=0x7f060092;
-        public static final int moneyAccountFormFragment_textField_bankAddress=0x7f060094;
-        public static final int moneyAccountFormFragment_textField_currentBalance=0x7f060091;
-        public static final int moneyAccountFormFragment_textField_name=0x7f06008f;
-        public static final int moneyAccountFormFragment_textField_remark=0x7f060095;
+        public static final int moneyAccountFormFragment_selectorField_currency=0x7f060091;
+        public static final int moneyAccountFormFragment_textField_accountNumber=0x7f060094;
+        public static final int moneyAccountFormFragment_textField_accountType=0x7f060093;
+        public static final int moneyAccountFormFragment_textField_bankAddress=0x7f060095;
+        public static final int moneyAccountFormFragment_textField_currentBalance=0x7f060092;
+        public static final int moneyAccountFormFragment_textField_name=0x7f060090;
+        public static final int moneyAccountFormFragment_textField_remark=0x7f060096;
         public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f0600b1;
-        public static final int moneyAccountListItem_name=0x7f060096;
-        public static final int moneyExpenseFormFragment_imageButton_refresh_exchangeRate=0x7f06007c;
-        public static final int moneyExpenseFormFragment_imageField_picture=0x7f060072;
-        public static final int moneyExpenseFormFragment_imageView_camera=0x7f060073;
-        public static final int moneyExpenseFormFragment_selectorField_friend=0x7f060077;
-        public static final int moneyExpenseFormFragment_selectorField_moneyAccount=0x7f060078;
-        public static final int moneyExpenseFormFragment_selectorField_project=0x7f060079;
-        public static final int moneyExpenseFormFragment_textField_amount=0x7f060075;
-        public static final int moneyExpenseFormFragment_textField_date=0x7f060074;
-        public static final int moneyExpenseFormFragment_textField_exchangeRate=0x7f06007b;
-        public static final int moneyExpenseFormFragment_textField_moneyExpenseCategory=0x7f060076;
-        public static final int moneyExpenseFormFragment_textField_remark=0x7f06007d;
+        public static final int moneyAccountListItem_name=0x7f060097;
+        public static final int moneyExpenseFormFragment_imageButton_refresh_exchangeRate=0x7f06007d;
+        public static final int moneyExpenseFormFragment_imageField_picture=0x7f060073;
+        public static final int moneyExpenseFormFragment_imageView_camera=0x7f060074;
+        public static final int moneyExpenseFormFragment_selectorField_friend=0x7f060078;
+        public static final int moneyExpenseFormFragment_selectorField_moneyAccount=0x7f060079;
+        public static final int moneyExpenseFormFragment_selectorField_project=0x7f06007a;
+        public static final int moneyExpenseFormFragment_textField_amount=0x7f060076;
+        public static final int moneyExpenseFormFragment_textField_date=0x7f060075;
+        public static final int moneyExpenseFormFragment_textField_exchangeRate=0x7f06007c;
+        public static final int moneyExpenseFormFragment_textField_moneyExpenseCategory=0x7f060077;
+        public static final int moneyExpenseFormFragment_textField_remark=0x7f06007e;
         public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f0600af;
-        public static final int moneyExpenseListItem_amount=0x7f06008c;
-        public static final int moneyExpenseListItem_category=0x7f060089;
-        public static final int moneyExpenseListItem_date=0x7f06008b;
-        public static final int moneyExpenseListItem_owner=0x7f06008d;
-        public static final int moneyExpenseListItem_picture=0x7f060087;
-        public static final int moneyExpenseListItem_project=0x7f060088;
-        public static final int moneyExpenseListItem_remark=0x7f06008a;
-        public static final int moneyIncomeFormFragment_selectorField_friend=0x7f060085;
-        public static final int moneyIncomeFormFragment_selectorField_moneyAccount=0x7f060081;
-        public static final int moneyIncomeFormFragment_selectorField_project=0x7f060082;
-        public static final int moneyIncomeFormFragment_textField_amount=0x7f060080;
-        public static final int moneyIncomeFormFragment_textField_date=0x7f06007f;
-        public static final int moneyIncomeFormFragment_textField_exchangeRate=0x7f060083;
-        public static final int moneyIncomeFormFragment_textField_moneyIncomeCategory=0x7f060084;
-        public static final int moneyIncomeFormFragment_textField_picture=0x7f06007e;
-        public static final int moneyIncomeFormFragment_textField_remark=0x7f060086;
+        public static final int moneyExpenseListItem_amount=0x7f06008d;
+        public static final int moneyExpenseListItem_category=0x7f06008a;
+        public static final int moneyExpenseListItem_date=0x7f06008c;
+        public static final int moneyExpenseListItem_owner=0x7f06008e;
+        public static final int moneyExpenseListItem_picture=0x7f060088;
+        public static final int moneyExpenseListItem_project=0x7f060089;
+        public static final int moneyExpenseListItem_remark=0x7f06008b;
+        public static final int moneyIncomeFormFragment_selectorField_friend=0x7f060086;
+        public static final int moneyIncomeFormFragment_selectorField_moneyAccount=0x7f060082;
+        public static final int moneyIncomeFormFragment_selectorField_project=0x7f060083;
+        public static final int moneyIncomeFormFragment_textField_amount=0x7f060081;
+        public static final int moneyIncomeFormFragment_textField_date=0x7f060080;
+        public static final int moneyIncomeFormFragment_textField_exchangeRate=0x7f060084;
+        public static final int moneyIncomeFormFragment_textField_moneyIncomeCategory=0x7f060085;
+        public static final int moneyIncomeFormFragment_textField_picture=0x7f06007f;
+        public static final int moneyIncomeFormFragment_textField_remark=0x7f060087;
         public static final int moneyIncomeListFragment_action_moneyIncome_addnew=0x7f0600b0;
-        public static final int moneyIncomeListItem_date=0x7f06008e;
+        public static final int moneyIncomeListItem_date=0x7f06008f;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
@@ -1282,10 +1292,10 @@ containing a value of this type.
         public static final int pager_title_strip=0x7f06004e;
         public static final int progress_circular=0x7f060018;
         public static final int progress_horizontal=0x7f060019;
-        public static final int projectFormFragment_checkBox_autoApportion=0x7f060099;
-        public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f06009a;
-        public static final int projectFormFragment_listField_parentProject=0x7f060098;
-        public static final int projectFormFragment_textField_projectName=0x7f060097;
+        public static final int projectFormFragment_checkBox_autoApportion=0x7f06009a;
+        public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f060063;
+        public static final int projectFormFragment_listField_parentProject=0x7f060099;
+        public static final int projectFormFragment_textField_projectName=0x7f060098;
         public static final int projectListFragment_action_project_addnew=0x7f0600b2;
         public static final int projectListItem_name=0x7f06009b;
         public static final int radio=0x7f060039;
@@ -1470,7 +1480,7 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
         public static final int addCurrencyListFragment_title_add=0x7f0b005f;
-        public static final int addFriendListFragment_title_add=0x7f0b007e;
+        public static final int addFriendListFragment_title_add=0x7f0b0080;
         public static final int alert_dialog_cancel=0x7f0b0055;
         public static final int alert_dialog_no=0x7f0b0054;
         public static final int alert_dialog_ok=0x7f0b0052;
@@ -1519,33 +1529,35 @@ containing a value of this type.
         public static final int exchangeListFragment_title_select_foreign_currency=0x7f0b0072;
         public static final int exchangeListFragment_title_select_local_currency=0x7f0b0073;
         public static final int exchangeListFragment_title_update_all_exchange=0x7f0b0071;
-        public static final int friendAddRequestMessageFormFragment_editText_hint_detail=0x7f0b008f;
-        public static final int friendAddRequestMessageFormFragment_editText_hint_toUser=0x7f0b008d;
-        public static final int friendAddRequestMessageFormFragment_textView_detail=0x7f0b008e;
-        public static final int friendAddRequestMessageFormFragment_textView_toUser=0x7f0b008c;
-        public static final int friendCategoryFormFragment_editText_hint_name=0x7f0b007d;
-        public static final int friendCategoryFormFragment_textView_name=0x7f0b007c;
-        public static final int friendCategoryFormFragment_title_create=0x7f0b007a;
-        public static final int friendCategoryFormFragment_title_edit=0x7f0b007b;
-        public static final int friendCategoryListFragment_action_create=0x7f0b0084;
-        public static final int friendCategoryListFragment_title_select_friend_category=0x7f0b0085;
-        public static final int friendFormFragment_editText_hint_friend_category=0x7f0b0079;
-        public static final int friendFormFragment_editText_hint_nickName=0x7f0b0077;
-        public static final int friendFormFragment_textView_friend_category=0x7f0b0078;
-        public static final int friendFormFragment_textView_nickName=0x7f0b0076;
-        public static final int friendFormFragment_title_create=0x7f0b0074;
-        public static final int friendFormFragment_title_edit=0x7f0b0075;
-        public static final int friendListFragment_action_friend_add=0x7f0b0080;
-        public static final int friendListFragment_action_friend_create=0x7f0b0083;
-        public static final int friendListFragment_addFriend_searchView_hint=0x7f0b007f;
-        public static final int friendListFragment_title_select_friend_payee=0x7f0b0081;
-        public static final int friendListFragment_title_select_friend_payer=0x7f0b0082;
-        public static final int homeListFragment_action_display_exchangeAll=0x7f0b008b;
-        public static final int homeListFragment_action_display_transaction_type=0x7f0b0088;
-        public static final int homeListFragment_action_display_transaction_type_personal=0x7f0b0089;
-        public static final int homeListFragment_action_display_transaction_type_project=0x7f0b008a;
-        public static final int homeListFragment_action_report=0x7f0b0086;
-        public static final int homeListFragment_action_sync=0x7f0b0087;
+        public static final int exchangeListItem_autoUpdate_false=0x7f0b0075;
+        public static final int exchangeListItem_autoUpdate_true=0x7f0b0074;
+        public static final int friendAddRequestMessageFormFragment_editText_hint_detail=0x7f0b0091;
+        public static final int friendAddRequestMessageFormFragment_editText_hint_toUser=0x7f0b008f;
+        public static final int friendAddRequestMessageFormFragment_textView_detail=0x7f0b0090;
+        public static final int friendAddRequestMessageFormFragment_textView_toUser=0x7f0b008e;
+        public static final int friendCategoryFormFragment_editText_hint_name=0x7f0b007f;
+        public static final int friendCategoryFormFragment_textView_name=0x7f0b007e;
+        public static final int friendCategoryFormFragment_title_create=0x7f0b007c;
+        public static final int friendCategoryFormFragment_title_edit=0x7f0b007d;
+        public static final int friendCategoryListFragment_action_create=0x7f0b0086;
+        public static final int friendCategoryListFragment_title_select_friend_category=0x7f0b0087;
+        public static final int friendFormFragment_editText_hint_friend_category=0x7f0b007b;
+        public static final int friendFormFragment_editText_hint_nickName=0x7f0b0079;
+        public static final int friendFormFragment_textView_friend_category=0x7f0b007a;
+        public static final int friendFormFragment_textView_nickName=0x7f0b0078;
+        public static final int friendFormFragment_title_create=0x7f0b0076;
+        public static final int friendFormFragment_title_edit=0x7f0b0077;
+        public static final int friendListFragment_action_friend_add=0x7f0b0082;
+        public static final int friendListFragment_action_friend_create=0x7f0b0085;
+        public static final int friendListFragment_addFriend_searchView_hint=0x7f0b0081;
+        public static final int friendListFragment_title_select_friend_payee=0x7f0b0083;
+        public static final int friendListFragment_title_select_friend_payer=0x7f0b0084;
+        public static final int homeListFragment_action_display_exchangeAll=0x7f0b008d;
+        public static final int homeListFragment_action_display_transaction_type=0x7f0b008a;
+        public static final int homeListFragment_action_display_transaction_type_personal=0x7f0b008b;
+        public static final int homeListFragment_action_display_transaction_type_project=0x7f0b008c;
+        public static final int homeListFragment_action_report=0x7f0b0088;
+        public static final int homeListFragment_action_sync=0x7f0b0089;
         public static final int loginActivity_action_forgot_password=0x7f0b0024;
         public static final int loginActivity_action_sign_in=0x7f0b0021;
         public static final int loginActivity_alert_require_login=0x7f0b002a;
@@ -1569,74 +1581,74 @@ containing a value of this type.
         public static final int mainActivity_section_title_friend=0x7f0b0030;
         public static final int mainActivity_section_title_home=0x7f0b002e;
         public static final int mainActivity_section_title_project=0x7f0b002f;
-        public static final int moneyAccountFormFragment_editText_hint_accountNumber=0x7f0b00cb;
-        public static final int moneyAccountFormFragment_editText_hint_accountType=0x7f0b00c9;
-        public static final int moneyAccountFormFragment_editText_hint_bankAddress=0x7f0b00cd;
-        public static final int moneyAccountFormFragment_editText_hint_currency=0x7f0b00c5;
-        public static final int moneyAccountFormFragment_editText_hint_currentBalance=0x7f0b00c7;
-        public static final int moneyAccountFormFragment_editText_hint_name=0x7f0b00c3;
-        public static final int moneyAccountFormFragment_editText_hint_remark=0x7f0b00cf;
-        public static final int moneyAccountFormFragment_textView_accountNumber=0x7f0b00ca;
-        public static final int moneyAccountFormFragment_textView_accountType=0x7f0b00c8;
-        public static final int moneyAccountFormFragment_textView_bankAddress=0x7f0b00cc;
-        public static final int moneyAccountFormFragment_textView_currency=0x7f0b00c4;
-        public static final int moneyAccountFormFragment_textView_currentBalance=0x7f0b00c6;
-        public static final int moneyAccountFormFragment_textView_name=0x7f0b00c2;
-        public static final int moneyAccountFormFragment_textView_remark=0x7f0b00ce;
-        public static final int moneyAccountFormFragment_title_addnew=0x7f0b00c0;
-        public static final int moneyAccountFormFragment_title_edit=0x7f0b00c1;
-        public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f0b00d0;
-        public static final int moneyAccountListFragment_title_manage_moneyAccount=0x7f0b00d1;
-        public static final int moneyAccountListFragment_title_select_currency=0x7f0b00d3;
-        public static final int moneyAccountListFragment_title_select_moneyAccount=0x7f0b00d2;
-        public static final int moneyExpenseFormFragment_editText_hint_amount=0x7f0b0097;
-        public static final int moneyExpenseFormFragment_editText_hint_date=0x7f0b0095;
-        public static final int moneyExpenseFormFragment_editText_hint_exchangeRate=0x7f0b009f;
-        public static final int moneyExpenseFormFragment_editText_hint_friend=0x7f0b00a3;
-        public static final int moneyExpenseFormFragment_editText_hint_moneyAccount=0x7f0b009b;
-        public static final int moneyExpenseFormFragment_editText_hint_moneyExpenseCategory=0x7f0b00a1;
-        public static final int moneyExpenseFormFragment_editText_hint_picture=0x7f0b0093;
-        public static final int moneyExpenseFormFragment_editText_hint_project=0x7f0b009d;
-        public static final int moneyExpenseFormFragment_editText_hint_remark=0x7f0b00a5;
-        public static final int moneyExpenseFormFragment_editText_validationError_beyondMAX_amount=0x7f0b0099;
-        public static final int moneyExpenseFormFragment_editText_validationError_negative_amount=0x7f0b0098;
-        public static final int moneyExpenseFormFragment_textView_amount=0x7f0b0096;
-        public static final int moneyExpenseFormFragment_textView_date=0x7f0b0094;
-        public static final int moneyExpenseFormFragment_textView_exchangeRate=0x7f0b009e;
-        public static final int moneyExpenseFormFragment_textView_friend=0x7f0b00a2;
-        public static final int moneyExpenseFormFragment_textView_moneyAccount=0x7f0b009a;
-        public static final int moneyExpenseFormFragment_textView_moneyExpenseCategory=0x7f0b00a0;
-        public static final int moneyExpenseFormFragment_textView_picture=0x7f0b0092;
-        public static final int moneyExpenseFormFragment_textView_project=0x7f0b009c;
-        public static final int moneyExpenseFormFragment_textView_remark=0x7f0b00a4;
-        public static final int moneyExpenseFormFragment_title_addnew=0x7f0b0090;
-        public static final int moneyExpenseFormFragment_title_edit=0x7f0b0091;
-        public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f0b00bc;
-        public static final int moneyExpenseListFragment_title_all=0x7f0b00bd;
-        public static final int moneyIncomeFormFragment_editText_hint_amount=0x7f0b00ad;
-        public static final int moneyIncomeFormFragment_editText_hint_date=0x7f0b00ab;
-        public static final int moneyIncomeFormFragment_editText_hint_exchangeRate=0x7f0b00b5;
-        public static final int moneyIncomeFormFragment_editText_hint_friend=0x7f0b00b9;
-        public static final int moneyIncomeFormFragment_editText_hint_moneyAccount=0x7f0b00b1;
-        public static final int moneyIncomeFormFragment_editText_hint_moneyIncomeCategory=0x7f0b00b7;
-        public static final int moneyIncomeFormFragment_editText_hint_picture=0x7f0b00a9;
-        public static final int moneyIncomeFormFragment_editText_hint_project=0x7f0b00b3;
-        public static final int moneyIncomeFormFragment_editText_hint_remark=0x7f0b00bb;
-        public static final int moneyIncomeFormFragment_editText_validationError_beyondMAX_amount=0x7f0b00af;
-        public static final int moneyIncomeFormFragment_editText_validationError_negative_amount=0x7f0b00ae;
-        public static final int moneyIncomeFormFragment_textView_amount=0x7f0b00ac;
-        public static final int moneyIncomeFormFragment_textView_date=0x7f0b00aa;
-        public static final int moneyIncomeFormFragment_textView_exchangeRate=0x7f0b00b4;
-        public static final int moneyIncomeFormFragment_textView_friend=0x7f0b00b8;
-        public static final int moneyIncomeFormFragment_textView_moneyAccount=0x7f0b00b0;
-        public static final int moneyIncomeFormFragment_textView_moneyIncomeCategory=0x7f0b00b6;
-        public static final int moneyIncomeFormFragment_textView_picture=0x7f0b00a8;
-        public static final int moneyIncomeFormFragment_textView_project=0x7f0b00b2;
-        public static final int moneyIncomeFormFragment_textView_remark=0x7f0b00ba;
-        public static final int moneyIncomeFormFragment_title_addnew=0x7f0b00a6;
-        public static final int moneyIncomeFormFragment_title_edit=0x7f0b00a7;
-        public static final int moneyIncomeListFragment_action_moneyIncome_addnew=0x7f0b00be;
-        public static final int moneyIncomeListFragment_title_all=0x7f0b00bf;
+        public static final int moneyAccountFormFragment_editText_hint_accountNumber=0x7f0b00cd;
+        public static final int moneyAccountFormFragment_editText_hint_accountType=0x7f0b00cb;
+        public static final int moneyAccountFormFragment_editText_hint_bankAddress=0x7f0b00cf;
+        public static final int moneyAccountFormFragment_editText_hint_currency=0x7f0b00c7;
+        public static final int moneyAccountFormFragment_editText_hint_currentBalance=0x7f0b00c9;
+        public static final int moneyAccountFormFragment_editText_hint_name=0x7f0b00c5;
+        public static final int moneyAccountFormFragment_editText_hint_remark=0x7f0b00d1;
+        public static final int moneyAccountFormFragment_textView_accountNumber=0x7f0b00cc;
+        public static final int moneyAccountFormFragment_textView_accountType=0x7f0b00ca;
+        public static final int moneyAccountFormFragment_textView_bankAddress=0x7f0b00ce;
+        public static final int moneyAccountFormFragment_textView_currency=0x7f0b00c6;
+        public static final int moneyAccountFormFragment_textView_currentBalance=0x7f0b00c8;
+        public static final int moneyAccountFormFragment_textView_name=0x7f0b00c4;
+        public static final int moneyAccountFormFragment_textView_remark=0x7f0b00d0;
+        public static final int moneyAccountFormFragment_title_addnew=0x7f0b00c2;
+        public static final int moneyAccountFormFragment_title_edit=0x7f0b00c3;
+        public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f0b00d2;
+        public static final int moneyAccountListFragment_title_manage_moneyAccount=0x7f0b00d3;
+        public static final int moneyAccountListFragment_title_select_currency=0x7f0b00d5;
+        public static final int moneyAccountListFragment_title_select_moneyAccount=0x7f0b00d4;
+        public static final int moneyExpenseFormFragment_editText_hint_amount=0x7f0b0099;
+        public static final int moneyExpenseFormFragment_editText_hint_date=0x7f0b0097;
+        public static final int moneyExpenseFormFragment_editText_hint_exchangeRate=0x7f0b00a1;
+        public static final int moneyExpenseFormFragment_editText_hint_friend=0x7f0b00a5;
+        public static final int moneyExpenseFormFragment_editText_hint_moneyAccount=0x7f0b009d;
+        public static final int moneyExpenseFormFragment_editText_hint_moneyExpenseCategory=0x7f0b00a3;
+        public static final int moneyExpenseFormFragment_editText_hint_picture=0x7f0b0095;
+        public static final int moneyExpenseFormFragment_editText_hint_project=0x7f0b009f;
+        public static final int moneyExpenseFormFragment_editText_hint_remark=0x7f0b00a7;
+        public static final int moneyExpenseFormFragment_editText_validationError_beyondMAX_amount=0x7f0b009b;
+        public static final int moneyExpenseFormFragment_editText_validationError_negative_amount=0x7f0b009a;
+        public static final int moneyExpenseFormFragment_textView_amount=0x7f0b0098;
+        public static final int moneyExpenseFormFragment_textView_date=0x7f0b0096;
+        public static final int moneyExpenseFormFragment_textView_exchangeRate=0x7f0b00a0;
+        public static final int moneyExpenseFormFragment_textView_friend=0x7f0b00a4;
+        public static final int moneyExpenseFormFragment_textView_moneyAccount=0x7f0b009c;
+        public static final int moneyExpenseFormFragment_textView_moneyExpenseCategory=0x7f0b00a2;
+        public static final int moneyExpenseFormFragment_textView_picture=0x7f0b0094;
+        public static final int moneyExpenseFormFragment_textView_project=0x7f0b009e;
+        public static final int moneyExpenseFormFragment_textView_remark=0x7f0b00a6;
+        public static final int moneyExpenseFormFragment_title_addnew=0x7f0b0092;
+        public static final int moneyExpenseFormFragment_title_edit=0x7f0b0093;
+        public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f0b00be;
+        public static final int moneyExpenseListFragment_title_all=0x7f0b00bf;
+        public static final int moneyIncomeFormFragment_editText_hint_amount=0x7f0b00af;
+        public static final int moneyIncomeFormFragment_editText_hint_date=0x7f0b00ad;
+        public static final int moneyIncomeFormFragment_editText_hint_exchangeRate=0x7f0b00b7;
+        public static final int moneyIncomeFormFragment_editText_hint_friend=0x7f0b00bb;
+        public static final int moneyIncomeFormFragment_editText_hint_moneyAccount=0x7f0b00b3;
+        public static final int moneyIncomeFormFragment_editText_hint_moneyIncomeCategory=0x7f0b00b9;
+        public static final int moneyIncomeFormFragment_editText_hint_picture=0x7f0b00ab;
+        public static final int moneyIncomeFormFragment_editText_hint_project=0x7f0b00b5;
+        public static final int moneyIncomeFormFragment_editText_hint_remark=0x7f0b00bd;
+        public static final int moneyIncomeFormFragment_editText_validationError_beyondMAX_amount=0x7f0b00b1;
+        public static final int moneyIncomeFormFragment_editText_validationError_negative_amount=0x7f0b00b0;
+        public static final int moneyIncomeFormFragment_textView_amount=0x7f0b00ae;
+        public static final int moneyIncomeFormFragment_textView_date=0x7f0b00ac;
+        public static final int moneyIncomeFormFragment_textView_exchangeRate=0x7f0b00b6;
+        public static final int moneyIncomeFormFragment_textView_friend=0x7f0b00ba;
+        public static final int moneyIncomeFormFragment_textView_moneyAccount=0x7f0b00b2;
+        public static final int moneyIncomeFormFragment_textView_moneyIncomeCategory=0x7f0b00b8;
+        public static final int moneyIncomeFormFragment_textView_picture=0x7f0b00aa;
+        public static final int moneyIncomeFormFragment_textView_project=0x7f0b00b4;
+        public static final int moneyIncomeFormFragment_textView_remark=0x7f0b00bc;
+        public static final int moneyIncomeFormFragment_title_addnew=0x7f0b00a8;
+        public static final int moneyIncomeFormFragment_title_edit=0x7f0b00a9;
+        public static final int moneyIncomeListFragment_action_moneyIncome_addnew=0x7f0b00c0;
+        public static final int moneyIncomeListFragment_title_all=0x7f0b00c1;
         public static final int pref_default_display_name=0x7f0b0047;
         public static final int pref_description_social_recommendations=0x7f0b0045;
         /**  Example settings for Data & Sync 
@@ -1658,17 +1670,17 @@ containing a value of this type.
         public static final int pref_title_sync_frequency=0x7f0b004a;
         public static final int pref_title_system_sync_settings=0x7f0b004b;
         public static final int pref_title_vibrate=0x7f0b0050;
-        public static final int projectFormFragment_checkBox_autoApportion=0x7f0b00da;
-        public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f0b00db;
-        public static final int projectFormFragment_editText_hint_parentProject=0x7f0b00d9;
-        public static final int projectFormFragment_editText_hint_projectName=0x7f0b00d7;
-        public static final int projectFormFragment_textView_parentProject=0x7f0b00d8;
-        public static final int projectFormFragment_textView_projectName=0x7f0b00d6;
-        public static final int projectFormFragment_title_addnew=0x7f0b00d4;
-        public static final int projectFormFragment_title_edit=0x7f0b00d5;
-        public static final int projectListFragment_action_project_addnew=0x7f0b00dc;
-        public static final int projectListFragment_title_select_parent_project=0x7f0b00de;
-        public static final int projectListFragment_title_select_project=0x7f0b00dd;
+        public static final int projectFormFragment_checkBox_autoApportion=0x7f0b00dc;
+        public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f0b00dd;
+        public static final int projectFormFragment_editText_hint_parentProject=0x7f0b00db;
+        public static final int projectFormFragment_editText_hint_projectName=0x7f0b00d9;
+        public static final int projectFormFragment_textView_parentProject=0x7f0b00da;
+        public static final int projectFormFragment_textView_projectName=0x7f0b00d8;
+        public static final int projectFormFragment_title_addnew=0x7f0b00d6;
+        public static final int projectFormFragment_title_edit=0x7f0b00d7;
+        public static final int projectListFragment_action_project_addnew=0x7f0b00de;
+        public static final int projectListFragment_title_select_parent_project=0x7f0b00e0;
+        public static final int projectListFragment_title_select_project=0x7f0b00df;
         public static final int registerActivity_action_register=0x7f0b0034;
         public static final int registerActivity_editText_hint_password1=0x7f0b003d;
         public static final int registerActivity_editText_hint_password2=0x7f0b003e;
@@ -2590,21 +2602,26 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
            <tr><td><code>{@link #HyjTextField_editTextBold com.hoyoji.hoyoji:editTextBold}</code></td><td></td></tr>
            <tr><td><code>{@link #HyjTextField_editTextBorder com.hoyoji.hoyoji:editTextBorder}</code></td><td></td></tr>
            <tr><td><code>{@link #HyjTextField_editTextColor com.hoyoji.hoyoji:editTextColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #HyjTextField_falseText com.hoyoji.hoyoji:falseText}</code></td><td></td></tr>
            <tr><td><code>{@link #HyjTextField_hintText com.hoyoji.hoyoji:hintText}</code></td><td></td></tr>
            <tr><td><code>{@link #HyjTextField_labelText com.hoyoji.hoyoji:labelText}</code></td><td></td></tr>
            <tr><td><code>{@link #HyjTextField_style com.hoyoji.hoyoji:style}</code></td><td></td></tr>
+           <tr><td><code>{@link #HyjTextField_trueText com.hoyoji.hoyoji:trueText}</code></td><td></td></tr>
            </table>
            @see #HyjTextField_editText
            @see #HyjTextField_editTextBold
            @see #HyjTextField_editTextBorder
            @see #HyjTextField_editTextColor
+           @see #HyjTextField_falseText
            @see #HyjTextField_hintText
            @see #HyjTextField_labelText
            @see #HyjTextField_style
+           @see #HyjTextField_trueText
          */
         public static final int[] HyjTextField = {
             0x7f01006d, 0x7f01006e, 0x7f01006f, 0x7f010070,
-            0x7f010071, 0x7f010072, 0x7f010073
+            0x7f010071, 0x7f010072, 0x7f010073, 0x7f010074,
+            0x7f010075
         };
         /**
           <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#editText}
@@ -2633,7 +2650,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.hoyoji.hoyoji:editTextBold
         */
-        public static final int HyjTextField_editTextBold = 5;
+        public static final int HyjTextField_editTextBold = 7;
         /**
           <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#editTextBorder}
           attribute's value can be found in the {@link #HyjTextField} array.
@@ -2647,13 +2664,14 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.hoyoji.hoyoji:editTextBorder
         */
-        public static final int HyjTextField_editTextBorder = 4;
+        public static final int HyjTextField_editTextBorder = 6;
         /**
           <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#editTextColor}
           attribute's value can be found in the {@link #HyjTextField} array.
 
 
-          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
 theme attribute (in the form
@@ -2661,7 +2679,17 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.hoyoji.hoyoji:editTextColor
         */
-        public static final int HyjTextField_editTextColor = 6;
+        public static final int HyjTextField_editTextColor = 8;
+        /**
+          <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#falseText}
+          attribute's value can be found in the {@link #HyjTextField} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.hoyoji.hoyoji:falseText
+        */
+        public static final int HyjTextField_falseText = 4;
         /**
           <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#hintText}
           attribute's value can be found in the {@link #HyjTextField} array.
@@ -2703,7 +2731,17 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.hoyoji.hoyoji:style
         */
-        public static final int HyjTextField_style = 3;
+        public static final int HyjTextField_style = 5;
+        /**
+          <p>This symbol is the offset where the {@link com.hoyoji.hoyoji.R.attr#trueText}
+          attribute's value can be found in the {@link #HyjTextField} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.hoyoji.hoyoji:trueText
+        */
+        public static final int HyjTextField_trueText = 3;
         /** Attributes that can be used with a LinearLayoutICS.
            <p>Includes the following attributes:</p>
            <table>

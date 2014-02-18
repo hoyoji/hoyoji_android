@@ -18,9 +18,11 @@
        <attr name="labelText" format="string" />
        <attr name="editText" format="string" />
        <attr name="hintText" format="string" />
+       <attr name="trueText" format="reference" />
+       <attr name="falseText" format="reference" />
        <attr name="style" format="string" />
        <attr name="editTextBorder" format="string" />
        <attr name="editTextBold" format="boolean" />
-       <attr name="editTextColor" format="string" />
+       <attr name="editTextColor" format="color" />
    </declare-styleable>
 </resources>  

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
@@ -16,13 +17,13 @@
             android:id="@+id/exchangeListItem_localCurrency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="2dp"/>
 
         <TextView
             android:id="@+id/exchangeListItem_foreignCurrency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
+            android:paddingTop="2dp"
             android:paddingLeft="20dp"/>
     </LinearLayout>
 
@@ -33,23 +34,22 @@
         android:gravity="right"
         android:orientation="vertical" >
 
-        <TextView
+        <com.hoyoji.android.hyjframework.view.HyjBooleanView
             android:id="@+id/exchangeListItem_autoUpdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"/>
+            hyj:trueText="@string/exchangeListItem_autoUpdate_true"
+            hyj:falseText="@string/exchangeListItem_autoUpdate_false"
+            android:textColor="@android:color/darker_gray"
+            android:paddingBottom="2dp"/>
 
         <com.hoyoji.android.hyjframework.view.HyjNumericView
             android:id="@+id/exchangeListItem_rate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        
-        <TextView
-            android:id="@+id/exchangeListItem_exchange"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"
-            android:text="折算：$100.00"/>
+            android:paddingTop="2dp"
+			android:textStyle="bold"/>
+        
     </LinearLayout>
 
 </FrameLayout>
