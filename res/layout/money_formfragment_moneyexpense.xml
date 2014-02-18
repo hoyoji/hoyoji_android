@@ -25,7 +25,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/transparent" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -90,31 +90,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                android:id="@+id/moneyExpenseFormFragment_selectorField_moneyAccount"
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/moneyExpenseFormFragment_textField_moneyExpenseCategory"
                 hyj:style="top_label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyAccount"
-                hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyAccount" />
+                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyExpenseCategory"
+                hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyExpenseCategory" />
 
             <View
                 android:id="@id/field_separator"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
                 android:background="@android:color/darker_gray" />
 
-            <com.hoyoji.android.hyjframework.view.HyjNumericField
-                android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
+            <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                android:id="@+id/moneyExpenseFormFragment_selectorField_friend"
                 hyj:style="top_label"
-                android:layout_width="0dip"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
-                hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
+                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
+                hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" />
         </LinearLayout>
 
         <View
@@ -135,14 +136,14 @@
                 android:layout_weight="2"
                 android:orientation="vertical" >
 
-                <com.hoyoji.android.hyjframework.view.HyjTextField
-                    android:id="@+id/moneyExpenseFormFragment_textField_moneyExpenseCategory"
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyExpenseFormFragment_selectorField_moneyAccount"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyExpenseCategory"
-                    hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyExpenseCategory" />
+                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_moneyAccount"
+                    hyj:labelText="@string/moneyExpenseFormFragment_textView_moneyAccount" />
 
                 <View
                     android:id="@id/field_separator"
@@ -150,7 +151,6 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:layout_marginRight="5dip"
                     android:background="@android:color/darker_gray" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
@@ -164,21 +164,36 @@
             </LinearLayout>
 
             <View
-                android:id="@id/field_separator"
+                android:id="@+id/field_separator_exchange"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
                 android:background="@android:color/darker_gray" />
 
-            <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                android:id="@+id/moneyExpenseFormFragment_selectorField_friend"
-                hyj:style="top_label"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:orientation="vertical" >
+            <com.hoyoji.android.hyjframework.view.HyjNumericField
+                android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
+                hyj:style="top_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
-                hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" />
+                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
+                hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
+
+            <ImageButton
+                android:id="@+id/moneyExpenseFormFragment_imageButton_refresh_exchangeRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_action_refresh" />
+            
+            </LinearLayout>
         </LinearLayout>
 
         <View
