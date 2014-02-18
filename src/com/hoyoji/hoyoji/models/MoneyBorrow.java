@@ -13,8 +13,8 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
-@Table(name = "MoneyExpense", id = BaseColumns._ID)
-public class MoneyExpense extends HyjModel{
+@Table(name = "MoneyBorrow", id = BaseColumns._ID)
+public class MoneyBorrow extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
@@ -27,9 +27,6 @@ public class MoneyExpense extends HyjModel{
 
 	@Column(name = "amount")
 	private Double mAmount;
-	
-	@Column(name = "expenseType")
-	private String mExpenseType;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -46,11 +43,14 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "projectId")
 	private String mProjectId;
 	
-	@Column(name = "moneyExpenseCategory")
-	private String mMoneyExpenseCategory;
-	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
+	
+	@Column(name = "returnDate")
+	private String mReturnDate;
+	
+	@Column(name = "returnedAmount")
+	private Double mReturnedAmount;
 
 	@Column(name = "remark")
 	private String mRemark;
@@ -82,14 +82,14 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "address")
 	private String mAddress;	
 	
-	public MoneyExpense(){
+	public MoneyBorrow(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mId = UUID.randomUUID().toString();
-		mExpenseType = "MoneyExpense";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		mReturnedAmount = 0.00; 
 	}
 
 	public String getId() {
@@ -139,14 +139,6 @@ public class MoneyExpense extends HyjModel{
 		this.mAmount = mAmount;
 	}
 	
-	public String getExpenseType() {
-		return mExpenseType;
-	}
-
-	public void setExpenseType(String mExpenseType) {
-		this.mExpenseType = mExpenseType;
-	}
-
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return (Friend) getModel(Friend.class, mFriendUserId);
@@ -227,14 +219,6 @@ public class MoneyExpense extends HyjModel{
 		this.mProjectId = mProjectId;
 	}
 
-	public String getMoneyExpenseCategory() {
-		return mMoneyExpenseCategory;
-	}
-
-	public void setMoneyExpenseCategory(String mMoneyExpenseCategory) {
-		this.mMoneyExpenseCategory = mMoneyExpenseCategory;
-	}
-
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
@@ -243,6 +227,22 @@ public class MoneyExpense extends HyjModel{
 		this.mExchangeRate = mExchangeRate;
 	}
 
+	public String getReturnDate() {
+		return mReturnDate;
+	}
+
+	public void setReturnDate(String mReturnDate) {
+		this.mReturnDate = mReturnDate;
+	}
+
+	public Double getReturnedAmount() {
+		return mReturnedAmount;
+	}
+
+	public void setReturnedAmount(Double mReturnedAmount) {
+		this.mReturnedAmount = mReturnedAmount;
+	}
+	
 	public String getRemark() {
 		return mRemark;
 	}
@@ -325,38 +325,38 @@ public class MoneyExpense extends HyjModel{
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getDate() == null){
-			modelEditor.setValidationError("date",R.string.moneyExpenseFormFragment_editText_hint_date);
-		}else{
-			modelEditor.removeValidationError("date");
-		}
-		if(this.getAmount() == null){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
-		}else if(this.getAmount() < 0){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_validationError_negative_amount);
-		}else if(this.getAmount() > 99999999){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_validationError_beyondMAX_amount);
-		}
-		else{
-			modelEditor.removeValidationError("amount");
-		}
+//		if(this.getDate() == null){
+//			modelEditor.setValidationError("date",R.string.moneyBorrowFormFragment_editText_hint_date);
+//		}else{
+//			modelEditor.removeValidationError("date");
+//		}
+//		if(this.getAmount() == null){
+//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_hint_amount);
+//		}else if(this.getAmount() < 0){
+//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_negative_amount);
+//		}else if(this.getAmount() > 99999999){
+//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_beyondMAX_amount);
+//		}
+//		else{
+//			modelEditor.removeValidationError("amount");
+//		}
 //		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
+//			modelEditor.setValidationError("moneyAccount",R.string.moneyBorrowFormFragment_editText_hint_moneyAccount);
 //		}else{
 //			modelEditor.removeValidationError("moneyAccount");
 //		}
-//		if(this.getMoneyExpenseCategory() == null){
-//			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
+//		if(this.getMoneyBorrowCategory() == null){
+//			modelEditor.setValidationError("moneyBorrowCategory", R.string.moneyBorrowFormFragment_editText_hint_moneyBorrowCategory);
 //		}else{
-//			modelEditor.removeValidationError("moneyExpenseCategory");
+//			modelEditor.removeValidationError("moneyBorrowCategory");
 //		}
 //		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+//			modelEditor.setValidationError("project",R.string.moneyBorrowFormFragment_editText_hint_project);
 //		}else{
 //			modelEditor.removeValidationError("project");
 //		}
 //		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
+//			modelEditor.setValidationError("friend",R.string.moneyBorrowFormFragment_editText_hint_friend);
 //		}else{
 //			modelEditor.removeValidationError("friend");
 //		}

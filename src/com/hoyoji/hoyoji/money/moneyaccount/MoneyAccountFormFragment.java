@@ -16,6 +16,7 @@ import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 
 public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_CURRENCY_ID = 1;
@@ -61,7 +62,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mSelectorFieldCurrency.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyAccountFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_CURRENCY_ID);
+				MoneyAccountFormFragment.this.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
 			}
 		});	
 		

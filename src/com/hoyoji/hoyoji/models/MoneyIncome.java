@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -81,7 +82,12 @@ public class MoneyIncome extends HyjModel{
 	
 	public MoneyIncome(){
 		super();
+		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mId = UUID.randomUUID().toString();
+		mIncomeType = "MoneyIncome";
+		mMoneyAccountId = userData.getActiveMoneyAccountId();
+		mProjectId = userData.getActiveProjectId();
+		mExchangeRate = 1.00;
 	}
 
 	public String getId() {
@@ -307,15 +313,25 @@ public class MoneyIncome extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("date");
 		}
-//		if(this.getAmount() == null){
-//			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_hint_amount);
-//		}else{
-//			modelEditor.removeValidationError("amount");
-//		}
+		if(this.getAmount() == null){
+			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_hint_amount);
+		}else if(this.getAmount() < 0){
+			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_validationError_negative_amount);
+		}else if(this.getAmount() > 99999999){
+			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_amount);
+		}
+		else{
+			modelEditor.removeValidationError("amount");
+		}
 //		if(this.getMoneyAccountId() == null){
 //			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
 //		}else{
 //			modelEditor.removeValidationError("moneyAccount");
+//		}
+//		if(this.getMoneyIncomeCategory() == null){
+//			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
+//		}else{
+//			modelEditor.removeValidationError("moneyIncomeCategory");
 //		}
 //		if(this.getProjectId() == null){
 //			modelEditor.setValidationError("project",R.string.moneyIncomeFormFragment_editText_hint_project);

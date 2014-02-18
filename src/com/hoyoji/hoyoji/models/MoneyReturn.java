@@ -13,8 +13,8 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
-@Table(name = "MoneyExpense", id = BaseColumns._ID)
-public class MoneyExpense extends HyjModel{
+@Table(name = "MoneyReturn", id = BaseColumns._ID)
+public class MoneyReturn extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
@@ -27,9 +27,6 @@ public class MoneyExpense extends HyjModel{
 
 	@Column(name = "amount")
 	private Double mAmount;
-	
-	@Column(name = "expenseType")
-	private String mExpenseType;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -46,11 +43,14 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "projectId")
 	private String mProjectId;
 	
-	@Column(name = "moneyExpenseCategory")
-	private String mMoneyExpenseCategory;
-	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
+	
+	@Column(name = "interest")
+	private Double mInterest;
+	
+	@Column(name = "moneyBorrowId")
+	private String mMoneyBorrowId;
 
 	@Column(name = "remark")
 	private String mRemark;
@@ -82,11 +82,10 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "address")
 	private String mAddress;	
 	
-	public MoneyExpense(){
+	public MoneyReturn(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mId = UUID.randomUUID().toString();
-		mExpenseType = "MoneyExpense";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
@@ -139,14 +138,6 @@ public class MoneyExpense extends HyjModel{
 		this.mAmount = mAmount;
 	}
 	
-	public String getExpenseType() {
-		return mExpenseType;
-	}
-
-	public void setExpenseType(String mExpenseType) {
-		this.mExpenseType = mExpenseType;
-	}
-
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return (Friend) getModel(Friend.class, mFriendUserId);
@@ -227,14 +218,6 @@ public class MoneyExpense extends HyjModel{
 		this.mProjectId = mProjectId;
 	}
 
-	public String getMoneyExpenseCategory() {
-		return mMoneyExpenseCategory;
-	}
-
-	public void setMoneyExpenseCategory(String mMoneyExpenseCategory) {
-		this.mMoneyExpenseCategory = mMoneyExpenseCategory;
-	}
-
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
@@ -243,6 +226,33 @@ public class MoneyExpense extends HyjModel{
 		this.mExchangeRate = mExchangeRate;
 	}
 
+	public Double getInterest() {
+		return mInterest;
+	}
+
+	public void setInterest(Double mInterest) {
+		this.mInterest = mInterest;
+	}
+
+	public String getMoneyBorrowId() {
+		return mMoneyBorrowId;
+	}
+
+	public void setMoneyBorrowId(String mMoneyBorrowId) {
+		this.mMoneyBorrowId = mMoneyBorrowId;
+	}
+	
+	public MoneyBorrow getMoneyBorrow(){
+		if(mMoneyBorrowId == null){
+			return null;
+		}
+		return (MoneyBorrow) getModel(MoneyBorrow.class, mMoneyBorrowId);
+	}
+	
+	public void setMoneyBorrow(MoneyBorrow mMoneyBorrow) {
+		this.mMoneyBorrowId = mMoneyBorrow.getId();
+	}
+	
 	public String getRemark() {
 		return mRemark;
 	}
@@ -325,38 +335,38 @@ public class MoneyExpense extends HyjModel{
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getDate() == null){
-			modelEditor.setValidationError("date",R.string.moneyExpenseFormFragment_editText_hint_date);
-		}else{
-			modelEditor.removeValidationError("date");
-		}
-		if(this.getAmount() == null){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
-		}else if(this.getAmount() < 0){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_validationError_negative_amount);
-		}else if(this.getAmount() > 99999999){
-			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_validationError_beyondMAX_amount);
-		}
-		else{
-			modelEditor.removeValidationError("amount");
-		}
+//		if(this.getDate() == null){
+//			modelEditor.setValidationError("date",R.string.moneyReturnFormFragment_editText_hint_date);
+//		}else{
+//			modelEditor.removeValidationError("date");
+//		}
+//		if(this.getAmount() == null){
+//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_hint_amount);
+//		}else if(this.getAmount() < 0){
+//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_negative_amount);
+//		}else if(this.getAmount() > 99999999){
+//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_beyondMAX_amount);
+//		}
+//		else{
+//			modelEditor.removeValidationError("amount");
+//		}
 //		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
+//			modelEditor.setValidationError("moneyAccount",R.string.moneyReturnFormFragment_editText_hint_moneyAccount);
 //		}else{
 //			modelEditor.removeValidationError("moneyAccount");
 //		}
-//		if(this.getMoneyExpenseCategory() == null){
-//			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
+//		if(this.getMoneyReturnCategory() == null){
+//			modelEditor.setValidationError("moneyReturnCategory", R.string.moneyReturnFormFragment_editText_hint_moneyReturnCategory);
 //		}else{
-//			modelEditor.removeValidationError("moneyExpenseCategory");
+//			modelEditor.removeValidationError("moneyReturnCategory");
 //		}
 //		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+//			modelEditor.setValidationError("project",R.string.moneyReturnFormFragment_editText_hint_project);
 //		}else{
 //			modelEditor.removeValidationError("project");
 //		}
 //		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
+//			modelEditor.setValidationError("friend",R.string.moneyReturnFormFragment_editText_hint_friend);
 //		}else{
 //			modelEditor.removeValidationError("friend");
 //		}
