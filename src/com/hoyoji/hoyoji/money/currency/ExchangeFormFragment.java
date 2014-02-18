@@ -136,9 +136,6 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		case GET_LOCAL_CURRENCY_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
-				if(_id < 0){
-					return;
-				}
 				Currency localCurrency = Currency.load(Currency.class, _id);
 				mEditTextLocalCurrency.setText(localCurrency.getName());
 				mEditTextLocalCurrency.setModelId(localCurrency.getId());
@@ -147,9 +144,6 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		case GET_FOREIGN_CURRENCY_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
-				if(_id < 0){
-					return;
-				}
 				Currency foreignCurrency = Currency.load(Currency.class, _id);
 				mEditTextForeignCurrency.setText(foreignCurrency.getName());
 				mEditTextForeignCurrency.setModelId(foreignCurrency.getId());

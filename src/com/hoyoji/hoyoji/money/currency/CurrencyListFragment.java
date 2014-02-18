@@ -66,7 +66,9 @@ public class CurrencyListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
-		
+		if(id < 0){
+			return;
+		}
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
