@@ -13,6 +13,8 @@
    
    <string name="moneyIncomeFormFragment_textView_amount">金额</string>
    <string name="moneyIncomeFormFragment_editText_hint_amount">请输入金额</string>
+   <string name="moneyIncomeFormFragment_editText_validationError_negative_amount">金额不能为负数</string>
+   <string name="moneyIncomeFormFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
    
    <string name="moneyIncomeFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyIncomeFormFragment_editText_hint_moneyAccount">请选择账户</string>

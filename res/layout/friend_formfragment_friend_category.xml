@@ -23,8 +23,8 @@
         android:id="@id/field_separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
-    	android:layout_marginTop="10dip"
-    	android:layout_marginBottom="10dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
         />
     
