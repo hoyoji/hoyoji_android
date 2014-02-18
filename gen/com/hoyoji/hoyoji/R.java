@@ -1289,7 +1289,7 @@ containing a value of this type.
         public static final int projectFormFragment_checkBox_autoApportion=0x7f06009a;
         public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f06009b;
         public static final int projectFormFragment_listField_parentProject=0x7f060098;
-        public static final int projectFormFragment_selectorField_currency=0x7f060099;
+        public static final int projectFormFragment_selectorField_projectCurrency=0x7f060099;
         public static final int projectFormFragment_textField_projectName=0x7f060097;
         public static final int projectListFragment_action_project_addnew=0x7f0600b7;
         public static final int projectListItem_name=0x7f06009c;
@@ -1665,11 +1665,11 @@ containing a value of this type.
         public static final int pref_title_vibrate=0x7f0b0050;
         public static final int projectFormFragment_checkBox_autoApportion=0x7f0b00dc;
         public static final int projectFormFragment_checkBox_hint_autoApportion=0x7f0b00dd;
-        public static final int projectFormFragment_editText_hint_currency=0x7f0b00db;
         public static final int projectFormFragment_editText_hint_parentProject=0x7f0b00d9;
+        public static final int projectFormFragment_editText_hint_projectCurrency=0x7f0b00db;
         public static final int projectFormFragment_editText_hint_projectName=0x7f0b00d7;
-        public static final int projectFormFragment_textView_currency=0x7f0b00da;
         public static final int projectFormFragment_textView_parentProject=0x7f0b00d8;
+        public static final int projectFormFragment_textView_projectCurrency=0x7f0b00da;
         public static final int projectFormFragment_textView_projectName=0x7f0b00d6;
         public static final int projectFormFragment_title_addnew=0x7f0b00d4;
         public static final int projectFormFragment_title_edit=0x7f0b00d5;

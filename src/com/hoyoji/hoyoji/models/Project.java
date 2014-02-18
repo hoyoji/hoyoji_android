@@ -62,7 +62,12 @@ public class Project extends HyjModel {
 			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
 		} else {
 			modelEditor.removeValidationError("name");
-		}	
+		}
+		if(this.getCurrencyId() == null){
+			modelEditor.setValidationError("currency", R.string.projectFormFragment_editText_hint_projectCurrency);
+		} else {
+			modelEditor.removeValidationError("currency");
+		}
 	}
 
 	public String getId() {

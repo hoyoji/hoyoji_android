@@ -82,7 +82,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		});
 		
 		Currency currency = project.getCurrency();
-		mSelectorFieldProjectCurrency = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_currency);
+		mSelectorFieldProjectCurrency = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_projectCurrency);
 		
 		if(currency != null){
 			mSelectorFieldProjectCurrency.setModelId(currency.getId());

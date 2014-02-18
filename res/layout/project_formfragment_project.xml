@@ -47,11 +47,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
-        android:id="@+id/projectFormFragment_selectorField_currency"
+        android:id="@+id/projectFormFragment_selectorField_projectCurrency"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/projectFormFragment_editText_hint_currency"
-        hyj:labelText="@string/projectFormFragment_textView_currency" />
+        hyj:hintText="@string/projectFormFragment_editText_hint_projectCurrency"
+        hyj:labelText="@string/projectFormFragment_textView_projectCurrency" />
     
         <View 
         android:id="@id/field_separator"
