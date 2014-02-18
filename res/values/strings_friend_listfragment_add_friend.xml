@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-   <string name="AddFriendListFragment_title_add">添加好友</string>
+   <string name="addFriendListFragment_title_add">添加好友</string>
    <string name="friendListFragment_addFriend_searchView_hint">请输入用户名或昵称</string>
 </resources>

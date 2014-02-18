@@ -55,25 +55,25 @@ public abstract class HyjActivity extends ActionBarActivity {
 		}
 	}
 	
-	public void displayDialog(String title) {
+	public void displayDialog(String title, String msg) {
 		if(mDialogFragment != null){
 			mDialogFragment.dismiss();
 		}
 		
-		mDialogFragment = HyjDialogFragment.newInstance(title, R.string.alert_dialog_ok, -1, -1);
+		mDialogFragment = HyjDialogFragment.newInstance(title, msg, R.string.alert_dialog_ok, -1, -1);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
 	
-	public void displayDialog(int title) {
+	public void displayDialog(int title, int msg) {
 		if(mDialogFragment != null){
 			mDialogFragment.dismiss();
 		}
 		
-		mDialogFragment = HyjDialogFragment.newInstance(title, R.string.alert_dialog_ok, -1, -1);
+		mDialogFragment = HyjDialogFragment.newInstance(title, msg, R.string.alert_dialog_ok, -1, -1);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
 
-	public void displayDialog(int title, int positiveButton, int negativeButton, int NeutralButton, DialogCallbackListener dialogCallback) {
+	public void displayDialog(int title, int msg, int positiveButton, int negativeButton, int NeutralButton, DialogCallbackListener dialogCallback) {
 		this.mDialogCallback = dialogCallback;
 		
 		if(mDialogFragment != null){
@@ -84,7 +84,7 @@ public abstract class HyjActivity extends ActionBarActivity {
 			positiveButton = R.string.alert_dialog_ok;
 		}
 		
-		mDialogFragment = HyjDialogFragment.newInstance(title, positiveButton, negativeButton, NeutralButton);
+		mDialogFragment = HyjDialogFragment.newInstance(title, msg, positiveButton, negativeButton, NeutralButton);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
 

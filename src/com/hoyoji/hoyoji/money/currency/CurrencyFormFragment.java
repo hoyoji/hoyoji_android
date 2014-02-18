@@ -43,10 +43,10 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		mTextFieldName.setText(currency.getName());
 		
 		mTextFieldSymbol = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_symbol);
-		mTextFieldSymbol.setText(currency.getName());
+		mTextFieldSymbol.setText(currency.getSymbol());
 		
 		mTextFieldCode = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_code);
-		mTextFieldCode.setText(currency.getName());
+		mTextFieldCode.setText(currency.getCode());
 		
 	}
 	

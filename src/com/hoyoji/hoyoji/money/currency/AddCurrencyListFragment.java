@@ -1,6 +1,7 @@
-package com.hoyoji.hoyoji.friend;
+package com.hoyoji.hoyoji.money.currency;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,14 +26,15 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 
-public class AddFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
+public class AddCurrencyListFragment extends HyjUserListFragment implements OnQueryTextListener {
 	protected SearchView mSearchView;
 	protected String mSearchText = "";
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.friend_listfragment_add_friend;
+		return R.layout.currency_listfragment_add_currency;
 	}
 	
 	
@@ -43,7 +45,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	
 	@Override
 	public void onInitViewData(){
-		mSearchView = (SearchView)getView().findViewById(R.id.friendListFragment_addFriend_searchView);
+		mSearchView = (SearchView)getView().findViewById(R.id.currencyListFragment_addCurrency_searchView);
 		mSearchView.setOnQueryTextListener(this);
 	}
 	
@@ -77,9 +79,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new HyjJSONListAdapter(getActivity(),
-				R.layout.friend_listitem_add_friend,
-				new String[] { "userName" },
-				new int[] { R.id.friendListItem_nickName }); 
+				R.layout.currency_listitem_currency,
+				new String[] { "name" },
+				new int[] { R.id.currencyListItem_name }); 
 	}
 
 
@@ -88,7 +90,16 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
     public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(id >= 0){
-			HyjUtil.displayToast("adding friend " + position + " : " + id);
+			JSONObject object = (JSONObject) getListAdapter().getItem(position);
+			Currency newCurrency = new Currency();
+			newCurrency.loadFromJSON(object);
+			
+			java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
+			newCurrency.setSymbol(localeCurrency.getSymbol());
+			
+			newCurrency.save();
+			HyjUtil.displayToast(R.string.currencyListFragment_addCurrency_toast_success);
+			this.getActivity().finish();
 		}
     }
 
@@ -113,19 +124,19 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		}
 		JSONObject data = new JSONObject();
 		try {
-			data.put("userName", mSearchText);
-			data.put("nickName", mSearchText);
-			data.put("__dataType", "User");
+			data.put("name", mSearchText);
+			data.put("code", mSearchText);
+			data.put("__dataType", "CurrencyAll");
 			data.put("__limit", mListPageSize);
 			data.put("__offset", 0);
-			data.put("__orderBy", "userName ASC");
+			data.put("__orderBy", "name ASC");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		Bundle bundle = new Bundle();
-		bundle.putString("target", "findData");
+		bundle.putString("target", "findCurrency");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
 		if(getLoaderManager().getLoader(0) != null){
 			getLoaderManager().destroyLoader(0);
@@ -139,19 +150,19 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		this.setFooterLoadStart();
 		JSONObject data = new JSONObject();
 		try {
-			data.put("userName", mSearchText);
-			data.put("nickName", mSearchText);
-			data.put("__dataType", "User");
+			data.put("name", mSearchText);
+			data.put("name", mSearchText);
+			data.put("__dataType", "CurrencyAll");
 			data.put("__limit", pageSize);
 			data.put("__offset", offset);
-			data.put("__orderBy", "userName ASC");
+			data.put("__orderBy", "name ASC");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		Bundle bundle = new Bundle();
-		bundle.putString("target", "findData");
+		bundle.putString("target", "findCurrency");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
 		Loader loader = getLoaderManager().getLoader(0);
 		((HyjHttpPostJSONLoader)loader).changePostQuery(bundle);		
