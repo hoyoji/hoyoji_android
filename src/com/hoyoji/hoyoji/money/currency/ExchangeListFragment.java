@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money.currency;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,11 +14,17 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 
 public class ExchangeListFragment extends HyjUserListFragment{
@@ -39,8 +46,8 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.exchange_listitem_exchange,
 				null,
-				new String[] { "name" },
-				new int[] { R.id.exchangeListItem_name },
+				new String[] { "localCurrencyId", "foreignCurrencyId", "rate", "autoUpdate" },
+				new int[] { R.id.exchangeListItem_localCurrency, R.id.exchangeListItem_foreignCurrency, R.id.exchangeListItem_rate, R.id.exchangeListItem_autoUpdate },
 				0); 
 	}	
 
@@ -113,5 +120,23 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
 		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.exchangeListItem_foreignCurrency || 
+				view.getId() == R.id.exchangeListItem_localCurrency){
+			((TextView)view).setText(((Currency)(HyjModel.getModel(Currency.class, cursor.getString(columnIndex)))).getName());
+			return true;
+		} else if(view.getId() == R.id.exchangeListItem_rate){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setNumber(cursor.getDouble(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.exchangeListItem_autoUpdate){
+			((TextView)view).setText(String.valueOf(cursor.getInt(columnIndex)));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

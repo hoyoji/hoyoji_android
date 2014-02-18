@@ -67,9 +67,6 @@ public class FriendFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		
-		mDateTimeDate = (HyjDateTimeField) getView().findViewById(R.id.friendFormFragment_textField_datetime);
-		
 	}
 	
 	private void fillData(){

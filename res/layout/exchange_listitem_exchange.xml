@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="vertical"
-     android:descendantFocusability="blocksDescendants">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants" >
 
-<TextView android:id="@+id/exchangeListItem_name"  
-    android:layout_width="match_parent"  
-    android:layout_height="wrap_content"  
-    android:gravity="center_vertical"  
-    android:paddingLeft="16dp"  
-    android:paddingRight="16dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="left"
+        android:orientation="vertical" >
 
- </LinearLayout>
+        <TextView
+            android:id="@+id/exchangeListItem_localCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/exchangeListItem_foreignCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingLeft="20dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/exchangeListItem_autoUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"/>
+
+        <com.hoyoji.android.hyjframework.view.HyjNumericView
+            android:id="@+id/exchangeListItem_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/exchangeListItem_exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:text="折算：$100.00"/>
+    </LinearLayout>
+
+</FrameLayout>

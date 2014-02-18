@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -18,7 +19,7 @@ public class Exchange extends HyjModel {
 	private String mId;
 
 	@Column(name = "rate")
-	private String mRate;
+	private Double mRate;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -30,7 +31,7 @@ public class Exchange extends HyjModel {
 	private String mForeignCurrencyId;
 	
 	@Column(name = "autoUpdate")
-	private String mAutoUpdate;
+	private Boolean mAutoUpdate;
 
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -44,6 +45,7 @@ public class Exchange extends HyjModel {
 	public Exchange(){
 		super();
 		mId = UUID.randomUUID().toString();
+		setAutoUpdate(true);
 	}
 	
 	@Override
@@ -66,16 +68,23 @@ public class Exchange extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getRate() {
+	public Double getRate() {
 		return mRate;
 	}
 
-	public void setRate(String mRate) {
+	public void setRate(Double mRate) {
 		this.mRate = mRate;
 	}
 
 	public String getLocalCurrencyId() {
 		return mLocalCurrencyId;
+	}
+	
+	public Currency getLocalCurrency() {
+		if(mLocalCurrencyId == null){
+			return null;
+		}
+		return (Currency)getModel(Currency.class, mLocalCurrencyId);
 	}
 
 	public void setLocalCurrencyId(String mLocalCurrencyId) {
@@ -86,15 +95,22 @@ public class Exchange extends HyjModel {
 		return mForeignCurrencyId;
 	}
 
+	public Currency getForeignCurrency() {
+		if(mForeignCurrencyId == null){
+			return null;
+		}
+		return (Currency)getModel(Currency.class, mForeignCurrencyId);
+	}
+	
 	public void setForeignCurrencyId(String mForeignCurrencyId) {
 		this.mForeignCurrencyId = mForeignCurrencyId;
 	}
 
-	public String getAutoUpdate() {
+	public Boolean getAutoUpdate() {
 		return mAutoUpdate;
 	}
 
-	public void setAutoUpdate(String mAutoUpdate) {
+	public void setAutoUpdate(Boolean mAutoUpdate) {
 		this.mAutoUpdate = mAutoUpdate;
 	}
 
