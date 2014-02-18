@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -57,7 +58,10 @@ public class MoneyAccount extends HyjModel {
 	
 	public MoneyAccount(){
 		super();
+		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mId = UUID.randomUUID().toString();
+		mCurrencyId = userData.getActiveCurrencyId();
+		mCurrentBalance = 0.00;
 	}
 	
 	@Override
