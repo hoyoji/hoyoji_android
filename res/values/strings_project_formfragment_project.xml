@@ -11,6 +11,9 @@
    <string name="projectFormFragment_textView_parentProject">上级项目</string>
    <string name="projectFormFragment_editText_hint_parentProject">无上级项目</string>
     
+   <string name="projectFormFragment_textView_currency">结算币种</string>
+   <string name="projectFormFragment_editText_hint_currency">请选择结算币种</string>
+   
    <string name="projectFormFragment_checkBox_autoApportion">自动分摊</string>
    <string name="projectFormFragment_checkBox_hint_autoApportion">新增账务时，账务金额在成员间自动分摊</string>
     

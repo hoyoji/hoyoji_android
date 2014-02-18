@@ -104,6 +104,17 @@ public class Project extends HyjModel {
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
+	
+	public Currency getCurrency(){
+		if(mCurrencyId == null){
+			return null;
+		}
+		return (Currency) getModel(Currency.class, mCurrencyId);
+	}
+	
+	public void setCurrency(Currency mCurrency) {
+		this.mCurrencyId = mCurrency.getId();
+	}
 
 	public Boolean getAutoApportion() {
 		return mAutoApportion;
