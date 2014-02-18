@@ -26,10 +26,10 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 	private final static int GET_FOREIGN_CURRENCY_ID = 2;
 
 	private HyjModelEditor mExchangeEditor = null;
-	private HyjSelectorField mEditTextLocalCurrency = null;
-	private HyjSelectorField mEditTextForeignCurrency = null;
-	private HyjNumericField mEditTextRate = null;
-	private CheckBox mEditTextAutoUpdate = null;
+	private HyjSelectorField mSelectorFieldLocalCurrency = null;
+	private HyjSelectorField mSelectorFieldForeignCurrency = null;
+	private HyjNumericField mNumericFieldRate = null;
+	private CheckBox mCheckBoxAutoUpdate = null;
 
 	@Override
 	public Integer useContentView() {
@@ -51,14 +51,14 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		}
 		mExchangeEditor = exchange.newModelEditor();
 
-		mEditTextLocalCurrency = (HyjSelectorField) getView().findViewById(
+		mSelectorFieldLocalCurrency = (HyjSelectorField) getView().findViewById(
 				R.id.exchangeFormFragment_editText_localCurrency);
 		Currency localCurrency = exchange.getLocalCurrency();
 		if (localCurrency != null) {
-			mEditTextLocalCurrency.setText(localCurrency.getName());
-			mEditTextLocalCurrency.setModelId(exchange.getLocalCurrencyId());
+			mSelectorFieldLocalCurrency.setText(localCurrency.getName());
+			mSelectorFieldLocalCurrency.setModelId(exchange.getLocalCurrencyId());
 		}
-		mEditTextLocalCurrency.setOnClickListener(new OnClickListener() {
+		mSelectorFieldLocalCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				ExchangeFormFragment.this
@@ -69,15 +69,15 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mEditTextForeignCurrency = (HyjSelectorField) getView().findViewById(
+		mSelectorFieldForeignCurrency = (HyjSelectorField) getView().findViewById(
 				R.id.exchangeFormFragment_editText_foreignCurrency);
 		Currency foreignCurrency = exchange.getForeignCurrency();
 		if (foreignCurrency != null) {
-			mEditTextForeignCurrency.setText(foreignCurrency.getName());
-			mEditTextForeignCurrency
+			mSelectorFieldForeignCurrency.setText(foreignCurrency.getName());
+			mSelectorFieldForeignCurrency
 					.setModelId(exchange.getForeignCurrencyId());
 		}
-		mEditTextForeignCurrency.setOnClickListener(new OnClickListener() {
+		mSelectorFieldForeignCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				ExchangeFormFragment.this
@@ -88,29 +88,29 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mEditTextRate = (HyjNumericField) getView().findViewById(
+		mNumericFieldRate = (HyjNumericField) getView().findViewById(
 				R.id.exchangeFormFragment_editText_rate);
-		mEditTextRate.setNumber(exchange.getRate());
+		mNumericFieldRate.setNumber(exchange.getRate());
 
-		mEditTextAutoUpdate = (CheckBox) getView().findViewById(
+		mCheckBoxAutoUpdate = (CheckBox) getView().findViewById(
 				R.id.exchangeFormFragment_checkBox_autoUpdate);
-		mEditTextAutoUpdate.setChecked(exchange.getAutoUpdate());
+		mCheckBoxAutoUpdate.setChecked(exchange.getAutoUpdate());
 
 	}
 
 	 private void fillData(){
 		 Exchange modelCopy = (Exchange) mExchangeEditor.getModelCopy();
-		 modelCopy.setAutoUpdate(this.mEditTextAutoUpdate.isChecked());
-		 modelCopy.setLocalCurrencyId(mEditTextLocalCurrency.getModelId());
-		 modelCopy.setForeignCurrencyId(mEditTextForeignCurrency.getModelId());
-		 modelCopy.setRate(mEditTextRate.getNumber());
+		 modelCopy.setAutoUpdate(this.mCheckBoxAutoUpdate.isChecked());
+		 modelCopy.setLocalCurrencyId(mSelectorFieldLocalCurrency.getModelId());
+		 modelCopy.setForeignCurrencyId(mSelectorFieldForeignCurrency.getModelId());
+		 modelCopy.setRate(mNumericFieldRate.getNumber());
 	 }
 
 	 private void showValidatioErrors(){
 		 HyjUtil.displayToast(R.string.app_validation_error);
-		 mEditTextLocalCurrency.setError(mExchangeEditor.getValidationError("localCurrency"));
-		 mEditTextForeignCurrency.setError(mExchangeEditor.getValidationError("foreignCurrency"));
-		 mEditTextRate.setError(mExchangeEditor.getValidationError("rate"));
+		 mSelectorFieldLocalCurrency.setError(mExchangeEditor.getValidationError("localCurrency"));
+		 mSelectorFieldForeignCurrency.setError(mExchangeEditor.getValidationError("foreignCurrency"));
+		 mNumericFieldRate.setError(mExchangeEditor.getValidationError("rate"));
 	 }
 
 	@Override
@@ -137,16 +137,16 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Currency localCurrency = Currency.load(Currency.class, _id);
-				mEditTextLocalCurrency.setText(localCurrency.getName());
-				mEditTextLocalCurrency.setModelId(localCurrency.getId());
+				mSelectorFieldLocalCurrency.setText(localCurrency.getName());
+				mSelectorFieldLocalCurrency.setModelId(localCurrency.getId());
 			}
 			break;
 		case GET_FOREIGN_CURRENCY_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Currency foreignCurrency = Currency.load(Currency.class, _id);
-				mEditTextForeignCurrency.setText(foreignCurrency.getName());
-				mEditTextForeignCurrency.setModelId(foreignCurrency.getId());
+				mSelectorFieldForeignCurrency.setText(foreignCurrency.getName());
+				mSelectorFieldForeignCurrency.setModelId(foreignCurrency.getId());
 			}
 			break;
 		}
