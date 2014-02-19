@@ -75,7 +75,7 @@ public class HyjServer {
 							((HyjAsyncTask)asyncTask).doPublishProgress((int) ((count / (float) length) * 100));
 						}
 					}
-					Thread.sleep(100);
+					Thread.sleep(10);
 				}
 				s = new String(baos.toByteArray());
 				Log.i("Server", s);

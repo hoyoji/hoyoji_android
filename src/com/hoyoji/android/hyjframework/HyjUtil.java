@@ -14,6 +14,10 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Toast;
 
 import com.hoyoji.hoyoji.RegisterActivity;
@@ -90,4 +94,17 @@ public class HyjUtil {
 
 		    return image;
 		}
+		
+		public static void startRoateView(View v){
+			RotateAnimation anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+			anim.setInterpolator(new LinearInterpolator());
+			anim.setRepeatCount(Animation.INFINITE);
+			anim.setDuration(1000);
+			v.startAnimation(anim);
+		}
+		
+		public static void stopRoateView(View v){
+			v.setAnimation(null);
+		}
+		
 }

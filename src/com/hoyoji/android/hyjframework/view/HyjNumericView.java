@@ -20,6 +20,7 @@ import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -34,7 +35,6 @@ import android.widget.TextView;
 public class HyjNumericView extends TextView {
 	public HyjNumericView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 	}
 
 	private Double mNumber;

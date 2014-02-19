@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.activeandroid.ActiveAndroid;
@@ -46,6 +47,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjTextField mTextFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
+	private ImageView mImageViewRefreshRate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -131,12 +133,18 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				mImageFieldPicture.addPicture();		
 			}
-			
+		});
+		
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_refresh_exchangeRate);	
+		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				HyjUtil.startRoateView(mImageViewRefreshRate);
+			}
 		});
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

@@ -186,7 +186,7 @@
                 hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
                 hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/moneyExpenseFormFragment_imageButton_refresh_exchangeRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
