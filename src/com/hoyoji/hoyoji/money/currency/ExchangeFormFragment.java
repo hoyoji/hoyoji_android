@@ -136,13 +136,13 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 							if(object != null){
 								HyjUtil.displayToast(object.toString());
 							} else {
-								HyjUtil.displayToast("无法获取汇率，请手工输入。");
+								HyjUtil.displayToast(R.string.exchangeFormFragment_toast_cannot_refresh_rate);
 							}
 						}
 					};
 					HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
 				} else {
-					HyjUtil.displayToast("请先选择本币和外币");
+					HyjUtil.displayToast(R.string.exchangeFormFragment_toast_select_currency);
 				}
 			}
 		});

@@ -60,7 +60,7 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 	// onPostExecute displays the results of the AsyncTask.
 	@Override
 	protected void onPostExecute(Object result) {
-		if (result != null) {
+		if (result instanceof Double) {
 			mServerCallback.finishCallback(result);
 		} else {
 			mServerCallback.errorCallback(result);
