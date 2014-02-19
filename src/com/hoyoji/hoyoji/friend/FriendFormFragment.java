@@ -27,7 +27,6 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldNickName = null;
-	private HyjDateTimeField mDateTimeDate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -73,8 +72,6 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText().toString().trim());
 		modelCopy.setFriendCategoryId(mSelectorFieldFriendCategory.getModelId());
-
-		HyjUtil.displayToast(this.mDateTimeDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){

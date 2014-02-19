@@ -107,15 +107,29 @@
                 android:layout_marginLeft="5dip"
                 android:background="@android:color/darker_gray" />
 
-            <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                android:id="@+id/moneyExpenseFormFragment_selectorField_friend"
-                hyj:style="top_label"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
-                hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" />
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/moneyExpenseFormFragment_imageView_clear_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="0dp"
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyExpenseFormFragment_selectorField_friend"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
+                    hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" >
+                </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+            </FrameLayout>
         </LinearLayout>
 
         <View
@@ -173,26 +187,26 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:orientation="vertical" >
-            <com.hoyoji.android.hyjframework.view.HyjNumericField
-                android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
-                hyj:style="top_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
-                hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
 
-            <ImageView
-                android:id="@+id/moneyExpenseFormFragment_imageButton_refresh_exchangeRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_action_refresh" />
-            
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyExpenseFormFragment_textField_exchangeRate"
+                    hyj:style="top_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_exchangeRate"
+                    hyj:labelText="@string/moneyExpenseFormFragment_textView_exchangeRate" />
+
+                <ImageView
+                    android:id="@+id/moneyExpenseFormFragment_imageButton_refresh_exchangeRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_refresh_rotate" />
             </LinearLayout>
         </LinearLayout>
 

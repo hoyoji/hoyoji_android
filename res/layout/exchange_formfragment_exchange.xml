@@ -41,7 +41,7 @@
            	android:id="@+id/exchangeFormFragment_imageView_refresh_rate"
    	   	    android:layout_width="wrap_content"
    	   	    android:layout_height="wrap_content" 
-   	   	    android:src="@drawable/ic_action_refresh"
+   	   	    android:src="@drawable/ic_action_refresh_rotate"
    	   	    android:layout_gravity="right"/>
      	   	</FrameLayout>
     <View 

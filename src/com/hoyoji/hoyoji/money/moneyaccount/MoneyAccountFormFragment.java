@@ -54,7 +54,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		
 		Currency currency = moneyAccount.getCurrency();
 		mSelectorFieldCurrency = (HyjSelectorField) getView().findViewById(R.id.moneyAccountFormFragment_selectorField_currency);
-		
+		mSelectorFieldCurrency.setEnabled(modelId == -1);
 		if(currency != null){
 			mSelectorFieldCurrency.setModelId(currency.getId());
 			mSelectorFieldCurrency.setText(currency.getName());
