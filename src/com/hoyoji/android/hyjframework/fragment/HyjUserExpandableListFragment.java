@@ -2,6 +2,7 @@ package com.hoyoji.android.hyjframework.fragment;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter.OnGetChildrenCursorListener;
+import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -26,10 +28,12 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.SimpleAdapter;
 
 public abstract class HyjUserExpandableListFragment extends Fragment implements 
 	LoaderManager.LoaderCallbacks<Object>, 
 	SimpleCursorTreeAdapter.ViewBinder, 
+	SimpleAdapter.ViewBinder, 
 	OnChildClickListener,
 	OnGroupClickListener,
 	OnGroupCollapseListener,
@@ -38,8 +42,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 {
 	public final static int DELETE_LIST_ITEM = 1024;
 	public final static int CANCEL_LIST_ITEM = 1025;
-	private boolean mIsViewInited = false;
-	private ExpandableListView mExpandableListView;
+	protected boolean mIsViewInited = false;
+	protected ExpandableListView mExpandableListView;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -67,10 +71,14 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		super.onActivityCreated(savedInstanceState);
 	    getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
-		SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter) getListView().getExpandableListAdapter();
+		ExpandableListAdapter adapter = (ExpandableListAdapter) getListView().getExpandableListAdapter();
 		if(adapter == null){
 			adapter = useListViewAdapter();
-			adapter.setViewBinder(this);
+			if(adapter instanceof SimpleCursorTreeAdapter){
+				((SimpleCursorTreeAdapter) adapter).setViewBinder(this);
+			} else if(adapter instanceof HyjSimpleExpandableListAdapter){
+				((HyjSimpleExpandableListAdapter) adapter).setViewBinder(this);
+			}
 			getListView().setAdapter(adapter); 
 		}
 	}
@@ -125,7 +133,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	
 	public abstract Integer useContentView();
 
-	public abstract SimpleCursorTreeAdapter useListViewAdapter();
+	public abstract ExpandableListAdapter useListViewAdapter();
 	
 	public void onInitViewData(){
 		
@@ -136,7 +144,11 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public void onLoadFinished(Loader<Object> loader, Object cursor) {
 		SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter) getListView().getExpandableListAdapter();
 		if(loader.getId() < 0){
+			boolean expandFirstGroup = adapter.getGroupCount() == 0;
 			adapter.setGroupCursor((Cursor)cursor);
+			if(expandFirstGroup){
+				getListView().expandGroup(0);
+			}
 		} else {
 			// 
 			if(adapter.getGroupCount() > loader.getId()){
@@ -252,6 +264,11 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 
 	@Override
+	public boolean setViewValue(View arg0, Object arg1, String arg2) {
+		return false;
+	}
+
+	@Override
 	public void onGroupExpand(int arg0) {
 		
 	}
@@ -272,7 +289,11 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			int groupPosition, int childPosition, long id) {
 		return false;
 	}  	
-	
+
+	@Override
+	public void onGetChildrenCursor(Cursor groupCursor) {
+
+	}
 }
 
 
