@@ -114,6 +114,7 @@ public class HyjNumericField extends LinearLayout {
 	
 	public void setText(String text){
 		mEditTextEdit.setText(text);
+		mEditTextEdit.setSelection(text.length());
 	}
 	
 	public Editable getText(){
@@ -122,9 +123,9 @@ public class HyjNumericField extends LinearLayout {
 	
 	public void setNumber(Double number){
 		if(number == null){
-			mEditTextEdit.setText("");
+			setText("");
 		} else {
-			mEditTextEdit.setText(number.toString());
+			setText(number.toString());
 		}
 	}
 	
