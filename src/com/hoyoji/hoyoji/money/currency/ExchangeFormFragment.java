@@ -126,6 +126,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 						@Override
 						public void finishCallback(Object object) {
 							HyjUtil.stopRoateView(mImageViewRefreshRate);
+							mImageViewRefreshRate.setEnabled(true);
 							mNumericFieldRate.setNumber((Double)object);
 						}
 						@Override
