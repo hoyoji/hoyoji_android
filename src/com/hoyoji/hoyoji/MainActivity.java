@@ -134,7 +134,7 @@ public class MainActivity extends HyjUserActivity {
 	    mDrawerList.setItemChecked(position, true);
 	    switch(position){
 	        case 2 :
-	        	openActivityWithFragment(HomeListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
 	        	break;
 	        case 3 :
 	        	openActivityWithFragment(ExchangeListFragment.class, R.string.exchangeListFragment_title_manage_exchange, null);
