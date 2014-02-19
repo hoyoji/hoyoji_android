@@ -1,7 +1,9 @@
 package com.hoyoji.hoyoji.money;
 
+import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -10,6 +12,9 @@ import android.widget.ImageView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -22,6 +27,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -36,6 +42,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
+	private int CREATE_EXCHANGE = 0;
+	private int setExchangeFirstFlag = 1;
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -48,6 +56,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
+	
+	private View mViewSeparatorExchange = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -106,9 +116,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
+		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
-		//mNumericExchangeRate.setVisibility(View.GONE);
+		
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_exchange);
 		
 		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
 		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
@@ -143,11 +155,85 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				HyjUtil.startRoateView(mImageViewRefreshRate);
+				if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId() != null){
+					MoneyAccount moneyAccount = (MoneyAccount)HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
+					Project project = (Project)HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					String fromCurrency = moneyAccount.getCurrencyId();
+					String toCurrency = project.getCurrencyId();
+					if(fromCurrency != null && toCurrency != null){
+						HyjUtil.startRoateView(mImageViewRefreshRate);
+						mImageViewRefreshRate.setEnabled(false);
+						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
+							@Override
+							public void finishCallback(Object object) {
+								HyjUtil.stopRoateView(mImageViewRefreshRate);
+								mImageViewRefreshRate.setEnabled(true);
+								mNumericExchangeRate.setNumber((Double)object);
+							}
+							@Override
+							public void errorCallback(Object object) {
+								HyjUtil.stopRoateView(mImageViewRefreshRate);
+								mImageViewRefreshRate.setEnabled(true);
+								if(object != null){
+									HyjUtil.displayToast(object.toString());
+								} else {
+									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+								}
+							}
+						};
+						HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
+					} else {
+						HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_select_currency);
+					}
+				}else{
+					HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_select_currency);
+				}
 			}
 		});
 		
+			setExchangeRate();
+		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	}
+	
+	private void setExchangeRate(){
+		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
+			MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+			Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			
+			String fromCurrency = moneyAccount.getCurrencyId();
+			String toCurrency = project.getCurrencyId();
+			
+			if(fromCurrency.equals(toCurrency)){
+				if(setExchangeFirstFlag != 1){
+					mNumericExchangeRate.setNumber(1.00);
+					CREATE_EXCHANGE = 0;
+				}
+				mNumericExchangeRate.setVisibility(View.GONE);
+				mImageViewRefreshRate.setVisibility(View.GONE);
+				mViewSeparatorExchange.setVisibility(View.GONE);
+			}else{
+				mNumericExchangeRate.setVisibility(View.VISIBLE);
+				mImageViewRefreshRate.setVisibility(View.VISIBLE);
+				mViewSeparatorExchange.setVisibility(View.VISIBLE);
+				
+				Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?",new Object [] {fromCurrency, toCurrency}).executeSingle();
+					if(exchange != null){
+						mNumericExchangeRate.setNumber(exchange.getRate());
+						CREATE_EXCHANGE = 0;
+					}else{
+						mNumericExchangeRate.setText(null);
+						CREATE_EXCHANGE = 1;
+					}
+			}
+			
+		}else{
+			mNumericExchangeRate.setVisibility(View.GONE);
+			mImageViewRefreshRate.setVisibility(View.GONE);
+			mViewSeparatorExchange.setVisibility(View.GONE);
+		}
+			setExchangeFirstFlag = 0;
 	}
 	
 	private void fillData(){
@@ -222,6 +308,18 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				
 				mMoneyExpenseEditor.save();
 				
+				if(CREATE_EXCHANGE == 1){
+					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+					
+					Exchange newExchange = new Exchange();
+					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
+					newExchange.setForeignCurrencyId(project.getCurrencyId());
+					newExchange.setRate(mNumericExchangeRate.getNumber());
+					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					newExchange.save();
+				}
+				
 				if(mSelectorFieldMoneyAccount.getModelId() != null){
 					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
 					moneyAccount.setCurrentBalance(moneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
@@ -246,7 +344,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
 	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName());
 	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-	         	 }
+	         		setExchangeRate();
+	        	 }
 	        	 break;
              case GET_PROJECT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
@@ -254,7 +353,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		Project project = Project.load(Project.class, _id);
 	         		mSelectorFieldProject.setText(project.getName());
 	         		mSelectorFieldProject.setModelId(project.getId());
-	         	 }
+	         		setExchangeRate();
+	        	 }
 	        	 break;
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){

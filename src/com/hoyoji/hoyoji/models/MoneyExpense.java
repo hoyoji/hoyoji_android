@@ -330,6 +330,7 @@ public class MoneyExpense extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("date");
 		}
+		
 		if(this.getAmount() == null){
 			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
 		}else if(this.getAmount() < 0){
@@ -339,6 +340,19 @@ public class MoneyExpense extends HyjModel{
 		}
 		else{
 			modelEditor.removeValidationError("amount");
+		}
+		
+		if(this.getExchangeRate() == null){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyExpenseFormFragment_editText_hint_exchangeRate);
+		}else if(this.getExchangeRate() == 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyExpenseFormFragment_editText_validationError_zero_exchangeRate);
+		}else if(this.getExchangeRate() < 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyExpenseFormFragment_editText_validationError_negative_exchangeRate);
+		}else if(this.getExchangeRate() > 99999999){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyExpenseFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		}
+		else{
+			modelEditor.removeValidationError("exchangeRate");
 		}
 //		if(this.getMoneyAccountId() == null){
 //			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
