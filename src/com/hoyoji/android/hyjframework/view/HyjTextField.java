@@ -120,6 +120,9 @@ public class HyjTextField extends LinearLayout {
 	public Editable getText(){
 		return mEditTextEdit.getText();
 	}
-	
+
+	public void setEnabled(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+	}
 	
 }

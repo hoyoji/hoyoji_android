@@ -11,12 +11,12 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	private String m_creatorId;
 
 	
-	public static HyjModel getModel(Class<? extends Model> modelClass, String id){
-		Model entity = Cache.getEntity(modelClass, id);
+	public static <T extends HyjModel> T getModel(Class<T> modelClass, String id){
+		T entity = (T)Cache.getEntity(modelClass, id);
 		if (entity == null) {
 			entity = new Select().from(modelClass).where("id=?", id).executeSingle();
 		}
-		return (HyjModel) entity;
+		return entity;
 	}	
 	
 	@Override

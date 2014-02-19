@@ -15,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.ContextMenu;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -47,6 +48,7 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 	public void onInitViewData(){
 		mSearchView = (SearchView)getView().findViewById(R.id.currencyListFragment_addCurrency_searchView);
 		mSearchView.setOnQueryTextListener(this);
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
 	@Override

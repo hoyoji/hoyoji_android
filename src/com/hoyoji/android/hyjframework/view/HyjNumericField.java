@@ -136,4 +136,8 @@ public class HyjNumericField extends LinearLayout {
 			return null;
 		}
 	}
+	
+	public void setEnabled(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+	}
 }

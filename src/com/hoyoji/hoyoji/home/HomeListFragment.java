@@ -57,17 +57,18 @@ public class HomeListFragment extends HyjUserListFragment {
 		if(item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project){
 			HyjUtil.displayToast(R.string.homeListFragment_action_display_transaction_type);
 			return true;
-		}else if(item.getItemId() == R.id.homeListFragment_action_display_exchangeAll){
-			openActivityWithFragment(ExchangeListFragment.class, R.string.exchangeFormFragment_title_addnew, null);
-			return true;
-		}else if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
-			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
-			return true;
 		}
-		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
-			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
-			return true;
-		}
+
+//   以下在 MainActivity.java 里面设置!
+//		
+//		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
+//			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+//			return true;
+//		}
+//		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
+//			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+//			return true;
+//		}
 //		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
 //			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
 //			return true;

@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.money.moneyaccount;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 
 import com.activeandroid.query.Select;
@@ -80,7 +81,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyAccount.getRemark());
-		
+
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
 	private void fillData(){
