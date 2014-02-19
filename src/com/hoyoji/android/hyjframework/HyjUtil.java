@@ -11,15 +11,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RotateDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 
 public class HyjUtil {
@@ -59,6 +68,18 @@ public class HyjUtil {
 	        return "";
 	    }
 	  
+	 public static boolean hasNetworkConnection(){
+		 ConnectivityManager connMgr = (ConnectivityManager) HyjApplication
+					.getInstance().getApplicationContext()
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			if (networkInfo != null && networkInfo.isConnected()) {
+				return true;
+			} else {
+				return false;
+			}
+	 }
+	 
 	    public static String toHexString(byte[] keyData) {
 	        if (keyData == null) {
 	            return null;
@@ -95,15 +116,24 @@ public class HyjUtil {
 		    return image;
 		}
 		
-		public static void startRoateView(View v){
-			RotateAnimation anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-			anim.setInterpolator(new LinearInterpolator());
-			anim.setRepeatCount(Animation.INFINITE);
-			anim.setDuration(1000);
-			v.startAnimation(anim);
+
+		public static void startRoateView(ImageView v){
+//			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				RotateAnimation anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+				anim.setInterpolator(new LinearInterpolator());
+				anim.setRepeatCount(Animation.INFINITE);
+				anim.setDuration(1000);
+				v.startAnimation(anim);
+//			} else {
+//				RotateDrawable d = (RotateDrawable)v.getDrawable();
+//				ObjectAnimator anim = ObjectAnimator.ofInt(d, "Level", 10000);
+//				anim.setRepeatCount(ObjectAnimator.INFINITE);
+//				anim.setDuration(1000);
+//				anim.start();
+//			}
 		}
 		
-		public static void stopRoateView(View v){
+		public static void stopRoateView(ImageView v){
 			v.setAnimation(null);
 		}
 		

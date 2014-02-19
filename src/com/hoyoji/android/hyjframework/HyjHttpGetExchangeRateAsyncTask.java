@@ -41,12 +41,8 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 
 	@Override
 	protected Object doInBackground(String... params) {
-		ConnectivityManager connMgr = (ConnectivityManager) HyjApplication
-				.getInstance().getApplicationContext()
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		String target = "https://www.google.com/finance/converter?a=1&from=" + params[0] + "&to=" + params[1];
-		if (networkInfo != null && networkInfo.isConnected()) {
+		if (HyjUtil.hasNetworkConnection()) {
+			String target = "https://www.google.com/finance/converter?a=1&from=" + params[0] + "&to=" + params[1];
 			return doHttpGet(target);
 		} else {
 			return HyjApplication.getInstance().getString(R.string.server_connection_disconnected);

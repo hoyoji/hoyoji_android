@@ -25,6 +25,12 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		return R.layout.currency_formfragment_currency;
 	}
 	
+
+	@Override
+	public Integer useOptionsMenuView(){
+		return null;
+	}
+	
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
@@ -41,45 +47,55 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_name);
 		mTextFieldName.setText(currency.getName());
+		mTextFieldName.setEnabled(modelId == -1);
 		
 		mTextFieldSymbol = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_symbol);
 		mTextFieldSymbol.setText(currency.getSymbol());
+		mTextFieldSymbol.setEnabled(modelId == -1);
 		
 		mTextFieldCode = (HyjTextField) getView().findViewById(R.id.currencyFormFragment_textField_code);
 		mTextFieldCode.setText(currency.getCode());
+		mTextFieldCode.setEnabled(modelId == -1);
+		
+//		if(modelId == -1){
+//			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+//		}
 		
 	}
 	
-	private void fillData(){
-		Currency modelCopy = (Currency) mCurrencyEditor.getModelCopy();
-		modelCopy.setName(mTextFieldName.getText().toString().trim());
-		modelCopy.setSymbol(mTextFieldSymbol.getText().toString().trim());
-		modelCopy.setCode(mTextFieldCode.getText().toString().trim());
-	}
-	
-	private void showValidatioErrors(){
-		HyjUtil.displayToast(R.string.app_validation_error);
-		
-		mTextFieldName.setError(mCurrencyEditor.getValidationError("name"));
-		mTextFieldSymbol.setError(mCurrencyEditor.getValidationError("symbol"));
-		mTextFieldCode.setError(mCurrencyEditor.getValidationError("code"));
-		
-	}
+//	private void fillData(){
+//		Currency modelCopy = (Currency) mCurrencyEditor.getModelCopy();
+//		modelCopy.setName(mTextFieldName.getText().toString().trim());
+//		modelCopy.setSymbol(mTextFieldSymbol.getText().toString().trim());
+//		modelCopy.setCode(mTextFieldCode.getText().toString().trim());
+//	}
+//	
+//	private void showValidatioErrors(){
+//		HyjUtil.displayToast(R.string.app_validation_error);
+//		
+//		mTextFieldName.setError(mCurrencyEditor.getValidationError("name"));
+//		mTextFieldSymbol.setError(mCurrencyEditor.getValidationError("symbol"));
+//		mTextFieldCode.setError(mCurrencyEditor.getValidationError("code"));
+//	}
 
-	 @Override
-	public void onSave(View v){
-		super.onSave(v);
-		
-		fillData();
-		
-		mCurrencyEditor.validate();
-		
-		if(mCurrencyEditor.hasValidationErrors()){
-			showValidatioErrors();
-		} else {
-			mCurrencyEditor.save();
-			HyjUtil.displayToast(R.string.app_save_success);
-			getActivity().finish();
-		}
-	}	
+//	 @Override
+//	public void onSave(View v){
+//		super.onSave(v);
+//		
+//		if(mCurrencyEditor.getModel().get_mId() != null){
+//			return;
+//		}
+//		
+//		fillData();
+//		
+//		mCurrencyEditor.validate();
+//		
+//		if(mCurrencyEditor.hasValidationErrors()){
+//			showValidatioErrors();
+//		} else {
+//			mCurrencyEditor.save();
+//			HyjUtil.displayToast(R.string.app_save_success);
+//			getActivity().finish();
+//		}
+//	}	
 }

@@ -63,5 +63,12 @@ public class HyjListField extends LinearLayout {
 	public void setListAdapter(ListAdapter adapter){
 		mListView.setAdapter(adapter);
 	}
-	
+
+	public void setEnabled(boolean enabled){
+		if(!enabled){
+			mAddButton.setVisibility(View.GONE);
+		} else {
+			mAddButton.setVisibility(View.VISIBLE);
+		}
+	}
 }

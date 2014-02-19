@@ -28,14 +28,16 @@ public abstract class HyjUserFormFragment extends HyjUserFragment {
 	@Override
 	public void onInitViewData (){
 			final Button button = (Button) getView().findViewById(R.id.button_save);
-		    button.setOnClickListener(
-		        new OnClickListener() {
-		            @Override
-		            public void onClick(View v) {
-		                onSave();
-		            }
-		        }
-		    );
+			if(button != null){
+			    button.setOnClickListener(
+			        new OnClickListener() {
+			            @Override
+			            public void onClick(View v) {
+			                onSave();
+			            }
+			        }
+			    );
+			}
 	}
 	
 	public void onSave(){

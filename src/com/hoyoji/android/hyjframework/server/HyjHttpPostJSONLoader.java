@@ -62,9 +62,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	     */
 	    @Override 
 	    public List<JSONObject> loadInBackground() {
-	        ConnectivityManager connMgr = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		    if (networkInfo != null && networkInfo.isConnected()) {
+			if (HyjUtil.hasNetworkConnection()) {
 		    	Object object = null;
 		    	if(mTarget != null){
 		    		object = HyjServer.doHttpPost(this, HyjApplication.getServerUrl()+mTarget+".php", mPostData, false);

@@ -26,10 +26,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
@@ -105,8 +107,8 @@ public class MainActivity extends HyjUserActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(2);
-		mViewPager.setCurrentItem(1, false);
+		mViewPager.setOffscreenPageLimit(4);
+		mViewPager.setCurrentItem(2, false);
 
 	}
 	
@@ -142,7 +144,7 @@ public class MainActivity extends HyjUserActivity {
 	        	return;
 	    	case 6 :
 	    		HyjApplication.getInstance().switchUser();
-	    	break;
+	    		break;
 	    }
 	    
 	    mDrawerLayout.closeDrawer(mDrawerList);
@@ -176,6 +178,22 @@ public class MainActivity extends HyjUserActivity {
           return true;
         }
         // Handle your other action bar items...
+    		if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
+    			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+    			return true;
+    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
+    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+    			return true;
+    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
+    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+    			return true;
+    		}
+//    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_topup){
+//    			openActivityWithFragment(MoneyIncomeListFragment.class, R.string.moneyIncomeListFragment_title_all, null);
+//    			return true;
+//    		}
 
         return super.onOptionsItemSelected(item);
     }
@@ -196,12 +214,15 @@ public class MainActivity extends HyjUserActivity {
 			Fragment fragment = null;
 			switch(position){
 			case 0:
-				fragment = new ProjectListFragment();
+				fragment = new MoneyAccountListFragment();
 				break;
 			case 1:
-				fragment = new HomeListFragment();
+				fragment = new ProjectListFragment();
 				break;
 			case 2:
+				fragment = new HomeListFragment();
+				break;
+			case 3:
 				fragment = new FriendListFragment();
 				break;
 			}
@@ -211,7 +232,7 @@ public class MainActivity extends HyjUserActivity {
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 3;
+			return 4;
 		}
 
 		@Override
@@ -219,10 +240,12 @@ public class MainActivity extends HyjUserActivity {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.mainActivity_section_title_project).toUpperCase(l);
+				return getString(R.string.mainActivity_section_title_moneyaccount).toUpperCase(l);
 			case 1:
-				return getString(R.string.mainActivity_section_title_home).toUpperCase(l);
+				return getString(R.string.mainActivity_section_title_project).toUpperCase(l);
 			case 2:
+				return getString(R.string.mainActivity_section_title_home).toUpperCase(l);
+			case 3:
 				return getString(R.string.mainActivity_section_title_friend).toUpperCase(l);
 			}
 			return null;

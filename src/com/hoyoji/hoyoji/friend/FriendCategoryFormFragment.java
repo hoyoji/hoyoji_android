@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.friend;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
@@ -46,6 +47,7 @@ public class FriendCategoryFormFragment extends HyjUserFormFragment {
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.friendCategoryFormFragment_textField_name);
 		mTextFieldName.setText(friendCategory.getName());
 
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
 	private void fillData(){

@@ -164,5 +164,8 @@ public class HyjDateTimeField extends LinearLayout {
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return mDateFormat.format(mDate);
 	}
-	
+
+	public void setEnabled(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+	}
 }

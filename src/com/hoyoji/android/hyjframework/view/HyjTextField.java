@@ -112,11 +112,17 @@ public class HyjTextField extends LinearLayout {
 	
 	public void setText(String text){
 		mEditTextEdit.setText(text);
+		if(text != null){
+			mEditTextEdit.setSelection(text.length());
+		}
 	}
 	
 	public Editable getText(){
 		return mEditTextEdit.getText();
 	}
-	
+
+	public void setEnabled(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+	}
 	
 }

@@ -4,8 +4,4 @@
             android:fromDegrees="0"
             android:toDegrees="360"
             android:pivotX="50%"
-            android:pivotY="50%"
-            android:duration="400"
-            android:repeatCount="infinite"
-            android:repeatMode="restart" 
-    		android:shareInterpolator="false"/>
+            android:pivotY="50%"/>

@@ -15,5 +15,7 @@
     
    <string name="currencyFormFragment_textView_code">货币代号</string>
    <string name="currencyFormFragment_editText_hint_code">请输入货币代号</string>
+   
+   <string name="currencyFormFragment_button_setAsLocalCurrency">设为本币</string>
     
 </resources>

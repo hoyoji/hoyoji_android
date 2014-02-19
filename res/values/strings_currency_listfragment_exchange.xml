@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="exchangeListFragment_title_manage_exchange">货币管理</string>
+    <string name="exchangeListFragment_title_manage_exchange">汇率管理</string>
     
     <string name="exchangeListFragment_action_exchange_addnew">创建汇率</string>
     <string name="exchangeListFragment_title_update_all_exchange">更新全部汇率</string>

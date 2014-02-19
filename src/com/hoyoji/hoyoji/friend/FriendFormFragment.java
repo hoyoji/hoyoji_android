@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.friend;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
@@ -27,7 +28,6 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldNickName = null;
-	private HyjDateTimeField mDateTimeDate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -66,15 +66,15 @@ public class FriendFormFragment extends HyjUserFormFragment {
 				.openActivityWithFragmentForResult(FriendCategoryListFragment.class, R.string.friendCategoryListFragment_title_select_friend_category, null, GET_FRIEND_CATEGORY_ID);
 			}
 		});
-		
+
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 	}
 	
 	private void fillData(){
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText().toString().trim());
 		modelCopy.setFriendCategoryId(mSelectorFieldFriendCategory.getModelId());
-
-		HyjUtil.displayToast(this.mDateTimeDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){

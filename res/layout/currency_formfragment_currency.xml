@@ -56,10 +56,10 @@
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
     
-	<Button
-	    android:id="@id/button_save"
+ 	<Button
+	    android:id="@+id/currencyFormFragment_button_setAsLocalCurrency"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/app_action_save"/>
+	    android:text="@string/currencyFormFragment_button_setAsLocalCurrency"/> 
 	
 </LinearLayout>
