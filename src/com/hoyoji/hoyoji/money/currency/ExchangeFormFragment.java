@@ -46,7 +46,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.currency_formfragment_exchange;
+		return R.layout.exchange_formfragment_exchange;
 	}
 
 	@Override
@@ -121,6 +121,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 				String toCurrency = mSelectorFieldForeignCurrency.getModelId();
 				if(fromCurrency != null && toCurrency != null){
 					HyjUtil.startRoateView(mImageViewRefreshRate);
+					mImageViewRefreshRate.setEnabled(false);
 					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
 						@Override
 						public void finishCallback(Object object) {
@@ -130,6 +131,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 						@Override
 						public void errorCallback(Object object) {
 							HyjUtil.stopRoateView(mImageViewRefreshRate);
+							mImageViewRefreshRate.setEnabled(true);
 							if(object != null){
 								HyjUtil.displayToast(object.toString());
 							} else {

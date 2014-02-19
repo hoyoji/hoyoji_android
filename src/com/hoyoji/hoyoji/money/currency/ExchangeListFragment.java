@@ -45,7 +45,7 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
-				R.layout.currency_listitem_exchange,
+				R.layout.exchange_listitem_exchange,
 				null,
 				new String[] { "localCurrencyId", "foreignCurrencyId", "rate", "autoUpdate" },
 				new int[] { R.id.exchangeListItem_localCurrency, R.id.exchangeListItem_foreignCurrency, R.id.exchangeListItem_rate, R.id.exchangeListItem_autoUpdate },
