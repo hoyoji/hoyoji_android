@@ -26,6 +26,7 @@ import android.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.User;
 
@@ -44,13 +45,11 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 	
 	@Override
 	protected Object doInBackground(String... params) {
-		ConnectivityManager connMgr = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	    String target = "post";
-	    if(params.length == 2){
-	    	target = params[1];
-	    }
-	    if (networkInfo != null && networkInfo.isConnected()) {
+		if (HyjUtil.hasNetworkConnection()) {
+	    	String target = "post";
+		    if(params.length == 2){
+		    	target = params[1];
+		    }
 	        return HyjServer.doHttpPost(this, HyjApplication.getServerUrl()+target+".php", params[0], true);
 	    } else {
 	    	try {

@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Toast;
 
+import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 
 public class HyjUtil {
@@ -59,6 +62,18 @@ public class HyjUtil {
 	        return "";
 	    }
 	  
+	 public static boolean hasNetworkConnection(){
+		 ConnectivityManager connMgr = (ConnectivityManager) HyjApplication
+					.getInstance().getApplicationContext()
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			if (networkInfo != null && networkInfo.isConnected()) {
+				return true;
+			} else {
+				return false;
+			}
+	 }
+	 
 	    public static String toHexString(byte[] keyData) {
 	        if (keyData == null) {
 	            return null;
