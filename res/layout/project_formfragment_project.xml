@@ -46,6 +46,22 @@
         android:background="@android:color/darker_gray" 
         />
     
+    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/projectFormFragment_selectorField_projectCurrency"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/projectFormFragment_editText_hint_projectCurrency"
+        hyj:labelText="@string/projectFormFragment_textView_projectCurrency" />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
 	<CheckBox
 	    android:id="@+id/projectFormFragment_checkBox_autoApportion"
 	    android:layout_width="fill_parent"

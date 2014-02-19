@@ -34,18 +34,18 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.exchange_listfragment_exchange;
+		return R.layout.currency_listfragment_exchange;
 	}
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.exchange_listfragment_exchange;
+		return R.menu.currency_listfragment_exchange;
 	}
 
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
-				R.layout.exchange_listitem_exchange,
+				R.layout.currency_listitem_exchange,
 				null,
 				new String[] { "localCurrencyId", "foreignCurrencyId", "rate", "autoUpdate" },
 				new int[] { R.id.exchangeListItem_localCurrency, R.id.exchangeListItem_foreignCurrency, R.id.exchangeListItem_rate, R.id.exchangeListItem_autoUpdate },

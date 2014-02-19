@@ -28,19 +28,25 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjListField;
+import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment.ParentProjectListItem;
 
 
 public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
+	private final static int GET_CURRENCY_ID = 2;
 	
 	private HyjModelEditor mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
 	private HyjListField mListFieldParentProject = null;
+	private HyjSelectorField mSelectorFieldProjectCurrency = null;
 	private CheckBox mCheckBoxAutoApportion = null;
 	private PrentProjectListAdapter mParentProjectListAdapter = null;
 	
@@ -75,6 +81,20 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		Currency currency = project.getCurrency();
+		mSelectorFieldProjectCurrency = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_projectCurrency);
+		
+		if(currency != null){
+			mSelectorFieldProjectCurrency.setModelId(currency.getId());
+			mSelectorFieldProjectCurrency.setText(currency.getName());
+		}
+		mSelectorFieldProjectCurrency.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				ProjectFormFragment.this.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
+			}
+		});	
+		
 		mCheckBoxAutoApportion = (CheckBox)getView().findViewById(R.id.projectFormFragment_checkBox_autoApportion);
 		mCheckBoxAutoApportion.setChecked(project.getAutoApportion());
 
@@ -91,6 +111,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private void fillData() {
 		Project modelCopy = (Project) mProjectEditor.getModelCopy();
 		modelCopy.setName(mTextFieldProjectName.getText().toString().trim());
+		modelCopy.setCurrencyId(mSelectorFieldProjectCurrency.getModelId());
 		modelCopy.setAutoApportion(mCheckBoxAutoApportion.isChecked());
 	}
 	
@@ -98,7 +119,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		
 		mTextFieldProjectName.setError(mProjectEditor.getValidationError("name"));
-		
+		mSelectorFieldProjectCurrency.setError(mProjectEditor.getValidationError("currency"));
 	}
 
 	 @Override
@@ -144,8 +165,16 @@ public class ProjectFormFragment extends HyjUserFormFragment {
             		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
             		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
             	 }
-             case 2:
-
+            	 break;
+             case GET_CURRENCY_ID:
+            	 if(resultCode == Activity.RESULT_OK){
+            		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
+            		 long _id = data.getLongExtra("MODEL_ID", -1);
+ 	         		 Currency currency = Currency.load(Currency.class, _id);
+ 	         		 mSelectorFieldProjectCurrency.setText(currency.getName());
+ 	         		 mSelectorFieldProjectCurrency.setModelId(currency.getId());
+            	 }
+            	 break;
           }
     }
 	 

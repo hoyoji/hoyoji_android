@@ -62,7 +62,12 @@ public class Project extends HyjModel {
 			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
 		} else {
 			modelEditor.removeValidationError("name");
-		}	
+		}
+		if(this.getCurrencyId() == null){
+			modelEditor.setValidationError("currency", R.string.projectFormFragment_editText_hint_projectCurrency);
+		} else {
+			modelEditor.removeValidationError("currency");
+		}
 	}
 
 	public String getId() {
@@ -103,6 +108,17 @@ public class Project extends HyjModel {
 
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
+	}
+	
+	public Currency getCurrency(){
+		if(mCurrencyId == null){
+			return null;
+		}
+		return (Currency) getModel(Currency.class, mCurrencyId);
+	}
+	
+	public void setCurrency(Currency mCurrency) {
+		this.mCurrencyId = mCurrency.getId();
 	}
 
 	public Boolean getAutoApportion() {

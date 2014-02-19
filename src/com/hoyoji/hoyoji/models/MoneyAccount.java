@@ -67,10 +67,15 @@ public class MoneyAccount extends HyjModel {
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
 		if(this.getName().length() == 0){
-			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
+			modelEditor.setValidationError("name", R.string.moneyAccountFormFragment_editText_hint_name);
 		} else {
 			modelEditor.removeValidationError("name");
-		}	
+		}
+		if(this.getCurrencyId() == null){
+			modelEditor.setValidationError("currency", R.string.moneyAccountFormFragment_editText_hint_currency);
+		} else {
+			modelEditor.removeValidationError("currency");
+		}
 	}
 
 	public String getId() {
