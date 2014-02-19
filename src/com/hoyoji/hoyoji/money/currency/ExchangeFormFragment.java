@@ -112,10 +112,10 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		mCheckBoxAutoUpdate.setChecked(exchange.getAutoUpdate());
 		mCheckBoxAutoUpdate.setChecked(exchange.getAutoUpdate());
 
-		setUpdateRefreshRateButton();
+		setupRefreshRateButton();
 	}
 
-	private void setUpdateRefreshRateButton(){
+	private void setupRefreshRateButton(){
 		mImageViewRefreshRate = (ImageView) getView().findViewById(
 				R.id.exchangeFormFragment_imageView_refresh_rate);
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
