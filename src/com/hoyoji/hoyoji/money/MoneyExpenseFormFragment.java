@@ -142,6 +142,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
+	private void setExchangeRate(MoneyAccount moneyAccount,Project project){
+		
+	}
+	
 	private void fillData(){
 		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
