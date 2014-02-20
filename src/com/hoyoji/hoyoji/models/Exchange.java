@@ -55,7 +55,24 @@ public class Exchange extends HyjModel {
 	}
 	
 	@Override
-	public void validate(HyjModelEditor modelEditor) {
+	public void validate(HyjModelEditor<?> modelEditor) {
+		if(this.getLocalCurrencyId() == null){
+			modelEditor.setValidationError("localCurrency",R.string.exchangeFormFragment_editText_hint_localCurrency);
+		}else{
+			modelEditor.removeValidationError("localCurrency");
+		}
+		
+		if(this.getForeignCurrencyId() == null){
+			modelEditor.setValidationError("foreignCurrency",R.string.exchangeFormFragment_editText_hint_foreignCurrency);
+		}else{
+			modelEditor.removeValidationError("foreignCurrency");
+		}
+		
+		if(this.getRate() == null){
+			modelEditor.setValidationError("rate",R.string.exchangeFormFragment_editText_hint_rate);
+		}else{
+			modelEditor.removeValidationError("rate");
+		}
 	}
 
 	public String getId() {
@@ -90,7 +107,7 @@ public class Exchange extends HyjModel {
 		if(mLocalCurrencyId == null){
 			return null;
 		}
-		return (Currency)getModel(Currency.class, mLocalCurrencyId);
+		return getModel(Currency.class, mLocalCurrencyId);
 	}
 
 	public void setLocalCurrencyId(String mLocalCurrencyId) {
@@ -105,7 +122,7 @@ public class Exchange extends HyjModel {
 		if(mForeignCurrencyId == null){
 			return null;
 		}
-		return (Currency)getModel(Currency.class, mForeignCurrencyId);
+		return getModel(Currency.class, mForeignCurrencyId);
 	}
 	
 	public void setForeignCurrencyId(String mForeignCurrencyId) {

@@ -112,7 +112,7 @@ public class MoneyExpense extends HyjModel{
 		if(mPictureId == null){
 			return null;
 		}
-		return (Picture) getModel(Picture.class, mPictureId);
+		return getModel(Picture.class, mPictureId);
 	}
 
 	public void setPicture(Picture picture){
@@ -149,9 +149,9 @@ public class MoneyExpense extends HyjModel{
 
 	public Friend getFriend(){
 		if(mFriendUserId != null){
-			return (Friend) getModel(Friend.class, mFriendUserId);
+			return getModel(Friend.class, mFriendUserId);
 		}else if(mLocalFriendId != null){
-			return (Friend) getModel(Friend.class, mLocalFriendId);
+			return getModel(Friend.class, mLocalFriendId);
 		}
 		return null;
 	}
@@ -193,7 +193,7 @@ public class MoneyExpense extends HyjModel{
 		if(mMoneyAccountId == null){
 			return null;
 		}
-		return (MoneyAccount) getModel(MoneyAccount.class, mMoneyAccountId);
+		return getModel(MoneyAccount.class, mMoneyAccountId);
 	}
 	
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
@@ -212,7 +212,7 @@ public class MoneyExpense extends HyjModel{
 		if(mProjectId == null){
 			return null;
 		}
-		return (Project) getModel(Project.class, mProjectId);
+		return getModel(Project.class, mProjectId);
 	}
 	
 	public void setProject(Project mProject) {
@@ -324,7 +324,7 @@ public class MoneyExpense extends HyjModel{
 	}
 	
 	@Override
-	public void validate(HyjModelEditor modelEditor) {
+	public void validate(HyjModelEditor<?> modelEditor) {
 		if(this.getDate() == null){
 			modelEditor.setValidationError("date",R.string.moneyExpenseFormFragment_editText_hint_date);
 		}else{

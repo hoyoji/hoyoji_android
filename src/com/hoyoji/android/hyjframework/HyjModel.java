@@ -38,5 +38,5 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		return new HyjModelEditor(this);
 	}
 	
-	public abstract void validate(HyjModelEditor<?> hyjModelEditor);
+	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);
 }
