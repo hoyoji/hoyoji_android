@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -41,8 +42,10 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
+	private Double oldAmount;
+	private MoneyAccount oldMoneyAccount;
 	
-	private HyjModelEditor mMoneyIncomeEditor = null;
+	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
@@ -54,6 +57,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
+	private LinearLayout mLinearLayoutExchangeRate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -81,13 +85,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyIncome.getAmount());
+		oldAmount = moneyIncome.getAmount0();
 		
-		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
+		oldMoneyAccount = moneyIncome.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
 		
-		if(moneyAccount != null){
-			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
+		if(oldMoneyAccount != null){
+			mSelectorFieldMoneyAccount.setModelId(oldMoneyAccount.getId());
+			mSelectorFieldMoneyAccount.setText(oldMoneyAccount.getName() + "(" + oldMoneyAccount.getCurrencyId() + ")");
 		}
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
@@ -114,7 +119,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate.setNumber(moneyIncome.getExchangeRate());
 		//mNumericExchangeRate.setVisibility(View.GONE);
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_moneyIncome_exchange);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyIncomeFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyIncomeFormFragment_linearLayout_exchangeRate);
 		
 		mTextFieldMoneyIncomeCategory = (HyjTextField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_moneyIncomeCategory);
 		mTextFieldMoneyIncomeCategory.setText(moneyIncome.getMoneyIncomeCategory());
@@ -154,7 +160,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId() != null){
 					MoneyAccount moneyAccount = (MoneyAccount)HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
-					Project project = (Project)HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					
 					String fromCurrency = moneyAccount.getCurrencyId();
 					String toCurrency = project.getCurrencyId();
@@ -196,8 +202,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	
 	private void setExchangeRate(){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
-			MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-			Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 			
 			String fromCurrency = moneyAccount.getCurrencyId();
 			String toCurrency = project.getCurrencyId();
@@ -207,12 +213,10 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					mNumericExchangeRate.setNumber(1.00);
 					CREATE_EXCHANGE = 0;
 				}
-				mNumericExchangeRate.setVisibility(View.GONE);
-				mImageViewRefreshRate.setVisibility(View.GONE);
+				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 				mViewSeparatorExchange.setVisibility(View.GONE);
 			}else{
-				mNumericExchangeRate.setVisibility(View.VISIBLE);
-				mImageViewRefreshRate.setVisibility(View.VISIBLE);
+				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				
 				Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?",new Object [] {fromCurrency, toCurrency}).executeSingle();
@@ -226,15 +230,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			}
 			
 		}else{
-			mNumericExchangeRate.setVisibility(View.GONE);
-			mImageViewRefreshRate.setVisibility(View.GONE);
 			mViewSeparatorExchange.setVisibility(View.GONE);
+			mLinearLayoutExchangeRate.setVisibility(View.GONE);
 		}
 			SET_EXCHANGE_RATE_FLAG = 0;
 	}
 	
 	private void fillData(){
-		MoneyIncome modelCopy = (MoneyIncome) mMoneyIncomeEditor.getModelCopy();
+		MoneyIncome modelCopy =  mMoneyIncomeEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
@@ -243,7 +246,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyIncomeCategory(mTextFieldMoneyIncomeCategory.getText().toString().trim());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
-			Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
 			if(friend.getFriendUserId() != null){
 				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			}
@@ -306,8 +309,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				mMoneyIncomeEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-					Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
@@ -318,9 +321,19 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 				
 				if(mSelectorFieldMoneyAccount.getModelId() != null){
-					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-					moneyAccount.setCurrentBalance(moneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
-					moneyAccount.save();
+					MoneyAccount newMoneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
+					
+					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldAmount + mNumericAmount.getNumber());
+							
+					}else{
+						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
+						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldAmount);
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + mNumericAmount.getNumber());
+						oldMoneyAccountEditor.save();
+					}
+					newMoneyAccountEditor.save();
 				}	
 				
 				HyjUtil.displayToast(R.string.app_save_success);

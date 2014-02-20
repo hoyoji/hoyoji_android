@@ -12,13 +12,16 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 
 public class MoneyIncomeListFragment extends HyjUserListFragment {
@@ -87,9 +90,21 @@ public class MoneyIncomeListFragment extends HyjUserListFragment {
 
 	@Override 
 	public void onDeleteListItem(Long id){
-		MoneyIncome moneyIncome = MoneyIncome.load(MoneyIncome.class, id);
-		moneyIncome.delete();
-	    HyjUtil.displayToast("支出删除成功");
+		try {
+			ActiveAndroid.beginTransaction();
+			
+			MoneyIncome moneyIncome = MoneyIncome.load(MoneyIncome.class, id);
+			MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
+			HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+			moneyIncome.delete();
+			moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyIncome.getAmount());
+			moneyAccountEditor.save();
+			
+		    HyjUtil.displayToast("收入删除成功");
+		    ActiveAndroid.setTransactionSuccessful();
+	} finally {
+	    ActiveAndroid.endTransaction();
+	}
 	}
 	
 	@Override
