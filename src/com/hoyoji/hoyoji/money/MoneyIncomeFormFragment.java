@@ -87,12 +87,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setNumber(moneyIncome.getAmount());
 		oldAmount = moneyIncome.getAmount0();
 		
-		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
+		oldMoneyAccount = moneyIncome.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
 		
-		if(moneyAccount != null){
-			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
+		if(oldMoneyAccount != null){
+			mSelectorFieldMoneyAccount.setModelId(oldMoneyAccount.getId());
+			mSelectorFieldMoneyAccount.setText(oldMoneyAccount.getName() + "(" + oldMoneyAccount.getCurrencyId() + ")");
 		}
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
