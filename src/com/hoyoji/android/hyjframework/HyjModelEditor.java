@@ -10,22 +10,22 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
 import com.hoyoji.hoyoji.models.Project;
 
-public class HyjModelEditor {
+public class HyjModelEditor<T extends HyjModel> {
 
-	private HyjModel mModel;
-	private HyjModel mModelCopy;
+	private T mModel;
+	private T mModelCopy;
 	private HashMap<String, String> mValidationErrors = new HashMap<String, String>();
 	
-	public HyjModelEditor(HyjModel model){
+	public HyjModelEditor(T model){
 		this.mModel = model;
-		this.mModelCopy = model.clone();
+		this.mModelCopy = (T) model.clone();
 	}
 	
-	public HyjModel getModelCopy(){
+	public T getModelCopy(){
 		return this.mModelCopy;
 	}
 
-	public HyjModel getModel() {
+	public T getModel() {
 		return this.mModel;
 	}
 	

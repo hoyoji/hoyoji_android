@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -45,7 +46,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
-	private HyjModelEditor mMoneyExpenseEditor = null;
+	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
@@ -57,6 +58,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
+	private LinearLayout mLinearLayoutExchangeRate = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -119,6 +121,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_moneyExpense_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyExpenseFormFragment_linearLayout_exchangeRate);
 		
 		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
 		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
@@ -197,8 +200,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void setExchangeRate(){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
-			MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-			Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 			
 			String fromCurrency = moneyAccount.getCurrencyId();
 			String toCurrency = project.getCurrencyId();
@@ -208,15 +211,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					mNumericExchangeRate.setNumber(1.00);
 					CREATE_EXCHANGE = 0;
 				}
-				mNumericExchangeRate.setVisibility(View.GONE);
-				mImageViewRefreshRate.setVisibility(View.GONE);
 				mViewSeparatorExchange.setVisibility(View.GONE);
+				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 			}else{
-				mNumericExchangeRate.setVisibility(View.VISIBLE);
-				mImageViewRefreshRate.setVisibility(View.VISIBLE);
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
+				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				
-				Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?",new Object [] {fromCurrency, toCurrency}).executeSingle();
+				Exchange exchange = Exchange.getExchange(fromCurrency, toCurrency);
 					if(exchange != null){
 						mNumericExchangeRate.setNumber(exchange.getRate());
 						CREATE_EXCHANGE = 0;
@@ -227,9 +228,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 			
 		}else{
-			mNumericExchangeRate.setVisibility(View.GONE);
-			mImageViewRefreshRate.setVisibility(View.GONE);
 			mViewSeparatorExchange.setVisibility(View.GONE);
+			mLinearLayoutExchangeRate.setVisibility(View.GONE);
 		}
 			SET_EXCHANGE_RATE_FLAG = 0;
 	}
@@ -300,15 +300,15 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					}
 					if(!mainPicSet && pi.getPicture() != null){
 						mainPicSet = true;
-						((MoneyExpense)mMoneyExpenseEditor.getModelCopy()).setPicture(pi.getPicture());
+						mMoneyExpenseEditor.getModelCopy().setPicture(pi.getPicture());
 					}
 				}
 				
 				mMoneyExpenseEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-					Project project = (Project) HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
@@ -319,13 +319,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				}
 				
 				if(mSelectorFieldMoneyAccount.getModelId() != null){
-					MoneyAccount moneyAccount = (MoneyAccount) HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-					moneyAccount.setCurrentBalance(moneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
-					moneyAccount.save();
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+					HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+					moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
+					moneyAccountEditor.save();
 				}	
 				
-				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
+				HyjUtil.displayToast(R.string.app_save_success);
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();

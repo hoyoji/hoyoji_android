@@ -1,17 +1,15 @@
 package com.hoyoji.android.hyjframework.view;
 
+import java.io.File;
 import java.io.IOException;
 
+import com.hoyoji.android.hyjframework.HyjBitmapWorkerAsyncTask;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Picture;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.widget.ImageButton;
-import android.widget.AbsListView.LayoutParams;
 import android.widget.ImageView;
 
 public class HyjImageView extends ImageView {
@@ -25,16 +23,22 @@ public class HyjImageView extends ImageView {
 //		this.setLayoutParams(new LayoutParams((int)px, (int)px));
 	}
 		
+	public HyjImageView(Context context) {
+		super(context);
+	}
+
 	public void setImage(Picture picture){
 		mPicture = picture;
 		if(picture == null){
-			return;
-		}
-		try {
-			this.setImageURI(Uri.fromFile(HyjUtil.createImageFile(picture.getId()+"_icon", picture.getPictureType())));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			super.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
+		} else {
+		File f;
+			try {
+				f = HyjUtil.createImageFile(picture.getId()+"_icon", picture.getPictureType());
+				HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

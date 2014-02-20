@@ -178,6 +178,7 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/moneyExpenseFormFragment_linearLayout_exchangeRate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

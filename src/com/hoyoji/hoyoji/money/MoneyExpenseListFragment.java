@@ -36,10 +36,10 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
-				R.layout.money_listitem_moneyexpense,
+				R.layout.home_listitem_row,
 				null,
 				new String[] {"pictureId", "date", "amount" },
-				new int[] { R.id.moneyExpenseListItem_picture, R.id.moneyExpenseListItem_date, R.id.moneyExpenseListItem_amount },
+				new int[] { R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount },
 				0); 
 	}	
 
@@ -94,15 +94,15 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		if(view.getId() == R.id.moneyExpenseListItem_date){
+		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
 			return true;
-		} else if(view.getId() == R.id.moneyExpenseListItem_amount){
+		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setCurrencySymbol("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
-		} else if(view.getId() == R.id.moneyExpenseListItem_picture){
+		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setImage(cursor.getString(columnIndex));
 			return true;
