@@ -170,13 +170,14 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/field_separator_moneyIncome_exchange"
+                android:id="@+id/moneyIncomeFormFragment_separatorField_exchange"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/moneyIncomeFormFragment_linearLayout_exchangeRate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

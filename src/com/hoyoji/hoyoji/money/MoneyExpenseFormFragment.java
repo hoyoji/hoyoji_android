@@ -120,7 +120,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_moneyExpense_exchange);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyIncomeFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyExpenseFormFragment_linearLayout_exchangeRate);
 		
 		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
@@ -157,8 +157,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId() != null){
-					MoneyAccount moneyAccount = (MoneyAccount)HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
-					Project project = (Project)HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					
 					String fromCurrency = moneyAccount.getCurrencyId();
 					String toCurrency = project.getCurrencyId();
@@ -244,7 +244,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyExpenseCategory(mTextFieldMoneyExpenseCategory.getText().toString().trim());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
-			Friend friend = (Friend)HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
 			if(friend.getFriendUserId() != null){
 				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			}
