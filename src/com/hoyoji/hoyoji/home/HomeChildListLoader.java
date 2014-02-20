@@ -1,15 +1,23 @@
 package com.hoyoji.hoyoji.home;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.MoneyExpense;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,7 +25,7 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class HomeChildListLoader extends AsyncTaskLoader<List<Map<String, Object>>> {
+public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -30,20 +38,28 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<Map<String, Object
 //	    }
 //	};
 
-	    private List<Map<String, Object>> mChildList;
+		private DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	    private List<HyjModel> mChildList;
 	    private Integer mLoadLimit = null;
+	    private long mDateFrom = 0;
+	    private long mDateTo = 0;
 	    
 	    public HomeChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
+			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    	if(queryParams != null){
 	    		mLoadLimit = queryParams.getInt("limit");
+	    		mDateFrom = queryParams.getLong("dateFrom");
+	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
 	    }
 	    
 
-	    public void changePostQuery(Bundle queryParams){
+	    public void changeQuery(Bundle queryParams){
 	    	if(queryParams != null){
 	    		mLoadLimit = queryParams.getInt("limit");
+	    		mDateFrom = queryParams.getLong("dateFrom");
+	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
 	    	this.onContentChanged();
 	    }
@@ -55,22 +71,18 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<Map<String, Object
 	     * data to be published by the loader.
 	     */
 	    @Override 
-	    public List<Map<String, Object>> loadInBackground() {
+	    public List<HyjModel> loadInBackground() {
+	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
+	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	
-			HashMap<String, Object> groupObject1 = new HashMap<String, Object>();
-			groupObject1.put("title", "日常支出");
-			HashMap<String, Object> groupObject2 = new HashMap<String, Object>();
-			groupObject2.put("title", "地铁");
-			HashMap<String, Object> groupObject3 = new HashMap<String, Object>();
-			groupObject3.put("title", "公司午餐");
-			
-			List<Map<String, Object>> groupList = new ArrayList<Map<String, Object>>();
-			groupList.add(groupObject1);
-			groupList.add(groupObject2);
-			groupList.add(groupObject3);
-			
-			
-			return groupList;
+	    	return new Select().from(MoneyExpense.class).where("date > ? AND date <= ?", dateFrom, dateTo).execute();
+//	    	for(MoneyExpense expense : listMoneyExpenses){
+//	    		HashMap<String, Object> fields = new HashMap<String, Object>();
+//	    		fields.put("title", expense.getMoneyExpenseCategory());
+//	    		fields.put("subTitle", value);
+//	    	}
+//			
+//			return groupList;
 		}
 
 		  /**
@@ -78,7 +90,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<Map<String, Object
 	     * super class will take care of delivering it; the implementation
 	     * here just adds a little more logic.
 	     */
-	    @Override public void deliverResult(List<Map<String, Object>> objects) {
+	    @Override public void deliverResult(List<HyjModel> objects) {
 	        mChildList = objects;
 
 	        if (isStarted() && mChildList != null) {
@@ -118,7 +130,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<Map<String, Object
 	     * Handles a request to cancel a load.
 	     */
 	    @Override 
-	    public void onCanceled(List<Map<String, Object>> objects) {
+	    public void onCanceled(List<HyjModel> objects) {
 	        super.onCanceled(objects);
 	    }
 

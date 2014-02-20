@@ -1,0 +1,6 @@
+<resources>
+
+    <!-- Strings related to login -->
+    <string name="imageField_cannot_save_picture">无法保存照片，可能是由于您没有存储卡</string>
+    
+</resources>

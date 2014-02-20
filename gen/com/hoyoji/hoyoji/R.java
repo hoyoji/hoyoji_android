@@ -1573,6 +1573,9 @@ containing a value of this type.
         public static final int homeListFragment_action_display_transaction_type_project=0x7f0b0090;
         public static final int homeListFragment_action_report=0x7f0b008c;
         public static final int homeListFragment_action_sync=0x7f0b008d;
+        /**  Strings related to login 
+         */
+        public static final int imageField_cannot_save_picture=0x7f0b00f1;
         public static final int loginActivity_action_forgot_password=0x7f0b0024;
         public static final int loginActivity_action_sign_in=0x7f0b0021;
         public static final int loginActivity_alert_require_login=0x7f0b002a;

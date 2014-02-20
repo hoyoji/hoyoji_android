@@ -1,9 +1,16 @@
 package com.hoyoji.hoyoji.home;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +23,7 @@ import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
@@ -24,11 +32,12 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 
 public class HomeListFragment extends HyjUserExpandableListFragment {
 
 	private ArrayList<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
-	private ArrayList<List<Map<String, Object>>> mListChildData = new ArrayList<List<Map<String, Object>>>();
+	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
 	@Override
 	public Integer useContentView() {
@@ -101,36 +110,35 @@ public class HomeListFragment extends HyjUserExpandableListFragment {
 		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
-			loader = new HomeGroupListLoader(getActivity(), null);
+			loader = new HomeGroupListLoader(getActivity(), arg1);
 			return (Loader<Object>) loader;
 		} else {
-			loader = new HomeChildListLoader(getActivity(), null);
+			loader = new HomeChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Object> loader, Object list) {
-		SimpleExpandableListAdapter adapter = (SimpleExpandableListAdapter) getListView()
+		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter) getListView()
 				.getExpandableListAdapter();
 		if (loader.getId() < 0) {
-			boolean expandFirstGroup = adapter.getGroupCount() == 0;
+//			boolean expandFirstGroup = adapter.getGroupCount() == 0;
 			List<Map<String, Object>> groupList = (List<Map<String, Object>>) list;
 			mListGroupData.addAll(groupList);
-			List<Map<String, Object>> emptyChildList = new ArrayList<Map<String, Object>>();
+			List<HyjModel> emptyChildList = new ArrayList<HyjModel>();
 			for(int i = 0; i < groupList.size(); i++){
 				mListChildData.add(emptyChildList);
+				getListView().expandGroup(i);
 			}
-			((SimpleExpandableListAdapter) getListView()
-					.getExpandableListAdapter()).notifyDataSetChanged();
-			if(expandFirstGroup){
-				getListView().expandGroup(0);
-			}
+			adapter.notifyDataSetChanged();
+//			if(expandFirstGroup){
+//				getListView().expandGroup(0);
+//			}
 		} else {
 			 if(adapter.getGroupCount() > loader.getId()){
-				 mListChildData.set(loader.getId(), (List<Map<String, Object>>) list);
-					((SimpleExpandableListAdapter) getListView()
-							.getExpandableListAdapter()).notifyDataSetChanged();
+				 mListChildData.set(loader.getId(), (List<HyjModel>) list);
+				adapter.notifyDataSetChanged();
 			 } else {
 				 getLoaderManager().destroyLoader(loader.getId());
 			 }
@@ -165,26 +173,48 @@ public class HomeListFragment extends HyjUserExpandableListFragment {
 //		if(getLoaderManager().getLoader(groupPosition) != null){
 //			getLoaderManager().destroyLoader(groupPosition);
 //		}
-		getLoaderManager().restartLoader(groupPosition, null, this);
+
+//		DateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd");
+//		Date d = new Date();
+//		try {
+//			d = dateFormat.parse((String) mListGroupData.get(groupPosition).get("date"));
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTimeInMillis(d.getTime())
+//		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+//		cal.clear(Calendar.MINUTE);
+//		cal.clear(Calendar.SECOND);
+//		cal.clear(Calendar.MILLISECOND);
+
+		long dateInMilliSeconds = (Long) mListGroupData.get(groupPosition).get("dateInMilliSeconds");
+		Bundle bundle = new Bundle();
+		bundle.putLong("dateFrom", dateInMilliSeconds);
+		bundle.putLong("dateTo", dateInMilliSeconds + 24*60*60*1000);
+		getLoaderManager().restartLoader(groupPosition, bundle, this);
 	}
 
 	
 	@Override
 	public boolean setViewValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(object.toString());
+			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText((CharSequence) ((Map)object).get(name));
+			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(((MoneyExpense)object).getProject().getName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setCurrencySymbol("¥");
-			//numericView.setNumber(object.toString());
+			numericView.setNumber(((MoneyExpense)object).getAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setImage(object.toString());
+			imageView.setImage(((MoneyExpense)object).getPicture());
 			return true;
 		} else {
 			return false;

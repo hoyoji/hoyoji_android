@@ -146,7 +146,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		if(loader.getId() < 0){
 			boolean expandFirstGroup = adapter.getGroupCount() == 0;
 			adapter.setGroupCursor((Cursor)cursor);
-			if(expandFirstGroup){
+			if(expandFirstGroup && adapter.getGroupCount() > 0){
 				getListView().expandGroup(0);
 			}
 		} else {

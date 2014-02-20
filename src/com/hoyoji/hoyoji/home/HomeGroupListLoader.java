@@ -45,7 +45,7 @@ public class HomeGroupListLoader extends AsyncTaskLoader<List<Map<String, Object
 	    }
 	    
 
-	    public void changePostQuery(Bundle queryParams){
+	    public void changeQuery(Bundle queryParams){
 	    	if(queryParams != null){
 	    		mLoadLimit = queryParams.getInt("limit");
 	    	}
@@ -81,6 +81,7 @@ public class HomeGroupListLoader extends AsyncTaskLoader<List<Map<String, Object
 				String ds = df.format(calToday.getTime());
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
 				groupObject.put("date", ds);
+				groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
 				list.add(groupObject);
 			}
 			return list;

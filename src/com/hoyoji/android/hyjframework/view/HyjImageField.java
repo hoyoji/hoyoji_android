@@ -175,7 +175,7 @@ public class HyjImageField extends GridView {
 		        }
 	        } catch (IOException ex) {
 	            // Error occurred while creating the File
-	        	HyjUtil.displayToast("无法创建图片文件");
+	        	HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 	        }
 	    }
 	}
@@ -226,6 +226,14 @@ public class HyjImageField extends GridView {
 					} catch (Exception e) {
 					    e.printStackTrace();
 					}
+					if(out != null){
+						try {
+							out.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						out = null;
+					}
 					
 					scaled.recycle();
 					
@@ -233,10 +241,17 @@ public class HyjImageField extends GridView {
 					PictureItem pi = new PictureItem(mPicture, PictureItem.NEW);
 					mImageGridAdapter.add(pi);
 				} else {
-					mPhotoFile.delete();
+					if(!mPhotoFile.exists()){
+			        	HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
+					} else {
+						mPhotoFile.delete();
+					}
 				}
-				mContext.unregisterReceiver(this);
-				
+				try{
+					mContext.unregisterReceiver(this);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 		}
 	}
