@@ -8,6 +8,8 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,7 +50,17 @@ public class HyjListField extends LinearLayout {
 //		mListView.setEmptyView(emptyView);
 //		mListView.addHeaderView(headerView, null, false);
 	}
+	
+	@Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
+                MeasureSpec.AT_MOST);
+        super.onMeasure(widthMeasureSpec, expandSpec);
 
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.height = getMeasuredHeight();
+    }
+	
 	public void setError(String error){
 	}
 	

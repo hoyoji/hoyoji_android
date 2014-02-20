@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -15,6 +16,9 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RotateDrawable;
 import android.net.ConnectivityManager;
@@ -137,4 +141,80 @@ public class HyjUtil {
 			v.setAnimation(null);
 		}
 		
+		public static int calculateInSampleSize(
+	            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+
+	    if (height > reqHeight || width > reqWidth) {
+
+	        final int halfHeight = height / 2;
+	        final int halfWidth = width / 2;
+
+	        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+	        // height and width larger than the requested height and width.
+	        while ((halfHeight / inSampleSize) > reqHeight
+	                && (halfWidth / inSampleSize) > reqWidth) {
+	            inSampleSize *= 2;
+	        }
+	    }
+
+	    return inSampleSize;
+	}
+		
+		public static Bitmap decodeSampledBitmapFromResource(int resId,
+				Integer reqWidth, Integer reqHeight) {
+			Resources res = HyjApplication.getInstance().getResources();
+		    // First decode with inJustDecodeBounds=true to check dimensions
+		    final BitmapFactory.Options options = new BitmapFactory.Options();
+		    if(reqWidth != null && reqHeight != null){
+			    options.inJustDecodeBounds = true;
+			    BitmapFactory.decodeResource(res, resId, options);
+	
+			    // Calculate inSampleSize
+			    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+	
+			    // Decode bitmap with inSampleSize set
+			    options.inJustDecodeBounds = false;
+		    }
+		    options.inPurgeable = true;
+		    Bitmap bmp = BitmapFactory.decodeResource(res, resId, options);
+		    if(bmp == null){
+		    	return HyjUtil.getCommonBitmap(R.drawable.ic_action_refresh);
+		    }
+		    return bmp;
+		}
+		
+		public static Bitmap decodeSampledBitmapFromFile(String photoPath, Integer targetW, Integer targetH){
+		    // Get the dimensions of the bitmap
+		    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+		    if(targetW != null && targetH != null){
+			    bmOptions.inJustDecodeBounds = true;
+			    BitmapFactory.decodeFile(photoPath, bmOptions);
+	
+			    // Determine how much to scale down the image
+			    bmOptions.inSampleSize = HyjUtil.calculateInSampleSize(bmOptions, targetW, targetH);
+	
+			    // Decode the image file into a Bitmap sized to fill the View
+			    bmOptions.inJustDecodeBounds = false;
+		    }
+		    bmOptions.inPurgeable = true;
+		    Bitmap bmp = BitmapFactory.decodeFile(photoPath, bmOptions);
+		    if(bmp == null){
+		    	return HyjUtil.getCommonBitmap(R.drawable.ic_action_picture);
+		    }
+		    return bmp;
+		}
+		
+		static LinkedHashMap<String, Bitmap> commonBitmaps = new LinkedHashMap<String, Bitmap>();
+		public static Bitmap getCommonBitmap(int resId) {
+			Bitmap bitmap = commonBitmaps.get(String.valueOf(resId));
+			if(bitmap == null){
+				bitmap = decodeSampledBitmapFromResource(resId, null, null);
+				commonBitmaps.put(String.valueOf(resId), bitmap);
+			}
+			return bitmap;
+		}
 }

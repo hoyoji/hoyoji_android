@@ -89,12 +89,12 @@ public class HyjImageField extends GridView {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView iv;
+			HyjImageView iv;
 			final HyjImageField self = (HyjImageField) parent;
 			if (convertView != null) {
-				iv = (ImageView) convertView;
+				iv = (HyjImageView) convertView;
 			} else {
-				iv = new ImageView(this.getContext());
+				iv = new HyjImageView(this.getContext());
 				float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, self.r.getDisplayMetrics());
 				iv.setLayoutParams(new LayoutParams((int)px, (int)px));
 //				iv.setPadding(0, 0, 0, 0);
@@ -109,14 +109,15 @@ public class HyjImageField extends GridView {
 			
 			PictureItem pic = getItem(position);
 			iv.setTag(pic);
-			File imageFile;
-			try {
-				imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
-				iv.setImageURI(Uri.fromFile(imageFile));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//File imageFile;
+//			try {
+//				imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
+//				iv.setImageURI(Uri.fromFile(imageFile));
+				iv.setImage(pic.getPicture());
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			return iv;
 		}
 
@@ -179,26 +180,6 @@ public class HyjImageField extends GridView {
 	    }
 	}
 	
-
-	
-	private Bitmap getScaledBitmap(String photoPath, int targetW, int targetH){
-	    // Get the dimensions of the bitmap
-	    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-	    bmOptions.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(photoPath, bmOptions);
-	    int photoW = bmOptions.outWidth;
-	    int photoH = bmOptions.outHeight;
-
-	    // Determine how much to scale down the image
-	    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-	    // Decode the image file into a Bitmap sized to fill the View
-	    bmOptions.inJustDecodeBounds = false;
-	    bmOptions.inSampleSize = scaleFactor;
-	    bmOptions.inPurgeable = true;
-
-	    return BitmapFactory.decodeFile(photoPath, bmOptions);
-	}
 	
 //	private void galleryAddPic(String picturePath) {
 //	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -227,7 +208,7 @@ public class HyjImageField extends GridView {
 					float pxW = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, r.getDisplayMetrics());
 					float pxH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 800, r.getDisplayMetrics());
 					FileOutputStream out = null;
-					Bitmap scaled = getScaledBitmap(mPhotoFile.getAbsolutePath(), (int)pxW, (int)pxH);
+					Bitmap scaled = HyjUtil.decodeSampledBitmapFromFile(mPhotoFile.getAbsolutePath(), (int)pxW, (int)pxH);
 					try {
 					    out = new FileOutputStream(mPhotoFile);
 					    scaled.compress(Bitmap.CompressFormat.JPEG, 90, out);
