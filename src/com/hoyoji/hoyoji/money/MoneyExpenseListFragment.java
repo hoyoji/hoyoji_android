@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;

@@ -33,6 +33,7 @@ import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -179,11 +180,11 @@ public class MainActivity extends HyjUserActivity {
         }
         // Handle your other action bar items...
     		if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
-    			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
-    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+    			openActivityWithFragment(MoneyIncomeListFragment.class, R.string.moneyIncomeListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
