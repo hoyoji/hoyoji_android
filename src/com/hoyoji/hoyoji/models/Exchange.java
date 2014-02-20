@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -46,6 +47,11 @@ public class Exchange extends HyjModel {
 		super();
 		mId = UUID.randomUUID().toString();
 		setAutoUpdate(true);
+	}
+	
+	public static Exchange getExchange(String fromCurrency, String toCurrency){
+		return new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
+		
 	}
 	
 	@Override
