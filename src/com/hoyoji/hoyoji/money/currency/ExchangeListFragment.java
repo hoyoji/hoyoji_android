@@ -79,6 +79,10 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(id < 0){
+			super.onListItemClick(l, v, position, id);
+			return;
+		}
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
@@ -93,9 +97,9 @@ public class ExchangeListFragment extends HyjUserListFragment{
 
 	@Override 
 	public void onDeleteListItem(Long id){
-		Exchange exchange = Exchange.load(Exchange.class, id);
-		exchange.delete();
-	    HyjUtil.displayToast("汇率删除成功");
+//		Exchange exchange = Exchange.load(Exchange.class, id);
+//		exchange.delete();
+	    HyjUtil.displayToast("汇率不能被删除");
 	}
 	
 	@Override
@@ -103,24 +107,25 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		if(!getUserVisibleHint()){
 			return super.onContextItemSelected(item);
 		}
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	    Long itemId = getListAdapter().getItemId(info.position);
-		switch (item.getItemId()) {
-			case ADD_SUB_PROJECT:
-			    HyjUtil.displayToast("创建子项目" + itemId);
-				break;
-			case VIEW_PROJECT_MEMBERS:
-			    HyjUtil.displayToast("项目成员" + itemId);
-				break;
-		}
-		return super.onContextItemSelected(item);
+//	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//	    Long itemId = getListAdapter().getItemId(info.position);
+//		switch (item.getItemId()) {
+//			case ADD_SUB_PROJECT:
+//			    HyjUtil.displayToast("创建子项目" + itemId);
+//				break;
+//			case VIEW_PROJECT_MEMBERS:
+//			    HyjUtil.displayToast("项目成员" + itemId);
+//				break;
+//		}
+		return true;
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
-		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+		//super.onCreateContextMenu(menu, v, menuInfo);
+//		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
+//		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+//		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 	}
 	
 	@Override

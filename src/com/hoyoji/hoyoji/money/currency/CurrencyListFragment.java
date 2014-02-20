@@ -67,6 +67,7 @@ public class CurrencyListFragment extends HyjUserListFragment{
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
 		if(id < 0){
+			super.onListItemClick(l, v, position, id);
 			return;
 		}
 		if(getActivity().getCallingActivity() != null){
