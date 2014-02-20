@@ -43,7 +43,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
-	private int setExchangeFirstFlag = 1;
+	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
 	private HyjModelEditor mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -56,7 +56,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
-	
 	private View mViewSeparatorExchange = null;
 	
 	@Override
@@ -79,8 +78,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
-
-		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
@@ -94,7 +91,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(moneyAccount.getName());
+			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 		}
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
@@ -103,11 +100,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_project);
 		Project project = moneyExpense.getProject();
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_project);
+		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getName());
+			mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -120,7 +118,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_exchange);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.field_separator_moneyExpense_exchange);
 		
 		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
 		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
@@ -206,7 +204,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			String toCurrency = project.getCurrencyId();
 			
 			if(fromCurrency.equals(toCurrency)){
-				if(setExchangeFirstFlag != 1){
+				if(SET_EXCHANGE_RATE_FLAG != 1){//新增或修改打开时不做setNumber
 					mNumericExchangeRate.setNumber(1.00);
 					CREATE_EXCHANGE = 0;
 				}
@@ -233,7 +231,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			mImageViewRefreshRate.setVisibility(View.GONE);
 			mViewSeparatorExchange.setVisibility(View.GONE);
 		}
-			setExchangeFirstFlag = 0;
+			SET_EXCHANGE_RATE_FLAG = 0;
 	}
 	
 	private void fillData(){
@@ -342,7 +340,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
-	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName());
+	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
 	         		setExchangeRate();
 	        	 }
@@ -351,7 +349,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		Project project = Project.load(Project.class, _id);
-	         		mSelectorFieldProject.setText(project.getName());
+	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();
 	        	 }

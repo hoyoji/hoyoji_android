@@ -171,7 +171,7 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/field_separator_exchange"
+                android:id="@+id/field_separator_moneyExpense_exchange"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"

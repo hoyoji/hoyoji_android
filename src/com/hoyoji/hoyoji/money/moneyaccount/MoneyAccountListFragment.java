@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money.moneyaccount;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,6 +15,9 @@ import android.widget.ListView;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 
@@ -34,8 +38,8 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.moneyaccount_listitem_moneyaccount,
 				null,
-				new String[] { "name" },
-				new int[] { R.id.moneyAccountListItem_name },
+				new String[] { "name","currentBalance" },
+				new int[] { R.id.moneyAccountListItem_name,R.id.moneyAccountListItem_currentBalance },
 				0); 
 	}	
 
@@ -86,5 +90,17 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, id);
 		moneyAccount.delete();
 	    HyjUtil.displayToast("账户删除成功");
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.moneyAccountListItem_currentBalance){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(cursor.getDouble(columnIndex));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

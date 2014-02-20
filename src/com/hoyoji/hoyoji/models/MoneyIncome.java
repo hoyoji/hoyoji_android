@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import android.provider.BaseColumns;
@@ -106,6 +108,21 @@ public class MoneyIncome extends HyjModel{
 		this.mPictureId = mPictureId;
 	}
 
+	public Picture getPicture(){
+		if(mPictureId == null){
+			return null;
+		}
+		return (Picture) getModel(Picture.class, mPictureId);
+	}
+
+	public void setPicture(Picture picture){
+		this.setPictureId(picture.getId());
+	}
+	
+	public List<Picture> getPictures(){
+		return getMany(Picture.class, "recordId");
+	}
+	
 	public String getDate() {
 		return mDate;
 	}
@@ -313,6 +330,7 @@ public class MoneyIncome extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("date");
 		}
+		
 		if(this.getAmount() == null){
 			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_hint_amount);
 		}else if(this.getAmount() < 0){
@@ -322,6 +340,19 @@ public class MoneyIncome extends HyjModel{
 		}
 		else{
 			modelEditor.removeValidationError("amount");
+		}
+		
+		if(this.getExchangeRate() == null){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_hint_exchangeRate);
+		}else if(this.getExchangeRate() == 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_zero_exchangeRate);
+		}else if(this.getExchangeRate() < 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_negative_exchangeRate);
+		}else if(this.getExchangeRate() > 99999999){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		}
+		else{
+			modelEditor.removeValidationError("exchangeRate");
 		}
 //		if(this.getMoneyAccountId() == null){
 //			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
