@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -27,11 +28,23 @@ public class MoneyTransfer extends HyjModel{
 	@Column(name = "transferOutAmount")
 	private Double mTransferOutAmount;
 	
+	@Column(name = "transferOutFriendUserId")
+	private String mTransferOutFriendUserId;
+	
+	@Column(name = "transferOutLocalFriendId")
+	private String mTransferOutLocalFriendId;
+	
 	@Column(name = "transferOutId")
 	private String mTransferOutId;
 	
 	@Column(name = "transferInAmount")
 	private Double mTransferInAmount;
+	
+	@Column(name = "transferInFriendUserId")
+	private String mTransferInFriendUserId;
+	
+	@Column(name = "transferInLocalFriendId")
+	private String mTransferInLocalFriendId;
 	
 	@Column(name = "transferInId")
 	private String mTransferInId;
@@ -129,6 +142,39 @@ public class MoneyTransfer extends HyjModel{
 		this.mTransferOutAmount = mTransferOutAmount;
 	}
 
+	public String getTransferOutFriendUserId() {
+		return mTransferOutFriendUserId;
+	}
+
+	public void setTransferOutFriendUserId(String mTransferOutFriendUserId) {
+		this.mTransferOutFriendUserId = mTransferOutFriendUserId;
+	}
+	
+	public String getTransferOutLocalFriendId() {
+		return mTransferOutLocalFriendId;
+	}
+
+	public void setTransferOutLocalFriendId(String mTransferOutLocalFriendId) {
+		this.mTransferOutLocalFriendId = mTransferOutLocalFriendId;
+	}
+	
+	public Friend getTransferOutFriendUser(){
+		if(mTransferOutFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?",mTransferOutFriendUserId).executeSingle();
+		}else if(mTransferOutLocalFriendId != null){
+			return getModel(Friend.class,mTransferOutLocalFriendId);
+		}
+		return null;
+	}
+	
+	public void setTransferOutFriendUser(Friend mTransferOutFriendUser){
+		if(mTransferOutFriendUser.getFriendUserId() != null){
+			this.mTransferOutFriendUserId = mTransferOutFriendUser.getFriendUserId();
+		}else{
+			this.mTransferOutLocalFriendId = mTransferOutFriendUser.getId();
+		}
+	}
+	
 	public String getTransferOutId() {
 		return mTransferOutId;
 	}
@@ -154,6 +200,39 @@ public class MoneyTransfer extends HyjModel{
 
 	public void setTransferInAmount(Double mTransferInAmount) {
 		this.mTransferInAmount = mTransferInAmount;
+	}
+	
+	public String getTransferInFriendUserId() {
+		return mTransferInFriendUserId;
+	}
+
+	public void setTransferInFriendUserId(String mTransferInFriendUserId) {
+		this.mTransferInFriendUserId = mTransferInFriendUserId;
+	}
+	
+	public String getTransferInLocalFriendId() {
+		return mTransferInLocalFriendId;
+	}
+
+	public void setTransferInLocalFriendId(String mTransferInLocalFriendId) {
+		this.mTransferInLocalFriendId = mTransferInLocalFriendId;
+	}
+	
+	public Friend getTransferInFriendUser(){
+		if(mTransferInFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?",mTransferInFriendUserId).executeSingle();
+		}else if(mTransferInLocalFriendId != null){
+			return getModel(Friend.class,mTransferInLocalFriendId);
+		}
+		return null;
+	}
+	
+	public void setTransferInFriendUser(Friend mTransferInFriendUser){
+		if(mTransferInFriendUser.getFriendUserId() != null){
+			this.mTransferInFriendUserId = mTransferInFriendUser.getFriendUserId();
+		}else{
+			this.mTransferInFriendUserId = mTransferInFriendUser.getId();
+		}
 	}
 
 	public String getTransferInId() {

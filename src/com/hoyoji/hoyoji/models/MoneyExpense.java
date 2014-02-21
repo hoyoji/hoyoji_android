@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -153,24 +154,6 @@ public class MoneyExpense extends HyjModel{
 	public void setExpenseType(String mExpenseType) {
 		this.mExpenseType = mExpenseType;
 	}
-
-	public Friend getFriend(){
-		if(mFriendUserId != null){
-			return getModel(Friend.class, mFriendUserId);
-		}else if(mLocalFriendId != null){
-			return getModel(Friend.class, mLocalFriendId);
-		}
-		return null;
-	}
-	
-	public void setFriend(Friend mFriend) {
-		if(mFriend.getFriendUserId() != null){
-			this.mFriendUserId = mFriend.getId();
-		}
-		else{
-			this.mLocalFriendId = mFriend.getId();
-		}
-	}
 	
 	public String getFriendUserId() {
 		return mFriendUserId;
@@ -186,6 +169,24 @@ public class MoneyExpense extends HyjModel{
 
 	public void setLocalFriendId(String mLocalFriendId) {
 		this.mLocalFriendId = mLocalFriendId;
+	}
+	
+	public Friend getFriend(){
+		if(mFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
+		}else if(mLocalFriendId != null){
+			return getModel(Friend.class, mLocalFriendId);
+		}
+		return null;
+	}
+	
+	public void setFriend(Friend mFriend) {
+		if(mFriend.getFriendUserId() != null){
+			this.mFriendUserId = mFriend.getFriendUserId();
+		}
+		else {
+			this.mLocalFriendId = mFriend.getId();
+		}
 	}
 
 	public String getFriendAccountId() {

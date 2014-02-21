@@ -219,7 +219,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				
-				Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?",new Object [] {fromCurrency, toCurrency}).executeSingle();
+				Exchange exchange = Exchange.getExchange(fromCurrency, toCurrency);
 					if(exchange != null){
 						mNumericExchangeRate.setNumber(exchange.getRate());
 						CREATE_EXCHANGE = 0;
