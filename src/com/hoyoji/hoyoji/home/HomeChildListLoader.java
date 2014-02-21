@@ -3,6 +3,8 @@ package com.hoyoji.hoyoji.home;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,16 +14,22 @@ import java.util.TimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyIncome;
 
 import android.content.Context;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
@@ -43,6 +51,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    private Integer mLoadLimit = null;
 	    private long mDateFrom = 0;
 	    private long mDateTo = 0;
+	    private ChangeObserver mChangeObserver;
+	    private DateComparator mDateComparator = new DateComparator();
 	    
 	    public HomeChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -52,6 +62,12 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
+	    	mChangeObserver = new ChangeObserver();
+	    	context.getContentResolver().registerContentObserver(
+	    			ContentProvider.createUri(MoneyExpense.class, null), true, mChangeObserver);
+	    	context.getContentResolver().registerContentObserver(
+	    			ContentProvider.createUri(MoneyIncome.class, null), true, mChangeObserver);
+
 	    }
 	    
 
@@ -72,20 +88,50 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	     */
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
+	    	
 	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
+	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpense.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyExpenses);
+	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyIncomes);
 	    	
-	    	return new Select().from(MoneyExpense.class).where("date > ? AND date <= ?", dateFrom, dateTo).execute();
-//	    	for(MoneyExpense expense : listMoneyExpenses){
-//	    		HashMap<String, Object> fields = new HashMap<String, Object>();
-//	    		fields.put("title", expense.getMoneyExpenseCategory());
-//	    		fields.put("subTitle", value);
-//	    	}
-//			
-//			return groupList;
+	    	Collections.sort(list, mDateComparator);
+	    	return list;
 		}
 
-		  /**
+	    static class DateComparator implements Comparator<HyjModel> {
+			@Override
+			public int compare(HyjModel lhs, HyjModel rhs) {
+				String lhsStr = "";
+				String rhsStr = "";
+				if(lhs instanceof MoneyExpense){
+					lhsStr = ((MoneyExpense) lhs).getDate();
+				}
+				if(rhs instanceof MoneyExpense){
+					rhsStr = ((MoneyExpense) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyIncome){
+					lhsStr = ((MoneyIncome) lhs).getDate();
+				}
+				if(rhs instanceof MoneyIncome){
+					rhsStr = ((MoneyIncome) rhs).getDate();
+				}
+				
+				return rhsStr.compareTo(lhsStr);
+			}
+	    } 
+	    
+		  @Override
+		  protected void onAbandon (){
+			  super.onAbandon();
+			  this.getContext().getContentResolver().unregisterContentObserver(mChangeObserver);
+		  }
+
+
+		/**
 	     * Called when there is new data to deliver to the client.  The
 	     * super class will take care of delivering it; the implementation
 	     * here just adds a little more logic.
@@ -145,5 +191,21 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	        onStopLoading();
 	        
 	        mChildList = null;
+	    }
+	    
+	    private class ChangeObserver extends ContentObserver {
+	        public ChangeObserver() {
+	            super(new Handler());
+	        }
+
+	        @Override
+	        public boolean deliverSelfNotifications() {
+	            return true;
+	        }
+
+	        @Override
+	        public void onChange(boolean selfChange) {
+	            onContentChanged();
+	        }
 	    }
 }

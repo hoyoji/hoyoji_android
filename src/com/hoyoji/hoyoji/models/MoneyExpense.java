@@ -254,7 +254,15 @@ public class MoneyExpense extends HyjModel{
 	public String getRemark() {
 		return mRemark;
 	}
-
+	
+	public String getDisplayRemark() {
+		if(mRemark != null){
+			return mRemark;
+		} else {
+			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+		}
+	}
+	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
@@ -293,6 +301,10 @@ public class MoneyExpense extends HyjModel{
 
 	public String getOwnerUserId() {
 		return mOwnerUserId;
+	}
+
+	public User getOwnerUser() {
+		return getModel(User.class, mOwnerUserId);
 	}
 
 	public void setOwnerUserId(String mOwnerUserId) {

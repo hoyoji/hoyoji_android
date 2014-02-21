@@ -19,6 +19,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		return entity;
 	}	
 	
+	
 	@Override
 	protected HyjModel clone() {
 		try {

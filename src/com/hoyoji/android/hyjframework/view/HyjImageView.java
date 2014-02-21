@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class HyjImageView extends ImageView {
-	private Picture mPicture;
+	private String mPictureId = "";
 	
 	public HyjImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -28,21 +28,31 @@ public class HyjImageView extends ImageView {
 	}
 
 	public void setImage(Picture picture){
-		mPicture = picture;
 		if(picture == null){
-			super.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
-		} else {
-		File f;
-			try {
-				f = HyjUtil.createImageFile(picture.getId()+"_icon", picture.getPictureType());
-				HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(mPictureId != null){
+				mPictureId = null;
+				super.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
 			}
-		}
+		} else if(picture.getId() == mPictureId){
+			return;
+		} else {
+			mPictureId = picture.getId();
+			File f;
+				try {
+					f = HyjUtil.createImageFile(picture.getId()+"_icon", picture.getPictureType());
+					HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 	}
 	
 	public void setImage(String id){
+		if(mPictureId == id){
+			return;
+		}
+		
+		mPictureId = id;
 		if(id != null){
 			setImage((Picture)Picture.getModel(Picture.class, id));
 		} else {

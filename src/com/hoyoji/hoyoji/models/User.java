@@ -98,6 +98,10 @@ public class User extends HyjModel {
 		return mUserName;
 	}
 
+	public String getDisplayName() {
+		return mUserName;
+	}
+
 	public void setUserName(String mUserName) {
 		this.mUserName = mUserName.trim();
 	}

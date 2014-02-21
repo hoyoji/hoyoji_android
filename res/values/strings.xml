@@ -14,6 +14,7 @@
     <string name="app_validation_error">表单中包含错误</string>
     <string name="app_save_success">保存成功</string>
     
+   <string name="app_no_remark">无备注</string>
     <string name="app_listfield_add">添加</string>
     
     <string name="app_listview_no_content">无内容</string>
