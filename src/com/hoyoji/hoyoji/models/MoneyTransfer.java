@@ -137,6 +137,13 @@ public class MoneyTransfer extends HyjModel{
 	public Double getTransferOutAmount() {
 		return mTransferOutAmount;
 	}
+	
+	public Double getTransferOutAmount0() {
+		if(mTransferOutAmount == null){
+			return 0.00;
+		}
+		return mTransferOutAmount;
+	}
 
 	public void setTransferOutAmount(Double mTransferOutAmount) {
 		this.mTransferOutAmount = mTransferOutAmount;
@@ -158,7 +165,7 @@ public class MoneyTransfer extends HyjModel{
 		this.mTransferOutLocalFriendId = mTransferOutLocalFriendId;
 	}
 	
-	public Friend getTransferOutFriendUser(){
+	public Friend getTransferOutFriend(){
 		if(mTransferOutFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?",mTransferOutFriendUserId).executeSingle();
 		}else if(mTransferOutLocalFriendId != null){
@@ -167,7 +174,7 @@ public class MoneyTransfer extends HyjModel{
 		return null;
 	}
 	
-	public void setTransferOutFriendUser(Friend mTransferOutFriendUser){
+	public void setTransferOutFriend(Friend mTransferOutFriendUser){
 		if(mTransferOutFriendUser.getFriendUserId() != null){
 			this.mTransferOutFriendUserId = mTransferOutFriendUser.getFriendUserId();
 		}else{
@@ -197,6 +204,13 @@ public class MoneyTransfer extends HyjModel{
 	public Double getTransferInAmount() {
 		return mTransferInAmount;
 	}
+	
+	public Double getTransferInAmount0() {
+		if(mTransferInAmount == null){
+			return 0.00;
+		}
+		return mTransferInAmount;
+	}
 
 	public void setTransferInAmount(Double mTransferInAmount) {
 		this.mTransferInAmount = mTransferInAmount;
@@ -218,7 +232,7 @@ public class MoneyTransfer extends HyjModel{
 		this.mTransferInLocalFriendId = mTransferInLocalFriendId;
 	}
 	
-	public Friend getTransferInFriendUser(){
+	public Friend getTransferInFriend(){
 		if(mTransferInFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?",mTransferInFriendUserId).executeSingle();
 		}else if(mTransferInLocalFriendId != null){
@@ -227,7 +241,7 @@ public class MoneyTransfer extends HyjModel{
 		return null;
 	}
 	
-	public void setTransferInFriendUser(Friend mTransferInFriendUser){
+	public void setTransferInFriend(Friend mTransferInFriendUser){
 		if(mTransferInFriendUser.getFriendUserId() != null){
 			this.mTransferInFriendUserId = mTransferInFriendUser.getFriendUserId();
 		}else{
@@ -268,6 +282,10 @@ public class MoneyTransfer extends HyjModel{
 
 	public void setProjectId(String mProjectId) {
 		this.mProjectId = mProjectId;
+	}
+	
+	public Project getProject(){
+		return getModel(Project.class, mProjectId);
 	}
 
 	public String getRemark() {

@@ -11,23 +11,28 @@
    <string name="moneyTransferFormFragment_textView_date">时间</string>
    <string name="moneyTransferFormFragment_editText_hint_date">请选择时间</string>
    
-   <string name="moneyTransferFormFragment_textView_amount">金额</string>
-   <string name="moneyTransferFormFragment_editText_hint_amount">请输入金额</string>
-   <string name="moneyTransferFormFragment_editText_validationError_negative_amount">金额不能为负数</string>
-   <string name="moneyTransferFormFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
+   <string name="moneyTransferFormFragment_textView_transferOutAmount">转出金额</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferOutAmount">请输入金额</string>
+   <string name="moneyTransferFormFragment_editText_validationError_negative_transferOutAmount">金额不能为负数</string>
+   <string name="moneyTransferFormFragment_editText_validationError_beyondMAX_transferOutAmount">金额超出范围</string>
    
-   <string name="moneyTransferFormFragment_textView_transferOutFriendUser">转出人</string>
-   <string name="moneyTransferFormFragment_editText_hint_transferOutFriendUser">自己</string>
+   <string name="moneyTransferFormFragment_textView_transferOutFriend">转出人</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferOutFriend">自己</string>
    
    <string name="moneyTransferFormFragment_textView_transferOut">转出账户</string>
    <string name="moneyTransferFormFragment_editText_hint_transferOut">请选择转出账户</string>
    
-   <string name="moneyTransferFormFragment_textView_transferInFriendUser">转入人</string>
-   <string name="moneyTransferFormFragment_editText_hint_transferInFriendUser">自己</string>
+   <string name="moneyTransferFormFragment_textView_transferInFriend">转入人</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferInFriend">自己</string>
    
    <string name="moneyTransferFormFragment_textView_transferIn">转入账户</string>
    <string name="moneyTransferFormFragment_editText_hint_transferIn">请选择转入账户</string>
   
+   <string name="moneyTransferFormFragment_textView_transferInAmount">转入金额</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferInAmount">请输入金额</string>
+   <string name="moneyTransferFormFragment_editText_validationError_negative_transferInAmount">金额不能为负数</string>
+   <string name="moneyTransferFormFragment_editText_validationError_beyondMAX_transferInAmount">金额超出范围</string>
+   
    <string name="moneyTransferFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyTransferFormFragment_editText_hint_exchangeRate">请输入汇率</string>
    <string name="moneyTransferFormFragment_editText_validationError_zero_exchangeRate">汇率不能为0</string>

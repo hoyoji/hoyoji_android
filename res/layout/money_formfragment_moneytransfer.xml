@@ -56,14 +56,14 @@
                     android:background="@android:color/darker_gray" />
 
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
-                    android:id="@+id/moneyTransferFormFragment_textField_amount"
+                    android:id="@+id/moneyTransferFormFragment_textField_transferOutAmount"
+                    hyj:style="top_label"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    hyj:style="no_label"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_amount"
-                    hyj:labelText="@string/moneyTransferFormFragment_textView_amount" >
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferOutAmount"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferOutAmount" >
 
                     <requestFocus />
                 </com.hoyoji.android.hyjframework.view.HyjNumericField>
@@ -88,7 +88,7 @@
                 android:layout_weight="1" >
 
                 <ImageView
-                    android:id="@+id/moneyTransferFormFragment_imageView_clear_transferOutFriendUser"
+                    android:id="@+id/moneyTransferFormFragment_imageView_clear_transferOutFriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -96,18 +96,18 @@
                     android:src="@drawable/abc_ic_clear_search_api_holo_light" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                    android:id="@+id/moneyTransferFormFragment_selectorField_transferOutUser"
+                    android:id="@+id/moneyTransferFormFragment_selectorField_transferOutFriend"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferOutFriendUser"
-                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferOutFriendUser" >
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferOutFriend"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferOutFriend" >
                 </com.hoyoji.android.hyjframework.view.HyjSelectorField>
             </FrameLayout>
 
             <View
-                android:id="@id/field_separator"
+                android:id="@+id/moneyTransferFormFragment_separatorField_transferOut"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
@@ -142,7 +142,7 @@
                 android:layout_weight="1" >
 
                 <ImageView
-                    android:id="@+id/moneyTransferFormFragment_imageView_clear_transferInFriendUser"
+                    android:id="@+id/moneyTransferFormFragment_imageView_clear_transferInFriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -150,13 +150,13 @@
                     android:src="@drawable/abc_ic_clear_search_api_holo_light" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                    android:id="@+id/moneyTransferFormFragment_selectorField_transferInFriendUser"
+                    android:id="@+id/moneyTransferFormFragment_selectorField_transferInFriend"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferInFriendUser"
-                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferInFriendUser" >
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferInFriend"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferInFriend" >
                 </com.hoyoji.android.hyjframework.view.HyjSelectorField>
             </FrameLayout>
 
@@ -179,7 +179,7 @@
         </LinearLayout>
 
         <View
-            android:id="@id/field_separator"
+            android:id="@+id/moneyTransferFormFragment_separatorField_transferIn"
             android:layout_width="match_parent"
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
@@ -188,43 +188,75 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" >
+            android:layout_height="wrap_content" >
 
-            <com.hoyoji.android.hyjframework.view.HyjNumericField
-                android:id="@+id/moneyTransferFormFragment_textField_exchangeRate"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                hyj:style="top_label"
-                hyj:editTextBorder="none"
-                hyj:hintText="@string/moneyTransferFormFragment_editText_hint_exchangeRate"
-                hyj:labelText="@string/moneyTransferFormFragment_textView_exchangeRate" />
+                android:layout_weight="2"
+                android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/moneyTransferFormFragment_imageButton_refresh_exchangeRate"
-                android:layout_width="wrap_content"
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTransferFormFragment_textField_transferInAmount"
+                    hyj:style="top_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferInAmount"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferInAmount" />
+
+                <View
+                    android:id="@+id/moneyTransferFormFragment_separatorField_transferInamount"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:background="@android:color/darker_gray" />
+
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyTransferFormFragment_selectorField_project"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_project"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_project" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/moneyTransferFormFragment_separatorField_exchange"
+                android:layout_width="1dip"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:id="@+id/moneyTransferFormFragment_linearLayout_exchangeRate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:src="@drawable/ic_action_refresh_rotate" />
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTransferFormFragment_textField_exchangeRate"
+                    hyj:style="top_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_exchangeRate"
+                    hyj:labelText="@string/moneyTransferFormFragment_textView_exchangeRate" />
+
+                <ImageView
+                    android:id="@+id/moneyTransferFormFragment_imageButton_refresh_exchangeRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_refresh_rotate" />
+            </LinearLayout>
         </LinearLayout>
-
-        <View
-            android:id="@id/field_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
-
-        <com.hoyoji.android.hyjframework.view.HyjSelectorField
-            android:id="@+id/moneyTransferFormFragment_selectorField_project"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            hyj:style="top_label"
-            hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyTransferFormFragment_editText_hint_project"
-            hyj:labelText="@string/moneyTransferFormFragment_textView_project" />
 
         <View
             android:id="@id/field_separator"

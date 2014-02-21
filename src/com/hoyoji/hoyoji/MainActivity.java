@@ -34,6 +34,8 @@ import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -188,7 +190,7 @@ public class MainActivity extends HyjUserActivity {
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
-    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+    			openActivityWithFragment(MoneyTransferListFragment.class, R.string.moneyTransferListFragment_title_all, null);
     			return true;
     		}
 //    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_topup){
