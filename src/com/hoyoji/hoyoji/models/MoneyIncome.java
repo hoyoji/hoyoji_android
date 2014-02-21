@@ -253,7 +253,15 @@ public class MoneyIncome extends HyjModel{
 	public String getRemark() {
 		return mRemark;
 	}
-
+	
+	public String getDisplayRemark() {
+		if(mRemark != null){
+			return mRemark;
+		} else {
+			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+		}
+	}
+	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
@@ -298,6 +306,10 @@ public class MoneyIncome extends HyjModel{
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
+	public User getOwnerUser() {
+		return getModel(User.class, mOwnerUserId);
+	}
+	
 	public String getLocation() {
 		return mLocation;
 	}

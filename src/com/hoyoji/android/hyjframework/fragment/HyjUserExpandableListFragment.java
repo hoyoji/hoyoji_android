@@ -17,11 +17,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -44,6 +47,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public final static int CANCEL_LIST_ITEM = 1025;
 	protected boolean mIsViewInited = false;
 	protected ExpandableListView mExpandableListView;
+	private View mFooterView;
+	protected int mListPageSize = 10;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -69,7 +74,15 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-	    getListView().setEmptyView(getView().findViewById(android.R.id.empty));
+		mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		getListView().addFooterView(mFooterView);
+		mFooterView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), mListPageSize);
+			}
+		});
+		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
 		ExpandableListAdapter adapter = (ExpandableListAdapter) getListView().getExpandableListAdapter();
 		if(adapter == null){
@@ -82,7 +95,24 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			getListView().setAdapter(adapter); 
 		}
 	}
+	public void setFooterLoadStart(){
+        if(getListView().getItemAtPosition(0) == null){
+        	((TextView)getListView().getEmptyView()).setText(R.string.app_listview_footer_fetching_more);
+        } else {
+            ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
+        }
+        ((TextView)mFooterView).setEnabled(false);
+	}
 	
+	public void setFooterLoadFinished(int count){
+        ((TextView)mFooterView).setEnabled(true);
+        ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
+		if(count >= mListPageSize){
+	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+		} else {
+		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+		}
+	}
 	@Override
 	public void onStart(){
 		super.onStart();
@@ -149,6 +179,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			if(expandFirstGroup && adapter.getGroupCount() > 0){
 				getListView().expandGroup(0);
 			}
+	        setFooterLoadFinished(adapter.getGroupCount());
 		} else {
 			// 
 			if(adapter.getGroupCount() > loader.getId()){
@@ -183,6 +214,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		setFooterLoadStart();
 		return null;
 	}
 
@@ -279,11 +311,14 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 
 	@Override
-	public boolean onGroupClick(ExpandableListView arg0, View arg1, int arg2,
+	public boolean onGroupClick(ExpandableListView arg0, View v, int arg2,
 			long arg3) {
-		return false;
+			return false;
 	}
 
+	public void doFetchMore(int offset, int pageSize){
+	}
+	
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {

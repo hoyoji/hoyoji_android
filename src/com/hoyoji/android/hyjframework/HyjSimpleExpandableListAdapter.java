@@ -1,25 +1,17 @@
 package com.hoyoji.android.hyjframework;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONObject;
-
-import com.hoyoji.hoyoji.friend.FriendListFragment;
+import java.util.SortedMap;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorTreeAdapter;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
@@ -27,7 +19,7 @@ import android.widget.TextView;
 public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
 	private SimpleAdapter.ViewBinder mViewBinder;
 	
-	private List<? extends Map<String, ?>> mGroupData;
+	private SortedMap<String, ? extends Map<String, ?>> mGroupData;
     private int mExpandedGroupLayout;
     private int mCollapsedGroupLayout;
     private String[] mGroupFrom;
@@ -40,6 +32,12 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
     private int[] mChildTo;
     
     private LayoutInflater mInflater;
+    
+    public interface OnFetchMoreListener{
+    	public void onFetchMore();
+    }
+    
+    private OnFetchMoreListener mOnFetchMoreListener = null;
     
     /**
      * Constructor
@@ -78,7 +76,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            those named views defined in "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            List<? extends Map<String, ?>> groupData, int groupLayout,
+            SortedMap<String, ? extends Map<String, ?>> groupData, int groupLayout,
             String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, String[] childFrom, int[] childTo) {
@@ -126,7 +124,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            those named views defined in "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            List<? extends Map<String, ?>> groupData, int expandedGroupLayout,
+            SortedMap<String, ? extends Map<String, ?>> groupData, int expandedGroupLayout,
             int collapsedGroupLayout, String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, String[] childFrom, int[] childTo) {
@@ -180,7 +178,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            List<? extends Map<String, ?>> groupData, int expandedGroupLayout,
+            SortedMap<String, ? extends Map<String, ?>> groupData, int expandedGroupLayout,
             int collapsedGroupLayout, String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, int lastChildLayout, String[] childFrom,
@@ -242,11 +240,21 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public int getChildrenCount(int groupPosition) {
+    	if(mChildData.size() <= groupPosition || mChildData.get(groupPosition) == null){
+    		return 0;
+    	}
         return mChildData.get(groupPosition).size();
     }
 
     public Object getGroup(int groupPosition) {
-        return mGroupData.get(groupPosition);
+    	int i = 0;
+    	
+    	for(Map.Entry<String, ?> entry : mGroupData.entrySet()){
+    		if(i == groupPosition){
+    			return entry.getValue();
+    		}
+    	}
+    	return null;
     }
 
     public int getGroupCount() {
@@ -265,7 +273,8 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
-        bindView(v, mGroupData.get(groupPosition), mGroupFrom, mGroupTo);
+        bindView(v, (Map<String, ?>) mGroupData.values().toArray()[groupPosition], mGroupFrom, mGroupTo);
+        
         return v;
     }
 
@@ -293,6 +302,9 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
 		mViewBinder = viewBinder;
 	}
 	
+	public void setOnFetchMoreListener(OnFetchMoreListener onFetchMoreListener){
+		mOnFetchMoreListener = onFetchMoreListener;
+	}
 	
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
@@ -323,7 +335,12 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
         		((TextView)v).setText(data.toString());
             }
         }
-        
+
+//      if(groupPosition == mGroupData.size()-1 && isLastChild){
+//      	if(this.mOnFetchMoreListener != null){
+//      		this.mOnFetchMoreListener.onFetchMore();
+//      	}
+//      }
         return view;
 	}
 
