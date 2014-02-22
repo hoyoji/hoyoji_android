@@ -54,7 +54,6 @@ public class HyjUtil {
             		list.add((JSONObject) o);
             	}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
@@ -108,6 +107,12 @@ public class HyjUtil {
 		    );
 
 		    return image;
+		}
+		
+		public static File createTempImageFile(String imageFileName) throws IOException {
+		    // Create an image file name
+			File outputDir = HyjApplication.getInstance().getCacheDir(); // context being the Activity pointer
+			return File.createTempFile(imageFileName, ".JPEG", outputDir);
 		}
 		
 		public static File createImageFile(String imageFileName, String type) throws IOException {
@@ -216,5 +221,21 @@ public class HyjUtil {
 				commonBitmaps.put(String.valueOf(resId), bitmap);
 			}
 			return bitmap;
+		}
+		
+		public static <T extends Object> T ifNull(T obj1, T obj2){
+			if(obj1 == null){
+				return obj2;
+			} else {
+				return obj1;
+			}
+		}
+		
+		public static <T extends Object> T ifJSONNull(JSONObject jsonObj, String field1, T obj){
+			if(jsonObj.isNull(field1)){
+				return obj;
+			} else {
+				return (T)jsonObj.opt(field1);
+			}
 		}
 }

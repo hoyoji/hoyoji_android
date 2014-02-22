@@ -73,7 +73,7 @@ public class HyjJSONListAdapter extends ArrayAdapter<JSONObject> {
         JSONObject item = getItem(position);
         for(int i=0; i<mViewIds.length; i++){
         	View v = viewHolder[i];
-        	if(this.mViewBinder != null || !mViewBinder.setViewValue(v, item, mFields[i])){
+        	if(this.mViewBinder == null || !mViewBinder.setViewValue(v, item, mFields[i])){
         		((TextView)v).setText(item.optString(mFields[i]));
             }
         }

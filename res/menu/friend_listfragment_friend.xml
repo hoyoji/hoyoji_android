@@ -9,7 +9,7 @@
     <item
         android:id="@+id/friendListFragment_action_friend_create"
         android:title="@string/friendListFragment_action_friend_create"
-        android:icon="@drawable/ic_action_add_person"
+        android:icon="@drawable/ic_action_new"
         hoyoji:showAsAction="always"/>
     
 </menu>

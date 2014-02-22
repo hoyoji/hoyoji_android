@@ -1,15 +1,30 @@
 package com.hoyoji.android.hyjframework.view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjBitmapWorkerAsyncTask;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.Picture;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.widget.ImageView;
 
 public class HyjImageView extends ImageView {
@@ -31,7 +46,11 @@ public class HyjImageView extends ImageView {
 		if(picture == null){
 			if(mPictureId != null){
 				mPictureId = null;
-				super.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
+			}
+			if(this.getBackground() == null) {
+				setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
+			} else {
+				this.setImageDrawable(null);
 			}
 		} else if(picture.getId() == mPictureId){
 			return;
@@ -57,6 +76,17 @@ public class HyjImageView extends ImageView {
 			setImage((Picture)Picture.getModel(Picture.class, id));
 		} else {
 			setImage((Picture)null);
+			
 		}
+	}
+	
+	public void loadRemoteImage(final String id){
+		if(id == null){
+			setImage((Picture)null);
+			return;
+		}
+		
+		HyjBitmapWorkerAsyncTask.loadRemoteBitmap(id, HyjApplication.getServerUrl()+"fetchUserImageIcon.php", this);
+		
 	}
 }

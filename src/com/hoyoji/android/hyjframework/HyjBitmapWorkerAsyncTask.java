@@ -1,14 +1,27 @@
 package com.hoyoji.android.hyjframework;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Picture;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.widget.ImageView;
 
 public class HyjBitmapWorkerAsyncTask extends AsyncTask<String, Void, Bitmap> {
@@ -30,17 +43,75 @@ public class HyjBitmapWorkerAsyncTask extends AsyncTask<String, Void, Bitmap> {
 	    }
 	}
     
+    public static void loadRemoteBitmap(String data, String path, ImageView imageView) {
+	    if (cancelPotentialWork(data, imageView)) {
+	        final HyjBitmapWorkerAsyncTask task = new HyjBitmapWorkerAsyncTask(imageView);
+	        final AsyncDrawable asyncDrawable =
+	                new AsyncDrawable(HyjApplication.getInstance().getResources(), HyjUtil.getCommonBitmap(R.drawable.ic_action_refresh), task);
+	        imageView.setImageDrawable(asyncDrawable);
+	        task.execute(data, path);
+	    }
+	}
+    
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(String... params) {
     	data = params[0];
     	Integer w = null;
     	Integer h = null;
+    	String target = "";
     	if(params.length == 3){
     		w = Integer.parseInt(params[1]);
     		h = Integer.parseInt(params[2]);
     	}
-        return HyjUtil.decodeSampledBitmapFromFile(data, w, h);
+    	if(params.length == 2){
+    		target = params[1];
+    	}
+    	if(target.startsWith("http://")){
+    		File dir = HyjApplication.getInstance().getCacheDir();
+    		String[] l = dir.list(new FilenameFilter(){
+    			@Override
+    			public boolean accept(File dir, String filename) {
+    				if(filename.startsWith(data+"_icon")){
+    					return true;
+    				}
+    				return false;
+    			}
+    		});
+    		
+    		if(l.length > 0){
+        		return HyjUtil.decodeSampledBitmapFromFile(dir+"/"+l[0], null, null);
+    		}
+    		
+    		
+    	    Object result = HyjServer.doHttpPost(this, target, data, true);
+    	    if(result instanceof JSONArray){		
+    	    	JSONArray jsonArray = (JSONArray) result;
+				try {
+					JSONObject jsonIcon = jsonArray.getJSONObject(0);
+				    byte[] decodedByte = Base64.decode(jsonIcon.getString("base64PictureIcon"), 0);
+				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+				    FileOutputStream out = new FileOutputStream(HyjUtil.createTempImageFile(data+"_icon"));
+				    icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				    out.close();
+				    out = null;
+					return icon;
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return null;
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				} 
+    	    } else {
+				return null;
+			}
+    	} else {
+    		return HyjUtil.decodeSampledBitmapFromFile(data, w, h);
+    	}
     }
 
     // Once complete, see if ImageView is still around and set bitmap.

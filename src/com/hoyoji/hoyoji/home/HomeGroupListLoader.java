@@ -107,9 +107,9 @@ public class HomeGroupListLoader extends
 				cursor.moveToFirst();
 				count += cursor.getInt(0);
 				expenseTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -119,9 +119,9 @@ public class HomeGroupListLoader extends
 				cursor.moveToFirst();
 				count += cursor.getInt(0);
 				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
 			if (count > 0) {
 				String ds = df.format(calToday.getTime());
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
@@ -161,6 +161,7 @@ public class HomeGroupListLoader extends
 	private long getHasMoreDataDateInMillis(long fromDateInMillis){
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
+		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -168,26 +169,42 @@ public class HomeGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			String ds = cursor.getString(0);
+			dateString = cursor.getString(0);
 			cursor.close();
 			cursor = null;
-			if(ds != null){
-				try {
-					Long dateInMillis = mDateFormat.parse(ds).getTime();
-					Calendar calToday = Calendar.getInstance();
-					calToday.setTimeInMillis(dateInMillis);
-					calToday.set(Calendar.HOUR_OF_DAY, 0);
-					calToday.clear(Calendar.MINUTE);
-					calToday.clear(Calendar.SECOND);
-					calToday.clear(Calendar.MILLISECOND);
-					return calToday.getTimeInMillis();
-				} catch (ParseException e) {
-					e.printStackTrace();
-					return -1;
-				}
-			}
 		}
-		return -1;
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyIncome WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(dateString == null 
+					|| dateString.compareTo(cursor.getString(0)) < 0){
+				dateString = cursor.getString(0);
+			}
+			cursor.close();
+			cursor = null;
+		}
+		
+		if(dateString != null){
+			try {
+				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Calendar calToday = Calendar.getInstance();
+				calToday.setTimeInMillis(dateInMillis);
+				calToday.set(Calendar.HOUR_OF_DAY, 0);
+				calToday.clear(Calendar.MINUTE);
+				calToday.clear(Calendar.SECOND);
+				calToday.clear(Calendar.MILLISECOND);
+				return calToday.getTimeInMillis();
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		} else {
+			return -1;
+		}
 	}
 	
 	public boolean hasMoreData() {

@@ -21,11 +21,15 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.User;
 
 public class AddFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
 	protected SearchView mSearchView;
@@ -80,8 +84,8 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	public ListAdapter useListViewAdapter() {
 		return new HyjJSONListAdapter(getActivity(),
 				R.layout.friend_listitem_add_friend,
-				new String[] { "userName" },
-				new int[] { R.id.friendListItem_nickName }); 
+				new String[] { "pictureId", "nickName" },
+				new int[] {R.id.friendListItem_add_picture, R.id.friendListItem_add_nickName }); 
 	}
 
 
@@ -122,7 +126,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 			data.put("__offset", 0);
 			data.put("__orderBy", "userName ASC");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -148,7 +151,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 			data.put("__offset", offset);
 			data.put("__orderBy", "userName ASC");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -157,5 +159,23 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
 		Loader loader = getLoaderManager().getLoader(0);
 		((HyjHttpPostJSONLoader)loader).changePostQuery(bundle);		
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Object object, String field) {
+		JSONObject jsonObj = (JSONObject)object;
+		if(view.getId() == R.id.friendListItem_add_nickName){
+			((TextView)view).setText(HyjUtil.ifJSONNull(jsonObj, "nickName", jsonObj.optString("userName")));
+			return true;
+		} else if(view.getId() == R.id.friendListItem_add_picture){
+			if(!jsonObj.isNull(field)){
+				((HyjImageView)view).loadRemoteImage(jsonObj.optString(field));
+			} else {
+				((HyjImageView)view).setImage((Picture)null);
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

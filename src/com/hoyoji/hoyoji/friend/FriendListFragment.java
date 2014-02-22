@@ -12,16 +12,24 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
+import com.hoyoji.android.hyjframework.view.HyjBooleanView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
+import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.User;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
@@ -94,8 +102,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				new String[] { "name" },
 				new int[] { R.id.friendListItem_category_name }, 
 				R.layout.friend_listitem_friend,
-				new String[] { "nickName" },
-				new int[] { R.id.friendListItem_nickName });
+				new String[] { "friendUserId", "nickName" },
+				new int[] { R.id.friendListItem_picture, R.id.friendListItem_nickName });
 		adapter.setGetChildrenCursorListener(this);
 		return adapter;
 	}
@@ -200,5 +208,21 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	    	getLoaderManager().initLoader(groupPos, bundle, this);
 	    }
 	}
-
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.friendListItem_nickName){
+			((TextView)view).setText(cursor.getString(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.friendListItem_picture){
+			if(cursor.getString(columnIndex) != null){
+				((HyjImageView)view).setImage(HyjModel.getModel(User.class, cursor.getString(columnIndex)).getPictureId());
+			} else {
+				((HyjImageView)view).setImage((Picture)null);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -79,7 +79,7 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
         				mServerCallback.errorCallback(result);
         			}		
     			} else {
-    				mServerCallback.errorCallback(result);
+    				mServerCallback.finishCallback(result);
     			}
             } else {
             	try {

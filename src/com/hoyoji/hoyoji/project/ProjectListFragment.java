@@ -124,7 +124,7 @@ public class ProjectListFragment extends HyjUserListFragment{
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.projectListItem_name){
-			((TextView)view).setText(cursor.getString(columnIndex) + " (hi)");
+			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		} else {
 			return false;

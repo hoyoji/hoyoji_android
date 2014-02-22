@@ -39,7 +39,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 				R.layout.moneyaccount_listitem_moneyaccount,
 				null,
 				new String[] { "name","currentBalance" },
-				new int[] { R.id.moneyAccountListItem_name,R.id.moneyAccountListItem_currentBalance },
+				new int[] { R.id.moneyAccountListItem_name, R.id.moneyAccountListItem_currentBalance },
 				0); 
 	}	
 

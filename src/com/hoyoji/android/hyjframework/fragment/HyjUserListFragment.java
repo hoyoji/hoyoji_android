@@ -227,7 +227,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) { 
 		super.onListItemClick(l, v, position, id);
 		if(v == mFooterView){
-			doFetchMore(l.getAdapter().getCount(), this.mListPageSize);
+			doFetchMore(l.getAdapter().getCount()-1, this.mListPageSize);
 		}
     }  
 	
