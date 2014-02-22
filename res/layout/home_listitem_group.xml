@@ -4,7 +4,7 @@
      android:layout_height="48dp"
      android:padding="5dip"
      android:descendantFocusability="blocksDescendants"
-     android:background="#F5F9FC"
+     android:background="#f5f5f5"
 	 android:gravity="center_vertical">
 
 		<com.hoyoji.android.hyjframework.view.HyjDateTimeView android:id="@+id/homeListItem_group_date"  

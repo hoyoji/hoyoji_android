@@ -62,11 +62,11 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
-	    	mChangeObserver = new ChangeObserver();
-	    	context.getContentResolver().registerContentObserver(
-	    			ContentProvider.createUri(MoneyExpense.class, null), true, mChangeObserver);
-	    	context.getContentResolver().registerContentObserver(
-	    			ContentProvider.createUri(MoneyIncome.class, null), true, mChangeObserver);
+//	    	mChangeObserver = new ChangeObserver();
+//	    	context.getContentResolver().registerContentObserver(
+//	    			ContentProvider.createUri(MoneyExpense.class, null), true, mChangeObserver);
+//	    	context.getContentResolver().registerContentObserver(
+//	    			ContentProvider.createUri(MoneyIncome.class, null), true, mChangeObserver);
 
 	    }
 	    
@@ -127,7 +127,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 		  @Override
 		  protected void onAbandon (){
 			  super.onAbandon();
-			  this.getContext().getContentResolver().unregisterContentObserver(mChangeObserver);
+//			  this.getContext().getContentResolver().unregisterContentObserver(mChangeObserver);
 		  }
 
 

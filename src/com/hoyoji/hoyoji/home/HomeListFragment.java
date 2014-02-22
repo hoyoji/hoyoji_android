@@ -44,12 +44,7 @@ import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
-	private SortedMap<String, Map<String, Object>> mListGroupData = new TreeMap<String, Map<String, Object>>(new Comparator<String>(){
-		@Override
-		public int compare(String lhs, String rhs) {
-			return rhs.compareTo(lhs);
-		}
-	});
+	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
 	@Override
@@ -130,7 +125,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-		super.onCreateLoader(groupPos, arg1);
+//		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
 			loader = new HomeGroupListLoader(getActivity(), arg1);
@@ -142,28 +137,26 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Object> loader, Object list) {
+	public void onLoadFinished(Loader loader, Object list) {
 		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter) getListView()
 				.getExpandableListAdapter();
 		if (loader.getId() < 0) {
-			SortedMap<String, Map<String, Object>> groupList = (SortedMap<String, Map<String, Object>>) list;
+			ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) list;
 			mListGroupData.clear();
-			mListGroupData.putAll(groupList);
-//			List<HyjModel> emptyChildList = new ArrayList<HyjModel>();
+			mListGroupData.addAll(groupList);
 			for(int i = 0; i < groupList.size(); i++){
-				mListChildData.add(null);
-				getListView().expandGroup(i);
+				if(mListChildData.size() <= i){
+					mListChildData.add(null);
+					getListView().expandGroup(i);
+				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(groupList.size());
+			this.setFooterLoadFinished(((HomeGroupListLoader)loader).hasMoreData() ? this.mListPageSize : 0);
 		} else {
-			 if(adapter.getGroupCount() > loader.getId()){
-				 mListChildData.set(loader.getId(), (List<HyjModel>) list);
+				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
+				mListChildData.set(loader.getId(), childList);
 				adapter.notifyDataSetChanged();
-			 } else {
-				 getLoaderManager().destroyLoader(loader.getId());
-			 }
-		 }
+		}
 		// The list should now be shown.
 		if (isResumed()) {
 			// setListShown(true);
@@ -190,17 +183,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public void onGroupExpand(int groupPosition) {
-		int i = 0;
-		for(Map.Entry<String, Map<String, Object>> entry : mListGroupData.entrySet()){
-			if(i == groupPosition){
-				long dateInMilliSeconds = (Long) entry.getValue().get("dateInMilliSeconds");
+//		int i = 0;
+//		for(Map.Entry<String, Map<String, Object>> entry : mListGroupData.entrySet()){
+//			if(i == groupPosition){
+				long dateInMilliSeconds = (Long) mListGroupData.get(groupPosition).get("dateInMilliSeconds");
 				Bundle bundle = new Bundle();
 				bundle.putLong("dateFrom", dateInMilliSeconds);
-				bundle.putLong("dateTo", dateInMilliSeconds + 24*60*60*1000);
+				bundle.putLong("dateTo", dateInMilliSeconds + 24*3600000);
 				getLoaderManager().restartLoader(groupPosition, bundle, this);
-			}
-			i++;
-		}
+//			}
+//			i++;
+//		}
 	}
 
 	
@@ -282,8 +275,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //		Bundle bundle = new Bundle();
 //		bundle.putString("target", "findData");
 //		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		Loader loader = getLoaderManager().getLoader(-1);
-		((HomeGroupListLoader)loader).fetchMore(null);	
+//		Loader loader = getLoaderManager().getLoader(-1);
+//		((HomeGroupListLoader)loader).fetchMore(null);	
 	}
 
 	@Override

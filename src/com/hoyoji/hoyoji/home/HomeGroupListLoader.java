@@ -1,13 +1,16 @@
 package com.hoyoji.hoyoji.home;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -33,12 +36,13 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 public class HomeGroupListLoader extends
-		AsyncTaskLoader<SortedMap<String, Map<String, Object>>> {
+		AsyncTaskLoader<List<Map<String, Object>>> {
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	private SortedMap<String, Map<String, Object>> mGroupList;
+	private List<Map<String, Object>> mGroupList;
 	private Integer mLoadLimit = 10;
+	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
 
 	public HomeGroupListLoader(Context context, Bundle queryParams) {
@@ -72,38 +76,28 @@ public class HomeGroupListLoader extends
 	 * by the loader.
 	 */
 	@Override
-	public SortedMap<String, Map<String, Object>> loadInBackground() {
-		SortedMap<String, Map<String, Object>> list = new TreeMap<String, Map<String, Object>>(new Comparator<String>(){
-			@Override
-			public int compare(String lhs, String rhs) {
-				return rhs.compareTo(lhs);
-			}
-		});
+	public List<Map<String, Object>> loadInBackground() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		DateFormat df = SimpleDateFormat.getDateInstance();
 		Calendar calToday = Calendar.getInstance();
-		calToday.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of
-											// day !
+		calToday.set(Calendar.HOUR_OF_DAY, 0);
 		calToday.clear(Calendar.MINUTE);
 		calToday.clear(Calendar.SECOND);
 		calToday.clear(Calendar.MILLISECOND);
 
-//		Calendar calToday = Calendar.getInstance();
-//		calToday.setTimeInMillis(cal.getTimeInMillis());
-
-		// get start of this week in milliseconds
+// get start of this week in milliseconds
 //		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
 
-		int totalRowCount = 0;
-		while (totalRowCount < mLoadLimit) {
+		int loadCount = 0;
+		while (loadCount < mLoadLimit) {
+			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calToday.getTime()),
-					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24
-							* 60 * 60 * 1000)) };
+					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24 * 3600000)) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
-			double count = 0;
 			Cursor cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -132,21 +126,72 @@ public class HomeGroupListLoader extends
 				String ds = df.format(calToday.getTime());
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
 				groupObject.put("date", ds);
-				groupObject.put("dateInMilliSeconds",
-						calToday.getTimeInMillis());
+				groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
 				groupObject.put("expenseTotal",
 						"收入: ¥" + String.valueOf(incomeTotal));
 				groupObject.put("incomeTotal",
 						"支出: ¥" + String.valueOf(expenseTotal));
-				list.put(ds, groupObject);
-				totalRowCount += count;
+				list.add(groupObject);
+				loadCount += count + 1;
 			}
 
-			calToday.add(Calendar.DAY_OF_YEAR, -1);
-			totalRowCount++;
+			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
+			if(count == 0){
+				long moreDataInMillis = getHasMoreDataDateInMillis(calToday.getTimeInMillis());
+				if(moreDataInMillis == -1){
+					break;
+				} else {
+					calToday.setTimeInMillis(moreDataInMillis);
+				}
+			} else {
+				calToday.add(Calendar.DAY_OF_YEAR, -1);
+			}
 		}
+		mHasMoreData = loadCount >= mLoadLimit;
 		
+		Collections.sort(list,new Comparator<Map<String, Object>>(){
+			@Override
+			public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {
+				return (int) ((Long)rhs.get("dateInMilliSeconds") - (Long)lhs.get("dateInMilliSeconds"));
+			}
+		});
 		return list;
+	}
+	
+	private long getHasMoreDataDateInMillis(long fromDateInMillis){
+		String[] args = new String[] {
+				mDateFormat.format(fromDateInMillis) };
+		Cursor cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyExpense WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			String ds = cursor.getString(0);
+			cursor.close();
+			cursor = null;
+			if(ds != null){
+				try {
+					Long dateInMillis = mDateFormat.parse(ds).getTime();
+					Calendar calToday = Calendar.getInstance();
+					calToday.setTimeInMillis(dateInMillis);
+					calToday.set(Calendar.HOUR_OF_DAY, 0);
+					calToday.clear(Calendar.MINUTE);
+					calToday.clear(Calendar.SECOND);
+					calToday.clear(Calendar.MILLISECOND);
+					return calToday.getTimeInMillis();
+				} catch (ParseException e) {
+					e.printStackTrace();
+					return -1;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public boolean hasMoreData() {
+		return mHasMoreData;
 	}
 
 	/**
@@ -155,7 +200,7 @@ public class HomeGroupListLoader extends
 	 * little more logic.
 	 */
 	@Override
-	public void deliverResult(SortedMap<String, Map<String, Object>> objects) {
+	public void deliverResult(List<Map<String, Object>> objects) {
 		mGroupList = objects;
 
 		if (isStarted() && mGroupList != null) {
@@ -203,7 +248,7 @@ public class HomeGroupListLoader extends
 	 * Handles a request to cancel a load.
 	 */
 	@Override
-	public void onCanceled(SortedMap<String, Map<String, Object>> objects) {
+	public void onCanceled(List<Map<String, Object>> objects) {
 		super.onCanceled(objects);
 	}
 
@@ -235,4 +280,5 @@ public class HomeGroupListLoader extends
 			onContentChanged();
 		}
 	}
+	
 }

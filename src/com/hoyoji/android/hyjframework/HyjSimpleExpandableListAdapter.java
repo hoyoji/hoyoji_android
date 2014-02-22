@@ -19,7 +19,7 @@ import android.widget.TextView;
 public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
 	private SimpleAdapter.ViewBinder mViewBinder;
 	
-	private SortedMap<String, ? extends Map<String, ?>> mGroupData;
+	private List<? extends Map<String, ?>> mGroupData;
     private int mExpandedGroupLayout;
     private int mCollapsedGroupLayout;
     private String[] mGroupFrom;
@@ -45,7 +45,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      * @param context The context where the {@link ExpandableListView}
      *            associated with this {@link SimpleExpandableListAdapter} is
      *            running
-     * @param groupData A List of Maps. Each entry in the List corresponds to
+     * @param mListGroupData A List of Maps. Each entry in the List corresponds to
      *            one group in the list. The Maps contain the data for each
      *            group, and should include all the entries specified in
      *            "groupFrom"
@@ -76,11 +76,11 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            those named views defined in "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            SortedMap<String, ? extends Map<String, ?>> groupData, int groupLayout,
+            List<Map<String, Object>> mListGroupData, int groupLayout,
             String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, String[] childFrom, int[] childTo) {
-        this(context, groupData, groupLayout, groupLayout, groupFrom, groupTo, childData,
+        this(context, mListGroupData, groupLayout, groupLayout, groupFrom, groupTo, childData,
                 childLayout, childLayout, childFrom, childTo);
     }
 
@@ -124,7 +124,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            those named views defined in "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            SortedMap<String, ? extends Map<String, ?>> groupData, int expandedGroupLayout,
+            List<? extends Map<String, ?>> groupData, int expandedGroupLayout,
             int collapsedGroupLayout, String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, String[] childFrom, int[] childTo) {
@@ -178,7 +178,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
      *            "childTo"
      */
     public HyjSimpleExpandableListAdapter(Context context,
-            SortedMap<String, ? extends Map<String, ?>> groupData, int expandedGroupLayout,
+            List<? extends Map<String, ?>> groupData, int expandedGroupLayout,
             int collapsedGroupLayout, String[] groupFrom, int[] groupTo,
             List<? extends List<? extends HyjModel>> childData,
             int childLayout, int lastChildLayout, String[] childFrom,
@@ -247,14 +247,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public Object getGroup(int groupPosition) {
-    	int i = 0;
-    	
-    	for(Map.Entry<String, ?> entry : mGroupData.entrySet()){
-    		if(i == groupPosition){
-    			return entry.getValue();
-    		}
-    	}
-    	return null;
+    	return mGroupData.get(groupPosition);
     }
 
     public int getGroupCount() {
@@ -273,7 +266,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
-        bindView(v, (Map<String, ?>) mGroupData.values().toArray()[groupPosition], mGroupFrom, mGroupTo);
+        bindView(v, (Map<String, ?>) mGroupData.get(groupPosition), mGroupFrom, mGroupTo);
         
         return v;
     }
