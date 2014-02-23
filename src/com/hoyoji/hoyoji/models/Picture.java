@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -161,5 +162,12 @@ public class Picture extends HyjModel {
 	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
-	
+
+	@Override
+	public void save(){
+		if(this.getOwnerUserId() == null){
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		}
+		super.save();
+	}
 }

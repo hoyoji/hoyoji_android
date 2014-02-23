@@ -38,7 +38,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.moneyaccount_listitem_moneyaccount,
 				null,
-				new String[] { "name","currentBalance" },
+				new String[] { "name", "currentBalance" },
 				new int[] { R.id.moneyAccountListItem_name, R.id.moneyAccountListItem_currentBalance },
 				0); 
 	}	

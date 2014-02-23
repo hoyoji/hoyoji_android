@@ -38,6 +38,14 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	public HyjModelEditor newModelEditor(){
 		return new HyjModelEditor(this);
 	}
+
+	@Override
+	public void save(){
+		if(m_creatorId == null){
+			m_creatorId = this.getId();
+		}
+		super.save();
+	}
 	
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);
 }

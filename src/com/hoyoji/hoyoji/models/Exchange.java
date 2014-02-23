@@ -9,6 +9,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -161,4 +162,11 @@ public class Exchange extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 	
+	@Override
+	public void save(){
+		if(this.getOwnerUserId() == null){
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		}
+		super.save();
+	}
 }

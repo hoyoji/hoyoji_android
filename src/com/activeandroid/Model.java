@@ -66,7 +66,7 @@ public abstract class Model {
 	
 	public abstract String getId();
 
-	public final void delete() {
+	public void delete() {
 		Cache.openDatabase().delete(mTableInfo.getTableName(), "id=?", new String[] { getId() });
 		Cache.removeEntity(this);
 
@@ -74,7 +74,7 @@ public abstract class Model {
 				.notifyChange(ContentProvider.createUri(mTableInfo.getType(), mId), null);
 	}
 
-	public final void save() {
+	public void save() {
 		final SQLiteDatabase db = Cache.openDatabase();
 		final ContentValues values = new ContentValues();
 
@@ -371,10 +371,102 @@ public abstract class Model {
 			catch (SecurityException e) {
 				Log.e(e.getClass().getName(), e);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = new JSONObject();
+
+		for (Field field : mTableInfo.getFields()) {
+			final String fieldName = mTableInfo.getColumnName(field);
+			Class<?> fieldType = field.getType();
+
+			field.setAccessible(true);
+
+			try {
+				Object value = field.get(this);
+
+				if (value != null) {
+					final TypeSerializer typeSerializer = Cache.getParserForType(fieldType);
+					if (typeSerializer != null) {
+						// serialize data
+						value = typeSerializer.serialize(value);
+						// set new object type
+						if (value != null) {
+							fieldType = value.getClass();
+							// check that the serializer returned what it promised
+							if (!fieldType.equals(typeSerializer.getSerializedType())) {
+								Log.w(String.format("TypeSerializer returned wrong type: expected a %s but got a %s",
+										typeSerializer.getSerializedType(), fieldType));
+							}
+						}
+					}
+				}
+
+				// TODO: Find a smarter way to do this? This if block is necessary because we
+				// can't know the type until runtime.
+				if (value == null) {
+						jsonObj.put(fieldName, null);
+				}
+				else if (fieldType.equals(Byte.class) || fieldType.equals(byte.class)) {
+					jsonObj.put(fieldName, (Byte) value);
+				}
+				else if (fieldType.equals(Short.class) || fieldType.equals(short.class)) {
+					jsonObj.put(fieldName, (Short) value);
+				}
+				else if (fieldType.equals(Integer.class) || fieldType.equals(int.class)) {
+					jsonObj.put(fieldName, (Integer) value);
+				}
+				else if (fieldType.equals(Long.class) || fieldType.equals(long.class)) {
+					jsonObj.put(fieldName, (Long) value);
+				}
+				else if (fieldType.equals(Float.class) || fieldType.equals(float.class)) {
+					jsonObj.put(fieldName, (Float) value);
+				}
+				else if (fieldType.equals(Double.class) || fieldType.equals(double.class)) {
+					jsonObj.put(fieldName, (Double) value);
+				}
+				else if (fieldType.equals(Boolean.class) || fieldType.equals(boolean.class)) {
+					jsonObj.put(fieldName, (Boolean) value);
+				}
+				else if (fieldType.equals(Character.class) || fieldType.equals(char.class)) {
+					jsonObj.put(fieldName, value.toString());
+				}
+				else if (fieldType.equals(String.class)) {
+					jsonObj.put(fieldName, value.toString());
+				}
+				else if (fieldType.equals(Byte[].class) || fieldType.equals(byte[].class)) {
+					jsonObj.put(fieldName, (byte[]) value);
+				}
+				else if (ReflectionUtils.isModel(fieldType)) {
+					jsonObj.put(fieldName, ((Model) value).getId());
+				}
+				else if (ReflectionUtils.isSubclassOf(fieldType, Enum.class)) {
+					jsonObj.put(fieldName, ((Enum<?>) value).name());
+				}
+			}
+			catch (IllegalArgumentException e) {
+				Log.e(e.getClass().getName(), e);
+			}
+			catch (IllegalAccessException e) {
+				Log.e(e.getClass().getName(), e);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			jsonObj.put("__dataType", mTableInfo.getTableName());
+			String lastServerUpdateTime = jsonObj.optString("lastServerUpdateTime");
+			if(lastServerUpdateTime != null && lastServerUpdateTime.length() > 0){
+//				jsonObj.remove("lastServerUpdateTime");
+				jsonObj.put("lastServerUpdateTime", Long.valueOf(lastServerUpdateTime));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObj;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// PROTECTED METHODS

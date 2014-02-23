@@ -200,5 +200,12 @@ public class MoneyAccount extends HyjModel {
 	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
-	
+
+	@Override
+	public void save(){
+		if(this.getOwnerUserId() == null){
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		}
+		super.save();
+	}
 }

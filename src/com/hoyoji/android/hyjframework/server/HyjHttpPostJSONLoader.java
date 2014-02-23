@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.R;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -31,6 +33,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    private List<JSONObject> mJSONList;
 	    private String mTarget = null;
 	    private String mPostData = "";
+	    private Integer errorMsg = null;
 	    
 	    public HyjHttpPostJSONLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -78,6 +81,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 					HyjUtil.flattenJSONArray(array, list);
 					return list;
 				}
+		    } else {
+		    	errorMsg = R.string.server_connection_disconnected;
 		    }
 			return null;
 		}
@@ -90,7 +95,10 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    @Override public void deliverResult(List<JSONObject> objects) {
 	        mJSONList = objects;
 
-	        if (isStarted() && mJSONList != null) {
+	        if(errorMsg != null) {
+		    	HyjUtil.displayToast(errorMsg);
+		    }
+	        if (isStarted()) {
 	            // If the Loader is currently started, we can immediately
 	            // deliver its results.
 	            super.deliverResult(objects);

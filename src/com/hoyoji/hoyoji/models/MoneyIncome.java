@@ -396,4 +396,11 @@ public class MoneyIncome extends HyjModel{
 //		}
 	}
 
+	@Override
+	public void save(){
+		if(this.getOwnerUserId() == null){
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		}
+		super.save();
+	}
 }

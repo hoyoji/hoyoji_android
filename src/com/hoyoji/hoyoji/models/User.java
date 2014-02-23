@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -98,10 +99,6 @@ public class User extends HyjModel {
 		return mUserName;
 	}
 
-	public String getDisplayName() {
-		return mUserName;
-	}
-
 	public void setUserName(String mUserName) {
 		this.mUserName = mUserName.trim();
 	}
@@ -114,6 +111,13 @@ public class User extends HyjModel {
 		this.mNickName = mNickName;
 	}
 
+	public String getDisplayName() {
+		if(this.getNickName() != null){
+			return this.getNickName();
+		}
+		return this.getUserName();
+	}
+	
 	public boolean ismIsMerchant() {
 		return mIsMerchant;
 	}
@@ -212,4 +216,6 @@ public class User extends HyjModel {
 			modelEditor.removeValidationError("userName");
 		}		
 	}	
+	
+	
 }

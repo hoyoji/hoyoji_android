@@ -235,7 +235,11 @@ public class HyjUtil {
 			if(jsonObj.isNull(field1)){
 				return obj;
 			} else {
-				return (T)jsonObj.opt(field1);
+				try {
+					return (T)jsonObj.opt(field1);
+				} catch(Exception e){
+					return null;
+				}
 			}
 		}
 }

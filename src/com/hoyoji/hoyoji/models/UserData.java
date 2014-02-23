@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
@@ -43,8 +44,8 @@ public class UserData extends HyjModel {
 	@Column(name = "activeMoneyAccountId")
 	private String mActiveMoneyAccountId;
 
-	@Column(name = "defaultFriendCategory")
-	private String mDefaultFriendCategory;
+	@Column(name = "defaultFriendCategoryId")
+	private String mDefaultFriendCategoryId;
 	
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
@@ -171,12 +172,12 @@ public class UserData extends HyjModel {
 		this.mActiveMoneyAccountId = mActiveMoneyAccountId;
 	}
 
-	public String getDefaultFriendCategory() {
-		return mDefaultFriendCategory;
+	public String getDefaultFriendCategoryId() {
+		return mDefaultFriendCategoryId;
 	}
 
-	public void setDefaultFriendCategory(String mDefaultFriendCategory) {
-		this.mDefaultFriendCategory = mDefaultFriendCategory;
+	public void setDefaultFriendCategory(String mDefaultFriendCategoryId) {
+		this.mDefaultFriendCategoryId = mDefaultFriendCategoryId;
 	}
 
 	public String getServerRecordHash() {
@@ -263,5 +264,12 @@ public class UserData extends HyjModel {
 		
 	}
 
-	
+
+	@Override
+	public void save(){
+		if(this.getOwnerUserId() == null){
+			this.setOwnerUserId(this.getUserId());
+		}
+		super.save();
+	}
 }

@@ -100,6 +100,8 @@ public class HyjServer {
 				return new JSONObject(s);
 			} else if(s.startsWith("[")){
 				return new JSONArray(s);
+			} else if(s.equals("")){
+				return new JSONArray();
 			} else {
 				if(returnJSONError){
 					return new JSONObject("{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_dataparse_error)+"'}}");

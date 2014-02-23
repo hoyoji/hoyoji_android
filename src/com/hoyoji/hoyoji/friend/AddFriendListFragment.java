@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -21,13 +22,22 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.RegisterActivity;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 
@@ -94,9 +104,78 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
     public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(id >= 0){
-			HyjUtil.displayToast("adding friend " + position + " : " + id);
+			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(position);
+			try {
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
+					@Override
+					public void finishCallback(Object object) {
+						JSONArray jsonArray = (JSONArray) object;
+						if(jsonArray.optJSONArray(0).length() > 0){
+							((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+							HyjUtil.displayToast(R.string.friendListFragment_addFriend_error_exists);
+						} else if(jsonUser.optString("id").equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+							((HyjActivity)AddFriendListFragment.this.getActivity()).displayDialog(-1, R.string.friendListFragment_addFriend_addSelf_title, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+									new DialogCallbackListener() {
+										@Override
+										public void doPositiveClick(Object object) {
+											final Friend newFriend = new Friend();
+											newFriend.setFriendUser(HyjApplication.getInstance().getCurrentUser());
+											newFriend.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+											newFriend.setFriendCategoryId(HyjApplication.getInstance().getCurrentUser().getUserData().getDefaultFriendCategoryId());
+											HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
+												@Override
+												public void finishCallback(Object object) {
+													newFriend.save();
+													((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+													HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+												}
+												@Override
+												public void errorCallback(Object object) {
+													((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+													JSONObject json = (JSONObject)object;
+													HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+												}
+											};
+
+											HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+newFriend.toJSON().toString()+"]", "postData");
+											((HyjActivity)AddFriendListFragment.this.getActivity()).displayProgressDialog(R.string.addFriendListFragment_title_add, R.string.friendListFragment_addFriend_progress_adding);
+										}
+										@Override
+										public void doNegativeClick() {
+										}
+									});
+						} else {
+							User newUser = HyjModel.getModel(User.class, jsonUser.optString("id"));
+							if(newUser == null) {
+								newUser = new User();
+							}
+							newUser.loadFromJSON(jsonUser);
+							newUser.save();
+							((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+							HyjUtil.displayToast(newUser.getDisplayName());
+						}
+					}
+					@Override
+					public void errorCallback(Object object) {
+						((HyjActivity)AddFriendListFragment.this.getActivity()).dismissProgressDialog();
+						JSONObject json = (JSONObject)object;
+						HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+					}
+				};
+
+				JSONObject data = new JSONObject();
+				data.put("__dataType", "Friend");
+				data.put("friendUserId", jsonUser.optString("id"));
+				data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+data.toString()+"]", "getData");
+				((HyjActivity)this.getActivity()).displayProgressDialog(R.string.addFriendListFragment_title_add, R.string.friendListFragment_addFriend_progress_adding);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
     }
+	
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -165,7 +244,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements OnQuer
 	public boolean setViewValue(View view, Object object, String field) {
 		JSONObject jsonObj = (JSONObject)object;
 		if(view.getId() == R.id.friendListItem_add_nickName){
-			((TextView)view).setText(HyjUtil.ifJSONNull(jsonObj, "nickName", jsonObj.optString("userName")));
+			try{
+				((TextView)view).setText(HyjUtil.ifJSONNull(jsonObj, "nickName", jsonObj.optString("userName")));
+			} catch(Exception e) {
+				((TextView)view).setText("");
+			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_add_picture){
 			if(!jsonObj.isNull(field)){
