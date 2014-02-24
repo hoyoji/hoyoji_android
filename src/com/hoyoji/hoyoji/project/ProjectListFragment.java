@@ -104,11 +104,13 @@ public class ProjectListFragment extends HyjUserListFragment{
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    Long itemId = getListAdapter().getItemId(info.position);
 		switch (item.getItemId()) {
-			case ADD_SUB_PROJECT:
-			    HyjUtil.displayToast("创建子项目" + itemId);
-				break;
+//			case ADD_SUB_PROJECT:
+//			    HyjUtil.displayToast("创建子项目" + itemId);
+//				break;
 			case VIEW_PROJECT_MEMBERS:
-			    HyjUtil.displayToast("项目成员" + itemId);
+				Bundle bundle = new Bundle();
+				bundle.putLong("MODEL_ID", info.id);
+				openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
 				break;
 		}
 		return super.onContextItemSelected(item);

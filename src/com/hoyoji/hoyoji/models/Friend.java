@@ -75,6 +75,14 @@ public class Friend extends HyjModel {
 	public void setId(String mId) {
 		this.mId = mId;
 	}
+
+	public String getDisplayName(){
+		if(this.getNickName() != null){
+			return this.getNickName();
+		} else {
+			return this.getFriendUser().getDisplayName();
+		}
+	}
 	
 	public String getNickName() {
 		return mNickName;

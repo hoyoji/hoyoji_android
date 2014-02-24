@@ -22,6 +22,7 @@ import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 
@@ -340,12 +341,15 @@ public class LoginActivity extends HyjActivity {
 							JSONObject obj = array.optJSONObject(j);
 							if (obj != null) {
 								try {
-									if (obj.optString("__dataType").equals("MoneyAccount")) {
+									if (obj.optString("__dataType").equals(
+											"MoneyAccount")) {
 										obj.put("currentBalance", 0);
 										MoneyAccount moneyAccount = new MoneyAccount();
 										moneyAccount.loadFromJSON(obj);
 										moneyAccount.save();
-									} else if (obj.optString("__dataType").equals("ProjectShareAuthorization")) {
+									} else if (obj
+											.optString("__dataType")
+											.equals("ProjectShareAuthorization")) {
 										obj.put("actualTotalIncome", 0);
 										obj.put("actualTotalExpense", 0);
 										obj.put("actualTotalBorrow", 0);
@@ -358,12 +362,12 @@ public class LoginActivity extends HyjActivity {
 										obj.put("apportionedTotalLend", 0);
 										obj.put("apportionedTotalReturn", 0);
 										obj.put("apportionedTotalPayback", 0);
-										// ProjectShareAuthorization
-										// newProjectShareAuthorization = new
-										// ProjectShareAuthorization();
-										// newProjectShareAuthorization.loadFromJSON(obj);
-										// newProjectShareAuthorization.save();
-									} else if (obj.optString("__dataType").equals("Currency")) {
+										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+										newProjectShareAuthorization
+												.loadFromJSON(obj);
+										newProjectShareAuthorization.save();
+									} else if (obj.optString("__dataType")
+											.equals("Currency")) {
 										if (obj.optString("symbol") == null) {
 											java.util.Currency localeCurrency = java.util.Currency
 													.getInstance(obj
@@ -374,21 +378,26 @@ public class LoginActivity extends HyjActivity {
 										Currency newCurrency = new Currency();
 										newCurrency.loadFromJSON(obj);
 										newCurrency.save();
-									} else if (obj.optString("__dataType").equals("Picture")) {
+									} else if (obj.optString("__dataType")
+											.equals("Picture")) {
 
-									} else if (obj.optString("__dataType").equals("ParentProject")) {
+									} else if (obj.optString("__dataType")
+											.equals("ParentProject")) {
 										ParentProject parentProject = new ParentProject();
 										parentProject.loadFromJSON(obj);
 										parentProject.save();
-									} else if (obj.optString("__dataType").equals("FriendCategory")) {
+									} else if (obj.optString("__dataType")
+											.equals("FriendCategory")) {
 										FriendCategory friendCategory = new FriendCategory();
 										friendCategory.loadFromJSON(obj);
 										friendCategory.save();
-									} else if (obj.optString("__dataType").equals("Project")) {
+									} else if (obj.optString("__dataType")
+											.equals("Project")) {
 										Project project = new Project();
 										project.loadFromJSON(obj);
 										project.save();
-									} else if (obj.optString("__dataType").equals("MessageBox")) {
+									} else if (obj.optString("__dataType")
+											.equals("MessageBox")) {
 										MessageBox messageBox = new MessageBox();
 										messageBox.loadFromJSON(obj);
 										messageBox.save();
