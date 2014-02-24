@@ -97,7 +97,7 @@ public class MoneyIncomeListFragment extends HyjUserListFragment {
 			MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
 			HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 			moneyIncome.delete();
-			moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyIncome.getAmount());
+			moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncome.getAmount());
 			moneyAccountEditor.save();
 			
 		    HyjUtil.displayToast("收入删除成功");
