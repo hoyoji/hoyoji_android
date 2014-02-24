@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    
+   <string name="moneyBorrowFormFragment_title_addnew">新增借入</string>
+   <string name="moneyBorrowFormFragment_title_edit">修改借入</string>
+   
+   <string name="moneyBorrowFormFragment_textView_picture">图片</string>
+   <string name="moneyBorrowFormFragment_editText_hint_picture">请导入图片</string>
+   
+   <string name="moneyBorrowFormFragment_textView_date">时间</string>
+   <string name="moneyBorrowFormFragment_editText_hint_date">请选择时间</string>
+   
+   <string name="moneyBorrowFormFragment_textView_amount">金额</string>
+   <string name="moneyBorrowFormFragment_editText_hint_amount">请输入金额</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_negative_amount">金额不能为负数</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
+   
+   <string name="moneyBorrowFormFragment_textView_returnDate">还款时间</string>
+   <string name="moneyBorrowFormFragment_editText_hint_returnDate">请选择还款时间</string>
+   
+   <string name="moneyBorrowFormFragment_textView_moneyAccount">账户</string>
+   <string name="moneyBorrowFormFragment_editText_hint_moneyAccount">请选择账户</string>
+   
+   <string name="moneyBorrowFormFragment_textView_project">项目</string>
+   <string name="moneyBorrowFormFragment_editText_hint_project">请选择项目</string>
+   
+   <string name="moneyBorrowFormFragment_textView_exchangeRate">汇率</string>
+   <string name="moneyBorrowFormFragment_editText_hint_exchangeRate">请输入汇率</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_zero_exchangeRate">汇率不能为0</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_negative_exchangeRate">汇率不能为负数</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_beyondMAX_exchangeRate">汇率超出范围</string>
+   
+   <string name="moneyBorrowFormFragment_textView_friend">债权人方</string>
+   <string name="moneyBorrowFormFragment_editText_hint_friend">无债权人</string>
+   
+   <string name="moneyBorrowFormFragment_textView_remark">备注</string>
+   <string name="moneyBorrowFormFragment_editText_hint_remark">无备注</string>
+    
+   <string name="moneyBorrowFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
+   <string name="moneyBorrowFormFragment_toast_select_currency">请先选择账户和项目</string> 
+    
+</resources>
