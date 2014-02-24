@@ -67,6 +67,9 @@ public class ParentProject extends HyjModel {
 	}
 
 	public Project getParentProject(){
+		if(mParentProjectId == null){
+			return null;
+		}
 		return (Project) getModel(Project.class, mParentProjectId);
 	}
 

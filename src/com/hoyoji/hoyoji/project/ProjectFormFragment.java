@@ -208,7 +208,12 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		}
 		
 		public String toString(){
-			return mParentProject.getParentProject().getName();
+			Project parentProject = mParentProject.getParentProject();
+			if(parentProject != null){
+				return parentProject.getName();
+			} else {
+				return "";
+			}
 		}
 	}
 	

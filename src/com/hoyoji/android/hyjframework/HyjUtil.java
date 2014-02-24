@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -241,5 +244,11 @@ public class HyjUtil {
 					return null;
 				}
 			}
+		}
+		
+		public static String formatDateToIOS(Date date){
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+			return dateFormat.format(date);
 		}
 }
