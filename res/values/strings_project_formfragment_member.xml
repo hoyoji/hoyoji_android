@@ -9,6 +9,7 @@
    
    <string name="memberFormFragment_textView_friend">好友名称</string>
    <string name="memberFormFragment_editText_hint_friend">请选择共享好友</string>
+   <string name="memberFormFragment_toast_cannot_select_local_friend">不能添加共享给本地好友</string>
     
    <string name="memberFormFragment_textView_sharePercentageType">占股类型</string>
    <string name="memberFormFragment_editText_hint_sharePercentageType">请选择占股类型</string>
