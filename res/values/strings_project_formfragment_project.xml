@@ -16,5 +16,8 @@
    
    <string name="projectFormFragment_checkBox_autoApportion">自动分摊</string>
    <string name="projectFormFragment_checkBox_hint_autoApportion">新增账务时，账务金额在成员间自动分摊</string>
-    
+   
+   <string name="projectFormFragment_parentProject_topProject">顶级项目</string>
+  
+   
 </resources>

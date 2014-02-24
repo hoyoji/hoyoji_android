@@ -1679,7 +1679,7 @@ containing a value of this type.
         public static final int homeListFragment_action_sync=0x7f0b0092;
         /**  Strings related to login 
          */
-        public static final int imageField_cannot_save_picture=0x7f0b0150;
+        public static final int imageField_cannot_save_picture=0x7f0b0151;
         public static final int loginActivity_action_forgot_password=0x7f0b0025;
         public static final int loginActivity_action_sign_in=0x7f0b0022;
         public static final int loginActivity_alert_require_login=0x7f0b002b;
@@ -1728,8 +1728,8 @@ containing a value of this type.
         public static final int memberFormFragment_textView_sharePercentageType=0x7f0b012e;
         public static final int memberFormFragment_title_addnew=0x7f0b0129;
         public static final int memberFormFragment_title_edit=0x7f0b012a;
-        public static final int memberListFragment_action_member_addnew=0x7f0b014c;
-        public static final int memberListFragment_title=0x7f0b014b;
+        public static final int memberListFragment_action_member_addnew=0x7f0b014d;
+        public static final int memberListFragment_title=0x7f0b014c;
         public static final int moneyAccountFormFragment_editText_hint_accountNumber=0x7f0b0120;
         public static final int moneyAccountFormFragment_editText_hint_accountType=0x7f0b011e;
         public static final int moneyAccountFormFragment_editText_hint_bankAddress=0x7f0b0122;
@@ -1898,14 +1898,15 @@ containing a value of this type.
         public static final int projectFormFragment_editText_hint_parentProject=0x7f0b0146;
         public static final int projectFormFragment_editText_hint_projectCurrency=0x7f0b0148;
         public static final int projectFormFragment_editText_hint_projectName=0x7f0b0144;
+        public static final int projectFormFragment_parentProject_topProject=0x7f0b014b;
         public static final int projectFormFragment_textView_parentProject=0x7f0b0145;
         public static final int projectFormFragment_textView_projectCurrency=0x7f0b0147;
         public static final int projectFormFragment_textView_projectName=0x7f0b0143;
         public static final int projectFormFragment_title_addnew=0x7f0b0141;
         public static final int projectFormFragment_title_edit=0x7f0b0142;
-        public static final int projectListFragment_action_project_addnew=0x7f0b014d;
-        public static final int projectListFragment_title_select_parent_project=0x7f0b014f;
-        public static final int projectListFragment_title_select_project=0x7f0b014e;
+        public static final int projectListFragment_action_project_addnew=0x7f0b014e;
+        public static final int projectListFragment_title_select_parent_project=0x7f0b0150;
+        public static final int projectListFragment_title_select_project=0x7f0b014f;
         public static final int registerActivity_action_register=0x7f0b0036;
         public static final int registerActivity_editText_hint_password1=0x7f0b003f;
         public static final int registerActivity_editText_hint_password2=0x7f0b0040;
