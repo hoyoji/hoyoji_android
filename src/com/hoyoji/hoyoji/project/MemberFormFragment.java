@@ -184,7 +184,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	private void fillData() {
 		ProjectShareAuthorization modelCopy = mProjectShareAuthorizationEditor.getModelCopy();
 		modelCopy.setSharePercentage(mNumericFieldSharePercentage.getNumber());
-		modelCopy.setSharePercentageType(this.mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fix");
+		modelCopy.setSharePercentageType(this.mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
 		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
