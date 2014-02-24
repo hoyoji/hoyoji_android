@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -141,5 +142,8 @@ public class HyjNumericField extends LinearLayout {
 	
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
+	}
+	public void addEditTextChangeListener(TextWatcher watcher){
+		mEditTextEdit.addTextChangedListener(watcher);
 	}
 }
