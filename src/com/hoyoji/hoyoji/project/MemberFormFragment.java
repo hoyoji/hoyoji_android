@@ -258,7 +258,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
             		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
             		 long _id = data.getLongExtra("MODEL_ID", -1);
  	         		 Friend friend = Friend.load(Friend.class, _id);
- 	         		 if(friend.getFriendUser() != null){
+ 	         		 if(friend.getFriendUserId() != null){
  	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
  	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
  	         		 } else {

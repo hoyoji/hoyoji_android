@@ -60,6 +60,9 @@ public class Friend extends HyjModel {
 	}
 
 	public User getFriendUser(){
+		if(mFriendUserId == null){
+			return null;
+		}
 		return (User) getModel(User.class, mFriendUserId);
 	}
 	
