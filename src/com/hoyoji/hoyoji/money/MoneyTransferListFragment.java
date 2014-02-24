@@ -95,10 +95,21 @@ public class MoneyTransferListFragment extends HyjUserListFragment {
 				
 				MoneyTransfer moneyTransfer = MoneyTransfer.load(MoneyTransfer.class, id);
 				MoneyAccount transferOut = moneyTransfer.getTransferOut();
-				HyjModelEditor<MoneyAccount> moneyAccountEditor = transferOut.newModelEditor();
+				MoneyAccount transferIn = moneyTransfer.getTransferIn();
+				
+				HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
+				HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
+				
 				moneyTransfer.delete();
-				moneyAccountEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
-				moneyAccountEditor.save();
+				
+				if(transferOut != null){
+					transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
+					transferOutEditor.save();
+				}
+				if(transferIn != null){
+					transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
+					transferInEditor.save();
+				}
 				
 			    HyjUtil.displayToast("转账删除成功");
 			    ActiveAndroid.setTransactionSuccessful();
