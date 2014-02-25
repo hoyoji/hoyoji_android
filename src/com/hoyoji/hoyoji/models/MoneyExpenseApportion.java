@@ -12,7 +12,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyExpenseApportion", id = BaseColumns._ID)
-public class MoneyExpenseApportion extends HyjModel{
+public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
@@ -169,7 +169,7 @@ public class MoneyExpenseApportion extends HyjModel{
 	}
 	
 	@Override
-	public void validate(HyjModelEditor<?> modelEditor) {
+	public void validate(HyjModelEditor<? extends HyjModel> modelEditor) {
 		if(this.getAmount() == null){
 			modelEditor.setValidationError("amount",R.string.moneyExpenseFormFragment_editText_hint_amount);
 		}else if(this.getAmount() < 0){
@@ -187,5 +187,26 @@ public class MoneyExpenseApportion extends HyjModel{
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}
+
+
+	@Override
+	public Project getProject() {
+		this.getMoneyExpense().getProject();
+		return null;
+	}
+
+	@Override
+	public User getFriendUser() {
+		if(this.mFriendUserId != null){
+			return HyjModel.getModel(User.class, this.mFriendUserId);
+		}
+		return null;
+	}
+
+	@Override
+	public ProjectShareAuthorization getProjectShareAuthorization() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -123,8 +123,8 @@ public class MoneyExpense extends HyjModel{
 	public List<Picture> getPictures(){
 		return getMany(Picture.class, "recordId");
 	}
-	
-	public List<MoneyExpenseApportion> getExpenseApportions(){
+
+	public List<MoneyExpenseApportion> getApportions(){
 		return getMany(MoneyExpenseApportion.class, "moneyExpenseId");
 	}
 	
