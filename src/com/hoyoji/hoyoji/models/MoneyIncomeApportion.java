@@ -96,9 +96,9 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		this.mFriendUserId = mFriendUserId;
 	}
 	
-	public Friend getFriend(){
-		return getModel(Friend.class, mFriendUserId);
-	}
+//	public Friend getFriend(){
+//		return getModel(Friend.class, mFriendUserId);
+//	}
 	
 	public String getApportionType() {
 		return mApportionType;
@@ -190,7 +190,6 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}
 
 
-	@Override
 	public Project getProject() {
 		this.getMoneyIncome().getProject();
 		return null;
@@ -204,7 +203,6 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		return null;
 	}
 
-	@Override
 	public ProjectShareAuthorization getProjectShareAuthorization() {
 		// TODO Auto-generated method stub
 		return null;

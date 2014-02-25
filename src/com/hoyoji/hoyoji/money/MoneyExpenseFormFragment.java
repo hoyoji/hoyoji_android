@@ -4,7 +4,10 @@ import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -36,6 +39,7 @@ import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -52,7 +56,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
-	private MoneyApportionField<MoneyExpenseApportion> mApportionFieldApportions = null;
+	private MoneyApportionField mApportionFieldApportions = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
@@ -81,7 +85,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			moneyExpense =  new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyExpense = new MoneyExpense();
-			
 		}
 		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		
@@ -89,8 +92,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
 		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseFormFragment_apportionField);	
-		mApportionFieldApportions.setApportions(moneyExpense.getApportions());
-		
+		if(modelId != -1){
+			mApportionFieldApportions.setApportions(moneyExpense.getApportions(), moneyExpense.getProjectId());
+		} else {
+			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+			apportion.setAmount(moneyExpense.getAmount0());
+			apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+			apportion.setMoneyExpenseId(moneyExpense.getId());
+			mApportionFieldApportions.addApportion(apportion, moneyExpense.getProjectId(), ApportionItem.NEW);
+		}
+
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyExpense.getDate());
@@ -98,6 +109,21 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyExpense.getAmount());
+		mNumericAmount.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+		});
+		
 		oldAmount = moneyExpense.getAmount0();
 		
 		oldMoneyAccount = moneyExpense.getMoneyAccount();
@@ -212,10 +238,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-				apportion.setAmount(800.0);
+				apportion.setAmount(0.0);
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				apportion.setMoneyExpenseId(moneyExpense.getId());
-				mApportionFieldApportions.addApportion(apportion);
+				mApportionFieldApportions.addApportion(apportion, mSelectorFieldProject.getModelId(), ApportionItem.NEW);
+				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
 			}
 		});
 		
@@ -307,26 +334,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		} else {
 			try {
 				ActiveAndroid.beginTransaction();
-				HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
-				int count = adapter.getCount();
-				boolean mainPicSet = false;
-				for(int i = 0; i < count; i++){
-					PictureItem pi = adapter.getItem(i);
-					if(pi.getState() == PictureItem.NEW){
-						Picture newPic = pi.getPicture();
-						newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
-						newPic.setRecordType("Picture");
-						newPic.save();
-					} else if(pi.getState() == PictureItem.DELETED){
-						pi.getPicture().delete();
-					} else if(pi.getState() == PictureItem.CHANGED){
-
-					}
-					if(!mainPicSet && pi.getPicture() != null){
-						mainPicSet = true;
-						mMoneyExpenseEditor.getModelCopy().setPicture(pi.getPicture());
-					}
-				}
+				
+				savePictures();
+				
+				saveApportions();
 				
 				mMoneyExpenseEditor.save();
 				
@@ -367,6 +378,50 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 	}	
 
+	 private void savePictures(){
+			HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
+			int count = adapter.getCount();
+			boolean mainPicSet = false;
+			for(int i = 0; i < count; i++){
+				PictureItem pi = adapter.getItem(i);
+				if(pi.getState() == PictureItem.NEW){
+					Picture newPic = pi.getPicture();
+					newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
+					newPic.setRecordType("Picture");
+					newPic.save();
+				} else if(pi.getState() == PictureItem.DELETED){
+					pi.getPicture().delete();
+				} else if(pi.getState() == PictureItem.CHANGED){
+
+				}
+				if(!mainPicSet && pi.getPicture() != null){
+					mainPicSet = true;
+					mMoneyExpenseEditor.getModelCopy().setPicture(pi.getPicture());
+				}
+			}
+	 }
+	 
+	 private void saveApportions(){
+			MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
+			int count = adapter.getCount();
+			for(int i = 0; i < count; i++){
+				
+				ApportionItem<MoneyApportion> pi = adapter.getItem(i);
+				MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
+				HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
+				
+				if(pi.getState() == ApportionItem.NEW ||
+						pi.getState() == PictureItem.CHANGED){
+				
+					pi.saveToCopy(apportionEditor.getModelCopy());
+					apportionEditor.save();
+				
+				} else if(pi.getState() == PictureItem.DELETED){
+					apportion.delete();
+				}
+			}
+	 }
+	 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){

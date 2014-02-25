@@ -103,7 +103,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mNumericFieldSharePercentage.setNumber(projectShareAuthorization.getSharePercentage());
 		mNumericFieldSharePercentage.setEnabled(!projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
 		if(modelId == -1){
-			calculatePercentage(mProjectShareAuthorizationEditor.getModelCopy());
+			setSharePercentage(mProjectShareAuthorizationEditor.getModelCopy());
 		}
 		
 		mBooleanFieldSharePercentageType = (HyjBooleanView) getView().findViewById(R.id.memberFormFragment_textField_sharePercentageType);
@@ -114,7 +114,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				if(!mBooleanFieldSharePercentageType.getBoolean()){
 					mBooleanFieldSharePercentageType.setBoolean(true);
 					mNumericFieldSharePercentage.setEnabled(false);
-					calculatePercentage(mProjectShareAuthorizationEditor.getModelCopy());
+					setSharePercentage(mProjectShareAuthorizationEditor.getModelCopy());
 				} else {
 					mBooleanFieldSharePercentageType.setBoolean(false);
 					mNumericFieldSharePercentage.setEnabled(true);
@@ -202,7 +202,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
 	}
 	
-	private void calculatePercentage(
+	private void setSharePercentage(
 			ProjectShareAuthorization projectShareAuthorization) {
 		Double fixedPercentageTotal = 0.0;
 //		Double averagePercentageTotal = 0.0;

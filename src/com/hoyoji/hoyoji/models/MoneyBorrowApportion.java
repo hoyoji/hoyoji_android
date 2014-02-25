@@ -196,13 +196,11 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 		super.save();
 	}
 
-	@Override
 	public Project getProject() {
 		this.getMoneyBorrow().getProject();
 		return null;
 	}
 
-	@Override
 	public ProjectShareAuthorization getProjectShareAuthorization() {
 		return null;
 	}

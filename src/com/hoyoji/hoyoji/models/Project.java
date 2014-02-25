@@ -190,6 +190,10 @@ public class Project extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
+	public List<ProjectShareAuthorization> getShareAuthorizations(){
+		return this.getMany(ProjectShareAuthorization.class, "projectId");
+	}
+	
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){

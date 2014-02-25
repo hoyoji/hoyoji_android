@@ -44,7 +44,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	private final static int GET_CURRENCY_ID = 2;
 	
-	private HyjModelEditor mProjectEditor = null;
+	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
 	private HyjListField mListFieldParentProject = null;
 	private HyjSelectorField mSelectorFieldProjectCurrency = null;

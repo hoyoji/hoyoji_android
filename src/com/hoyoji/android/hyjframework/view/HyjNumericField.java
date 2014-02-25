@@ -113,6 +113,10 @@ public class HyjNumericField extends LinearLayout {
 		mEditTextEdit.setError(error);
 	}
 	
+	public void addTextChangedListener(TextWatcher watcher){
+		mEditTextEdit.addTextChangedListener(watcher);
+	}
+	
 	public void setText(String text){
 		mEditTextEdit.setText(text);
 		if(text != null){
