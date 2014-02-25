@@ -81,7 +81,10 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyIncomeFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyIncome.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);	
+		if(modelId != -1){
+			mDateTimeFieldDate.setText(moneyIncome.getDate());
+		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyIncome.getAmount());

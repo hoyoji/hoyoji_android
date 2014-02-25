@@ -85,7 +85,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
+		if(modelId != -1){
+			mDateTimeFieldDate.setText(moneyExpense.getDate());
+		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyExpense.getAmount());

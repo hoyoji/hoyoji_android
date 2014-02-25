@@ -97,30 +97,31 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyTransferFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyTransfer.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyTransferFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyTransferFormFragment_textField_date);	
+		if(modelId != -1){
+			mDateTimeFieldDate.setText(moneyTransfer.getDate());
+		}
 		
 		mNumericTransferOutAmount = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferOutAmount);		
 		mNumericTransferOutAmount.setNumber(moneyTransfer.getTransferOutAmount());
 		oldTransferOutAmount = moneyTransfer.getTransferOutAmount0();
-		mNumericTransferOutAmount.addEditTextChangeListener(new TextWatcher(){
+		mNumericTransferOutAmount.getEditText().addTextChangedListener(new TextWatcher(){
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				// TODO Auto-generated method stub
-				if(s!= null && mNumericExchangeRate.getNumber() != null){
+				if(s!= null && s.length()>0 && mNumericExchangeRate.getNumber() != null){
 					mNumericTransferInAmount.setNumber(Double.valueOf(s.toString()) * mNumericExchangeRate.getNumber());
 				}else{
 					mNumericTransferInAmount.setNumber(null);
@@ -144,6 +145,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		}); 
 		
 		mViewSeparatorTransferOut = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferOut);
+		
 		
 		oldTransferOut = moneyTransfer.getTransferOut();
 		mSelectorFieldTransferOut = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_transferOut);
@@ -338,7 +340,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
 			modelCopy.setTransferInFriend(transferInFriend);
 		}
-		
+		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
@@ -422,40 +424,54 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				    	newTransferOutEditor.save();
 				    }
 				    if(newTransferIn != null){
-				    	newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() - mNumericTransferInAmount.getNumber());
+				    	newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + mNumericTransferInAmount.getNumber());
 				    	newTransferInEditor.save();
 				    }
 				}else{
 					HyjModelEditor<MoneyAccount> oldTransferOutEditor = oldTransferOut.newModelEditor();
 					HyjModelEditor<MoneyAccount> oldTransferInEditor = oldTransferIn.newModelEditor();
-					if(oldTransferOut != null && newTransferOut == null){
-						oldTransferOutEditor.getModelCopy().setCurrentBalance(oldTransferOut.getCurrentBalance() + oldTransferOutAmount);
-						oldTransferOutEditor.save();
-					}else if(oldTransferOut == null && newTransferOut != null){
-						newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
+//					if(oldTransferOut != null && newTransferOut == null){
+//						oldTransferOutEditor.getModelCopy().setCurrentBalance(oldTransferOut.getCurrentBalance() + oldTransferOutAmount);
+//						oldTransferOutEditor.save();
+//					}else if(oldTransferOut == null && newTransferOut != null){
+//						newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
+//						newTransferOutEditor.save();
+//					}else if(oldTransferOut != null && newTransferOut != null){
+//						if(oldTransferOut.getId().equals(newTransferIn.getId())){
+//							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() + oldTransferOutAmount - mNumericTransferOutAmount.getNumber());
+//							newTransferOutEditor.save();
+//						}else{
+//							oldTransferOutEditor.getModelCopy().setCurrentBalance(oldTransferOut.getCurrentBalance() + oldTransferOutAmount);
+//							oldTransferOutEditor.save();
+//							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
+//							newTransferOutEditor.save();
+//						}
+//					}
+					
+					if(oldTransferOut.getId().equals(newTransferOut.getId())){
+						newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() + oldTransferOutAmount - mNumericTransferOutAmount.getNumber());
 						newTransferOutEditor.save();
-					}else if(oldTransferOut != null && newTransferOut != null){
-						if(oldTransferOut.getId().equals(newTransferIn.getId())){
-							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() + oldTransferOutAmount - mNumericTransferOutAmount.getNumber());
-							newTransferOutEditor.save();
-						}else{
+					}else{
+						if(oldTransferOut != null){
 							oldTransferOutEditor.getModelCopy().setCurrentBalance(oldTransferOut.getCurrentBalance() + oldTransferOutAmount);
 							oldTransferOutEditor.save();
+						}
+						if(newTransferOut != null){
 							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
 							newTransferOutEditor.save();
 						}
 					}
 					
 					if(oldTransferIn.getId().equals(newTransferIn.getId())){
-						newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + oldTransferInAmount - mNumericTransferInAmount.getNumber());
+						newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() - oldTransferInAmount + mNumericTransferInAmount.getNumber());
 						newTransferInEditor.save();
 					}else{
 						if(oldTransferIn != null){
-							oldTransferInEditor.getModelCopy().setCurrentBalance(oldTransferIn.getCurrentBalance() + oldTransferInAmount);
+							oldTransferInEditor.getModelCopy().setCurrentBalance(oldTransferIn.getCurrentBalance() - oldTransferInAmount);
 							oldTransferInEditor.save();
 						}
 						if(newTransferIn != null){
-							newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() - mNumericTransferInAmount.getNumber());
+							newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + mNumericTransferInAmount.getNumber());
 							newTransferInEditor.save();
 						}
 					}
