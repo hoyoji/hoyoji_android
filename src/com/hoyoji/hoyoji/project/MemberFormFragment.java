@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -26,6 +28,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_Friend_ID = 2;
 	
 	private HyjModelEditor<ProjectShareAuthorization> mProjectShareAuthorizationEditor = null;
+	private List<ProjectShareAuthorization> mProjectShareAuthorizations;
 	private HyjTextField mTextFieldProjectName = null;
 	private HyjNumericField mNumericFieldSharePercentage = null;
 	private HyjBooleanView mBooleanFieldSharePercentageType = null;
@@ -70,34 +73,54 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		ProjectShareAuthorization projectShareAuthorization;
+		final ProjectShareAuthorization _projectShareAuthorization;
+		Project project;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Long projectId = intent.getLongExtra("PROJECT_ID", -1);
 		if(modelId != -1){
-			projectShareAuthorization =  new Select().from(ProjectShareAuthorization.class).where("_id=?", modelId).executeSingle();
+			_projectShareAuthorization =  new Select().from(ProjectShareAuthorization.class).where("_id=?", modelId).executeSingle();
+			project = _projectShareAuthorization.getProject();
 		} else {
-			projectShareAuthorization = new ProjectShareAuthorization();
-			Project project = Project.load(Project.class, projectId);
-			projectShareAuthorization.setProjectId(project.getId());
+			_projectShareAuthorization = new ProjectShareAuthorization();
+			project = Project.load(Project.class, projectId);
+			_projectShareAuthorization.setProjectId(project.getId());
+			_projectShareAuthorization.setState("Accept");
+		}
+
+		mProjectShareAuthorizationEditor = _projectShareAuthorization.newModelEditor();
+		final ProjectShareAuthorization projectShareAuthorization = mProjectShareAuthorizationEditor.getModelCopy();
+		
+		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", project.getId(), "Delete", projectShareAuthorization.getId()).execute();
+		mProjectShareAuthorizations.add(projectShareAuthorization);
+		if(modelId == -1){
+			calculatePercentage(projectShareAuthorization);
 		}
 		
-		mProjectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.memberFormFragment_textField_projectName);
-		mTextFieldProjectName.setText(projectShareAuthorization.getProject().getDisplayName());
+		mTextFieldProjectName.setText(project.getDisplayName());
 		mTextFieldProjectName.setEnabled(false);
 		
 		mNumericFieldSharePercentage = (HyjNumericField) getView().findViewById(R.id.memberFormFragment_textField_sharePercentage);
 		mNumericFieldSharePercentage.setNumber(projectShareAuthorization.getSharePercentage());
+		mNumericFieldSharePercentage.setEnabled(!projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
 		
 		mBooleanFieldSharePercentageType = (HyjBooleanView) getView().findViewById(R.id.memberFormFragment_textField_sharePercentageType);
-		mBooleanFieldSharePercentageType.setBoolean(projectShareAuthorization.getSharePercentageType().equals("Average"));
+		mBooleanFieldSharePercentageType.setBoolean(projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
 		mBooleanFieldSharePercentageType.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mBooleanFieldSharePercentageType.setBoolean(!mBooleanFieldSharePercentageType.getBoolean());
+				if(!mBooleanFieldSharePercentageType.getBoolean()){
+					mBooleanFieldSharePercentageType.setBoolean(true);
+					mNumericFieldSharePercentage.setEnabled(false);
+					calculatePercentage(projectShareAuthorization);
+					mNumericFieldSharePercentage.setNumber(projectShareAuthorization.getSharePercentage());
+				} else {
+					mBooleanFieldSharePercentageType.setBoolean(false);
+					mNumericFieldSharePercentage.setEnabled(true);
+				}
 			}
 		});
 		
@@ -181,6 +204,21 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
 	}
 	
+	private void calculatePercentage(
+			ProjectShareAuthorization projectShareAuthorization) {
+		Double fixedPercentageTotal = 0.0;
+//		Double averagePercentageTotal = 0.0;
+		int numOfAverage = 0;
+		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+			if(!psa.getSharePercentageType().equalsIgnoreCase("Average")){
+				fixedPercentageTotal += psa.getSharePercentage();
+			} else {
+				numOfAverage++;
+			}
+		}
+		projectShareAuthorization.setSharePercentage((100.0 - Math.min(fixedPercentageTotal, 100)) / numOfAverage);
+	}
+
 	private void fillData() {
 		ProjectShareAuthorization modelCopy = mProjectShareAuthorizationEditor.getModelCopy();
 		modelCopy.setSharePercentage(mNumericFieldSharePercentage.getNumber());
@@ -234,12 +272,14 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		fillData();
 
 		mProjectShareAuthorizationEditor.validate();
+		validateFixedPercentageTotal(mProjectShareAuthorizationEditor);
 		
 		if(mProjectShareAuthorizationEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
 			try {
 				ActiveAndroid.beginTransaction();
+				saveAverageTotal();				
 				mProjectShareAuthorizationEditor.save();
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
@@ -249,16 +289,67 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			}
 		}
 	}	
-	
+	 
+	 private void saveAverageTotal(){
+			double fixedPercentageTotal = 0.0;
+			int numOfAverage = 0;
+			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
+					fixedPercentageTotal += psa.getSharePercentage();
+				} else {
+					numOfAverage++;
+				}
+			}
+			double average = (100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage;
+			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+				if(psa.getSharePercentageType().equalsIgnoreCase("Average")){
+					if(psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId())){
+						mProjectShareAuthorizationEditor.getModelCopy().setSharePercentage(average);
+					} else {
+						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
+						editor.getModelCopy().setSharePercentage(average);
+						editor.save();
+					}
+				}
+			}
+	 }
+	 
+	 private double validateFixedPercentageTotal(HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor) {
+			if(projectShareAuthorizationEditor.getModelCopy().getSharePercentageType().equalsIgnoreCase("Average")){
+				return 0.0;
+			}
+			if(projectShareAuthorizationEditor.getValidationError("sharePercentage") != null){
+				return 0.0;
+			}
+			
+			Double fixedPercentageTotal = 0.0;
+			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
+					fixedPercentageTotal += psa.getSharePercentage();
+				}
+			}
+			if(fixedPercentageTotal > 100.00){
+				projectShareAuthorizationEditor.setValidationError("sharePercentage", this.getActivity().getString(R.string.memberFormFragment_editText_error_sharePercentage));
+			} else {
+				projectShareAuthorizationEditor.removeValidationError("sharePercentage");
+			}
+			return fixedPercentageTotal;
+		}
+	 
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
               case GET_Friend_ID:
             	 if(resultCode == Activity.RESULT_OK){
-            		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
             		 long _id = data.getLongExtra("MODEL_ID", -1);
  	         		 Friend friend = Friend.load(Friend.class, _id);
  	         		 if(friend.getFriendUserId() != null){
+ 	         			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+	 	       				if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_cannot_select_local_friend_already_exists);
+	 	       					return;
+	 	       				}
+ 	         			}
  	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
  	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
  	         		 } else {
