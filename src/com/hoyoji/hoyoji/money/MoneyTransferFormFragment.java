@@ -97,7 +97,10 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyTransferFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyTransfer.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyTransferFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyTransferFormFragment_textField_date);	
+		if(modelId != -1){
+			mDateTimeFieldDate.setText(moneyTransfer.getDate());
+		}
 		
 		mNumericTransferOutAmount = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferOutAmount);		
 		mNumericTransferOutAmount.setNumber(moneyTransfer.getTransferOutAmount());

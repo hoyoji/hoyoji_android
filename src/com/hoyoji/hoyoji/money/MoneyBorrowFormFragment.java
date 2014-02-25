@@ -23,12 +23,11 @@ import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
-import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -45,7 +44,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private Double oldAmount;
 	private MoneyAccount oldMoneyAccount;
 	
-	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
+	private HyjModelEditor<MoneyBorrow> mMoneyBorrowEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
@@ -53,7 +52,6 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
-	private HyjTextField mTextFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
@@ -62,35 +60,35 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_formfragment_moneyexpense;
+		return R.layout.money_formfragment_moneyborrow;
 	}
 	 
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyExpense moneyExpense;
+		MoneyBorrow moneyBorrow;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyExpense =  new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
+			moneyBorrow =  new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
 		} else {
-			moneyExpense = new MoneyExpense();
+			moneyBorrow = new MoneyBorrow();
 			
 		}
-		mMoneyExpenseEditor = moneyExpense.newModelEditor();
+		mMoneyBorrowEditor = moneyBorrow.newModelEditor();
 		
-		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
-		mImageFieldPicture.setImages(moneyExpense.getPictures());
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyBorrowFormFragment_imageField_picture);		
+		mImageFieldPicture.setImages(moneyBorrow.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_date);		
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);		
-		mNumericAmount.setNumber(moneyExpense.getAmount());
-		oldAmount = moneyExpense.getAmount0();
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_amount);		
+		mNumericAmount.setNumber(moneyBorrow.getAmount());
+		oldAmount = moneyBorrow.getAmount0();
 		
-		oldMoneyAccount = moneyExpense.getMoneyAccount();
-		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_moneyAccount);
+		oldMoneyAccount = moneyBorrow.getMoneyAccount();
+		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_moneyAccount);
 		
 		if(oldMoneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(oldMoneyAccount.getId());
@@ -103,8 +101,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
-		Project project = moneyExpense.getProject();
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_project);
+		Project project = moneyBorrow.getProject();
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_project);
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
@@ -118,17 +116,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		});	
 		
 		
-		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_exchangeRate);		
-		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_exchangeRate);		
+		mNumericExchangeRate.setNumber(moneyBorrow.getExchangeRate());
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyExpenseFormFragment_separatorField_exchange);
-		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyExpenseFormFragment_linearLayout_exchangeRate);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyBorrowFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyBorrowFormFragment_linearLayout_exchangeRate);
 		
-		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
-		mTextFieldMoneyExpenseCategory.setText(moneyExpense.getMoneyExpenseCategory());
-		
-		Friend friend = moneyExpense.getFriend();
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_friend);
+		Friend friend = moneyBorrow.getFriend();
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_friend);
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
@@ -142,10 +137,10 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		}); 
 		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyExpense.getRemark());
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_remark);
+		mRemarkFieldRemark.setText(moneyBorrow.getRemark());
 		
-		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);	
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyBorrowFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -153,7 +148,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_refresh_exchangeRate);	
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyBorrowFormFragment_imageButton_refresh_exchangeRate);	
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -180,16 +175,16 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 								if(object != null){
 									HyjUtil.displayToast(object.toString());
 								} else {
-									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+									HyjUtil.displayToast(R.string.moneyBorrowFormFragment_toast_cannot_refresh_rate);
 								}
 							}
 						};
 						HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
 					} else {
-						HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_select_currency);
+						HyjUtil.displayToast(R.string.moneyBorrowFormFragment_toast_select_currency);
 					}
 				}else{
-					HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_select_currency);
+					HyjUtil.displayToast(R.string.moneyBorrowFormFragment_toast_select_currency);
 				}
 			}
 		});
@@ -236,13 +231,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void fillData(){
-		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
+		MoneyBorrow modelCopy = (MoneyBorrow) mMoneyBorrowEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		modelCopy.setMoneyExpenseCategory(mTextFieldMoneyExpenseCategory.getText().toString().trim());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
@@ -261,14 +255,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
-		mDateTimeFieldDate.setError(mMoneyExpenseEditor.getValidationError("datetime"));
-		mNumericAmount.setError(mMoneyExpenseEditor.getValidationError("amount"));
-		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor.getValidationError("moneyAccount"));
-		mSelectorFieldProject.setError(mMoneyExpenseEditor.getValidationError("project"));
-		mNumericExchangeRate.setError(mMoneyExpenseEditor.getValidationError("exchangeRate"));
-		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor.getValidationError("moneyExpenseCategory"));
-		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
-		mRemarkFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
+		mDateTimeFieldDate.setError(mMoneyBorrowEditor.getValidationError("datetime"));
+		mNumericAmount.setError(mMoneyBorrowEditor.getValidationError("amount"));
+		mSelectorFieldMoneyAccount.setError(mMoneyBorrowEditor.getValidationError("moneyAccount"));
+		mSelectorFieldProject.setError(mMoneyBorrowEditor.getValidationError("project"));
+		mNumericExchangeRate.setError(mMoneyBorrowEditor.getValidationError("exchangeRate"));
+		mSelectorFieldFriend.setError(mMoneyBorrowEditor.getValidationError("friend"));
+		mRemarkFieldRemark.setError(mMoneyBorrowEditor.getValidationError("remark"));
 	}
 
 	 @Override
@@ -277,9 +270,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		mMoneyExpenseEditor.validate();
+		mMoneyBorrowEditor.validate();
 		
-		if(mMoneyExpenseEditor.hasValidationErrors()){
+		if(mMoneyBorrowEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
 			try {
@@ -291,7 +284,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					PictureItem pi = adapter.getItem(i);
 					if(pi.getState() == PictureItem.NEW){
 						Picture newPic = pi.getPicture();
-						newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
+						newPic.setRecordId(mMoneyBorrowEditor.getModel().getId());
 						newPic.setRecordType("Picture");
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
@@ -301,11 +294,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					if(!mainPicSet && pi.getPicture() != null){
 						mainPicSet = true;
-						mMoneyExpenseEditor.getModelCopy().setPicture(pi.getPicture());
+						mMoneyBorrowEditor.getModelCopy().setPicture(pi.getPicture());
 					}
 				}
 				
-				mMoneyExpenseEditor.save();
+				mMoneyBorrowEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
