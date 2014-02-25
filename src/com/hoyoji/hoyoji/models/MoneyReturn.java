@@ -121,6 +121,10 @@ public class MoneyReturn extends HyjModel{
 	public List<Picture> getPictures(){
 		return getMany(Picture.class, "recordId");
 	}
+
+	public List<MoneyReturnApportion> getApportions(){
+		return getMany(MoneyReturnApportion.class, "moneyReturnId");
+	}
 	
 	public String getDate() {
 		return mDate;

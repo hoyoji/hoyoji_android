@@ -123,6 +123,10 @@ public class MoneyLend extends HyjModel{
 		return getMany(Picture.class, "recordId");
 	}
 	
+	public List<MoneyLendApportion> getApportions(){
+		return getMany(MoneyLendApportion.class, "moneyLendId");
+	}
+	
 	public String getDate() {
 		return mDate;
 	}

@@ -1,31 +1,15 @@
 package com.hoyoji.hoyoji.money;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
-import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.Project;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.IBinder;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -33,16 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
-public class MoneyApportionField<T extends HyjModel> extends GridView {
+public class MoneyApportionField<T extends MoneyApportion> extends GridView {
 	private ImageGridAdapter mImageGridAdapter;
 	private	Resources r = getResources();
 	
 	public MoneyApportionField(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
+		int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, r.getDisplayMetrics());
 		this.setColumnWidth(px);
 		this.setNumColumns(AUTO_FIT);
 		this.setGravity(Gravity.CENTER);
@@ -69,7 +51,7 @@ public class MoneyApportionField<T extends HyjModel> extends GridView {
 	public void setApportions(List<T> apportions){
 		//List<PictureItem> pis = new ArrayList<PictureItem>();
 		for(int i=0; i < apportions.size(); i++){
-			ApportionItem pi = new ApportionItem(apportions.get(i));
+			ApportionItem<T> pi = new ApportionItem<T>(apportions.get(i));
 			mImageGridAdapter.add(pi);
 			//pis.add(pi);
 		}
@@ -80,11 +62,24 @@ public class MoneyApportionField<T extends HyjModel> extends GridView {
 		return mImageGridAdapter;
 	}
 	
-	public void addApportion(){
-
+	public void addApportion(MoneyApportion apportion){
+		ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion);
+		mImageGridAdapter.add(pi);
 	}
+	
+	public void setProjectApportions(Project project){
+//		List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
+//		for(int i=0; i < apportions.size(); i++){
+//			ApportionItem<T> pi = new ApportionItem<T>(apportions.get(i));
+//			mImageGridAdapter.add(pi);
+//		}
+	}
+	
+	public void setError(String errMsg){
 		
-	public static class ImageGridAdapter extends ArrayAdapter<ApportionItem> {
+	}
+	
+	public static class ImageGridAdapter<T extends MoneyApportion> extends ArrayAdapter<ApportionItem<T>> {
 		public ImageGridAdapter(Context context, int resource) {
 			super(context, resource);
 		}
@@ -92,7 +87,7 @@ public class MoneyApportionField<T extends HyjModel> extends GridView {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			HyjImageView iv;
-			final MoneyApportionField self = (MoneyApportionField) parent;
+			final MoneyApportionField<T> self = (MoneyApportionField<T>) parent;
 			if (convertView != null) {
 				iv = (HyjImageView) convertView;
 			} else {
@@ -103,21 +98,21 @@ public class MoneyApportionField<T extends HyjModel> extends GridView {
 				iv.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						ApportionItem pic = (ApportionItem) v.getTag();
-						HyjUtil.displayToast("Show large pic " + pic.getApportion().getId());
+						ApportionItem<T> apport = (ApportionItem<T>) v.getTag();
+						HyjUtil.displayToast("Edit Apportion " + apport.getApportion().getId());
 					}
 				});
 			}
 			
-			ApportionItem app = getItem(position);
-//			iv.setTag(app);
-//			iv.setApportion(app.getApportion());
+			ApportionItem<T> app = getItem(position);
+			iv.setTag(app);
+			iv.setImage(app.getApportion().getFriendUser().getPictureId());
 			return iv;
 		}
 
 	}
 	
-	public static class ApportionItem<T extends HyjModel> {
+	public static class ApportionItem<T extends MoneyApportion> {
 		public static final int UNCHANGED = 0;
 		public static final int NEW = 1;
 		public static final int DELETED = 2;

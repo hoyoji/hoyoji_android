@@ -31,7 +31,9 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -50,6 +52,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
+	private MoneyApportionField<MoneyExpenseApportion> mApportionFieldApportions = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
@@ -70,7 +73,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyExpense moneyExpense;
+		final MoneyExpense moneyExpense;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -84,6 +87,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
+		
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseFormFragment_apportionField);	
+		mApportionFieldApportions.setApportions(moneyExpense.getApportions());
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
 		if(modelId != -1){
@@ -199,7 +205,19 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
+		setExchangeRate();
+		
+		
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_add_apportion).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+				apportion.setAmount(800.0);
+				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				apportion.setMoneyExpenseId(moneyExpense.getId());
+				mApportionFieldApportions.addApportion(apportion);
+			}
+		});
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
