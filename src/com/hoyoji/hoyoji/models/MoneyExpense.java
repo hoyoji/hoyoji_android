@@ -362,6 +362,12 @@ public class MoneyExpense extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
+		if(this.getMoneyExpenseCategory() == null){
+			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
+		}else{
+			modelEditor.removeValidationError("moneyExpenseCategory");
+		}
+		
 		if(this.getExchangeRate() == null){
 			modelEditor.setValidationError("exchangeRate",R.string.moneyExpenseFormFragment_editText_hint_exchangeRate);
 		}else if(this.getExchangeRate() == 0){
@@ -374,26 +380,18 @@ public class MoneyExpense extends HyjModel{
 		else{
 			modelEditor.removeValidationError("exchangeRate");
 		}
-//		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
-//		}else{
-//			modelEditor.removeValidationError("moneyAccount");
-//		}
-//		if(this.getMoneyExpenseCategory() == null){
-//			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
-//		}else{
-//			modelEditor.removeValidationError("moneyExpenseCategory");
-//		}
-//		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
-//		}else{
-//			modelEditor.removeValidationError("project");
-//		}
-//		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyExpenseFormFragment_editText_hint_friend);
-//		}else{
-//			modelEditor.removeValidationError("friend");
-//		}
+		
+		if(this.getMoneyAccountId() == null){
+			modelEditor.setValidationError("moneyAccount",R.string.moneyExpenseFormFragment_editText_hint_moneyAccount);
+		}else{
+			modelEditor.removeValidationError("moneyAccount");
+		}
+		
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
 	}
 
 	@Override
