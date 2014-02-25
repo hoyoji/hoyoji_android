@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="memberListFragment_title">项目成员</string>
+    <string name="memberListFragment_action_member_addnew">新增共享好友</string>
+    
+</resources>

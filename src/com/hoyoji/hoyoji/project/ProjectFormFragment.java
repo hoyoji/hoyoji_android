@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
@@ -212,7 +213,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			if(parentProject != null){
 				return parentProject.getName();
 			} else {
-				return "";
+				return HyjApplication.getInstance().getApplicationContext().getString(R.string.projectFormFragment_parentProject_topProject);
 			}
 		}
 	}

@@ -128,6 +128,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				if(mListChildData.size() <= i){
 					mListChildData.add(null);
 					getListView().expandGroup(i);
+				} else if(getListView().collapseGroup(i)){
+					getListView().expandGroup(i);
 				}
 			}
 			adapter.notifyDataSetChanged();

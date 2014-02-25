@@ -82,7 +82,11 @@ public class Project extends HyjModel {
 	public String getName() {
 		return mName;
 	}
-
+	
+	public String getDisplayName(){
+		return getName();
+	}
+	
 	public void setName(String mName) {
 		this.mName = mName;
 	}

@@ -60,6 +60,9 @@ public class Friend extends HyjModel {
 	}
 
 	public User getFriendUser(){
+		if(mFriendUserId == null){
+			return null;
+		}
 		return (User) getModel(User.class, mFriendUserId);
 	}
 	
@@ -74,6 +77,14 @@ public class Friend extends HyjModel {
 
 	public void setId(String mId) {
 		this.mId = mId;
+	}
+
+	public String getDisplayName(){
+		if(this.getNickName() != null){
+			return this.getNickName();
+		} else {
+			return this.getFriendUser().getDisplayName();
+		}
 	}
 	
 	public String getNickName() {

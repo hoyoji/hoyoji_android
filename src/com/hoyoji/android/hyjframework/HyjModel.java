@@ -9,7 +9,13 @@ public abstract class HyjModel extends Model  implements Cloneable {
 
 	@Column(name = "_creatorId")
 	private String m_creatorId;
-
+	
+	public HyjModel(){
+		super();
+		if(HyjApplication.getInstance().getCurrentUser() != null){
+			m_creatorId = HyjApplication.getInstance().getCurrentUser().getId();
+		}
+	}
 	
 	public static <T extends HyjModel> T getModel(Class<T> modelClass, String id){
 		T entity = (T)Cache.getEntity(modelClass, id);
@@ -25,7 +31,6 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		try {
 			return (HyjModel)super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
