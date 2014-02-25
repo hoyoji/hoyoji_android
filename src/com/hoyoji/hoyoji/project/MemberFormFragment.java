@@ -323,12 +323,15 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			}
 			
 			Double fixedPercentageTotal = 0.0;
+			int numOfAverage = 0;
 			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
 				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
 					fixedPercentageTotal += psa.getSharePercentage();
+				} else {
+					numOfAverage ++;
 				}
 			}
-			if(fixedPercentageTotal > 100.00){
+			if(fixedPercentageTotal > 100.00 || (fixedPercentageTotal < 100.0 && numOfAverage == 0)){
 				projectShareAuthorizationEditor.setValidationError("sharePercentage", this.getActivity().getString(R.string.memberFormFragment_editText_error_sharePercentage));
 			} else {
 				projectShareAuthorizationEditor.removeValidationError("sharePercentage");

@@ -47,8 +47,8 @@ public class MemberListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_member,
 				null,
-				new String[] { "friendUserId", "sharePercentage", "remark" },
-				new int[] { R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark },
+				new String[] { "friendUserId", "friendUserId", "sharePercentage", "remark" },
+				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark },
 				0); 
 	}	
 
