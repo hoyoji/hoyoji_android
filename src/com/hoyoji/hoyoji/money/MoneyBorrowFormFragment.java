@@ -82,10 +82,18 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture.setImages(moneyBorrow.getPictures());
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_date);		
+		if(modelId != -1){
+			mDateTimeFieldDate.setText(moneyBorrow.getDate());
+		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyBorrow.getAmount());
 		oldAmount = moneyBorrow.getAmount0();
+		
+		mDateTimeFieldReturnDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnDate);
+		if(modelId != -1){
+			mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
+		}
 		
 		oldMoneyAccount = moneyBorrow.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_moneyAccount);
@@ -234,6 +242,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		MoneyBorrow modelCopy = (MoneyBorrow) mMoneyBorrowEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
+		modelCopy.setReturnDate(mDateTimeFieldReturnDate.getText());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
@@ -257,6 +266,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyBorrowEditor.getValidationError("datetime"));
 		mNumericAmount.setError(mMoneyBorrowEditor.getValidationError("amount"));
+		mDateTimeFieldReturnDate.setError(mMoneyBorrowEditor.getValidationError("returnDate"));
 		mSelectorFieldMoneyAccount.setError(mMoneyBorrowEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyBorrowEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyBorrowEditor.getValidationError("exchangeRate"));
@@ -317,12 +327,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
 					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - mNumericAmount.getNumber());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldAmount + mNumericAmount.getNumber());
 							
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount);
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - mNumericAmount.getNumber());
+						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldAmount);
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + mNumericAmount.getNumber());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();

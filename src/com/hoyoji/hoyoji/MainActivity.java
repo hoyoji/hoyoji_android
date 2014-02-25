@@ -21,6 +21,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
@@ -181,10 +182,10 @@ public class MainActivity extends HyjUserActivity {
     			openActivityWithFragment(MoneyTransferListFragment.class, R.string.moneyTransferListFragment_title_all, null);
     			return true;
     		}
-//    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_topup){
-//    			openActivityWithFragment(MoneyIncomeListFragment.class, R.string.moneyIncomeListFragment_title_all, null);
-//    			return true;
-//    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_borrow){
+    			openActivityWithFragment(MoneyBorrowListFragment.class, R.string.moneyBorrowListFragment_title_all, null);
+    			return true;
+    		}
 
         return super.onOptionsItemSelected(item);
     }

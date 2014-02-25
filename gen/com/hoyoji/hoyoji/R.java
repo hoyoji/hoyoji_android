@@ -1291,7 +1291,7 @@ containing a value of this type.
         public static final int memberFormFragment_textField_projectName=0x7f0600cf;
         public static final int memberFormFragment_textField_sharePercentage=0x7f0600d1;
         public static final int memberFormFragment_textField_sharePercentageType=0x7f0600d2;
-        public static final int memberListFragment_action_member_addnew=0x7f060116;
+        public static final int memberListFragment_action_member_addnew=0x7f060117;
         public static final int memberListItem_expenseTotal=0x7f0600f5;
         public static final int memberListItem_expenseTotal_title=0x7f0600f6;
         public static final int memberListItem_incomeTotal=0x7f0600f8;
@@ -1308,7 +1308,7 @@ containing a value of this type.
         public static final int moneyAccountFormFragment_textField_currentBalance=0x7f0600c8;
         public static final int moneyAccountFormFragment_textField_name=0x7f0600c6;
         public static final int moneyAccountFormFragment_textField_remark=0x7f0600cc;
-        public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f060115;
+        public static final int moneyAccountListFragment_action_moneyAccount_addnew=0x7f060116;
         public static final int moneyAccountListItem_currentBalance=0x7f0600ce;
         public static final int moneyAccountListItem_name=0x7f0600cd;
         public static final int moneyBorrowFormFragment_imageButton_refresh_exchangeRate=0x7f06008d;
@@ -1325,6 +1325,7 @@ containing a value of this type.
         public static final int moneyBorrowFormFragment_textField_exchangeRate=0x7f06008c;
         public static final int moneyBorrowFormFragment_textField_remark=0x7f06008e;
         public static final int moneyBorrowFormFragment_textField_returnDate=0x7f060085;
+        public static final int moneyBorrowListFragment_action_moneyBorrow_addnew=0x7f060112;
         public static final int moneyExpenseFormFragment_imageButton_refresh_exchangeRate=0x7f06009b;
         public static final int moneyExpenseFormFragment_imageField_picture=0x7f06008f;
         public static final int moneyExpenseFormFragment_imageView_camera=0x7f060090;
@@ -1339,7 +1340,7 @@ containing a value of this type.
         public static final int moneyExpenseFormFragment_textField_exchangeRate=0x7f06009a;
         public static final int moneyExpenseFormFragment_textField_moneyExpenseCategory=0x7f060093;
         public static final int moneyExpenseFormFragment_textField_remark=0x7f06009c;
-        public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f060112;
+        public static final int moneyExpenseListFragment_action_moneyExpense_addnew=0x7f060113;
         public static final int moneyIncomeFormFragment_imageButton_refresh_exchangeRate=0x7f0600a9;
         public static final int moneyIncomeFormFragment_imageField_picture=0x7f06009d;
         public static final int moneyIncomeFormFragment_imageView_camera=0x7f06009e;
@@ -1354,7 +1355,7 @@ containing a value of this type.
         public static final int moneyIncomeFormFragment_textField_exchangeRate=0x7f0600a8;
         public static final int moneyIncomeFormFragment_textField_moneyIncomeCategory=0x7f0600a1;
         public static final int moneyIncomeFormFragment_textField_remark=0x7f0600aa;
-        public static final int moneyIncomeListFragment_action_moneyIncome_addnew=0x7f060113;
+        public static final int moneyIncomeListFragment_action_moneyIncome_addnew=0x7f060114;
         public static final int moneyIncomeListItem_amount=0x7f0600c4;
         public static final int moneyIncomeListItem_category=0x7f0600c1;
         public static final int moneyIncomeListItem_date=0x7f0600c3;
@@ -1382,7 +1383,7 @@ containing a value of this type.
         public static final int moneyTransferFormFragment_textField_remark=0x7f0600be;
         public static final int moneyTransferFormFragment_textField_transferInAmount=0x7f0600b7;
         public static final int moneyTransferFormFragment_textField_transferOutAmount=0x7f0600ae;
-        public static final int moneyTransferListFragment_action_moneyTransfer_addnew=0x7f060114;
+        public static final int moneyTransferListFragment_action_moneyTransfer_addnew=0x7f060115;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
@@ -1395,7 +1396,7 @@ containing a value of this type.
         public static final int projectFormFragment_listField_parentProject=0x7f0600ee;
         public static final int projectFormFragment_selectorField_projectCurrency=0x7f0600ef;
         public static final int projectFormFragment_textField_projectName=0x7f0600ed;
-        public static final int projectListFragment_action_project_addnew=0x7f060117;
+        public static final int projectListFragment_action_project_addnew=0x7f060118;
         public static final int projectListItem_expenseTotal=0x7f0600fa;
         public static final int projectListItem_incomeTotal=0x7f0600fb;
         public static final int projectListItem_name=0x7f0600f9;
@@ -1542,12 +1543,13 @@ containing a value of this type.
         public static final int friend_listfragment_friend=0x7f0e0006;
         public static final int friend_listfragment_friend_category=0x7f0e0007;
         public static final int home_listfragment_home=0x7f0e0008;
-        public static final int money_listfragment_moneyexpense=0x7f0e0009;
-        public static final int money_listfragment_moneyincome=0x7f0e000a;
-        public static final int money_listfragment_moneytransfer=0x7f0e000b;
-        public static final int moneyaccount_listfragment_moneyaccount=0x7f0e000c;
-        public static final int project_listfragment_member=0x7f0e000d;
-        public static final int project_listfragment_project=0x7f0e000e;
+        public static final int money_listfragment_moneyborrow=0x7f0e0009;
+        public static final int money_listfragment_moneyexpense=0x7f0e000a;
+        public static final int money_listfragment_moneyincome=0x7f0e000b;
+        public static final int money_listfragment_moneytransfer=0x7f0e000c;
+        public static final int moneyaccount_listfragment_moneyaccount=0x7f0e000d;
+        public static final int project_listfragment_member=0x7f0e000e;
+        public static final int project_listfragment_project=0x7f0e000f;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
