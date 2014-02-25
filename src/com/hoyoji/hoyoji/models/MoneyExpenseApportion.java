@@ -99,6 +99,14 @@ public class MoneyExpenseApportion extends HyjModel{
 	public Friend getFriend(){
 		return getModel(Friend.class, mFriendUserId);
 	}
+	
+	public String getApportionType() {
+		return mApportionType;
+	}
+	
+	public void setApportionType(String mApportionType) {
+		this.mApportionType = mApportionType;
+	}
 
 	public String getRemark() {
 		return mRemark;
