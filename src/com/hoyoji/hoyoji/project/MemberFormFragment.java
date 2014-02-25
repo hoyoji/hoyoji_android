@@ -345,7 +345,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
  	         		 Friend friend = Friend.load(Friend.class, _id);
  	         		 if(friend.getFriendUserId() != null){
  	         			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-	 	       				if(psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+	 	       				if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
 	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_cannot_select_local_friend_already_exists);
 	 	       					return;
 	 	       				}
