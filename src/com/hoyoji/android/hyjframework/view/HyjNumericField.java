@@ -143,7 +143,7 @@ public class HyjNumericField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
-	public void addEditTextChangeListener(TextWatcher watcher){
-		mEditTextEdit.addTextChangedListener(watcher);
+	public EditText getEditText(){
+		return mEditTextEdit;
 	}
 }
