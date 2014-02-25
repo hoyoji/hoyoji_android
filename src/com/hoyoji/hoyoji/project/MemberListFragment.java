@@ -145,14 +145,19 @@ public class MemberListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.memberListItem_name) {
 			String friendUserId = cursor.getString(columnIndex);
-			Friend friend = HyjModel.getModel(Friend.class, friendUserId);
-			if(friend != null){
-				((TextView)view).setText(friend.getDisplayName());
-			} else {
-				User user = HyjModel.getModel(User.class, friendUserId);
-				if(user != null){
-					((TextView)view).setText(user.getDisplayName());
+			Friend friend = null;
+			if(friendUserId != null){
+				friend = HyjModel.getModel(Friend.class, friendUserId);
+				if(friend != null){
+					((TextView)view).setText(friend.getDisplayName());
+				} else {
+					User user = HyjModel.getModel(User.class, friendUserId);
+					if(user != null){
+						((TextView)view).setText(user.getDisplayName());
+					}
 				}
+			} else {
+				((TextView)view).setText(null);
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_picture) {

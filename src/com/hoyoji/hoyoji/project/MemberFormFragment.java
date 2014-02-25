@@ -125,9 +125,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		});
 		
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.memberFormFragment_selectorField_friend);
-		mSelectorFieldFriend.setEnabled(modelId == -1);
-		if(modelId != -1){
-		Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
+		if(modelId != -1 && projectShareAuthorization.getFriendUserId() != null){
+			mSelectorFieldFriend.setEnabled(false);
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
 			if(friend != null){
 				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
