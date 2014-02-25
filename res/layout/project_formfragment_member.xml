@@ -90,12 +90,14 @@
             android:id="@+id/memberFormFragment_checkBox_shareAllSubProjects"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/memberFormFragment_checkBox_shareAllSubProjects" />
 
         <TextView
             android:id="@+id/memberFormFragment_checkBox_hint_shareAllSubProjects"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/memberFormFragment_checkBox_hint_shareAllSubProjects" />
 
         <View
@@ -104,6 +106,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
+            android:visibility="gone"
             android:background="@android:color/darker_gray" />
 
         <LinearLayout

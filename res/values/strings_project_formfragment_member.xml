@@ -10,6 +10,7 @@
    <string name="memberFormFragment_textView_friend">好友名称</string>
    <string name="memberFormFragment_editText_hint_friend">请选择共享好友</string>
    <string name="memberFormFragment_toast_cannot_select_local_friend">不能添加共享给本地好友</string>
+   <string name="memberFormFragment_toast_cannot_select_local_friend_already_exists">该好友已经是共享成员</string>
     
    <string name="memberFormFragment_textView_sharePercentageType">占股类型</string>
    <string name="memberFormFragment_editText_hint_sharePercentageType">请选择占股类型</string>
@@ -19,6 +20,7 @@
    
    <string name="memberFormFragment_textView_sharePercentage">占股比例(%)</string>
    <string name="memberFormFragment_editText_hint_sharePercentage">请输入占股比例</string>
+   <string name="memberFormFragment_editText_error_sharePercentage">占股总和不为100.00</string>
    
    <string name="memberFormFragment_checkBox_shareAllSubProjects">共享所有子项目</string>
    <string name="memberFormFragment_checkBox_hint_shareAllSubProjects">新增账务时，账务金额在成员间自动分摊</string>

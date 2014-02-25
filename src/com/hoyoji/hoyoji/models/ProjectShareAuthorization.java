@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.hoyoji.R;
 
 @Table(name = "ProjectShareAuthorization", id = BaseColumns._ID)
 public class ProjectShareAuthorization extends HyjModel {
@@ -302,6 +303,11 @@ public class ProjectShareAuthorization extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
+		if(this.getSharePercentage() == null){
+			modelEditor.setValidationError("sharePercentage", R.string.memberFormFragment_editText_hint_sharePercentage);
+		} else {
+			modelEditor.removeValidationError("sharePercentage");
+		}
 	}
 
 	public String getId() {
