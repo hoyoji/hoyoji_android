@@ -124,6 +124,10 @@ public class MoneyExpense extends HyjModel{
 		return getMany(Picture.class, "recordId");
 	}
 	
+	public List<MoneyExpenseApportion> getExpenseApportions(){
+		return getMany(MoneyExpenseApportion.class, "moneyExpenseId");
+	}
+	
 	public String getDate() {
 		return mDate;
 	}
