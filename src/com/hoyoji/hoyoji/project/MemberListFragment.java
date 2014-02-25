@@ -22,6 +22,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
@@ -143,14 +144,21 @@ public class MemberListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.memberListItem_name) {
 			String friendUserId = cursor.getString(columnIndex);
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+			Friend friend = HyjModel.getModel(Friend.class, friendUserId);
 			if(friend != null){
 				((TextView)view).setText(friend.getDisplayName());
 			} else {
-				User user = new Select().from(User.class).where("id=?", friendUserId).executeSingle();
+				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user != null){
 					((TextView)view).setText(user.getDisplayName());
 				}
+			}
+			return true;
+		} else if(view.getId() == R.id.memberListItem_picture) {
+			String friendUserId = cursor.getString(columnIndex);
+			User user = HyjModel.getModel(User.class, friendUserId);
+			if(user != null){
+				((HyjImageView)view).setImage(user.getPictureId());
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
