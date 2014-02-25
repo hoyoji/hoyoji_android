@@ -25,6 +25,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
@@ -156,9 +157,11 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_picture) {
 			String friendUserId = cursor.getString(columnIndex);
-			User user = HyjModel.getModel(User.class, friendUserId);
-			if(user != null){
+			if(friendUserId != null){
+				User user = HyjModel.getModel(User.class, friendUserId);
 				((HyjImageView)view).setImage(user.getPictureId());
+			} else {
+				((HyjImageView)view).setImage((Picture)null);
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
