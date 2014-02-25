@@ -122,6 +122,10 @@ public class MoneyLend extends HyjModel{
 	public List<Picture> getPictures(){
 		return getMany(Picture.class, "recordId");
 	}
+
+	public List<MoneyPayback> getMoneyPaybacks(){
+		return getMany(MoneyPayback.class, "moneyPaybackId");
+	}
 	
 	public List<MoneyLendApportion> getApportions(){
 		return getMany(MoneyLendApportion.class, "moneyLendId");

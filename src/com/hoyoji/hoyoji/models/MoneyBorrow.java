@@ -127,6 +127,10 @@ public class MoneyBorrow extends HyjModel{
 		return getMany(MoneyBorrowApportion.class, "moneyBorrowId");
 	}
 	
+	public List<MoneyReturn> getMoneyReturns(){
+		return getMany(MoneyReturn.class, "moneyBorrowId");
+	}
+	
 	public String getDate() {
 		return mDate;
 	}
