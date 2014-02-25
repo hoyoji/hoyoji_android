@@ -134,6 +134,13 @@ public class MoneyLend extends HyjModel{
 	public Double getAmount() {
 		return mAmount;
 	}
+	
+	public Double getAmount0() {
+		if(mAmount == null){
+			return 0.00;
+		}
+		return mAmount;
+	}
 
 	public void setAmount(Double mAmount) {
 		this.mAmount = mAmount;

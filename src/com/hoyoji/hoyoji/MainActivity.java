@@ -24,6 +24,9 @@ import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyLendListFragment;
+import com.hoyoji.hoyoji.money.MoneyPaybackListFragment;
+import com.hoyoji.hoyoji.money.MoneyReturnListFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
@@ -184,6 +187,18 @@ public class MainActivity extends HyjUserActivity {
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_borrow){
     			openActivityWithFragment(MoneyBorrowListFragment.class, R.string.moneyBorrowListFragment_title_all, null);
+    			return true;
+    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_lend){
+    			openActivityWithFragment(MoneyLendListFragment.class, R.string.moneyLendListFragment_title_all, null);
+    			return true;
+    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_return){
+    			openActivityWithFragment(MoneyReturnListFragment.class, R.string.moneyReturnListFragment_title_all, null);
+    			return true;
+    		}
+    		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_payback){
+    			openActivityWithFragment(MoneyPaybackListFragment.class, R.string.moneyPaybackListFragment_title_all, null);
     			return true;
     		}
 

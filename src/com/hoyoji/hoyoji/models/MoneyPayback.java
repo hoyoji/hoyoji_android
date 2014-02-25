@@ -133,6 +133,13 @@ public class MoneyPayback extends HyjModel{
 	public Double getAmount() {
 		return mAmount;
 	}
+	
+	public Double getAmount0() {
+		if(mAmount == null){
+			return 0.00;
+		}
+		return mAmount;
+	}
 
 	public void setAmount(Double mAmount) {
 		this.mAmount = mAmount;
@@ -227,6 +234,13 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public Double getInterest() {
+		return mInterest;
+	}
+	
+	public Double getInterest0() {
+		if(mInterest == null){
+			return 0.00;
+		}
 		return mInterest;
 	}
 
