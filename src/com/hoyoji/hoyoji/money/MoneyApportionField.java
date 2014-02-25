@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -35,7 +36,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public class MoneyApportionField extends GridView {
+public class MoneyApportionField<T extends HyjModel> extends GridView {
 	private ImageGridAdapter mImageGridAdapter;
 	private	Resources r = getResources();
 	
@@ -65,10 +66,10 @@ public class MoneyApportionField extends GridView {
         params.height = getMeasuredHeight();
     }
 	
-	public void setImages(List<Picture> pictures){
+	public void setApportions(List<T> apportions){
 		//List<PictureItem> pis = new ArrayList<PictureItem>();
-		for(int i=0; i < pictures.size(); i++){
-			PictureItem pi = new PictureItem(pictures.get(i));
+		for(int i=0; i < apportions.size(); i++){
+			ApportionItem pi = new ApportionItem(apportions.get(i));
 			mImageGridAdapter.add(pi);
 			//pis.add(pi);
 		}
@@ -79,11 +80,11 @@ public class MoneyApportionField extends GridView {
 		return mImageGridAdapter;
 	}
 	
-	public void addPicture(){
-		dispatchTakePictureIntent();
+	public void addApportion(){
+
 	}
 		
-	public static class ImageGridAdapter extends ArrayAdapter<PictureItem> {
+	public static class ImageGridAdapter extends ArrayAdapter<ApportionItem> {
 		public ImageGridAdapter(Context context, int resource) {
 			super(context, resource);
 		}
@@ -102,43 +103,35 @@ public class MoneyApportionField extends GridView {
 				iv.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						PictureItem pic = (PictureItem) v.getTag();
-						HyjUtil.displayToast("Show large pic " + pic.getPicture().getId());
+						ApportionItem pic = (ApportionItem) v.getTag();
+						HyjUtil.displayToast("Show large pic " + pic.getApportion().getId());
 					}
 				});
 			}
 			
-			PictureItem pic = getItem(position);
-			iv.setTag(pic);
-			//File imageFile;
-//			try {
-//				imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
-//				iv.setImageURI(Uri.fromFile(imageFile));
-				iv.setImage(pic.getPicture());
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			ApportionItem app = getItem(position);
+//			iv.setTag(app);
+//			iv.setApportion(app.getApportion());
 			return iv;
 		}
 
 	}
 	
-	public static class PictureItem {
+	public static class ApportionItem<T extends HyjModel> {
 		public static final int UNCHANGED = 0;
 		public static final int NEW = 1;
 		public static final int DELETED = 2;
 		public static final int CHANGED = 3;
 		
 		private int mState = UNCHANGED;
-		private Picture mPicture;
+		private T mApportion;
 		
-		PictureItem(Picture picture){
-			mPicture = picture;
+		ApportionItem(T apportion){
+			mApportion = apportion;
 		}
 		
-		PictureItem(Picture picture, int state){
-			mPicture = picture;
+		ApportionItem(T apportion, int state){
+			mApportion = apportion;
 			mState = state;
 		}
 		
@@ -150,110 +143,9 @@ public class MoneyApportionField extends GridView {
 			return mState;
 		}
 		
-		public Picture getPicture() {
-			return mPicture;
+		public T getApportion() {
+			return mApportion;
 		}
 	}	
 	
-
-	public void dispatchTakePictureIntent() {
-		Picture newPicture = new Picture();
-	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    // Ensure that there's a camera activity to handle the intent
-	    if (takePictureIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
-	        // Create the File where the photo should go
-	        File photoFile = null;
-	        try {
-	            photoFile = HyjUtil.createImageFile(newPicture.getId());
-		        // Continue only if the File was successfully created
-		        if (photoFile != null) {
-		            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-		           ((HyjActivity)getContext()).startActivityForResult(takePictureIntent, HyjActivity.REQUEST_TAKE_PHOTO);
-		           
-		           IntentFilter intentFilter = new IntentFilter("REQUEST_TAKE_PHOTO");
-		           BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(getContext(), photoFile, newPicture);
-		           getContext().registerReceiver(receiver,intentFilter); 
-		        }
-	        } catch (IOException ex) {
-	            // Error occurred while creating the File
-	        	HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
-	        }
-	    }
-	}
-	
-	
-//	private void galleryAddPic(String picturePath) {
-//	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//	    File f = new File(picturePath);
-//	    Uri contentUri = Uri.fromFile(f);
-//	    mediaScanIntent.setData(contentUri);
-//	    this.getContext().sendBroadcast(mediaScanIntent);
-//	}
-	
-	private class TakePhotoBroadcastReceiver extends BroadcastReceiver {
-		File mPhotoFile;
-		Context mContext;
-		Picture mPicture;
-		
-		TakePhotoBroadcastReceiver(Context context, File photoFile, Picture picture){
-			mPhotoFile = photoFile;
-			mContext = context;
-			mPicture = picture;
-		}
-		
-		@Override
-		public void onReceive(Context context, Intent intent) {  
-			if(intent.getAction().equals("REQUEST_TAKE_PHOTO")) {
-				int result = intent.getIntExtra("resultCode", Activity.RESULT_CANCELED);
-				if(result == Activity.RESULT_OK){
-					float pxW = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, r.getDisplayMetrics());
-					float pxH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 800, r.getDisplayMetrics());
-					FileOutputStream out = null;
-					Bitmap scaled = HyjUtil.decodeSampledBitmapFromFile(mPhotoFile.getAbsolutePath(), (int)pxW, (int)pxH);
-					try {
-					    out = new FileOutputStream(mPhotoFile);
-					    scaled.compress(Bitmap.CompressFormat.JPEG, 90, out);
-					    out.close();
-					    out = null;
-					    
-					    int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
-					    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(scaled, px, px);
-					    
-					    out = new FileOutputStream(HyjUtil.createImageFile(mPicture.getId()+"_icon"));
-					    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-					    out.close();
-					    out = null;
-					    thumbnail.recycle();
-					} catch (Exception e) {
-					    e.printStackTrace();
-					}
-					if(out != null){
-						try {
-							out.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						out = null;
-					}
-					
-					scaled.recycle();
-					
-					mPicture.setPictureType("JPEG");
-					PictureItem pi = new PictureItem(mPicture, PictureItem.NEW);
-					mImageGridAdapter.add(pi);
-				} else {
-					if(!mPhotoFile.exists()){
-			        	HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
-					} else {
-						mPhotoFile.delete();
-					}
-				}
-				try{
-					mContext.unregisterReceiver(this);
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 }

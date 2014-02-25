@@ -149,12 +149,12 @@ public class HomeGroupListLoader extends
 		}
 		mHasMoreData = loadCount >= mLoadLimit;
 		
-		Collections.sort(list,new Comparator<Map<String, Object>>(){
-			@Override
-			public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {
-				return (int) ((Long)rhs.get("dateInMilliSeconds") - (Long)lhs.get("dateInMilliSeconds"));
-			}
-		});
+//		Collections.sort(list,new Comparator<Map<String, Object>>(){
+//			@Override
+//			public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {
+//				return (int) ((Long)lhs.get("dateInMilliSeconds") - (Long)rhs.get("dateInMilliSeconds"));
+//			}
+//		});
 		return list;
 	}
 	

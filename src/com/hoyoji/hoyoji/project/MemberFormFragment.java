@@ -94,10 +94,6 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", project.getId(), "Delete", projectShareAuthorization.getId()).execute();
 		mProjectShareAuthorizations.add(mProjectShareAuthorizationEditor.getModelCopy());
-		if(modelId == -1){
-			calculatePercentage(mProjectShareAuthorizationEditor.getModelCopy());
-		}
-		
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.memberFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getDisplayName());
@@ -106,6 +102,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mNumericFieldSharePercentage = (HyjNumericField) getView().findViewById(R.id.memberFormFragment_textField_sharePercentage);
 		mNumericFieldSharePercentage.setNumber(projectShareAuthorization.getSharePercentage());
 		mNumericFieldSharePercentage.setEnabled(!projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
+		if(modelId == -1){
+			calculatePercentage(mProjectShareAuthorizationEditor.getModelCopy());
+		}
 		
 		mBooleanFieldSharePercentageType = (HyjBooleanView) getView().findViewById(R.id.memberFormFragment_textField_sharePercentageType);
 		mBooleanFieldSharePercentageType.setBoolean(projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
@@ -215,7 +214,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				numOfAverage++;
 			}
 		}
-		this.mNumericFieldSharePercentage.setNumber((100.0 - Math.min(fixedPercentageTotal, 100)) / numOfAverage);
+		mNumericFieldSharePercentage.setNumber((100.0 - Math.min(fixedPercentageTotal, 100)) / numOfAverage);
 	}
 
 	private void fillData() {
