@@ -93,7 +93,7 @@ public class HyjDateTimeField extends LinearLayout {
 			
 			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			mTextViewLabel.setLayoutParams(layoutParams);
-			//mEditTextEdit.setLayoutParams(layoutParams);
+			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);

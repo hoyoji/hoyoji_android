@@ -22,18 +22,18 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
 
 public class MoneyBorrowListFragment extends HyjUserListFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_listfragment_moneyexpense;
+		return R.layout.money_listfragment_moneyborrow;
 	}
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.money_listfragment_moneyexpense;
+		return R.menu.money_listfragment_moneyborrow;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MoneyBorrowListFragment extends HyjUserListFragment {
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(MoneyExpense.class, null),
+				ContentProvider.createUri(MoneyBorrow.class, null),
 				null, null, null, null
 			);
 		return (Loader<Object>)loader;
@@ -64,8 +64,8 @@ public class MoneyBorrowListFragment extends HyjUserListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.moneyExpenseListFragment_action_moneyExpense_addnew){
-			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+		if(item.getItemId() == R.id.moneyBorrowListFragment_action_moneyBorrow_addnew){
+			openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -84,7 +84,7 @@ public class MoneyBorrowListFragment extends HyjUserListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+			openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 		}
     }  
 
@@ -93,14 +93,14 @@ public class MoneyBorrowListFragment extends HyjUserListFragment {
 		try {
 				ActiveAndroid.beginTransaction();
 				
-				MoneyExpense moneyExpense = MoneyExpense.load(MoneyExpense.class, id);
-				MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
+				MoneyBorrow moneyBorrow = MoneyBorrow.load(MoneyBorrow.class, id);
+				MoneyAccount moneyAccount = moneyBorrow.getMoneyAccount();
 				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-				moneyExpense.delete();
-				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
+				moneyBorrow.delete();
+				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyBorrow.getAmount());
 				moneyAccountEditor.save();
 				
-			    HyjUtil.displayToast("支出删除成功");
+			    HyjUtil.displayToast("借入删除成功");
 			    ActiveAndroid.setTransactionSuccessful();
 		} finally {
 		    ActiveAndroid.endTransaction();
