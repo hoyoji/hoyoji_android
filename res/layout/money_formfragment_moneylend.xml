@@ -131,6 +131,25 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
+        
+        
+        <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyLendFormFragment_textField_paybackedAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:style="top_label"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyLendFormFragment_editText_hint_paybackedAmount"
+                    hyj:labelText="@string/moneyLendFormFragment_textView_paybackedAmount" />
+        
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
