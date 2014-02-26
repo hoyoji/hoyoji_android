@@ -22,12 +22,19 @@ import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
+import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
+import com.hoyoji.hoyoji.money.MoneyLendListFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
+import com.hoyoji.hoyoji.money.MoneyPaybackListFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
+import com.hoyoji.hoyoji.money.MoneyReturnListFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -174,31 +181,31 @@ public class MainActivity extends HyjUserActivity {
         }
         // Handle your other action bar items...
     		if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
-    			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
-    			openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyIncomeListFragment.class, R.string.moneyIncomeListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_transfer){
-    			openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyTransferListFragment.class, R.string.moneyTransferListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_borrow){
-    			openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyBorrowListFragment.class, R.string.moneyBorrowListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_lend){
-    			openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyLendListFragment.class, R.string.moneyLendListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_return){
-    			openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyReturnListFragment.class, R.string.moneyReturnListFragment_title_all, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_payback){
-    			openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
+    			openActivityWithFragment(MoneyPaybackListFragment.class, R.string.moneyPaybackListFragment_title_all, null);
     			return true;
     		}
 
