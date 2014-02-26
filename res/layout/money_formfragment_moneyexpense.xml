@@ -245,15 +245,15 @@
                     android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_add_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_action_reply_all" />
+                 android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_add_group" />
 
                 <ImageView
-                android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_action_new" />
+                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_add_person" />
                 
             </LinearLayout>
         </FrameLayout>
