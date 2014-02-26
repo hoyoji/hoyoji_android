@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -156,7 +157,7 @@ public class MoneyBorrow extends HyjModel{
 	
 	public Friend getFriend(){
 		if(mFriendUserId != null){
-			return (Friend) getModel(Friend.class, mFriendUserId);
+			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
 		}else if(mLocalFriendId != null){
 			return (Friend) getModel(Friend.class, mLocalFriendId);
 		}
@@ -165,7 +166,7 @@ public class MoneyBorrow extends HyjModel{
 	
 	public void setFriend(Friend mFriend) {
 		if(mFriend.getFriendUserId() != null){
-			this.mFriendUserId = mFriend.getId();
+			this.mFriendUserId = mFriend.getFriendUserId();
 		}
 		else{
 			this.mLocalFriendId = mFriend.getId();

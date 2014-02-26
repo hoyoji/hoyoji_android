@@ -142,6 +142,66 @@ public class HomeGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+//				transferTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyBorrow WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyLend WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyReturn WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyPayback WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
 			if (count > 0) {
 				String ds = df.format(calToday.getTime());
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();

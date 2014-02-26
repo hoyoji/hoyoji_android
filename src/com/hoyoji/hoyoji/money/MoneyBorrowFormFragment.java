@@ -43,6 +43,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private Double oldAmount;
 	private MoneyAccount oldMoneyAccount;
+	Long modelId;
 	
 	private HyjModelEditor<MoneyBorrow> mMoneyBorrowEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -70,7 +71,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		MoneyBorrow moneyBorrow;
 		
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyBorrow =  new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -347,6 +348,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 				}	
+				
+				if(modelId == -1){
+			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
+				
+				}else{
+					
+				}
 				
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
