@@ -23,8 +23,13 @@ import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyPayback;
+import com.hoyoji.hoyoji.models.MoneyReturn;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -58,6 +63,21 @@ public class HomeGroupListLoader extends
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyIncome.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyTransfer.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyBorrow.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyLend.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyReturn.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyPayback.class, null), true,
 				mChangeObserver);
 	}
 

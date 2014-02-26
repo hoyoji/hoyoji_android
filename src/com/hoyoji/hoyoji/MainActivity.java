@@ -21,12 +21,19 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeListFragment;
+import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendListFragment;
+import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackListFragment;
+import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnListFragment;
+import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
@@ -174,7 +181,7 @@ public class MainActivity extends HyjUserActivity {
         }
         // Handle your other action bar items...
     		if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
-    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseListFragment_title_all, null);
+    			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     			return true;
     		}
     		else if(item.getItemId() == R.id.mainActivity_action_money_addnew_income){
