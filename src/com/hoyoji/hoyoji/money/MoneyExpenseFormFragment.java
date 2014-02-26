@@ -99,9 +99,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
 		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseFormFragment_apportionField);	
-		if(modelId != -1){
-			mApportionFieldApportions.setApportions(moneyExpense.getApportions(), moneyExpense.getProjectId());
-		} else {
+		mApportionFieldApportions.init(moneyExpense.getAmount0(), moneyExpense.getApportions(), moneyExpense.getProjectId());
+		if(modelId == -1){
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 			apportion.setAmount(moneyExpense.getAmount0());
 			apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
@@ -269,10 +268,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_fixed).setOnClickListener(new OnClickListener(){
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_share).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mApportionFieldApportions.setAllApportionFixed();
+				mApportionFieldApportions.setAllApportionShare();
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			}
 		});
@@ -382,6 +381,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			} else {
 				mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
 			}
+		} else {
+			mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
 		}
 		
 		if(mMoneyExpenseEditor.hasValidationErrors()){

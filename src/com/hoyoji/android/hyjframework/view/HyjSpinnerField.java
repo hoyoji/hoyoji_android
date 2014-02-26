@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework.view;
 
+import java.util.ArrayList;
+
 import com.hoyoji.hoyoji.R;
 
 import android.annotation.TargetApi;
@@ -11,8 +13,14 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
@@ -22,8 +30,11 @@ public class HyjSpinnerField extends LinearLayout {
 	private String mHintText;
 	
 	private TextView mTextViewLabel;
-	private EditText mEditTextEdit;
-
+	private Spinner mEditTextEdit;
+	ArrayAdapter<CharSequence> mAdapter;
+	String[] mValues;
+	String mSelectedValue;
+	
 	@SuppressWarnings("deprecation")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjSpinnerField(Context context, AttributeSet attrs) {
@@ -51,9 +62,9 @@ public class HyjSpinnerField extends LinearLayout {
 
 		final LayoutInflater inflater = (LayoutInflater)
 			       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			inflater.inflate(R.layout.text_field, this);
+			inflater.inflate(R.layout.spinner_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
-		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
+		mEditTextEdit = (Spinner)findViewById(R.id.text_field_edit);
 		if(border.equals("none")){
 			if(android.os.Build.VERSION.SDK_INT >= 16){
 				mEditTextEdit.setBackground(null);
@@ -77,23 +88,69 @@ public class HyjSpinnerField extends LinearLayout {
 			mTextViewLabel.setTextColor(Color.GRAY);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
-		mEditTextEdit.setHint(mHintText);
-		mEditTextEdit.setText(mEditText);
+//		mEditTextEdit.setHint(mHintText);
+//		mEditTextEdit.setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
+		
 	}
 
+	public void setItems(int items, String[] values){
+		mValues = values;
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		mAdapter = ArrayAdapter.createFromResource(this.getContext(),
+				items, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		mEditTextEdit.setAdapter(mAdapter);
+		mEditTextEdit.setOnItemSelectedListener(new OnItemSelectedListener(){
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
+					long id) {
+				mSelectedValue = mValues[pos];
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	public String getSelectedValue(){
+		return mSelectedValue;
+	}
+	
+	public void setSelectedValue(int position){
+		mSelectedValue = mValues[position];
+		mEditTextEdit.setSelection(position);
+	}
+	
+	public void setSelectedValue(String value){
+		int position = -1;
+		for(int i=0; i < mValues.length; i++){
+			if(mValues[i].equalsIgnoreCase(value)){
+				position = i;
+				break;
+			}
+		}
+		mSelectedValue = mValues[position];
+		mEditTextEdit.setSelection(position);
+	}
+	
 	public void setError(String error){
-		mEditTextEdit.setError(error);
+//		mEditTextEdit.setError(error);
 	}
 	
-	public void setText(String text){
-		mEditTextEdit.setText(text);
-	}
+//	public void setText(String text){
+////		mEditTextEdit.setText(text);
+//	}
+//	
+//	public Editable getText(){
+////		return mEditTextEdit.getText();
+//	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getText();
-	}
-
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
