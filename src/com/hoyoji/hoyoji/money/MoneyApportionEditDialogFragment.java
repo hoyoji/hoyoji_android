@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money;
 
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
+import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.hoyoji.R;
 
 import android.os.Bundle;
@@ -37,6 +38,10 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
         numericFieldApportionAmount.setNumber(apportionAmount);
         
+        final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
+        spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Share", "Fixed"});
+        spinnerFieldApportionType.setSelectedValue(apportionType);
+        
         v.findViewById(R.id.moneyApportionDialogFragment_button_cancel).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -56,7 +61,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 			        Bundle args = new Bundle();
 			        args.putDouble("apportionAmount", numericFieldApportionAmount.getNumber());
-			        args.putString("apportionType", "Fixed");
+			        args.putString("apportionType", spinnerFieldApportionType.getSelectedValue());
 					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 			        ((HyjActivity) getActivity()).dialogDoPositiveClick(args);
 			}

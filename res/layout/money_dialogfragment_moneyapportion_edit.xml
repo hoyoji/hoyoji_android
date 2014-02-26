@@ -20,6 +20,14 @@
         <requestFocus />
     </com.hoyoji.android.hyjframework.view.HyjNumericField>
     
+    
+    <com.hoyoji.android.hyjframework.view.HyjSpinnerField
+        android:id="@+id/moneyApportionDialogFragment_spinnerField_type"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:labelText="@string/moneyApportionDialogFragment_spinnerField_apportionType" >
+    </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
+    
    <LinearLayout 
        android:layout_width="match_parent"
        android:layout_height="wrap_content" 

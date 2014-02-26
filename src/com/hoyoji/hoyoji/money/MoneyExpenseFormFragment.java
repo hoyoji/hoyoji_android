@@ -271,7 +271,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_share).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mApportionFieldApportions.setAllApportionFixed();
+				mApportionFieldApportions.setAllApportionShare();
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			}
 		});

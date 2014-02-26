@@ -95,11 +95,11 @@ public class MoneyApportionField extends GridView {
 		return true;
 	}
 	
-	public void setAllApportionFixed(){
+	public void setAllApportionShare(){
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
-				api.setApportionType("Fixed");
+				api.setApportionType("Share");
 			}
 		}
 	}

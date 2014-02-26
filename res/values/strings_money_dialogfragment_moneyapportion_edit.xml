@@ -7,6 +7,11 @@
    <string name="moneyApportionDialogFragment_editText_validationError_negative_amount">金额不能为负数</string>
    <string name="moneyApportionDialogFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
    
-   <string name="moneyApportionDialogFragment_booleanField_apportionType">分摊类型</string>
+   <string name="moneyApportionDialogFragment_spinnerField_apportionType">分摊类型</string>
       
+   <string-array name="moneyApportionDialogFragment_spinnerField_apportionType_array">
+        <item>平均分摊</item>
+        <item>占股分摊</item>
+        <item>定额分摊</item>
+    </string-array>
 </resources>
