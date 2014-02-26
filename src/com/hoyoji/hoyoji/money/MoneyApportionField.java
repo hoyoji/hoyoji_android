@@ -18,7 +18,9 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Interpolator;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -105,12 +107,41 @@ public class MoneyApportionField extends GridView {
 		}
 	}
 	
-	public void setApportionAmount(Double totalAmount){
+	public Double getTotalAmount(){
+		double total = 0.0;
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				total += api.getAmount();
+			}
+		}
+		return total;
+	}
+	
+	public int getCount(){
+		int count = 0;
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	
+	public void setTotalAmount(Double totalAmount){
 		double fixedTotal = 0.0;
 		double averageAmount = 0.0;
 		int numOfAverage = 0;
 		if(totalAmount == null){
 			totalAmount = 0.0;
+			for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+				ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+				if(api.getState() != ApportionItem.DELETED) {
+					totalAmount += api.getAmount();
+				}
+			}
 		}
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
@@ -140,7 +171,20 @@ public class MoneyApportionField extends GridView {
 		return mHiddenApportionItems;
 	}
 	
-	public void changeApportionProject(Project project){
+	public void clearAll(){
+		int i = 0; 
+		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+				if(api.getState() == ApportionItem.NEW){
+					mImageGridAdapter.remove(api);
+				} else {
+					api.delete();
+					i++;
+				}
+		}
+	}
+	
+	public void changeProject(Project project){
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 		Set<String> friendUserSet = new HashSet<String>();
 		
@@ -169,13 +213,16 @@ public class MoneyApportionField extends GridView {
 	        ApportionItem<MoneyApportion> item = it.next();
 	        if(friendUserSet.contains(item.getApportion().getFriendUserId())){
 	        	mImageGridAdapter.add(item);
+	        	item.changeProject(project.getId());
 	        	it.remove();
 	        }
 	    }
 	}
 	
 	public void setError(String errMsg){
-		
+		if(errMsg != null){
+			HyjUtil.displayToast(errMsg);
+		}
 	}
 	
 	public static class ImageGridAdapter extends ArrayAdapter<ApportionItem<MoneyApportion>> {
@@ -220,7 +267,10 @@ public class MoneyApportionField extends GridView {
 					@Override
 					public void onClick(View v) {
 						ApportionItem<MoneyApportion> apportionItem = (ApportionItem<MoneyApportion>) ((ViewHolder)v.getTag()).apportionItem;
-						HyjUtil.displayToast("Edit Apportion " + apportionItem.getApportion().getId());
+						if(apportionItem.getState() == ApportionItem.DELETED){
+							apportionItem.undelete();
+							self.setTotalAmount(null);
+						}
 					}
 				});
 			}
@@ -238,8 +288,22 @@ public class MoneyApportionField extends GridView {
 			
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){
 				vh.textViewAmount.setText(R.string.moneyListItem_apportion_to_be_removed);
+				vh.textViewAmount.setTextColor(Color.parseColor("#FF0000"));
+				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
+				vh.textViewFriendName.setPaintFlags(vh.textViewFriendName.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
+				vh.textViewApportionType.setPaintFlags(vh.textViewApportionType.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
 			} else {
 				vh.textViewAmount.setText(vh.apportionItem.getAmount().toString());
+				vh.textViewAmount.setTextColor(Color.parseColor("#000000"));
+				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
+						& (~Paint.STRIKE_THRU_TEXT_FLAG));
+				vh.textViewFriendName.setPaintFlags(vh.textViewFriendName.getPaintFlags()
+						& (~Paint.STRIKE_THRU_TEXT_FLAG));
+				vh.textViewApportionType.setPaintFlags(vh.textViewApportionType.getPaintFlags()
+						& (~Paint.STRIKE_THRU_TEXT_FLAG));
 			}
 			
 			vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getProjectShareAuthorization().getSharePercentage() + "%");
@@ -315,6 +379,10 @@ public class MoneyApportionField extends GridView {
 		
 		public void delete(){
 			mState = DELETED;
+		}
+		
+		public void undelete(){
+			mState = UNCHANGED;
 		}
 		
 		public int getState(){

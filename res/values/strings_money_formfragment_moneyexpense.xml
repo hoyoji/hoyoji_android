@@ -41,6 +41,7 @@
    <string name="moneyExpenseFormFragment_toast_select_currency">请先选择账户和项目</string> 
    
    <string name="moneyExpenseFormFragment_apportionField_select_apportion_member">选择分摊成员</string>
-<string name="moneyExpenseFormFragment_toast_apportion_user_already_exists">该分摊成员已经存在</string> 
+	<string name="moneyExpenseFormFragment_toast_apportion_user_already_exists">该分摊成员已经存在</string> 
+	<string name="moneyExpenseFormFragment_toast_apportion_totalAmount_not_equal">分摊总额与支出金额不一样</string> 
        
 </resources>
