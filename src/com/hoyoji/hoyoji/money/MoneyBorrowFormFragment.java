@@ -49,6 +49,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjDateTimeField mDateTimeFieldReturnDate = null;
+	private HyjNumericField mNumerFieldReturnedAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
@@ -93,6 +94,15 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldReturnDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnDate);
 		if(modelId != -1){
 			mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
+		}
+		
+		mNumerFieldReturnedAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnedAmount);	
+		mNumerFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
+		mNumerFieldReturnedAmount.setEnabled(false);
+		if(modelId == -1){
+			mNumerFieldReturnedAmount.setVisibility(View.GONE);
+		}else{
+			mNumerFieldReturnedAmount.setVisibility(View.VISIBLE);
 		}
 		
 		oldMoneyAccount = moneyBorrow.getMoneyAccount();

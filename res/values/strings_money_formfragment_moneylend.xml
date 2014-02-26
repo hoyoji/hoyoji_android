@@ -19,8 +19,8 @@
    <string name="moneyLendFormFragment_textView_paybackDate">收款时间</string>
    <string name="moneyLendFormFragment_editText_hint_paybackDate">请选择收款时间</string>
    
-   <string name="moneyLendFormFragment_textView_paybackAmount">已收金额</string>
-   <string name="moneyLendFormFragment_editText_hint_paybackAmount">请输入已收金额</string>
+   <string name="moneyLendFormFragment_textView_paybackedAmount">已收金额</string>
+   <string name="moneyLendFormFragment_editText_hint_paybackedAmount">请输入已收金额</string>
    
    <string name="moneyLendFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyLendFormFragment_editText_hint_moneyAccount">请选择账户</string>
