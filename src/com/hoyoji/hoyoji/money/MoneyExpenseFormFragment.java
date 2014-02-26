@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.Iterator;
+import java.util.List;
+
 import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
@@ -248,6 +251,40 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+				List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setMoneyExpenseId(moneyExpense.getId());
+					
+					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				}	
+				
+				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+			}
+		});
+		
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_fixed).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mApportionFieldApportions.setAllApportionFixed();
+				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+			}
+		});
+		
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_average).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mApportionFieldApportions.setAllApportionAverage();
+				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+			}
+		});
+		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
@@ -407,7 +444,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 			int count = adapter.getCount();
 			for(int i = 0; i < count; i++){
-				
 				ApportionItem<MoneyApportion> pi = adapter.getItem(i);
 				MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
 				HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
@@ -422,6 +458,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					apportion.delete();
 				}
 			}
+			
+			// 把隐藏掉的分摊添加回去
+		    Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions.getHiddenApportions().iterator();
+		    while (it.hasNext()) {
+		        // Get element
+		        ApportionItem<MoneyApportion> item = it.next();
+		        if(item.getState() != ApportionItem.NEW){
+		        	((MoneyExpenseApportion)item.getApportion()).delete();
+		        }
+		    }
 	 }
 	 
 	@Override
@@ -443,6 +489,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();
+	         		mApportionFieldApportions.changeApportionProject(project);
+	         		mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
 	        	 }
 	        	 break;
 	        	 

@@ -1,6 +1,9 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -9,6 +12,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
@@ -29,6 +33,7 @@ import android.widget.TextView;
 public class MoneyApportionField extends GridView {
 	private ImageGridAdapter mImageGridAdapter;
 	private	Resources r = getResources();
+	private Set<ApportionItem<MoneyApportion>> mHiddenApportionItems = new HashSet<ApportionItem<MoneyApportion>>();
 	
 	public MoneyApportionField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -82,6 +87,24 @@ public class MoneyApportionField extends GridView {
 		return true;
 	}
 	
+	public void setAllApportionFixed(){
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				api.setApportionType("Fixed");
+			}
+		}
+	}
+	
+	public void setAllApportionAverage(){
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				api.setApportionType("Average");
+			}
+		}
+	}
+	
 	public void setApportionAmount(Double totalAmount){
 		double fixedTotal = 0.0;
 		double averageAmount = 0.0;
@@ -91,30 +114,64 @@ public class MoneyApportionField extends GridView {
 		}
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			if(api.getApportionType().equalsIgnoreCase("Average")){
-				numOfAverage++;
-			} else {
-				Double shareAmount = totalAmount * api.getProjectShareAuthorization().getSharePercentage();
-				api.setAmount(shareAmount);
-				fixedTotal+=shareAmount;
+			if(api.getState() != ApportionItem.DELETED) {
+				if(api.getApportionType().equalsIgnoreCase("Average")){
+					numOfAverage++;
+				} else {
+					Double shareAmount = totalAmount * api.getProjectShareAuthorization().getSharePercentage() / 100;
+					api.setAmount(shareAmount);
+					fixedTotal+=shareAmount;
+				}
 			}
 		}
 		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			if(api.getApportionType().equalsIgnoreCase("Average")){
-				api.setAmount(averageAmount);
+			if(api.getState() != ApportionItem.DELETED) {
+				if(api.getApportionType().equalsIgnoreCase("Average")){
+					api.setAmount(averageAmount);
+				}
 			}
 		}
 		mImageGridAdapter.notifyDataSetChanged();
 	}
 	
-	public void setProjectApportions(Project project){
-//		List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
-//		for(int i=0; i < apportions.size(); i++){
-//			ApportionItem<T> pi = new ApportionItem<T>(apportions.get(i));
-//			mImageGridAdapter.add(pi);
-//		}
+	public Set<ApportionItem<MoneyApportion>> getHiddenApportions(){
+		return mHiddenApportionItems;
+	}
+	
+	public void changeApportionProject(Project project){
+		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+		Set<String> friendUserSet = new HashSet<String>();
+		
+		for(int i=0; i < projectShareAuthorizations.size(); i++){
+			friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
+		}	
+		
+		int i = 0; 
+		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(!friendUserSet.contains(api.getApportion().getFriendUserId())){
+//				if(api.getState() == ApportionItem.NEW){
+					mHiddenApportionItems.add(api);
+					mImageGridAdapter.remove(api);
+//				}
+			} else {
+				api.changeProject(project.getId());
+				i++;
+			}
+		}
+
+		// 把隐藏掉的分摊添加回去
+	    Iterator<ApportionItem<MoneyApportion>> it = mHiddenApportionItems.iterator();
+	    while (it.hasNext()) {
+	        // Get element
+	        ApportionItem<MoneyApportion> item = it.next();
+	        if(friendUserSet.contains(item.getApportion().getFriendUserId())){
+	        	mImageGridAdapter.add(item);
+	        	it.remove();
+	        }
+	    }
 	}
 	
 	public void setError(String errMsg){
@@ -148,7 +205,7 @@ public class MoneyApportionField extends GridView {
 				iv = convertView;
 				vh = (ViewHolder) convertView.getTag();
 			} else {
-				iv = inflater.inflate(R.layout.money_listitem_money_apportion, null);
+				iv = inflater.inflate(R.layout.money_listitem_moneyapportion, null);
 				vh = new ViewHolder();
 				vh.imageViewPicture = (HyjImageView) iv.findViewById(R.id.moneyApportionListItem_picture);
 				vh.textViewAmount = (TextView) iv.findViewById(R.id.moneyApportionListItem_amount);
@@ -167,23 +224,30 @@ public class MoneyApportionField extends GridView {
 					}
 				});
 			}
-			vh.apportionItem = getItem(position);
-			MoneyApportion apportion = vh.apportionItem.getApportion();
-			vh.imageViewPicture.setImage(apportion.getFriendUser().getPictureId());
-			
-			if(vh.apportionItem.getFriend() != null){
-				vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
-			} else {
-				vh.textViewFriendName.setText(apportion.getFriendUser().getDisplayName());
+			if(vh.apportionItem != getItem(position)){
+				vh.apportionItem = getItem(position);
+				
+				vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
+				
+				if(vh.apportionItem.getFriend() != null){
+					vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
+				} else {
+					vh.textViewFriendName.setText(vh.apportionItem.getApportion().getFriendUser().getDisplayName());
+				}
 			}
-			vh.textViewAmount.setText(vh.apportionItem.getAmount().toString());
 			
-			vh.textViewPercentage.setText("占股"+vh.apportionItem.getProjectShareAuthorization().getSharePercentage() + "%");
-			
-			if(apportion.getApportionType().equalsIgnoreCase("Average")){
-				vh.textViewApportionType.setText("平均分摊");
+			if(vh.apportionItem.getState() == ApportionItem.DELETED){
+				vh.textViewAmount.setText(R.string.moneyListItem_apportion_to_be_removed);
 			} else {
-				vh.textViewApportionType.setText("固定分摊");
+				vh.textViewAmount.setText(vh.apportionItem.getAmount().toString());
+			}
+			
+			vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getProjectShareAuthorization().getSharePercentage() + "%");
+
+			if(vh.apportionItem.getApportionType().equalsIgnoreCase("Average")){
+				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_average_apport);
+			} else {
+				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_fixed_apport);
 			}
 			return iv;
 		}
@@ -217,6 +281,11 @@ public class MoneyApportionField extends GridView {
 			mApportionType = apportion.getApportionType();
 		}
 		
+		public void changeProject(String projectId){
+			mProjectId = projectId;
+			mProjectShareAuthorization = null;
+		}
+		
 		public ProjectShareAuthorization getProjectShareAuthorization(){
 			if(mProjectShareAuthorization == null) {
 				mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
@@ -239,10 +308,14 @@ public class MoneyApportionField extends GridView {
 			}
 			return mFriend;
 		}
-//		
+		
 //		public void setState(int state){
 //			mState = state;
 //		}
+		
+		public void delete(){
+			mState = DELETED;
+		}
 		
 		public int getState(){
 			if(mState == UNCHANGED){
@@ -270,6 +343,8 @@ public class MoneyApportionField extends GridView {
 			apportion.setAmount(mAmount);
 			apportion.setApportionType(mApportionType);
 		}
-	}	
+		
+	}
+
 	
 }
