@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    
+   <string name="moneyApportionDialogFragment_textView_amount">金额</string>
+   <string name="moneyApportionDialogFragment_editText_hint_amount">请输入金额</string>
+   <string name="moneyApportionDialogFragment_editText_validationError_negative_amount">金额不能为负数</string>
+   <string name="moneyApportionDialogFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
+   
+   <string name="moneyApportionDialogFragment_booleanField_apportionType">分摊类型</string>
+      
+</resources>
