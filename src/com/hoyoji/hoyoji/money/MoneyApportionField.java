@@ -70,9 +70,16 @@ public class MoneyApportionField extends GridView {
 		return mImageGridAdapter;
 	}
 	
-	public void addApportion(MoneyApportion apportion, String projectId, int state){
+	public boolean addApportion(MoneyApportion apportion, String projectId, int state){
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getApportion().getFriendUserId().equalsIgnoreCase(apportion.getFriendUserId())){
+				return false;
+			}
+		}
 		ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, projectId, state);
 		mImageGridAdapter.add(pi);
+		return true;
 	}
 	
 	public void setApportionAmount(Double totalAmount){
@@ -220,9 +227,6 @@ public class MoneyApportionField extends GridView {
 		
 		public void setAmount(Double amount){
 			mAmount = amount;
-			if(mState == UNCHANGED){
-				mState = CHANGED;
-			}
 		}
 		
 		public Double getAmount(){
@@ -235,20 +239,23 @@ public class MoneyApportionField extends GridView {
 			}
 			return mFriend;
 		}
-		
-		public void setState(int state){
-			mState = state;
-		}
+//		
+//		public void setState(int state){
+//			mState = state;
+//		}
 		
 		public int getState(){
+			if(mState == UNCHANGED){
+				if(mApportion.getAmount() != mAmount
+						|| mApportion.getApportionType().equalsIgnoreCase(mApportionType)){
+					return CHANGED;
+				}
+			}
 			return mState;
 		}
 
 		public void setApportionType(String apportionType){
 			mApportionType = apportionType;
-			if(mState == UNCHANGED){
-				mState = CHANGED;
-			}
 		}
 		
 		public String getApportionType(){

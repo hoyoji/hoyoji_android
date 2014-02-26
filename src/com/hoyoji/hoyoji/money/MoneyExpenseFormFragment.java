@@ -4,6 +4,7 @@ import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -39,8 +40,10 @@ import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -49,6 +52,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
+	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private Double oldAmount;
@@ -234,15 +238,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		setExchangeRate();
 		
 		
-		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_add_apportion).setOnClickListener(new OnClickListener(){
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-				apportion.setAmount(0.0);
-				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				apportion.setMoneyExpenseId(moneyExpense.getId());
-				mApportionFieldApportions.addApportion(apportion, mSelectorFieldProject.getModelId(), ApportionItem.NEW);
-				mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+				Bundle bundle = new Bundle();
+				Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+				bundle.putLong("MODEL_ID", project.get_mId());
+				openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyExpenseFormFragment_apportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 			}
 		});
 		
@@ -443,6 +445,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	         		setExchangeRate();
 	        	 }
 	        	 break;
+	        	 
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
@@ -451,6 +454,23 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;
+            	 
+             case GET_APPORTION_MEMBER_ID:
+            	 if(resultCode == Activity.RESULT_OK){
+             		long _id = data.getLongExtra("MODEL_ID", -1);
+             		ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+             		MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+	 				apportion.setAmount(0.0);
+	 				apportion.setFriendUserId(psa.getFriendUserId());
+	 				apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModel().getId());
+	 				if(mApportionFieldApportions.addApportion(apportion, mSelectorFieldProject.getModelId(), ApportionItem.NEW)){
+	 					mApportionFieldApportions.setApportionAmount(mNumericAmount.getNumber());
+	 				} else {
+	 					HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_apportion_user_already_exists);
+	 				}
+            	 }
+           	 break;
+
 
           }
     }
