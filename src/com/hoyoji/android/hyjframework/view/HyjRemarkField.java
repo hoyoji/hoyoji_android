@@ -24,8 +24,6 @@ public class HyjRemarkField extends LinearLayout {
 	private TextView mTextViewLabel;
 	private EditText mEditTextEdit;
 
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjRemarkField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
@@ -41,10 +39,10 @@ public class HyjRemarkField extends LinearLayout {
 			if(style == null){
 				style = "";
 			}
-			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-			if(border == null){
-				border = "";
-			}
+//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+//			if(border == null){
+//				border = "";
+//			}
 		} finally {
 			a.recycle();
 		}
@@ -54,13 +52,13 @@ public class HyjRemarkField extends LinearLayout {
 			inflater.inflate(R.layout.remark_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		if(border.equals("none")){
-			if(android.os.Build.VERSION.SDK_INT >= 16){
-				mEditTextEdit.setBackground(null);
-			} else {
-				mEditTextEdit.setBackgroundDrawable(null);
-			}
-		}		
+//		if(border.equals("none")){
+//			if(android.os.Build.VERSION.SDK_INT >= 16){
+//				mEditTextEdit.setBackground(null);
+//			} else {
+//				mEditTextEdit.setBackgroundDrawable(null);
+//			}
+//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 //			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);

@@ -27,4 +27,11 @@
     <string name="server_connection_error">无法连接到服务器</string>
     <string name="server_dataparse_error">无法解析服务器返回的数据</string>
     
+    <string name="app_take_picture">拍照</string>
+    <string name="app_import_picture">从相册导入</string>
+    
+   <string-array name="app_get_picture">
+        <item>拍照</item>
+        <item>从相册导入</item>
+    </string-array>
 </resources>

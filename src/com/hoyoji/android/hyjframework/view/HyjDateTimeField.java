@@ -42,13 +42,11 @@ public class HyjDateTimeField extends LinearLayout {
 	private String mHintText;
 	
 	private TextView mTextViewLabel;
-	private EditText mEditTextEdit;
+	private TextView mEditTextEdit;
 
 	private Date mDate;
 	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjDateTimeField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
@@ -64,10 +62,10 @@ public class HyjDateTimeField extends LinearLayout {
 			if(style == null){
 				style = "";
 			}
-			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-			if(border == null){
-				border = "";
-			}
+//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+//			if(border == null){
+//				border = "";
+//			}
 		} finally {
 			a.recycle();
 		}
@@ -76,14 +74,14 @@ public class HyjDateTimeField extends LinearLayout {
 			       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			inflater.inflate(R.layout.datetime_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
-		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		if(border.equals("none")){
-			if(android.os.Build.VERSION.SDK_INT >= 16){
-				mEditTextEdit.setBackground(null);
-			} else {
-				mEditTextEdit.setBackgroundDrawable(null);
-			}
-		}		
+		mEditTextEdit = (TextView)findViewById(R.id.text_field_edit);
+//		if(border.equals("none")){
+//			if(android.os.Build.VERSION.SDK_INT >= 16){
+//				mEditTextEdit.setBackground(null);
+//			} else {
+//				mEditTextEdit.setBackgroundDrawable(null);
+//			}
+//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);

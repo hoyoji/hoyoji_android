@@ -33,7 +33,6 @@ public class HyjSpinnerField extends LinearLayout {
 	private Spinner mEditTextEdit;
 	ArrayAdapter<CharSequence> mAdapter;
 	String[] mValues;
-	String mSelectedValue;
 	
 	@SuppressWarnings("deprecation")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -94,6 +93,7 @@ public class HyjSpinnerField extends LinearLayout {
 		
 	}
 
+
 	public void setItems(int items, String[] values){
 		mValues = values;
 		// Create an ArrayAdapter using the string array and a default spinner layout
@@ -103,25 +103,13 @@ public class HyjSpinnerField extends LinearLayout {
 		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		mEditTextEdit.setAdapter(mAdapter);
-		mEditTextEdit.setOnItemSelectedListener(new OnItemSelectedListener(){
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
-					long id) {
-				mSelectedValue = mValues[pos];
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
 	}
 	
 	public String getSelectedValue(){
-		return mSelectedValue;
+		return mValues[mEditTextEdit.getSelectedItemPosition()];
 	}
 	
 	public void setSelectedValue(int position){
-		mSelectedValue = mValues[position];
 		mEditTextEdit.setSelection(position);
 	}
 	
@@ -133,7 +121,6 @@ public class HyjSpinnerField extends LinearLayout {
 				break;
 			}
 		}
-		mSelectedValue = mValues[position];
 		mEditTextEdit.setSelection(position);
 	}
 	
@@ -153,4 +140,7 @@ public class HyjSpinnerField extends LinearLayout {
 		mEditTextEdit.setEnabled(enabled);
 	}
 	
+	public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener){
+		mEditTextEdit.setOnItemSelectedListener(onItemSelectedListener);
+	}
 }

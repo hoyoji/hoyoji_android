@@ -118,7 +118,6 @@
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    hyj:editTextBorder="none"
                     hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_friend"
                     hyj:labelText="@string/moneyExpenseFormFragment_textView_friend" >
                 </com.hoyoji.android.hyjframework.view.HyjSelectorField>
@@ -165,7 +164,6 @@
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    hyj:editTextBorder="none"
                     hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_project"
                     hyj:labelText="@string/moneyExpenseFormFragment_textView_project" />
             </LinearLayout>

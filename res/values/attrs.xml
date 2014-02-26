@@ -25,4 +25,9 @@
        <attr name="editTextBold" format="boolean" />
        <attr name="editTextColor" format="color" />
    </declare-styleable>
+   
+     
+     <declare-styleable name="HyjSpinnerField">
+       <attr name="items" format="reference" />
+   </declare-styleable>
 </resources>  

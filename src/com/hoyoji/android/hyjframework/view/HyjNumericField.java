@@ -28,8 +28,6 @@ public class HyjNumericField extends LinearLayout {
 	private TextView mTextViewLabel;
 	private EditText mEditTextEdit;
 
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjNumericField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
@@ -49,10 +47,10 @@ public class HyjNumericField extends LinearLayout {
 			}
 			color  = a.getColor(R.styleable.HyjTextField_editTextColor, -1);
 			bold  = a.getBoolean(R.styleable.HyjTextField_editTextBold, false);
-			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-			if(border == null){
-				border = "";
-			}
+//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+//			if(border == null){
+//				border = "";
+//			}
 		} finally {
 			a.recycle();
 		}
@@ -70,17 +68,17 @@ public class HyjNumericField extends LinearLayout {
 		if(bold){
 			mEditTextEdit.setTypeface(null, Typeface.BOLD);
 		}
-		if(border.equals("none")){
-			if(android.os.Build.VERSION.SDK_INT >= 16){
-				mEditTextEdit.setBackground(null);
-			} else {
-				mEditTextEdit.setBackgroundDrawable(null);
-			}
-			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-			if(border == null){
-				border = "";
-			}
-		}		
+//		if(border.equals("none")){
+//			if(android.os.Build.VERSION.SDK_INT >= 16){
+//				mEditTextEdit.setBackground(null);
+//			} else {
+//				mEditTextEdit.setBackgroundDrawable(null);
+//			}
+//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+//			if(border == null){
+//				border = "";
+//			}
+//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);

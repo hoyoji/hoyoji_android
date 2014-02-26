@@ -23,10 +23,8 @@ public class HyjSelectorField extends LinearLayout {
 	private String mModelId;
 	
 	private TextView mTextViewLabel;
-	private EditText mEditTextEdit;
+	private TextView mEditTextEdit;
 
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public HyjSelectorField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
@@ -42,10 +40,10 @@ public class HyjSelectorField extends LinearLayout {
 			if(style == null){
 				style = "";
 			}
-			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-			if(border == null){
-				border = "";
-			}
+//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
+//			if(border == null){
+//				border = "";
+//			}
 		} finally {
 			a.recycle();
 		}
@@ -54,14 +52,14 @@ public class HyjSelectorField extends LinearLayout {
 			       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			inflater.inflate(R.layout.selector_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
-		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		if(border.equals("none")){
-			if(android.os.Build.VERSION.SDK_INT >= 16){
-				mEditTextEdit.setBackground(null);
-			} else {
-				mEditTextEdit.setBackgroundDrawable(null);
-			}
-		}		
+		mEditTextEdit = (TextView)findViewById(R.id.text_field_edit);
+//		if(border.equals("none")){
+//			if(android.os.Build.VERSION.SDK_INT >= 16){
+//				mEditTextEdit.setBackground(null);
+//			} else {
+//				mEditTextEdit.setBackgroundDrawable(null);
+//			}
+//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -69,13 +67,14 @@ public class HyjSelectorField extends LinearLayout {
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
+			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
@@ -93,7 +92,7 @@ public class HyjSelectorField extends LinearLayout {
 	}
 	
 	public Editable getText(){
-		return mEditTextEdit.getText();
+		return mEditTextEdit.getEditableText();
 	}
 	
 	public void setModelId(String modelId){

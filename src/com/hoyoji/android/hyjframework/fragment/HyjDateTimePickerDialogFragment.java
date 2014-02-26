@@ -95,7 +95,7 @@ public class HyjDateTimePickerDialogFragment extends DialogFragment implements O
         builder.setView(mView);
 
         // Set title of dialog
-        builder.setMessage(title)
+        builder.setTitle(title)
                 // Set Ok button
                 .setPositiveButton(R.string.alert_dialog_ok,
                         new DialogInterface.OnClickListener() {
