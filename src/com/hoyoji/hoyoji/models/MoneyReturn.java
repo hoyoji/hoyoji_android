@@ -275,6 +275,14 @@ public class MoneyReturn extends HyjModel{
 		return mRemark;
 	}
 
+	public String getDisplayRemark() {
+		if(mRemark != null){
+			return mRemark;
+		} else {
+			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+		}
+	}
+	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}

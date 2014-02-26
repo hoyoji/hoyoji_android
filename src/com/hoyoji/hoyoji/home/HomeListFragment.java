@@ -20,8 +20,13 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyPayback;
+import com.hoyoji.hoyoji.models.MoneyReturn;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -185,11 +190,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return setMoneyExpenseItemValue(view, object, name);
 		} else if(object instanceof MoneyIncome){
 			return setMoneyIncomeItemValue(view, object, name);
-			
+		} else if(object instanceof MoneyTransfer){
+			return setMoneyTransferItemValue(view, object, name);
+		} else if(object instanceof MoneyBorrow){
+			return setMoneyBorrowItemValue(view, object, name);
+		} else if(object instanceof MoneyLend){
+			return setMoneyLendItemValue(view, object, name);
+		} else if(object instanceof MoneyReturn){
+			return setMoneyReturnItemValue(view, object, name);
+		} else if(object instanceof MoneyPayback){
+			return setMoneyPaybackItemValue(view, object, name);
 		}
 		return false;
 	}
-	
+
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
@@ -248,6 +262,156 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(((MoneyIncome)object).getDisplayRemark());
 			return true;
 		} else {
+			return false;
+		}
+	}
+	
+	private boolean setMoneyTransferItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyTransfer)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("转账");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+//			((TextView)view).setText(((MoneyTransfer)object).getProject().getName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(((MoneyTransfer)object).getTransferOutAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((MoneyTransfer)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+//			((TextView)view).setText(((MoneyTransfer)object).getOwnerUser().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	private boolean setMoneyBorrowItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("借入");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+//			((TextView)view).setText(((MoneyBorrow)object).getProject().getName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(((MoneyBorrow)object).getAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((MoneyBorrow)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+//			((TextView)view).setText(((MoneyBorrow)object).getOwnerUser().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyBorrow)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	private boolean setMoneyLendItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("借出");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+//			((TextView)view).setText(((MoneyLend)object).getProject().getName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(((MoneyLend)object).getAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((MoneyLend)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+//			((TextView)view).setText(((MoneyLend)object).getOwnerUser().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyLend)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	private boolean setMoneyReturnItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("还款");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+//			((TextView)view).setText(((MoneyReturn)object).getProject().getName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(((MoneyReturn)object).getAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((MoneyReturn)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+//			((TextView)view).setText(((MoneyReturn)object).getOwnerUser().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyReturn)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	private boolean setMoneyPaybackItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("收款");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+//			((TextView)view).setText(((MoneyPayback)object).getProject().getName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setCurrencySymbol("¥");
+			numericView.setNumber(((MoneyPayback)object).getAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((MoneyPayback)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+//			((TextView)view).setText(((MoneyPayback)object).getOwnerUser().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyPayback)object).getDisplayRemark());
+			return true;
+		} else{
 			return false;
 		}
 	}

@@ -366,7 +366,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor.getValidationError("moneyExpenseCategory"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyExpenseEditor.getValidationError("remark"));
-		mApportionFieldApportions.setError(mMoneyExpenseEditor.getValidationError("remark"));
+		mApportionFieldApportions.setError(mMoneyExpenseEditor.getValidationError("apportionTotalAmount"));
 	}
 
 	 @Override

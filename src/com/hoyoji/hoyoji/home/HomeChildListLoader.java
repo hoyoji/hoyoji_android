@@ -20,8 +20,13 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyPayback;
+import com.hoyoji.hoyoji.models.MoneyReturn;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -96,6 +101,16 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	list.addAll(moneyExpenses);
 	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
+	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyTransfers);
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyBorrows);
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyLends);
+	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyReturns);
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyPaybacks);
 	    	
 	    	Collections.sort(list, mDateComparator);
 	    	return list;
@@ -118,6 +133,41 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				}
 				if(rhs instanceof MoneyIncome){
 					rhsStr = ((MoneyIncome) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyTransfer){
+					lhsStr = ((MoneyTransfer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyTransfer){
+					rhsStr = ((MoneyTransfer) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyBorrow){
+					lhsStr = ((MoneyBorrow) lhs).getDate();
+				}
+				if(rhs instanceof MoneyBorrow){
+					rhsStr = ((MoneyBorrow) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyLend){
+					lhsStr = ((MoneyLend) lhs).getDate();
+				}
+				if(rhs instanceof MoneyLend){
+					rhsStr = ((MoneyLend) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyReturn){
+					lhsStr = ((MoneyReturn) lhs).getDate();
+				}
+				if(rhs instanceof MoneyReturn){
+					rhsStr = ((MoneyReturn) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyPayback){
+					lhsStr = ((MoneyPayback) lhs).getDate();
+				}
+				if(rhs instanceof MoneyPayback){
+					rhsStr = ((MoneyPayback) rhs).getDate();
 				}
 				
 				return rhsStr.compareTo(lhsStr);
