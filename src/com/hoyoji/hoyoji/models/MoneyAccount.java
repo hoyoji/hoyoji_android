@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -62,6 +63,10 @@ public class MoneyAccount extends HyjModel {
 		mId = UUID.randomUUID().toString();
 		mCurrencyId = userData.getActiveCurrencyId();
 		mCurrentBalance = 0.00;
+	}
+	
+	public static MoneyAccount getDebtAccount(String currency, String friend){
+		return new Select().from(MoneyAccount.class).where("accountType=Debt AND currencyId=? AND friendId=?", currency, friend).executeSingle();
 	}
 	
 	@Override
