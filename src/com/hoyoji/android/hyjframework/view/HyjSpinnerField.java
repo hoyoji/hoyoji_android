@@ -112,8 +112,6 @@ public class HyjSpinnerField extends LinearLayout {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 	}
