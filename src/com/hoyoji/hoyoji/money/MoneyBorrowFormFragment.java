@@ -51,6 +51,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericAmount = null;
 	private HyjDateTimeField mDateTimeFieldReturnDate = null;
 	private HyjNumericField mNumerFieldReturnedAmount = null;
+	private View mSeparatorFieldReturnedAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
@@ -100,10 +101,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mNumerFieldReturnedAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnedAmount);	
 		mNumerFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
 		mNumerFieldReturnedAmount.setEnabled(false);
+		mSeparatorFieldReturnedAmount = (View) getView().findViewById(R.id.moneyBorrowFormFragment_separatorField_returnedAmount);
 		if(modelId == -1){
 			mNumerFieldReturnedAmount.setVisibility(View.GONE);
+			mSeparatorFieldReturnedAmount.setVisibility(View.GONE);
 		}else{
 			mNumerFieldReturnedAmount.setVisibility(View.VISIBLE);
+			mSeparatorFieldReturnedAmount.setVisibility(View.VISIBLE);
 		}
 		
 		oldMoneyAccount = moneyBorrow.getMoneyAccount();
@@ -350,7 +354,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				}	
 				
 				if(modelId == -1){
-			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
+//			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
 				
 				}else{
 					
