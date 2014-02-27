@@ -116,11 +116,16 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				public void finishCallback(Object object) {
 					JSONArray jsonArray = (JSONArray) object;
 					if (jsonArray.optJSONArray(0).length() > 0) {
-						// 好友已经在服务器上存在
-						((HyjActivity) AddFriendListFragment.this.getActivity())
-								.dismissProgressDialog();
-						HyjUtil.displayToast(R.string.friendListFragment_addFriend_error_exists);
-						
+						// 好友已经在服务器上存在，如果该好友不在本地（可能是未同步，或是同步出错？），我们将其加进来
+						JSONObject jsonFriend = jsonArray.optJSONArray(0).optJSONObject(0);
+						Friend newFriend = HyjModel.getModel(Friend.class, jsonFriend.optString("id"));
+						if(newFriend == null){
+							loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
+						} else {
+							((HyjActivity) AddFriendListFragment.this.getActivity())
+									.dismissProgressDialog();
+							HyjUtil.displayToast(R.string.friendListFragment_addFriend_error_exists);
+						}
 					} else if (jsonUser.optString("id").equals(
 							HyjApplication.getInstance().getCurrentUser()
 									.getId())) {
@@ -330,52 +335,57 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		}
 	}
 
+	private void loadFriendPicturesAndSaveFriend(final JSONObject jsonUser, final JSONObject jsonFriend){
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				Friend newFriend = HyjModel.getModel(Friend.class,
+						jsonFriend.optString("id"));
+				if (newFriend == null) {
+					newFriend = new Friend();
+				}
+				newFriend.loadFromJSON(jsonFriend);
+
+				User newUser = HyjModel.getModel(User.class,
+						jsonUser.optString("id"));
+				if (newUser == null) {
+					newUser = new User();
+				}
+				newUser.loadFromJSON(jsonUser);
+
+				saveUserPictures(object);
+				newUser.save();
+				newFriend.save();
+				
+				((HyjActivity) AddFriendListFragment.this.getActivity())
+				.dismissProgressDialog();
+				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+				AddFriendListFragment.this.getActivity().finish();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonUser.optString("id"), "fetchRecordPictures");
+	}
+	
 	private void loadNewlyAddedFriend(final JSONObject jsonUser) {
 		// load new friend from server
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
 				try {
-					final JSONObject jsonFriend = ((JSONArray) object).getJSONArray(0)
+					JSONObject jsonFriend;
+					jsonFriend = ((JSONArray) object).getJSONArray(0)
 							.getJSONObject(0);
-					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-						@Override
-						public void finishCallback(Object object) {
-							Friend newFriend = HyjModel.getModel(Friend.class,
-									jsonFriend.optString("id"));
-							if (newFriend == null) {
-								newFriend = new Friend();
-							}
-							newFriend.loadFromJSON(jsonFriend);
-
-							User newUser = HyjModel.getModel(User.class,
-									jsonUser.optString("id"));
-							if (newUser == null) {
-								newUser = new User();
-							}
-							newUser.loadFromJSON(jsonUser);
-
-							saveUserPictures(object);
-							newUser.save();
-							newFriend.save();
-							
-							((HyjActivity) AddFriendListFragment.this.getActivity())
-							.dismissProgressDialog();
-							HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-							AddFriendListFragment.this.getActivity().finish();
-						}
-
-						@Override
-						public void errorCallback(Object object) {
-							displayError(object);
-						}
-					};
-					
-					HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonUser.optString("id"), "fetchRecordPictures");
+					loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
 				} catch (JSONException e) {
 					e.printStackTrace();
 					((HyjActivity) AddFriendListFragment.this.getActivity())
-							.dismissProgressDialog();
+					.dismissProgressDialog();
 				}
 			}
 
