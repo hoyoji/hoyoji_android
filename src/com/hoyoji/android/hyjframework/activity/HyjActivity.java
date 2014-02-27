@@ -149,24 +149,18 @@ public abstract class HyjActivity extends ActionBarActivity {
     }
 	
 	public void dialogDoPositiveClick(Object object) {
-		mDialogFragment.dismiss();
-		mDialogFragment = null;
 		if(mDialogCallback != null){
 			mDialogCallback.doPositiveClick(object);
 		}
 	}
 	
 	public void dialogDoNegativeClick() {
-		mDialogFragment.dismiss();
-		mDialogFragment = null;
 		if(mDialogCallback != null){
 			mDialogCallback.doNegativeClick();
 		}
 	}
 	
 	public void dialogDoNeutralClick() {
-		mDialogFragment.dismiss();
-		mDialogFragment = null;
 		if(mDialogCallback != null){
 			mDialogCallback.doNeutralClick();
 		}

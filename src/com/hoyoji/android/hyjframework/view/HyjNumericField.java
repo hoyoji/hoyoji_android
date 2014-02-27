@@ -106,7 +106,11 @@ public class HyjNumericField extends LinearLayout {
 			}
 		});
 	}
-
+	
+	public void setOnFocusChangeListener(OnFocusChangeListener l){
+		mEditTextEdit.setOnFocusChangeListener(l);
+	}
+			
 	public void setError(String error){
 		mEditTextEdit.setError(error);
 	}

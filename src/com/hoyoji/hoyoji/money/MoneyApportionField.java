@@ -138,6 +138,8 @@ public class MoneyApportionField extends GridView {
 	
 	public void setTotalAmount(Double totalAmount){
 		double fixedTotal = 0.0;
+		double fixedSharePercentage = 0.0;
+		
 		double averageAmount = 0.0;
 		double shareTotal = 0.0;
 		int numOfAverage = 0;
@@ -160,23 +162,27 @@ public class MoneyApportionField extends GridView {
 					numOfAverage++;
 				} else if(api.getApportionType().equalsIgnoreCase("Fixed")){
 //					api.setAmount(api.getAmount());
-					fixedTotal+=api.getAmount();
+					fixedTotal += api.getAmount();
+					fixedSharePercentage += api.getProjectShareAuthorization().getSharePercentage();
 				}
 			}
 		}
 		
+		
+		// 占股分摊=（总金额-定额分摊）*占股/（100-定额分摊人所占股数）
 		shareTotal = totalAmount - fixedTotal;
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Share")){
-					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / 100;
+					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / (100 - fixedSharePercentage);
 					api.setAmount(shareAmount);
 					fixedTotal += shareAmount;
 				}
 			}
 		}
 		
+		// 平均分摊 = （总金额-定额分摊-占股分摊） / 平均分摊人数
 		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
@@ -293,7 +299,7 @@ public class MoneyApportionField extends GridView {
 							apportionItem.undelete();
 							self.setTotalAmount(null);
 						} else {
-							HyjActivity activity = (HyjActivity) getContext();
+							final HyjActivity activity = (HyjActivity) getContext();
 							if(activity.mDialogFragment != null){
 								activity.mDialogFragment.dismiss();
 							}
@@ -301,12 +307,19 @@ public class MoneyApportionField extends GridView {
 							activity.mDialogCallback = new HyjActivity.DialogCallbackListener() {
 								@Override
 								public void doPositiveClick(Object bundle) {
-									Bundle b = (Bundle)bundle;
-							    	final String apportionType = b.getString("apportionType");
-							    	Double apportionAmount = b.getDouble("apportionAmount");
-									apportionItem.setAmount(apportionAmount);
-									apportionItem.setApportionType(apportionType);
-									self.setTotalAmount(null);
+//									if(bundle != null){
+										Bundle b = (Bundle)bundle;
+								    	final String apportionType = b.getString("apportionType");
+								    	Double apportionAmount = b.getDouble("apportionAmount");
+										apportionItem.setAmount(apportionAmount);
+										apportionItem.setApportionType(apportionType);
+										self.setTotalAmount(null);
+//									} else {
+//										MoneyApportionEditDialogFragment f = (MoneyApportionEditDialogFragment)activity.mDialogFragment;
+//										apportionItem.setApportionType(f.getApportionType());
+//										self.setTotalAmount(null);
+//										f.setApportionAmount(apportionItem.getAmount());
+//									}
 								}
 								@Override
 								public void doNegativeClick() {

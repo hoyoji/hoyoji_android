@@ -8,6 +8,7 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.hoyoji.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,14 +18,20 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class MoneyApportionEditDialogFragment extends DialogFragment {
-    static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType) {
+	private HyjNumericField mNumericFieldApportionAmount;
+	private HyjSpinnerField mSpinnerFieldApportionType;
+	
+	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType) {
     	MoneyApportionEditDialogFragment f = new MoneyApportionEditDialogFragment();
         Bundle args = new Bundle();
         args.putDouble("apportionAmount", apportionAmount);
@@ -32,7 +39,8 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         f.setArguments(args);
         return f;
     }
-    @Override
+
+	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       	final String apportionType = getArguments().getString("apportionType");
     	Double apportionAmount = getArguments().getDouble("apportionAmount");
@@ -42,12 +50,36 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
     	
     	View v = inflater.inflate(R.layout.money_dialogfragment_moneyapportion_edit, null);
-        final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
+    	final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
         numericFieldApportionAmount.setNumber(apportionAmount);
-        
+        mNumericFieldApportionAmount = numericFieldApportionAmount;
+//        mNumericFieldApportionAmount.setOnFocusChangeListener(new OnFocusChangeListener(){
+//			@Override
+//			public void onFocusChange(View v, boolean hasFocus) {
+//				if(hasFocus){
+//				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//				}
+//			}
+//        });
         final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
+        mSpinnerFieldApportionType = spinnerFieldApportionType;
         spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Share", "Fixed"});
         spinnerFieldApportionType.setSelectedValue(apportionType);
+		numericFieldApportionAmount.setEnabled(apportionType == "Fixed");
+        spinnerFieldApportionType.setOnItemSelectedListener(new OnItemSelectedListener(){
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int pos, long arg3) {
+				if(pos == 2){
+					numericFieldApportionAmount.setEnabled(true);
+				} else {
+					numericFieldApportionAmount.setEnabled(false);
+				}
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+        });
         
 
         v.findViewById(R.id.moneyApportionDialogFragment_button_delete).setOnClickListener(new OnClickListener(){
@@ -85,11 +117,20 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
                             }
                         }); 
         
-		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         // Create the AlertDialog object and return it
         return builder.create();
     }
+    
+
+	public void setApportionAmount(Double amount) {
+		mNumericFieldApportionAmount.setNumber(amount);
+	}
+	
+	public String getApportionType(){
+		return mSpinnerFieldApportionType.getSelectedValue();
+	}
+	
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //            Bundle savedInstanceState) {
