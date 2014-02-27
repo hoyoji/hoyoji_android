@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="button_save" type="id"/>
+    <item name="button_money_add_new" type="id"/>
     
+    <item name="button_save" type="id"/>
+    <item name="button_delete" type="id"/>
+    <item name="field_separator_button_delete" type="id"/>
     <item name="field_separator" type="id"/>
     
     <item name="text_field_label" type="id"/>

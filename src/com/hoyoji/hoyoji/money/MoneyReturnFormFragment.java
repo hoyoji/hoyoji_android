@@ -152,7 +152,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mImageFieldPicture.addPicture();		
+				mImageFieldPicture.takePictureFromCamera();		
 			}
 		});
 		

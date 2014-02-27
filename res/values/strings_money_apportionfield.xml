@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="moneyApportionField_title">分摊成员</string>
+    <string name="moneyApportionField_select_apportion_member">选择分摊成员</string>
+	<string name="moneyApportionField_select_toast_apportion_user_already_exists">该分摊成员已经存在</string> 
+	<string name="moneyApportionField_select_toast_apportion_totalAmount_not_equal">分摊总额与支出金额不一样</string> 
+	
+	<string name="moneyApportionField_moreActions_add">添加成员</string> 
+	<string name="moneyApportionField_moreActions_add_all">添加所有成员</string> 
+	<string name="moneyApportionField_moreActions_clear">清空所有成员</string> 
+	<string name="moneyApportionField_moreActions_all_average">所有成员平均分摊</string> 
+	<string name="moneyApportionField_moreActions_all_share">所有成员占股分摊</string> 
+</resources>

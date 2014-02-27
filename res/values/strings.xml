@@ -15,8 +15,11 @@
     <string name="app_validation_error">表单中包含错误</string>
     <string name="app_save_success">保存成功</string>
     
-   <string name="app_no_remark">无备注</string>
+    <string name="app_no_remark">无备注</string>
     <string name="app_listfield_add">添加</string>
+    <string name="app_confirm_delete">你确定要删除当前记录吗？</string>
+    <string name="app_delete_success">删除成功</string>
+    <string name="app_delete_failed">删除不成功</string>
     
     <string name="app_listview_no_content">无内容</string>
     <string name="app_listview_footer_fetch_no_more">无更多</string>
@@ -30,8 +33,9 @@
     <string name="app_take_picture">拍照</string>
     <string name="app_import_picture">从相册导入</string>
     
-   <string-array name="app_get_picture">
-        <item>拍照</item>
-        <item>从相册导入</item>
-    </string-array>
+    <string name="app_action_money_expense">支出</string>
+    <string name="app_action_money_income">收入</string>
+    <string name="app_action_money_transfer">转账</string>
+    <string name="app_action_money_debt">借贷</string>
+    <string name="app_action_money_topup">充值</string>
 </resources>

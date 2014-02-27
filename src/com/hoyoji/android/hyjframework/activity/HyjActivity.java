@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -197,10 +198,8 @@ public abstract class HyjActivity extends ActionBarActivity {
 			fragmentTransaction.add(android.R.id.content, newFragment, "fragment");
 			fragmentTransaction.commit();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -210,6 +209,9 @@ public abstract class HyjActivity extends ActionBarActivity {
 	    if (requestCode == REQUEST_TAKE_PHOTO) {
 	    	Intent intent = new Intent("REQUEST_TAKE_PHOTO");
 	    	intent.putExtra("resultCode", resultCode);
+	    	if(data != null){
+		    	intent.putExtra("selectedImage", data.getDataString());
+	    	}
 	    	this.sendBroadcast(intent);
 	    } else {
 	    	super.onActivityResult(requestCode, resultCode, data);

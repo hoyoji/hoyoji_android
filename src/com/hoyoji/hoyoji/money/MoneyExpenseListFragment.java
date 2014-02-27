@@ -96,8 +96,8 @@ public class MoneyExpenseListFragment extends HyjUserListFragment {
 				MoneyExpense moneyExpense = MoneyExpense.load(MoneyExpense.class, id);
 				MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-				moneyExpense.delete();
 				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
+				moneyExpense.delete();
 				moneyAccountEditor.save();
 				
 			    HyjUtil.displayToast("支出删除成功");

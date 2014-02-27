@@ -3,12 +3,20 @@ package com.hoyoji.hoyoji.home;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -20,6 +28,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
@@ -27,6 +36,15 @@ import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.money.MoneyApportionField;
+import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
+import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
+import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -53,6 +71,48 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		super.onInitViewData();
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
+		getView().findViewById(R.id.homeListFragment_action_money_expense).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+    		}
+		});
+		getView().findViewById(R.id.homeListFragment_action_money_income).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+    		}
+		});
+		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
+    		}
+		});		
+		getView().findViewById(R.id.homeListFragment_action_money_debt).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				PopupMenu popup = new PopupMenu(getActivity(), v);
+				MenuInflater inflater = popup.getMenuInflater();
+				inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
+							return true;
+						} 
+						return false;
+					}
+				});
+				popup.show();
+			}
+		});
+		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+			//	openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
+    		}
+		});			
 	}
 
 	@Override
@@ -78,33 +138,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjUtil.displayToast(R.string.homeListFragment_action_display_transaction_type);
 			return true;
 		}
-
-		// 以下在 MainActivity.java 里面设置!
-		//
-		// else if(item.getItemId() ==
-		// R.id.mainActivity_action_money_addnew_expense){
-		// openActivityWithFragment(MoneyExpenseFormFragment.class,
-		// R.string.moneyExpenseFormFragment_title_addnew, null);
-		// return true;
-		// }
-		// else if(item.getItemId() ==
-		// R.id.mainActivity_action_money_addnew_income){
-		// openActivityWithFragment(MoneyExpenseListFragment.class,
-		// R.string.moneyExpenseListFragment_title_all, null);
-		// return true;
-		// }
-		// else if(item.getItemId() ==
-		// R.id.mainActivity_action_money_addnew_transfer){
-		// openActivityWithFragment(MoneyExpenseListFragment.class,
-		// R.string.moneyExpenseListFragment_title_all, null);
-		// return true;
-		// }
-		// else if(item.getItemId() ==
-		// R.id.mainActivity_action_money_addnew_topup){
-		// openActivityWithFragment(MoneyIncomeListFragment.class,
-		// R.string.moneyIncomeListFragment_title_all, null);
-		// return true;
-		// }
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -430,4 +463,47 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		Loader loader = getLoaderManager().getLoader(-1);
 		((HomeGroupListLoader)loader).fetchMore(null);	
 	}
+	
+	@Override  
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		if(id == -1) {
+			 return false;
+		}
+		if(getActivity().getCallingActivity() != null){
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_ID", id);
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+			return true;
+		} else {
+			HyjModel object = (HyjModel) ((HyjSimpleExpandableListAdapter)parent.getExpandableListAdapter()).getChild(groupPosition, childPosition);
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", object.get_mId());
+			if(object instanceof MoneyExpense){
+				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyIncome){
+				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyTransfer){
+				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyBorrow){
+				openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyLend){
+				openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyReturn){
+				openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyPayback){
+				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				return true;
+			}
+		}
+		return false;
+    } 
+	
 }

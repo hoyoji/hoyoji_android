@@ -216,7 +216,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="项目分摊成员">
+            android:text="@string/moneyApportionField_title">
             </TextView>
             <LinearLayout 
                 android:layout_width="wrap_content"
@@ -226,40 +226,19 @@
                 >
 
                 <ImageView
-                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_clear_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_action_cancel" />
-                
-                <ImageView
-                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_action_data_usage" />
-
-                <ImageView
-                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_average"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_action_view_as_grid" />
-
-                <ImageView
-                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_add_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                 android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_action_add_group" />
-
-                <ImageView
                     android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/ic_action_add_person" />
                 
+                <ImageView
+                    android:id="@+id/moneyExpenseFormFragment_imageButton_apportion_more_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_overflow" />
+
             </LinearLayout>
         </FrameLayout>
         
@@ -309,6 +288,21 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_action_save" />
+    <View
+        android:id="@id/field_separator_button_delete"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+
+    <Button
+        android:id="@id/button_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_action_remove"
+        android:textColor="#FF0000" />
+        
     </LinearLayout>
 
 </ScrollView>
