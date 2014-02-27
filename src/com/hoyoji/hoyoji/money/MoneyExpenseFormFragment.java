@@ -311,7 +311,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		// 只在新增时才自动打开软键盘， 修改时不自动打开
+		if(modelId == -1){
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 	}
 	
 	private void setExchangeRate(){
