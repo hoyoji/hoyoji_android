@@ -50,6 +50,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericAmount = null;
 	private HyjDateTimeField mDateTimeFieldPaybackDate = null;
 	private HyjNumericField mNumericFieldPaybackedAmount = null;
+	private View mSeparatorFieldPaybackedAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
@@ -99,10 +100,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mNumericFieldPaybackedAmount = (HyjNumericField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackedAmount);	
 		mNumericFieldPaybackedAmount.setNumber(moneyLend.getPaybackedAmount());
 		mNumericFieldPaybackedAmount.setEnabled(false);
+		mSeparatorFieldPaybackedAmount = (View) getView().findViewById(R.id.moneyLendFormFragment_separatorField_paybackedAmount);
 		if(modelId == -1){
 			mNumericFieldPaybackedAmount.setVisibility(View.GONE);
+			mSeparatorFieldPaybackedAmount.setVisibility(View.GONE);
 		}else{
 			mNumericFieldPaybackedAmount.setVisibility(View.VISIBLE);
+			mSeparatorFieldPaybackedAmount.setVisibility(View.VISIBLE);
 		}
 		
 		oldMoneyAccount = moneyLend.getMoneyAccount();

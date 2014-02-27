@@ -144,7 +144,7 @@
                     hyj:labelText="@string/moneyBorrowFormFragment_textView_returnedAmount" />
 
         <View
-            android:id="@id/field_separator"
+            android:id="@+id/moneyBorrowFormFragment_separatorField_returnedAmount"
             android:layout_width="match_parent"
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
