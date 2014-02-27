@@ -299,7 +299,7 @@ public class MoneyApportionField extends GridView {
 							apportionItem.undelete();
 							self.setTotalAmount(null);
 						} else {
-							HyjActivity activity = (HyjActivity) getContext();
+							final HyjActivity activity = (HyjActivity) getContext();
 							if(activity.mDialogFragment != null){
 								activity.mDialogFragment.dismiss();
 							}
@@ -307,12 +307,19 @@ public class MoneyApportionField extends GridView {
 							activity.mDialogCallback = new HyjActivity.DialogCallbackListener() {
 								@Override
 								public void doPositiveClick(Object bundle) {
-									Bundle b = (Bundle)bundle;
-							    	final String apportionType = b.getString("apportionType");
-							    	Double apportionAmount = b.getDouble("apportionAmount");
-									apportionItem.setAmount(apportionAmount);
-									apportionItem.setApportionType(apportionType);
-									self.setTotalAmount(null);
+//									if(bundle != null){
+										Bundle b = (Bundle)bundle;
+								    	final String apportionType = b.getString("apportionType");
+								    	Double apportionAmount = b.getDouble("apportionAmount");
+										apportionItem.setAmount(apportionAmount);
+										apportionItem.setApportionType(apportionType);
+										self.setTotalAmount(null);
+//									} else {
+//										MoneyApportionEditDialogFragment f = (MoneyApportionEditDialogFragment)activity.mDialogFragment;
+//										apportionItem.setApportionType(f.getApportionType());
+//										self.setTotalAmount(null);
+//										f.setApportionAmount(apportionItem.getAmount());
+//									}
 								}
 								@Override
 								public void doNegativeClick() {

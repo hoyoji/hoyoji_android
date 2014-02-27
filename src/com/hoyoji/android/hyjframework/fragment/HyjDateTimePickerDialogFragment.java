@@ -103,6 +103,7 @@ public class HyjDateTimePickerDialogFragment extends DialogFragment implements O
                                 // User ok the dialog
 								((HyjActivity) getActivity())
 								.dialogDoPositiveClick(mCalendar.getTime());
+								dismiss();
                             }
                         })
                 // Set Cancel button
@@ -110,7 +111,8 @@ public class HyjDateTimePickerDialogFragment extends DialogFragment implements O
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User cancelled the dialog
-                                HyjDateTimePickerDialogFragment.this.getDialog().cancel();
+//                                HyjDateTimePickerDialogFragment.this.getDialog().cancel();
+								dismiss();
                             }
                         }); 
 

@@ -64,6 +64,7 @@ public class HyjDialogFragment extends DialogFragment {
 									int whichButton) {
 								((HyjActivity) getActivity())
 										.dialogDoPositiveClick(null);
+								dismiss();
 							}
 						});
 		if(negativeButton != -1){
@@ -73,6 +74,7 @@ public class HyjDialogFragment extends DialogFragment {
 									int whichButton) {
 								((HyjActivity) getActivity())
 										.dialogDoNegativeClick();
+								dismiss();
 							}
 						});
 			builder.setOnKeyListener(new OnKeyListener() {
@@ -81,6 +83,7 @@ public class HyjDialogFragment extends DialogFragment {
 						KeyEvent arg2) {
 					if(arg1 == KeyEvent.KEYCODE_BACK){
 						((HyjActivity) getActivity()).dialogDoNegativeClick();
+						dismiss();
 						return true;
 					}
 					return false;
@@ -94,6 +97,7 @@ public class HyjDialogFragment extends DialogFragment {
 									int whichButton) {
 								((HyjActivity) getActivity())
 										.dialogDoNeutralClick();
+								dismiss();
 							}
 						});
 		}
