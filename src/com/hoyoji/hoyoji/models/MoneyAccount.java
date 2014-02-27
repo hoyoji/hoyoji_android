@@ -66,7 +66,10 @@ public class MoneyAccount extends HyjModel {
 	}
 	
 	public static MoneyAccount getDebtAccount(String currency, String friend){
-		return new Select().from(MoneyAccount.class).where("accountType=Debt AND currencyId=? AND friendId=?", currency, friend).executeSingle();
+		if(friend == null){
+			friend = "";
+		}
+		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currency, friend).executeSingle();
 	}
 	
 	@Override

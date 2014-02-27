@@ -353,8 +353,16 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					newMoneyAccountEditor.save();
 				}	
 				
+				MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
+				HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 				if(modelId == -1){
-//			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
+			    	if(newDebtAccount != null) {
+			    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - mNumericAmount.getNumber());
+			    		newDebtAccountEditor.save();
+			    	}else{
+			    		MoneyAccount createDebtAccount = new MoneyAccount();
+			    		
+			    	}
 				
 				}else{
 					
