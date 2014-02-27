@@ -398,33 +398,34 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
+				MoneyTransfer moneyTransferCopy = mMoneyTransferEditor.getModelCopy();
 				mMoneyTransferEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
-					MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
+					MoneyAccount transferOut = moneyTransferCopy.getTransferOut();
+					MoneyAccount transferIn = moneyTransferCopy.getTransferIn();
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(transferOut.getCurrencyId());
 					newExchange.setForeignCurrencyId(transferIn.getCurrencyId());
-					newExchange.setRate(mNumericExchangeRate.getNumber());
+					newExchange.setRate(moneyTransferCopy.getExchangeRate());
 					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}
 				
-				MoneyAccount newTransferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
+				MoneyAccount newTransferOut = moneyTransferCopy.getTransferOut();
 				HyjModelEditor<MoneyAccount> newTransferOutEditor = newTransferOut.newModelEditor();
 				
-				MoneyAccount newTransferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
+				MoneyAccount newTransferIn = moneyTransferCopy.getTransferIn();
 				HyjModelEditor<MoneyAccount> newTransferInEditor = newTransferIn.newModelEditor();
 				
 				if(modelId == -1){
 				    if(newTransferOut != null){
-				    	newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
+				    	newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - moneyTransferCopy.getTransferOutAmount0());
 				    	newTransferOutEditor.save();
 				    }
 				    if(newTransferIn != null){
-				    	newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + mNumericTransferInAmount.getNumber());
+				    	newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + moneyTransferCopy.getTransferInAmount0());
 				    	newTransferInEditor.save();
 				    }
 				}else{
@@ -449,7 +450,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 //					}
 					
 					if(oldTransferOut.getId().equals(newTransferOut.getId())){
-						newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() + oldTransferOutAmount - mNumericTransferOutAmount.getNumber());
+						newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() + oldTransferOutAmount - moneyTransferCopy.getTransferOutAmount0());
 						newTransferOutEditor.save();
 					}else{
 						if(oldTransferOut != null){
@@ -457,13 +458,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 							oldTransferOutEditor.save();
 						}
 						if(newTransferOut != null){
-							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - mNumericTransferOutAmount.getNumber());
+							newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - moneyTransferCopy.getTransferOutAmount0());
 							newTransferOutEditor.save();
 						}
 					}
 					
 					if(oldTransferIn.getId().equals(newTransferIn.getId())){
-						newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() - oldTransferInAmount + mNumericTransferInAmount.getNumber());
+						newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() - oldTransferInAmount + moneyTransferCopy.getTransferInAmount0());
 						newTransferInEditor.save();
 					}else{
 						if(oldTransferIn != null){
@@ -471,7 +472,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 							oldTransferInEditor.save();
 						}
 						if(newTransferIn != null){
-							newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + mNumericTransferInAmount.getNumber());
+							newTransferInEditor.getModelCopy().setCurrentBalance(newTransferIn.getCurrentBalance() + moneyTransferCopy.getTransferInAmount0());
 							newTransferInEditor.save();
 						}
 					}
