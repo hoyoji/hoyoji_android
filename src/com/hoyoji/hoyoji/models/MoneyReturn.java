@@ -90,6 +90,7 @@ public class MoneyReturn extends HyjModel{
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		mInterest = 0.00;
 	}
 
 	public String getId() {
@@ -362,41 +363,46 @@ public class MoneyReturn extends HyjModel{
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-//		if(this.getDate() == null){
-//			modelEditor.setValidationError("date",R.string.moneyReturnFormFragment_editText_hint_date);
-//		}else{
-//			modelEditor.removeValidationError("date");
-//		}
-//		if(this.getAmount() == null){
-//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_hint_amount);
-//		}else if(this.getAmount() < 0){
-//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_negative_amount);
-//		}else if(this.getAmount() > 99999999){
-//			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_beyondMAX_amount);
-//		}
-//		else{
-//			modelEditor.removeValidationError("amount");
-//		}
-//		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyReturnFormFragment_editText_hint_moneyAccount);
-//		}else{
-//			modelEditor.removeValidationError("moneyAccount");
-//		}
-//		if(this.getMoneyReturnCategory() == null){
-//			modelEditor.setValidationError("moneyReturnCategory", R.string.moneyReturnFormFragment_editText_hint_moneyReturnCategory);
-//		}else{
-//			modelEditor.removeValidationError("moneyReturnCategory");
-//		}
-//		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyReturnFormFragment_editText_hint_project);
-//		}else{
-//			modelEditor.removeValidationError("project");
-//		}
-//		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyReturnFormFragment_editText_hint_friend);
-//		}else{
-//			modelEditor.removeValidationError("friend");
-//		}
+		if(this.getDate() == null){
+			modelEditor.setValidationError("date",R.string.moneyReturnFormFragment_editText_hint_date);
+		}else{
+			modelEditor.removeValidationError("date");
+		}
+		
+		if(this.getAmount() == null){
+			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_hint_amount);
+		}else if(this.getAmount() < 0){
+			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_negative_amount);
+		}else if(this.getAmount() > 99999999){
+			modelEditor.setValidationError("amount",R.string.moneyReturnFormFragment_editText_validationError_beyondMAX_amount);
+		}
+		else{
+			modelEditor.removeValidationError("amount");
+		}
+		
+		if(this.getMoneyAccountId() == null){
+			modelEditor.setValidationError("moneyAccount",R.string.moneyReturnFormFragment_editText_hint_moneyAccount);
+		}else{
+			modelEditor.removeValidationError("moneyAccount");
+		}
+		
+
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.moneyReturnFormFragment_editText_hint_project);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
+		
+		if(this.getInterest() == null){
+			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_hint_amount);
+		}else if(this.getAmount() < 0){
+			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_validationError_negative_amount);
+		}else if(this.getAmount() > 99999999){
+			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_validationError_beyondMAX_amount);
+		}
+		else{
+			modelEditor.removeValidationError("interest");
+		}
 	}
 
 	@Override

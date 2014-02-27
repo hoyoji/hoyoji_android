@@ -350,7 +350,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				}	
 				
 				if(modelId == -1){
-			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
+//			    	MoneyAccount debtAccount = MoneyAccount.getDebtAccount(HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId()).getCurrencyId(), mSelectorFieldFriend.getModelId());
 				
 				}else{
 					
