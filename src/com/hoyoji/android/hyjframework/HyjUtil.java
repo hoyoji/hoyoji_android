@@ -258,7 +258,7 @@ public class HyjUtil {
 		}
 		public static String formatDateToIOS(Date date){
 			mIsoDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-			return mIsoDateFormat.format(date).replace("+0000$", "Z");
+			return mIsoDateFormat.format(date).replace("+0000", "Z");
 		}
 		
 		public static double toFixed2(Double number){

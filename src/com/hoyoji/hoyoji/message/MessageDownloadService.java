@@ -44,8 +44,8 @@ public class MessageDownloadService extends Service {
 		        @Override  
 		        public void run() {  
 		            // 开始执行后台任务  
-		        	User currentUser = HyjApplication.getInstance().getCurrentUser();
-		        	while(currentUser != null){
+		        	while(HyjApplication.getInstance().getCurrentUser() != null){
+			        		User currentUser = HyjApplication.getInstance().getCurrentUser();
 							Log.d(TAG, "checking messages ...");  
 			        		JSONObject postData = new JSONObject();
 			        		try {
