@@ -213,6 +213,30 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyTransfer.getExchangeRate());
+		mNumericExchangeRate.getEditText().addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
+					mNumericTransferInAmount.setNumber(Double.valueOf(s.toString()) * mNumericTransferOutAmount.getNumber());
+				}else{
+					mNumericTransferInAmount.setNumber(null);
+				}
+			}
+			
+		});
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_linearLayout_exchangeRate);
