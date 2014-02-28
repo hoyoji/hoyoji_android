@@ -219,6 +219,7 @@ public class HomeGroupListLoader extends
 			}
 			if (count > 0) {
 				String ds = df.format(calToday.getTime());
+//				ds = ds.replaceAll("Z$", "+0000");
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
 				groupObject.put("date", ds);
 				groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
@@ -382,6 +383,7 @@ public class HomeGroupListLoader extends
 		}
 		if(dateString != null){
 			try {
+				dateString = dateString.replaceAll("Z$", "+0000");
 				Long dateInMillis = mDateFormat.parse(dateString).getTime();
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
