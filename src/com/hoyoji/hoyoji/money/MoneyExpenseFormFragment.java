@@ -410,8 +410,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final MoneyExpense moneyExpense = moneyExpenseEditor.getModelCopy();
 		
 		if (moneyExpense.get_mId() == null) {
-			getView().findViewById(R.id.field_separator_button_delete)
-					.setVisibility(View.GONE);
 			buttonDelete.setVisibility(View.GONE);
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
