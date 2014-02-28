@@ -343,7 +343,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyLend moneyLendModel = mMoneyLendEditor.getModelCopy();
+				MoneyLend moneyLendModel = mMoneyLendEditor.getModel();
 				mMoneyLendEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){

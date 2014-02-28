@@ -329,7 +329,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyPayback moneyPaybackModel = mMoneyPaybackEditor.getModelCopy();
+				MoneyPayback moneyPaybackModel = mMoneyPaybackEditor.getModel();
 				mMoneyPaybackEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){

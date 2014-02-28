@@ -329,7 +329,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModelCopy();
+				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModel();
 				mMoneyReturnEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
