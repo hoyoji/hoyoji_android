@@ -55,6 +55,7 @@ import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
@@ -70,6 +71,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private Double oldAmount;
 	private MoneyAccount oldMoneyAccount;
+	Long modelId;
 
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -97,7 +99,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final MoneyExpense moneyExpense;
 
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
 			moneyExpense = new Select().from(MoneyExpense.class)
 					.where("_id=?", modelId).executeSingle();
@@ -570,6 +572,15 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModel();
 				mMoneyExpenseEditor.save();
+				
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
+					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
+					userDataEditor.save();
+				}
+				
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
 					Project project = moneyExpenseModel.getProject();

@@ -103,13 +103,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
 						} 
 						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
-							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
 						} 
 						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
-							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
 						} 
 						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
-							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
 						} 
 						return false;
 					}
