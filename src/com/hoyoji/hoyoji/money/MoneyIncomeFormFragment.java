@@ -309,7 +309,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModelCopy();
+				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModel();
 				mMoneyIncomeEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){

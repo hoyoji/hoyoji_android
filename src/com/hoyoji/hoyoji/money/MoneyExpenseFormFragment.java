@@ -568,7 +568,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 				saveApportions();
 
-				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
+				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModel();
 				mMoneyExpenseEditor.save();
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
