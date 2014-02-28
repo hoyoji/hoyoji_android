@@ -10,7 +10,6 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	@Column(name = "_creatorId")
 	private String m_creatorId;
 
-
 	@Column(name = "serverRecordHash")
 	private String mServerRecordHash;
 

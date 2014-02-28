@@ -20,6 +20,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
@@ -111,6 +112,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	list.addAll(moneyReturns);
 	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
+	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(messages);
 	    	
 	    	Collections.sort(list, mDateComparator);
 	    	return list;
@@ -169,7 +172,9 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				if(rhs instanceof MoneyPayback){
 					rhsStr = ((MoneyPayback) rhs).getDate();
 				}
-				
+				if(rhs instanceof Message){
+					rhsStr = ((Message) rhs).getDate();
+				}
 				return rhsStr.compareTo(lhsStr);
 			}
 	    } 

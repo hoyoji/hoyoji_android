@@ -121,7 +121,7 @@ public class MoneyApportionField extends GridView {
 				total += api.getAmount();
 			}
 		}
-		return total;
+		return HyjUtil.toFixed2(total);
 	}
 	
 	public int getCount(){
@@ -178,6 +178,7 @@ public class MoneyApportionField extends GridView {
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Share")){
 					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / sharePercentageTotal;
+					shareAmount = HyjUtil.toFixed2(shareAmount);
 					api.setAmount(shareAmount);
 					fixedTotal += shareAmount;
 				}
@@ -186,12 +187,21 @@ public class MoneyApportionField extends GridView {
 		
 		// 平均分摊 = （总金额-定额分摊-占股分摊） / 平均分摊人数
 		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
+		averageAmount = HyjUtil.toFixed2(averageAmount);
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Average")){
 					api.setAmount(averageAmount);
+					fixedTotal += averageAmount;
 				}
+			}
+		}
+		if(mImageGridAdapter.getCount() > 0){
+			double totalAmountFixed2 = HyjUtil.toFixed2(totalAmount.doubleValue());
+			if(fixedTotal != totalAmountFixed2){
+				totalAmountFixed2 = mImageGridAdapter.getItem(0).getAmount() + HyjUtil.toFixed2((totalAmountFixed2 - fixedTotal));
+				mImageGridAdapter.getItem(0).setAmount(HyjUtil.toFixed2(totalAmountFixed2));
 			}
 		}
 		mImageGridAdapter.notifyDataSetChanged();

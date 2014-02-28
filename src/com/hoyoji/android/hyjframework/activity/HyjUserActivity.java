@@ -10,6 +10,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.SettingsActivity;
+import com.hoyoji.hoyoji.message.MessageDownloadService;
 
 public abstract class HyjUserActivity extends HyjActivity {
 	private boolean mIsFirstTimeStart = true;
@@ -18,6 +19,8 @@ public abstract class HyjUserActivity extends HyjActivity {
 	protected void onStart() {
 		if(HyjApplication.getInstance().isLoggedIn()) {
 			super.onStart();
+		    Intent startIntent = new Intent(this, MessageDownloadService.class);  
+            startService(startIntent);  
 		} else {
 			super.onStartWithoutInitViewData();
 			if(mIsFirstTimeStart){ 

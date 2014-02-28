@@ -137,11 +137,11 @@ public class Message extends HyjModel {
 		this.mType = mType;
 	}
 
-	public MessageBox getmMessageBoxId() {
+	public MessageBox MessageBoxId() {
 		return (MessageBox) getModel(MessageBox.class, mMessageBoxId);
 	}
 
-	public void setmMessageBoxId(String mMessageBoxId) {
+	public void setMessageBoxId(String mMessageBoxId) {
 		this.mMessageBoxId = mMessageBoxId;
 	}
 

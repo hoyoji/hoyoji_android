@@ -36,6 +36,7 @@ import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
@@ -242,10 +243,41 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return setMoneyReturnItemValue(view, object, name);
 		} else if(object instanceof MoneyPayback){
 			return setMoneyPaybackItemValue(view, object, name);
+		}else if(object instanceof Message){
+			return setMessageItemValue(view, object, name);
 		}
 		return false;
 	}
-
+	private boolean setMessageItemValue(View view, Object object, String name){
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((Message)object).getDate());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(((Message)object).getMessageTitle());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(((Message)object).getFromUserId());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			numericView.setTextColor(Color.parseColor("#FF0000"));
+//			numericView.setCurrencySymbol("¥");
+//			numericView.setNumber(((MoneyExpense)object).getAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setImage(((Message)object).getFromUserId());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_owner){
+			((TextView)view).setText(((Message)object).getToUserId());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((Message)object).getDetail());
+			return true;
+		} else {
+			return false;
+		}
+	}
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());

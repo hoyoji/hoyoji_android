@@ -1,5 +1,6 @@
 package com.hoyoji.android.hyjframework.view;
 
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 import android.annotation.TargetApi;
@@ -134,13 +135,13 @@ public class HyjNumericField extends LinearLayout {
 		if(number == null){
 			setText("");
 		} else {
-			setText(number.toString());
+			setText(String.format("%.2f", HyjUtil.toFixed2(number)));
 		}
 	}
 	
 	public Double getNumber(){
 		try{
-			return Double.valueOf(getText().toString());
+			return HyjUtil.toFixed2(Double.valueOf(getText().toString()));
 		} catch (NumberFormatException e){
 			return null;
 		}
@@ -149,6 +150,7 @@ public class HyjNumericField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
+	
 	public EditText getEditText(){
 		return mEditTextEdit;
 	}

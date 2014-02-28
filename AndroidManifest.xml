@@ -67,7 +67,9 @@
             android:exported="false"
             android:grantUriPermissions="true"
             android:label="HoYoJiContentProvider" />
-
+        
+		<service android:name="com.hoyoji.hoyoji.message.MessageDownloadService" >  
+        </service>  
     </application>
     
 </manifest>

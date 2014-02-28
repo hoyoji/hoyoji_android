@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
@@ -41,21 +42,28 @@ public class HyjNumericView extends TextView {
 	private String mCurrencySymbol;
 	
 	public void setText(String number){
-		mNumber = Double.parseDouble(number);
-		super.setText(number);
+		mNumber = HyjUtil.toFixed2(Double.parseDouble(number));
+		super.setText(getText());
 	}
 	
 	public void setNumber(Double number){
-		mNumber = number;
-		if(mCurrencySymbol != null){
-			super.setText(mCurrencySymbol + String.valueOf(number));
+		if(number != null){
+			mNumber = HyjUtil.toFixed2(number);
 		} else {
-			super.setText(String.valueOf(number));
+			mNumber = null;
+		}
+		if(mCurrencySymbol != null){
+			super.setText(mCurrencySymbol + getText());
+		} else {
+			super.setText(getText());
 		}
 	}
 	
 	public String getText(){
-		return String.valueOf(mNumber);
+		if(mNumber == null){
+			return "";
+		}
+		return String.format("%.2f", HyjUtil.toFixed2(mNumber));
 	}
 	
 	public void setCurrencySymbol(String symbol){

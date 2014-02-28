@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
@@ -37,20 +38,10 @@ public class HyjDateTimeView extends TextView {
 	}
 
 	private Date mDate;
-	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
 	public void setText(String dateString){
-		Date date;
-		try {
-			mDateFormat.setTimeZone(TimeZone.getDefault());
-			date = mDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
-			setDate(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			super.setText(dateString);
-			mDate = null;
-		}
+		setDate(HyjUtil.parseDateFromISO(dateString));
 	}
 	
 	public void setDate(Date date){
@@ -58,7 +49,7 @@ public class HyjDateTimeView extends TextView {
 		if(date == null){
 			super.setText("");
 		} else {
-			DateFormat df = DateFormat.getDateTimeInstance();
+			DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 			super.setText(df.format(date));
 		}
 	}
@@ -67,8 +58,7 @@ public class HyjDateTimeView extends TextView {
 		if(mDate == null){
 			return null;
 		} 
-		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return mDateFormat.format(mDate);
+		return HyjUtil.formatDateToIOS(mDate);
 	}
 	
 }

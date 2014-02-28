@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
@@ -45,7 +46,7 @@ public class HyjDateTimeField extends LinearLayout {
 	private TextView mEditTextEdit;
 
 	private Date mDate;
-	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
 	public HyjDateTimeField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -132,17 +133,7 @@ public class HyjDateTimeField extends LinearLayout {
 	}
 	
 	public void setText(String dateString){
-		Date date;
-		try {
-			mDateFormat.setTimeZone(TimeZone.getDefault());
-			date = mDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
-			setDate(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			mEditTextEdit.setText(dateString);
-			mDate = null;
-		}
+		setDate(HyjUtil.parseDateFromISO(dateString));
 	}
 	
 	public void setDate(Date date){
@@ -159,8 +150,7 @@ public class HyjDateTimeField extends LinearLayout {
 		if(mDate == null){
 			return null;
 		} 
-		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return mDateFormat.format(mDate);
+		return HyjUtil.formatDateToIOS(mDate);
 	}
 
 	public void setEnabled(boolean enabled){

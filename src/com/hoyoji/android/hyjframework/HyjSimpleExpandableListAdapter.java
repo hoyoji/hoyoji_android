@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -232,9 +234,13 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
         int len = to.length;
 
         for (int i = 0; i < len; i++) {
-            TextView v = (TextView)view.findViewById(to[i]);
+            View v = view.findViewById(to[i]);
             if (v != null) {
-                v.setText((String)data.get(from[i]));
+            	if(v instanceof HyjNumericView){
+            		((HyjNumericView)v).setNumber(Double.valueOf(data.get(from[i]).toString()));
+            	} else if(v instanceof TextView){
+            		((TextView)v).setText((String)data.get(from[i]));
+            	}
             }
         }
     }

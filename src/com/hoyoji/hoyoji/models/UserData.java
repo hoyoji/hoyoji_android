@@ -50,6 +50,9 @@ public class UserData extends HyjModel {
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
 
+	@Column(name = "lastMessagesDownloadTime")
+	private String mLastMessagesDownloadTime;
+	
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
@@ -177,6 +180,14 @@ public class UserData extends HyjModel {
 
 	public void setLastSyncTime(String mLastSyncTime) {
 		this.mLastSyncTime = mLastSyncTime;
+	}
+	
+	public String getLastMessagesDownloadTime() {
+		return mLastMessagesDownloadTime;
+	}
+
+	public void setLastMessagesDownloadTime(String mLastMessagesDownloadTime) {
+		this.mLastMessagesDownloadTime = mLastMessagesDownloadTime;
 	}
 
 	public String getOwnerUserId() {

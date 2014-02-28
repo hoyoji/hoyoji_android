@@ -39,4 +39,6 @@
     <string name="app_action_money_transfer">转账</string>
     <string name="app_action_money_debt">借贷</string>
     <string name="app_action_money_topup">充值</string>
+    
+    <string name="app_toast_new_messages">您有 %1$d 条新消息</string>
 </resources>

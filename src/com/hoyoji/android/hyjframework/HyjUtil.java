@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -245,10 +246,26 @@ public class HyjUtil {
 				}
 			}
 		}
-		
+		static SimpleDateFormat mIsoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		public static Date parseDateFromISO(String dateString){
+			try {
+				mIsoDateFormat.setTimeZone(TimeZone.getDefault());
+				return mIsoDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 		public static String formatDateToIOS(Date date){
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-			dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-			return dateFormat.format(date);
+			mIsoDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+			return mIsoDateFormat.format(date).replace("+0000$", "Z");
+		}
+		
+		public static double toFixed2(Double number){
+			return Math.round(number*100)/100.0;
+		}
+		
+		public static double toFixed4(Double number){
+			return Math.round(number*10000)/10000.0;
 		}
 }

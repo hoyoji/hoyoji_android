@@ -23,6 +23,7 @@ import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
@@ -78,6 +79,9 @@ public class HomeGroupListLoader extends
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyPayback.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(Message.class, null), true,
 				mChangeObserver);
 	}
 
@@ -202,15 +206,26 @@ public class HomeGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+				cursor.close();
+				cursor = null;
+			}
 			if (count > 0) {
 				String ds = df.format(calToday.getTime());
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
 				groupObject.put("date", ds);
 				groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
 				groupObject.put("expenseTotal",
-						"收入: ¥" + String.valueOf(incomeTotal));
+						HyjUtil.toFixed2(incomeTotal));
 				groupObject.put("incomeTotal",
-						"支出: ¥" + String.valueOf(expenseTotal));
+						HyjUtil.toFixed2(expenseTotal));
 				list.add(groupObject);
 				loadCount += count + 1;
 			}
@@ -269,7 +284,102 @@ public class HomeGroupListLoader extends
 			cursor.close();
 			cursor = null;
 		}
-		
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyBorrow WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyLend WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyTransfer WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyReturn WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyPayback WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM Message WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
 		if(dateString != null){
 			try {
 				Long dateInMillis = mDateFormat.parse(dateString).getTime();
