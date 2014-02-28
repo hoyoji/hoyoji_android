@@ -163,14 +163,15 @@ public class MoneyApportionField extends GridView {
 					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
 				} else if(api.getApportionType().equalsIgnoreCase("Share")){
 //					api.setAmount(api.getAmount());
-					fixedTotal += api.getAmount();
 					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
+				} else {
+					fixedTotal += api.getAmount();
 				}
 			}
 		}
 		
 		
-		// 占股分摊=（总金额-定额分摊）*占股/（100-定额分摊人所占股数）
+		// 占股分摊=（总金额-定额分摊）*占股/（分摊人所占股数）
 		shareTotal = totalAmount - fixedTotal;
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);

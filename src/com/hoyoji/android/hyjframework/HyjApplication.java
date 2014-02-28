@@ -70,6 +70,7 @@ public class HyjApplication extends Application {
 		provider.initialize();
 	}
 	public boolean login(String userId, String password){
+		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
@@ -86,12 +87,21 @@ public class HyjApplication extends Application {
 			return true;
 		} else {
 			ActiveAndroid.dispose();
+			currentUser = curUser;
+			if(curUser != null){
+				config = new Configuration.Builder(HyjApplication.getInstance())
+				.setDatabaseName(curUser.getId())
+				.create(); 
+				ActiveAndroid.initialize(config);
+				initContentProvider();
+			}
 			return false;
 		}
 	}
 	
 	
 	public boolean login(String userId, String password, JSONObject jsonObject) throws JSONException {
+		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
@@ -134,6 +144,14 @@ public class HyjApplication extends Application {
 			return true;
 		} else {
 			ActiveAndroid.dispose();
+			currentUser = curUser;
+			if(curUser != null){
+				config = new Configuration.Builder(HyjApplication.getInstance())
+				.setDatabaseName(curUser.getId())
+				.create(); 
+				ActiveAndroid.initialize(config);
+				initContentProvider();
+			}
 			return false;
 		}
 	}
