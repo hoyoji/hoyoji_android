@@ -72,6 +72,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 					int pos, long arg3) {
 				if(pos == 2){
 					numericFieldApportionAmount.setEnabled(true);
+					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 				} else {
 					numericFieldApportionAmount.setEnabled(false);
 				}
@@ -87,6 +88,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		        ((HyjActivity) getActivity()).dialogDoNegativeClick();
+		        dismiss();
 			}
         });
          

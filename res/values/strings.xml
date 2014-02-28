@@ -9,6 +9,7 @@
     <string name="app_action_search">查找</string>
     <string name="app_action_save">保存</string>
     <string name="app_action_remove">移除</string>
+    <string name="app_action_delete">删除</string>
     <string name="app_action_delete_list_item">删除</string>
     <string name="app_action_cancel_list_item">取消</string>
     
