@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -44,6 +45,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private Double oldAmount;
 	private MoneyAccount oldMoneyAccount;
+	Long modelId;
 	
 	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -70,7 +72,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		MoneyIncome moneyIncome;
 		
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyIncome =  new Select().from(MoneyIncome.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -311,6 +313,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				
 				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModel();
 				mMoneyIncomeEditor.save();
+				
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyIncomeModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeModel.getProjectId())){
+					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyIncomeModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(moneyIncomeModel.getProjectId());
+					userDataEditor.save();
+				}
 				
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = moneyIncomeModel.getMoneyAccount();

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -106,7 +107,12 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 			numericView.setCurrencySymbol("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
-		} else {
+		}if(view.getId() == R.id.moneyAccountListItem_name){
+			TextView textView = (TextView)view;
+			textView.setText(cursor.getString(columnIndex));
+			return true;
+		}  
+		else {
 			return false;
 		}
 	}

@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -345,6 +346,14 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				
 				MoneyLend moneyLendModel = mMoneyLendEditor.getModel();
 				mMoneyLendEditor.save();
+				
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyLendModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyLendModel.getProjectId())){
+					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyLendModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(moneyLendModel.getProjectId());
+					userDataEditor.save();
+				}
 				
 				if(CREATE_EXCHANGE == 1){
 					Exchange newExchange = new Exchange();

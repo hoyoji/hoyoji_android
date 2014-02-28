@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -331,6 +332,14 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				
 				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModel();
 				mMoneyReturnEditor.save();
+				
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyReturnModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyReturnModel.getProjectId())){
+					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyReturnModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(moneyReturnModel.getProjectId());
+					userDataEditor.save();
+				}
 				
 				if(CREATE_EXCHANGE == 1){
 					Exchange newExchange = new Exchange();
