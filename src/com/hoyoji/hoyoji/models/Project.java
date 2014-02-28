@@ -42,14 +42,6 @@ public class Project extends HyjModel {
 	@Column(name = "depositeExpenseCategory")
 	private String mDepositeExpenseCategory;
 
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 	
 	public Project(){
 		super();
@@ -164,30 +156,6 @@ public class Project extends HyjModel {
 
 	public void setDepositeExpenseCategory(String mDepositeExpenseCategory) {
 		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	public List<ProjectShareAuthorization> getShareAuthorizations(){

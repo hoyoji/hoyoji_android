@@ -48,14 +48,6 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 	
 	public MoneyAccount(){
 		super();
@@ -188,30 +180,6 @@ public class MoneyAccount extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 	
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}
-
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){

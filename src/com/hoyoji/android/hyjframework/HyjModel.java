@@ -9,6 +9,16 @@ public abstract class HyjModel extends Model  implements Cloneable {
 
 	@Column(name = "_creatorId")
 	private String m_creatorId;
+
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public HyjModel(){
 		super();
@@ -39,6 +49,30 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	public void setCreator(HyjModel creator){
 		m_creatorId = creator.getId();
 	}
+	
+	public String getServerRecordHash() {
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash) {
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime() {
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime() {
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime) {
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
 	
 	public HyjModelEditor newModelEditor(){
 		return new HyjModelEditor(this);

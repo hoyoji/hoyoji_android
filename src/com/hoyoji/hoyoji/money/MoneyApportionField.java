@@ -138,7 +138,7 @@ public class MoneyApportionField extends GridView {
 	
 	public void setTotalAmount(Double totalAmount){
 		double fixedTotal = 0.0;
-		double fixedSharePercentage = 0.0;
+		double sharePercentageTotal = 0.0;
 		
 		double averageAmount = 0.0;
 		double shareTotal = 0.0;
@@ -160,10 +160,11 @@ public class MoneyApportionField extends GridView {
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Average")){
 					numOfAverage++;
-				} else if(api.getApportionType().equalsIgnoreCase("Fixed")){
+					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
+				} else if(api.getApportionType().equalsIgnoreCase("Share")){
 //					api.setAmount(api.getAmount());
 					fixedTotal += api.getAmount();
-					fixedSharePercentage += api.getProjectShareAuthorization().getSharePercentage();
+					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
 				}
 			}
 		}
@@ -175,7 +176,7 @@ public class MoneyApportionField extends GridView {
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Share")){
-					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / (100 - fixedSharePercentage);
+					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / sharePercentageTotal;
 					api.setAmount(shareAmount);
 					fixedTotal += shareAmount;
 				}
@@ -308,12 +309,12 @@ public class MoneyApportionField extends GridView {
 								@Override
 								public void doPositiveClick(Object bundle) {
 //									if(bundle != null){
-										Bundle b = (Bundle)bundle;
-								    	final String apportionType = b.getString("apportionType");
-								    	Double apportionAmount = b.getDouble("apportionAmount");
-										apportionItem.setAmount(apportionAmount);
-										apportionItem.setApportionType(apportionType);
-										self.setTotalAmount(null);
+									Bundle b = (Bundle)bundle;
+							    	final String apportionType = b.getString("apportionType");
+							    	Double apportionAmount = b.getDouble("apportionAmount");
+									apportionItem.setAmount(apportionAmount);
+									apportionItem.setApportionType(apportionType);
+									self.setTotalAmount(null);
 //									} else {
 //										MoneyApportionEditDialogFragment f = (MoneyApportionEditDialogFragment)activity.mDialogFragment;
 //										apportionItem.setApportionType(f.getApportionType());
@@ -323,7 +324,11 @@ public class MoneyApportionField extends GridView {
 								}
 								@Override
 								public void doNegativeClick() {
-									apportionItem.delete();
+									if(apportionItem.getState() == ApportionItem.NEW){
+										self.mImageGridAdapter.remove(apportionItem);
+									} else if(apportionItem.getState() != ApportionItem.DELETED){
+										apportionItem.delete();
+									} 
 									self.setTotalAmount(null);
 								}
 							};

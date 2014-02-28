@@ -28,15 +28,6 @@ public class Currency extends HyjModel {
 	
 	@Column(name = "code")
 	private String mCode;
-
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 	
 	
 	public Currency(){
@@ -77,29 +68,7 @@ public class Currency extends HyjModel {
 		this.mCode = mCode;
 	}
 
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
 
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}
 
 	public String getOwnerUserId() {
 		return mOwnerUserId;
