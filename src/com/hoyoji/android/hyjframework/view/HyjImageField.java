@@ -251,9 +251,9 @@ public class HyjImageField extends GridView {
 							r.getDisplayMetrics());
 					FileOutputStream out = null;
 					String picturePath;
-
-					Uri selectedImage = Uri.parse(intent.getStringExtra("selectedImage"));
-					if (selectedImage != null) {
+					
+					if(intent.getStringExtra("selectedImage") != null){
+						Uri selectedImage = Uri.parse(intent.getStringExtra("selectedImage"));
 						String[] filePathColumn = { MediaStore.Images.Media.DATA };
 						Cursor cursor = getContext().getContentResolver()
 								.query(selectedImage, filePathColumn, null,
