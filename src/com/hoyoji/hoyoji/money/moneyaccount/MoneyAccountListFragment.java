@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.money.moneyaccount;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -15,13 +16,16 @@ import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.UserData;
 
 public class MoneyAccountListFragment extends HyjUserListFragment{
@@ -107,13 +111,27 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 			numericView.setCurrencySymbol("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
-		}if(view.getId() == R.id.moneyAccountListItem_name){
-			TextView textView = (TextView)view;
-			textView.setText(cursor.getString(columnIndex));
-			return true;
-		}  
-		else {
+		} else {
 			return false;
 		}
 	}
+//	public boolean setViewValue(View view, Object object, String name){
+//		if(view.getId() == R.id.moneyAccountListItem_currentBalance){
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			numericView.setCurrencySymbol("¥");
+//			numericView.setNumber(((MoneyAccount)object).getCurrentBalance());
+//			return true;
+//		}else if(view.getId() == R.id.moneyAccountListItem_name){
+//			String accountType = ((MoneyAccount)object).getAccountType();
+//			String accountName = ((MoneyAccount)object).getName();
+//			if(accountType == "Debt" && accountName != "匿名借贷账户"){
+//				Friend friend = HyjModel.getModel(Friend.class, accountName);
+//				accountName = friend.getDisplayName();
+//			}
+//			((TextView)view).setText(accountName);
+//			return true;
+//		}
+//		return false;
+//		
+//	}
 }
