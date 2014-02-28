@@ -157,7 +157,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyBorrowFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_creditor, null, GET_FRIEND_ID);
 			}
 		}); 
 		
