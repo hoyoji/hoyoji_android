@@ -349,41 +349,48 @@ public class MoneyBorrow extends HyjModel{
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-//		if(this.getDate() == null){
-//			modelEditor.setValidationError("date",R.string.moneyBorrowFormFragment_editText_hint_date);
-//		}else{
-//			modelEditor.removeValidationError("date");
-//		}
-//		if(this.getAmount() == null){
-//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_hint_amount);
-//		}else if(this.getAmount() < 0){
-//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_negative_amount);
-//		}else if(this.getAmount() > 99999999){
-//			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_beyondMAX_amount);
-//		}
-//		else{
-//			modelEditor.removeValidationError("amount");
-//		}
-//		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyBorrowFormFragment_editText_hint_moneyAccount);
-//		}else{
-//			modelEditor.removeValidationError("moneyAccount");
-//		}
-//		if(this.getMoneyBorrowCategory() == null){
-//			modelEditor.setValidationError("moneyBorrowCategory", R.string.moneyBorrowFormFragment_editText_hint_moneyBorrowCategory);
-//		}else{
-//			modelEditor.removeValidationError("moneyBorrowCategory");
-//		}
-//		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyBorrowFormFragment_editText_hint_project);
-//		}else{
-//			modelEditor.removeValidationError("project");
-//		}
-//		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyBorrowFormFragment_editText_hint_friend);
-//		}else{
-//			modelEditor.removeValidationError("friend");
-//		}
+		if(this.getDate() == null){
+			modelEditor.setValidationError("date",R.string.moneyBorrowFormFragment_editText_hint_date);
+		}else{
+			modelEditor.removeValidationError("date");
+		}
+		
+		if(this.getAmount() == null){
+			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_hint_amount);
+		}else if(this.getAmount() < 0){
+			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_negative_amount);
+		}else if(this.getAmount() > 99999999){
+			modelEditor.setValidationError("amount",R.string.moneyBorrowFormFragment_editText_validationError_beyondMAX_amount);
+		}
+		else{
+			modelEditor.removeValidationError("amount");
+		}
+		
+		if(this.getMoneyAccountId() == null){
+			modelEditor.setValidationError("moneyAccount",R.string.moneyBorrowFormFragment_editText_hint_moneyAccount);
+		}else{
+			modelEditor.removeValidationError("moneyAccount");
+		}
+		
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.moneyBorrowFormFragment_editText_hint_project);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
+		
+		if(this.getExchangeRate() == null){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyBorrowFormFragment_editText_hint_exchangeRate);
+		}else if(this.getExchangeRate() == 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyBorrowFormFragment_editText_validationError_zero_exchangeRate);
+		}else if(this.getExchangeRate() < 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyBorrowFormFragment_editText_validationError_negative_exchangeRate);
+		}else if(this.getExchangeRate() > 99999999){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyBorrowFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		}
+		else{
+			modelEditor.removeValidationError("exchangeRate");
+		}
+		
 	}
 
 	@Override

@@ -59,6 +59,7 @@
                     android:id="@+id/moneyIncomeFormFragment_textField_amount"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    hyj:style="no_label"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
                     hyj:editTextColor="#339900"
