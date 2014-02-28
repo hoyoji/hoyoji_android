@@ -283,6 +283,10 @@ public class LoginActivity extends HyjActivity {
 				user.getMessageBoxId());
 		if (msgBox != null) {
 			this.dismissProgressDialog();
+			 Intent i = getPackageManager()
+			 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
+			 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+			 startActivity(i);
 			finish();
 			return;
 		}
@@ -411,6 +415,11 @@ public class LoginActivity extends HyjActivity {
 					}
 
 					LoginActivity.this.dismissProgressDialog();
+
+					 Intent i = getPackageManager()
+					 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
+					 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+					 startActivity(i);
 					finish();
 				}
 

@@ -34,15 +34,6 @@ public class User extends HyjModel {
 	@Column(name = "newFriendAuthentication")
 	private String mNewFriendAuthentication;
 	
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-	
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
-	
 	@Column(name = "pictureId")
 	private String mPictureId;
 
@@ -140,30 +131,6 @@ public class User extends HyjModel {
 
 	public void setNewFriendAuthentication(String mNewFriendAuthentication) {
 		this.mNewFriendAuthentication = mNewFriendAuthentication;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	public String getPictureId() {

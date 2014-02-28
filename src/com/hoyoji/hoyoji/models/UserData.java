@@ -46,15 +46,6 @@ public class UserData extends HyjModel {
 
 	@Column(name = "defaultFriendCategoryId")
 	private String mDefaultFriendCategoryId;
-	
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
@@ -178,30 +169,6 @@ public class UserData extends HyjModel {
 
 	public void setDefaultFriendCategory(String mDefaultFriendCategoryId) {
 		this.mDefaultFriendCategoryId = mDefaultFriendCategoryId;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	public String getLastSyncTime() {

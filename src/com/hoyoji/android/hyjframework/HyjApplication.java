@@ -10,6 +10,8 @@ import com.activeandroid.Cache;
 import com.activeandroid.Configuration;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
+import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 
@@ -68,6 +70,7 @@ public class HyjApplication extends Application {
 		provider.initialize();
 	}
 	public boolean login(String userId, String password){
+		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
 									.setDatabaseName(userId)
@@ -89,10 +92,11 @@ public class HyjApplication extends Application {
 	
 	
 	public boolean login(String userId, String password, JSONObject jsonObject) throws JSONException {
+		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
 									.setDatabaseName(userId)
-									.create();
+									.create(); 
 		ActiveAndroid.initialize(config);
 		initContentProvider();
 		
@@ -142,12 +146,13 @@ public class HyjApplication extends Application {
 	}
 	
 	public void switchUser(){
-		logout();
-		 Intent i = getPackageManager()
-		 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
-	
-		 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-		 startActivity(i);
+
+		Intent intent = new Intent(
+				this.getApplicationContext(),
+				LoginActivity.class);
+
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+		startActivity(intent);
 	}
 	
 	private User authenticateUser(String userId, String password){

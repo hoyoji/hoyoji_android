@@ -26,15 +26,6 @@ public class ParentProject extends HyjModel {
 	
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
-
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 	
 	public ParentProject(){
 		super();
@@ -91,30 +82,6 @@ public class ParentProject extends HyjModel {
 
 	public void setSubProjectId(String mSubProjectId) {
 		this.mSubProjectId = mSubProjectId;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	@Override

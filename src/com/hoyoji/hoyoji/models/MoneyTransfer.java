@@ -57,15 +57,6 @@ public class MoneyTransfer extends HyjModel{
 	
 	@Column(name = "remark")
 	private String mRemark;
-	
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
@@ -302,30 +293,6 @@ public class MoneyTransfer extends HyjModel{
 
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	public String getLastSyncTime() {

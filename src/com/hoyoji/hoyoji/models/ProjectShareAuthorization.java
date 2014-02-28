@@ -34,15 +34,6 @@ public class ProjectShareAuthorization extends HyjModel {
 	
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
-
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private Long mLastClientUpdateTime = 0l;
 	
 	@Column(name = "sharePercentage")
 	private Double mSharePercentage = 100.0;
@@ -393,30 +384,6 @@ public class ProjectShareAuthorization extends HyjModel {
 
 	public void setFriendUserId(String mFriendUserId) {
 		this.mFriendUserId = mFriendUserId;
-	}
-
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public Long getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(Long mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
 	public Boolean getShareAllSubProjects() {

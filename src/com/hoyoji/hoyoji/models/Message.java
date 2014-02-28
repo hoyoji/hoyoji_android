@@ -12,12 +12,15 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
-@Table(name = "Project", id = BaseColumns._ID)
+@Table(name = "Message", id = BaseColumns._ID)
 public class Message extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
 
+	@Column(name = "date")
+	private String mDate;
+	
 	@Column(name = "messageState")
 	private String mMessageState;
 
@@ -44,15 +47,6 @@ public class Message extends HyjModel {
 
 	@Column(name = "messageBoxId")
 	private String mMessageBoxId;
-
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private String mLastClientUpdateTime;
 	
 	public Message(){
 		super();
@@ -70,7 +64,15 @@ public class Message extends HyjModel {
 	public void setId(String mId) {
 		this.mId = mId;
 	}
-	
+
+	public String getDate() {
+		return mDate;
+	}
+
+	public void setDate(String mDate) {
+		this.mDate = mDate;
+	}
+
 	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
@@ -143,29 +145,6 @@ public class Message extends HyjModel {
 		this.mMessageBoxId = mMessageBoxId;
 	}
 
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
-
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
-
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
-
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
-
-	public String getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
-
-	public void setLastClientUpdateTime(String mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}
 
 	@Override
 	public void save(){
