@@ -27,6 +27,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -44,6 +45,8 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	private Double oldAmount;
 	private Double oldInterest;
 	private MoneyAccount oldMoneyAccount;
+	private Friend oldFriend;
+	Long modelId;
 	
 	private HyjModelEditor<MoneyReturn> mMoneyReturnEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -70,7 +73,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		MoneyReturn moneyReturn;
 		
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyReturn =  new Select().from(MoneyReturn.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -130,18 +133,18 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyReturnFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyReturnFormFragment_linearLayout_exchangeRate);
 		
-		Friend friend = moneyReturn.getFriend();
+		oldFriend = moneyReturn.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_friend);
 		
-		if(friend != null){
-			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+		if(oldFriend != null){
+			mSelectorFieldFriend.setModelId(oldFriend.getId());
+			mSelectorFieldFriend.setText(oldFriend.getNickName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				MoneyReturnFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_creditor, null, GET_FRIEND_ID);
 			}
 		}); 
 		
@@ -273,6 +276,24 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setError(mMoneyReturnEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyReturnEditor.getValidationError("remark"));
 	}
+	
+	private void createDebtAccount(MoneyReturn moneyReturn){
+		MoneyAccount createDebtAccount = new MoneyAccount();
+		String debtAccountName = "匿名借贷账户";
+		String friendId = "";
+		if(moneyReturn.getFriend() != null){
+			friendId = moneyReturn.getFriend().getId();
+			debtAccountName = friendId;
+			
+		}
+		createDebtAccount.setName(debtAccountName);
+		createDebtAccount.setCurrencyId(moneyReturn.getMoneyAccount().getCurrencyId());
+		createDebtAccount.setCurrentBalance(-moneyReturn.getAmount0());
+		createDebtAccount.setSharingType("Private");
+		createDebtAccount.setAccountType("Debt");
+		createDebtAccount.setFriendId(friendId);
+		createDebtAccount.save();
+	}
 
 	 @Override
 	public void onSave(View v){
@@ -308,35 +329,62 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
+				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModelCopy();
 				mMoneyReturnEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
-					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-					
 					Exchange newExchange = new Exchange();
-					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
-					newExchange.setForeignCurrencyId(project.getCurrencyId());
-					newExchange.setRate(mNumericExchangeRate.getNumber());
+					newExchange.setLocalCurrencyId(moneyReturnModel.getMoneyAccount().getCurrencyId());
+					newExchange.setForeignCurrencyId(moneyReturnModel.getProject().getCurrencyId());
+					newExchange.setRate(moneyReturnModel.getExchangeRate());
 					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}
 				
-				if(mSelectorFieldMoneyAccount.getModelId() != null){
-					MoneyAccount newMoneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
+//				if(mSelectorFieldMoneyAccount.getModelId() != null){
+					MoneyAccount newMoneyAccount = moneyReturnModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
 					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount + oldInterest - mNumericFieldAmount.getNumber() - mNumericFieldInterest.getNumber());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount + oldInterest - moneyReturnModel.getAmount0() - moneyReturnModel.getInterest0());
 							
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
 						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount + oldInterest);
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - mNumericFieldAmount.getNumber() - mNumericFieldInterest.getNumber());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyReturnModel.getAmount0() - moneyReturnModel.getInterest0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
-				}	
+//				}	
+					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getMoneyAccount().getCurrencyId(), moneyReturnModel.getFriend());
+					if(modelId == -1){
+				    	if(newDebtAccount != null) {
+				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
+				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getAmount0());
+				    		newDebtAccountEditor.save();
+				    	}else{
+				    		createDebtAccount(moneyReturnModel);
+				    	}
+					}else{
+						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldFriend);
+						HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+						if(newDebtAccount != null){
+							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
+							if(oldDebtAccount.getId().equals(newDebtAccount.getId())){
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - oldAmount + moneyReturnModel.getAmount0());
+							}else{
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getAmount0());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
+								oldDebtAccountEditor.save();
+							}
+							newDebtAccountEditor.save();
+						}else{
+							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
+							oldDebtAccountEditor.save();
+							
+							createDebtAccount(moneyReturnModel);
+						}
+					}
 				
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);

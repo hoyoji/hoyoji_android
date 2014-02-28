@@ -345,26 +345,21 @@ public class MoneyIncome extends HyjModel{
 		else{
 			modelEditor.removeValidationError("exchangeRate");
 		}
-//		if(this.getMoneyAccountId() == null){
-//			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
-//		}else{
-//			modelEditor.removeValidationError("moneyAccount");
-//		}
-//		if(this.getMoneyIncomeCategory() == null){
-//			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
-//		}else{
-//			modelEditor.removeValidationError("moneyIncomeCategory");
-//		}
-//		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.moneyIncomeFormFragment_editText_hint_project);
-//		}else{
-//			modelEditor.removeValidationError("project");
-//		}
-//		if(this.getFriend() == null){
-//			modelEditor.setValidationError("friend",R.string.moneyIncomeFormFragment_editText_hint_friend);
-//		}else{
-//			modelEditor.removeValidationError("friend");
-//		}
+		if(this.getMoneyAccountId() == null){
+			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
+		}else{
+			modelEditor.removeValidationError("moneyAccount");
+		}
+		if(this.getMoneyIncomeCategory() == null){
+			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
+		}else{
+			modelEditor.removeValidationError("moneyIncomeCategory");
+		}
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.moneyIncomeFormFragment_editText_hint_project);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
 	}
 
 	@Override

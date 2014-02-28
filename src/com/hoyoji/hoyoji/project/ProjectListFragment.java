@@ -17,10 +17,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.UserData;
 
 public class ProjectListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
@@ -92,6 +94,11 @@ public class ProjectListFragment extends HyjUserListFragment{
 	@Override 
 	public void onDeleteListItem(Long id){
 		Project project = Project.load(Project.class, id);
+		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+		if(userData.getActiveProjectId().equals(project.getId())){
+			HyjUtil.displayToast("默认项目不能删除");
+			return;
+		}
 		project.delete();
 	    HyjUtil.displayToast("项目删除成功");
 	}

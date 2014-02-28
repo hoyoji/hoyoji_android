@@ -13,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
@@ -20,6 +21,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.UserData;
 
 public class MoneyAccountListFragment extends HyjUserListFragment{
 	
@@ -88,6 +90,11 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 	@Override 
 	public void onDeleteListItem(Long id){
 		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, id);
+		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+		if(userData.getActiveMoneyAccountId().equals(moneyAccount.getId())){
+			HyjUtil.displayToast("默认账户不能删除");
+			return;
+		}
 		moneyAccount.delete();
 	    HyjUtil.displayToast("账户删除成功");
 	}

@@ -96,9 +96,13 @@ public class MoneyPaybackListFragment extends HyjUserListFragment {
 				MoneyPayback moneyPayback = MoneyPayback.load(MoneyPayback.class, id);
 				MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
 				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyPayback.getMoneyAccount().getCurrencyId(), moneyPayback.getFriend());
+				HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 				moneyPayback.delete();
 				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount() - moneyPayback.getInterest0());
+				debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getAmount());
 				moneyAccountEditor.save();
+				debtAccountEditor.save();
 				
 			    HyjUtil.displayToast("还款删除成功");
 			    ActiveAndroid.setTransactionSuccessful();

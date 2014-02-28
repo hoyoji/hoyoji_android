@@ -568,30 +568,30 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 				saveApportions();
 
-				MoneyExpense moneyExpenseCopy = mMoneyExpenseEditor.getModelCopy();
+				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
 				mMoneyExpenseEditor.save();
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = moneyExpenseCopy.getMoneyAccount();
-					Project project = moneyExpenseCopy.getProject();
+					MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
+					Project project = moneyExpenseModel.getProject();
 					
 					Exchange newExchange = new Exchange();
 					newExchange
 							.setLocalCurrencyId(moneyAccount.getCurrencyId());
 					newExchange.setForeignCurrencyId(project.getCurrencyId());
-					newExchange.setRate(moneyExpenseCopy.getExchangeRate());
+					newExchange.setRate(moneyExpenseModel.getExchangeRate());
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}
-					MoneyAccount newMoneyAccount = moneyExpenseCopy.getMoneyAccount();
+					MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
 					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - moneyExpenseCopy.getAmount0());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - moneyExpenseModel.getAmount0());
 							
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
 						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount);
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseCopy.getAmount0());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
