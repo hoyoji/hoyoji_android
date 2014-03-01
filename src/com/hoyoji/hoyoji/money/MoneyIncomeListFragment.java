@@ -114,7 +114,7 @@ public class MoneyIncomeListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setCurrencySymbol("¥");
+			numericView.setPrefix("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){

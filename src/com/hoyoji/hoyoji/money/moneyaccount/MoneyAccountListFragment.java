@@ -108,7 +108,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.moneyAccountListItem_currentBalance){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setCurrencySymbol("¥");
+			numericView.setPrefix("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
 			return true;
 		} else {

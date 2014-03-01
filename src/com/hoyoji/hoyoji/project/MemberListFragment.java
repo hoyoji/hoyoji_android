@@ -23,6 +23,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Picture;
@@ -171,7 +172,8 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
 			double percentage = cursor.getDouble(columnIndex);
-			((TextView)view).setText(percentage + "%");
+			((HyjNumericView)view).setSuffix("%");
+			((HyjNumericView)view).setNumber(percentage);
 			return true;
 		} else {
 			return false;

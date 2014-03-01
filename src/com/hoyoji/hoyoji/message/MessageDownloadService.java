@@ -45,6 +45,15 @@ public class MessageDownloadService extends Service {
 		        public void run() {  
 		            // 开始执行后台任务  
 		        	while(HyjApplication.getInstance().getCurrentUser() != null){
+			        		if(!HyjUtil.hasNetworkConnection()){
+								try {
+									Thread.sleep(5000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								continue;
+			        		}
+		        		
 			        		User currentUser = HyjApplication.getInstance().getCurrentUser();
 							Log.d(TAG, "checking messages ...");  
 			        		JSONObject postData = new JSONObject();

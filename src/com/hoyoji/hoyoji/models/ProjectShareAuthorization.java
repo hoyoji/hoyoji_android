@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "ProjectShareAuthorization", id = BaseColumns._ID)
@@ -335,7 +336,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharePercentage(Double mSharePercentage) {
-		this.mSharePercentage = mSharePercentage;
+		this.mSharePercentage = HyjUtil.toFixed4(mSharePercentage);
 	}
 
 	public String getRemark() {
@@ -399,7 +400,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalIncome(Double mActualTotalIncome) {
-		this.mActualTotalIncome = mActualTotalIncome;
+		this.mActualTotalIncome = HyjUtil.toFixed2(mActualTotalIncome);
 	}
 
 	public Double getActualTotalExpense() {
@@ -407,7 +408,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalExpense(Double mActualTotalExpense) {
-		this.mActualTotalExpense = mActualTotalExpense;
+		this.mActualTotalExpense = HyjUtil.toFixed2(mActualTotalExpense);
 	}
 
 	public Double getActualTotalBorrow() {
@@ -415,7 +416,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalBorrow(Double mActualTotalBorrow) {
-		this.mActualTotalBorrow = mActualTotalBorrow;
+		this.mActualTotalBorrow = HyjUtil.toFixed2(mActualTotalBorrow);
 	}
 
 	public Double getActualTotalLend() {
@@ -423,7 +424,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalLend(Double mActualTotalLend) {
-		this.mActualTotalLend = mActualTotalLend;
+		this.mActualTotalLend = HyjUtil.toFixed2(mActualTotalLend);
 	}
 
 	public Double getActualTotalReturn() {
@@ -431,7 +432,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalReturn(Double mActualTotalReturn) {
-		this.mActualTotalReturn = mActualTotalReturn;
+		this.mActualTotalReturn = HyjUtil.toFixed2(mActualTotalReturn);
 	}
 
 	public Double getActualTotalPayback() {
@@ -439,7 +440,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setActualTotalPayback(Double mActualTotalPayback) {
-		this.mActualTotalPayback = mActualTotalPayback;
+		this.mActualTotalPayback = HyjUtil.toFixed2(mActualTotalPayback);
 	}
 
 	public Double getApportionedTotalIncome() {
@@ -447,7 +448,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalIncome(Double mApportionedTotalIncome) {
-		this.mApportionedTotalIncome = mApportionedTotalIncome;
+		this.mApportionedTotalIncome = HyjUtil.toFixed2(mApportionedTotalIncome);
 	}
 
 	public Double getApportionedTotalExpense() {
@@ -455,7 +456,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalExpense(Double mApportionedTotalExpense) {
-		this.mApportionedTotalExpense = mApportionedTotalExpense;
+		this.mApportionedTotalExpense = HyjUtil.toFixed2(mApportionedTotalExpense);
 	}
 
 	public Double getApportionedTotalBorrow() {
@@ -463,7 +464,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalBorrow(Double mApportionedTotalBorrow) {
-		this.mApportionedTotalBorrow = mApportionedTotalBorrow;
+		this.mApportionedTotalBorrow = HyjUtil.toFixed2(mApportionedTotalBorrow);
 	}
 
 	public Double getApportionedTotalLend() {
@@ -471,7 +472,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalLend(Double mApportionedTotalLend) {
-		this.mApportionedTotalLend = mApportionedTotalLend;
+		this.mApportionedTotalLend = HyjUtil.toFixed2(mApportionedTotalLend);
 	}
 
 	public Double getApportionedTotalReturn() {
@@ -479,7 +480,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalReturn(Double mApportionedTotalReturn) {
-		this.mApportionedTotalReturn = mApportionedTotalReturn;
+		this.mApportionedTotalReturn = HyjUtil.toFixed2(mApportionedTotalReturn);
 	}
 
 	public Double getApportionedTotalPayback() {
@@ -487,7 +488,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setApportionedTotalPayback(Double mApportionedTotalPayback) {
-		this.mApportionedTotalPayback = mApportionedTotalPayback;
+		this.mApportionedTotalPayback = HyjUtil.toFixed2(mApportionedTotalPayback);
 	}
 
 	public Double getSharedTotalIncome() {
@@ -495,7 +496,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalIncome(Double mSharedTotalIncome) {
-		this.mSharedTotalIncome = mSharedTotalIncome;
+		this.mSharedTotalIncome = HyjUtil.toFixed2(mSharedTotalIncome);
 	}
 
 	public Double getSharedTotalExpense() {
@@ -503,7 +504,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalExpense(Double mSharedTotalExpense) {
-		this.mSharedTotalExpense = mSharedTotalExpense;
+		this.mSharedTotalExpense = HyjUtil.toFixed2(mSharedTotalExpense);
 	}
 
 	public Double getSharedTotalBorrow() {
@@ -511,7 +512,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalBorrow(Double mSharedTotalBorrow) {
-		this.mSharedTotalBorrow = mSharedTotalBorrow;
+		this.mSharedTotalBorrow = HyjUtil.toFixed2(mSharedTotalBorrow);
 	}
 
 	public Double getSharedTotalLend() {
@@ -519,7 +520,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalLend(Double mSharedTotalLend) {
-		this.mSharedTotalLend = mSharedTotalLend;
+		this.mSharedTotalLend = HyjUtil.toFixed2(mSharedTotalLend);
 	}
 
 	public Double getSharedTotalReturn() {
@@ -527,7 +528,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalReturn(Double mSharedTotalReturn) {
-		this.mSharedTotalReturn = mSharedTotalReturn;
+		this.mSharedTotalReturn = HyjUtil.toFixed2(mSharedTotalReturn);
 	}
 
 	public Double getSharedTotalPayback() {
@@ -535,7 +536,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public void setSharedTotalPayback(Double mSharedTotalPayback) {
-		this.mSharedTotalPayback = mSharedTotalPayback;
+		this.mSharedTotalPayback = HyjUtil.toFixed2(mSharedTotalPayback);
 	}
 
 	public Boolean getProjectShareMoneyExpenseOwnerDataOnly() {

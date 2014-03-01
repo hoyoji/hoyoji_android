@@ -251,7 +251,7 @@ public class MoneyExpense extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		if(mRemark != null){
+		if(mRemark != null && mRemark.length() > 0){
 			return mRemark;
 		} else {
 			return HyjApplication.getInstance().getString(R.string.app_no_remark);

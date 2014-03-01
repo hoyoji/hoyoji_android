@@ -103,7 +103,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mNumericFieldSharePercentage.setNumber(projectShareAuthorization.getSharePercentage());
 		mNumericFieldSharePercentage.setEnabled(!projectShareAuthorization.getSharePercentageType().equalsIgnoreCase("Average"));
 		if(modelId == -1){
-			setSharePercentage(mProjectShareAuthorizationEditor.getModelCopy());
+			setAveragePercentage(mProjectShareAuthorizationEditor.getModelCopy());
 		}
 		
 		mBooleanFieldSharePercentageType = (HyjBooleanView) getView().findViewById(R.id.memberFormFragment_textField_sharePercentageType);
@@ -114,7 +114,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				if(!mBooleanFieldSharePercentageType.getBoolean()){
 					mBooleanFieldSharePercentageType.setBoolean(true);
 					mNumericFieldSharePercentage.setEnabled(false);
-					setSharePercentage(mProjectShareAuthorizationEditor.getModelCopy());
+					setAveragePercentage(mProjectShareAuthorizationEditor.getModelCopy());
 				} else {
 					mBooleanFieldSharePercentageType.setBoolean(false);
 					mNumericFieldSharePercentage.setEnabled(true);
@@ -202,19 +202,29 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
 	}
 	
-	private void setSharePercentage(
-			ProjectShareAuthorization projectShareAuthorization) {
-		Double fixedPercentageTotal = 0.0;
-//		Double averagePercentageTotal = 0.0;
+	private void setAveragePercentage(ProjectShareAuthorization projectShareAuthorization) {
+		//将成员设成平均分摊
+		double fixedPercentageTotal = 0.0;
+//		double averageTotal = 0.0;
 		int numOfAverage = 0;
 		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
 			if(!psa.getSharePercentageType().equalsIgnoreCase("Average") && psa != projectShareAuthorization){
 				fixedPercentageTotal += psa.getSharePercentage();
 			} else {
 				numOfAverage++;
+//				averageTotal += psa.getSharePercentage();
 			}
 		}
-		mNumericFieldSharePercentage.setNumber((100.0 - Math.min(fixedPercentageTotal, 100)) / numOfAverage);
+		double averageAmount = HyjUtil.toFixed2((100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage);
+		double adjsutedAverageAmount = HyjUtil.toFixed2(averageAmount + (100.0 - fixedPercentageTotal - averageAmount * numOfAverage));
+		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+			if(psa.getSharePercentage().doubleValue() == adjsutedAverageAmount && psa != projectShareAuthorization){
+				mNumericFieldSharePercentage.setNumber(averageAmount);
+				return;
+			} 
+		}
+		
+		mNumericFieldSharePercentage.setNumber(adjsutedAverageAmount);
 	}
 
 	private void fillData() {
@@ -289,6 +299,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	}	
 	 
 	 private void saveAverageTotal(){
+		 //重新计算所有均摊成员的占股比例并保存
 			double fixedPercentageTotal = 0.0;
 			int numOfAverage = 0;
 			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
@@ -298,17 +309,27 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					numOfAverage++;
 				}
 			}
-			double average = (100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage;
+			
+			double averageTotal = 0.0;
+			double averageAmount = HyjUtil.toFixed2((100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage);
+			double diff = HyjUtil.toFixed2(100.0 - fixedPercentageTotal - averageAmount * numOfAverage);
+			double adjustedAverageTotal = HyjUtil.toFixed2(averageAmount + diff);
+			
 			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
 				if(psa.getSharePercentageType().equalsIgnoreCase("Average")){
-					if(psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId())){
-						mProjectShareAuthorizationEditor.getModelCopy().setSharePercentage(average);
-					} else {
+					if(!psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId()) &&
+							(psa.getSharePercentage().doubleValue() != averageAmount && 
+							psa.getSharePercentage().doubleValue() != adjustedAverageTotal)){
 						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
-						editor.getModelCopy().setSharePercentage(average);
+						editor.getModelCopy().setSharePercentage(averageAmount);
 						editor.save();
 					}
+					averageTotal += psa.getSharePercentage();
 				}
+			}
+			if(HyjUtil.toFixed2(averageTotal) != HyjUtil.toFixed2(100.0 - fixedPercentageTotal)){
+				mProjectShareAuthorizationEditor.getModelCopy().setSharePercentage(
+						mProjectShareAuthorizationEditor.getModelCopy().getSharePercentage() + diff);
 			}
 	 }
 	 

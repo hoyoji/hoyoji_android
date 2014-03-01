@@ -284,7 +284,7 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		if(mRemark != null){
+		if(mRemark != null && mRemark.length() > 0){
 			return mRemark;
 		} else {
 			return HyjApplication.getInstance().getString(R.string.app_no_remark);
@@ -359,5 +359,9 @@ public class MoneyTransfer extends HyjModel{
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}
+
+	public User getOwnerUser() {
+		return getModel(User.class, mOwnerUserId);
 	}
 }

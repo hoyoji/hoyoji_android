@@ -55,7 +55,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-    <TextView
+    <com.hoyoji.android.hyjframework.view.HyjNumericView
         android:id="@+id/moneyApportionListItem_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
