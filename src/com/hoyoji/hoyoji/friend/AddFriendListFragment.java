@@ -134,14 +134,14 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 						((HyjActivity) AddFriendListFragment.this.getActivity())
 								.dismissProgressDialog();
 						
-					} else {
+					} else if(jsonUser.optString("newFriendAuthentication").equals("non")) {
 						
 						addFriendWithoutAuthorization(jsonUser);
 						
 					} 
-//					else {
-//						sendAddFriendRequestMessage(jsonUser);
-//					}
+					else {
+						sendAddFriendRequestMessage(jsonUser);
+					}
 				}
 
 				@Override
@@ -327,6 +327,13 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 							.getDisplayName() + "成功添加您为好友");
 			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
 			data.put("ownerUserId", jsonUser.optString("id"));
+			JSONObject msgData = new JSONObject();
+			try {
+				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
+			} catch (JSONException e) {
+			}
+			data.put("messageData", msgData);
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
 					"[" + data.toString() + "]", "postData");
 
@@ -404,18 +411,45 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
 					"[" + data.toString() + "]", "getData");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void sendAddFriendRequestMessage(JSONObject jsonUser) {
+//		data.put("type", "System.Friend.AddResponse");
+//		data.put("messageState", "new");
+//		data.put("messageTitle", "好友请求");
+		
+		
+		final Message msg = new Message();
+		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setMessageState("new");
+		msg.setType("System.Friend.AddRequest");
+		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
+				.getId());
+		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		msg.setToUserId(jsonUser.optString("id"));
+		msg.setMessageTitle("好友请求");
+		msg.setDetail("用户"
+				+ HyjApplication.getInstance().getCurrentUser()
+						.getDisplayName() + "请求将您添加为好友");
+		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+		msg.setOwnerUserId(jsonUser.optString("id"));
+		JSONObject msgData = new JSONObject();
+		try {
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+			msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
+		} catch (JSONException e) {
+		}
+		msg.setMessageData(msgData.toString());
+		
 		// send message to server to request add new friend
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
 				((HyjActivity) AddFriendListFragment.this.getActivity())
 				.dismissProgressDialog();
+				msg.save();
 				HyjUtil.displayToast("已发送添加好友请求，请等待回复");
 			}
 
@@ -424,16 +458,8 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				displayError(object);
 			}
 		};
-		
-		Message msg = new Message();
-		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
-				.getId());
-		msg.setToUserId(jsonUser.optString("id"));
-		msg.setDetail("用户"
-				+ HyjApplication.getInstance().getCurrentUser()
-						.getDisplayName() + "请求将您添加为好友");
-		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		msg.setOwnerUserId(jsonUser.optString("id"));
+
+
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + msg.toJSON().toString()
 				+ "]", "postData");
 		((HyjActivity) this.getActivity()).displayProgressDialog(

@@ -15,8 +15,11 @@ public class HyjNumericView extends TextView {
 	private String mSuffix = "";
 	
 	public void setText(String number){
-		mNumber = HyjUtil.toFixed2(Double.parseDouble(number));
-		super.setText(getText());
+		if(number != null){
+			setNumber(HyjUtil.toFixed2(Double.parseDouble(number)));
+		} else {
+			setNumber(null);
+		}
 	}
 	
 	public void setNumber(Double number){

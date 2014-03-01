@@ -3,10 +3,15 @@ package com.hoyoji.hoyoji.models;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.provider.BaseColumns;
+import android.widget.TextView;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -105,6 +110,38 @@ public class Message extends HyjModel {
 		this.mToUserId = mToUserId;
 	}
 
+	private String getUserDisplayName(String friendUserId, String fromOrToUserDisplayName){
+		if(friendUserId.equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			return HyjApplication.getInstance().getApplicationContext().getString(R.string.messageListItem_user_self);
+			}
+		Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+		if(friend != null){
+			return friend.getDisplayName();
+		} else {
+			User user = HyjModel.getModel(User.class, friendUserId);
+			if(user != null){
+				return user.getDisplayName();
+			} else {
+				try {
+					JSONObject dataObject = new JSONObject(this.getMessageData());
+					return dataObject.getString(fromOrToUserDisplayName);
+				} catch (Exception e) {
+					return HyjApplication.getInstance().getApplicationContext().getString(R.string.messageListItem_fromUser_not_friend);
+				}
+			}
+		}
+	}
+	
+	public String getToUserDisplayName(){
+		String friendUserId = this.getToUserId();
+		return getUserDisplayName(friendUserId, "toUserDisplayName");
+	}
+	
+	public String getFromUserDisplayName(){
+		String friendUserId = this.getFromUserId();
+		return getUserDisplayName(friendUserId, "fromUserDisplayName");
+	}
+	
 	public String getMessageTitle() {
 		return mMessageTitle;
 	}
