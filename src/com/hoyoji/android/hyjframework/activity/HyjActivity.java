@@ -162,27 +162,18 @@ public abstract class HyjActivity extends ActionBarActivity
     }
 	
 	public void dialogDoPositiveClick(Object object) {
-//		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//		imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-
 		if(mDialogCallback != null){
 			mDialogCallback.doPositiveClick(object);
 		}
 	}
 	
 	public void dialogDoNegativeClick() {
-//		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//		imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-
 		if(mDialogCallback != null){
 			mDialogCallback.doNegativeClick();
 		}
 	}
 	
 	public void dialogDoNeutralClick() {      
-//		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//		imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-
 		if(mDialogCallback != null){
 			mDialogCallback.doNeutralClick();
 		}

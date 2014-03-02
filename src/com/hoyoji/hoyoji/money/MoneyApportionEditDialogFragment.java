@@ -77,8 +77,6 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         v.findViewById(R.id.moneyApportionDialogFragment_button_delete).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-		    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
 				((HyjActivity) getActivity()).dialogDoNegativeClick();
 		        dismiss();
 			}
@@ -98,8 +96,6 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
             			        Bundle args = new Bundle();
             			        args.putDouble("apportionAmount", numericFieldApportionAmount.getNumber());
             			        args.putString("apportionType", spinnerFieldApportionType.getSelectedValue());
-						    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-								imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
 								((HyjActivity) getActivity()).dialogDoPositiveClick(args);
                             }
                         })
@@ -107,8 +103,6 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.alert_dialog_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-						    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-								imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
                 		        ((HyjActivity) getActivity()).dialogDoNeutralClick();
                             }
                         }); 

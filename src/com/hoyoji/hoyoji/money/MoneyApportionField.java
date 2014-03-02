@@ -320,8 +320,6 @@ public class MoneyApportionField extends GridView {
 									apportionItem.setApportionType(apportionType);
 									self.setTotalAmount(null);
 
-//									InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-//									imm.hideSoftInputFromWindow(activity.getWindow().getCurrentFocus().getWindowToken(), 0);
 //									} else {
 //										MoneyApportionEditDialogFragment f = (MoneyApportionEditDialogFragment)activity.mDialogFragment;
 //										apportionItem.setApportionType(f.getApportionType());
