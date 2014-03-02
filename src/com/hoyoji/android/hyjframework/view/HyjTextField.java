@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -123,4 +124,13 @@ public class HyjTextField extends LinearLayout {
 		mEditTextEdit.setEnabled(enabled);
 	}
 	
+	public void showSoftKeyboard(){
+		mEditTextEdit.post(
+			new Runnable() {
+			    public void run() {
+			        InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+			        inputMethodManager.toggleSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
+			    }
+			});
+	}
 }

@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -318,6 +319,9 @@ public class MoneyApportionField extends GridView {
 									apportionItem.setAmount(apportionAmount);
 									apportionItem.setApportionType(apportionType);
 									self.setTotalAmount(null);
+
+//									InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//									imm.hideSoftInputFromWindow(activity.getWindow().getCurrentFocus().getWindowToken(), 0);
 //									} else {
 //										MoneyApportionEditDialogFragment f = (MoneyApportionEditDialogFragment)activity.mDialogFragment;
 //										apportionItem.setApportionType(f.getApportionType());

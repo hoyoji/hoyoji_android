@@ -214,7 +214,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
+		setExchangeRate();
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}

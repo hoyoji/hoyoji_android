@@ -11,6 +11,7 @@ import com.hoyoji.hoyoji.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.DatePicker;
@@ -72,7 +74,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 					int pos, long arg3) {
 				if(pos == 2){
 					numericFieldApportionAmount.setEnabled(true);
-					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+					numericFieldApportionAmount.showSoftKeyboard();
 				} else {
 					numericFieldApportionAmount.setEnabled(false);
 				}
@@ -86,8 +88,9 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         v.findViewById(R.id.moneyApportionDialogFragment_button_delete).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		        ((HyjActivity) getActivity()).dialogDoNegativeClick();
+		    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
+				((HyjActivity) getActivity()).dialogDoNegativeClick();
 		        dismiss();
 			}
         });
@@ -106,15 +109,17 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
             			        Bundle args = new Bundle();
             			        args.putDouble("apportionAmount", numericFieldApportionAmount.getNumber());
             			        args.putString("apportionType", spinnerFieldApportionType.getSelectedValue());
-            					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            			        ((HyjActivity) getActivity()).dialogDoPositiveClick(args);
+						    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+								imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
+								((HyjActivity) getActivity()).dialogDoPositiveClick(args);
                             }
                         })
                 // Set Cancel button
                 .setNegativeButton(R.string.alert_dialog_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+						    	InputMethodManager imm = (InputMethodManager)numericFieldApportionAmount.getEditText().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+								imm.hideSoftInputFromWindow(numericFieldApportionAmount.getEditText().getWindowToken(), 0);
                 		        ((HyjActivity) getActivity()).dialogDoNeutralClick();
                             }
                         }); 
@@ -132,52 +137,4 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 	public String getApportionType(){
 		return mSpinnerFieldApportionType.getSelectedValue();
 	}
-	
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//            Bundle savedInstanceState) {
-//    	
-//    	final String apportionType = getArguments().getString("apportionType");
-//    	Double apportionAmount = getArguments().getDouble("apportionAmount");
-//    	
-//    	getDialog().setTitle("修改分摊");
-//    	
-//    	
-//    	View v = inflater.inflate(R.layout.money_dialogfragment_moneyapportion_edit, container, false);
-//        final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
-//        numericFieldApportionAmount.setNumber(apportionAmount);
-//        
-//        final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
-//        spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Share", "Fixed"});
-//        spinnerFieldApportionType.setSelectedValue(apportionType);
-//        
-//        v.findViewById(R.id.moneyApportionDialogFragment_button_cancel).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//		        ((HyjActivity) getActivity()).dialogDoNeutralClick();
-//			}
-//        });
-//        v.findViewById(R.id.moneyApportionDialogFragment_button_delete).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//		        ((HyjActivity) getActivity()).dialogDoNegativeClick();
-//			}
-//        });
-//        v.findViewById(R.id.moneyApportionDialogFragment_button_yes).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//			        Bundle args = new Bundle();
-//			        args.putDouble("apportionAmount", numericFieldApportionAmount.getNumber());
-//			        args.putString("apportionType", spinnerFieldApportionType.getSelectedValue());
-//					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//			        ((HyjActivity) getActivity()).dialogDoPositiveClick(args);
-//			}
-//        });
-//         
-//         
-//		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-//        return v;
-//    }
 }
