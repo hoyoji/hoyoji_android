@@ -359,8 +359,8 @@ public class MoneyApportionField extends GridView {
 			}
 			
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){
-				vh.textViewAmount.setNumber(null);
 				vh.textViewAmount.setPrefix(R.string.moneyListItem_apportion_to_be_removed);
+				vh.textViewAmount.setNumber(null);
 				vh.textViewAmount.setTextColor(Color.parseColor("#FF0000"));
 				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
@@ -369,8 +369,8 @@ public class MoneyApportionField extends GridView {
 				vh.textViewApportionType.setPaintFlags(vh.textViewApportionType.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 			} else {
+				vh.textViewAmount.setPrefix(null);
 				vh.textViewAmount.setNumber(vh.apportionItem.getAmount());
-				vh.textViewAmount.setPrefix("");
 				vh.textViewAmount.setTextColor(Color.parseColor("#000000"));
 				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
 						& (~Paint.STRIKE_THRU_TEXT_FLAG));
