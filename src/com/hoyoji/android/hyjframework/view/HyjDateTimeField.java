@@ -156,4 +156,8 @@ public class HyjDateTimeField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
+	
+	public void setLabel(int resId){
+		mTextViewLabel.setText(resId);
+	}
 }

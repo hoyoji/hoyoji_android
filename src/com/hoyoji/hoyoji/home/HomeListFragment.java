@@ -34,6 +34,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
+import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -273,6 +274,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_email);
 			imageView.setImage(((Message)object).getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
@@ -280,7 +282,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(msg.getToUserDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(((Message)object).getDetail());
+			((TextView)view).setText(((Message)object).getMessageDetail());
 			return true;
 		} else {
 			return false;
@@ -304,6 +306,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyExpense)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
@@ -335,6 +338,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyIncome)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
@@ -365,6 +369,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
@@ -395,6 +400,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
@@ -425,6 +431,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
@@ -455,6 +462,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
@@ -485,6 +493,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
@@ -550,6 +559,15 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof MoneyPayback){
 				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
 				return true;
+			} else if(object instanceof Message){
+				Message msg = (Message)object;
+				if(msg.getType().equals("System.Friend.AddRequest") ){
+					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+					return true;
+				} else if(msg.getType().equals("System.Friend.AddResponse") ){
+					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					return true;
+				}
 			}
 		}
 		return false;

@@ -45,10 +45,10 @@ public class Message extends HyjModel {
 	private String mMessageData;
 	
 	@Column(name = "detail")
-	private String mDetail;
+	private String mMessageDetail;
 
 	@Column(name = "type")
-	private String mType;
+	private String mMessageType;
 
 	@Column(name = "messageBoxId")
 	private String mMessageBoxId;
@@ -158,24 +158,24 @@ public class Message extends HyjModel {
 		this.mMessageData = mMessageData;
 	}
 
-	public String getDetail() {
-		return mDetail;
+	public String getMessageDetail() {
+		return mMessageDetail;
 	}
 
-	public void setDetail(String mDetail) {
-		this.mDetail = mDetail;
+	public void setMessageDetail(String mDetail) {
+		this.mMessageDetail = mDetail;
 	}
 
 	public String getType() {
-		return mType;
+		return mMessageType;
 	}
 
 	public void setType(String mType) {
-		this.mType = mType;
+		this.mMessageType = mType;
 	}
 
-	public MessageBox MessageBoxId() {
-		return (MessageBox) getModel(MessageBox.class, mMessageBoxId);
+	public String getMessageBoxId() {
+		return mMessageBoxId;
 	}
 
 	public void setMessageBoxId(String mMessageBoxId) {

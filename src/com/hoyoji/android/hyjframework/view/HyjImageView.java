@@ -21,6 +21,7 @@ import com.hoyoji.hoyoji.models.Picture;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
@@ -29,9 +30,11 @@ import android.widget.ImageView;
 
 public class HyjImageView extends ImageView {
 	private String mPictureId = "";
+	private int mBackgroundResource = -1;
 	
 	public HyjImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
 //		this.setScaleType(ScaleType.FIT_XY);
 //		Resources r = context.getResources();
 //		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
@@ -41,7 +44,12 @@ public class HyjImageView extends ImageView {
 	public HyjImageView(Context context) {
 		super(context);
 	}
-
+//	public void setBackgroundResource(int resId){
+//		if(mBackgroundResource == -1 || resId != mBackgroundResource){
+//			mBackgroundResource = resId;
+//			this.setBackgroundResource(resId);
+//		}
+//	}
 	public void setImage(Picture picture){
 		if(picture == null){
 			if(mPictureId != null){

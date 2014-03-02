@@ -26,6 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -118,7 +119,8 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 					if (jsonArray.optJSONArray(0).length() > 0) {
 						// 好友已经在服务器上存在，如果该好友不在本地（可能是未同步，或是同步出错？），我们将其加进来
 						JSONObject jsonFriend = jsonArray.optJSONArray(0).optJSONObject(0);
-						Friend newFriend = HyjModel.getModel(Friend.class, jsonFriend.optString("id"));
+						Friend newFriend = new Select().from(Friend.class).where("friendUserId=?",
+								jsonFriend.optString("id")).executeSingle();
 						if(newFriend == null){
 							loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
 						} else {
@@ -430,7 +432,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
-		msg.setDetail("用户"
+		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "请求将您添加为好友");
 		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
@@ -450,7 +452,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				((HyjActivity) AddFriendListFragment.this.getActivity())
 				.dismissProgressDialog();
 				msg.save();
-				HyjUtil.displayToast("已发送添加好友请求，请等待回复");
+				HyjUtil.displayToast(R.string.friendListFragment_addFriend_toast_send_success);
 			}
 
 			@Override

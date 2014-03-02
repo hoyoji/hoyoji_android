@@ -11,4 +11,5 @@
    <string name="friendListFragment_addFriend_progress_add_success">添加好友成功</string>
    
    <string name="friendListFragment_addFriend_addSelf_title">您确定添加自己为好友？</string>
+   <string name="friendListFragment_addFriend_toast_send_success">添加好友请求已发送，请等待该用户回复</string>
 </resources>

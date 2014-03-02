@@ -123,6 +123,10 @@ public class HyjTextField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
+
+	public void setLabel(int resId){
+		mTextViewLabel.setText(resId);
+	}
 	
 	public void showSoftKeyboard(){
 		mEditTextEdit.post(
