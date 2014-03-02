@@ -1,33 +1,22 @@
 package com.hoyoji.hoyoji.money;
 
-import java.util.Calendar;
-
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.fragment.HyjDateTimePickerDialogFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.hoyoji.R;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.DatePicker;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
 public class MoneyApportionEditDialogFragment extends DialogFragment {
 	private HyjNumericField mNumericFieldApportionAmount;
