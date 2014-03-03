@@ -174,4 +174,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
 				this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
 	}
+	
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyExpenseId(moneyTransactionId);
+	}
 }

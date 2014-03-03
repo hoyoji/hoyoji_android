@@ -390,7 +390,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		
 		mApportionFieldApportions.init(moneyExpense.getAmount0(),
-				moneyApportions, moneyExpense.getProjectId());
+				moneyApportions, moneyExpense.getProjectId(), moneyExpense.getId());
 	}
 
 	private void setupDeleteButton(
@@ -679,7 +679,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
 				setExchangeRate();
-				mApportionFieldApportions.changeProject(project);
+				mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			}
 			break;

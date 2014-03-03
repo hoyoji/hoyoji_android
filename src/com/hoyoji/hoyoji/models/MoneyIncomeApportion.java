@@ -173,5 +173,10 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	public ProjectShareAuthorization getProjectShareAuthorization() {
 		// TODO Auto-generated method stub
 		return null;
+	}	
+	
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyIncomeId(moneyTransactionId);
 	}
 }

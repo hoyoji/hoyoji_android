@@ -43,6 +43,7 @@ public class MoneyApportionField extends GridView {
 	private	Resources r = getResources();
 	private Set<ApportionItem<MoneyApportion>> mHiddenApportionItems = new HashSet<ApportionItem<MoneyApportion>>();
 	private double mTotalAmount = 0.0;
+	private String mMoneyTransactionId = null;
 	
 	public MoneyApportionField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -70,7 +71,8 @@ public class MoneyApportionField extends GridView {
         params.height = getMeasuredHeight();
     }
 	
-	public void init(Double totalAmount, List<? extends MoneyApportion> apportions, String projectId){
+	public void init(Double totalAmount, List<? extends MoneyApportion> apportions, String projectId, String moneyTransactionId){
+		mMoneyTransactionId = moneyTransactionId;
 		mTotalAmount = totalAmount;
 		//List<PictureItem> pis = new ArrayList<PictureItem>();
 		for(int i=0; i < apportions.size(); i++){
@@ -219,14 +221,16 @@ public class MoneyApportionField extends GridView {
 		}
 	}
 	
-	public void changeProject(Project project){
+	public void changeProject(Project project, Class<? extends MoneyApportion> type){
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 		Set<String> friendUserSet = new HashSet<String>();
+		Set<String> gridUserSet = new HashSet<String>();
 		
 		for(int i=0; i < projectShareAuthorizations.size(); i++){
 			friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
 		}	
-		
+
+		// 把不属于当前项目用户分摊隐藏掉
 		int i = 0; 
 		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
@@ -234,6 +238,7 @@ public class MoneyApportionField extends GridView {
 					mHiddenApportionItems.add(api);
 					mImageGridAdapter.remove(api);
 			} else {
+				gridUserSet.add(api.getApportion().getFriendUserId());
 				api.changeProject(project.getId());
 				i++;
 			}
@@ -245,10 +250,33 @@ public class MoneyApportionField extends GridView {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
 	        if(friendUserSet.contains(item.getApportion().getFriendUserId())){
+				gridUserSet.add(item.getApportion().getFriendUserId());
 	        	mImageGridAdapter.add(item);
 	        	item.changeProject(project.getId());
 	        	it.remove();
 	        }
+	    }
+	    if(project.getAutoApportion()){
+		    int count = projectShareAuthorizations.size();
+			for(i = 0; i < count; i++){
+				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId())){
+					try {
+						MoneyApportion apportion;
+						apportion = type.newInstance();
+						apportion.setAmount(0.0);
+						apportion.setApportionType("Share");
+						apportion.setMoneyId(mMoneyTransactionId);
+						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
+						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+						mImageGridAdapter.add(pi);
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 	    }
 	}
 	

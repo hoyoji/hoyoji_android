@@ -174,4 +174,9 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyPaybackId(moneyTransactionId);
+	}
 }

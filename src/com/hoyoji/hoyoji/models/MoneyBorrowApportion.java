@@ -172,4 +172,9 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 		return null;
 	}
 
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyBorrowId(moneyTransactionId);
+	}
+
 }
