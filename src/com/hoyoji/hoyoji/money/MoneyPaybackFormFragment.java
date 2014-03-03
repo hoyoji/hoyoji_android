@@ -277,24 +277,6 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setError(mMoneyPaybackEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyPaybackEditor.getValidationError("remark"));
 	}
-
-	private void createDebtAccount(MoneyPayback moneyPayback){
-		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
-		if(moneyPayback.getFriend() != null){
-			friendId = moneyPayback.getFriend().getId();
-			debtAccountName = friendId;
-			
-		}
-		createDebtAccount.setName(debtAccountName);
-		createDebtAccount.setCurrencyId(moneyPayback.getMoneyAccount().getCurrencyId());
-		createDebtAccount.setCurrentBalance(-moneyPayback.getAmount0());
-		createDebtAccount.setSharingType("Private");
-		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.setFriendId(friendId);
-		createDebtAccount.save();
-	}
 	
 	 @Override
 	public void onSave(View v){
@@ -372,7 +354,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyPaybackModel.getAmount0());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		createDebtAccount(moneyPaybackModel);
+				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getFriend(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getAmount0());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldFriend);
@@ -391,7 +373,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
 							oldDebtAccountEditor.save();
 							
-							createDebtAccount(moneyPaybackModel);
+							MoneyAccount.createDebtAccount(moneyPaybackModel.getFriend(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getAmount0());
 						}
 					}
 				

@@ -292,24 +292,6 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mRemarkFieldRemark.setError(mMoneyLendEditor.getValidationError("remark"));
 	}
 
-	private void createDebtAccount(MoneyLend moneyLend){
-		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
-		if(moneyLend.getFriend() != null){
-			friendId = moneyLend.getFriend().getId();
-			debtAccountName = friendId;
-			
-		}
-		createDebtAccount.setName(debtAccountName);
-		createDebtAccount.setCurrencyId(moneyLend.getMoneyAccount().getCurrencyId());
-		createDebtAccount.setCurrentBalance(-moneyLend.getAmount0());
-		createDebtAccount.setSharingType("Private");
-		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.setFriendId(friendId);
-		createDebtAccount.save();
-	}
-	
 	 @Override
 	public void onSave(View v){
 		super.onSave(v);
@@ -386,7 +368,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyLendModel.getAmount0());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		createDebtAccount(moneyLendModel);
+				    		MoneyAccount.createDebtAccount(moneyLendModel.getFriend(), moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getAmount0());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldFriend);
@@ -405,7 +387,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
 							oldDebtAccountEditor.save();
 							
-							createDebtAccount(moneyLendModel);
+							MoneyAccount.createDebtAccount(moneyLendModel.getFriend(), moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getAmount0());
 						}
 					}
 				

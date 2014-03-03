@@ -290,24 +290,6 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setError(mMoneyBorrowEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyBorrowEditor.getValidationError("remark"));
 	}
-	
-	private void createDebtAccount(MoneyBorrow moneyBorrow){
-		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
-		if(moneyBorrow.getFriend() != null){
-			friendId = moneyBorrow.getFriend().getId();
-			debtAccountName = friendId;
-			
-		}
-		createDebtAccount.setName(debtAccountName);
-		createDebtAccount.setCurrencyId(moneyBorrow.getMoneyAccount().getCurrencyId());
-		createDebtAccount.setCurrentBalance(-moneyBorrow.getAmount0());
-		createDebtAccount.setSharingType("Private");
-		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.setFriendId(friendId);
-		createDebtAccount.save();
-	}
 
 	 @Override
 	public void onSave(View v){
@@ -343,7 +325,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyBorrow moneyBorrowModel = mMoneyBorrowEditor.getModelCopy();
+				MoneyBorrow moneyBorrowModel = mMoneyBorrowEditor.getModel();
 				mMoneyBorrowEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
@@ -385,7 +367,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getAmount0());
 			    		newDebtAccountEditor.save();
 			    	}else{
-			    		createDebtAccount(moneyBorrowModel);
+			    		MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getMoneyAccount().getCurrencyId(), -moneyBorrowModel.getAmount0());
 			    	}
 				}else{
 					MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldFriend);
@@ -404,7 +386,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
 						oldDebtAccountEditor.save();
 						
-						createDebtAccount(moneyBorrowModel);
+						MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getMoneyAccount().getCurrencyId(), -moneyBorrowModel.getAmount0());
 					}
 				}
 				
