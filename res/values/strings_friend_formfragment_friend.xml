@@ -3,6 +3,7 @@
     
    <string name="friendFormFragment_title_create">创建好友</string>
    <string name="friendFormFragment_title_edit">修改好友资料</string>
+   <string name="friendFormFragment_title_delete">删除好友资料</string>
    
    <string name="friendFormFragment_textView_nickName">好友名称</string>
    <string name="friendFormFragment_editText_hint_nickName">请输入好友名称</string>
@@ -10,5 +11,7 @@
    <string name="friendFormFragment_textView_friend_category">分类名称</string>
    <string name="friendFormFragment_editText_hint_friend_category">请选择好友分类</string>
    
+   <string name="friendFormFragment_confirm_delete">确定删除好友，同时将我从对方好友列表中移除吗？</string>
+   <string name="friendFormFragment_toast_progress_deleting">正在从服务器上删除好友</string>
     
 </resources>

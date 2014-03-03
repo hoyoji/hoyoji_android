@@ -72,7 +72,7 @@ public class MessageDownloadService extends Service {
 			        		JSONObject postData = new JSONObject();
 			        		try {
 				        		postData.put("__dataType", "Message");
-								postData.put("ownerUserId", currentUser.getId());
+								postData.put("messageBoxId", currentUser.getMessageBoxId());
 //								postData.put("__orderBy", "lastServerUpdateTime ASC");
 								String lastMessagesDownloadTime = currentUser.getUserData().getLastMessagesDownloadTime();
 								if(lastMessagesDownloadTime != null){
@@ -93,7 +93,8 @@ public class MessageDownloadService extends Service {
 												Message newMessage = new Message();
 												newMessage.loadFromJSON(jsonMessage);
 												newMessage.save();
-												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")){
+												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse") 
+														|| newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
 													newMessages.add(newMessage);
 												}
 												if(lastMessagesDownloadTime == null || lastMessagesDownloadTime.compareTo(jsonMessage.optString("lastServerUpdateTime")) < 0){
@@ -121,17 +122,25 @@ public class MessageDownloadService extends Service {
 					        		}
 									
 									for(Message newMessage : newMessages){
-										String newUserId = "";
-										if(newMessage.getToUserId().equals(currentUser.getId())){
-											newUserId = newMessage.getFromUserId();
-										} else if(newMessage.getFromUserId().equals(currentUser.getId())){
-											newUserId = newMessage.getToUserId();
-										} else {
-											continue;
+										if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")) {
+											String newUserId = "";
+											if(newMessage.getToUserId().equals(currentUser.getId())){
+												newUserId = newMessage.getFromUserId();
+											} else if(newMessage.getFromUserId().equals(currentUser.getId())){
+												newUserId = newMessage.getToUserId();
+											} else {
+												continue;
+											}
+											Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newUserId).executeSingle();
+											if(newFriend == null){
+												loadNewlyAddedFriend(newUserId);
+											}
 										}
-										Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newUserId).executeSingle();
-										if(newFriend == null){
-											loadNewlyAddedFriend(newUserId);
+										else if(newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
+											Friend delFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+											if(delFriend != null){
+												delFriend.delete();
+											}
 										}
 									}
 									

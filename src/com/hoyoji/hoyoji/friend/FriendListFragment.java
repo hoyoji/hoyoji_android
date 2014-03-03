@@ -136,10 +136,10 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
 		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
 			menu.add(EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, R.string.friendCategoryFormFragment_title_edit);
+			super.onCreateContextMenu(menu, v, menuInfo);
 		}
 	}		
 	
@@ -177,12 +177,12 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		Friend friend = Friend.load(Friend.class, id);
-		friend.delete();
-	    HyjUtil.displayToast("好友删除成功");
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		Friend friend = Friend.load(Friend.class, id);
+//		friend.delete();
+//	    HyjUtil.displayToast("好友删除成功");
+//	}
 
 	@Override 
 	public void onDeleteListGroup(int groupPos, Long id){

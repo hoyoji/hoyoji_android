@@ -307,8 +307,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddResponse");
-		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
-				.getId());
+		msg.setOwnerUserId(jsonUser.optString("id"));
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
@@ -316,7 +315,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "同意您的添加好友请求");
 		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		msg.setOwnerUserId(jsonUser.optString("id"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
@@ -474,17 +472,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 	}
 
 	private void sendAddFriendRequestMessage(JSONObject jsonUser) {
-//		data.put("type", "System.Friend.AddResponse");
-//		data.put("messageState", "new");
-//		data.put("messageTitle", "好友请求");
-		
-		
 		final Message msg = new Message();
 		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddRequest");
-		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
-				.getId());
+		msg.setOwnerUserId(jsonUser.optString("id"));
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
@@ -492,7 +484,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "请求将您添加为好友");
 		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		msg.setOwnerUserId(jsonUser.optString("id"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());

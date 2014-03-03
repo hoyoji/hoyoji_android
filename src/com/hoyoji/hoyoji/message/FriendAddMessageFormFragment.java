@@ -414,8 +414,8 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 
 				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
 						.dismissProgressDialog();
-//				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
+				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+//				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
 				FriendAddMessageFormFragment.this.getActivity().finish();
 			}
 
@@ -470,8 +470,7 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddRequest");
-		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
-				.getId());
+		msg.setOwnerUserId(jsonUser.optString("id"));
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
@@ -480,7 +479,6 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 //						.getDisplayName() + "请求将您添加为好友");
 		msg.setMessageDetail(mMessageEditor.getModelCopy().getMessageDetail());
 		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		msg.setOwnerUserId(jsonUser.optString("id"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
@@ -497,9 +495,9 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
+				msg.save();
 				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
 						.dismissProgressDialog();
-				msg.save();
 				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_resend_success);
 			}
 
@@ -522,8 +520,7 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddResponse");
-		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
-				.getId());
+		msg.setOwnerUserId(jsonUser.optString("id"));
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
@@ -531,7 +528,6 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "同意您的添加好友请求");
 		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		msg.setOwnerUserId(jsonUser.optString("id"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
@@ -548,8 +544,8 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
-						.dismissProgressDialog();
+//				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
+//						.dismissProgressDialog();
 				msg.save();
 				loadNewlyAddedFriend(jsonUser);
 //				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);

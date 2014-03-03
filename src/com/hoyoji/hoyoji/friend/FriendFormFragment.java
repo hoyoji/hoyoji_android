@@ -1,23 +1,37 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.util.Date;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
+import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 
@@ -25,7 +39,7 @@ import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 public class FriendFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_CATEGORY_ID = 1;
 	
-	private HyjModelEditor mFriendEditor = null;
+	private HyjModelEditor<Friend> mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldNickName = null;
 	
@@ -48,7 +62,8 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		}
 		mFriendEditor = friend.newModelEditor();
 		
-				
+		setupDeleteButton(mFriendEditor);
+		
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
 		mTextFieldNickName.setText(friend.getNickName());
 		
@@ -70,6 +85,97 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 	}
+	
+	private void setupDeleteButton(
+			HyjModelEditor<Friend> friendEditor) {
+
+		Button buttonDelete = (Button) getView().findViewById(
+				R.id.button_delete);
+		
+		final Friend friend = friendEditor.getModelCopy();
+		
+		if (friend.get_mId() == null) {
+			buttonDelete.setVisibility(View.GONE);
+		} else if(friend.getFriendUser() == null) {
+			friend.delete();
+			HyjUtil.displayToast(R.string.app_delete_success);
+			getActivity().finish();
+		} else {
+			buttonDelete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.friendFormFragment_confirm_delete, R.string.alert_dialog_ok, R.string.alert_dialog_no, -1,
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+										sendDeleteFriendMessage();
+								}
+							});
+				}
+			});
+		}
+		
+	}
+	
+	private void sendDeleteFriendMessage() {
+		final Message msg = new Message();
+		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setMessageState("new");
+		msg.setType("System.Friend.Delete");
+		msg.setOwnerUserId(mFriendEditor.getModelCopy().getFriendUserId());
+		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		msg.setToUserId(mFriendEditor.getModelCopy().getFriendUserId());
+		msg.setMessageTitle("删除好友");
+		msg.setMessageDetail("用户"
+				+ HyjApplication.getInstance().getCurrentUser()
+						.getDisplayName() + "把您从好友列表删除");
+		msg.setMessageBoxId(mFriendEditor.getModelCopy().getFriendUser().getMessageBoxId());
+		JSONObject msgData = new JSONObject();
+		try {
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
+					.getCurrentUser().getDisplayName());
+			msgData.put("toUserDisplayName",mFriendEditor.getModelCopy().getFriendUser().getDisplayName());
+		} catch (JSONException e) {
+		}
+		msg.setMessageData(msgData.toString());
+
+		// send message to server to request add new friend
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				((HyjActivity) FriendFormFragment.this.getActivity())
+						.dismissProgressDialog();
+				try {
+					ActiveAndroid.beginTransaction();
+					msg.save();
+					mFriendEditor.getModelCopy().delete();
+					HyjUtil.displayToast(R.string.app_delete_success);
+					ActiveAndroid.setTransactionSuccessful();
+					ActiveAndroid.endTransaction();
+					getActivity().finish();
+				} catch (Exception e) {
+					ActiveAndroid.endTransaction();
+					HyjUtil.displayToast(R.string.app_delete_failed);
+				} 
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				((HyjActivity) FriendFormFragment.this.getActivity())
+				.dismissProgressDialog();
+				JSONObject json = (JSONObject) object;
+				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+			}
+		};
+
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
+				+ msg.toJSON().toString() + "]", "postData");
+		((HyjActivity) this.getActivity()).displayProgressDialog(
+				R.string.friendFormFragment_title_delete,
+				R.string.friendFormFragment_toast_progress_deleting);
+
+	}
+	
 	
 	private void fillData(){
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
