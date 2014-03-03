@@ -61,7 +61,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	Long modelId;
+	private Long modelId;
 
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;

@@ -43,7 +43,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	Long modelId;
+	private Long modelId;
 	
 	private HyjModelEditor<MoneyLend> mMoneyLendEditor = null;
 	private HyjImageField mImageFieldPicture = null;
