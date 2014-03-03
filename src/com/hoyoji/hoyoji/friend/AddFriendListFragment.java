@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.ContextMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -65,10 +67,15 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		mSearchView = (SearchView) getView().findViewById(
 				R.id.friendListFragment_addFriend_searchView);
 		mSearchView.setOnQueryTextListener(this);
+		
+//        InputMethodManager inputMethodManager =  (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.toggleSoftInputFromWindow(mSearchView.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
+
 		this.getActivity()
 				.getWindow()
 				.setSoftInputMode(
 						WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
 	}
 
 	@Override
@@ -189,6 +196,10 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			HyjUtil.displayToast("请输入查询条件");
 			return true;
 		}
+
+	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
+   
 		JSONObject data = new JSONObject();
 		try {
 			data.put("userName", mSearchText);
@@ -331,9 +342,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				((HyjActivity) AddFriendListFragment.this.getActivity())
-						.dismissProgressDialog();
 				msg.save();
+//				((HyjActivity) AddFriendListFragment.this.getActivity())
+//						.dismissProgressDialog();
 				loadNewlyAddedFriend(jsonUser);
 //				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
 			}
@@ -346,9 +357,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
 				+ msg.toJSON().toString() + "]", "postData");
-		((HyjActivity) this.getActivity()).displayProgressDialog(
-				R.string.addFriendListFragment_title_add,
-				R.string.friendListFragment_addFriend_progress_adding);
+//		((HyjActivity) this.getActivity()).displayProgressDialog(
+//				R.string.addFriendListFragment_title_add,
+//				R.string.friendListFragment_addFriend_progress_adding);
 
 	}
 	
@@ -496,11 +507,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
+				msg.save();
 				((HyjActivity) AddFriendListFragment.this.getActivity())
 				.dismissProgressDialog();
-				msg.save();
 				HyjUtil.displayToast(R.string.friendListFragment_addFriend_toast_send_success);
-			}
+		   }
 
 			@Override
 			public void errorCallback(Object object) {
@@ -511,9 +522,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + msg.toJSON().toString()
 				+ "]", "postData");
-		((HyjActivity) this.getActivity()).displayProgressDialog(
-				R.string.addFriendListFragment_title_add,
-				R.string.friendListFragment_addFriend_progress_adding);
+//		((HyjActivity) this.getActivity()).displayProgressDialog(
+//				R.string.addFriendListFragment_title_add,
+//				R.string.friendListFragment_addFriend_progress_adding);
 
 	}
 	

@@ -137,10 +137,6 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 			if (mMessageEditor.hasValidationErrors()) {
 				showValidatioErrors();
 			} else {
-				// mMessageEditor.save();
-				// HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_resend_success);
-				// getActivity().finish();
-				
 				Friend newFriend = new Select().from(Friend.class).where("friendUserId=?",
 						mMessageEditor.getModelCopy().getToUserId()).executeSingle();
 				if (newFriend != null) {
@@ -559,9 +555,6 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
 				+ msg.toJSON().toString() + "]", "postData");
-		((HyjActivity) this.getActivity()).displayProgressDialog(
-				R.string.addFriendListFragment_title_add,
-				R.string.friendListFragment_addFriend_progress_adding);
 
 	}
 
