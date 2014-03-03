@@ -61,8 +61,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Double oldAmount;
-	private MoneyAccount oldMoneyAccount;
 	Long modelId;
 
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
@@ -93,8 +91,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 		modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
-			moneyExpense = new Select().from(MoneyExpense.class)
-					.where("_id=?", modelId).executeSingle();
+			moneyExpense = new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyExpense = new MoneyExpense();
 		}
@@ -148,16 +145,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		oldAmount = moneyExpense.getAmount0();
-
-		oldMoneyAccount = moneyExpense.getMoneyAccount();
+		MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_selectorField_moneyAccount);
 
-		if (oldMoneyAccount != null) {
-			mSelectorFieldMoneyAccount.setModelId(oldMoneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(oldMoneyAccount.getName() + "("
-					+ oldMoneyAccount.getCurrencyId() + ")");
+		if (moneyAccount != null) {
+			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
+			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "("
+					+ moneyAccount.getCurrencyId() + ")");
 		}
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener() {
 			@Override
@@ -530,8 +525,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 				saveApportions();
 
+				MoneyExpense oldMoneyExpenseModel = mMoneyExpenseEditor.getModel();
 				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
-				mMoneyExpenseEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
@@ -546,26 +541,27 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					Project project = moneyExpenseModel.getProject();
 					
 					Exchange newExchange = new Exchange();
-					newExchange
-							.setLocalCurrencyId(moneyAccount.getCurrencyId());
+					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
 					newExchange.setForeignCurrencyId(project.getCurrencyId());
 					newExchange.setRate(moneyExpenseModel.getExchangeRate());
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}
+				    MoneyAccount oldMoneyAccount = oldMoneyExpenseModel.getMoneyAccount();
 					MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - moneyExpenseModel.getAmount0());
-							
+					if(modelId == -1 || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0() - moneyExpenseModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount);
+						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0());
 						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
+					
+				mMoneyExpenseEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
 				getActivity().finish();
@@ -611,6 +607,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				apportionEditor.save();
 				nonDeleteCount++;
+				
+				
 			} else if (pi.getState() == PictureItem.DELETED) {
 				apportion.delete();
 			}
@@ -678,12 +676,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 				apportion.setAmount(0.0);
 				apportion.setFriendUserId(psa.getFriendUserId());
-				apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModel()
-						.getId());
-				if (mApportionFieldApportions.addApportion(apportion,
-						mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
-					mApportionFieldApportions.setTotalAmount(mNumericAmount
-							.getNumber());
+				apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModel().getId());
+				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 				} else {
 					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
 				}

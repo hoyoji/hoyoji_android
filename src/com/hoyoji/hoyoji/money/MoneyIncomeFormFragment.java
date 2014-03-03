@@ -43,8 +43,6 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Double oldAmount;
-	private MoneyAccount oldMoneyAccount;
 	Long modelId;
 	
 	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
@@ -90,14 +88,13 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyIncome.getAmount());
-		oldAmount = moneyIncome.getAmount0();
 		
-		oldMoneyAccount = moneyIncome.getMoneyAccount();
+		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
 		
-		if(oldMoneyAccount != null){
-			mSelectorFieldMoneyAccount.setModelId(oldMoneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(oldMoneyAccount.getName() + "(" + oldMoneyAccount.getCurrencyId() + ")");
+		if(moneyAccount != null){
+			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
+			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 		}
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
@@ -311,8 +308,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
+				MoneyIncome oldMoneyIncomeModel = mMoneyIncomeEditor.getModel();
 				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModelCopy();
-				mMoneyIncomeEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyIncomeModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeModel.getProjectId())){
@@ -335,21 +332,21 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 				
 //				if(mSelectorFieldMoneyAccount.getModelId() != null){
+				    MoneyAccount oldMoneyAccount = oldMoneyIncomeModel.getMoneyAccount();
 					MoneyAccount newMoneyAccount = moneyIncomeModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(oldMoneyAccount == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldAmount + moneyIncomeModel.getAmount0());
-							
+					if(modelId == -1 || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldMoneyIncomeModel.getAmount0() + moneyIncomeModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldAmount);
+						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldMoneyIncomeModel.getAmount0());
 						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + moneyIncomeModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
 //				}	
-				
+				mMoneyIncomeEditor.save();
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
 				getActivity().finish();
