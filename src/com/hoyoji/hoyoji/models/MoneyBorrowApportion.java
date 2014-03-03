@@ -41,7 +41,7 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 	public MoneyBorrowApportion(){
 		super();
 		mId = UUID.randomUUID().toString();
-		mApportionType = "Average";
+		mApportionType = "Share";
 	}
 
 	public String getId() {

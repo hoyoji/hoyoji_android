@@ -1,7 +1,10 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -103,20 +106,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
-
-		mApportionFieldApportions = (MoneyApportionField) getView()
-				.findViewById(R.id.moneyExpenseFormFragment_apportionField);
-		mApportionFieldApportions.init(moneyExpense.getAmount0(),
-				moneyExpense.getApportions(), moneyExpense.getProjectId());
-		if (modelId == -1) {
-			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-			apportion.setAmount(moneyExpense.getAmount0());
-			apportion.setFriendUserId(HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			apportion.setMoneyExpenseId(moneyExpense.getId());
-			mApportionFieldApportions.addApportion(apportion,
-					moneyExpense.getProjectId(), ApportionItem.NEW);
-		}
+		
+		setupApportionField(moneyExpense);
 
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_date);
@@ -366,6 +357,42 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 	}
 
+	private void setupApportionField(MoneyExpense moneyExpense) {
+
+		mApportionFieldApportions = (MoneyApportionField) getView()
+				.findViewById(R.id.moneyExpenseFormFragment_apportionField);
+		
+		List<MoneyExpenseApportion> moneyApportions = null;
+		if(modelId == -1) {
+			moneyApportions = new ArrayList<MoneyExpenseApportion>();
+			if(moneyExpense.getProject() != null 
+					&& moneyExpense.getProject().getAutoApportion()){
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpense.getProject().getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setMoneyExpenseId(moneyExpense.getId());
+					apportion.setApportionType("Share");
+					
+					moneyApportions.add(apportion);
+				}
+			} else {
+				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+				apportion.setAmount(0.0);
+				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				apportion.setMoneyExpenseId(moneyExpense.getId());
+				apportion.setApportionType("Average");
+				moneyApportions.add(apportion);
+			}
+		} else {
+			moneyApportions = moneyExpense.getApportions();
+		}
+		
+		mApportionFieldApportions.init(moneyExpense.getAmount0(),
+				moneyApportions, moneyExpense.getProjectId());
+	}
+
 	private void setupDeleteButton(
 			HyjModelEditor<MoneyExpense> moneyExpenseEditor) {
 
@@ -471,8 +498,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
-
-		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
 
 	private void showValidatioErrors() {

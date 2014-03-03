@@ -283,10 +283,6 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "projectShareMoneyReturnDelete")
 	private Boolean mProjectShareMoneyReturnDelete = true;
 	
-
-	
-	
-	
 	
 	public ProjectShareAuthorization(){
 		super();
