@@ -28,7 +28,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	private String mFriendUserId;
 
 	@Column(name = "state")
-	private String mState;
+	private String mState = "Wait";
 	
 	@Column(name = "projectId")
 	private String mProjectId;
