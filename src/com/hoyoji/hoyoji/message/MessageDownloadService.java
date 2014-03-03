@@ -93,8 +93,7 @@ public class MessageDownloadService extends Service {
 												Message newMessage = new Message();
 												newMessage.loadFromJSON(jsonMessage);
 												newMessage.save();
-												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse") &&
-														newMessage.getToUserId().equals(currentUser.getId())){
+												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")){
 													newMessages.add(newMessage);
 												}
 												if(lastMessagesDownloadTime == null || lastMessagesDownloadTime.compareTo(jsonMessage.optString("lastServerUpdateTime")) < 0){
@@ -122,9 +121,17 @@ public class MessageDownloadService extends Service {
 					        		}
 									
 									for(Message newMessage : newMessages){
-										Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+										String newUserId = "";
+										if(newMessage.getToUserId().equals(currentUser.getId())){
+											newUserId = newMessage.getFromUserId();
+										} else if(newMessage.getFromUserId().equals(currentUser.getId())){
+											newUserId = newMessage.getToUserId();
+										} else {
+											continue;
+										}
+										Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newUserId).executeSingle();
 										if(newFriend == null){
-											loadNewlyAddedFriend(newMessage.getFromUserId());
+											loadNewlyAddedFriend(newUserId);
 										}
 									}
 									

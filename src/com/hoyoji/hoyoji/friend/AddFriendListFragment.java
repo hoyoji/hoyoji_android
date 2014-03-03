@@ -119,8 +119,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 					if (jsonArray.optJSONArray(0).length() > 0) {
 						// 好友已经在服务器上存在，如果该好友不在本地（可能是未同步，或是同步出错？），我们将其加进来
 						JSONObject jsonFriend = jsonArray.optJSONArray(0).optJSONObject(0);
-						Friend newFriend = new Select().from(Friend.class).where("friendUserId=?",
-								jsonFriend.optString("id")).executeSingle();
+//						Friend newFriend = new Select().from(Friend.class).where("friendUserId=?",
+//								jsonFriend.optString("id")).executeSingle();
+						Friend newFriend = HyjModel.getModel(Friend.class, jsonFriend.optString("id"));
 						if(newFriend == null){
 							loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
 						} else {
@@ -132,7 +133,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 							HyjApplication.getInstance().getCurrentUser()
 									.getId())) {
 						// 添加自己为好友
-						addSelfAsFriend();
+						addSelfAsFriend(jsonUser);
 						((HyjActivity) AddFriendListFragment.this.getActivity())
 								.dismissProgressDialog();
 						
@@ -254,43 +255,44 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		}
 	}
 
-	private void addSelfAsFriend() {
+	private void addSelfAsFriend(final JSONObject jsonUser) {
 		((HyjActivity) AddFriendListFragment.this.getActivity()).displayDialog(
 				-1, R.string.friendListFragment_addFriend_addSelf_title,
 				R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 				new DialogCallbackListener() {
 					@Override
 					public void doPositiveClick(Object object) {
-						final Friend newFriend = new Friend();
-						newFriend.setFriendUser(HyjApplication.getInstance()
-								.getCurrentUser());
-						newFriend.setOwnerUserId(HyjApplication.getInstance()
-								.getCurrentUser().getId());
-						newFriend.setFriendCategoryId(HyjApplication
-								.getInstance().getCurrentUser().getUserData()
-								.getDefaultFriendCategoryId());
-						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-							@Override
-							public void finishCallback(Object object) {
-								newFriend.save();
-								((HyjActivity) AddFriendListFragment.this
-										.getActivity()).dismissProgressDialog();
-								HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-							}
-
-							@Override
-							public void errorCallback(Object object) {
-								displayError(object);
-							}
-						};
-
-						HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
-								+ newFriend.toJSON().toString() + "]",
-								"postData");
-						((HyjActivity) AddFriendListFragment.this.getActivity())
-								.displayProgressDialog(
-										R.string.addFriendListFragment_title_add,
-										R.string.friendListFragment_addFriend_progress_adding);
+						addFriendWithoutAuthorization(jsonUser);
+//						final Friend newFriend = new Friend();
+//						newFriend.setFriendUser(HyjApplication.getInstance()
+//								.getCurrentUser());
+//						newFriend.setOwnerUserId(HyjApplication.getInstance()
+//								.getCurrentUser().getId());
+//						newFriend.setFriendCategoryId(HyjApplication
+//								.getInstance().getCurrentUser().getUserData()
+//								.getDefaultFriendCategoryId());
+//						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//							@Override
+//							public void finishCallback(Object object) {
+//								newFriend.save();
+//								((HyjActivity) AddFriendListFragment.this
+//										.getActivity()).dismissProgressDialog();
+//								HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+//							}
+//
+//							@Override
+//							public void errorCallback(Object object) {
+//								displayError(object);
+//							}
+//						};
+//
+//						HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
+//								+ newFriend.toJSON().toString() + "]",
+//								"postData");
+//						((HyjActivity) AddFriendListFragment.this.getActivity())
+//								.displayProgressDialog(
+//										R.string.addFriendListFragment_title_add,
+//										R.string.friendListFragment_addFriend_progress_adding);
 					}
 
 					@Override

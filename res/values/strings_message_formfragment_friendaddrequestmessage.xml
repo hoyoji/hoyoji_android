@@ -15,7 +15,7 @@
    <string name="friendAddRequestMessageFormFragment_editText_hint_title">无消息标题</string>
  
    <string name="friendAddRequestMessageFormFragment_textView_detail">消息内容</string>
-   <string name="friendAddRequestMessageFormFragment_editText_hint_detail">无消息内容</string>
+   <string name="friendAddRequestMessageFormFragment_editText_hint_detail">请输入消息内容</string>
  
    <string name="friendAddRequestMessageFormFragment_button_resend">重新发送</string>
    <string name="friendAddRequestMessageFormFragment_button_accept">接受</string>

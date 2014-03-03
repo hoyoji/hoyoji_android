@@ -60,6 +60,11 @@ public class Message extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
+		if(this.getMessageDetail() == null || this.getMessageDetail().length() == 0){
+			modelEditor.setValidationError("messageDetail",R.string.friendAddRequestMessageFormFragment_editText_hint_detail);
+		}else{
+			modelEditor.removeValidationError("messageDetail");
+		}
 	}
 
 	public String getId() {
