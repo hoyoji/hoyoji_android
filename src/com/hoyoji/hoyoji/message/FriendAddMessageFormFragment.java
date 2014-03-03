@@ -414,7 +414,8 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 
 				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
 						.dismissProgressDialog();
-				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+//				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
 				FriendAddMessageFormFragment.this.getActivity().finish();
 			}
 
