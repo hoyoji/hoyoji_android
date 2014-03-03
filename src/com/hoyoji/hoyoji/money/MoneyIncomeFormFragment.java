@@ -311,7 +311,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModel();
+				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModelCopy();
 				mMoneyIncomeEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();

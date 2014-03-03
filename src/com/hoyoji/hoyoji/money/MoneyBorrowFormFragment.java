@@ -325,7 +325,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyBorrow moneyBorrowModel = mMoneyBorrowEditor.getModel();
+				MoneyBorrow moneyBorrowModel = mMoneyBorrowEditor.getModelCopy();
 				mMoneyBorrowEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();

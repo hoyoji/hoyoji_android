@@ -3,12 +3,8 @@ package com.hoyoji.hoyoji.money;
 import java.util.Iterator;
 import java.util.List;
 
-import android.R.color;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -17,11 +13,9 @@ import android.text.TextWatcher;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -34,7 +28,6 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -44,7 +37,6 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
-import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
@@ -218,7 +210,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 		if (friend != null) {
 			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
@@ -326,10 +318,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					}
 				});
 
-		getView()
-				.findViewById(
-						R.id.moneyExpenseFormFragment_imageButton_apportion_more_actions)
-				.setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -341,50 +330,29 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
 								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_all) {
-									Project project = HyjModel.getModel(
-											Project.class,
-											mSelectorFieldProject.getModelId());
-									List<ProjectShareAuthorization> projectShareAuthorizations = project
-											.getShareAuthorizations();
-									for (int i = 0; i < projectShareAuthorizations
-											.size(); i++) {
+									Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+									List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+									for (int i = 0; i < projectShareAuthorizations.size(); i++) {
 										MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 										apportion.setAmount(0.0);
-										apportion
-												.setFriendUserId(projectShareAuthorizations
-														.get(i)
-														.getFriendUserId());
-										apportion
-												.setMoneyExpenseId(moneyExpense
-														.getId());
+										apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+										apportion.setMoneyExpenseId(moneyExpense.getId());
 
-										mApportionFieldApportions.addApportion(
-												apportion, project.getId(),
-												ApportionItem.NEW);
+										mApportionFieldApportions.addApportion(apportion, project.getId(),ApportionItem.NEW);
 									}
-									mApportionFieldApportions
-											.setTotalAmount(mNumericAmount
-													.getNumber());
+									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
 								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
 									mApportionFieldApportions.clearAll();
-									mApportionFieldApportions
-											.setTotalAmount(mNumericAmount
-													.getNumber());
+									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
 								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_average) {
-									mApportionFieldApportions
-											.setAllApportionAverage();
-									mApportionFieldApportions
-											.setTotalAmount(mNumericAmount
-													.getNumber());
+									mApportionFieldApportions.setAllApportionAverage();
+									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
 								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_share) {
-									mApportionFieldApportions
-											.setAllApportionShare();
-									mApportionFieldApportions
-											.setTotalAmount(mNumericAmount
-													.getNumber());
+									mApportionFieldApportions.setAllApportionShare();
+									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
 								}
 								return false;
@@ -424,13 +392,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount moneyAccount = moneyExpense
-												.getMoneyAccount();
-										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount
-												.newModelEditor();
-										moneyAccountEditor.getModelCopy().setCurrentBalance(
-												moneyAccount.getCurrentBalance()
-														+ moneyExpense.getAmount());
+										MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
+										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
 										moneyExpense.delete();
 										moneyAccountEditor.save();
 
@@ -548,13 +512,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		if (mApportionFieldApportions.getCount() > 0) {
 			if (!mNumericAmount.getNumber().equals(
 					mApportionFieldApportions.getTotalAmount())) {
-				mMoneyExpenseEditor
-						.setValidationError(
-								"apportionTotalAmount",
-								R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
+				mMoneyExpenseEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
 			} else {
-				mMoneyExpenseEditor
-						.removeValidationError("apportionTotalAmount");
+				mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
 			}
 		} else {
 			mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
@@ -570,7 +530,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 				saveApportions();
 
-				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModel();
+				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
 				mMoneyExpenseEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
@@ -616,8 +576,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	}
 
 	private void savePictures() {
-		HyjImageField.ImageGridAdapter adapter = mImageFieldPicture
-				.getAdapter();
+		HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
 		int count = adapter.getCount();
 		boolean mainPicSet = false;
 		for (int i = 0; i < count; i++) {
@@ -640,32 +599,25 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	}
 
 	private void saveApportions() {
-		MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions
-				.getAdapter();
+		MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 		int count = adapter.getCount();
 		int nonDeleteCount = 0;
 		for (int i = 0; i < count; i++) {
 			ApportionItem<MoneyApportion> pi = adapter.getItem(i);
-			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi
-					.getApportion();
-			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion
-					.newModelEditor();
+			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
+			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
 
-			if (pi.getState() == ApportionItem.NEW
-					|| pi.getState() == PictureItem.CHANGED) {
-
+			if (pi.getState() == ApportionItem.NEW || pi.getState() == PictureItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				apportionEditor.save();
 				nonDeleteCount++;
-
 			} else if (pi.getState() == PictureItem.DELETED) {
 				apportion.delete();
 			}
 		}
 
 		// 把隐藏掉的分摊添加回去
-		Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions
-				.getHiddenApportions().iterator();
+		Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions.getHiddenApportions().iterator();
 		while (it.hasNext()) {
 			// Get element
 			ApportionItem<MoneyApportion> item = it.next();
@@ -675,12 +627,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 		if (nonDeleteCount == 0) {
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-			apportion
-					.setAmount(mMoneyExpenseEditor.getModelCopy().getAmount0());
-			apportion.setFriendUserId(HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModelCopy()
-					.getId());
+			apportion.setAmount(mMoneyExpenseEditor.getModelCopy().getAmount0());
+			apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+			apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModelCopy().getId());
 			apportion.setApportionType("Average");
 			apportion.save();
 		}
@@ -704,13 +653,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Project project = Project.load(Project.class, _id);
-				mSelectorFieldProject.setText(project.getName() + "("
-						+ project.getCurrencyId() + ")");
+				mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
 				setExchangeRate();
 				mApportionFieldApportions.changeProject(project);
-				mApportionFieldApportions.setTotalAmount(mNumericAmount
-						.getNumber());
+				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			}
 			break;
 

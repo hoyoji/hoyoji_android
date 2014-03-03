@@ -422,7 +422,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyTransfer moneyTransferModel = mMoneyTransferEditor.getModel();
+				MoneyTransfer moneyTransferModel = mMoneyTransferEditor.getModelCopy();
 				mMoneyTransferEditor.save();
 				
 				if(CREATE_EXCHANGE == 1){

@@ -312,7 +312,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModel();
+				MoneyReturn moneyReturnModel = mMoneyReturnEditor.getModelCopy();
 				mMoneyReturnEditor.save();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
