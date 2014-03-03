@@ -277,24 +277,6 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setError(mMoneyReturnEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyReturnEditor.getValidationError("remark"));
 	}
-	
-	private void createDebtAccount(MoneyReturn moneyReturn){
-		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
-		if(moneyReturn.getFriend() != null){
-			friendId = moneyReturn.getFriend().getId();
-			debtAccountName = friendId;
-			
-		}
-		createDebtAccount.setName(debtAccountName);
-		createDebtAccount.setCurrencyId(moneyReturn.getMoneyAccount().getCurrencyId());
-		createDebtAccount.setCurrentBalance(-moneyReturn.getAmount0());
-		createDebtAccount.setSharingType("Private");
-		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.setFriendId(friendId);
-		createDebtAccount.save();
-	}
 
 	 @Override
 	public void onSave(View v){
@@ -372,7 +354,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getAmount0());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		createDebtAccount(moneyReturnModel);
+				    		MoneyAccount.createDebtAccount(moneyReturnModel.getFriend(), moneyReturnModel.getMoneyAccount().getCurrencyId(), moneyReturnModel.getAmount0());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldFriend);
@@ -391,7 +373,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
 							oldDebtAccountEditor.save();
 							
-							createDebtAccount(moneyReturnModel);
+							MoneyAccount.createDebtAccount(moneyReturnModel.getFriend(), moneyReturnModel.getMoneyAccount().getCurrencyId(), moneyReturnModel.getAmount0());
 						}
 					}
 				

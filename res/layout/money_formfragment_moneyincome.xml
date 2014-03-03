@@ -211,6 +211,63 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
+        
+          <FrameLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/moneyApportionField_title">
+            </TextView>
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_add_person" />
+                
+                <ImageView
+                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_more_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_overflow" />
+
+            </LinearLayout>
+        </FrameLayout>
+        
+           <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="2dip"
+            android:layout_marginTop="2dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="20dip"
+            android:background="@android:color/darker_gray" />
+        
+        <com.hoyoji.hoyoji.money.MoneyApportionField
+            android:id="@+id/moneyIncomeFormFragment_apportionField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:layout_marginBottom="5dip"/>
+        
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
 
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
             android:id="@+id/moneyIncomeFormFragment_textField_remark"
