@@ -39,6 +39,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
@@ -139,7 +140,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 						
 					} else if(jsonUser.optString("newFriendAuthentication").equals("non")) {
 						
-						addFriendWithoutAuthorization(jsonUser);
+						sendAddFriendResponseMessage(jsonUser);
 						
 					} 
 					else {
@@ -262,7 +263,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				new DialogCallbackListener() {
 					@Override
 					public void doPositiveClick(Object object) {
-						addFriendWithoutAuthorization(jsonUser);
+						sendAddFriendResponseMessage(jsonUser);
 //						final Friend newFriend = new Friend();
 //						newFriend.setFriendUser(HyjApplication.getInstance()
 //								.getCurrentUser());
@@ -301,12 +302,42 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				});
 	}
 
-	private void addFriendWithoutAuthorization(final JSONObject jsonUser) {
+	private void sendAddFriendResponseMessage(final JSONObject jsonUser) {
+		final Message msg = new Message();
+		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setMessageState("new");
+		msg.setType("System.Friend.AddResponse");
+		msg.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
+				.getId());
+		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
+		msg.setToUserId(jsonUser.optString("id"));
+		msg.setMessageTitle("好友请求");
+		msg.setMessageDetail("用户"
+				+ HyjApplication.getInstance().getCurrentUser()
+						.getDisplayName() + "同意您的添加好友请求");
+		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+		msg.setOwnerUserId(jsonUser.optString("id"));
+		JSONObject msgData = new JSONObject();
+		try {
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
+					.getCurrentUser().getDisplayName());
+			msgData.put(
+					"toUserDisplayName",
+					HyjUtil.ifJSONNull(jsonUser, "nickName",
+							jsonUser.getString("userName")));
+		} catch (JSONException e) {
+		}
+		msg.setMessageData(msgData.toString());
+
 		// send message to server to request add new friend
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
+				((HyjActivity) AddFriendListFragment.this.getActivity())
+						.dismissProgressDialog();
+				msg.save();
 				loadNewlyAddedFriend(jsonUser);
+//				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
 			}
 
 			@Override
@@ -315,36 +346,59 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			}
 		};
 
-		JSONObject data = new JSONObject();
-		try {
-			data.put("__dataType", "Message");
-			data.put("id", UUID.randomUUID().toString());
-			data.put("toUserId", jsonUser.optString("id"));
-			data.put("fromUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			data.put("type", "System.Friend.AddResponse");
-			data.put("messageState", "new");
-			data.put("messageTitle", "好友请求");
-			data.put("date", HyjUtil.formatDateToIOS(new Date()));
-			data.put("detail", "用户"
-					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "成功添加您为好友");
-			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
-			data.put("ownerUserId", jsonUser.optString("id"));
-			JSONObject msgData = new JSONObject();
-			try {
-				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-				msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
-			} catch (JSONException e) {
-			}
-			data.put("messageData", msgData);
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-					"[" + data.toString() + "]", "postData");
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
+				+ msg.toJSON().toString() + "]", "postData");
+		((HyjActivity) this.getActivity()).displayProgressDialog(
+				R.string.addFriendListFragment_title_add,
+				R.string.friendListFragment_addFriend_progress_adding);
 
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
+	
+	
+//	private void addFriendWithoutAuthorization(final JSONObject jsonUser) {
+//		// send message to server to request add new friend
+//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//			@Override
+//			public void finishCallback(Object object) {
+//				loadNewlyAddedFriend(jsonUser);
+//			}
+//
+//			@Override
+//			public void errorCallback(Object object) {
+//				displayError(object);
+//			}
+//		};
+//
+//		JSONObject data = new JSONObject();
+//		try {
+//			data.put("__dataType", "Message");
+//			data.put("id", UUID.randomUUID().toString());
+//			data.put("toUserId", jsonUser.optString("id"));
+//			data.put("fromUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
+//			data.put("type", "System.Friend.AddResponse");
+//			data.put("messageState", "new");
+//			data.put("messageTitle", "好友请求");
+//			data.put("date", HyjUtil.formatDateToIOS(new Date()));
+//			data.put("detail", "用户"
+//					+ HyjApplication.getInstance().getCurrentUser()
+//							.getDisplayName() + "成功添加您为好友");
+//			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
+//			data.put("ownerUserId", jsonUser.optString("id"));
+//			JSONObject msgData = new JSONObject();
+//			try {
+//				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+//				msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
+//			} catch (JSONException e) {
+//			}
+//			data.put("messageData", msgData);
+//			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
+//					"[" + data.toString() + "]", "postData");
+//
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	private void loadFriendPicturesAndSaveFriend(final JSONObject jsonUser, final JSONObject jsonFriend){
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {

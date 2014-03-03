@@ -172,13 +172,13 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 										0).optJSONObject(0);
 								loadFriendPicturesAndSaveFriend(jsonUser,
 										jsonFriend);
-							} else if (jsonUser.optString("id").equals(
-									HyjApplication.getInstance()
-											.getCurrentUser().getId())) {
-								// 添加自己为好友
-								addSelfAsFriend(jsonUser);
-								((HyjActivity) FriendAddMessageFormFragment.this
-										.getActivity()).dismissProgressDialog();
+//							} else if (jsonUser.optString("id").equals(
+//									HyjApplication.getInstance()
+//											.getCurrentUser().getId())) {
+//								// 添加自己为好友
+//								addSelfAsFriend(jsonUser);
+//								((HyjActivity) FriendAddMessageFormFragment.this
+//										.getActivity()).dismissProgressDialog();
 
 							} else if (jsonUser.optString(
 									"newFriendAuthentication").equals("non")) {
@@ -287,58 +287,58 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 		}
 	}
 
-	private void addSelfAsFriend(final JSONObject jsonUser) {
-		((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
-				.displayDialog(-1,
-						R.string.friendListFragment_addFriend_addSelf_title,
-						R.string.alert_dialog_yes, R.string.alert_dialog_no,
-						-1, new DialogCallbackListener() {
-							@Override
-							public void doPositiveClick(Object object) {
-								addFriendWithoutAuthorization(jsonUser);
-//								final Friend newFriend = new Friend();
-//								newFriend.setFriendUser(HyjApplication
-//										.getInstance().getCurrentUser());
-//								newFriend
-//										.setOwnerUserId(HyjApplication
-//												.getInstance().getCurrentUser()
-//												.getId());
-//								newFriend.setFriendCategoryId(HyjApplication
-//										.getInstance().getCurrentUser()
-//										.getUserData()
-//										.getDefaultFriendCategoryId());
-//								HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//									@Override
-//									public void finishCallback(Object object) {
-//										newFriend.save();
-//										((HyjActivity) FriendAddMessageFormFragment.this
-//												.getActivity())
-//												.dismissProgressDialog();
-//										HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-//									}
+//	private void addSelfAsFriend(final JSONObject jsonUser) {
+//		((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
+//				.displayDialog(-1,
+//						R.string.friendListFragment_addFriend_addSelf_title,
+//						R.string.alert_dialog_yes, R.string.alert_dialog_no,
+//						-1, new DialogCallbackListener() {
+//							@Override
+//							public void doPositiveClick(Object object) {
+//								addFriendWithoutAuthorization(jsonUser);
+////								final Friend newFriend = new Friend();
+////								newFriend.setFriendUser(HyjApplication
+////										.getInstance().getCurrentUser());
+////								newFriend
+////										.setOwnerUserId(HyjApplication
+////												.getInstance().getCurrentUser()
+////												.getId());
+////								newFriend.setFriendCategoryId(HyjApplication
+////										.getInstance().getCurrentUser()
+////										.getUserData()
+////										.getDefaultFriendCategoryId());
+////								HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+////									@Override
+////									public void finishCallback(Object object) {
+////										newFriend.save();
+////										((HyjActivity) FriendAddMessageFormFragment.this
+////												.getActivity())
+////												.dismissProgressDialog();
+////										HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
+////									}
+////
+////									@Override
+////									public void errorCallback(Object object) {
+////										displayError(object);
+////									}
+////								};
+////
+////								HyjHttpPostAsyncTask.newInstance(
+////										serverCallbacks, "["
+////												+ newFriend.toJSON().toString()
+////												+ "]", "postData");
+////								((HyjActivity) FriendAddMessageFormFragment.this
+////										.getActivity())
+////										.displayProgressDialog(
+////												R.string.addFriendListFragment_title_add,
+////												R.string.friendListFragment_addFriend_progress_adding);
+//							}
 //
-//									@Override
-//									public void errorCallback(Object object) {
-//										displayError(object);
-//									}
-//								};
-//
-//								HyjHttpPostAsyncTask.newInstance(
-//										serverCallbacks, "["
-//												+ newFriend.toJSON().toString()
-//												+ "]", "postData");
-//								((HyjActivity) FriendAddMessageFormFragment.this
-//										.getActivity())
-//										.displayProgressDialog(
-//												R.string.addFriendListFragment_title_add,
-//												R.string.friendListFragment_addFriend_progress_adding);
-							}
-
-							@Override
-							public void doNegativeClick() {
-							}
-						});
-	}
+//							@Override
+//							public void doNegativeClick() {
+//							}
+//						});
+//	}
 
 	private void addFriendWithoutAuthorization(final JSONObject jsonUser) {
 		// send message to server to request add new friend
@@ -549,9 +549,9 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 			public void finishCallback(Object object) {
 				((HyjActivity) FriendAddMessageFormFragment.this.getActivity())
 						.dismissProgressDialog();
-				loadNewlyAddedFriend(jsonUser);
 				msg.save();
-				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
+				loadNewlyAddedFriend(jsonUser);
+//				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
 			}
 
 			@Override
