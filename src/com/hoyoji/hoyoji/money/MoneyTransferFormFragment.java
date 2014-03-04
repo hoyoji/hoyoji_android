@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,8 @@ import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
@@ -88,6 +91,8 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			
 		}
 		mMoneyTransferEditor = moneyTransfer.newModelEditor();
+		
+		setupDeleteButton(mMoneyTransferEditor);
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyTransferFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyTransfer.getPictures());
@@ -289,6 +294,58 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			setExchangeRate();
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	}
+	
+	private void setupDeleteButton(HyjModelEditor<MoneyTransfer> moneyTransferEditor) {
+
+		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
+		
+		final MoneyTransfer moneyTransfer = moneyTransferEditor.getModelCopy();
+		
+		if (moneyTransfer.get_mId() == null) {
+			buttonDelete.setVisibility(View.GONE);
+		} else {
+			buttonDelete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+									try {
+										ActiveAndroid.beginTransaction();
+
+										MoneyAccount transferOut = moneyTransfer.getTransferOut();
+										MoneyAccount transferIn = moneyTransfer.getTransferIn();
+										
+										HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
+										HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
+										
+										if(transferOut != null){
+											transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
+											transferOutEditor.save();
+										}
+										if(transferIn != null){
+											transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
+											transferInEditor.save();
+										}
+										
+										moneyTransfer.delete();
+
+										HyjUtil.displayToast(R.string.app_delete_success);
+										ActiveAndroid.setTransactionSuccessful();
+										ActiveAndroid.endTransaction();
+										getActivity().finish();
+									} catch (Exception e) {
+										ActiveAndroid.endTransaction();
+										HyjUtil.displayToast(R.string.app_delete_failed);
+									} 
+								}
+							});
+				}
+			});
+		}
+		
 	}
 	
 	private void setExchangeRate(){
