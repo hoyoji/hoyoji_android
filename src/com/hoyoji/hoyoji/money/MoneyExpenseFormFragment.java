@@ -618,7 +618,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
 			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
             
-			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization();
+			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization(mMoneyExpenseEditor.getModelCopy().getProjectId());
 			HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 			
 			Double oldApportionAmount = 0.0;
@@ -657,7 +657,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModelCopy().getId());
 			apportion.setApportionType("Average");
 			
-			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization();
+			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization(mMoneyExpenseEditor.getModelCopy().getProjectId());
 			HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 			projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() + apportion.getAmount0());
 			
