@@ -371,7 +371,7 @@ public class MoneyExpense extends HyjModel{
 			modelEditor.removeValidationError("project");
 		}
 	}
-
+	
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){
