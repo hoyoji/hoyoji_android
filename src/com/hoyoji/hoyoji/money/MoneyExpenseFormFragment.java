@@ -107,7 +107,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
 		
 		setupApportionField(moneyExpense);
-
+				
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_date);
 		if (modelId != -1) {
@@ -359,7 +359,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				.findViewById(R.id.moneyExpenseFormFragment_apportionField);
 		
 		List<MoneyExpenseApportion> moneyApportions = null;
+		
 		if(mMoneyExpenseEditor.getModelCopy().get_mId() == null) {
+			
 			moneyApportions = new ArrayList<MoneyExpenseApportion>();
 			if(moneyExpense.getProject() != null 
 					&& moneyExpense.getProject().getAutoApportion()){
@@ -373,7 +375,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					
 					moneyApportions.add(apportion);
 				}
-			} else {
+			} else if(moneyExpense.getProject() != null) {
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 				apportion.setAmount(0.0);
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
@@ -381,6 +383,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				apportion.setApportionType("Average");
 				moneyApportions.add(apportion);
 			}
+			
 		} else {
 			moneyApportions = moneyExpense.getApportions();
 		}
@@ -523,6 +526,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		fillData();
 
 		mMoneyExpenseEditor.validate();
+		
 		if (mApportionFieldApportions.getCount() > 0) {
 			if (!mNumericAmount.getNumber().equals(
 					mApportionFieldApportions.getTotalAmount())) {
@@ -616,7 +620,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private void saveApportions() {
 		MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 		int count = adapter.getCount();
-		int nonDeleteCount = 0;
+		int savedCount = 0;
 		for (int i = 0; i < count; i++) {
 			ApportionItem<MoneyApportion> pi = adapter.getItem(i);
 			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
@@ -625,13 +629,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				apportionEditor.save();
-				nonDeleteCount++;
+				savedCount++;
 			} else if (pi.getState() == ApportionItem.DELETED) {
 				apportion.delete();
 			}
 		}
 
-		// 把隐藏掉的分摊添加回去
+		// 从隐藏掉的分摊里面删除原来的分摊
 		Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions.getHiddenApportions().iterator();
 		while (it.hasNext()) {
 			// Get element
@@ -640,7 +644,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				((MoneyExpenseApportion) item.getApportion()).delete();
 			}
 		}
-		if (nonDeleteCount == 0) {
+		
+		// 如果列表里一个都没有被保存，我们生成一个默认的分摊
+		if (savedCount == 0) {
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 			apportion.setAmount(mMoneyExpenseEditor.getModelCopy().getAmount0());
 			apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());

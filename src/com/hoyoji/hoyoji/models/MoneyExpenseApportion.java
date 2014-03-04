@@ -157,6 +157,16 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		super.save();
 	}
 
+	@Override
+	public void delete(){
+		
+		// 维护其他余额....
+		
+		
+		
+		super.delete();
+	}
+	
 
 	public Project getProject() {
 		return this.getMoneyExpense().getProject();

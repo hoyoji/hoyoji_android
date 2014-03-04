@@ -269,8 +269,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setText(null);
 			numericView.setPrefix(null);
+			numericView.setSuffix(null);
 			numericView.setNumber(null);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -303,6 +303,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpense)object).getAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
