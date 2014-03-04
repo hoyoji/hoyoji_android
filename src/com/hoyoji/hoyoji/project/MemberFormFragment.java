@@ -374,7 +374,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					.getCurrentUser().getId());
 			msg.put("type", "Project.Share.AddRequest");
 			msg.put("messageState", "new");
-			msg.put("messageTitle", "共享请求");
+			msg.put("messageTitle", "项目共享请求");
 			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
 			msg.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
@@ -387,7 +387,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getDisplayName());
 			msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
 			msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
-			msgData.put("projectIds", new JSONArray());
+			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
 			msgData.put("projectCurrencyIds", new JSONArray());
 			msg.put("messageData", msgData.toString());
 	

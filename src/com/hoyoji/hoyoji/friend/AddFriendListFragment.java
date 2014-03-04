@@ -41,7 +41,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
@@ -507,7 +507,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				msg.save();
+//				msg.save();
 				((HyjActivity) AddFriendListFragment.this.getActivity())
 				.dismissProgressDialog();
 				HyjUtil.displayToast(R.string.friendListFragment_addFriend_toast_send_success);

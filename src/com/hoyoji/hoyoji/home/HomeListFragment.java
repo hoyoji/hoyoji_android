@@ -34,7 +34,8 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
-import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
+import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -563,13 +564,22 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof Message){
 				Message msg = (Message)object;
 				if(msg.getType().equals("System.Friend.AddRequest") ){
-					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
 					return true;
 				} else if(msg.getType().equals("System.Friend.AddResponse") ){
-					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
 					return true;
 				} else if(msg.getType().equals("System.Friend.Delete") ){
-					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.AddRequest") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.Accept") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.Delete") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
 					return true;
 				}
 			}
