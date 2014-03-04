@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.money.moneyaccount;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -45,7 +48,7 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.moneyaccount_listitem_moneyaccount,
 				null,
-				new String[] { "name", "currentBalance" },
+				new String[] { "id", "currentBalance" },
 				new int[] { R.id.moneyAccountListItem_name, R.id.moneyAccountListItem_currentBalance },
 				0); 
 	}	
@@ -53,10 +56,23 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+
+		Intent intent = getActivity().getIntent();
+		String excludeType = intent.getStringExtra("excludeType");
+		String selection = null;
+		String[] selectionArgs = null;
+		
+		if(excludeType != null){
+			selection = "accountType<>?";
+			selectionArgs = new String[]{ excludeType };
+		}
+		
+		
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(MoneyAccount.class, null),
-				null, null, null, null
+				null, selection, selectionArgs, null
 			);
+		
 		return (Loader<Object>)loader;
 	}
 
@@ -106,7 +122,12 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		if(view.getId() == R.id.moneyAccountListItem_currentBalance){
+		if(view.getId() == R.id.moneyAccountListItem_name){
+			TextView nameView = (TextView)view;
+			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, cursor.getString(columnIndex));
+			nameView.setText(moneyAccount.getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.moneyAccountListItem_currentBalance){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix("¥");
 			numericView.setNumber(cursor.getDouble(columnIndex));
@@ -115,23 +136,4 @@ public class MoneyAccountListFragment extends HyjUserListFragment{
 			return false;
 		}
 	}
-//	public boolean setViewValue(View view, Object object, String name){
-//		if(view.getId() == R.id.moneyAccountListItem_currentBalance){
-//			HyjNumericView numericView = (HyjNumericView)view;
-//			numericView.setCurrencySymbol("¥");
-//			numericView.setNumber(((MoneyAccount)object).getCurrentBalance());
-//			return true;
-//		}else if(view.getId() == R.id.moneyAccountListItem_name){
-//			String accountType = ((MoneyAccount)object).getAccountType();
-//			String accountName = ((MoneyAccount)object).getName();
-//			if(accountType == "Debt" && accountName != "匿名借贷账户"){
-//				Friend friend = HyjModel.getModel(Friend.class, accountName);
-//				accountName = friend.getDisplayName();
-//			}
-//			((TextView)view).setText(accountName);
-//			return true;
-//		}
-//		return false;
-//		
-//	}
 }

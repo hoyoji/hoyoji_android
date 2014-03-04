@@ -165,7 +165,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
 			loader = new HomeGroupListLoader(getActivity(), arg1);
-			return (Loader<Object>) loader;
 		} else {
 			loader = new HomeChildListLoader(getActivity(), arg1);
 		}

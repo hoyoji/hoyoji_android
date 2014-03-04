@@ -57,14 +57,41 @@ public class MoneyAccount extends HyjModel {
 		mCurrentBalance = 0.00;
 	}
 	
+	public String getDisplayName(){
+		if(!this.getAccountType().equalsIgnoreCase("Debt")){
+			return this.getName();
+		}
+		
+		if(this.getFriendId() != null){
+			Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
+			return friend.getDisplayName();
+		} else {
+			Friend friend = new Select().from(Friend.class).where("friendUserId", this.getName()).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, this.getName());
+				if(user != null){
+					return user.getDisplayName();
+				} else {
+					return "Debt Account";
+				}
+			}
+		}
+	}
+	
 	public static MoneyAccount getDebtAccount(String currencyId, Friend friend){
 		String friendId;
 		if(friend == null){
-			friendId = "";
-		}else{
-			friendId = friend.getId();
+			return null;
 		}
-		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+		
+		if(friend.getFriendUserId() == null){
+			friendId = friend.getId();
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+		} else {	
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
+		}
 	}
 	
 	public static void createDebtAccount(Friend friend, String currencyId, Double amount){
