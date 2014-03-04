@@ -287,19 +287,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 		setExchangeRate();
 
-		getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageButton_apportion_add)
-				.setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Bundle bundle = new Bundle();
-						Project project = HyjModel.getModel(Project.class,
-								mSelectorFieldProject.getModelId());
+						Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 						bundle.putLong("MODEL_ID", project.get_mId());
-						openActivityWithFragmentForResult(
-								MemberListFragment.class,
-								R.string.moneyApportionField_select_apportion_member,
-								bundle, GET_APPORTION_MEMBER_ID);
+						openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 					}
 				});
 
@@ -308,9 +302,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					public void onClick(View v) {
 						PopupMenu popup = new PopupMenu(getActivity(), v);
 						MenuInflater inflater = popup.getMenuInflater();
-						inflater.inflate(
-								R.menu.money_apportionfield_more_actions,
-								popup.getMenu());
+						inflater.inflate(R.menu.money_apportionfield_more_actions, popup.getMenu());
 						popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
@@ -355,14 +347,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 	private void setupApportionField(MoneyExpense moneyExpense) {
 
-		mApportionFieldApportions = (MoneyApportionField) getView()
-				.findViewById(R.id.moneyExpenseFormFragment_apportionField);
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseFormFragment_apportionField);
 		
 		List<MoneyExpenseApportion> moneyApportions = null;
 		if(mMoneyExpenseEditor.getModelCopy().get_mId() == null) {
 			moneyApportions = new ArrayList<MoneyExpenseApportion>();
-			if(moneyExpense.getProject() != null 
-					&& moneyExpense.getProject().getAutoApportion()){
+			if(moneyExpense.getProject() != null && moneyExpense.getProject().getAutoApportion()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpense.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
@@ -385,8 +375,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			moneyApportions = moneyExpense.getApportions();
 		}
 		
-		mApportionFieldApportions.init(moneyExpense.getAmount0(),
-				moneyApportions, moneyExpense.getProjectId(), moneyExpense.getId());
+		mApportionFieldApportions.init(moneyExpense.getAmount0(), moneyApportions, moneyExpense.getProjectId(), moneyExpense.getId());
 	}
 
 	private void setupDeleteButton(HyjModelEditor<MoneyExpense> moneyExpenseEditor) {
@@ -621,12 +610,27 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			ApportionItem<MoneyApportion> pi = adapter.getItem(i);
 			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
 			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
-
-			if (pi.getState() == ApportionItem.NEW || pi.getState() == PictureItem.CHANGED) {
+            
+			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization();
+			HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+			
+			Double oldApportionAmount = 0.0;
+			if(pi.getState() == ApportionItem.CHANGED){
+				oldApportionAmount = apportionEditor.getModel().getAmount0();
+			}
+			
+			if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
+				
+				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - oldApportionAmount + apportion.getAmount0());
+				projectShareAuthorizationEditor.save();
+				
 				apportionEditor.save();
 				nonDeleteCount++;
-			} else if (pi.getState() == PictureItem.DELETED) {
+			} else if (pi.getState() == ApportionItem.DELETED) {
+				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - oldApportionAmount);
+				projectShareAuthorizationEditor.save();
+				
 				apportion.delete();
 			}
 		}
@@ -646,6 +650,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 			apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModelCopy().getId());
 			apportion.setApportionType("Average");
+			
+			ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization();
+			HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+			projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() + apportion.getAmount0());
+			
+			projectShareAuthorizationEditor.save();
 			apportion.save();
 		}
 	}
@@ -688,8 +698,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		case GET_APPORTION_MEMBER_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
-				ProjectShareAuthorization psa = ProjectShareAuthorization.load(
-						ProjectShareAuthorization.class, _id);
+				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 				apportion.setAmount(0.0);
 				apportion.setFriendUserId(psa.getFriendUserId());
