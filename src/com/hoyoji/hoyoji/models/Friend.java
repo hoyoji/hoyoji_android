@@ -71,7 +71,7 @@ public class Friend extends HyjModel {
 	}
 
 	public String getDisplayName(){
-		if(this.getNickName() != null){
+		if(this.getNickName() != null && this.getNickName().length() > 0){
 			return this.getNickName();
 		} else {
 			return this.getFriendUser().getDisplayName();
@@ -168,11 +168,13 @@ public class Friend extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("friendCategory");
 		}
-		if(this.getNickName().length() == 0){
-			modelEditor.setValidationError("nickName", R.string.friendFormFragment_editText_hint_nickName);
-		} else {
-			modelEditor.removeValidationError("nickName");
-		}		
+		if(this.getFriendUserId() == null){
+			if(this.getNickName().length() == 0){
+				modelEditor.setValidationError("nickName", R.string.friendFormFragment_editText_hint_friendName);
+			} else {
+				modelEditor.removeValidationError("nickName");
+			}		
+		}
 	}
 
 	@Override

@@ -42,6 +42,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<Friend> mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldNickName = null;
+	private HyjTextField mTextFieldUserName = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -64,8 +65,21 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		
 		setupDeleteButton(mFriendEditor);
 		
+		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_userName);
+		mTextFieldUserName.setEnabled(false);
+		
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
 		mTextFieldNickName.setText(friend.getNickName());
+		mTextFieldNickName.requestFocus();
+		if(friend.getFriendUserId() != null){
+			mTextFieldUserName.setText(friend.getFriendUser().getDisplayName());
+			mTextFieldNickName.setHint(R.string.friendFormFragment_editText_hint_nickName);
+		} else {
+			mTextFieldUserName.setVisibility(View.GONE);
+			getView().findViewById(R.id.field_separator_userName).setVisibility(View.GONE);
+			mTextFieldNickName.setLabel(R.string.friendFormFragment_textView_friendName);
+			mTextFieldNickName.setHint(R.string.friendFormFragment_editText_hint_friendName);
+		}
 		
 		FriendCategory friendCategory = friend.getFriendCategory();
 		mSelectorFieldFriendCategory = (HyjSelectorField) getView().findViewById(R.id.friendFormFragment_selectorField_friend_category);
@@ -96,10 +110,6 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		
 		if (friend.get_mId() == null) {
 			buttonDelete.setVisibility(View.GONE);
-		} else if(friend.getFriendUser() == null) {
-			friend.delete();
-			HyjUtil.displayToast(R.string.app_delete_success);
-			getActivity().finish();
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
@@ -108,7 +118,13 @@ public class FriendFormFragment extends HyjUserFormFragment {
 							new DialogCallbackListener() {
 								@Override
 								public void doPositiveClick(Object object) {
+									if(friend.getFriendUser() == null) {
+										friend.delete();
+										HyjUtil.displayToast(R.string.app_delete_success);
+										getActivity().finish();
+									} else { 
 										sendDeleteFriendMessage();
+									}
 								}
 							});
 				}

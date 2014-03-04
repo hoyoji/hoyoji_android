@@ -271,6 +271,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setText(null);
 			numericView.setPrefix(null);
+			numericView.setNumber(null);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -566,6 +567,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					return true;
 				} else if(msg.getType().equals("System.Friend.AddResponse") ){
 					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					return true;
+				} else if(msg.getType().equals("System.Friend.Delete") ){
+					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
 					return true;
 				}
 			}
