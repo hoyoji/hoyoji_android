@@ -76,7 +76,7 @@ public class MoneyApportionField extends GridView {
 		mTotalAmount = totalAmount;
 		//List<PictureItem> pis = new ArrayList<PictureItem>();
 		for(int i=0; i < apportions.size(); i++){
-			ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportions.get(i), projectId, ApportionItem.UNCHANGED);
+			ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportions.get(i), projectId, apportions.get(i).get_mId() == null ? ApportionItem.NEW : ApportionItem.UNCHANGED);
 			mImageGridAdapter.add(pi);
 			//pis.add(pi);
 		}

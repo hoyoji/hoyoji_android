@@ -103,7 +103,7 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 			actionButton
 					.setText(R.string.friendAddRequestMessageFormFragment_button_accept);
 		}
-		if(friendAddMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")){
+		if(friendAddMessage.getType().equalsIgnoreCase("System.Friend.AddResponse") || friendAddMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
 			actionButton.setVisibility(View.GONE);
 			mEditTextDetail.setEnabled(false);
 		}
@@ -126,7 +126,7 @@ public class FriendAddMessageFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onSave(View v) {
 		super.onSave(v);
-		if(mMessageEditor.getModel().getType().equalsIgnoreCase("System.Friend.AddResponse")){
+		if(mMessageEditor.getModel().getType().equalsIgnoreCase("System.Friend.AddResponse") || mMessageEditor.getModel().getType().equalsIgnoreCase("System.Friend.Delete")){
 			return;
 		}
 		if (mMessageEditor.getModel().getFromUserId()

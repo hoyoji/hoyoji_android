@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    
-   <string name="friendAddRequestMessageFormFragment_title_addrequest">添加好友请求消息</string>
-   <string name="friendAddRequestMessageFormFragment_title_addresponse">添加好友回复消息</string>
+   <string name="friendAddRequestMessageFormFragment_title_addrequest">添加好友请求</string>
+   <string name="friendAddRequestMessageFormFragment_title_addresponse">添加好友回复</string>
+   <string name="friendAddRequestMessageFormFragment_title_delete">删除好友</string>
    
    <string name="friendAddRequestMessageFormFragment_textView_date_send">发送时间</string>
    <string name="friendAddRequestMessageFormFragment_textView_date_receive">接收时间</string>

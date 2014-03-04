@@ -148,7 +148,7 @@ public class MemberListFragment extends HyjUserListFragment{
 			String friendUserId = cursor.getString(columnIndex);
 			Friend friend = null;
 			if(friendUserId != null){
-				friend = HyjModel.getModel(Friend.class, friendUserId);
+				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
 				if(friend != null){
 					((TextView)view).setText(friend.getDisplayName());
 				} else {
@@ -172,6 +172,7 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
 			double percentage = cursor.getDouble(columnIndex);
+			((HyjNumericView)view).setPrefix(null);
 			((HyjNumericView)view).setSuffix("%");
 			((HyjNumericView)view).setNumber(percentage);
 			return true;

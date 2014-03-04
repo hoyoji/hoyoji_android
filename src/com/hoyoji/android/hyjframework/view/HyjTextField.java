@@ -128,6 +128,11 @@ public class HyjTextField extends LinearLayout {
 		mTextViewLabel.setText(resId);
 	}
 	
+
+	public void setHint(int resId){
+		mEditTextEdit.setHint(resId);
+	}
+	
 	public void showSoftKeyboard(){
 		mEditTextEdit.post(
 			new Runnable() {
