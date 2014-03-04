@@ -323,7 +323,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 										apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 										apportion.setMoneyExpenseId(moneyExpense.getId());
 
-										mApportionFieldApportions.addApportion(apportion, project.getId(),ApportionItem.NEW);
+										mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 									}
 									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
@@ -622,11 +622,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			MoneyExpenseApportion apportion = (MoneyExpenseApportion) pi.getApportion();
 			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
 
-			if (pi.getState() == ApportionItem.NEW || pi.getState() == PictureItem.CHANGED) {
+			if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				apportionEditor.save();
 				nonDeleteCount++;
-			} else if (pi.getState() == PictureItem.DELETED) {
+			} else if (pi.getState() == ApportionItem.DELETED) {
 				apportion.delete();
 			}
 		}
