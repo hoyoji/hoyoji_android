@@ -350,6 +350,14 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					ActiveAndroid.beginTransaction();
 					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
 					mProjectShareAuthorizationEditor.save();
+					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+						mProjectShareAuthorizationEditor.getModelCopy().getProject().getClientSyncRecord().delete();
+					}
+					for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+						if(psa.isClientNew()){
+							psa.getClientSyncRecord().delete();
+						}
+					}
 					ActiveAndroid.setTransactionSuccessful();
 					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
 					getActivity().finish();
@@ -400,9 +408,12 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
 			jsonPSA.put("state", "Wait");
 			data += jsonPSA.toString();
-			data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+			}
 			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa != mProjectShareAuthorizationEditor.getModelCopy()){
+				if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+						psa.isClientNew()){
 					data += "," + psa.toJSON().toString();
 				}
 			}

@@ -94,7 +94,7 @@ public class MessageDownloadService extends Service {
 											for(int i=0; i < jsonArray.length(); i++){
 												JSONObject jsonMessage = jsonArray.optJSONObject(i);
 												Message newMessage = new Message();
-												newMessage.loadFromJSON(jsonMessage);
+												newMessage.loadFromJSON(jsonMessage, true);
 												newMessage.save();
 												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse") 
 														|| newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
@@ -176,11 +176,11 @@ public class MessageDownloadService extends Service {
 						for(int j = 0; j < jsonObjects.length(); j++){
 							if(jsonObjects.optJSONObject(j).optString("__dataType").equals("Project")){
 								Project newProject = new Project();
-								newProject.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProject.loadFromJSON(jsonObjects.optJSONObject(j), true);
 								newProject.save();
 							} else if(jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")){
 								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j), true);
 								newProjectShareAuthorization.save();
 							}
 						}	
@@ -313,14 +313,14 @@ public class MessageDownloadService extends Service {
 				if (newFriend == null) {
 					newFriend = new Friend();
 				}
-				newFriend.loadFromJSON(jsonFriend);
+				newFriend.loadFromJSON(jsonFriend, true);
 
 				User newUser = HyjModel.getModel(User.class,
 						jsonUser.optString("id"));
 				if (newUser == null) {
 					newUser = new User();
 				}
-				newUser.loadFromJSON(jsonUser);
+				newUser.loadFromJSON(jsonUser, true);
 
 				saveUserPictures(object);
 				newUser.save();
@@ -357,7 +357,7 @@ public class MessageDownloadService extends Service {
 					jsonPic.remove("base64PictureIcon");
 				}
 				Picture newPicture = new Picture();
-				newPicture.loadFromJSON(jsonPic);
+				newPicture.loadFromJSON(jsonPic, true);
 
 				newPicture.save();
 

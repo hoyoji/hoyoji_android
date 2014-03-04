@@ -219,11 +219,11 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 						for(int j = 0; j < jsonObjects.length(); j++){
 							if(jsonObjects.optJSONObject(j).optString("__dataType").equals("Project")){
 								Project newProject = new Project();
-								newProject.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProject.loadFromJSON(jsonObjects.optJSONObject(j), true);
 								newProject.save();
 							} else if(jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")){
 								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j), true);
 								newProjectShareAuthorization.save();
 							}
 						}	

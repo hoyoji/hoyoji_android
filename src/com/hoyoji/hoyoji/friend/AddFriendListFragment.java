@@ -418,14 +418,14 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				if (newFriend == null) {
 					newFriend = new Friend();
 				}
-				newFriend.loadFromJSON(jsonFriend);
+				newFriend.loadFromJSON(jsonFriend, true);
 
 				User newUser = HyjModel.getModel(User.class,
 						jsonUser.optString("id"));
 				if (newUser == null) {
 					newUser = new User();
 				}
-				newUser.loadFromJSON(jsonUser);
+				newUser.loadFromJSON(jsonUser, true);
 
 				saveUserPictures(object);
 				newUser.save();
@@ -544,7 +544,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				    jsonPic.remove("base64PictureIcon");
 				}
 				Picture newPicture = new Picture();
-				newPicture.loadFromJSON(jsonPic);
+				newPicture.loadFromJSON(jsonPic, true);
 				
 				newPicture.save();
 				

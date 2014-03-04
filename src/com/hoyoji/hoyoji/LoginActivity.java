@@ -349,7 +349,7 @@ public class LoginActivity extends HyjActivity {
 											"MoneyAccount")) {
 										obj.put("currentBalance", 0);
 										MoneyAccount moneyAccount = new MoneyAccount();
-										moneyAccount.loadFromJSON(obj);
+										moneyAccount.loadFromJSON(obj, true);
 										moneyAccount.save();
 									} else if (obj
 											.optString("__dataType")
@@ -368,7 +368,7 @@ public class LoginActivity extends HyjActivity {
 										obj.put("apportionedTotalPayback", 0);
 										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
 										newProjectShareAuthorization
-												.loadFromJSON(obj);
+												.loadFromJSON(obj, true);
 										newProjectShareAuthorization.save();
 									} else if (obj.optString("__dataType")
 											.equals("Currency")) {
@@ -380,7 +380,7 @@ public class LoginActivity extends HyjActivity {
 													localeCurrency.getSymbol());
 										}
 										Currency newCurrency = new Currency();
-										newCurrency.loadFromJSON(obj);
+										newCurrency.loadFromJSON(obj, true);
 										newCurrency.save();
 									} else if (obj.optString("__dataType")
 											.equals("Picture")) {
@@ -388,22 +388,22 @@ public class LoginActivity extends HyjActivity {
 									} else if (obj.optString("__dataType")
 											.equals("ParentProject")) {
 										ParentProject parentProject = new ParentProject();
-										parentProject.loadFromJSON(obj);
+										parentProject.loadFromJSON(obj, true);
 										parentProject.save();
 									} else if (obj.optString("__dataType")
 											.equals("FriendCategory")) {
 										FriendCategory friendCategory = new FriendCategory();
-										friendCategory.loadFromJSON(obj);
+										friendCategory.loadFromJSON(obj, true);
 										friendCategory.save();
 									} else if (obj.optString("__dataType")
 											.equals("Project")) {
 										Project project = new Project();
-										project.loadFromJSON(obj);
+										project.loadFromJSON(obj, true);
 										project.save();
 									} else if (obj.optString("__dataType")
 											.equals("MessageBox")) {
 										MessageBox messageBox = new MessageBox();
-										messageBox.loadFromJSON(obj);
+										messageBox.loadFromJSON(obj, true);
 										messageBox.save();
 									}
 

@@ -116,8 +116,8 @@ public class HyjApplication extends Application {
 			user = new User();
 			userData = new UserData();
 			
-			user.loadFromJSON(jsonObject.getJSONObject("user"));
-			userData.loadFromJSON(jsonObject.getJSONObject("userData"));
+			user.loadFromJSON(jsonObject.getJSONObject("user"), true);
+			userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
 			
 			user.setUserData(userData);
 			userData.setUser(user);

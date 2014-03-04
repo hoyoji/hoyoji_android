@@ -268,4 +268,28 @@ public class HyjUtil {
 		public static double toFixed4(Double number){
 			return Math.round(number*10000)/10000.0;
 		}
+		
+		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
+			
+			if(tableName != "HyjClientSyncTable"){
+				HyjClientSyncRecord clientSyncRecord = HyjModel.getModel(HyjClientSyncRecord.class, recordId);
+				if(clientSyncRecord != null){
+					if(syncFromServer){
+						clientSyncRecord.delete();
+						return;
+					} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create") && 
+						operation.equalsIgnoreCase("Delete")){
+						clientSyncRecord.delete();
+						return;
+					} else if(operation.equalsIgnoreCase("Update")){
+						return;
+					}
+				}
+				clientSyncRecord = new HyjClientSyncRecord();
+				clientSyncRecord.setId(recordId);
+				clientSyncRecord.setOperation(operation);
+				clientSyncRecord.setTableName(tableName);
+				clientSyncRecord.save();
+			}
+		}
 }

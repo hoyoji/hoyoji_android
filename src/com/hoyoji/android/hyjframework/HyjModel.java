@@ -85,5 +85,18 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		super.save();
 	}
 	
+	public boolean isClientNew(){
+		HyjClientSyncRecord clientSyncRecord = this.getClientSyncRecord();
+		if(clientSyncRecord == null){
+			return false;
+		} else {
+			return clientSyncRecord.getOperation().equalsIgnoreCase("Create");
+		}
+	}
+	
+	public HyjClientSyncRecord getClientSyncRecord(){
+		return HyjModel.getModel(HyjClientSyncRecord.class, getId());
+	}
+	
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);
 }

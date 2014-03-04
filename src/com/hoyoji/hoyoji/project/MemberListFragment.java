@@ -155,6 +155,8 @@ public class MemberListFragment extends HyjUserListFragment{
 					User user = HyjModel.getModel(User.class, friendUserId);
 					if(user != null){
 						((TextView)view).setText(user.getDisplayName());
+					} else {
+						((TextView)view).setText("");
 					}
 				}
 			} else {
@@ -165,7 +167,11 @@ public class MemberListFragment extends HyjUserListFragment{
 			String friendUserId = cursor.getString(columnIndex);
 			if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
-				((HyjImageView)view).setImage(user.getPictureId());
+				if(user == null){
+					((HyjImageView)view).setImage((Picture)null);
+				} else {
+					((HyjImageView)view).setImage(user.getPictureId());
+				}
 			} else {
 				((HyjImageView)view).setImage((Picture)null);
 			}

@@ -94,7 +94,7 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 		if(id >= 0){
 			JSONObject object = (JSONObject) getListAdapter().getItem(position);
 			Currency newCurrency = new Currency();
-			newCurrency.loadFromJSON(object);
+			newCurrency.loadFromJSON(object, true);
 			
 			java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
 			newCurrency.setSymbol(localeCurrency.getSymbol());
