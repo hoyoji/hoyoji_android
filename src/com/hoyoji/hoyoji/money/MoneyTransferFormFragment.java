@@ -49,7 +49,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 5;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Long modelId;
 	
 	private HyjModelEditor<MoneyTransfer> mMoneyTransferEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -81,7 +80,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		MoneyTransfer moneyTransfer;
 		
 		Intent intent = getActivity().getIntent();
-		modelId = intent.getLongExtra("MODEL_ID", -1);
+		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyTransfer =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -437,7 +436,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				MoneyAccount newTransferIn = moneyTransferModel.getTransferIn();
 				HyjModelEditor<MoneyAccount> newTransferInEditor = newTransferIn.newModelEditor();
 				
-				if(modelId == -1){
+				if(moneyTransferModel.get_mId() == null){
 				    if(newTransferOut != null){
 				    	newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - moneyTransferModel.getTransferOutAmount0());
 				    	newTransferOutEditor.save();

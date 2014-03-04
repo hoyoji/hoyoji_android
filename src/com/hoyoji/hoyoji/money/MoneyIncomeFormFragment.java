@@ -43,7 +43,6 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Long modelId;
 	
 	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -70,7 +69,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		MoneyIncome moneyIncome;
 		
 		Intent intent = getActivity().getIntent();
-		modelId = intent.getLongExtra("MODEL_ID", -1);
+		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyIncome =  new Select().from(MoneyIncome.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -312,7 +311,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				MoneyIncome moneyIncomeModel = mMoneyIncomeEditor.getModelCopy();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyIncomeModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeModel.getProjectId())){
+				if(moneyIncomeModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyIncomeModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyIncomeModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(moneyIncomeModel.getProjectId());
@@ -336,7 +335,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					MoneyAccount newMoneyAccount = moneyIncomeModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(modelId == -1 || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+					if(moneyIncomeModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
 						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldMoneyIncomeModel.getAmount0() + moneyIncomeModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
