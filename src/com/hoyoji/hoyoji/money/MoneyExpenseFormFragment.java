@@ -64,7 +64,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Long modelId;
 
 	private HyjModelEditor<MoneyExpense> mMoneyExpenseEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -92,7 +91,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final MoneyExpense moneyExpense;
 
 		Intent intent = getActivity().getIntent();
-		modelId = intent.getLongExtra("MODEL_ID", -1);
+		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
 			moneyExpense = new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -350,10 +349,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
-			this.getActivity()
-					.getWindow()
-					.setSoftInputMode(
-							WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
 	}
 
@@ -363,7 +359,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				.findViewById(R.id.moneyExpenseFormFragment_apportionField);
 		
 		List<MoneyExpenseApportion> moneyApportions = null;
-		if(modelId == -1) {
+		if(mMoneyExpenseEditor.getModelCopy().get_mId() == null) {
 			moneyApportions = new ArrayList<MoneyExpenseApportion>();
 			if(moneyExpense.getProject() != null 
 					&& moneyExpense.getProject().getAutoApportion()){
@@ -393,11 +389,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				moneyApportions, moneyExpense.getProjectId(), moneyExpense.getId());
 	}
 
-	private void setupDeleteButton(
-			HyjModelEditor<MoneyExpense> moneyExpenseEditor) {
+	private void setupDeleteButton(HyjModelEditor<MoneyExpense> moneyExpenseEditor) {
 
-		Button buttonDelete = (Button) getView().findViewById(
-				R.id.button_delete);
+		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
 		
 		final MoneyExpense moneyExpense = moneyExpenseEditor.getModelCopy();
 		
@@ -554,7 +548,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(modelId == -1 && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
+				if(moneyExpenseModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
@@ -576,7 +570,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(modelId == -1 || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+					if(moneyExpenseModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
 						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0() - moneyExpenseModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
@@ -632,8 +626,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				apportionEditor.save();
 				nonDeleteCount++;
-				
-				
 			} else if (pi.getState() == PictureItem.DELETED) {
 				apportion.delete();
 			}

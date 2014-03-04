@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,8 @@ import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
@@ -49,7 +52,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 5;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
-	private Long modelId;
 	
 	private HyjModelEditor<MoneyTransfer> mMoneyTransferEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -81,7 +83,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		MoneyTransfer moneyTransfer;
 		
 		Intent intent = getActivity().getIntent();
-		modelId = intent.getLongExtra("MODEL_ID", -1);
+		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyTransfer =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
 		} else {
@@ -89,6 +91,8 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			
 		}
 		mMoneyTransferEditor = moneyTransfer.newModelEditor();
+		
+		setupDeleteButton(mMoneyTransferEditor);
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyTransferFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(moneyTransfer.getPictures());
@@ -292,6 +296,58 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
+	private void setupDeleteButton(HyjModelEditor<MoneyTransfer> moneyTransferEditor) {
+
+		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
+		
+		final MoneyTransfer moneyTransfer = moneyTransferEditor.getModelCopy();
+		
+		if (moneyTransfer.get_mId() == null) {
+			buttonDelete.setVisibility(View.GONE);
+		} else {
+			buttonDelete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+									try {
+										ActiveAndroid.beginTransaction();
+
+										MoneyAccount transferOut = moneyTransfer.getTransferOut();
+										MoneyAccount transferIn = moneyTransfer.getTransferIn();
+										
+										HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
+										HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
+										
+										if(transferOut != null){
+											transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
+											transferOutEditor.save();
+										}
+										if(transferIn != null){
+											transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
+											transferInEditor.save();
+										}
+										
+										moneyTransfer.delete();
+
+										HyjUtil.displayToast(R.string.app_delete_success);
+										ActiveAndroid.setTransactionSuccessful();
+										ActiveAndroid.endTransaction();
+										getActivity().finish();
+									} catch (Exception e) {
+										ActiveAndroid.endTransaction();
+										HyjUtil.displayToast(R.string.app_delete_failed);
+									} 
+								}
+							});
+				}
+			});
+		}
+		
+	}
+	
 	private void setExchangeRate(){
 		if(mSelectorFieldTransferOut.getModelId() != null && mSelectorFieldTransferIn.getModelId()!= null){
 			MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
@@ -437,7 +493,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				MoneyAccount newTransferIn = moneyTransferModel.getTransferIn();
 				HyjModelEditor<MoneyAccount> newTransferInEditor = newTransferIn.newModelEditor();
 				
-				if(modelId == -1){
+				if(moneyTransferModel.get_mId() == null){
 				    if(newTransferOut != null){
 				    	newTransferOutEditor.getModelCopy().setCurrentBalance(newTransferOut.getCurrentBalance() - moneyTransferModel.getTransferOutAmount0());
 				    	newTransferOutEditor.save();
