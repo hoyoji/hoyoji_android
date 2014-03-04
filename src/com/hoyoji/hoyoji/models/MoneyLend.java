@@ -12,6 +12,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyLend", id = BaseColumns._ID)
@@ -143,6 +144,9 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public void setAmount(Double mAmount) {
+		if(mAmount != null){
+			mAmount = HyjUtil.toFixed2(mAmount);
+		}
 		this.mAmount = mAmount;
 	}
 	
@@ -231,6 +235,9 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public void setExchangeRate(Double mExchangeRate) {
+		if(mExchangeRate != null){
+			mExchangeRate = HyjUtil.toFixed2(mExchangeRate);
+		}
 		this.mExchangeRate = mExchangeRate;
 	}
 
@@ -247,6 +254,9 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public void setPaybackedAmount(Double mPaybackedAmount) {
+		if(mPaybackedAmount != null){
+			mPaybackedAmount = HyjUtil.toFixed2(mPaybackedAmount);
+		}
 		this.mPaybackedAmount = mPaybackedAmount;
 	}
 	

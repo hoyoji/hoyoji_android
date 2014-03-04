@@ -635,9 +635,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				apportionEditor.save();
 				savedCount++;
 			} else if (pi.getState() == ApportionItem.DELETED) {
-				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - oldApportionAmount);
-				projectShareAuthorizationEditor.save();
-				
 				apportion.delete();
 			}
 		}

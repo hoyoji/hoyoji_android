@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyLendApportion", id = BaseColumns._ID)
@@ -64,6 +65,9 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 	}
 
 	public void setAmount(Double mAmount) {
+		if(mAmount != null){
+			mAmount = HyjUtil.toFixed2(mAmount);
+		}
 		this.mAmount = mAmount;
 	}
 	

@@ -10,6 +10,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyAccount", id = BaseColumns._ID)
@@ -165,6 +166,9 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public void setCurrentBalance(Double mCurrentBalance) {
+		if(mCurrentBalance != null) {
+			mCurrentBalance = HyjUtil.toFixed2(mCurrentBalance);
+		}
 		this.mCurrentBalance = mCurrentBalance;
 	}
 
