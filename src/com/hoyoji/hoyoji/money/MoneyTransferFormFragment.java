@@ -4,6 +4,7 @@ import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -155,7 +156,10 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferOut.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyTransferFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_TRANSFEROUT_ID);
+				Bundle bundle = new Bundle();
+				bundle.putString("excludeType", "Debt");
+				
+				MoneyTransferFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_TRANSFEROUT_ID);
 			}
 		});	
 		
@@ -168,8 +172,11 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferInFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("excludeType", "Debt");
+				
 				MoneyTransferFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_TRANSFERIN_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, bundle, GET_TRANSFERIN_FRIEND_ID);
 			}
 		}); 
 		
