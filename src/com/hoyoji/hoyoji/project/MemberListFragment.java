@@ -50,7 +50,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_member,
 				null,
-				new String[] { "friendUserId", "friendUserId", "sharePercentage", "remark" },
+				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state" },
 				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark },
 				0); 
 	}	
@@ -175,6 +175,14 @@ public class MemberListFragment extends HyjUserListFragment{
 			((HyjNumericView)view).setPrefix(null);
 			((HyjNumericView)view).setSuffix("%");
 			((HyjNumericView)view).setNumber(percentage);
+			return true;
+		} else if(view.getId() == R.id.memberListItem_remark) {
+			String state = cursor.getString(columnIndex);
+			if(state.equalsIgnoreCase("Wait")){
+				((TextView)view).setText(R.string.memberListFragment_state_wait);
+			} else {
+				((TextView)view).setText("");
+			}
 			return true;
 		} else {
 			return false;

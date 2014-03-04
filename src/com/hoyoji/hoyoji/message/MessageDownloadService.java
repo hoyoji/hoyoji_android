@@ -25,6 +25,8 @@ import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 
@@ -84,7 +86,8 @@ public class MessageDownloadService extends Service {
 								Object returnedObject = HyjServer.doHttpPost(null, HyjApplication.getServerUrl()+"getData.php", "[" + postData.toString() + "]", true);
 								if(returnedObject instanceof JSONArray){
 									final JSONArray jsonArray = ((JSONArray) returnedObject).optJSONArray(0); 
-									List<Message> newMessages = new ArrayList<Message>();
+									List<Message> friendMessages = new ArrayList<Message>();
+									List<Message> projectShareMessages = new ArrayList<Message>();
 									try {
 					        			ActiveAndroid.beginTransaction();
 										if (jsonArray.length() > 0) {
@@ -95,7 +98,10 @@ public class MessageDownloadService extends Service {
 												newMessage.save();
 												if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse") 
 														|| newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
-													newMessages.add(newMessage);
+													friendMessages.add(newMessage);
+												} else if(newMessage.getType().equalsIgnoreCase("Project.Share.Accept") 
+														|| newMessage.getType().equalsIgnoreCase("Project.Share.Delete")){
+													projectShareMessages.add(newMessage);
 												}
 												if(lastMessagesDownloadTime == null || lastMessagesDownloadTime.compareTo(jsonMessage.optString("lastServerUpdateTime")) < 0){
 													lastMessagesDownloadTime = jsonMessage.optString("lastServerUpdateTime");
@@ -120,29 +126,8 @@ public class MessageDownloadService extends Service {
 					        		} finally {
 					        		    ActiveAndroid.endTransaction();
 					        		}
-									
-									for(Message newMessage : newMessages){
-										if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")) {
-											String newUserId = "";
-											if(newMessage.getToUserId().equals(currentUser.getId())){
-												newUserId = newMessage.getFromUserId();
-											} else if(newMessage.getFromUserId().equals(currentUser.getId())){
-												newUserId = newMessage.getToUserId();
-											} else {
-												continue;
-											}
-											Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newUserId).executeSingle();
-											if(newFriend == null){
-												loadNewlyAddedFriend(newUserId);
-											}
-										}
-										else if(newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
-											Friend delFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
-											if(delFriend != null){
-												delFriend.delete();
-											}
-										}
-									}
+									processFriendMessages(friendMessages, currentUser);
+									processProjectShareMessages(projectShareMessages, currentUser);
 									
 								}
 			        		} catch (Exception e) {
@@ -163,7 +148,106 @@ public class MessageDownloadService extends Service {
     	return super.onStartCommand(intent, flags, startId);  
     }  
   
-    @Override  
+    protected void processProjectShareMessages(
+			List<Message> newMessages, User currentUser) {
+    	for(Message newMessage : newMessages){
+			if(newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
+				
+				loadSharedProjectData(newMessage);
+				
+			} else if(newMessage.getType().equalsIgnoreCase("Project.Share.Delete")){
+				
+			}
+		}
+		
+	}
+    protected void loadSharedProjectData(Message message) {
+		// load new ProjectData from server
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				try {
+
+					JSONArray jsonArray = (JSONArray) object;
+					ActiveAndroid.beginTransaction();
+					
+					for(int i = 0; i < jsonArray.length(); i++){
+						JSONArray jsonObjects = jsonArray.getJSONArray(i);
+						for(int j = 0; j < jsonObjects.length(); j++){
+							if(jsonObjects.optJSONObject(j).optString("__dataType").equals("Project")){
+								Project newProject = new Project();
+								newProject.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProject.save();
+							} else if(jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")){
+								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j));
+								newProjectShareAuthorization.save();
+							}
+						}	
+					}
+
+					ActiveAndroid.setTransactionSuccessful();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+			}
+		};
+
+		JSONArray data = new JSONArray();
+		try {
+			JSONArray projectIds = new JSONObject(message.getMessageData()).optJSONArray("projectIds");
+			for (int i = 0; i < projectIds.length(); i++) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("__dataType", "Project");
+				newObj.put("id", projectIds.get(i));
+				data.put(newObj);
+				JSONObject newObj1 = new JSONObject();
+				newObj1.put("__dataType", "ProjectShareAuthorization");
+				newObj1.put("projectId", projectIds.get(i));
+				newObj1.put("state", "Accept");
+				data.put(newObj1);
+			}
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(),
+					"getData");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+    
+	protected void processFriendMessages(List<Message> newMessages, User currentUser) {
+		for(Message newMessage : newMessages){
+			if(newMessage.getType().equalsIgnoreCase("System.Friend.AddResponse")) {
+				String newUserId = "";
+				if(newMessage.getToUserId().equals(currentUser.getId())){
+					newUserId = newMessage.getFromUserId();
+				} else if(newMessage.getFromUserId().equals(currentUser.getId())){
+					newUserId = newMessage.getToUserId();
+				} else {
+					continue;
+				}
+				Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newUserId).executeSingle();
+				if(newFriend == null){
+					loadNewlyAddedFriend(newUserId);
+				}
+			}
+			else if(newMessage.getType().equalsIgnoreCase("System.Friend.Delete")){
+				Friend delFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+				if(delFriend != null){
+					delFriend.delete();
+				}
+			}
+		}
+		
+	}
+
+	@Override  
     public void onDestroy() {  
         super.onDestroy();  
         Log.d(TAG, "onDestroy() executed");  

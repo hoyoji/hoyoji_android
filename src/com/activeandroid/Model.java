@@ -425,7 +425,9 @@ public abstract class Model {
 		for (Field field : mTableInfo.getFields()) {
 			final String fieldName = mTableInfo.getColumnName(field);
 			Class<?> fieldType = field.getType();
-
+			if(fieldName == idName){
+				continue;
+			}
 			field.setAccessible(true);
 
 			try {

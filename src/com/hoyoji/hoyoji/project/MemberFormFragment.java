@@ -298,6 +298,8 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			showValidatioErrors();
 		} else if(mProjectShareAuthorizationEditor.getModelCopy().get_mId() == null) {
 
+			saveAverageTotal();				
+			
 			//去服务器上查找是否已经添加过共享给该好友
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
@@ -346,7 +348,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			public void finishCallback(Object object) {
 				try {
 					ActiveAndroid.beginTransaction();
-					saveAverageTotal();				
+					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
 					mProjectShareAuthorizationEditor.save();
 					ActiveAndroid.setTransactionSuccessful();
 					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
@@ -392,10 +394,21 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
 			msgData.put("projectCurrencyIds", new JSONArray());
 			msg.put("messageData", msgData.toString());
-	
+			
+
+			String data = "[";
+			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+			jsonPSA.put("state", "Wait");
+			data += jsonPSA.toString();
+			data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+				if(psa != mProjectShareAuthorizationEditor.getModelCopy()){
+					data += "," + psa.toJSON().toString();
+				}
+			}
+			data += "," + msg.toString() + "]";
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-					"[" + mProjectShareAuthorizationEditor.getModelCopy().toJSON().toString() + ", " +
-							msg.toString() + "]", "postData");
+					data, "postData");
 			
 		} catch (JSONException e1) {
 			e1.printStackTrace();
@@ -415,7 +428,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			}
 			
 			double averageTotal = 0.0;
-			double averageAmount = HyjUtil.toFixed2((100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage);
+			double averageAmount = 0.0;
+			double averageTotalAmount = 100.0 - Math.min(fixedPercentageTotal, 100.0);
+			if(numOfAverage > 0) {
+				averageAmount = HyjUtil.toFixed2(averageTotalAmount / numOfAverage);
+			}
 			double diff = HyjUtil.toFixed2(100.0 - fixedPercentageTotal - averageAmount * numOfAverage);
 			double adjustedAverageTotal = HyjUtil.toFixed2(averageAmount + diff);
 			
@@ -424,11 +441,13 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					if(!psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId()) &&
 							(psa.getSharePercentage().doubleValue() != averageAmount && 
 							psa.getSharePercentage().doubleValue() != adjustedAverageTotal)){
-						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
-						editor.getModelCopy().setSharePercentage(averageAmount);
-						editor.save();
+//						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
+//						editor.getModelCopy().setSharePercentage(averageAmount);
+						averageTotal += averageAmount;
+//						editor.save();
+					} else {
+						averageTotal += psa.getSharePercentage();
 					}
-					averageTotal += psa.getSharePercentage();
 				}
 			}
 			if(HyjUtil.toFixed2(averageTotal) != HyjUtil.toFixed2(100.0 - fixedPercentageTotal)){

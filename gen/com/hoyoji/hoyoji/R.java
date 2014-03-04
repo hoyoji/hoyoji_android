@@ -1823,8 +1823,8 @@ containing a value of this type.
         public static final int homeListFragment_action_display_transaction_type_project=0x7f0b00ab;
         public static final int homeListFragment_action_report=0x7f0b00a7;
         public static final int homeListFragment_action_sync=0x7f0b00a8;
-        public static final int imageField_action_cancelled=0x7f0b01fc;
-        public static final int imageField_cannot_save_picture=0x7f0b01fb;
+        public static final int imageField_action_cancelled=0x7f0b01fd;
+        public static final int imageField_cannot_save_picture=0x7f0b01fc;
         public static final int loginActivity_action_forgot_password=0x7f0b0032;
         public static final int loginActivity_action_sign_in=0x7f0b002f;
         public static final int loginActivity_alert_require_login=0x7f0b0038;
@@ -1879,6 +1879,7 @@ containing a value of this type.
         public static final int memberFormFragment_toast_friend_already_exists=0x7f0b01d6;
         public static final int memberFormFragment_toast_share_request_sent_success=0x7f0b01d1;
         public static final int memberListFragment_action_member_addnew=0x7f0b01f7;
+        public static final int memberListFragment_state_wait=0x7f0b01f8;
         public static final int memberListFragment_title=0x7f0b01f6;
         public static final int messageListItem_fromUser_not_friend=0x7f0b00d0;
         public static final int messageListItem_user_self=0x7f0b00d1;
@@ -2166,9 +2167,9 @@ containing a value of this type.
         public static final int projectFormFragment_textView_projectName=0x7f0b01ed;
         public static final int projectFormFragment_title_addnew=0x7f0b01eb;
         public static final int projectFormFragment_title_edit=0x7f0b01ec;
-        public static final int projectListFragment_action_project_addnew=0x7f0b01f8;
-        public static final int projectListFragment_title_select_parent_project=0x7f0b01fa;
-        public static final int projectListFragment_title_select_project=0x7f0b01f9;
+        public static final int projectListFragment_action_project_addnew=0x7f0b01f9;
+        public static final int projectListFragment_title_select_parent_project=0x7f0b01fb;
+        public static final int projectListFragment_title_select_project=0x7f0b01fa;
         public static final int projectMessageFormFragment_addShare_already_exists=0x7f0b00cf;
         public static final int projectMessageFormFragment_button_accept=0x7f0b00cb;
         public static final int projectMessageFormFragment_button_resend=0x7f0b00ca;
