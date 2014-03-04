@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -122,7 +123,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyBorrowFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_MONEYACCOUNT_ID);
+				Bundle bundle = new Bundle();
+				bundle.putString("excludeType", "Debt");
+				MoneyBorrowFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		

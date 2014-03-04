@@ -12,6 +12,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "Exchange", id = BaseColumns._ID)
@@ -89,6 +90,9 @@ public class Exchange extends HyjModel {
 	}
 
 	public void setRate(Double mRate) {
+		if(mRate != null){
+			mRate = HyjUtil.toFixed2(mRate);
+		}
 		this.mRate = mRate;
 	}
 

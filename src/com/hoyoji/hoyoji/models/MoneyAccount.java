@@ -10,6 +10,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyAccount", id = BaseColumns._ID)
@@ -60,6 +61,8 @@ public class MoneyAccount extends HyjModel {
 	public String getDisplayName(){
 		if(!this.getAccountType().equalsIgnoreCase("Debt")){
 			return this.getName();
+		}else if(this.getName().equalsIgnoreCase("匿名借贷账户")){
+			return this.getName();
 		}
 		
 		if(this.getFriendId() != null){
@@ -99,8 +102,12 @@ public class MoneyAccount extends HyjModel {
 		String debtAccountName = "匿名借贷账户";
 		String friendId = "";
 		if(friend != null){
-			friendId = friend.getId();
-			debtAccountName = friendId;
+			if(friend.getFriendUserId() == null){
+				friendId = friend.getId();
+				debtAccountName = "";
+			}else{
+				debtAccountName = friend.getFriendUserId();
+			}
 		}
 		createDebtAccount.setName(debtAccountName);
 		createDebtAccount.setCurrencyId(currencyId);
@@ -165,6 +172,9 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public void setCurrentBalance(Double mCurrentBalance) {
+		if(mCurrentBalance != null) {
+			mCurrentBalance = HyjUtil.toFixed2(mCurrentBalance);
+		}
 		this.mCurrentBalance = mCurrentBalance;
 	}
 

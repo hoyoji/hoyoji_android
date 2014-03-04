@@ -11,6 +11,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyTransfer", id = BaseColumns._ID)
@@ -137,6 +138,9 @@ public class MoneyTransfer extends HyjModel{
 	}
 
 	public void setTransferOutAmount(Double mTransferOutAmount) {
+		if(mTransferOutAmount != null) {
+			mTransferOutAmount = HyjUtil.toFixed2(mTransferOutAmount);
+		}
 		this.mTransferOutAmount = mTransferOutAmount;
 	}
 
@@ -204,6 +208,9 @@ public class MoneyTransfer extends HyjModel{
 	}
 
 	public void setTransferInAmount(Double mTransferInAmount) {
+		if(mTransferInAmount != null){
+			mTransferInAmount = HyjUtil.toFixed2(mTransferInAmount);
+		}
 		this.mTransferInAmount = mTransferInAmount;
 	}
 	
@@ -264,6 +271,9 @@ public class MoneyTransfer extends HyjModel{
 	}
 
 	public void setExchangeRate(Double mExchangeRate) {
+		if(mExchangeRate != null){
+			mExchangeRate = HyjUtil.toFixed2(mExchangeRate);
+		}
 		this.mExchangeRate = mExchangeRate;
 	}
 

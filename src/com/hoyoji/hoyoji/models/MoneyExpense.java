@@ -247,6 +247,9 @@ public class MoneyExpense extends HyjModel{
 	}
 
 	public void setExchangeRate(Double mExchangeRate) {
+		if(mExchangeRate != null) {
+			mExchangeRate = HyjUtil.toFixed2(mExchangeRate);
+		}
 		this.mExchangeRate = mExchangeRate;
 	}
 

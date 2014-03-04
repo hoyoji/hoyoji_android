@@ -159,10 +159,10 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-		
-		// 维护其他余额....
-		
-		
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization(null);
+		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - this.getAmount0());
+		projectShareAuthorizationEditor.save();
 		
 		super.delete();
 	}
@@ -180,9 +180,13 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return null;
 	}
 
-	public ProjectShareAuthorization getProjectShareAuthorization() {
+	public ProjectShareAuthorization getProjectShareAuthorization(String projectId) {
+		if(projectId == null){
+			projectId = this.getMoneyExpense().getProjectId();
+		}
+			
 		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
+				projectId, this.getFriendUserId()).executeSingle();
 	}
 	
 	@Override
