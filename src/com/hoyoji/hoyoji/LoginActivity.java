@@ -299,72 +299,71 @@ public class LoginActivity extends HyjActivity {
 		// 下载一些用户必须的资料
 		JSONArray belongsToes = new JSONArray();
 		try {
-			JSONObject jsonObj1 = new JSONObject();
-			jsonObj1.put("__dataType", "MessageBox");
-//			jsonObj1.put("id", user.getMessageBoxId());
-			jsonObj1.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			belongsToes.put(jsonObj1);
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MessageBox");
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj2 = new JSONObject();
-			jsonObj2.put("__dataType", "Project");
-			jsonObj2.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj2.put("id", userData.getActiveProjectId());
-			belongsToes.put(jsonObj2);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Project");
+			jsonObj.put("pst.friendUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getActiveProjectId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj3 = new JSONObject();
-			jsonObj3.put("__dataType", "ProjectShareAuthorization");
-//			jsonObj3.put("projectId", userData.getActiveProjectId());
-			jsonObj3.put("friendUserId", user.getId());
-			belongsToes.put(jsonObj3);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectShareAuthorization");
+//			jsonObj.put("projectId", userData.getActiveProjectId());
+			jsonObj.put("friendUserId", user.getId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj4 = new JSONObject();
-			jsonObj4.put("__dataType", "ParentProject");
-			jsonObj4.put("parentProjectId", null);
-//			jsonObj4.put("subProjectId", userData.getActiveProjectId());
-			jsonObj4.put("ownerUserId", user.getId());
-			belongsToes.put(jsonObj4);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ParentProject");
+			jsonObj.put("parentProjectId", null);
+//			jsonObj.put("subProjectId", userData.getActiveProjectId());
+			jsonObj.put("ownerUserId", user.getId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj5 = new JSONObject();
-			jsonObj5.put("__dataType", "FriendCategory");
-			jsonObj5.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
-			belongsToes.put(jsonObj5);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "FriendCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getDefaultFriendCategoryId());
+			belongsToes.put(jsonObj);
 			
-			jsonObj5 = new JSONObject();
-			jsonObj5.put("__dataType", "Friend");
-			jsonObj5.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
-			belongsToes.put(jsonObj5);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Friend");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getDefaultFriendCategoryId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj6 = new JSONObject();
-			jsonObj6.put("__dataType", "Currency");
-			jsonObj6.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			belongsToes.put(jsonObj6);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Currency");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			belongsToes.put(jsonObj);
 
-			jsonObj6 = new JSONObject();
-			jsonObj6.put("__dataType", "Exchange");
-			jsonObj6.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			belongsToes.put(jsonObj6);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Exchange");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			belongsToes.put(jsonObj);
 			
-			JSONObject jsonObj7 = new JSONObject();
-			jsonObj7.put("__dataType", "MoneyAccount");
-			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
-			belongsToes.put(jsonObj7);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyAccount");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
 			
-			jsonObj7 = new JSONObject();
-			jsonObj7.put("__dataType", "MoneyExpenseCategory");
-			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
-			belongsToes.put(jsonObj7);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyExpenseCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
 
-			jsonObj7 = new JSONObject();
-			jsonObj7.put("__dataType", "MoneyIncomeCategory");
-			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
-			belongsToes.put(jsonObj7);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyIncomeCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
 			
-			// 从服务器上下载用户数据
+			// 从服务器上下载基础数据
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
