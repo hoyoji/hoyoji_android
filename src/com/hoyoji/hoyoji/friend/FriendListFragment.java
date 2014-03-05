@@ -217,12 +217,21 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				((TextView)view).setText(cursor.getString(columnIndex));
 			} else {
 				User user = HyjModel.getModel(User.class, cursor.getString(cursor.getColumnIndex("friendUserId")));
-				((TextView)view).setText(user.getDisplayName());
+				if(user != null){
+					((TextView)view).setText(user.getDisplayName());
+				} else {
+					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_picture){
 			if(cursor.getString(columnIndex) != null){
-				((HyjImageView)view).setImage(HyjModel.getModel(User.class, cursor.getString(columnIndex)).getPictureId());
+				User user = HyjModel.getModel(User.class, cursor.getString(columnIndex));
+				if(user != null){
+					((HyjImageView)view).setImage(user.getPictureId());
+				} else {
+					((HyjImageView)view).setImage((Picture)null);
+				}
 			} else {
 				((HyjImageView)view).setImage((Picture)null);
 			}

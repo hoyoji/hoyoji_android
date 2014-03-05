@@ -22,6 +22,9 @@ public class Friend extends HyjModel {
 	
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
+
+	@Column(name = "friendUserName")
+	private String mFriendUserName;
 	
 	@Column(name = "friendCategoryId")
 	private String mFriendCategoryId;
@@ -78,7 +81,7 @@ public class Friend extends HyjModel {
 			if(friendUser != null){
 				return friendUser .getDisplayName();
 			} else {
-				return "";
+				return this.getFriendUserName();
 			}
 		}
 	}
@@ -99,6 +102,14 @@ public class Friend extends HyjModel {
 		this.mFriendUserId = mFriendUserId;
 	}
 
+	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+
+	public void setFriendUserName(String mFriendUserName) {
+		this.mFriendUserName = mFriendUserName;
+	}
+	
 	public FriendCategory getFriendCategory() {
 		if(mFriendCategoryId == null){
 			return null;

@@ -17,6 +17,8 @@ import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
@@ -299,41 +301,69 @@ public class LoginActivity extends HyjActivity {
 		try {
 			JSONObject jsonObj1 = new JSONObject();
 			jsonObj1.put("__dataType", "MessageBox");
-			jsonObj1.put("id", user.getMessageBoxId());
+//			jsonObj1.put("id", user.getMessageBoxId());
+			jsonObj1.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			belongsToes.put(jsonObj1);
 
 			JSONObject jsonObj2 = new JSONObject();
 			jsonObj2.put("__dataType", "Project");
-			jsonObj2.put("id", userData.getActiveProjectId());
+			jsonObj2.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj2.put("id", userData.getActiveProjectId());
 			belongsToes.put(jsonObj2);
 
 			JSONObject jsonObj3 = new JSONObject();
 			jsonObj3.put("__dataType", "ProjectShareAuthorization");
-			jsonObj3.put("projectId", userData.getActiveProjectId());
+//			jsonObj3.put("projectId", userData.getActiveProjectId());
 			jsonObj3.put("friendUserId", user.getId());
 			belongsToes.put(jsonObj3);
 
 			JSONObject jsonObj4 = new JSONObject();
 			jsonObj4.put("__dataType", "ParentProject");
 			jsonObj4.put("parentProjectId", null);
-			jsonObj4.put("subProjectId", userData.getActiveProjectId());
+//			jsonObj4.put("subProjectId", userData.getActiveProjectId());
 			jsonObj4.put("ownerUserId", user.getId());
 			belongsToes.put(jsonObj4);
 
 			JSONObject jsonObj5 = new JSONObject();
 			jsonObj5.put("__dataType", "FriendCategory");
-			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
+			jsonObj5.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
+			belongsToes.put(jsonObj5);
+			
+			jsonObj5 = new JSONObject();
+			jsonObj5.put("__dataType", "Friend");
+			jsonObj5.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
 			belongsToes.put(jsonObj5);
 
 			JSONObject jsonObj6 = new JSONObject();
 			jsonObj6.put("__dataType", "Currency");
-			jsonObj6.put("id", userData.getActiveCurrencyId());
+			jsonObj6.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			belongsToes.put(jsonObj6);
 
+			jsonObj6 = new JSONObject();
+			jsonObj6.put("__dataType", "Exchange");
+			jsonObj6.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			belongsToes.put(jsonObj6);
+			
 			JSONObject jsonObj7 = new JSONObject();
 			jsonObj7.put("__dataType", "MoneyAccount");
-			jsonObj7.put("id", userData.getActiveMoneyAccountId());
+			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
 			belongsToes.put(jsonObj7);
+			
+			jsonObj7 = new JSONObject();
+			jsonObj7.put("__dataType", "MoneyExpenseCategory");
+			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj7);
+
+			jsonObj7 = new JSONObject();
+			jsonObj7.put("__dataType", "MoneyIncomeCategory");
+			jsonObj7.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj7.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj7);
+			
 			// 从服务器上下载用户数据
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
@@ -347,25 +377,12 @@ public class LoginActivity extends HyjActivity {
 								try {
 									if (obj.optString("__dataType").equals(
 											"MoneyAccount")) {
-										obj.put("currentBalance", 0);
 										MoneyAccount moneyAccount = new MoneyAccount();
 										moneyAccount.loadFromJSON(obj, true);
 										moneyAccount.save();
 									} else if (obj
 											.optString("__dataType")
 											.equals("ProjectShareAuthorization")) {
-										obj.put("actualTotalIncome", 0);
-										obj.put("actualTotalExpense", 0);
-										obj.put("actualTotalBorrow", 0);
-										obj.put("actualTotalLend", 0);
-										obj.put("actualTotalReturn", 0);
-										obj.put("actualTotalPayback", 0);
-										obj.put("apportionedTotalIncome", 0);
-										obj.put("apportionedTotalExpense", 0);
-										obj.put("apportionedTotalBorrow", 0);
-										obj.put("apportionedTotalLend", 0);
-										obj.put("apportionedTotalReturn", 0);
-										obj.put("apportionedTotalPayback", 0);
 										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
 										newProjectShareAuthorization
 												.loadFromJSON(obj, true);
@@ -382,9 +399,6 @@ public class LoginActivity extends HyjActivity {
 										Currency newCurrency = new Currency();
 										newCurrency.loadFromJSON(obj, true);
 										newCurrency.save();
-									} else if (obj.optString("__dataType")
-											.equals("Picture")) {
-
 									} else if (obj.optString("__dataType")
 											.equals("ParentProject")) {
 										ParentProject parentProject = new ParentProject();
@@ -405,7 +419,28 @@ public class LoginActivity extends HyjActivity {
 										MessageBox messageBox = new MessageBox();
 										messageBox.loadFromJSON(obj, true);
 										messageBox.save();
-									}
+									} else if (obj.optString("__dataType")
+											.equals("Friend")) {
+										Friend friend = new Friend();
+										friend.loadFromJSON(obj, true);
+										friend.save();
+									} else if (obj.optString("__dataType")
+											.equals("Exchange")) {
+										Exchange exchange = new Exchange();
+										exchange.loadFromJSON(obj, true);
+										exchange.save();
+									} 
+//									else if (obj.optString("__dataType")
+//											.equals("MoneyExpenseCategory")) {
+//										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
+//										moneyExpenseCategory.loadFromJSON(obj, true);
+//										moneyExpenseCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MoneyIncomeCategory")) {
+//										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
+//										moneyIncomeCategory.loadFromJSON(obj, true);
+//										moneyIncomeCategory.save();
+//									}
 
 								} catch (JSONException e) {
 									//

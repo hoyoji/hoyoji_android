@@ -72,7 +72,11 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		mTextFieldNickName.setText(friend.getNickName());
 		mTextFieldNickName.requestFocus();
 		if(friend.getFriendUserId() != null){
-			mTextFieldUserName.setText(friend.getFriendUser().getDisplayName());
+			if(friend.getFriendUser() != null){
+				mTextFieldUserName.setText(friend.getFriendUser().getDisplayName());
+			} else {
+				mTextFieldUserName.setText(friend.getFriendUserName());
+			}
 			mTextFieldNickName.setHint(R.string.friendFormFragment_editText_hint_nickName);
 		} else {
 			mTextFieldUserName.setVisibility(View.GONE);
