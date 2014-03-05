@@ -136,12 +136,12 @@ public class MainActivity extends HyjUserActivity {
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
 	    switch(position){
-		    case 1 :
+		    case 2 :
 	        	openActivityWithFragment(MessageListFragment.class, R.string.friendListFragment_title_manage_message, null);
 	        	break;
-	       case 2 :
-	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
-	        	break;
+//	       case 2 :
+//	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+//	        	break;
 	        case 3 :
 	        	openActivityWithFragment(ExchangeListFragment.class, R.string.exchangeListFragment_title_manage_exchange, null);
 	        	break;

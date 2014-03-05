@@ -154,7 +154,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project) {
-			HyjUtil.displayToast(R.string.homeListFragment_action_display_transaction_type);
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
