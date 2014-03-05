@@ -132,7 +132,12 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.exchangeListItem_foreignCurrency || 
 				view.getId() == R.id.exchangeListItem_localCurrency){
-			((TextView)view).setText(((Currency)(HyjModel.getModel(Currency.class, cursor.getString(columnIndex)))).getName());
+			Currency currency = HyjModel.getModel(Currency.class, cursor.getString(columnIndex));
+			if(currency != null){
+				((TextView)view).setText(currency.getName());
+			} else {
+				((TextView)view).setText(cursor.getString(columnIndex));
+			}
 			return true;
 		} else if(view.getId() == R.id.exchangeListItem_rate){
 			HyjNumericView numericView = (HyjNumericView)view;
