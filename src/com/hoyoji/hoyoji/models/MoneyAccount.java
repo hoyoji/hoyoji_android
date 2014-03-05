@@ -97,6 +97,11 @@ public class MoneyAccount extends HyjModel {
 		}
 	}
 	
+
+	public static MoneyAccount getDebtAccount(String currencyId, String friendUserId) {
+		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friendUserId).executeSingle();
+	}
+	
 	public static void createDebtAccount(Friend friend, String currencyId, Double amount){
 		MoneyAccount createDebtAccount = new MoneyAccount();
 		String debtAccountName = "匿名借贷账户";
@@ -115,6 +120,16 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setSharingType("Private");
 		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.setFriendId(friendId);
+		createDebtAccount.save();
+	}
+	
+	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
+		MoneyAccount createDebtAccount = new MoneyAccount();
+		createDebtAccount.setName(friendUserId);
+		createDebtAccount.setCurrencyId(currencyId);
+		createDebtAccount.setCurrentBalance(amount);
+		createDebtAccount.setSharingType("Private");
+		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.save();
 	}
 	
@@ -241,4 +256,5 @@ public class MoneyAccount extends HyjModel {
 		}
 		super.save();
 	}
+
 }
