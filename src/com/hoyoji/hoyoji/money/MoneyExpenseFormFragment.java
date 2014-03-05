@@ -313,6 +313,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 									Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 									List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 									for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+										if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept")){
+											continue;
+										}
 										MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 										apportion.setAmount(0.0);
 										apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
@@ -729,6 +732,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+				if(!psa.getState().equalsIgnoreCase("Accept")){
+					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
+					break;
+				}
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 				apportion.setAmount(0.0);
 				apportion.setFriendUserId(psa.getFriendUserId());

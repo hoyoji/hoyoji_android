@@ -28,6 +28,9 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	@Column(name = "friendUserName")
+	private String mFriendUserName;
+	
 	@Column(name = "state")
 	private String mState = "Wait";
 	
@@ -370,8 +373,25 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public User getFriendUser(){
-		return (User) getModel(User.class, mFriendUserId);
+		if(mFriendUserId != null){
+			return (User) getModel(User.class, mFriendUserId);
+		}
+		return null;
 	}
+	
+	public String getFriendDisplayName(){
+		Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		if(friend != null){
+			return friend.getDisplayName();
+		} else {
+			User user = HyjModel.getModel(User.class, mFriendUserId);
+			if(user != null){
+				return user.getDisplayName();
+			}
+		}
+		return this.getFriendUserName();
+	}
+	
 	
 	public String getProjectId() {
 		return mProjectId;
@@ -387,6 +407,14 @@ public class ProjectShareAuthorization extends HyjModel {
 
 	public void setFriendUserId(String mFriendUserId) {
 		this.mFriendUserId = mFriendUserId;
+	}
+	
+	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+
+	public void setFriendUserName(String mFriendUserName) {
+		this.mFriendUserName = mFriendUserName;
 	}
 
 	public Boolean getShareAllSubProjects() {

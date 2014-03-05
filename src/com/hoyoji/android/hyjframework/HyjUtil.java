@@ -271,25 +271,83 @@ public class HyjUtil {
 		
 		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
 			
-			if(tableName != "HyjClientSyncTable"){
+			if(!tableName.equalsIgnoreCase("ClientSyncTable")){
 				HyjClientSyncRecord clientSyncRecord = HyjModel.getModel(HyjClientSyncRecord.class, recordId);
-				if(clientSyncRecord != null){
+				
+				if(operation.equalsIgnoreCase("Delete")){
 					if(syncFromServer){
-						clientSyncRecord.delete();
-						return;
-					} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create") && 
-						operation.equalsIgnoreCase("Delete")){
-						clientSyncRecord.delete();
-						return;
-					} else if(operation.equalsIgnoreCase("Update")){
-						return;
+
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+					
+						if(clientSyncRecord == null){
+							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							clientSyncRecord.delete();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
+						}
+					
+					}
+				} else 
+				if(operation.equalsIgnoreCase("Update")){
+					if(syncFromServer){
+						
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+					
+						if(clientSyncRecord == null){
+							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							//clientSyncRecord.delete();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+	//						clientSyncRecord.setOperation(operation);
+	//						clientSyncRecord.save();
+						}
+						
+					}
+				} else
+				if(operation.equalsIgnoreCase("Create")){
+					if(syncFromServer){
+						
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+						if(clientSyncRecord == null){
+							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							//clientSyncRecord.delete();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+	//						clientSyncRecord.setOperation(operation);
+	//						clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Delete")) {
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
+						}
+					
 					}
 				}
-				clientSyncRecord = new HyjClientSyncRecord();
-				clientSyncRecord.setId(recordId);
-				clientSyncRecord.setOperation(operation);
-				clientSyncRecord.setTableName(tableName);
-				clientSyncRecord.save();
 			}
 		}
 }
