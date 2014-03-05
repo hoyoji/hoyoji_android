@@ -21,6 +21,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
@@ -135,7 +136,10 @@ public class MainActivity extends HyjUserActivity {
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
 	    switch(position){
-	        case 2 :
+		    case 1 :
+	        	openActivityWithFragment(MessageListFragment.class, R.string.friendListFragment_title_manage_message, null);
+	        	break;
+	       case 2 :
 	        	openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
 	        	break;
 	        case 3 :

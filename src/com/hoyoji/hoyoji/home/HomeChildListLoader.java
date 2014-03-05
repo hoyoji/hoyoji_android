@@ -120,7 +120,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
-	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();
 	    	list.addAll(messages);
 	    	
 	    	Collections.sort(list, mDateComparator);
