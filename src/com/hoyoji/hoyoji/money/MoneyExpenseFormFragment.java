@@ -658,6 +658,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				
+				//更新项目成员的分摊金额
+				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - oldApportionAmount + apportionEditor.getModelCopy().getAmount0());
+				projectShareAuthorizationEditor.save();
+				
 				//更新支出所有者的实际支出
 				if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
@@ -671,17 +675,30 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() + mMoneyExpenseEditor.getModelCopy().getAmount0());
 						oldSelfProjectAuthorizationEditor.save();
 					}
+				}else{
+//					//更新相关好友的借贷账户
+//					if(pi.getState() == ApportionItem.NEW){
+//						MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), apportionEditor.getModelCopy().getFriendUserId());
+//		                if(debtAccount == null){
+//		                	MoneyAccount.createDebtAccount(apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), -apportionEditor.getModelCopy().getAmount0());
+//		                }else{
+//		                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//		                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0());
+//		                	debtAccountEditor.save();
+//		                }
+//					}else if(pi.getState() == ApportionItem.CHANGED){
+//						
+//					}else if (pi.getState() == ApportionItem.DELETED) {
+//						
+//					}
 				}
-				
-				//更新项目成员的分摊金额
-				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - oldApportionAmount + apportionEditor.getModelCopy().getAmount0());
-				projectShareAuthorizationEditor.save();
 				
 				apportionEditor.save();
 				savedCount++;
 			} else if (pi.getState() == ApportionItem.DELETED) {
 				apportion.delete();
 			}
+			
 		}
 
 		// 从隐藏掉的分摊里面删除原来的分摊
@@ -707,10 +724,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 			projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() + apportion.getAmount0());
 			
+			//更新借贷账户
+			
 			//更新支出所有者的实际支出
 			if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
-			    projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() + mMoneyExpenseEditor.getModelCopy().getAmount0());
+			    projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense()- mMoneyExpenseEditor.getModel().getAmount0() + mMoneyExpenseEditor.getModelCopy().getAmount0());
 				
 			}
 			

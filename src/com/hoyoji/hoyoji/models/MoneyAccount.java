@@ -84,17 +84,22 @@ public class MoneyAccount extends HyjModel {
 	}
 	
 	public static MoneyAccount getDebtAccount(String currencyId, Friend friend){
-		String friendId;
 		if(friend == null){
-			return null;
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=? AND name=?", "Debt", currencyId, "","匿名借贷账户").executeSingle();
 		}
 		
+		String friendId;
 		if(friend.getFriendUserId() == null){
 			friendId = friend.getId();
 			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
 		} else {	
 			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
 		}
+	}
+	
+
+	public static MoneyAccount getDebtAccount(String currencyId, String friendUserId) {
+		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friendUserId).executeSingle();
 	}
 	
 	public static void createDebtAccount(Friend friend, String currencyId, Double amount){
@@ -115,6 +120,16 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setSharingType("Private");
 		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.setFriendId(friendId);
+		createDebtAccount.save();
+	}
+	
+	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
+		MoneyAccount createDebtAccount = new MoneyAccount();
+		createDebtAccount.setName(friendUserId);
+		createDebtAccount.setCurrencyId(currencyId);
+		createDebtAccount.setCurrentBalance(amount);
+		createDebtAccount.setSharingType("Private");
+		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.save();
 	}
 	
@@ -241,4 +256,5 @@ public class MoneyAccount extends HyjModel {
 		}
 		super.save();
 	}
+
 }
