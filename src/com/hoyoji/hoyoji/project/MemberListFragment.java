@@ -206,8 +206,9 @@ public class MemberListFragment extends HyjUserListFragment{
 				numericView.setPrefix("已经支出:" + currencySymbol);
 				if(actualTotal.equals(0.0)){
 					numericView.setTextColor(Color.parseColor("#000000"));
+				}else{
+			    	numericView.setTextColor(Color.parseColor("#FF0000"));
 				}
-				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(actualTotal);
@@ -226,8 +227,9 @@ public class MemberListFragment extends HyjUserListFragment{
 				numericView.setPrefix("分摊支出:" + currencySymbol);
 				if(apportionTotal.equals(0.0)){
 					numericView.setTextColor(Color.parseColor("#000000"));
-				}
+				}else{
 				numericView.setTextColor(Color.parseColor("#FF0000"));
+				}
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(apportionTotal);
@@ -246,8 +248,9 @@ public class MemberListFragment extends HyjUserListFragment{
 				numericView.setPrefix("还要收入:" + currencySymbol);
 				if(settlement.equals(0.0)){
 					numericView.setTextColor(Color.parseColor("#000000"));
-				}
+				}else{
 				numericView.setTextColor(Color.parseColor("#339900"));
+				}
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(settlement);
