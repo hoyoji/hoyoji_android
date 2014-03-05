@@ -64,6 +64,11 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 		if (modelId != -1) {
 			friendAddMessage = new Select().from(Message.class)
 					.where("_id=?", modelId).executeSingle();
+			if(friendAddMessage.getMessageState().equalsIgnoreCase("unread") || 
+					friendAddMessage.getMessageState().equalsIgnoreCase("new")){
+				friendAddMessage.setMessageState("read");
+				friendAddMessage.save();
+			}
 		} else {
 			friendAddMessage = new Message();
 		}

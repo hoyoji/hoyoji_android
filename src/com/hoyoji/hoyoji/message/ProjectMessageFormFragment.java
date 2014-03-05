@@ -72,6 +72,11 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 		if (modelId != -1) {
 			shareAddMessage = new Select().from(Message.class)
 					.where("_id=?", modelId).executeSingle();
+			if(shareAddMessage.getMessageState().equalsIgnoreCase("unread") || 
+					shareAddMessage.getMessageState().equalsIgnoreCase("new")){
+				shareAddMessage.setMessageState("read");
+				shareAddMessage.save();
+			}
 		} else {
 			shareAddMessage = new Message();
 		}
