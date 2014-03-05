@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -130,13 +131,18 @@ public class HyjUtil {
 		}
 		
 
-		public static void startRoateView(ImageView v){
+		public static void startRoateView(View v){
 //			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 				RotateAnimation anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 				anim.setInterpolator(new LinearInterpolator());
 				anim.setRepeatCount(Animation.INFINITE);
 				anim.setDuration(1000);
 				v.startAnimation(anim);
+				
+//				Animation rotation = AnimationUtils.loadAnimation(v.getContext(), R.anim.clockwise_rotate);
+//			     rotation.setRepeatCount(Animation.INFINITE);
+//			     v.startAnimation(rotation);
+				
 //			} else {
 //				RotateDrawable d = (RotateDrawable)v.getDrawable();
 //				ObjectAnimator anim = ObjectAnimator.ofInt(d, "Level", 10000);

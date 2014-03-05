@@ -2,8 +2,16 @@ package com.hoyoji.hoyoji;
 
 import java.util.Locale;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,11 +25,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjClientSyncRecord;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.message.MessageListFragment;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
@@ -42,7 +58,18 @@ import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
-    private String[] mDrawerListerTitles = null;
+	private Menu optionsMenu;
+	
+    @Override
+	protected void onDestroy() {
+    	if(mChangeObserver != null){
+		this.getContentResolver()
+				.unregisterContentObserver(mChangeObserver);
+    	}
+    	super.onDestroy();
+	}
+
+	private String[] mDrawerListerTitles = null;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;  
@@ -56,7 +83,8 @@ public class MainActivity extends HyjUserActivity {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
-
+	ChangeObserver mChangeObserver;
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -66,6 +94,21 @@ public class MainActivity extends HyjUserActivity {
 	protected Integer getContentView() {
 		// TODO Auto-generated method stub
 		return R.layout.activity_main;
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(HyjApplication.getInstance().isLoggedIn()) {
+		   Intent startIntent = new Intent(this, MessageDownloadService.class);  
+	       startService(startIntent); 
+	       if(mChangeObserver == null){
+	       mChangeObserver = new ChangeObserver();
+	       		this.getContentResolver().registerContentObserver(
+					ContentProvider.createUri(HyjClientSyncRecord.class, null), true,
+					mChangeObserver);
+	       }
+		}
 	}
 	
 	@Override
@@ -117,12 +160,12 @@ public class MainActivity extends HyjUserActivity {
 	
 	/* Called whenever we call invalidateOptionsMenu() */
 //    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        // If the nav drawer is open, hide action items related to the content view
-//        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-//      //  menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-//        return super.onPrepareOptionsMenu(menu);
-//    }
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+      //  boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+      //  menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
     
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 	    @Override
@@ -158,6 +201,7 @@ public class MainActivity extends HyjUserActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		this.optionsMenu = menu;
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
@@ -176,13 +220,18 @@ public class MainActivity extends HyjUserActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
           return true;
         }
+
+        if(item.getItemId() == R.id.homeListFragment_action_sync){
+        	setRefreshActionButtonState(true);
+        }
+        
         // Handle your other action bar items...
     		if(item.getItemId() == R.id.mainActivity_action_money_addnew_expense){
     			openActivityWithFragment(MoneyExpenseListFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
@@ -267,6 +316,54 @@ public class MainActivity extends HyjUserActivity {
 				return getString(R.string.mainActivity_section_title_friend).toUpperCase(l);
 			}
 			return null;
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setRefreshActionButtonState(final boolean refreshing) {
+	    if (optionsMenu != null) {
+	        final MenuItem refreshItem = optionsMenu
+	            .findItem(R.id.homeListFragment_action_sync);
+	        if (refreshItem != null) {
+	            if (refreshing) {
+	                refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+	            } else {
+	                refreshItem.setActionView(null);
+	            }
+	        }
+	    }
+	}
+	
+	private class ChangeObserver extends ContentObserver {
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					HyjUtil.displayToast("上传资料成功");
+				}
+				@Override
+				public void errorCallback(Object object) {
+					JSONObject json = (JSONObject)object;
+					try {
+						HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
+					} catch (JSONException e) {
+						e.printStackTrace();
+						HyjUtil.displayToast(e.getMessage());
+					}
+				}
+			};
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, "", "postData");
 		}
 	}
 }

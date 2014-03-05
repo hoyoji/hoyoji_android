@@ -19,8 +19,6 @@ public abstract class HyjUserActivity extends HyjActivity {
 	protected void onStart() {
 		if(HyjApplication.getInstance().isLoggedIn()) {
 			super.onStart();
-		    Intent startIntent = new Intent(this, MessageDownloadService.class);  
-            startService(startIntent);  
 		} else {
 			super.onStartWithoutInitViewData();
 			if(mIsFirstTimeStart){ 
