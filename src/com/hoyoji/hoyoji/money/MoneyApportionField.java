@@ -15,6 +15,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
@@ -375,13 +376,17 @@ public class MoneyApportionField extends GridView {
 			if(vh.apportionItem != getItem(position)){
 				vh.apportionItem = getItem(position);
 				
-				vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
-				
-				if(vh.apportionItem.getFriend() != null){
-					vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
+				if(vh.apportionItem.getApportion().getFriendUser() != null){
+					vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
 				} else {
-					vh.textViewFriendName.setText(vh.apportionItem.getApportion().getFriendUser().getDisplayName());
+					vh.imageViewPicture.setImage((Picture)null);
 				}
+//				if(vh.apportionItem.getFriend() != null){
+//					vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
+//				} else {
+//					vh.textViewFriendName.setText(vh.apportionItem.getApportion().getFriendUser().getDisplayName());
+//				}
+				vh.textViewFriendName.setText(vh.apportionItem.getProjectShareAuthorization().getFriendDisplayName());
 			}
 			
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){

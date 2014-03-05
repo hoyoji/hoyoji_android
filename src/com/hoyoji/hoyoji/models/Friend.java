@@ -74,7 +74,12 @@ public class Friend extends HyjModel {
 		if(this.getNickName() != null && this.getNickName().length() > 0){
 			return this.getNickName();
 		} else {
-			return this.getFriendUser().getDisplayName();
+			User friendUser = this.getFriendUser();
+			if(friendUser != null){
+				return friendUser .getDisplayName();
+			} else {
+				return "";
+			}
 		}
 	}
 	

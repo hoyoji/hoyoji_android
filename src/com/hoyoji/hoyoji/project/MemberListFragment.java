@@ -158,7 +158,7 @@ public class MemberListFragment extends HyjUserListFragment{
 					if(user != null){
 						((TextView)view).setText(user.getDisplayName());
 					} else {
-						((TextView)view).setText("");
+						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 					}
 				}
 			} else {

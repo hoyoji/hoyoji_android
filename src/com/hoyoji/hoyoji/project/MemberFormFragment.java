@@ -246,7 +246,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
 		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-		
+		if(modelCopy.getFriendUserId() != null){
+			modelCopy.setFriendUserName(modelCopy.getFriendUser().getUserName());
+		}
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
 		modelCopy.setProjectShareMoneyExpenseEdit(mCheckBoxShareAuthExpenseEdit.isChecked());
@@ -305,7 +307,12 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				@Override
 				public void finishCallback(Object object) {
 					JSONArray jsonArray = (JSONArray) object;
-					if (jsonArray.optJSONArray(0).length() > 0) {
+					if (jsonArray.optJSONArray(0).length() > 0 && 
+							!jsonArray.optJSONArray(0).optJSONObject(0).optString("state").equalsIgnoreCase("Delete")) {
+						
+						ProjectShareAuthorization psa = new ProjectShareAuthorization();
+						psa.loadFromJSON(jsonArray.optJSONArray(0).optJSONObject(0), true);
+						psa.save();
 						((HyjActivity) MemberFormFragment.this.getActivity())
 								.dismissProgressDialog();
 						HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
@@ -325,7 +332,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				data.put("__dataType", "ProjectShareAuthorization");
 				data.put("projectId", mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
 				data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-				data.put("state", "Accept");
+				//data.put("state", "Accept");
 				
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
 						"[" + data.toString() + "]", "getData");
