@@ -920,5 +920,17 @@ public class ProjectShareAuthorization extends HyjModel {
 		super.save();
 	}
 
+	public Double getActualTotal() {		
+		return mActualTotalExpense - mActualTotalIncome + mActualTotalLend - mActualTotalPayback - mActualTotalBorrow + mActualTotalReturn;
+	}
+
+	public Double getApportionTotal() {
+		return mApportionedTotalExpense - mApportionedTotalIncome + mApportionedTotalLend - mApportionedTotalPayback - mApportionedTotalBorrow + mApportionedTotalReturn;
+	}
+
+	public Double getSettlement() {
+		return this.getActualTotal() - this.getApportionTotal();
+	}
+
 
 }
