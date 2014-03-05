@@ -301,7 +301,8 @@ public class LoginActivity extends HyjActivity {
 		try {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			jsonObj1.put("id", user.getMessageBoxId());
+			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
