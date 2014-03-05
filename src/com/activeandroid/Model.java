@@ -201,6 +201,7 @@ public abstract class Model {
 				}
 			}
 		} else {
+			db.update(mTableInfo.getTableName(), values, idName + "=" + mId, null);
 			HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
 		}
 		mSyncFromServer = false;
