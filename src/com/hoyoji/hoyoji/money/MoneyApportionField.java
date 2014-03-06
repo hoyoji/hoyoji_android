@@ -494,8 +494,8 @@ public class MoneyApportionField extends GridView {
 		
 		public int getState(){
 			if(mState == UNCHANGED){
-				if(mApportion.getAmount().compareTo(mAmount) == 0
-						|| mApportion.getApportionType().equalsIgnoreCase(mApportionType)){
+				if(mApportion.getAmount().compareTo(mAmount) != 0
+						|| !mApportion.getApportionType().equalsIgnoreCase(mApportionType)){
 					return CHANGED;
 				}
 			}

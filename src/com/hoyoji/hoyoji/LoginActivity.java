@@ -313,10 +313,19 @@ public class LoginActivity extends HyjActivity {
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ProjectShareAuthorization");
-//			jsonObj.put("projectId", userData.getActiveProjectId());
+			jsonObj.put("state", "Accept");
 			jsonObj.put("friendUserId", user.getId());
+
+			JSONObject notFilter = new JSONObject();
+			notFilter.put("ownerUserId", user.getId());
+			jsonObj.put("__NOT_FILTER__", notFilter);
 			belongsToes.put(jsonObj);
 
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectShareAuthorization");
+			jsonObj.put("ownerUserId", user.getId());
+			belongsToes.put(jsonObj);
+			
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ParentProject");
 			jsonObj.put("parentProjectId", null);

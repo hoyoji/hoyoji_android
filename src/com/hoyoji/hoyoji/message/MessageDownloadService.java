@@ -97,15 +97,6 @@ public class MessageDownloadService extends Service {
 												.getLastMessagesDownloadTime());
 								postData.put("__GREATER_FILTER__", timeFilter);
 							}
-//
-//							if (lastMessagesDownloadTime != null) {
-//								HyjModelEditor<UserData> modelEditor = currentUser
-//										.getUserData().newModelEditor();
-//								modelEditor.getModelCopy()
-//										.setLastMessagesDownloadTime(
-//												lastMessagesDownloadTime);
-//								modelEditor.save();
-//							}
 
 							Object returnedObject = HyjServer.doHttpPost(null,
 									HyjApplication.getServerUrl()
