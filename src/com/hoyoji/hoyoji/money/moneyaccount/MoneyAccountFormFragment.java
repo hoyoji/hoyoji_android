@@ -45,13 +45,15 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyAccount =  new Select().from(MoneyAccount.class).where("_id=?", modelId).executeSingle();
+		    
 		} else {
 			moneyAccount = new MoneyAccount();
 		}
 		mMoneyAccountEditor = moneyAccount.newModelEditor();
 		
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_name);
-		mTextFieldName.setText(moneyAccount.getName());
+		mTextFieldName.setText(moneyAccount.getDisplayName());
+		mTextFieldName.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		Currency currency = moneyAccount.getCurrency();
 		mSelectorFieldCurrency = (HyjSelectorField) getView().findViewById(R.id.moneyAccountFormFragment_selectorField_currency);
@@ -69,19 +71,24 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		
 		mNumericFieldCurrentBalance = (HyjNumericField) getView().findViewById(R.id.moneyAccountFormFragment_textField_currentBalance);		
 		mNumericFieldCurrentBalance.setNumber(moneyAccount.getCurrentBalance());
+		mNumericFieldCurrentBalance.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mTextFieldAccountType = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
 		mTextFieldAccountType.setText(moneyAccount.getAccountType());
+		mTextFieldAccountType.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountNumber);
 		mRemarkFieldAccountNumber.setText(moneyAccount.getAccountNumber());
+		mRemarkFieldAccountNumber.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldBankAddress = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_bankAddress);
 		mRemarkFieldBankAddress.setText(moneyAccount.getBankAddress());
+		mRemarkFieldBankAddress.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyAccount.getRemark());
-
+		mRemarkFieldRemark.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
