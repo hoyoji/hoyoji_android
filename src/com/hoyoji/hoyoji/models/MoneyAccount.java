@@ -69,7 +69,7 @@ public class MoneyAccount extends HyjModel {
 			Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
 			return friend.getDisplayName();
 		} else {
-			Friend friend = new Select().from(Friend.class).where("friendUserId", this.getName()).executeSingle();
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", this.getName()).executeSingle();
 			if(friend != null){
 				return friend.getDisplayName();
 			} else {
