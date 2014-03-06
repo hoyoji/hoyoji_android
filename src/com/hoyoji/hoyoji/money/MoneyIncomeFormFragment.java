@@ -1,8 +1,17 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -33,10 +42,14 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -45,11 +58,13 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
+	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
 	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
 	private HyjImageField mImageFieldPicture = null;
+	private MoneyApportionField mApportionFieldApportions = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
@@ -70,7 +85,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyIncome moneyIncome;
+		final MoneyIncome moneyIncome;
 		
 		Intent intent = getActivity().getIntent();
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -86,6 +101,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyIncomeFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyIncome.getPictures());
 		
+		setupApportionField(moneyIncome);
+		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);	
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyIncome.getDate());
@@ -93,6 +110,23 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
 		mNumericAmount.setNumber(moneyIncome.getAmount());
+		mNumericAmount.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+				mApportionFieldApportions.setTotalAmount(mNumericAmount
+						.getNumber());
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+		});
 		
 		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
@@ -206,8 +240,101 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		});
 		
 			setExchangeRate();
+			
+			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+					bundle.putLong("MODEL_ID", project.get_mId());
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+				}
+			});
+			
+			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					PopupMenu popup = new PopupMenu(getActivity(), v);
+					MenuInflater inflater = popup.getMenuInflater();
+					inflater.inflate(R.menu.money_apportionfield_more_actions, popup.getMenu());
+					popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem item) {
+							if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_all) {
+								Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+								List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+								for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+									if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept")){
+										continue;
+									}
+									MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+									apportion.setAmount(0.0);
+									apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+									apportion.setMoneyIncomeId(moneyIncome.getId());
+
+									mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+								}
+								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+								return true;
+							} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
+								mApportionFieldApportions.clearAll();
+								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+								return true;
+							} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_average) {
+								mApportionFieldApportions.setAllApportionAverage();
+								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+								return true;
+							} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_share) {
+								mApportionFieldApportions.setAllApportionShare();
+								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+								return true;
+							}
+							return false;
+						}
+					});
+					popup.show();
+				}
+			});
+			// 只在新增时才自动打开软键盘， 修改时不自动打开
+			if (modelId == -1) {
+				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			}
+	}
+	
+	private void setupApportionField(MoneyIncome moneyIncome) {
+
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyIncomeFormFragment_apportionField);
 		
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		List<MoneyIncomeApportion> moneyApportions = null;
+		
+		if(mMoneyIncomeEditor.getModelCopy().get_mId() == null) {
+			
+			moneyApportions = new ArrayList<MoneyIncomeApportion>();
+			if(moneyIncome.getProject() != null && moneyIncome.getProject().getAutoApportion()){
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncome.getProject().getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setMoneyIncomeId(moneyIncome.getId());
+					apportion.setApportionType("Share");
+					
+					moneyApportions.add(apportion);
+				}
+			} else if(moneyIncome.getProject() != null) {
+				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+				apportion.setAmount(0.0);
+				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				apportion.setMoneyIncomeId(moneyIncome.getId());
+				apportion.setApportionType("Average");
+				moneyApportions.add(apportion);
+			}
+			
+		} else {
+			moneyApportions = moneyIncome.getApportions();
+		}
+		
+		mApportionFieldApportions.init(moneyIncome.getAmount0(), moneyApportions, moneyIncome.getProjectId(), moneyIncome.getId());
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyIncome> moneyIncomeEditor) {

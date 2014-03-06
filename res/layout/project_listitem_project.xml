@@ -20,17 +20,19 @@
 	    android:layout_gravity="right"
 	    android:gravity="right"
 	    android:orientation="vertical">
-	    <TextView
-	        android:id="@+id/projectListItem_expenseTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	        android:text="支出: ¥1000.00"/>
-	    <TextView
-	        android:id="@+id/projectListItem_incomeTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	        android:text="收入: ¥50.00" />
+	    
+	     <com.hoyoji.android.hyjframework.view.HyjNumericView 
+	        android:id="@+id/projectListItem_expenseTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥1000.00"/>
+	    
+	    <com.hoyoji.android.hyjframework.view.HyjNumericView 
+	        android:id="@+id/projectListItem_incomeTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥500.00"/>
 	</LinearLayout>
 </FrameLayout>

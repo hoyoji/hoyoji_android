@@ -91,6 +91,10 @@ public class Project extends HyjModel {
 		return getMany(ParentProject.class, "parentProjectId");
 	}
 	
+	public List<ProjectShareAuthorization> getProjectShareAuthorizations() {
+		return getMany(ProjectShareAuthorization.class,"projectId");
+	}
+	
 	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
