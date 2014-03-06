@@ -228,7 +228,9 @@ public class MoneyApportionField extends GridView {
 		Set<String> gridUserSet = new HashSet<String>();
 		
 		for(int i=0; i < projectShareAuthorizations.size(); i++){
-			friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
+			if(projectShareAuthorizations.get(i).getState().equals("Accept")) {
+				friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
+			}
 		}	
 
 		// 把不属于当前项目用户分摊隐藏掉
@@ -260,6 +262,9 @@ public class MoneyApportionField extends GridView {
 	    if(project.getAutoApportion()){
 		    int count = projectShareAuthorizations.size();
 			for(i = 0; i < count; i++){
+				if(!projectShareAuthorizations.get(i).getState().equals("Accept")) {
+					continue;
+				}
 				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId())){
 					try {
 						MoneyApportion apportion;
@@ -459,8 +464,8 @@ public class MoneyApportionField extends GridView {
 		
 		public ProjectShareAuthorization getProjectShareAuthorization(){
 			if(mProjectShareAuthorization == null) {
-				mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-					mProjectId, mApportion.getFriendUserId()).executeSingle();
+				mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state=?", 
+					mProjectId, mApportion.getFriendUserId(), "Accept").executeSingle();
 			} 
 			return mProjectShareAuthorization;
 		}

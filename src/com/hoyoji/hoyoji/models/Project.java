@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -42,22 +44,23 @@ public class Project extends HyjModel {
 	@Column(name = "depositeExpenseCategory")
 	private String mDepositeExpenseCategory;
 
-	
-	public Project(){
+	public Project() {
 		super();
 		mId = UUID.randomUUID().toString();
 		setAutoApportion(false);
 	}
-	
+
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getName().length() == 0){
-			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
+		if (this.getName().length() == 0) {
+			modelEditor.setValidationError("name",
+					R.string.projectFormFragment_editText_hint_projectName);
 		} else {
 			modelEditor.removeValidationError("name");
 		}
-		if(this.getCurrencyId() == null){
-			modelEditor.setValidationError("currency", R.string.projectFormFragment_editText_hint_projectCurrency);
+		if (this.getCurrencyId() == null) {
+			modelEditor.setValidationError("currency",
+					R.string.projectFormFragment_editText_hint_projectCurrency);
 		} else {
 			modelEditor.removeValidationError("currency");
 		}
@@ -74,27 +77,29 @@ public class Project extends HyjModel {
 	public String getName() {
 		return mName;
 	}
-	
-	public String getDisplayName(){
+
+	public String getDisplayName() {
 		return getName();
 	}
-	
+
 	public void setName(String mName) {
 		this.mName = mName;
 	}
-	
+
 	public List<ParentProject> getParentProjects() {
 		return getMany(ParentProject.class, "subProjectId");
 	}
-	
+
 	public List<ParentProject> getSubProjects() {
 		return getMany(ParentProject.class, "parentProjectId");
 	}
-	
+
 	public List<ProjectShareAuthorization> getProjectShareAuthorizations() {
-		return getMany(ProjectShareAuthorization.class,"projectId");
+		return new Select().from(ProjectShareAuthorization.class)
+				.where("projectId =? AND state != 'Deleted'", getId())
+				.execute();
 	}
-	
+
 	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
@@ -110,14 +115,25 @@ public class Project extends HyjModel {
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
-	
-	public Currency getCurrency(){
-		if(mCurrencyId == null){
+
+	public Currency getCurrency() {
+		if (mCurrencyId == null) {
 			return null;
 		}
 		return getModel(Currency.class, mCurrencyId);
 	}
-	
+
+	public String getCurrencySymbol() {
+		if (mCurrencyId == null) {
+			return null;
+		}
+		Currency currency = getModel(Currency.class, mCurrencyId);
+		if (currency != null) {
+			return currency.getSymbol();
+		}
+		return mCurrencyId;
+	}
+
 	public void setCurrency(Currency mCurrency) {
 		this.mCurrencyId = mCurrency.getId();
 	}
@@ -162,14 +178,15 @@ public class Project extends HyjModel {
 		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
 	}
 
-	public List<ProjectShareAuthorization> getShareAuthorizations(){
+	public List<ProjectShareAuthorization> getShareAuthorizations() {
 		return this.getMany(ProjectShareAuthorization.class, "projectId");
 	}
-	
+
 	@Override
-	public void save(){
-		if(this.getOwnerUserId() == null){
-			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+	public void save() {
+		if (this.getOwnerUserId() == null) {
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
+					.getId());
 		}
 		super.save();
 	}

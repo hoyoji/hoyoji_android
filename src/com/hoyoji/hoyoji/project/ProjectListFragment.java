@@ -144,36 +144,28 @@ public class ProjectListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			List<ProjectShareAuthorization> projectShareAuthorizations = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getProjectShareAuthorizations();
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
             Double projectExpenseTotal = 0.0;
 			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
-            	projectExpenseTotal+= Psa.getExpenseTotal();
+            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
+            	projectExpenseTotal+= psa.getExpenseTotal();
             }
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-		    String currencySymbol = project.getCurrencyId();
-		    if(project.getCurrency() != null){
-		    	currencySymbol = project.getCurrency().getSymbol();
-		    }
-			numericView.setPrefix("支出:" + currencySymbol);
+			numericView.setPrefix("支出:" + project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setNumber(projectExpenseTotal);
 			return true;
 		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			List<ProjectShareAuthorization> projectShareAuthorizations = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getProjectShareAuthorizations();
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
             Double projectIncomeTotal = 0.0;
 			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
-            	projectIncomeTotal+= Psa.getIncomeTotal();
+            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
+            	projectIncomeTotal+= psa.getIncomeTotal();
             }
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-		    String currencySymbol = project.getCurrencyId();
-		    if(project.getCurrency() != null){
-		    	currencySymbol = project.getCurrency().getSymbol();
-		    }
-			numericView.setPrefix("收入:" + currencySymbol);
+			numericView.setPrefix("收入:" + project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#339900"));
 			numericView.setNumber(projectIncomeTotal);
