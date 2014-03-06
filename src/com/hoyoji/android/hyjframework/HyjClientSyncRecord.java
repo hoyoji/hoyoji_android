@@ -10,7 +10,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 
-@Table(name = "ClientSyncTable", id = BaseColumns._ID)
+@Table(name = "ClientSyncRecord", id = BaseColumns._ID)
 public class HyjClientSyncRecord extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
