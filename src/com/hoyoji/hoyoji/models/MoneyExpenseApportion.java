@@ -164,11 +164,12 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - this.getAmount0());
 		projectShareAuthorizationEditor.save();
 		
-		MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
-		HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-		debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - this.getAmount0());
-		debtAccountEditor.save();
-		
+		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - this.getAmount0());
+			debtAccountEditor.save();
+		}
 		super.delete();
 	}
 	
