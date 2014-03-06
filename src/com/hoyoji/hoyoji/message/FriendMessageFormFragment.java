@@ -316,7 +316,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 			data.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
 							.getDisplayName() + "成功添加您为好友");
-			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
+//			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
 			data.put("ownerUserId", jsonUser.optString("id"));
 			JSONObject msgData = new JSONObject();
 			try {
@@ -517,7 +517,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 				JSONObject jsonPic = pictureArray.getJSONObject(i);
 				String base64PictureIcon = jsonPic
 						.optString("base64PictureIcon");
-				if (base64PictureIcon != null) {
+				if (base64PictureIcon.length() > 0) {
 					byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
 					Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0,
 							decodedByte.length);

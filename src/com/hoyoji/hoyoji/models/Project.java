@@ -115,7 +115,7 @@ public class Project extends HyjModel {
 		if(mCurrencyId == null){
 			return null;
 		}
-		return (Currency) getModel(Currency.class, mCurrencyId);
+		return getModel(Currency.class, mCurrencyId);
 	}
 	
 	public void setCurrency(Currency mCurrency) {

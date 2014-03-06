@@ -408,7 +408,7 @@ public class MessageDownloadService extends Service {
 				JSONObject jsonPic = pictureArray.getJSONObject(i);
 				String base64PictureIcon = jsonPic
 						.optString("base64PictureIcon");
-				if (base64PictureIcon != null) {
+				if (base64PictureIcon.length() > 0) {
 					byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
 					Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0,
 							decodedByte.length);

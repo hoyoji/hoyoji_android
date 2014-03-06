@@ -112,7 +112,11 @@ public class Message extends HyjModel {
 	}
 
 	public void setToUserId(String mToUserId) {
-		this.mToUserId = mToUserId;
+		if(mToUserId.length() == 0){
+			this.mToUserId = null;
+		} else {
+			this.mToUserId = mToUserId;
+		}
 	}
 
 	private String getUserDisplayName(String friendUserId, String fromOrToUserDisplayName){

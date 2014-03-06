@@ -398,7 +398,7 @@ public class LoginActivity extends HyjActivity {
 										newProjectShareAuthorization.save();
 									} else if (obj.optString("__dataType")
 											.equals("Currency")) {
-										if (obj.optString("symbol") == null) {
+										if (obj.isNull("symbol")) {
 											java.util.Currency localeCurrency = java.util.Currency
 													.getInstance(obj
 															.optString("code"));

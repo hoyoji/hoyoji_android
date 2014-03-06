@@ -89,7 +89,7 @@ public class HyjImageView extends ImageView {
 	}
 	
 	public void loadRemoteImage(final String id){
-		if(id == null){
+		if(id == null || id.length() == 0){
 			setImage((Picture)null);
 			return;
 		}

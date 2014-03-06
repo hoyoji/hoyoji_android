@@ -534,7 +534,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			try {
 				JSONObject jsonPic = pictureArray.getJSONObject(i);
 				String base64PictureIcon = jsonPic.optString("base64PictureIcon");
-				if(base64PictureIcon != null){
+				if(base64PictureIcon.length() > 0){
 					 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
 				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
 				    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
