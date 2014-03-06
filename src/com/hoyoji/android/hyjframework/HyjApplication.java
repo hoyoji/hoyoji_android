@@ -119,6 +119,7 @@ public class HyjApplication extends Application {
 			user.loadFromJSON(jsonObject.getJSONObject("user"), true);
 			userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
 			
+			userData.setLastSyncTime(null);
 			user.setUserData(userData);
 			userData.setUser(user);
 			

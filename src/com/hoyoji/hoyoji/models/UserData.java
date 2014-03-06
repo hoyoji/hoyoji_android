@@ -1,9 +1,18 @@
 package com.hoyoji.hoyoji.models;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.activeandroid.Cache;
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.serializer.TypeSerializer;
+import com.activeandroid.util.Log;
+import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -267,5 +276,12 @@ public class UserData extends HyjModel {
 			this.setOwnerUserId(this.getUserId());
 		}
 		super.save();
+	}
+	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+		jsonObj.remove("lastMessagesDownloadTime");
+		jsonObj.remove("lastSyncTime");
+		return jsonObj;
 	}
 }

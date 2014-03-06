@@ -29,8 +29,8 @@ import com.activeandroid.serializer.TypeSerializer;
 import com.activeandroid.util.Log;
 import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjClientSyncRecord;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -84,6 +84,11 @@ public abstract class Model {
 						null);
 	}
 
+
+	public void setSyncFromServer(boolean b) {
+		mSyncFromServer = b;
+	}
+	
 	public void save() {
 		final SQLiteDatabase db = Cache.openDatabase();
 		final ContentValues values = new ContentValues();

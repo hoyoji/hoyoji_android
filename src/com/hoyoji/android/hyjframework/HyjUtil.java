@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 public class HyjUtil {
 	public static void displayToast(int msg){
@@ -277,8 +278,8 @@ public class HyjUtil {
 		
 		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
 			
-			if(!tableName.equalsIgnoreCase("ClientSyncTable")){
-				HyjClientSyncRecord clientSyncRecord = HyjModel.getModel(HyjClientSyncRecord.class, recordId);
+			if(!tableName.equalsIgnoreCase("ClientSyncRecord")){
+				ClientSyncRecord clientSyncRecord = HyjModel.getModel(ClientSyncRecord.class, recordId);
 				
 				if(operation.equalsIgnoreCase("Delete")){
 					if(syncFromServer){
@@ -290,14 +291,23 @@ public class HyjUtil {
 					} else {
 					
 						if(clientSyncRecord == null){
-							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord = new ClientSyncRecord();
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
-							clientSyncRecord.delete();
+							if(clientSyncRecord.getUploading()){
+								// 新记录，正在上传时被删除。如果上传失败，我们会回来删除它
+								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.save();
+							} else {
+								clientSyncRecord.delete();
+							}
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+							if(clientSyncRecord.getUploading()){
+								clientSyncRecord.setUploading(false);
+							}
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.save();
 						}
@@ -314,16 +324,22 @@ public class HyjUtil {
 					} else {
 					
 						if(clientSyncRecord == null){
-							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord = new ClientSyncRecord();
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
-							//clientSyncRecord.delete();
+							if(clientSyncRecord.getUploading()){
+								// 新记录，正在上传时被更新。如果上传失败，我们会回来将起改回到 "Create"
+								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.save();
+							}
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
-	//						clientSyncRecord.setOperation(operation);
-	//						clientSyncRecord.save();
+							if(clientSyncRecord.getUploading()){
+								clientSyncRecord.setUploading(false);
+								clientSyncRecord.save();
+							}
 						}
 						
 					}
@@ -337,7 +353,7 @@ public class HyjUtil {
 						
 					} else {
 						if(clientSyncRecord == null){
-							clientSyncRecord = new HyjClientSyncRecord();
+							clientSyncRecord = new ClientSyncRecord();
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
@@ -345,8 +361,8 @@ public class HyjUtil {
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							//clientSyncRecord.delete();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
-	//						clientSyncRecord.setOperation(operation);
-	//						clientSyncRecord.save();
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Delete")) {
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.save();

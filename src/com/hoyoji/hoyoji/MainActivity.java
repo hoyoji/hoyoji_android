@@ -1,7 +1,9 @@
 package com.hoyoji.hoyoji;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +13,7 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,22 +34,53 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjClientSyncRecord;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
+import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.message.MessageListFragment;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
+import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.MessageBox;
+import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
+import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyLendApportion;
+import com.hoyoji.hoyoji.models.MoneyPayback;
+import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
+import com.hoyoji.hoyoji.models.MoneyReturn;
+import com.hoyoji.hoyoji.models.MoneyReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.models.ParentProject;
+import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
@@ -69,7 +103,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
 	private boolean mIsUploading = false;
-	
+
 	@Override
 	protected void onDestroy() {
 		if (mChangeObserver != null) {
@@ -113,9 +147,11 @@ public class MainActivity extends HyjUserActivity {
 			startService(startIntent);
 			if (mChangeObserver == null) {
 				mChangeObserver = new ChangeObserver();
-				this.getContentResolver().registerContentObserver(
-						ContentProvider.createUri(HyjClientSyncRecord.class,
-								null), true, mChangeObserver);
+				this.getContentResolver()
+						.registerContentObserver(
+								ContentProvider.createUri(
+										ClientSyncRecord.class, null), true,
+								mChangeObserver);
 			}
 		}
 	}
@@ -188,8 +224,8 @@ public class MainActivity extends HyjUserActivity {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(!mIsUploading){
-						setRefreshActionButtonState(true, view);
+					if (!mIsUploading) {
+						uploadData(true);
 					}
 				}
 			});
@@ -401,19 +437,21 @@ public class MainActivity extends HyjUserActivity {
 				HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
-						Integer count = (Integer)object;
+						Integer count = (Integer) object;
 						if (count > 0) {
 							tv.setText(count.toString());
 						} else {
 							tv.setText("");
 						}
 					}
+
 					@Override
 					public Object doInBackground(String... string) {
 						Integer count = 0;
-						if(HyjApplication.getInstance().getCurrentUser() != null){
+						if (HyjApplication.getInstance().getCurrentUser() != null) {
 							Cursor cursor = Cache.openDatabase().rawQuery(
-									"SELECT COUNT(*) FROM ClientSyncRecord", null);
+									"SELECT COUNT(*) FROM ClientSyncRecord",
+									null);
 							if (cursor != null) {
 								cursor.moveToFirst();
 								count = cursor.getInt(0);
@@ -444,37 +482,446 @@ public class MainActivity extends HyjUserActivity {
 		}
 
 		@Override
-		public void onChange(boolean selfChange) {
-			if(mIsUploading){
-				return;
-			}
-			setRefreshActionButtonState(true, updateUploadCount(null, null));
-			HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-				@Override
-				public void finishCallback(Object object) {
-					Boolean result = (Boolean)object;
-					mIsUploading = false;
-					if(result){
-						setRefreshActionButtonState(false, null);
-						HyjUtil.displayToast("上传资料成功");
-					}
-				}
-				@Override
-				public void errorCallback(Object object) {
-					Boolean result = (Boolean)object;
-					mIsUploading = false;
-					if(!result){
-						setRefreshActionButtonState(false, null);
-						HyjUtil.displayToast("上传资料失败，请重试");
-					}
-				}
-				@Override
-				public Object doInBackground(String... string) {
-
-					
-					return false;
-				}
-			});
+		public void onChange(boolean selfChange, Uri uri) {
+			// TODO Auto-generated method stub
+			super.onChange(selfChange, uri);
 		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+
+			uploadData(false);
+		}
+
+	}
+
+	public void downloadData() {
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				if (object instanceof Boolean) {
+					Boolean result = (Boolean) object;
+					if (result == true) {
+
+
+						((HyjActivity) MainActivity.this)
+								.dismissProgressDialog();
+						setRefreshActionButtonState(false, null);
+						HyjUtil.displayToast("同步数据成功");
+					}
+				}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				mIsUploading = false;
+				if (object instanceof Boolean) {
+					// Boolean result = (Boolean)object;
+					// if(result == true){
+					return;
+					// }
+				}
+
+				setRefreshActionButtonState(false, null);
+				HyjUtil.displayToast(object.toString());
+				((HyjActivity) MainActivity.this).dismissProgressDialog();
+			}
+
+			@Override
+			public Object doInBackground(String... string) {
+				String postData =  HyjApplication.getInstance().getCurrentUser().getUserData().getLastSyncTime();
+				if(postData == null){
+					postData = "null";
+				}
+				Object result = HyjServer.doHttpPost(null,
+						HyjApplication.getServerUrl() + "syncPull.php", postData, true);
+				if (result == null) {
+					return HyjApplication.getInstance().getResources()
+							.getString(R.string.server_dataparse_error);
+				}
+				if (result instanceof JSONObject) {
+					JSONObject jsonResult = (JSONObject) result;
+					if (jsonResult.isNull("__summary")) {
+						try {
+
+							saveData(jsonResult.getJSONArray("data"), 
+									jsonResult.optString("lastSyncTime"));
+
+							return true;
+						} catch (JSONException e) {
+							return "下载数据失败，请重试";
+						}
+					} else {
+						return jsonResult.optJSONObject("__summary").optString(
+								"msg");
+					}
+					// } else if(result instanceof JSONArray) {
+					// saveData((JSONArray)result);
+				} else {
+					return "下载数据失败，请重试";
+				}
+			}
+		});
+	}
+
+	private void saveDataRecursive(JSONArray result) throws JSONException {
+		for (int i = 0; i < result.length(); i++) {
+			Object o = result.get(i);
+			if (o instanceof JSONArray) {
+				saveDataRecursive((JSONArray) o);
+			} else {
+				JSONObject jsonObj = (JSONObject) o;
+				String dataType = jsonObj.getString("__dataType");
+				HyjModel model = null;
+				if (dataType.equals("ServerSyncDeletedRecords")) {
+					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
+					if(model != null){
+						model.delete();
+					}
+				} else {
+					model = getModel(dataType, jsonObj.getString("id"));
+					if(model != null){
+						model.loadFromJSON(jsonObj, true);
+						model.save();
+					}
+				}
+			}
+		}
+	}
+
+	private void saveData(JSONArray result, String lastSyncTime) {
+		try {
+			ActiveAndroid.beginTransaction();
+			
+			saveDataRecursive(result);
+
+			HyjApplication
+					.getInstance()
+					.getCurrentUser()
+					.getUserData()
+					.setLastSyncTime(lastSyncTime);
+			Cache.openDatabase().execSQL(
+					"Update UserData SET lastSyncTime = '"
+							+ HyjApplication.getInstance()
+									.getCurrentUser()
+									.getUserData()
+									.getLastSyncTime()
+							+ "' WHERE id = '"
+							+ HyjApplication.getInstance()
+									.getCurrentUser()
+									.getUserDataId() + "'");
+
+			ActiveAndroid.setTransactionSuccessful();
+			ActiveAndroid.endTransaction();
+		} catch (JSONException e) {
+			ActiveAndroid.endTransaction();
+			((HyjActivity) MainActivity.this).dismissProgressDialog();
+			HyjUtil.displayToast("下载数据失败，请重试");
+		}
+	}
+
+	public void uploadData(final boolean downloadData) {
+		setRefreshActionButtonState(true, updateUploadCount(null, null));
+		if (mIsUploading) {
+			return;
+		}
+		mIsUploading = true;
+		if (downloadData) {
+			((HyjActivity) MainActivity.this).displayProgressDialog("同步数据",
+					"正在同步数据，请稍后...");
+		}
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				mIsUploading = downloadData;
+				if (object instanceof Boolean) {
+					Boolean result = (Boolean) object;
+					if (result == true) {
+						Cache.openDatabase()
+								.execSQL(
+										"DELETE FROM ClientSyncRecord WHERE uploading = 1");
+
+						// HyjUtil.displayToast("上传数据成功");
+
+						if (downloadData) {
+							updateUploadCount(null, null);
+							downloadData();
+						} else {
+							setRefreshActionButtonState(false,
+									updateUploadCount(null, null));
+						}
+					}
+				}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				mIsUploading = false;
+				if (object instanceof Boolean) {
+					// Boolean result = (Boolean)object;
+					// if(result == true){
+					return;
+					// }
+				}
+
+				setRefreshActionButtonState(false, null);
+				HyjUtil.displayToast(object.toString());
+				if (downloadData) {
+					((HyjActivity) MainActivity.this).dismissProgressDialog();
+				}
+			}
+
+			@Override
+			public Object doInBackground(String... string) {
+				if (!downloadData) {
+					try {
+						// 等待其他一起修改的记录都提交了再上传
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				List<ClientSyncRecord> syncRecords = null;
+				try {
+					ActiveAndroid.beginTransaction();
+					Cache.openDatabase()
+							.execSQL(
+									"Update ClientSyncRecord SET uploading = 1 WHERE uploading = 0");
+					syncRecords = new Select().from(ClientSyncRecord.class)
+							.execute();
+					ActiveAndroid.setTransactionSuccessful();
+					ActiveAndroid.endTransaction();
+				} catch (Exception e) {
+					ActiveAndroid.endTransaction();
+					rollbackUpload(syncRecords);
+					return "上传数据失败";
+				}
+
+				if (syncRecords.size() == 0) {
+					return true;
+				}
+
+				try {
+
+					JSONArray postData = new JSONArray();
+					for (ClientSyncRecord syncRec : syncRecords) {
+						JSONObject jsonObj = new JSONObject();
+						if (syncRec.getOperation().equalsIgnoreCase("Create")) {
+							HyjModel model = getModel(syncRec.getTableName(),
+									syncRec.getId());
+							if(model.get_mId() != null){
+								jsonObj.put("operation", "create");
+								jsonObj.put(
+										"recordData",
+										model.toJSON());
+								postData.put(jsonObj);
+							}
+						} else if (syncRec.getOperation().equalsIgnoreCase(
+								"Update")) {
+							HyjModel model = getModel(syncRec.getTableName(),
+									syncRec.getId());
+							if(model.get_mId() != null){
+								jsonObj.put("operation", "update");
+								jsonObj.put(
+										"recordData", model.toJSON());
+								postData.put(jsonObj);
+							}
+						} else if (syncRec.getOperation().equalsIgnoreCase(
+								"Delete")) {
+							jsonObj.put("operation", "delete");
+							jsonObj.put("recordData", syncRec.getId());
+							postData.put(jsonObj);
+						}
+					}
+					Object result = HyjServer.doHttpPost(null,
+							HyjApplication.getServerUrl() + "syncPush.php",
+							postData.toString(), true);
+					if (result == null) {
+						rollbackUpload(syncRecords);
+						return HyjApplication.getInstance().getString(
+								R.string.server_dataparse_error);
+					}
+					if (result instanceof JSONObject) {
+						JSONObject jsonResult = (JSONObject) result;
+						if (jsonResult.isNull("__summary")) {
+							return true;
+						} else {
+							rollbackUpload(syncRecords);
+							return jsonResult.optJSONObject("__summary")
+									.optString("msg");
+						}
+					} else {
+						rollbackUpload(syncRecords);
+						return "上传数据失败";
+					}
+				} catch (JSONException e) {
+					rollbackUpload(syncRecords);
+					return "上传数据失败";
+				}
+			}
+
+			private void rollbackUpload(List<ClientSyncRecord> syncRecords) {
+				if (syncRecords == null) {
+					return;
+				}
+				for (ClientSyncRecord syncRec : syncRecords) {
+					if (syncRec.getOperation().equalsIgnoreCase("Create")) {
+						ClientSyncRecord rec = HyjModel.getModel(
+								ClientSyncRecord.class, syncRec.getId());
+						if (rec.getUploading() == true) {
+							if (rec.getOperation().equalsIgnoreCase("Delete")) {
+								rec.delete();
+							} else if (rec.getOperation().equalsIgnoreCase(
+									"Update")) {
+								rec.setUploading(false);
+								rec.setOperation("Create");
+								rec.save();
+							}
+						}
+					}
+				}
+				// Cache.openDatabase().execSQL(
+				// "Update ClientSyncRecord SET uploading = 0 WHERE uploading = 1");
+			}
+
+		});
+	}
+
+	private HyjModel getModel(String tableName, String id) {
+		HyjModel model = null;
+		if (tableName.equalsIgnoreCase("Currency")) {
+			model = HyjModel.getModel(Currency.class, id);
+			if(model == null){
+				model = new Currency();
+			}
+		} else if (tableName.equalsIgnoreCase("Exchange")) {
+			model = HyjModel.getModel(Exchange.class, id);
+			if(model == null){
+				model = new Exchange();
+			}
+		} else if (tableName.equalsIgnoreCase("Friend")) {
+			model = HyjModel.getModel(Friend.class, id);
+			if(model == null){
+				model = new Friend();
+			}
+		} else if (tableName.equalsIgnoreCase("FriendCategory")) {
+			model = HyjModel.getModel(FriendCategory.class, id);
+			if(model == null){
+				model = new FriendCategory();
+			}
+		} else if (tableName.equalsIgnoreCase("Message")) {
+			model = HyjModel.getModel(Message.class, id);
+			if(model == null){
+				model = new Message();
+			}
+		} else if (tableName.equalsIgnoreCase("MessageBox")) {
+			model = HyjModel.getModel(MessageBox.class, id);
+			if(model == null){
+				model = new MessageBox();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyAccount")) {
+			model = HyjModel.getModel(MoneyAccount.class, id);
+			if(model == null){
+				model = new MoneyAccount();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyBorrow")) {
+			model = HyjModel.getModel(MoneyBorrow.class, id);
+			if(model == null){
+				model = new MoneyBorrow();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyBorrowApportion")) {
+			model = HyjModel.getModel(MoneyBorrowApportion.class, id);
+			if(model == null){
+				model = new MoneyBorrowApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyExpense")) {
+			model = HyjModel.getModel(MoneyExpense.class, id);
+			if(model == null){
+				model = new MoneyExpense();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyExpenseApportion")) {
+			model = HyjModel.getModel(MoneyExpenseApportion.class, id);
+			if(model == null){
+				model = new MoneyExpenseApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyIncome")) {
+			model = HyjModel.getModel(MoneyIncome.class, id);
+			if(model == null){
+				model = new MoneyIncome();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyIncomeApportion")) {
+			model = HyjModel.getModel(MoneyIncomeApportion.class, id);
+			if(model == null){
+				model = new MoneyIncomeApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyLend")) {
+			model = HyjModel.getModel(MoneyLend.class, id);
+			if(model == null){
+				model = new MoneyLend();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyLendApportion")) {
+			model = HyjModel.getModel(MoneyLendApportion.class, id);
+			if(model == null){
+				model = new MoneyLendApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyPayback")) {
+			model = HyjModel.getModel(MoneyPayback.class, id);
+			if(model == null){
+				model = new MoneyPayback();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyPaybackApportion")) {
+			model = HyjModel.getModel(MoneyPaybackApportion.class, id);
+			if(model == null){
+				model = new MoneyPaybackApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyReturn")) {
+			model = HyjModel.getModel(MoneyReturn.class, id);
+			if(model == null){
+				model = new MoneyReturn();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyReturnApportion")) {
+			model = HyjModel.getModel(MoneyReturnApportion.class, id);
+			if(model == null){
+				model = new MoneyReturnApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyTransfer")) {
+			model = HyjModel.getModel(MoneyTransfer.class, id);
+			if(model == null){
+				model = new MoneyTransfer();
+			}
+		} else if (tableName.equalsIgnoreCase("ParentProject")) {
+			model = HyjModel.getModel(ParentProject.class, id);
+			if(model == null){
+				model = new ParentProject();
+			}
+		} else if (tableName.equalsIgnoreCase("Picture")) {
+			model = HyjModel.getModel(Picture.class, id);
+			if(model == null){
+				model = new Picture();
+			}
+		} else if (tableName.equalsIgnoreCase("Project")) {
+			model = HyjModel.getModel(Project.class, id);
+			if(model == null){
+				model = new Project();
+			}
+		} else if (tableName.equalsIgnoreCase("ProjectShareAuthorization")) {
+			model = HyjModel.getModel(ProjectShareAuthorization.class, id);
+			if(model == null){
+				model = new ProjectShareAuthorization();
+			}
+		} else if (tableName.equalsIgnoreCase("User")) {
+			model = HyjModel.getModel(User.class, id);
+			if(model == null){
+				model = new User();
+			}
+		} else if (tableName.equalsIgnoreCase("UserData")) {
+			model = HyjModel.getModel(UserData.class, id);
+			if(model == null){
+				model = new UserData();
+			}
+		}
+		return model;
 	}
 }

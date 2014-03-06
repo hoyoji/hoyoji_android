@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Cache;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -75,7 +76,7 @@ public class MessageDownloadService extends Service {
 							postData.put("toUserId", currentUser.getId());
 							// postData.put("__orderBy",
 							// "lastServerUpdateTime ASC");
-							
+
 							JSONObject jsonServerTime = null;
 							String lastMessagesDownloadTime = currentUser
 									.getUserData()
@@ -84,11 +85,12 @@ public class MessageDownloadService extends Service {
 								JSONObject notFilter = new JSONObject();
 								notFilter.put("messageState", "closed");
 								postData.put("__NOT_FILTER__", notFilter);
-								
 
-								Object serverTime = HyjServer.doHttpPost(
-										null, HyjApplication.getServerUrl()
-												+ "getServerTime.php", "", true);
+								Object serverTime = HyjServer
+										.doHttpPost(null,
+												HyjApplication.getServerUrl()
+														+ "getServerTime.php",
+												"", true);
 								jsonServerTime = (JSONObject) serverTime;
 							} else {
 								JSONObject timeFilter = new JSONObject();
@@ -147,7 +149,8 @@ public class MessageDownloadService extends Service {
 										}
 									}
 
-									if (lastMessagesDownloadTime == null && jsonServerTime != null){
+									if (lastMessagesDownloadTime == null
+											&& jsonServerTime != null) {
 										lastMessagesDownloadTime = jsonServerTime
 												.optString("server_time");
 									}
@@ -155,12 +158,25 @@ public class MessageDownloadService extends Service {
 									if (lastMessagesDownloadTime != currentUser
 											.getUserData()
 											.getLastMessagesDownloadTime()) {
-										HyjModelEditor<UserData> userDataEditor = currentUser.getUserData().newModelEditor();
-										userDataEditor
-												.getModelCopy()
-												.setLastMessagesDownloadTime(
-														lastMessagesDownloadTime);
-										userDataEditor.save();
+										// HyjModelEditor<UserData>
+										// userDataEditor =
+										// currentUser.getUserData().newModelEditor();
+										// userDataEditor
+										// .getModelCopy()
+										// .setLastMessagesDownloadTime(
+										// lastMessagesDownloadTime);
+										// userDataEditor
+										// .getModel().setSyncFromServer(true);
+										// userDataEditor.save();
+										
+										currentUser.getUserData().setLastMessagesDownloadTime(lastMessagesDownloadTime);
+										Cache.openDatabase()
+												.execSQL(
+														"Update UserData SET lastMessagesDownloadTime = '"
+																+ lastMessagesDownloadTime
+																+ "' WHERE id = '"
+																+ currentUser.getUserDataId()
+																+ "'");
 									}
 									ActiveAndroid.setTransactionSuccessful();
 									if (jsonArray.length() > 0) {

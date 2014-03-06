@@ -4,6 +4,7 @@ import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 public abstract class HyjModel extends Model  implements Cloneable {
 
@@ -86,7 +87,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	}
 	
 	public boolean isClientNew(){
-		HyjClientSyncRecord clientSyncRecord = this.getClientSyncRecord();
+		ClientSyncRecord clientSyncRecord = this.getClientSyncRecord();
 		if(clientSyncRecord == null){
 			return false;
 		} else {
@@ -94,8 +95,8 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		}
 	}
 	
-	public HyjClientSyncRecord getClientSyncRecord(){
-		return HyjModel.getModel(HyjClientSyncRecord.class, getId());
+	public ClientSyncRecord getClientSyncRecord(){
+		return HyjModel.getModel(ClientSyncRecord.class, getId());
 	}
 	
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);

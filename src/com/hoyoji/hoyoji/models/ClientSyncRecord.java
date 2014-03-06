@@ -1,4 +1,4 @@
-package com.hoyoji.android.hyjframework;
+package com.hoyoji.hoyoji.models;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 
 @Table(name = "ClientSyncRecord", id = BaseColumns._ID)
-public class HyjClientSyncRecord extends HyjModel {
+public class ClientSyncRecord extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
 	private String mId;
@@ -28,12 +28,12 @@ public class HyjClientSyncRecord extends HyjModel {
 	@Column(name = "transactionId")
 	private String mTransactionId;
 	
-//	@Column(name = "ownerUserId")
-//	private String mOwnerUserId;
-//	
-	public HyjClientSyncRecord(){
+	@Column(name = "uploading")
+	private Boolean mUploading;
+	
+	public ClientSyncRecord(){
 		super();
-//		mId = UUID.randomUUID().toString();
+		mUploading = false;
 	}
 	
 
@@ -50,13 +50,13 @@ public class HyjClientSyncRecord extends HyjModel {
 //		return getMany(ParentProject.class, "");
 //	}
 //	
-//	public String getOwnerUserId() {
-//		return mOwnerUserId;
-//	}
-//
-//	public void setOwnerUserId(String mOwnerUserId) {
-//		this.mOwnerUserId = mOwnerUserId;
-//	}
+	public Boolean getUploading() {
+		return mUploading;
+	}
+
+	public void setUploading(Boolean uploading) {
+		this.mUploading = uploading;
+	}
 
 //	public String getRecordId(){
 //		return mRecordId;
