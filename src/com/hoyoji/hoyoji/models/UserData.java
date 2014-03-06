@@ -161,6 +161,17 @@ public class UserData extends HyjModel {
 		return (Currency) getModel(Currency.class, mActiveCurrencyId);
 	}
 	
+	public String getActiveCurrencySymbol() {
+		if(mActiveCurrencyId == null){
+			return null;
+		}
+		Currency currency = getModel(Currency.class, mActiveCurrencyId);
+		if(currency != null){
+			return currency.getSymbol();
+		}
+		return mActiveCurrencyId;
+	}
+	
 	public void setActiveCurrencyId(String mActiveCurrencyId) {
 		this.mActiveCurrencyId = mActiveCurrencyId;
 	}
