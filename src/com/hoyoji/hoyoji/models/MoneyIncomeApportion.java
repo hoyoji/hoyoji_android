@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -160,6 +161,21 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		super.save();
 	}
 
+	@Override
+	public void delete(){
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization(null);
+		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
+		projectShareAuthorizationEditor.save();
+		
+		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
+			debtAccountEditor.save();
+		}
+		super.delete();
+	}
 
 	public Project getProject() {
 		this.getMoneyIncome().getProject();
@@ -174,13 +190,19 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		return null;
 	}
 
-	public ProjectShareAuthorization getProjectShareAuthorization() {
-		// TODO Auto-generated method stub
-		return null;
-	}	
+	public ProjectShareAuthorization getProjectShareAuthorization(String projectId) {
+		if(projectId == null){
+			projectId = this.getMoneyIncome().getProjectId();
+		}
+			
+		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+				projectId, this.getFriendUserId()).executeSingle();
+	}
+	
 	
 	@Override
 	public void setMoneyId(String moneyTransactionId) {
 		this.setMoneyIncomeId(moneyTransactionId);
 	}
+
 }
