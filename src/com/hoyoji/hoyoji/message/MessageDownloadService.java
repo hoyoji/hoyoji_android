@@ -73,35 +73,31 @@ public class MessageDownloadService extends Service {
 							JSONObject postData = new JSONObject();
 							postData.put("__dataType", "Message");
 							postData.put("toUserId", currentUser.getId());
-
-							JSONObject notFilter = new JSONObject();
-							notFilter.put("messageState", "closed");
-							postData.put("__NOT_FILTER__", notFilter);
-							
 							// postData.put("__orderBy",
 							// "lastServerUpdateTime ASC");
+							
+							JSONObject jsonServerTime = null;
+							String lastMessagesDownloadTime = currentUser
+									.getUserData()
+									.getLastMessagesDownloadTime();
+							if (lastMessagesDownloadTime == null) {
+								JSONObject notFilter = new JSONObject();
+								notFilter.put("messageState", "closed");
+								postData.put("__NOT_FILTER__", notFilter);
+								
 
-//							String lastMessagesDownloadTime = currentUser
-//									.getUserData()
-//									.getLastMessagesDownloadTime();
-//							if (lastMessagesDownloadTime == null) {
-//								Object returnedObject = HyjServer.doHttpPost(
-//										null, HyjApplication.getServerUrl()
-//												+ "getServerTime.php", "", true);
-//								JSONObject jsonServerTime = (JSONObject) returnedObject;
-//								lastMessagesDownloadTime = jsonServerTime
-//										.optString("server_time");
-
-//							} else {
-//								// if(lastMessagesDownloadTime != null){
-//								JSONObject timeFilter = new JSONObject();
-//								timeFilter.put("lastServerUpdateTime",
-//										currentUser.getUserData()
-//												.getLastMessagesDownloadTime());
-//								postData.put("__GREATER_FILTER__", timeFilter);
-//								// }
-//							}
-
+								Object serverTime = HyjServer.doHttpPost(
+										null, HyjApplication.getServerUrl()
+												+ "getServerTime.php", "", true);
+								jsonServerTime = (JSONObject) serverTime;
+							} else {
+								JSONObject timeFilter = new JSONObject();
+								timeFilter.put("lastServerUpdateTime",
+										currentUser.getUserData()
+												.getLastMessagesDownloadTime());
+								postData.put("__GREATER_FILTER__", timeFilter);
+							}
+//
 //							if (lastMessagesDownloadTime != null) {
 //								HyjModelEditor<UserData> modelEditor = currentUser
 //										.getUserData().newModelEditor();
@@ -150,25 +146,31 @@ public class MessageDownloadService extends Service {
 												projectShareMessages
 														.add(newMessage);
 											}
-//											if (lastMessagesDownloadTime == null
-//													|| lastMessagesDownloadTime
-//															.compareTo(jsonMessage
-//																	.optString("lastServerUpdateTime")) < 0) {
-//												lastMessagesDownloadTime = jsonMessage
-//														.optString("lastServerUpdateTime");
-//											}
+											if (lastMessagesDownloadTime == null
+													|| lastMessagesDownloadTime
+															.compareTo(jsonMessage
+																	.optString("lastServerUpdateTime")) < 0) {
+												lastMessagesDownloadTime = jsonMessage
+														.optString("lastServerUpdateTime");
+											}
 										}
 									}
-//									if (lastMessagesDownloadTime != currentUser
-//											.getUserData()
-//											.getLastMessagesDownloadTime()) {
-//										HyjModelEditor<UserData> userDataEditor = currentUser.getUserData().newModelEditor();
-//										userDataEditor
-//												.getModelCopy()
-//												.setLastMessagesDownloadTime(
-//														lastMessagesDownloadTime);
-//										userDataEditor.save();
-//									}
+
+									if (lastMessagesDownloadTime == null && jsonServerTime != null){
+										lastMessagesDownloadTime = jsonServerTime
+												.optString("server_time");
+									}
+
+									if (lastMessagesDownloadTime != currentUser
+											.getUserData()
+											.getLastMessagesDownloadTime()) {
+										HyjModelEditor<UserData> userDataEditor = currentUser.getUserData().newModelEditor();
+										userDataEditor
+												.getModelCopy()
+												.setLastMessagesDownloadTime(
+														lastMessagesDownloadTime);
+										userDataEditor.save();
+									}
 									ActiveAndroid.setTransactionSuccessful();
 									if (jsonArray.length() > 0) {
 										Handler handler = new Handler(Looper

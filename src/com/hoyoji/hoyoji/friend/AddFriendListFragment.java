@@ -325,7 +325,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "同意您的添加好友请求");
-		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
@@ -342,7 +342,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				msg.save();
+//				msg.save();
 //				((HyjActivity) AddFriendListFragment.this.getActivity())
 //						.dismissProgressDialog();
 				loadNewlyAddedFriend(jsonUser);
@@ -494,7 +494,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "请求将您添加为好友");
-		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());

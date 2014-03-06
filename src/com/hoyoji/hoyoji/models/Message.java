@@ -179,13 +179,13 @@ public class Message extends HyjModel {
 		this.mMessageType = mType;
 	}
 
-	public String getMessageBoxId() {
-		return mMessageBoxId;
-	}
-
-	public void setMessageBoxId(String mMessageBoxId) {
-		this.mMessageBoxId = mMessageBoxId;
-	}
+//	public String getMessageBoxId() {
+//		return mMessageBoxId;
+//	}
+//
+//	public void setMessageBoxId(String mMessageBoxId) {
+//		this.mMessageBoxId = mMessageBoxId;
+//	}
 
 
 	@Override
