@@ -1,10 +1,8 @@
 package com.hoyoji.hoyoji.money;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -483,8 +481,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	}
 
 	private void fillData() {
-		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor
-				.getModelCopy();
+		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
@@ -667,9 +664,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
 				pi.saveToCopy(apportionEditor.getModelCopy());
 				
-				//更新项目成员的分摊金额
-				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
-				
 				//更新支出所有者的实际支出
 				if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 //					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
@@ -683,7 +677,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() + (mMoneyExpenseEditor.getModelCopy().getAmount0() * rate));
 						oldSelfProjectAuthorizationEditor.save();
 					}
-					projectShareAuthorizationEditor.save();
 				}else{
 					//更新相关好友的借贷账户
 					MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), apportionEditor.getModelCopy().getFriendUserId());
@@ -712,6 +705,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						oldDebtAccountEditor.save();
 					}
 				}
+				
+				//更新项目成员的分摊金额
+				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+				projectShareAuthorizationEditor.save();
 				
 				apportionEditor.save();
 				savedCount++;
