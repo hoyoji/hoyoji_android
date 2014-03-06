@@ -649,6 +649,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					savedCount++;
 				} else if (pi.getState() == ApportionItem.DELETED) {
 					apportion.delete();
+				} else if(pi.getState() == ApportionItem.UNCHANGED) {
+					savedCount++;
 				}
 				
 			}
