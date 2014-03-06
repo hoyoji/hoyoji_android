@@ -221,8 +221,11 @@ public class MemberListFragment extends HyjUserListFragment{
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double apportionTotal = projectShareAuthorization.getApportionTotal();
-			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
-			
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+			Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+			if(activeCurrency != null){
+				currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
+			}
 			if(apportionTotal < 0){
 				apportionTotal = -apportionTotal;
 				numericView.setPrefix("分摊收入:" + currencySymbol);
@@ -242,8 +245,11 @@ public class MemberListFragment extends HyjUserListFragment{
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double settlement = projectShareAuthorization.getSettlement();
-			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
-			
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+			Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+			if(activeCurrency != null){
+				currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
+			}
 			if(settlement < 0){
 				settlement = -settlement;
 				numericView.setPrefix("还要支出:" + currencySymbol);
