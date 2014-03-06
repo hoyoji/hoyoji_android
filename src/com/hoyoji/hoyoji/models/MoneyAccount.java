@@ -59,11 +59,19 @@ public class MoneyAccount extends HyjModel {
 	}
 	
 	public String getDisplayName(){
-		if(!this.getAccountType().equalsIgnoreCase("Debt")){
-			return this.getName();
-		}else if(this.getName().equalsIgnoreCase("匿名借贷账户")){
+		if(this.getAccountType() == null || !this.getAccountType().equalsIgnoreCase("Debt")){
 			return this.getName();
 		}
+
+//		else if(this.getName().equalsIgnoreCase("匿名借贷账户")){
+//			return this.getName();
+//		}
+		
+		// 为什么要判断这个"匿名借贷账户"？能不能用其他的属性判断是不是匿名账户，比如：friendUserId
+		else if(this.getAccountType().equalsIgnoreCase("Debt") && this.getFriendId() == null){
+			return this.getName();
+		}
+		
 		
 		if(this.getFriendId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
