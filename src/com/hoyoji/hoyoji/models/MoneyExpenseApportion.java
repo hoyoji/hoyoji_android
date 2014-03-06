@@ -161,7 +161,7 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	public void delete(){
 		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization(null);
 		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - this.getAmount0());
+		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
 		projectShareAuthorizationEditor.save();
 		
 		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
