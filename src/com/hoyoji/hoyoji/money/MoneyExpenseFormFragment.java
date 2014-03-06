@@ -724,8 +724,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				savedCount++;
 			} else if (pi.getState() == ApportionItem.DELETED) {
 				apportion.delete();
+			} else if(pi.getState() == ApportionItem.UNCHANGED) {
+				savedCount++;
 			}
-			
 		}
 
 		// 从隐藏掉的分摊里面删除原来的分摊
