@@ -411,13 +411,15 @@ public class MainActivity extends HyjUserActivity {
 					@Override
 					public Object doInBackground(String... string) {
 						Integer count = 0;
-						Cursor cursor = Cache.openDatabase().rawQuery(
-								"SELECT COUNT(*) FROM ClientSyncRecord", null);
-						if (cursor != null) {
-							cursor.moveToFirst();
-							count = cursor.getInt(0);
-							cursor.close();
-							cursor = null;
+						if(HyjApplication.getInstance().getCurrentUser() != null){
+							Cursor cursor = Cache.openDatabase().rawQuery(
+									"SELECT COUNT(*) FROM ClientSyncRecord", null);
+							if (cursor != null) {
+								cursor.moveToFirst();
+								count = cursor.getInt(0);
+								cursor.close();
+								cursor = null;
+							}
 						}
 						return count;
 					}
