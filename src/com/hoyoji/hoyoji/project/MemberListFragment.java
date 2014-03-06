@@ -26,6 +26,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.Picture;
@@ -196,8 +197,11 @@ public class MemberListFragment extends HyjUserListFragment{
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double actualTotal = projectShareAuthorization.getActualTotal();
-			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
-			
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+			Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+			if(activeCurrency != null){
+				currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol();
+			}
 			if(actualTotal < 0){
 				actualTotal = -actualTotal;
 				numericView.setPrefix("已经收入:" + currencySymbol);
