@@ -293,8 +293,8 @@ public class LoginActivity extends HyjActivity {
 			return;
 		}
 
-		UserData userData = HyjApplication.getInstance().getCurrentUser()
-				.getUserData();
+//		UserData userData = HyjApplication.getInstance().getCurrentUser()
+//				.getUserData();
 
 		// 下载一些用户必须的资料
 		JSONArray belongsToes = new JSONArray();
