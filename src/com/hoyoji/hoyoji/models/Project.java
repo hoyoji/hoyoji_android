@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -92,7 +94,10 @@ public class Project extends HyjModel {
 	}
 	
 	public List<ProjectShareAuthorization> getProjectShareAuthorizations() {
-		return getMany(ProjectShareAuthorization.class,"projectId");
+		return new Select()
+		.from(ProjectShareAuthorization.class)
+		.where("projectId =? AND state != 'Deleted'",
+				getId()).execute();
 	}
 	
 	public String getOwnerUserId() {
@@ -116,6 +121,17 @@ public class Project extends HyjModel {
 			return null;
 		}
 		return getModel(Currency.class, mCurrencyId);
+	}
+	
+	public String getCurrencySymbol(){
+		if(mCurrencyId == null){
+			return null;
+		}
+		Currency currency = getModel(Currency.class, mCurrencyId);
+		if(currency != null){
+			return currency.getSymbol();
+		}
+		return mCurrencyId;
 	}
 	
 	public void setCurrency(Currency mCurrency) {
