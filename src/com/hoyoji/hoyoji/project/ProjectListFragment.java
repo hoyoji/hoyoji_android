@@ -1,8 +1,12 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.content.ClipData.Item;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,10 +22,13 @@ import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 
 public class ProjectListFragment extends HyjUserListFragment{
@@ -43,8 +50,8 @@ public class ProjectListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
-				new String[] { "name" },
-				new int[] { R.id.projectListItem_name },
+				new String[] { "name", "id", "id"},
+				new int[] { R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal },
 				0); 
 	}	
 
@@ -134,6 +141,34 @@ public class ProjectListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.projectListItem_name){
 			((TextView)view).setText(cursor.getString(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
+			HyjNumericView numericView = (HyjNumericView)view;
+			List<ProjectShareAuthorization> projectShareAuthorizations = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getProjectShareAuthorizations();
+            Double projectExpenseTotal = 0.0;
+			for(int i= 0; i<projectShareAuthorizations.size(); i++){
+            	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
+            	projectExpenseTotal+= Psa.getExpenseTotal();
+            }
+		    String currencySymbol = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getCurrency().getSymbol();
+			numericView.setPrefix("支出:" + currencySymbol);
+			numericView.setSuffix(null);
+			numericView.setTextColor(Color.parseColor("#FF0000"));
+			numericView.setNumber(projectExpenseTotal);
+			return true;
+		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
+			HyjNumericView numericView = (HyjNumericView)view;
+			List<ProjectShareAuthorization> projectShareAuthorizations = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getProjectShareAuthorizations();
+            Double projectIncomeTotal = 0.0;
+			for(int i= 0; i<projectShareAuthorizations.size(); i++){
+            	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
+            	projectIncomeTotal+= Psa.getIncomeTotal();
+            }
+		    String currencySymbol = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getCurrency().getSymbol();
+			numericView.setPrefix("收入:" + currencySymbol);
+			numericView.setSuffix(null);
+			numericView.setTextColor(Color.parseColor("#339900"));
+			numericView.setNumber(projectIncomeTotal);
 			return true;
 		} else {
 			return false;

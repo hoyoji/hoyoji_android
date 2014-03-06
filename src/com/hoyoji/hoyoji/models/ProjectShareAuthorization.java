@@ -920,8 +920,17 @@ public class ProjectShareAuthorization extends HyjModel {
 		super.save();
 	}
 
+	public Double getExpenseTotal() {
+		return mActualTotalExpense + mActualTotalLend + mActualTotalReturn;
+	}
+	
+	public Double getIncomeTotal() {
+		return mActualTotalIncome + mActualTotalBorrow + mActualTotalPayback;
+	}
+	
 	public Double getActualTotal() {		
-		return mActualTotalExpense - mActualTotalIncome + mActualTotalLend - mActualTotalPayback - mActualTotalBorrow + mActualTotalReturn;
+//		return mActualTotalExpense - mActualTotalIncome + mActualTotalLend - mActualTotalPayback - mActualTotalBorrow + mActualTotalReturn;
+	    return this.getExpenseTotal() - this.getIncomeTotal();
 	}
 
 	public Double getApportionTotal() {
@@ -931,6 +940,4 @@ public class ProjectShareAuthorization extends HyjModel {
 	public Double getSettlement() {
 		return this.getActualTotal() - this.getApportionTotal();
 	}
-
-
 }
