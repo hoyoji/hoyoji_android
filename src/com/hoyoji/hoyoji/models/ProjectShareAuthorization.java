@@ -379,6 +379,13 @@ public class ProjectShareAuthorization extends HyjModel {
 		return null;
 	}
 	
+	public Friend getFriend(){
+		if(mFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		}
+		return null;
+	}
+	
 	public String getFriendDisplayName(){
 		Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
 		if(friend != null){

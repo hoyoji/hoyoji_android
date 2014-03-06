@@ -71,128 +71,128 @@ public class MessageDownloadService extends Service {
 									.getCurrentUser();
 							Log.d(TAG, "checking messages ...");
 							JSONObject postData = new JSONObject();
-							String lastMessagesDownloadTime = currentUser
-									.getUserData()
-									.getLastMessagesDownloadTime();
-							if (lastMessagesDownloadTime == null) {
-								Object returnedObject = HyjServer.doHttpPost(
-										null, HyjApplication.getServerUrl()
-												+ "getServerTime.php", "", true);
-								JSONObject jsonServerTime = (JSONObject) returnedObject;
-								lastMessagesDownloadTime = jsonServerTime
-										.optString("server_time");
-								if (lastMessagesDownloadTime != null) {
-									HyjModelEditor<UserData> modelEditor = currentUser
-											.getUserData().newModelEditor();
-									modelEditor.getModelCopy()
-											.setLastMessagesDownloadTime(
-													lastMessagesDownloadTime);
-									modelEditor.save();
-								}
-							} else {
-								postData.put("__dataType", "Message");
-								postData.put("messageBoxId",
-										currentUser.getMessageBoxId());
-								// postData.put("__orderBy",
-								// "lastServerUpdateTime ASC");
-								lastMessagesDownloadTime = currentUser
-										.getUserData()
-										.getLastMessagesDownloadTime();
-								// if(lastMessagesDownloadTime != null){
-								JSONObject timeFilter = new JSONObject();
-								timeFilter.put("lastServerUpdateTime",
-										lastMessagesDownloadTime);
-								postData.put("__GREATER_FILTER__", timeFilter);
-								// }
+							postData.put("__dataType", "Message");
+							postData.put("toUserId", currentUser.getId());
 
-								Object returnedObject = HyjServer.doHttpPost(
-										null, HyjApplication.getServerUrl()
-												+ "getData.php",
-										"[" + postData.toString() + "]", true);
-								if (returnedObject instanceof JSONArray) {
-									final JSONArray jsonArray = ((JSONArray) returnedObject)
-											.optJSONArray(0);
-									List<Message> friendMessages = new ArrayList<Message>();
-									List<Message> projectShareMessages = new ArrayList<Message>();
-									try {
-										ActiveAndroid.beginTransaction();
-										if (jsonArray.length() > 0) {
-											for (int i = 0; i < jsonArray
-													.length(); i++) {
-												JSONObject jsonMessage = jsonArray
-														.optJSONObject(i);
-												Message newMessage = new Message();
-												newMessage.loadFromJSON(
-														jsonMessage, true);
-												newMessage.save();
-												if (newMessage
-														.getType()
-														.equalsIgnoreCase(
-																"System.Friend.AddResponse")
-														|| newMessage
-																.getType()
-																.equalsIgnoreCase(
-																		"System.Friend.Delete")) {
-													friendMessages
-															.add(newMessage);
-												} else if (newMessage
-														.getType()
-														.equalsIgnoreCase(
-																"Project.Share.Accept")
-														|| newMessage
-																.getType()
-																.equalsIgnoreCase(
-																		"Project.Share.Delete")) {
-													projectShareMessages
-															.add(newMessage);
-												}
-												if (lastMessagesDownloadTime == null
-														|| lastMessagesDownloadTime
-																.compareTo(jsonMessage
-																		.optString("lastServerUpdateTime")) < 0) {
-													lastMessagesDownloadTime = jsonMessage
-															.optString("lastServerUpdateTime");
-												}
+							JSONObject notFilter = new JSONObject();
+							notFilter.put("messageState", "closed");
+							postData.put("__NOT_FILTER__", notFilter);
+							
+							// postData.put("__orderBy",
+							// "lastServerUpdateTime ASC");
+
+//							String lastMessagesDownloadTime = currentUser
+//									.getUserData()
+//									.getLastMessagesDownloadTime();
+//							if (lastMessagesDownloadTime == null) {
+//								Object returnedObject = HyjServer.doHttpPost(
+//										null, HyjApplication.getServerUrl()
+//												+ "getServerTime.php", "", true);
+//								JSONObject jsonServerTime = (JSONObject) returnedObject;
+//								lastMessagesDownloadTime = jsonServerTime
+//										.optString("server_time");
+
+//							} else {
+//								// if(lastMessagesDownloadTime != null){
+//								JSONObject timeFilter = new JSONObject();
+//								timeFilter.put("lastServerUpdateTime",
+//										currentUser.getUserData()
+//												.getLastMessagesDownloadTime());
+//								postData.put("__GREATER_FILTER__", timeFilter);
+//								// }
+//							}
+
+//							if (lastMessagesDownloadTime != null) {
+//								HyjModelEditor<UserData> modelEditor = currentUser
+//										.getUserData().newModelEditor();
+//								modelEditor.getModelCopy()
+//										.setLastMessagesDownloadTime(
+//												lastMessagesDownloadTime);
+//								modelEditor.save();
+//							}
+
+							Object returnedObject = HyjServer.doHttpPost(null,
+									HyjApplication.getServerUrl()
+											+ "getData.php",
+									"[" + postData.toString() + "]", true);
+							if (returnedObject instanceof JSONArray) {
+								final JSONArray jsonArray = ((JSONArray) returnedObject)
+										.optJSONArray(0);
+								List<Message> friendMessages = new ArrayList<Message>();
+								List<Message> projectShareMessages = new ArrayList<Message>();
+								try {
+									ActiveAndroid.beginTransaction();
+									if (jsonArray.length() > 0) {
+										for (int i = 0; i < jsonArray.length(); i++) {
+											JSONObject jsonMessage = jsonArray
+													.optJSONObject(i);
+											Message newMessage = new Message();
+											newMessage.loadFromJSON(
+													jsonMessage, true);
+											newMessage.save();
+											if (newMessage
+													.getType()
+													.equalsIgnoreCase(
+															"System.Friend.AddResponse")
+													|| newMessage
+															.getType()
+															.equalsIgnoreCase(
+																	"System.Friend.Delete")) {
+												friendMessages.add(newMessage);
+											} else if (newMessage
+													.getType()
+													.equalsIgnoreCase(
+															"Project.Share.Accept")
+													|| newMessage
+															.getType()
+															.equalsIgnoreCase(
+																	"Project.Share.Delete")) {
+												projectShareMessages
+														.add(newMessage);
 											}
+//											if (lastMessagesDownloadTime == null
+//													|| lastMessagesDownloadTime
+//															.compareTo(jsonMessage
+//																	.optString("lastServerUpdateTime")) < 0) {
+//												lastMessagesDownloadTime = jsonMessage
+//														.optString("lastServerUpdateTime");
+//											}
 										}
-										if (lastMessagesDownloadTime != currentUser
-												.getUserData()
-												.getLastMessagesDownloadTime()) {
-											HyjModelEditor<UserData> userDataEditor = currentUser
-													.getUserData()
-													.newModelEditor();
-											userDataEditor
-													.getModelCopy()
-													.setLastMessagesDownloadTime(
-															lastMessagesDownloadTime);
-											userDataEditor.save();
-										}
-										ActiveAndroid
-												.setTransactionSuccessful();
-										if (jsonArray.length() > 0) {
-											Handler handler = new Handler(
-													Looper.getMainLooper());
-											handler.post(new Runnable() {
-												public void run() {
-													HyjUtil.displayToast(String
-															.format(getApplicationContext()
-																	.getString(
-																			R.string.app_toast_new_messages),
-																	jsonArray
-																			.length()));
-												}
-											});
-										}
-									} catch (Exception e) {
-									} finally {
-										ActiveAndroid.endTransaction();
 									}
-									processFriendMessages(friendMessages,
-											currentUser);
-									processProjectShareMessages(
-											projectShareMessages, currentUser);
-
+//									if (lastMessagesDownloadTime != currentUser
+//											.getUserData()
+//											.getLastMessagesDownloadTime()) {
+//										HyjModelEditor<UserData> userDataEditor = currentUser.getUserData().newModelEditor();
+//										userDataEditor
+//												.getModelCopy()
+//												.setLastMessagesDownloadTime(
+//														lastMessagesDownloadTime);
+//										userDataEditor.save();
+//									}
+									ActiveAndroid.setTransactionSuccessful();
+									if (jsonArray.length() > 0) {
+										Handler handler = new Handler(Looper
+												.getMainLooper());
+										handler.post(new Runnable() {
+											public void run() {
+												HyjUtil.displayToast(String
+														.format(getApplicationContext()
+																.getString(
+																		R.string.app_toast_new_messages),
+																jsonArray
+																		.length()));
+											}
+										});
+									}
+								} catch (Exception e) {
+								} finally {
+									ActiveAndroid.endTransaction();
 								}
+								processFriendMessages(friendMessages,
+										currentUser);
+								processProjectShareMessages(
+										projectShareMessages, currentUser);
+
 							}
 
 							Thread.sleep(5000);

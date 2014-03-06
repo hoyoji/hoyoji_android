@@ -247,7 +247,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 		if(modelCopy.getFriendUserId() != null){
-			modelCopy.setFriendUserName(modelCopy.getFriendUser().getUserName());
+			modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
 		}
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
@@ -396,15 +396,15 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			msg.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
 							.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
-			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
+//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
 			msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
 			
 			JSONObject msgData = new JSONObject();
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getDisplayName());
+			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
 			msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
 			msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
-			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
 			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
 			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
 			msgData.put("projectCurrencyIds", new JSONArray());
