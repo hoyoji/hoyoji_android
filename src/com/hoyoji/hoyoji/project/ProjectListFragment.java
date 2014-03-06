@@ -150,7 +150,11 @@ public class ProjectListFragment extends HyjUserListFragment{
             	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
             	projectExpenseTotal+= Psa.getExpenseTotal();
             }
-		    String currencySymbol = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getCurrency().getSymbol();
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+		    String currencySymbol = project.getCurrencyId();
+		    if(project.getCurrency() != null){
+		    	currencySymbol = project.getCurrency().getSymbol();
+		    }
 			numericView.setPrefix("支出:" + currencySymbol);
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#FF0000"));
@@ -164,7 +168,11 @@ public class ProjectListFragment extends HyjUserListFragment{
             	ProjectShareAuthorization Psa = projectShareAuthorizations.get(i); 
             	projectIncomeTotal+= Psa.getIncomeTotal();
             }
-		    String currencySymbol = HyjModel.getModel(Project.class, cursor.getString(columnIndex)).getCurrency().getSymbol();
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+		    String currencySymbol = project.getCurrencyId();
+		    if(project.getCurrency() != null){
+		    	currencySymbol = project.getCurrency().getSymbol();
+		    }
 			numericView.setPrefix("收入:" + currencySymbol);
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#339900"));

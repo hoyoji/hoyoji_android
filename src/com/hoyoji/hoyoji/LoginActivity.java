@@ -282,7 +282,7 @@ public class LoginActivity extends HyjActivity {
 		User user = HyjApplication.getInstance().getCurrentUser();
 
 		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
-				user.getMessageBoxId());
+				user.getMessageBoxId1());
 		if (msgBox != null) {
 			this.dismissProgressDialog();
 			 Intent i = getPackageManager()
@@ -300,10 +300,10 @@ public class LoginActivity extends HyjActivity {
 		JSONArray belongsToes = new JSONArray();
 		try {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "MessageBox");
-//			jsonObj1.put("id", user.getMessageBoxId());
-			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			belongsToes.put(jsonObj);
+//			jsonObj.put("__dataType", "MessageBox");
+////			jsonObj1.put("id", user.getMessageBoxId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Project");

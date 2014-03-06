@@ -117,13 +117,13 @@ public class User extends HyjModel {
 		this.mIsMerchant = mIsMerchant;
 	}
 
-	public String getMessageBoxId() {
+	public String getMessageBoxId1() {
 		return mMessageBoxId;
 	}
 
-	public void setMessageBoxId(String mMessageBoxId) {
-		this.mMessageBoxId = mMessageBoxId;
-	}
+//	public void setMessageBoxId(String mMessageBoxId) {
+//		this.mMessageBoxId = mMessageBoxId;
+//	}
 
 	public String getNewFriendAuthentication() {
 		return mNewFriendAuthentication;

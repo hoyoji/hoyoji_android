@@ -149,7 +149,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "把您从好友列表删除");
-		msg.setMessageBoxId(mFriendEditor.getModelCopy().getFriendUser().getMessageBoxId());
+//		msg.setMessageBoxId(mFriendEditor.getModelCopy().getFriendUser().getMessageBoxId());
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
