@@ -152,8 +152,8 @@ public class HyjUtil {
 //			}
 		}
 		
-		public static void stopRoateView(ImageView v){
-			v.setAnimation(null);
+		public static void stopRoateView(View view){
+			view.setAnimation(null);
 		}
 		
 		public static int calculateInSampleSize(
