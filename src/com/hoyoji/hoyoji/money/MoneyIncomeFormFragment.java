@@ -63,6 +63,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
+	private int UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 1;
 	
 	private HyjModelEditor<MoneyIncome> mMoneyIncomeEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -533,6 +534,22 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 
+					//更新支出所有者的实际收入
+					if(UPDATE_SELF_PROJECTSHAREAUTHORIZATION == 1){
+						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyIncomeModel.getProjectId());
+						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
+					    if(moneyIncomeModel.get_mId() == null || oldMoneyIncomeModel.getProjectId().equals(moneyIncomeModel.getProjectId())){
+					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalIncome(selfProjectAuthorization.getActualTotalIncome() - oldMoneyIncomeModel.getAmount0() + moneyIncomeModel.getAmount0());
+						}else{
+							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyIncomeModel.getProjectId());
+							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalIncome(oldSelfProjectAuthorization.getActualTotalIncome() - oldMoneyIncomeModel.getAmount0());
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalIncome(selfProjectAuthorization.getActualTotalIncome() + moneyIncomeModel.getAmount0());
+							oldSelfProjectAuthorizationEditor.save();
+						}
+						 selfProjectAuthorizationEditor.save();
+					}
+					
 				mMoneyIncomeEditor.save();
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
@@ -587,7 +604,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					
 					//更新收入所有者的实际收入
 					if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//						UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
+						UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
 						
 						if(mMoneyIncomeEditor.getModelCopy().get_mId() == null || mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId())){
 							projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (mMoneyIncomeEditor.getModel().getAmount0() * oldRate) + (mMoneyIncomeEditor.getModelCopy().getAmount0() * rate));
@@ -680,7 +697,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				
 				//更新收入所有者的实际收入
 				if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
+					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
 				    projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome()- (mMoneyIncomeEditor.getModel().getAmount0() * mMoneyIncomeEditor.getModel().getExchangeRate()) + (mMoneyIncomeEditor.getModelCopy().getAmount0() * mMoneyIncomeEditor.getModelCopy().getExchangeRate()));
 					
 				}
