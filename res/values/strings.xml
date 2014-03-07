@@ -41,4 +41,6 @@
     <string name="app_action_money_topup">充值</string>
     
     <string name="app_toast_new_messages">您有 %1$d 条新消息</string>
+    
+    <string name="app_moneyaccount_anonymous">匿名借贷账户 </string>
 </resources>
