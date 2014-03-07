@@ -103,14 +103,6 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
 	
-	@Override
-	protected void onDestroy() {
-		if (mChangeObserver != null) {
-			this.getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-		}
-		super.onDestroy();
-	}
 
 	private String[] mDrawerListerTitles = null;
 	private DrawerLayout mDrawerLayout;
@@ -500,9 +492,18 @@ public class MainActivity extends HyjUserActivity {
 
 			uploadData(false);
 		}
-
 	}
 
+
+	@Override
+	protected void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		super.onDestroy();
+	}
+	
 	public void downloadData() {
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
