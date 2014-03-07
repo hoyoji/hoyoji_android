@@ -242,6 +242,9 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public String getFriendId() {
+		if(mFriendId != null && mFriendId.length() == 0){
+			return null;
+		}
 		return mFriendId;
 	}
 

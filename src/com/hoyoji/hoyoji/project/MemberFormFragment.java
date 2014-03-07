@@ -355,6 +355,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			public void finishCallback(Object object) {
 				try {
 					ActiveAndroid.beginTransaction();
+					mProjectShareAuthorizationEditor.getModelCopy().setSyncFromServer(true);
 					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
 					mProjectShareAuthorizationEditor.save();
 					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
