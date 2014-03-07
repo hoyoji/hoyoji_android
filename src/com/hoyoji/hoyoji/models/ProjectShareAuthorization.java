@@ -369,12 +369,12 @@ public class ProjectShareAuthorization extends HyjModel {
 		if(mProjectId == null){
 			return null;
 		}
-		return (Project) getModel(Project.class, mProjectId);
+		return getModel(Project.class, mProjectId);
 	}
 
 	public User getFriendUser(){
 		if(mFriendUserId != null){
-			return (User) getModel(User.class, mFriendUserId);
+			return getModel(User.class, mFriendUserId);
 		}
 		return null;
 	}

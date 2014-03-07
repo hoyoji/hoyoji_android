@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -29,11 +31,11 @@ public class ClientSyncRecord extends HyjModel {
 	private String mTransactionId;
 	
 	@Column(name = "uploading")
-	private Boolean mUploading;
+	private Integer mUploading;
 	
 	public ClientSyncRecord(){
 		super();
-		mUploading = false;
+		mUploading = 0;
 	}
 	
 
@@ -46,16 +48,12 @@ public class ClientSyncRecord extends HyjModel {
 	}
 
 	
-//	public List<ParentProject> getParentProjects() {
-//		return getMany(ParentProject.class, "");
-//	}
-//	
 	public Boolean getUploading() {
-		return mUploading;
+		return mUploading.intValue() == 1;
 	}
 
 	public void setUploading(Boolean uploading) {
-		this.mUploading = uploading;
+		this.mUploading = uploading ? 1 : 0;
 	}
 
 //	public String getRecordId(){

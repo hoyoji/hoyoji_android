@@ -96,7 +96,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	}
 	
 	public ClientSyncRecord getClientSyncRecord(){
-		return HyjModel.getModel(ClientSyncRecord.class, getId());
+		return new Select().from(ClientSyncRecord.class).where("id=?", getId()).executeSingle();
 	}
 	
 	final public void deleteFromServer(){

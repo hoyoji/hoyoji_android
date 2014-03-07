@@ -37,6 +37,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -279,7 +280,7 @@ public class HyjUtil {
 		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
 			
 			if(!tableName.equalsIgnoreCase("ClientSyncRecord")){
-				ClientSyncRecord clientSyncRecord = HyjModel.getModel(ClientSyncRecord.class, recordId);
+				ClientSyncRecord clientSyncRecord = new Select().from(ClientSyncRecord.class).where("id=?", recordId).executeSingle();
 				
 				if(operation.equalsIgnoreCase("Delete")){
 					if(syncFromServer){
