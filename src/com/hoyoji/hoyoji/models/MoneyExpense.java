@@ -340,7 +340,7 @@ public class MoneyExpense extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
-		if(this.getMoneyExpenseCategory() == null){
+		if(this.getMoneyExpenseCategory() == null || this.getMoneyExpenseCategory().length() == 0){
 			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
 		}else{
 			modelEditor.removeValidationError("moneyExpenseCategory");

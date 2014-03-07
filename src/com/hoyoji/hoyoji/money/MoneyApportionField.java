@@ -18,6 +18,7 @@ import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.User;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -159,10 +160,10 @@ public class MoneyApportionField extends GridView {
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Average")){
 					numOfAverage++;
-					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
+					sharePercentageTotal += api.getSharePercentage();
 				} else if(api.getApportionType().equalsIgnoreCase("Share")){
 //					api.setAmount(api.getAmount());
-					sharePercentageTotal += api.getProjectShareAuthorization().getSharePercentage();
+					sharePercentageTotal += api.getSharePercentage();
 				} else {
 					fixedTotal += api.getAmount();
 				}
@@ -176,7 +177,7 @@ public class MoneyApportionField extends GridView {
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
 				if(api.getApportionType().equalsIgnoreCase("Share")){
-					Double shareAmount = shareTotal * api.getProjectShareAuthorization().getSharePercentage() / sharePercentageTotal;
+					Double shareAmount = shareTotal * api.getSharePercentage() / sharePercentageTotal;
 					api.setAmount(shareAmount);
 					fixedTotal += api.getAmount();
 				}
@@ -391,7 +392,7 @@ public class MoneyApportionField extends GridView {
 //				} else {
 //					vh.textViewFriendName.setText(vh.apportionItem.getApportion().getFriendUser().getDisplayName());
 //				}
-				vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
+				vh.textViewFriendName.setText(vh.apportionItem.getFriendDisplayName());
 			}
 			
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){
@@ -416,7 +417,7 @@ public class MoneyApportionField extends GridView {
 						& (~Paint.STRIKE_THRU_TEXT_FLAG));
 			}
 			
-			vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getProjectShareAuthorization().getSharePercentage() + "%");
+			vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
 
 			if(vh.apportionItem.getApportionType().equalsIgnoreCase("Average")){
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_average_apport);
@@ -457,6 +458,13 @@ public class MoneyApportionField extends GridView {
 			mApportionType = apportion.getApportionType();
 		}
 		
+		public double getSharePercentage() {
+			if(this.getProjectShareAuthorization() != null){
+				this.getProjectShareAuthorization().getSharePercentage();
+			} 
+			return 0.0;
+		}
+
 		public void changeProject(String projectId){
 			mProjectId = projectId;
 			mProjectShareAuthorization = null;
@@ -483,6 +491,18 @@ public class MoneyApportionField extends GridView {
 				mFriend = new Select().from(Friend.class).where("friendUserId=?",mApportion.getFriendUserId()).executeSingle();
 			}
 			return mFriend;
+		}
+		
+		public String getFriendDisplayName(){
+			if(this.getFriend() != null){
+				return this.getFriend().getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
+				if(user != null){
+					return user.getDisplayName();
+				}
+			}
+			return "NO NAME";
 		}
 		
 //		public void setState(int state){

@@ -92,8 +92,8 @@ public class HyjSelectorField extends LinearLayout {
 		mEditTextEdit.setText(text);
 	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getEditableText();
+	public String getText(){
+		return (String) mEditTextEdit.getText();
 	}
 	
 	public void setModelId(String modelId){

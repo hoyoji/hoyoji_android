@@ -74,17 +74,15 @@ public class MessageDownloadService extends Service {
 							JSONObject postData = new JSONObject();
 							postData.put("__dataType", "Message");
 							postData.put("toUserId", currentUser.getId());
-							// postData.put("__orderBy",
-							// "lastServerUpdateTime ASC");
-
+							JSONObject notFilter = new JSONObject();
+							notFilter.put("messageState", "closed");
+							postData.put("__NOT_FILTER__", notFilter);
+							
 							JSONObject jsonServerTime = null;
 							String lastMessagesDownloadTime = currentUser
 									.getUserData()
 									.getLastMessagesDownloadTime();
 							if (lastMessagesDownloadTime == null) {
-								JSONObject notFilter = new JSONObject();
-								notFilter.put("messageState", "closed");
-								postData.put("__NOT_FILTER__", notFilter);
 
 								Object serverTime = HyjServer
 										.doHttpPost(null,

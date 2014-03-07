@@ -147,6 +147,10 @@ public class ProjectListFragment extends HyjUserListFragment{
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
+		if(mi.id == -1){
+			return;
+		}
 		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 	}

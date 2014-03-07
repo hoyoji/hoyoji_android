@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+   		android:paddingBottom="0dp"
+    	android:paddingLeft="0dp"
+    	android:paddingRight="0dp"
+    	android:paddingTop="0dp"  >
+
+    <ListView android:id="@id/android:list"
+              android:layout_weight="0.7"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:drawSelectorOnTop="true"/>
+    
+    <!-- <View 
+    android:id="@id/field_separator"
+    android:layout_width="1dp"
+    android:layout_height="match_parent"
+	android:layout_marginLeft="0dip"
+	android:layout_marginRight="0dip"
+    android:background="@android:color/darker_gray" 
+    /> -->
+    
+    <ListView android:id="@+id/moneyExpenseCategory_list_children"
+              android:layout_weight="1.3"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:drawSelectorOnTop="true"/>
+
+    <TextView android:id="@id/android:empty"
+        	  android:gravity="center_horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/app_listview_no_content"/>
+</LinearLayout>

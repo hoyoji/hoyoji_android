@@ -180,6 +180,10 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				if(rhs instanceof MoneyPayback){
 					rhsStr = ((MoneyPayback) rhs).getDate();
 				}
+				
+				if(lhs instanceof Message){
+					lhsStr = ((Message) lhs).getDate();
+				}
 				if(rhs instanceof Message){
 					rhsStr = ((Message) rhs).getDate();
 				}
