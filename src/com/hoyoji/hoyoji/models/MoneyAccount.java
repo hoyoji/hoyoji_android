@@ -59,41 +59,36 @@ public class MoneyAccount extends HyjModel {
 	}
 	
 	public String getDisplayName(){
-		if(this.getAccountType() == null || !this.getAccountType().equalsIgnoreCase("Debt")){
-			return this.getName();
-		}
-
-//		else if(this.getName().equalsIgnoreCase("匿名借贷账户")){
-//			return this.getName();
-//		}
-		
-		// 为什么要判断这个"匿名借贷账户"？能不能用其他的属性判断是不是匿名账户，比如：friendUserId
-		else if(this.getAccountType().equalsIgnoreCase("Debt") && this.getFriendId() == null){
-			return this.getName();
-		}
-		
-		
-		if(this.getFriendId() != null){
-			Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
-			return friend.getDisplayName();
-		} else {
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?", this.getName()).executeSingle();
-			if(friend != null){
+		if(this.getAccountType().equalsIgnoreCase("Debt")){
+			if(this.getFriendId() != null){
+				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
 				return friend.getDisplayName();
 			} else {
-				User user = HyjModel.getModel(User.class, this.getName());
-				if(user != null){
-					return user.getDisplayName();
+				if(this.getName().equalsIgnoreCase("__ANONYMOUS__")){
+					return String.valueOf(R.string.app_moneyaccount_anonymous);
+				}
+				
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", this.getName()).executeSingle();
+				if(friend != null){
+					return friend.getDisplayName();
 				} else {
-					return "Debt Account";
+					User user = HyjModel.getModel(User.class, this.getName());
+					if(user != null){
+						return user.getDisplayName();
+					} else {
+						return this.getName();
+					}
 				}
 			}
+		}else{
+			return this.getName();
 		}
+		
 	}
 	
 	public static MoneyAccount getDebtAccount(String currencyId, Friend friend){
 		if(friend == null){
-			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=? AND name=?", "Debt", currencyId, "","匿名借贷账户").executeSingle();
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=? AND name=?", "Debt", currencyId, null,"__ANONYMOUS__").executeSingle();
 		}
 		
 		String friendId;
@@ -112,12 +107,12 @@ public class MoneyAccount extends HyjModel {
 	
 	public static void createDebtAccount(Friend friend, String currencyId, Double amount){
 		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
+		String debtAccountName = "__ANONYMOUS__";
+		String friendId = null;
 		if(friend != null){
 			if(friend.getFriendUserId() == null){
 				friendId = friend.getId();
-				debtAccountName = "";
+				debtAccountName = null;
 			}else{
 				debtAccountName = friend.getFriendUserId();
 			}
