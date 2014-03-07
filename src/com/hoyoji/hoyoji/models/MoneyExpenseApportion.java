@@ -77,6 +77,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 	
 	public MoneyExpense getMoneyExpense(){
+		if(mMoneyExpenseId == null){
+			return null;
+		}
 		return getModel(MoneyExpense.class, mMoneyExpenseId);
 	}
 	

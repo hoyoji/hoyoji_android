@@ -579,7 +579,7 @@ public class MainActivity extends HyjUserActivity {
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
 					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
-					if(model != null){
+					if(model != null && model.get_mId() != null){
 						model.delete();
 					}
 				} else {
