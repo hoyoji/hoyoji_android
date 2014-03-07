@@ -62,12 +62,20 @@
         android:background="@android:color/darker_gray" 
         />
     
-    <com.hoyoji.android.hyjframework.view.HyjTextField
+   <!--  <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/moneyAccountFormFragment_textField_accountType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountType"
-        hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" />
+        hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" /> -->
+    
+    <com.hoyoji.android.hyjframework.view.HyjSpinnerField
+        android:id="@+id/moneyAccountFormFragment_textField_accountType"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountType"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" >
+    </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
     
         <View 
         android:id="@id/field_separator"
@@ -83,7 +91,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountNumber"
-        hyj:labelText="@string/moneyAccountFormFragment_textView_accountNumber" />
+        hyj:labelText="@string/moneyAccountFormFragment_textView_accountNumber"
+        android:visibility="gone" />
 
         <View 
         android:id="@id/field_separator"
@@ -92,6 +101,7 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
+        android:visibility="gone"
         />
     
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
@@ -99,7 +109,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_bankAddress"
-        hyj:labelText="@string/moneyAccountFormFragment_textView_bankAddress" />
+        hyj:labelText="@string/moneyAccountFormFragment_textView_bankAddress"
+        android:visibility="gone" />
     
         <View 
         android:id="@id/field_separator"
@@ -108,6 +119,7 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
+        android:visibility="gone"
         />
     
     <com.hoyoji.android.hyjframework.view.HyjRemarkField

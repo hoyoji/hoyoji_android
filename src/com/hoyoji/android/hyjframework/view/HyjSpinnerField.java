@@ -90,7 +90,6 @@ public class HyjSpinnerField extends LinearLayout {
 //		mEditTextEdit.setHint(mHintText);
 //		mEditTextEdit.setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
-		
 	}
 
 

@@ -26,5 +26,11 @@
    <string name="moneyAccountFormFragment_textView_remark">备注</string>
    <string name="moneyAccountFormFragment_editText_hint_remark">添加备注</string>
     
-    
+   <string-array name="moneyAccountFormFragment_spinnerField_accountType_array">
+        <item>现金账户</item>
+        <item>金融账户</item>
+        <item>信用卡账户</item>
+        <item>虚拟账户</item>
+        <item>借贷账户</item>
+   </string-array>
 </resources>

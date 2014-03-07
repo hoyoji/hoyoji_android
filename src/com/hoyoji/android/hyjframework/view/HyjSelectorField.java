@@ -80,6 +80,7 @@ public class HyjSelectorField extends LinearLayout {
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
+		
 	}
 
 	public void setError(String error){

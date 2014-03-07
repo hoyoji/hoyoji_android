@@ -214,13 +214,14 @@ public class ProjectListFragment extends HyjUserListFragment{
 			        protected String doInBackground(String... params) {
 						try {
 							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(500);
+							Thread.sleep(200);
 						} catch (InterruptedException e) {}
 						return null;
 			        }
 			        @Override
 			        protected void onPostExecute(String result) {
 						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+						mTask = null;
 			        }
 			    };
 			    mTask.execute();

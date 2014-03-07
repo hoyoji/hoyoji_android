@@ -19,6 +19,7 @@ public final class R {
     }
     public static final class array {
         public static final int mainActivity_drawer_list_titles=0x7f0d0000;
+        public static final int moneyAccountFormFragment_spinnerField_accountType_array=0x7f0d0006;
         public static final int moneyApportionDialogFragment_spinnerField_apportionType_array=0x7f0d0005;
         public static final int pref_example_list_titles=0x7f0d0001;
         public static final int pref_example_list_values=0x7f0d0002;
