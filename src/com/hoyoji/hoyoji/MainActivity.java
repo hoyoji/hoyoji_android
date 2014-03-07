@@ -227,6 +227,10 @@ public class MainActivity extends HyjUserActivity {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(!HyjUtil.hasNetworkConnection()){
+						HyjUtil.displayToast(R.string.server_connection_disconnected);
+						return;
+					}
 					if (!HyjApplication.getInstance().getIsSyncing()) {
 						uploadData(true);
 					}
@@ -506,8 +510,6 @@ public class MainActivity extends HyjUserActivity {
 				if (object instanceof Boolean) {
 					Boolean result = (Boolean) object;
 					if (result == true) {
-
-
 						((HyjActivity) MainActivity.this)
 								.dismissProgressDialog();
 						setRefreshActionButtonState(false, null);
@@ -625,7 +627,12 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	public void uploadData(final boolean downloadData) {
-		setRefreshActionButtonState(true, updateUploadCount(null, null));
+		if(!HyjUtil.hasNetworkConnection()){
+			updateUploadCount(null, null);
+			return;
+		} else {
+			setRefreshActionButtonState(true, updateUploadCount(null, null));
+		}
 		if (HyjApplication.getInstance().getIsSyncing()) {
 			return;
 		}

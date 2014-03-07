@@ -242,11 +242,18 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public String getFriendId() {
+		if(mFriendId != null && mFriendId.length() == 0){
+			return null;
+		}
 		return mFriendId;
 	}
 
 	public void setFriendId(String mFriendId) {
-		this.mFriendId = mFriendId;
+		if(mFriendId != null && mFriendId.length() == 0){
+			this.mFriendId = null;
+		} else {
+			this.mFriendId = mFriendId;
+		}
 	}
 
 	public String getOwnerUserId() {
