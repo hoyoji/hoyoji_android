@@ -26,8 +26,10 @@ public class HyjApplication extends Application {
 	public final static String TAG = "HyjApplication";
 	private final static String SERVER_URL = "http://money.app100697798.twsapp.com/";
 	private static HyjApplication sInstance;
+	private Boolean mIsSyncing = false;
 	private User currentUser = null;
 	private HashMap<String, Class<? extends Fragment>> fragmentClassMap = new HashMap<String, Class<? extends Fragment>>();
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -45,6 +47,14 @@ public class HyjApplication extends Application {
 	public void onTerminate() {
 		super.onTerminate();
 		logout();
+	}
+	
+	public Boolean getIsSyncing(){
+		return mIsSyncing;
+	}
+	
+	public void setIsSyncing(Boolean b){
+		mIsSyncing = b;
 	}
 	
 	public static HyjApplication getInstance() {

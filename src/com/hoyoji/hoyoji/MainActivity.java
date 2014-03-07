@@ -102,8 +102,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
-	private boolean mIsUploading = false;
-
+	
 	@Override
 	protected void onDestroy() {
 		if (mChangeObserver != null) {
@@ -220,11 +219,15 @@ public class MainActivity extends HyjUserActivity {
 		MenuItem refreshItem = menu.findItem(R.id.homeListFragment_action_sync);
 		if (refreshItem != null) {
 			final View view = MenuItemCompat.getActionView(refreshItem);
-			updateUploadCount(view, null);
+			if(HyjApplication.getInstance().getIsSyncing()){
+				setRefreshActionButtonState(true, updateUploadCount(view, null));
+			} else {
+				updateUploadCount(view, null);
+			}
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (!mIsUploading) {
+					if (!HyjApplication.getInstance().getIsSyncing()) {
 						uploadData(true);
 					}
 				}
@@ -515,7 +518,7 @@ public class MainActivity extends HyjUserActivity {
 
 			@Override
 			public void errorCallback(Object object) {
-				mIsUploading = false;
+				HyjApplication.getInstance().setIsSyncing(false);
 				if (object instanceof Boolean) {
 					// Boolean result = (Boolean)object;
 					// if(result == true){
@@ -623,10 +626,10 @@ public class MainActivity extends HyjUserActivity {
 
 	public void uploadData(final boolean downloadData) {
 		setRefreshActionButtonState(true, updateUploadCount(null, null));
-		if (mIsUploading) {
+		if (HyjApplication.getInstance().getIsSyncing()) {
 			return;
 		}
-		mIsUploading = true;
+		HyjApplication.getInstance().setIsSyncing(true);
 		if (downloadData) {
 			((HyjActivity) MainActivity.this).displayProgressDialog("同步数据",
 					"正在同步数据，请稍后...");
@@ -634,7 +637,6 @@ public class MainActivity extends HyjUserActivity {
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				mIsUploading = downloadData;
 				if (object instanceof Boolean) {
 					Boolean result = (Boolean) object;
 					if (result == true) {
@@ -644,6 +646,8 @@ public class MainActivity extends HyjUserActivity {
 
 						// HyjUtil.displayToast("上传数据成功");
 
+						HyjApplication.getInstance().setIsSyncing(downloadData);
+						
 						if (downloadData) {
 							updateUploadCount(null, null);
 							downloadData();
@@ -657,7 +661,6 @@ public class MainActivity extends HyjUserActivity {
 
 			@Override
 			public void errorCallback(Object object) {
-				mIsUploading = false;
 				if (object instanceof Boolean) {
 					// Boolean result = (Boolean)object;
 					// if(result == true){
@@ -665,6 +668,7 @@ public class MainActivity extends HyjUserActivity {
 					// }
 				}
 
+				HyjApplication.getInstance().setIsSyncing(false);
 				setRefreshActionButtonState(false, null);
 				HyjUtil.displayToast(object.toString());
 				if (downloadData) {
@@ -731,7 +735,10 @@ public class MainActivity extends HyjUserActivity {
 						} else if (syncRec.getOperation().equalsIgnoreCase(
 								"Delete")) {
 							jsonObj.put("operation", "delete");
-							jsonObj.put("recordData", syncRec.getId());
+							JSONObject recordData = new JSONObject();
+							recordData.put("id", syncRec.getId());
+							recordData.put("__dataType", syncRec.getTableName());
+							jsonObj.put("recordData", recordData);
 							postData.put(jsonObj);
 						}
 					}

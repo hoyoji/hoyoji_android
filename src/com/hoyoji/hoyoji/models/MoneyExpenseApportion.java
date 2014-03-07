@@ -159,7 +159,7 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization(null);
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
 		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
 		projectShareAuthorizationEditor.save();
@@ -186,13 +186,17 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return null;
 	}
 
-	public ProjectShareAuthorization getProjectShareAuthorization(String projectId) {
-		if(projectId == null){
-			projectId = this.getMoneyExpense().getProjectId();
+	public ProjectShareAuthorization getProjectShareAuthorization() {
+//		if(rojectId == null){
+//			projectId = this.getMoneyExpense().getProjectId();
+//		
+//		}
+		if(this.getMoneyExpense() == null){
+			return null;
+		} else {
+			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+					this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
-			
-		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				projectId, this.getFriendUserId()).executeSingle();
 	}
 	
 	@Override
