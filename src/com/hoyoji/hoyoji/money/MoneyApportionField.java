@@ -391,7 +391,7 @@ public class MoneyApportionField extends GridView {
 //				} else {
 //					vh.textViewFriendName.setText(vh.apportionItem.getApportion().getFriendUser().getDisplayName());
 //				}
-				vh.textViewFriendName.setText(vh.apportionItem.getProjectShareAuthorization().getFriendDisplayName());
+				vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
 			}
 			
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){

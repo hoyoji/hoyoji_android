@@ -534,7 +534,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mMoneyExpenseEditor.validate();
 		
 		if (mApportionFieldApportions.getCount() > 0) {
-			if (!mNumericAmount.getNumber().equals(
+			if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(
 					mApportionFieldApportions.getTotalAmount())) {
 				mMoneyExpenseEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
 			} else {
