@@ -99,5 +99,9 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		return HyjModel.getModel(ClientSyncRecord.class, getId());
 	}
 	
+	final public void deleteFromServer(){
+		super.delete();
+	}
+	
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);
 }
