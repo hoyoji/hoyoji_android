@@ -340,9 +340,6 @@ public class MoneyApportionField extends GridView {
 							self.setTotalAmount(null);
 						} else {
 							final HyjActivity activity = (HyjActivity) getContext();
-							if(activity.mDialogFragment != null){
-								activity.mDialogFragment.dismiss();
-							}
 							
 							activity.mDialogCallback = new HyjActivity.DialogCallbackListener() {
 								@Override

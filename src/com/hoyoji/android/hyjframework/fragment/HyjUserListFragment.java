@@ -3,7 +3,6 @@ package com.hoyoji.android.hyjframework.fragment;
 import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
@@ -39,7 +38,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	public final static int DELETE_LIST_ITEM = 1024;
 	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
-	protected View mFooterView;
+	private View mFooterView;
 	protected int mListPageSize = 10;
 	
 	@Override
@@ -64,12 +63,12 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				HyjUtil.displayToast("hello");
+				doFetchMore(getListView(), getListView().getAdapter().getCount()-1, mListPageSize);
 			}
 	    });
 	    
 		getListView().addFooterView(mFooterView, null, false);
-		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
+//		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
 			ListAdapter adapter = useListViewAdapter();
@@ -137,18 +136,18 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 	
 
-	public void setFooterLoadStart(){
-        if(getListView().getItemAtPosition(0) == null){
-        	((TextView)getListView().getEmptyView()).setText(R.string.app_listview_footer_fetching_more);
-        } else {
+	public void setFooterLoadStart(ListView l){
+//        if(l.getItemAtPosition(0) == null){
+//        	((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
+//        } else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
-        }
+//        }
         ((TextView)mFooterView).setEnabled(false);
 	}
 	
-	public void setFooterLoadFinished(int count){
+	public void setFooterLoadFinished(ListView l, int count){
         ((TextView)mFooterView).setEnabled(true);
-        ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
+        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
 		if(count >= mListPageSize){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		} else {
@@ -175,7 +174,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        	count = ((List)cursor).size();
 	        }
         }
-        setFooterLoadFinished(count);
+        setFooterLoadFinished(getListView(), count);
 	}
 	
 	
@@ -188,19 +187,16 @@ public abstract class HyjUserListFragment extends ListFragment implements
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		setFooterLoadStart();
+		setFooterLoadStart(getListView());
 		return null;
 	}
 	
-	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
-		super.onListItemClick(l, v, position, id);
-		if(v == mFooterView){
-			doFetchMore(l.getAdapter().getCount()-1, this.mListPageSize);
-		}
-    }  
+//	@Override  
+//    public void onListItemClick(ListView l, View v, int position, long id) { 
+//		super.onListItemClick(l, v, position, id);
+//    }  
 	
-	public void doFetchMore(int offset, int pageSize){
+	public void doFetchMore(ListView l, int offset, int pageSize){
 	}
 	
 	@Override

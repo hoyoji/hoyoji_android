@@ -44,14 +44,6 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     	final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
         numericFieldApportionAmount.setNumber(apportionAmount);
         mNumericFieldApportionAmount = numericFieldApportionAmount;
-//        mNumericFieldApportionAmount.setOnFocusChangeListener(new OnFocusChangeListener(){
-//			@Override
-//			public void onFocusChange(View v, boolean hasFocus) {
-//				if(hasFocus){
-//				getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-//				}
-//			}
-//        });
         final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
         mSpinnerFieldApportionType = spinnerFieldApportionType;
         spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Share", "Fixed"});
