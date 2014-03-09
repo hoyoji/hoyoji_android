@@ -98,6 +98,10 @@ public class MoneyIncome extends HyjModel{
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		if(mProjectId != null){
+			mMoneyIncomeCategory = this.getProject().getDefaultIncomeCategory();
+			mMoneyIncomeCategoryMain = this.getProject().getDefaultIncomeCategoryMain();
+		}
 	}
 
 	public String getId() {

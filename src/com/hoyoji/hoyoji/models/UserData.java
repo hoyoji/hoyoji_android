@@ -166,6 +166,14 @@ public class UserData extends HyjModel {
 	public String getActiveProjectId() {
 		return mActiveProjectId;
 	}
+	
+
+	public Project getActiveProject() {
+		if(mActiveProjectId == null){
+			return null;
+		}
+		return HyjModel.getModel(Project.class, mActiveProjectId);
+	}
 
 	public void setActiveProjectId(String mActiveProjectId) {
 		this.mActiveProjectId = mActiveProjectId;

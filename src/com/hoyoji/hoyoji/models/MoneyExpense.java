@@ -98,6 +98,10 @@ public class MoneyExpense extends HyjModel{
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		if(mProjectId != null){
+			mMoneyExpenseCategory = this.getProject().getDefaultExpenseCategory();
+			mMoneyExpenseCategoryMain = this.getProject().getDefaultExpenseCategoryMain();
+		}
 	}
 
 	public String getId() {

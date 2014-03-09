@@ -585,6 +585,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					userDataEditor.save();
 				}
 				
+				// 更新项目的默认分类
+				if(moneyExpenseModel.get_mId() == null){
+					HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
+					projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
+					projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseModel.getMoneyExpenseCategoryMain());
+					projectEditor.save();
+				}
+				
 				//当前汇率不存在时，创建汇率
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
