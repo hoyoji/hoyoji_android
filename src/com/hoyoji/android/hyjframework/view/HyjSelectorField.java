@@ -111,4 +111,16 @@ public class HyjSelectorField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
+
+	public void setLabel(String label) {
+		if(label == null){
+			mTextViewLabel.setText(mLabelText);
+		} else {
+			mTextViewLabel.setText(label);
+		}
+	}
+
+	public String getLabel() {
+		return mTextViewLabel.getText().toString();
+	}
 }

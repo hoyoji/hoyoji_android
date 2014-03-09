@@ -51,6 +51,9 @@ public class MoneyIncome extends HyjModel{
 	@Column(name = "moneyIncomeCategory")
 	private String mMoneyIncomeCategory;
 	
+	@Column(name = "moneyIncomeCategoryMain")
+	private String mMoneyIncomeCategoryMain;
+	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
@@ -254,6 +257,14 @@ public class MoneyIncome extends HyjModel{
 		this.mMoneyIncomeCategory = mMoneyIncomeCategory;
 	}
 
+	public String getMoneyIncomeCategoryMain() {
+		return mMoneyIncomeCategoryMain;
+	}
+
+	public void setMoneyIncomeCategoryMain(String mMoneyIncomeCategoryMain) {
+		this.mMoneyIncomeCategoryMain = mMoneyIncomeCategoryMain;
+	}
+	
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -194,6 +195,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
 		mSelectorFieldMoneyExpenseCategory.setText(moneyExpense
 				.getMoneyExpenseCategory());
+		if(moneyExpense.getMoneyExpenseCategoryMain() != null && moneyExpense.getMoneyExpenseCategoryMain().length() > 0){
+			mSelectorFieldMoneyExpenseCategory.setLabel(moneyExpense.getMoneyExpenseCategoryMain());
+		}
 		mSelectorFieldMoneyExpenseCategory.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -502,7 +506,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory
-				.getText().toString().trim());
+				.getText());
+		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
 		
 		if (mSelectorFieldFriend.getModelId() != null) {
 			Friend friend = HyjModel.getModel(Friend.class,
@@ -831,6 +836,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				MoneyExpenseCategory category = MoneyExpenseCategory.load(MoneyExpenseCategory.class, _id);
 				mSelectorFieldMoneyExpenseCategory.setText(category.getName());
 				mSelectorFieldMoneyExpenseCategory.setModelId(category.getId());
+				if(category.getParentExpenseCategory() != null){
+					mSelectorFieldMoneyExpenseCategory.setLabel(category.getParentExpenseCategory().getName());
+				} else {
+					mSelectorFieldMoneyExpenseCategory.setLabel(null);
+				}
 			}
 			break;
 

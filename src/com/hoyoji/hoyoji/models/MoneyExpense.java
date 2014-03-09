@@ -50,6 +50,9 @@ public class MoneyExpense extends HyjModel{
 	
 	@Column(name = "moneyExpenseCategory")
 	private String mMoneyExpenseCategory;
+
+	@Column(name = "moneyExpenseCategoryMain")
+	private String mMoneyExpenseCategoryMain;
 	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
@@ -254,6 +257,14 @@ public class MoneyExpense extends HyjModel{
 		this.mMoneyExpenseCategory = mMoneyExpenseCategory;
 	}
 
+	public String getMoneyExpenseCategoryMain() {
+		return mMoneyExpenseCategoryMain;
+	}
+
+	public void setMoneyExpenseCategoryMain(String mMoneyExpenseCategoryMain) {
+		this.mMoneyExpenseCategoryMain = mMoneyExpenseCategoryMain;
+	}	
+	
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
