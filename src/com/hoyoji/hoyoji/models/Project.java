@@ -35,8 +35,14 @@ public class Project extends HyjModel {
 	@Column(name = "defaultIncomeCategory")
 	private String mDefaultIncomeCategory;
 
+	@Column(name = "defaultIncomeCategoryMain")
+	private String mDefaultIncomeCategoryMain;
+
 	@Column(name = "defaultExpenseCategory")
 	private String mDefaultExpenseCategory;
+
+	@Column(name = "defaultExpenseCategoryMain")
+	private String mDefaultExpenseCategoryMain;
 
 	@Column(name = "depositeIncomeCategory")
 	private String mDepositeIncomeCategory;
@@ -172,6 +178,22 @@ public class Project extends HyjModel {
 
 	public void setDefaultExpenseCategory(String mDefaultExpenseCategory) {
 		this.mDefaultExpenseCategory = mDefaultExpenseCategory;
+	}
+
+	public String getDefaultIncomeCategoryMain() {
+		return mDefaultIncomeCategoryMain;
+	}
+
+	public void setDefaultIncomeCategoryMain(String mDefaultIncomeCategoryMain) {
+		this.mDefaultIncomeCategoryMain = mDefaultIncomeCategoryMain;
+	}
+
+	public String getDefaultExpenseCategoryMain() {
+		return mDefaultExpenseCategoryMain;
+	}
+
+	public void setDefaultExpenseCategoryMain(String mDefaultExpenseCategoryMain) {
+		this.mDefaultExpenseCategoryMain = mDefaultExpenseCategoryMain;
 	}
 
 	public String getDepositeIncomeCategory() {
