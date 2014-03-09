@@ -26,7 +26,7 @@ public class MoneyCategoryFormDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("categoryName", categoryName);
-        args.putInt("operation", 0);
+        args.putInt("operation", operation);
         f.setArguments(args);
         return f;
     }

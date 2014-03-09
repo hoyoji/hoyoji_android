@@ -624,6 +624,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						 selfProjectAuthorizationEditor.save();
 					}
 					
+				//更新分类，使之成为最近使用过的
+				if(this.mSelectorFieldMoneyExpenseCategory.getModelId() != null){
+					MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, this.mSelectorFieldMoneyExpenseCategory.getModelId());
+					if(category != null){
+						category.newModelEditor().save();
+					}
+				}
 				mMoneyExpenseEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
@@ -823,6 +830,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				MoneyExpenseCategory category = MoneyExpenseCategory.load(MoneyExpenseCategory.class, _id);
 				mSelectorFieldMoneyExpenseCategory.setText(category.getName());
+				mSelectorFieldMoneyExpenseCategory.setModelId(category.getId());
 			}
 			break;
 

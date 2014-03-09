@@ -101,6 +101,7 @@ import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
@@ -266,7 +267,15 @@ public class MainActivity extends HyjUserActivity {
 			openActivityWithFragment(CurrencyListFragment.class,
 					R.string.currencyListFragment_title_manage_currency, null);
 			break;
+		case 5:
+			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+					R.string.currencyListFragment_title_manage_currency, null);
+			break;
 		case 6:
+//			openActivityWithFragment(CurrencyListFragment.class,
+//					R.string.currencyListFragment_title_manage_currency, null);
+			break;
+		case 8:
 			HyjApplication.getInstance().switchUser();
 			break;
 		}
