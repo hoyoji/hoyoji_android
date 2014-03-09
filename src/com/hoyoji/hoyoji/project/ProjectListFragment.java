@@ -1,91 +1,58 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import android.app.Activity;
-import android.content.ClipData.Item;
-import android.content.Intent;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
-import com.activeandroid.content.ContentProvider;
-import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.view.HyjNumericView;
+import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.ClientSyncRecord;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
-public class ProjectListFragment extends HyjUserListFragment{
-	public final static int ADD_SUB_PROJECT = 0;
-	public final static int VIEW_PROJECT_MEMBERS = 1;
-	private ContentObserver mChangeObserver = null;
+public class ProjectListFragment extends HyjUserFragment implements OnSelectSubProjectsListener{
 	
+	SectionsPagerAdapter mSectionsPagerAdapter;
+
+	/**
+	 * The {@link ViewPager} that will host the section contents.
+	 */
+	ViewPager mViewPager;
+
 	@Override
 	public Integer useContentView() {
 		return R.layout.project_listfragment_project;
+	}
+	
+	@Override
+	public void onInitViewData() {
+		// Create the adapter that will return a fragment for each of the three
+		// primary sections of the app.
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+
+		// Set up the ViewPager with the sections adapter.
+		mViewPager = (ViewPager) getView().findViewById(R.id.projectListFragment_pager);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOffscreenPageLimit(100);
+		SubProjectListFragment firstFragment = SubProjectListFragment.newInstance(null, null);
+		firstFragment.setOnSelectSubProjectsListener(this);
+		mSectionsPagerAdapter.addPage(firstFragment);
+		mViewPager.setCurrentItem(0);
 	}
 
 	@Override
 	public Integer useOptionsMenuView() {
 		return R.menu.project_listfragment_project;
 	}
-
-	@Override
-	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
-				R.layout.project_listitem_project,
-				null,
-				new String[] { "name", "id", "id"},
-				new int[] { R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal },
-				0); 
-	}	
-
-
-	@Override
-	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		super.onCreateLoader(arg0, arg1);
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Project.class, null),
-				null, null, null, null
-			);
-		return (Loader<Object>)loader;
-	}
-
-
-	@Override
-	public void onInitViewData() {
-		super.onInitViewData();
-		if (mChangeObserver == null) {
-			mChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									ProjectShareAuthorization.class, null), true,
-							mChangeObserver);
-		}
-	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.projectListFragment_action_project_addnew){
@@ -94,153 +61,113 @@ public class ProjectListFragment extends HyjUserListFragment{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
-		if(id == -1) {
-			 return;
-		}
-		if(getActivity().getCallingActivity() != null){
-			Intent intent = new Intent();
-			intent.putExtra("MODEL_ID", id);
-			getActivity().setResult(Activity.RESULT_OK, intent);
-			getActivity().finish();
-		} else {
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
-		}
-    }  
+	/**
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the sections/tabs/pages.
+	 */
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		Project project = Project.load(Project.class, id);
-		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		if(userData.getActiveProjectId().equals(project.getId())){
-			HyjUtil.displayToast("默认项目不能删除");
-			return;
+	    private List<SubProjectListFragment> pages;
+	    
+		public SectionsPagerAdapter(FragmentManager fm) {
+			super(fm);
+			pages = new ArrayList<SubProjectListFragment>();
 		}
-		project.delete();
-	    HyjUtil.displayToast("项目删除成功");
+
+		public void addPage(SubProjectListFragment fragment){
+			pages.add(fragment);
+			this.notifyDataSetChanged();
+		}
+
+		public void removePageAt(int position){
+			pages.remove(position);
+		}
+		
+		@Override
+		public Fragment getItem(int position) {
+			// getItem is called to instantiate the fragment for the given page.
+			return pages.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return pages.size();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return pages.get(position).getTitle();
+		}
+		
+		//-----------------------------------------------------------------------------
+		  // Used by ViewPager.  "Object" represents the page; tell the ViewPager where the
+		  // page should be displayed, from left-to-right.  If the page no longer exists,
+		  // return POSITION_NONE.
+		  @Override
+		  public int getItemPosition (Object object)
+		  {
+		    int index = pages.indexOf (object);
+		    if (index == -1)
+		      return POSITION_NONE;
+		    else
+		      return index;
+		  }
+
+//		  //-----------------------------------------------------------------------------
+//		  // Used by ViewPager.  Called when ViewPager needs a page to display; it is our job
+//		  // to add the page to the container, which is normally the ViewPager itself.  Since
+//		  // all our pages are persistent, we simply retrieve it from our "views" ArrayList.
+//		  @Override
+//		  public Object instantiateItem (ViewGroup container, int position)
+//		  {
+//		    View v = pages.get(position).getView();
+//		    container.addView (v);
+//		    return v;
+//		  }
+
+		  //-----------------------------------------------------------------------------
+		  // Used by ViewPager.  Called when ViewPager no longer needs a page to display; it
+		  // is our job to remove the page from the container, which is normally the
+		  // ViewPager itself.  Since all our pages are persistent, we do nothing to the
+		  // contents of our "views" ArrayList.
+//		  @Override
+//		  public void destroyItem (ViewGroup container, int position, Object object)
+//		  {
+//			  super.destroyItem(container, position, object);
+//			  pages.remove(position);
+//			  this.notifyDataSetChanged();
+//		  }
+
+
+//		  //-----------------------------------------------------------------------------
+//		  // Used by ViewPager.
+//		  @Override
+//		  public boolean isViewFromObject (View view, Object object)
+//		  {
+//		    return view == object;
+//		  }
+
 	}
-	
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if(!getUserVisibleHint()){
-			return super.onContextItemSelected(item);
-		}
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	    Long itemId = getListAdapter().getItemId(info.position);
-		switch (item.getItemId()) {
-//			case ADD_SUB_PROJECT:
-//			    HyjUtil.displayToast("创建子项目" + itemId);
+	public void onSelectSubProjectsListener(final String parentProjectId, final String title) {
+		for(int i = mSectionsPagerAdapter.getCount()-1; i > mViewPager.getCurrentItem()+1; i--){
+//			if(i == mViewPager.getCurrentItem() && 
+//				((SubProjectListFragment)mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem())).getActivity() != null){
 //				break;
-			case VIEW_PROJECT_MEMBERS:
-				Bundle bundle = new Bundle();
-				bundle.putLong("MODEL_ID", info.id);
-				openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
-				break;
+//			}
+			mSectionsPagerAdapter.removePageAt(i);
 		}
-		return super.onContextItemSelected(item);
-	}
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
-		if(mi.id == -1){
-			return;
-		}
-		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
-//		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
-	}
-	
-	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		if(view.getId() == R.id.projectListItem_name){
-			((TextView)view).setText(cursor.getString(columnIndex));
-			return true;
-		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
-			HyjNumericView numericView = (HyjNumericView)view;
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
-            Double projectExpenseTotal = 0.0;
-			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-            	projectExpenseTotal+= psa.getExpenseTotal();
-            }
-			numericView.setPrefix("支出:" + project.getCurrencySymbol());
-			numericView.setSuffix(null);
-			numericView.setTextColor(Color.parseColor("#FF0000"));
-			numericView.setNumber(projectExpenseTotal);
-			return true;
-		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
-			HyjNumericView numericView = (HyjNumericView)view;
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
-            Double projectIncomeTotal = 0.0;
-			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-            	projectIncomeTotal+= psa.getIncomeTotal();
-            }
-			numericView.setPrefix("收入:" + project.getCurrencySymbol());
-			numericView.setSuffix(null);
-			numericView.setTextColor(Color.parseColor("#339900"));
-			numericView.setNumber(projectIncomeTotal);
-			return true;
+		mSectionsPagerAdapter.notifyDataSetChanged();
+		if(mSectionsPagerAdapter.getCount()-1 > mViewPager.getCurrentItem()){
+			mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
+			((SubProjectListFragment)mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem())).requery(parentProjectId, title);
 		} else {
-			return false;
-		}
-	}	
-	
-	private class ChangeObserver extends ContentObserver {
-		AsyncTask<String, Void, String> mTask = null;
-		public ChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
-
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if(mTask == null){
-				mTask = new AsyncTask<String, Void, String>() {
-			        @Override
-			        protected String doInBackground(String... params) {
-						try {
-							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(200);
-						} catch (InterruptedException e) {}
-						return null;
-			        }
-			        @Override
-			        protected void onPostExecute(String result) {
-						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
-						mTask = null;
-			        }
-			    };
-			    mTask.execute();
-			}
+			SubProjectListFragment nextFragment = SubProjectListFragment.newInstance(parentProjectId, title);
+			nextFragment.setOnSelectSubProjectsListener(this);
+			mSectionsPagerAdapter.addPage(nextFragment);
+			mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
+//			nextFragment.requery(parentProjectId, title);
 		}
 	}
 
-
-	@Override
-	public void onDestroy() {
-		if (mChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-		}
-		super.onDestroy();
-	}
-	
 }

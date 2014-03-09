@@ -106,8 +106,6 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
-	
-
 	private String[] mDrawerListerTitles = null;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
