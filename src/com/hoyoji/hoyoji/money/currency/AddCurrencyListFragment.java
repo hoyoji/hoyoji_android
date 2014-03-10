@@ -148,8 +148,8 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 	}
 	
 	@Override
-	public void doFetchMore(int offset, int pageSize){
-		this.setFooterLoadStart();
+	public void doFetchMore(ListView l, int offset, int pageSize){
+		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
 			data.put("name", mSearchText);

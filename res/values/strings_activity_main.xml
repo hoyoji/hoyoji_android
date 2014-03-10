@@ -18,6 +18,8 @@
         <item>消息管理</item>
         <item>汇率管理</item>
         <item>货币管理</item>
+        <item>支出分类管理</item>
+        <item>收入分类管理</item>
         <item>设置</item>
         <item>切换用户</item>
     </string-array>

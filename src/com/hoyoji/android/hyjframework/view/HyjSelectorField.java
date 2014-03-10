@@ -80,6 +80,7 @@ public class HyjSelectorField extends LinearLayout {
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
+		
 	}
 
 	public void setError(String error){
@@ -91,8 +92,8 @@ public class HyjSelectorField extends LinearLayout {
 		mEditTextEdit.setText(text);
 	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getEditableText();
+	public String getText(){
+		return (String) mEditTextEdit.getText();
 	}
 	
 	public void setModelId(String modelId){
@@ -109,5 +110,17 @@ public class HyjSelectorField extends LinearLayout {
 	
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
+	}
+
+	public void setLabel(String label) {
+		if(label == null){
+			mTextViewLabel.setText(mLabelText);
+		} else {
+			mTextViewLabel.setText(label);
+		}
+	}
+
+	public String getLabel() {
+		return mTextViewLabel.getText().toString();
 	}
 }

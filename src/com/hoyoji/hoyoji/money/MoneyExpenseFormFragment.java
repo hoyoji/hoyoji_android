@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -45,12 +46,14 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -60,6 +63,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
+	private final static int GET_CATEGORY_ID = 5;
+	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private int UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 1;
@@ -72,7 +77,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
-	private HyjTextField mTextFieldMoneyExpenseCategory = null;
+	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
@@ -186,10 +191,23 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(
 				R.id.moneyExpenseFormFragment_linearLayout_exchangeRate);
 
-		mTextFieldMoneyExpenseCategory = (HyjTextField) getView().findViewById(
+		mSelectorFieldMoneyExpenseCategory = (HyjSelectorField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
-		mTextFieldMoneyExpenseCategory.setText(moneyExpense
+		mSelectorFieldMoneyExpenseCategory.setText(moneyExpense
 				.getMoneyExpenseCategory());
+		if(moneyExpense.getMoneyExpenseCategoryMain() != null && moneyExpense.getMoneyExpenseCategoryMain().length() > 0){
+			mSelectorFieldMoneyExpenseCategory.setLabel(moneyExpense.getMoneyExpenseCategoryMain());
+		}
+		mSelectorFieldMoneyExpenseCategory.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyExpenseFormFragment.this
+						.openActivityWithFragmentForResult(
+								MoneyExpenseCategoryListFragment.class,
+								R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory,
+								null, GET_CATEGORY_ID);
+			}
+		});
 
 		Friend friend = moneyExpense.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(
@@ -487,9 +505,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		modelCopy.setMoneyExpenseCategory(mTextFieldMoneyExpenseCategory
-				.getText().toString().trim());
-
+		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory
+				.getText());
+		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
+		
 		if (mSelectorFieldFriend.getModelId() != null) {
 			Friend friend = HyjModel.getModel(Friend.class,
 					mSelectorFieldFriend.getModelId());
@@ -515,7 +534,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyExpenseEditor
 				.getValidationError("exchangeRate"));
-		mTextFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor
+		mSelectorFieldMoneyExpenseCategory.setError(mMoneyExpenseEditor
 				.getValidationError("moneyExpenseCategory"));
 		mSelectorFieldFriend.setError(mMoneyExpenseEditor
 				.getValidationError("friend"));
@@ -534,7 +553,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mMoneyExpenseEditor.validate();
 		
 		if (mApportionFieldApportions.getCount() > 0) {
-			if (!mNumericAmount.getNumber().equals(
+			if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(
 					mApportionFieldApportions.getTotalAmount())) {
 				mMoneyExpenseEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
 			} else {
@@ -564,6 +583,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
 					userDataEditor.save();
+				}
+				
+				// 更新项目的默认分类
+				if(moneyExpenseModel.get_mId() == null){
+					HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
+					projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
+					projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseModel.getMoneyExpenseCategoryMain());
+					projectEditor.save();
 				}
 				
 				//当前汇率不存在时，创建汇率
@@ -610,6 +637,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						 selfProjectAuthorizationEditor.save();
 					}
 					
+				//更新分类，使之成为最近使用过的
+				if(this.mSelectorFieldMoneyExpenseCategory.getModelId() != null){
+					MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, this.mSelectorFieldMoneyExpenseCategory.getModelId());
+					if(category != null){
+						category.newModelEditor().save();
+					}
+				}
 				mMoneyExpenseEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
@@ -802,6 +836,19 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				Friend friend = Friend.load(Friend.class, _id);
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				mSelectorFieldFriend.setModelId(friend.getId());
+			}
+			break;
+		case GET_CATEGORY_ID:
+			if (resultCode == Activity.RESULT_OK) {
+				long _id = data.getLongExtra("MODEL_ID", -1);
+				MoneyExpenseCategory category = MoneyExpenseCategory.load(MoneyExpenseCategory.class, _id);
+				mSelectorFieldMoneyExpenseCategory.setText(category.getName());
+				mSelectorFieldMoneyExpenseCategory.setModelId(category.getId());
+				if(category.getParentExpenseCategory() != null){
+					mSelectorFieldMoneyExpenseCategory.setLabel(category.getParentExpenseCategory().getName());
+				} else {
+					mSelectorFieldMoneyExpenseCategory.setLabel(null);
+				}
 			}
 			break;
 

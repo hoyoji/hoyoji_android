@@ -63,7 +63,6 @@ public abstract class HyjActivity extends ActionBarActivity
 	public void dismissProgressDialog(){
 		if(mProgressDialog != null){
 			mProgressDialog.dismiss();
-			mProgressDialog.dismiss();
 		}
 	}
 	
@@ -71,7 +70,6 @@ public abstract class HyjActivity extends ActionBarActivity
 		if(mDialogFragment != null){
 			mDialogFragment.dismiss();
 		}
-		
 		mDialogFragment = HyjDialogFragment.newInstance(title, msg, R.string.alert_dialog_ok, -1, -1);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 

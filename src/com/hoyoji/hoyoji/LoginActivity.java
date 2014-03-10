@@ -23,8 +23,11 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
+import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
@@ -329,6 +332,10 @@ public class LoginActivity extends HyjActivity {
 			jsonObj.put("__dataType", "ProjectShareAuthorization");
 			// jsonObj.put("ownerUserId", user.getId());
 
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectRemark");
+			// jsonObj.put("ownerUserId", user.getId());
+
 			JSONObject notFilter = new JSONObject();
 			notFilter.put("ownerUserId", "");
 			jsonObj.put("__NOT_FILTER__", notFilter);
@@ -454,22 +461,25 @@ public class LoginActivity extends HyjActivity {
 										Exchange exchange = new Exchange();
 										exchange.loadFromJSON(obj, true);
 										exchange.save();
+									} else if (obj.optString("__dataType")
+											.equals("MoneyExpenseCategory")) {
+										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
+										moneyExpenseCategory.loadFromJSON(obj,
+												true);
+										moneyExpenseCategory.save();
+									} else if (obj.optString("__dataType")
+											.equals("MoneyIncomeCategory")) {
+										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
+										moneyIncomeCategory.loadFromJSON(obj,
+												true);
+										moneyIncomeCategory.save();
+									} else if (obj.optString("__dataType")
+											.equals("ProjectRemark")) {
+										ProjectRemark projectRemark = new ProjectRemark();
+										projectRemark.loadFromJSON(obj,
+												true);
+										projectRemark.save();
 									}
-									// else if (obj.optString("__dataType")
-									// .equals("MoneyExpenseCategory")) {
-									// MoneyExpenseCategory moneyExpenseCategory
-									// = new MoneyExpenseCategory();
-									// moneyExpenseCategory.loadFromJSON(obj,
-									// true);
-									// moneyExpenseCategory.save();
-									// } else if (obj.optString("__dataType")
-									// .equals("MoneyIncomeCategory")) {
-									// MoneyIncomeCategory moneyIncomeCategory =
-									// new MoneyIncomeCategory();
-									// moneyIncomeCategory.loadFromJSON(obj,
-									// true);
-									// moneyIncomeCategory.save();
-									// }
 
 								}
 

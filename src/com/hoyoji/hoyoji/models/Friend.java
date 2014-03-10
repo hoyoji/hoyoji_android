@@ -15,7 +15,7 @@ import android.provider.BaseColumns;
 public class Friend extends HyjModel {
 	
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 	
 	@Column(name = "nickName")
 	private String mNickName;
@@ -46,11 +46,23 @@ public class Friend extends HyjModel {
 	
 	@Column(name = "address")
 	private String mAddress;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	
 	public Friend(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 
 	public User getFriendUser(){
@@ -66,11 +78,11 @@ public class Friend extends HyjModel {
 
 	@Override
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getDisplayName(){
@@ -199,5 +211,38 @@ public class Friend extends HyjModel {
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

@@ -24,7 +24,7 @@ import android.provider.BaseColumns;
 public class UserData extends HyjModel {
 	
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "userId", index = true, unique = true)
 	private String mUserId;
@@ -76,11 +76,23 @@ public class UserData extends HyjModel {
 	
 	@Column(name = "address")
 	private String mAddress;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	
 	public UserData(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 
 	public User getUser(){
@@ -96,11 +108,11 @@ public class UserData extends HyjModel {
 
 	@Override
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getUserId() {
@@ -153,6 +165,14 @@ public class UserData extends HyjModel {
 
 	public String getActiveProjectId() {
 		return mActiveProjectId;
+	}
+	
+
+	public Project getActiveProject() {
+		if(mActiveProjectId == null){
+			return null;
+		}
+		return HyjModel.getModel(Project.class, mActiveProjectId);
 	}
 
 	public void setActiveProjectId(String mActiveProjectId) {
@@ -283,5 +303,38 @@ public class UserData extends HyjModel {
 		jsonObj.remove("lastMessagesDownloadTime");
 		jsonObj.remove("lastSyncTime");
 		return jsonObj;
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ import com.hoyoji.hoyoji.R;
 public class MoneyIncome extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 	
 	@Column(name = "pictureId")
 	private String mPictureId;
@@ -51,6 +50,9 @@ public class MoneyIncome extends HyjModel{
 	@Column(name = "moneyIncomeCategory")
 	private String mMoneyIncomeCategory;
 	
+	@Column(name = "moneyIncomeCategoryMain")
+	private String mMoneyIncomeCategoryMain;
+	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
@@ -74,23 +76,39 @@ public class MoneyIncome extends HyjModel{
 	
 	@Column(name = "address")
 	private String mAddress;	
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyIncome(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		mIncomeType = "MoneyIncome";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		if(mProjectId != null){
+			mMoneyIncomeCategory = this.getProject().getDefaultIncomeCategory();
+			mMoneyIncomeCategoryMain = this.getProject().getDefaultIncomeCategoryMain();
+		}
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getPictureId() {
@@ -242,6 +260,14 @@ public class MoneyIncome extends HyjModel{
 		this.mMoneyIncomeCategory = mMoneyIncomeCategory;
 	}
 
+	public String getMoneyIncomeCategoryMain() {
+		return mMoneyIncomeCategoryMain;
+	}
+
+	public void setMoneyIncomeCategoryMain(String mMoneyIncomeCategoryMain) {
+		this.mMoneyIncomeCategoryMain = mMoneyIncomeCategoryMain;
+	}
+	
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
@@ -375,5 +401,38 @@ public class MoneyIncome extends HyjModel{
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

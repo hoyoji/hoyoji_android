@@ -19,7 +19,7 @@ import com.hoyoji.hoyoji.R;
 public class MoneyExpense extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 	
 	@Column(name = "pictureId")
 	private String mPictureId;
@@ -50,6 +50,9 @@ public class MoneyExpense extends HyjModel{
 	
 	@Column(name = "moneyExpenseCategory")
 	private String mMoneyExpenseCategory;
+
+	@Column(name = "moneyExpenseCategoryMain")
+	private String mMoneyExpenseCategoryMain;
 	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
@@ -74,23 +77,39 @@ public class MoneyExpense extends HyjModel{
 	
 	@Column(name = "address")
 	private String mAddress;	
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyExpense(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		mExpenseType = "MoneyExpense";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		if(mProjectId != null){
+			mMoneyExpenseCategory = this.getProject().getDefaultExpenseCategory();
+			mMoneyExpenseCategoryMain = this.getProject().getDefaultExpenseCategoryMain();
+		}
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getPictureId() {
@@ -242,6 +261,14 @@ public class MoneyExpense extends HyjModel{
 		this.mMoneyExpenseCategory = mMoneyExpenseCategory;
 	}
 
+	public String getMoneyExpenseCategoryMain() {
+		return mMoneyExpenseCategoryMain;
+	}
+
+	public void setMoneyExpenseCategoryMain(String mMoneyExpenseCategoryMain) {
+		this.mMoneyExpenseCategoryMain = mMoneyExpenseCategoryMain;
+	}	
+	
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
@@ -340,7 +367,7 @@ public class MoneyExpense extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
-		if(this.getMoneyExpenseCategory() == null){
+		if(this.getMoneyExpenseCategory() == null || this.getMoneyExpenseCategory().length() == 0){
 			modelEditor.setValidationError("moneyExpenseCategory", R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory);
 		}else{
 			modelEditor.removeValidationError("moneyExpenseCategory");
@@ -378,5 +405,38 @@ public class MoneyExpense extends HyjModel{
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

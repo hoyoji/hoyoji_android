@@ -13,6 +13,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
@@ -22,11 +23,11 @@ import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_CURRENCY_ID = 1;
 	
-	private HyjModelEditor mMoneyAccountEditor = null;
+	private HyjModelEditor<MoneyAccount> mMoneyAccountEditor = null;
 	private HyjTextField mTextFieldName = null;
 	private HyjSelectorField mSelectorFieldCurrency = null;
 	private HyjNumericField mNumericFieldCurrentBalance = null;
-	private HyjTextField mTextFieldAccountType = null;
+	private HyjSpinnerField mSpinnerFieldAccountType = null;
 	private HyjRemarkField mRemarkFieldAccountNumber = null;
 	private HyjRemarkField mRemarkFieldBankAddress = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
@@ -73,9 +74,10 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mNumericFieldCurrentBalance.setNumber(moneyAccount.getCurrentBalance());
 		mNumericFieldCurrentBalance.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
-		mTextFieldAccountType = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
-		mTextFieldAccountType.setText(moneyAccount.getAccountType());
-		mTextFieldAccountType.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
+		mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array, new String[] {"Cash", "Deposit", "Credit", "Online", "Debt"});
+	    mSpinnerFieldAccountType.setSelectedValue(moneyAccount.getAccountType());
+		mSpinnerFieldAccountType.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountNumber);
 		mRemarkFieldAccountNumber.setText(moneyAccount.getAccountNumber());
@@ -97,7 +99,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
-		modelCopy.setAccountType(mTextFieldAccountType.getText().toString().trim());
+		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
 		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
 		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -109,7 +111,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mTextFieldName.setError(mMoneyAccountEditor.getValidationError("name"));
 		mSelectorFieldCurrency.setError(mMoneyAccountEditor.getValidationError("currency"));
 		mNumericFieldCurrentBalance.setError(mMoneyAccountEditor.getValidationError("currentBalance"));
-		mTextFieldAccountType.setError(mMoneyAccountEditor.getValidationError("accountType"));
+		mSpinnerFieldAccountType.setError(mMoneyAccountEditor.getValidationError("accountType"));
 		mRemarkFieldAccountNumber.setError(mMoneyAccountEditor.getValidationError("accountNumber"));
 		mRemarkFieldBankAddress.setError(mMoneyAccountEditor.getValidationError("bankAddress"));
 		mRemarkFieldRemark.setError(mMoneyAccountEditor.getValidationError("remark"));

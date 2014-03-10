@@ -89,6 +89,10 @@ public abstract class Model {
 		mSyncFromServer = b;
 	}
 	
+	public Boolean getSyncFromServer() {
+		return mSyncFromServer;
+	}
+	
 	public void save() {
 		final SQLiteDatabase db = Cache.openDatabase();
 		final ContentValues values = new ContentValues();

@@ -66,8 +66,10 @@ import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyLendApportion;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -78,6 +80,7 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
@@ -98,12 +101,11 @@ import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
-	
-
 	private String[] mDrawerListerTitles = null;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -263,7 +265,15 @@ public class MainActivity extends HyjUserActivity {
 			openActivityWithFragment(CurrencyListFragment.class,
 					R.string.currencyListFragment_title_manage_currency, null);
 			break;
+		case 5:
+			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+					R.string.currencyListFragment_title_manage_currency, null);
+			break;
 		case 6:
+//			openActivityWithFragment(CurrencyListFragment.class,
+//					R.string.currencyListFragment_title_manage_currency, null);
+			break;
+		case 8:
 			HyjApplication.getInstance().switchUser();
 			break;
 		}
@@ -935,6 +945,21 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(UserData.class, id);
 			if(model == null){
 				model = new UserData();
+			}
+		} else if (tableName.equalsIgnoreCase("ProjectRemark")) {
+			model = HyjModel.getModel(ProjectRemark.class, id);
+			if(model == null){
+				model = new ProjectRemark();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyIncomeCategory")) {
+			model = HyjModel.getModel(MoneyIncomeCategory.class, id);
+			if(model == null){
+				model = new MoneyIncomeCategory();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyExpenseCategory")) {
+			model = HyjModel.getModel(MoneyExpenseCategory.class, id);
+			if(model == null){
+				model = new MoneyExpenseCategory();
 			}
 		}
 		return model;

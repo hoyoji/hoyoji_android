@@ -16,7 +16,7 @@ import com.hoyoji.hoyoji.R;
 public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -38,19 +38,31 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyBorrowApportion(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		mApportionType = "Share";
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public Double getAmount() {
@@ -180,5 +192,38 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 	public void setMoneyId(String moneyTransactionId) {
 		this.setMoneyBorrowId(moneyTransactionId);
 	}
+	
 
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

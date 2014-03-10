@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -37,7 +38,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	public final static int DELETE_LIST_ITEM = 1024;
 	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
-	protected View mFooterView;
+	private View mFooterView;
 	protected int mListPageSize = 10;
 	
 	@Override
@@ -57,9 +58,17 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 		getListView().setFooterDividersEnabled(true);
+		
 	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
-		getListView().addFooterView(mFooterView);
-		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
+	    mFooterView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				doFetchMore(getListView(), getListView().getAdapter().getCount()-1, mListPageSize);
+			}
+	    });
+	    
+		getListView().addFooterView(mFooterView, null, false);
+//		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
 			ListAdapter adapter = useListViewAdapter();
@@ -74,6 +83,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		}
 	}
 	
+
 	@Override
 	public void onStart(){
 		super.onStart();
@@ -126,20 +136,21 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 	
 
-	public void setFooterLoadStart(){
-        if(getListView().getItemAtPosition(0) == null){
-        	((TextView)getListView().getEmptyView()).setText(R.string.app_listview_footer_fetching_more);
-        } else {
+	public void setFooterLoadStart(ListView l){
+//        if(l.getItemAtPosition(0) == null){
+//        	((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
+//        } else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
-        }
+//        }
         ((TextView)mFooterView).setEnabled(false);
 	}
 	
-	public void setFooterLoadFinished(int count){
+	public void setFooterLoadFinished(ListView l, int count){
         ((TextView)mFooterView).setEnabled(true);
-        ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
 		if(count >= mListPageSize){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+		} else if(count == 0){
+	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
@@ -164,7 +175,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        	count = ((List)cursor).size();
 	        }
         }
-        setFooterLoadFinished(count);
+        setFooterLoadFinished(getListView(), count);
 	}
 	
 	
@@ -177,9 +188,44 @@ public abstract class HyjUserListFragment extends ListFragment implements
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		setFooterLoadStart();
+		setFooterLoadStart(getListView());
 		return null;
 	}
+	
+//	@Override  
+//    public void onListItemClick(ListView l, View v, int position, long id) { 
+//		super.onListItemClick(l, v, position, id);
+//    }  
+	
+	public void doFetchMore(ListView l, int offset, int pageSize){
+	}
+	
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//		super.onCreateContextMenu(menu, v, menuInfo);
+//		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
+//		if(mi.id == -1){
+//			return;
+//		}
+//		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
+//		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+//	}	
+	
+	public void onDeleteListItem(Long id){
+	}
+	
+
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		return false;
+	}  	
+	
+
+	@Override
+	public boolean setViewValue(View arg0, Object arg1, String arg2) {
+		return false;
+	}
+
 
 
 
@@ -206,55 +252,23 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		}
 	}
 	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if(!getUserVisibleHint()){
-			return super.onContextItemSelected(item);
-		}
-		switch (item.getItemId()) {
-			case DELETE_LIST_ITEM:
-			    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-			    Long itemId = getListAdapter().getItemId(info.position);
-				onDeleteListItem(itemId);
-				break;
-			case CANCEL_LIST_ITEM:
-				break;
-		}
-		return super.onContextItemSelected(item);
-	}
-	
-	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
-		super.onListItemClick(l, v, position, id);
-		if(v == mFooterView){
-			doFetchMore(l.getAdapter().getCount()-1, this.mListPageSize);
-		}
-    }  
-	
-	public void doFetchMore(int offset, int pageSize){
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
-		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-	}	
-	
-	public void onDeleteListItem(Long id){
-	}
-	
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {
+//		if(!getUserVisibleHint()){
+//			return super.onContextItemSelected(item);
+//		}
+//		switch (item.getItemId()) {
+//			case DELETE_LIST_ITEM:
+//			    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//			    Long itemId = getListAdapter().getItemId(info.position);
+//				onDeleteListItem(itemId);
+//				break;
+//			case CANCEL_LIST_ITEM:
+//				break;
+//		}
+//		return super.onContextItemSelected(item);
+//	}
 
-	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		return false;
-	}  	
-	
-
-	@Override
-	public boolean setViewValue(View arg0, Object arg1, String arg2) {
-		return false;
-	}
 }
 
 

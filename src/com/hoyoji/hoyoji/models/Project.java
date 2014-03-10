@@ -18,7 +18,7 @@ import com.hoyoji.hoyoji.R;
 public class Project extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "name")
 	private String mName;
@@ -35,8 +35,14 @@ public class Project extends HyjModel {
 	@Column(name = "defaultIncomeCategory")
 	private String mDefaultIncomeCategory;
 
+	@Column(name = "defaultIncomeCategoryMain")
+	private String mDefaultIncomeCategoryMain;
+
 	@Column(name = "defaultExpenseCategory")
 	private String mDefaultExpenseCategory;
+
+	@Column(name = "defaultExpenseCategoryMain")
+	private String mDefaultExpenseCategoryMain;
 
 	@Column(name = "depositeIncomeCategory")
 	private String mDepositeIncomeCategory;
@@ -44,9 +50,21 @@ public class Project extends HyjModel {
 	@Column(name = "depositeExpenseCategory")
 	private String mDepositeExpenseCategory;
 
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
+	
 	public Project() {
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		setAutoApportion(false);
 	}
 
@@ -67,11 +85,11 @@ public class Project extends HyjModel {
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getName() {
@@ -162,6 +180,22 @@ public class Project extends HyjModel {
 		this.mDefaultExpenseCategory = mDefaultExpenseCategory;
 	}
 
+	public String getDefaultIncomeCategoryMain() {
+		return mDefaultIncomeCategoryMain;
+	}
+
+	public void setDefaultIncomeCategoryMain(String mDefaultIncomeCategoryMain) {
+		this.mDefaultIncomeCategoryMain = mDefaultIncomeCategoryMain;
+	}
+
+	public String getDefaultExpenseCategoryMain() {
+		return mDefaultExpenseCategoryMain;
+	}
+
+	public void setDefaultExpenseCategoryMain(String mDefaultExpenseCategoryMain) {
+		this.mDefaultExpenseCategoryMain = mDefaultExpenseCategoryMain;
+	}
+
 	public String getDepositeIncomeCategory() {
 		return mDepositeIncomeCategory;
 	}
@@ -189,5 +223,38 @@ public class Project extends HyjModel {
 					.getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }
