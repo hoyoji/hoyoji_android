@@ -43,6 +43,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.Picture;
@@ -51,6 +52,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -61,6 +63,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
+	private final static int GET_CATEGORY_ID = 5;
+	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	private int UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 1;
@@ -73,7 +77,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
-	private HyjTextField mTextFieldMoneyIncomeCategory = null;
+	private HyjSelectorField mSelectorFieldMoneyIncomeCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
@@ -169,8 +173,23 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyIncomeFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyIncomeFormFragment_linearLayout_exchangeRate);
 		
-		mTextFieldMoneyIncomeCategory = (HyjTextField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_moneyIncomeCategory);
-		mTextFieldMoneyIncomeCategory.setText(moneyIncome.getMoneyIncomeCategory());
+		mSelectorFieldMoneyIncomeCategory = (HyjSelectorField) getView().findViewById(
+				R.id.moneyIncomeFormFragment_textField_moneyIncomeCategory);
+		mSelectorFieldMoneyIncomeCategory.setText(moneyIncome
+				.getMoneyIncomeCategory());
+		if(moneyIncome.getMoneyIncomeCategoryMain() != null && moneyIncome.getMoneyIncomeCategoryMain().length() > 0){
+			mSelectorFieldMoneyIncomeCategory.setLabel(moneyIncome.getMoneyIncomeCategoryMain());
+		}
+		mSelectorFieldMoneyIncomeCategory.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyIncomeFormFragment.this
+						.openActivityWithFragmentForResult(
+								MoneyIncomeCategoryListFragment.class,
+								R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory,
+								null, GET_CATEGORY_ID);
+			}
+		});
 		
 		Friend friend = moneyIncome.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_friend);
@@ -437,7 +456,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		modelCopy.setMoneyIncomeCategory(mTextFieldMoneyIncomeCategory.getText().toString().trim());
+		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText().toString().trim());
+		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
@@ -460,7 +480,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyAccount.setError(mMoneyIncomeEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyIncomeEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyIncomeEditor.getValidationError("exchangeRate"));
-		mTextFieldMoneyIncomeCategory.setError(mMoneyIncomeEditor.getValidationError("moneyIncomeCategory"));
+		mSelectorFieldMoneyIncomeCategory.setError(mMoneyIncomeEditor.getValidationError("moneyIncomeCategory"));
 		mSelectorFieldFriend.setError(mMoneyIncomeEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyIncomeEditor.getValidationError("remark"));
 		mApportionFieldApportions.setError(mMoneyIncomeEditor.getValidationError("apportionTotalAmount"));
@@ -548,6 +568,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 							oldSelfProjectAuthorizationEditor.save();
 						}
 						 selfProjectAuthorizationEditor.save();
+					}
+					
+					//更新分类，使之成为最近使用过的
+					if(this.mSelectorFieldMoneyIncomeCategory.getModelId() != null){
+						MoneyIncomeCategory category = HyjModel.getModel(MoneyIncomeCategory.class, this.mSelectorFieldMoneyIncomeCategory.getModelId());
+						if(category != null){
+							category.newModelEditor().save();
+						}
 					}
 					
 				mMoneyIncomeEditor.save();
@@ -731,6 +759,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	         	 }
 	        	 break;
+	        	 
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
@@ -739,6 +768,20 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;
+            	 
+             case GET_CATEGORY_ID:
+     			if (resultCode == Activity.RESULT_OK) {
+     				long _id = data.getLongExtra("MODEL_ID", -1);
+     				MoneyIncomeCategory category = MoneyIncomeCategory.load(MoneyIncomeCategory.class, _id);
+     				mSelectorFieldMoneyIncomeCategory.setText(category.getName());
+     				mSelectorFieldMoneyIncomeCategory.setModelId(category.getId());
+     				if(category.getParentIncomeCategory() != null){
+     					mSelectorFieldMoneyIncomeCategory.setLabel(category.getParentIncomeCategory().getName());
+     				} else {
+     					mSelectorFieldMoneyIncomeCategory.setLabel(null);
+     				}
+     			}
+     			break;
             	 
              case GET_APPORTION_MEMBER_ID:
      			if (resultCode == Activity.RESULT_OK) {

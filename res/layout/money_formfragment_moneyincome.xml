@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.hoyoji.android.hyjframework.view.HyjTextField
+            <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyIncomeFormFragment_textField_moneyIncomeCategory"
                 hyj:style="top_label"
                 android:layout_width="0dip"
