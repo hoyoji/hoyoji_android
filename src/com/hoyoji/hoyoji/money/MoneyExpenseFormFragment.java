@@ -838,6 +838,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setModelId(friend.getId());
 			}
 			break;
+			
 		case GET_CATEGORY_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);

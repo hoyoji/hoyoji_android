@@ -75,7 +75,7 @@ public class HyjImageView extends ImageView {
 	}
 	
 	public void setImage(String id){
-		if(mPictureId.equals(id)){
+		if(id != null && mPictureId.equals(id)){
 			return;
 		}
 		

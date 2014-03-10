@@ -28,9 +28,9 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
+import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 
-public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implements 
+public class MoneyIncomeCategoryListFragment extends HyjUserListFragment implements 
 	OnItemClickListener,  OnItemLongClickListener {
 	
 	ListView childrenList;
@@ -41,12 +41,12 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.moneyexpensecategory_listfragment_moneyexpensecategory;
+		return R.layout.moneyincomecategory_listfragment_moneyincomecategory;
 	}
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.moneyexpensecategory_listfragment_moneyexpensecategory;
+		return R.menu.moneyincomecategory_listfragment_moneyincomecategory;
 	}
 
 	@Override
@@ -86,9 +86,9 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			getListView().addHeaderView(mFrecentCategory);
 		}
 		
-		View mainCategoryPanel = getView().findViewById(R.id.moneyExpenseCategory_list_panel_mainCategory);
+		View mainCategoryPanel = getView().findViewById(R.id.moneyIncomeCategory_list_panel_mainCategory);
 		mainCategoryPanel.setBackgroundColor(Color.LTGRAY);
-		View addMainCategory = getView().findViewById(R.id.moneyExpenseCategory_list_button_addMainCategory);
+		View addMainCategory = getView().findViewById(R.id.moneyIncomeCategory_list_button_addMainCategory);
 		addMainCategory.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -103,8 +103,8 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 					public void doPositiveClick(Object bundle) {
 						Bundle b = (Bundle)bundle;
 				    	final String categoryName = b.getString("categoryName");
-				    	final MoneyExpenseCategory category = new MoneyExpenseCategory();
-				    	category.setParentExpenseCategoryId(null);
+				    	final MoneyIncomeCategory category = new MoneyIncomeCategory();
+				    	category.setParentIncomeCategoryId(null);
 				    	category.setName(categoryName);
 				    	category.save();
 					}
@@ -115,7 +115,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			}
 		});		
 		
-		childrenList = (ListView)getView().findViewById(R.id.moneyExpenseCategory_list_children);
+		childrenList = (ListView)getView().findViewById(R.id.moneyIncomeCategory_list_children);
 		childrenList.setFooterDividersEnabled(true);
 	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 	    mFooterView.setOnClickListener(new OnClickListener(){
@@ -131,7 +131,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		childrenList.setAdapter(childrenListAdapter); 
 		childrenList.setHeaderDividersEnabled(true);
 		childrenList.setOnItemClickListener((OnItemClickListener) this);
-		View addChildCategory = getView().findViewById(R.id.moneyExpenseCategory_list_button_addChildCategory);
+		View addChildCategory = getView().findViewById(R.id.moneyIncomeCategory_list_button_addChildCategory);
 		addChildCategory.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -142,15 +142,15 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 					return;
 				}
 			
-				final MoneyExpenseCategory mainCategory = MoneyExpenseCategory.load(MoneyExpenseCategory.class, lastSelectedMainCategoryId);
+				final MoneyIncomeCategory mainCategory = MoneyIncomeCategory.load(MoneyIncomeCategory.class, lastSelectedMainCategoryId);
 				
 				activity.mDialogCallback = new HyjActivity.DialogCallbackListener() {
 					@Override
 					public void doPositiveClick(Object bundle) {
 						Bundle b = (Bundle)bundle;
 				    	final String categoryName = b.getString("categoryName");
-				    	final MoneyExpenseCategory category = new MoneyExpenseCategory();
-				    	category.setParentExpenseCategoryId(mainCategory.getId());
+				    	final MoneyIncomeCategory category = new MoneyIncomeCategory();
+				    	category.setParentIncomeCategoryId(mainCategory.getId());
 				    	category.setName(categoryName);
 				    	category.save();
 					}
@@ -176,24 +176,24 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		String[] selectionArgs = null;
 		if(id == 0){
 			setFooterLoadStart(getListView());
-			selection = "parentExpenseCategoryId IS NULL";
+			selection = "parentIncomeCategoryId IS NULL";
 			loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(MoneyExpenseCategory.class, null),
+				ContentProvider.createUri(MoneyIncomeCategory.class, null),
 				null, selection, selectionArgs, "name ASC"
 			);
 		} else {
 			setFooterLoadStart(childrenList);
 			if(arg1 != null){
-				selection = "parentExpenseCategoryId=?";
+				selection = "parentIncomeCategoryId=?";
 				selectionArgs = new String[]{arg1.getString("parentCategoryId")};
 				orderBy = "name DESC";
 			} else {
-				selection = "parentExpenseCategoryId IS NOT NULL";
+				selection = "parentIncomeCategoryId IS NOT NULL";
 //				selectionArgs = new String[]{};
 				orderBy = "lastClientUpdateTime DESC LIMIT 10";
 			}
 			loader = new CursorLoader(getActivity(),
-					ContentProvider.createUri(MoneyExpenseCategory.class, null),
+					ContentProvider.createUri(MoneyIncomeCategory.class, null),
 					null, selection, selectionArgs, orderBy
 			);
 		}
@@ -309,8 +309,8 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			((MainCategorySimpleCursorAdapter)getListAdapter()).setSelectedId(id);
 			
 			bundle = new Bundle();
-			MoneyExpenseCategory moneyExpenseCategory = MoneyExpenseCategory.load(MoneyExpenseCategory.class, id);
-			bundle.putString("parentCategoryId", moneyExpenseCategory.getId());
+			MoneyIncomeCategory moneyIncomeCategory = MoneyIncomeCategory.load(MoneyIncomeCategory.class, id);
+			bundle.putString("parentCategoryId", moneyIncomeCategory.getId());
 		} else {
 			lastSelectedMainCategoryId = AdapterView.INVALID_ROW_ID;
 			((MainCategorySimpleCursorAdapter)getListAdapter()).setSelectedId(AdapterView.INVALID_ROW_ID);
@@ -335,7 +335,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 				return;
 			}
 			final HyjActivity activity = (HyjActivity) getActivity();
-			final MoneyExpenseCategory category = MoneyExpenseCategory.load(MoneyExpenseCategory.class, id);
+			final MoneyIncomeCategory category = MoneyIncomeCategory.load(MoneyIncomeCategory.class, id);
 			if(activity.mDialogFragment != null){
 				activity.mDialogFragment.dismiss();
 			}
@@ -368,7 +368,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 	
 //	@Override
 //	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-//		MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, cursor.getString(cursor.getColumnIndex("id")));
+//		MoneyIncomeCategory category = HyjModel.getModel(MoneyIncomeCategory.class, cursor.getString(cursor.getColumnIndex("id")));
 //		if(cursor.getLong(cursor.getColumnIndex("_id")) == selectedMainCategoryId){
 //			
 //			return true;
@@ -418,7 +418,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		} 
 		if(getActivity().getCallingActivity() == null){
 			final HyjActivity activity = (HyjActivity) getActivity();
-			final MoneyExpenseCategory category = MoneyExpenseCategory.load(MoneyExpenseCategory.class, id);
+			final MoneyIncomeCategory category = MoneyIncomeCategory.load(MoneyIncomeCategory.class, id);
 			if(activity.mDialogFragment != null){
 				activity.mDialogFragment.dismiss();
 			}
