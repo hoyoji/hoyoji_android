@@ -375,7 +375,12 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 						v.getResources().getDisplayMetrics());
 				v.setPadding((int)px, 0, 0, 0);
 			} else {
-				v.setBackground(null);
+				int sdk = android.os.Build.VERSION.SDK_INT;
+				if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+				    v.setBackgroundDrawable(null);
+				} else {
+				   v.setBackground(null);
+				}
 			}
 			return v;
 		}
