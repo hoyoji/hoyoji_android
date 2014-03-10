@@ -34,7 +34,13 @@ public class HyjSimpleCursorAdapter extends SimpleCursorAdapter {
 			if(this.getItemId(position) == mSelectedId){
 				v.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
 			} else {
-				v.setBackground(null);
+//				v.setBackground(null);
+				int sdk = android.os.Build.VERSION.SDK_INT;
+				if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+				    v.setBackgroundDrawable(null);
+				} else {
+				   v.setBackground(null);
+				}
 			}
 		}
 		return v;

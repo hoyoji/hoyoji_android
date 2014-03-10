@@ -267,12 +267,26 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		if(lastSelectedMainCategoryId != AdapterView.INVALID_ROW_ID){
 			for(int i=l.getFirstVisiblePosition(); i <= l.getLastVisiblePosition(); i++){
 				if(l.getItemIdAtPosition(i) == lastSelectedMainCategoryId){
-					l.getChildAt(i-l.getFirstVisiblePosition()).setBackground(null);
+//					l.getChildAt(i-l.getFirstVisiblePosition()).setBackground(null);
+					
+					int sdk = android.os.Build.VERSION.SDK_INT;
+					if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+						l.getChildAt(i-l.getFirstVisiblePosition()).setBackgroundDrawable(null);
+					} else {
+						l.getChildAt(i-l.getFirstVisiblePosition()).setBackground(null);
+					}
+					
 					break;
 				}
 			} 
 		} else {
-			mFrecentCategory.setBackground(null);
+//			mFrecentCategory.setBackground(null);
+			int sdk = android.os.Build.VERSION.SDK_INT;
+			if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+				mFrecentCategory.setBackgroundDrawable(null);
+			} else {
+				mFrecentCategory.setBackground(null);
+			}
 		}
 		
 		v.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
@@ -375,6 +389,8 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 						v.getResources().getDisplayMetrics());
 				v.setPadding((int)px, 0, 0, 0);
 			} else {
+//				v.setBackground(null);
+				
 				int sdk = android.os.Build.VERSION.SDK_INT;
 				if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				    v.setBackgroundDrawable(null);
