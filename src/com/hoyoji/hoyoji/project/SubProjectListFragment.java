@@ -65,7 +65,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public String getTitle(){
 		String title = getArguments().getString("title");
 		if(title == null){
-			return "全部项目";
+			return "顶级项目";
 		}
 		return title;
 	}
@@ -100,7 +100,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			selectionArgs = new String[]{ parentProjectId };
 		} else {
 			projections = new String[]{ "_id", "name", "id", "id AS _subProjectId" };
-			selection = "NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId)";
+			selection = "NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId) OR EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId AND parentProjectId IS NULL)";
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),

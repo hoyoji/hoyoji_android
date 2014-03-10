@@ -2,14 +2,16 @@ package com.hoyoji.hoyoji.project;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import android.os.Bundle;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.view.ViewPager.PageTransformer;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
-public class ProjectListFragment extends HyjUserFragment implements OnSelectSubProjectsListener{
+public class ProjectListFragment extends HyjUserFragment implements OnSelectSubProjectsListener, OnPageChangeListener{
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -40,11 +42,15 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) getView().findViewById(R.id.projectListFragment_pager);
+		getView().findViewById(R.id.projectListFragment_pager_title_strip).setBackgroundColor(Color.LTGRAY);
+//		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setOffscreenPageLimit(100);
 		SubProjectListFragment firstFragment = SubProjectListFragment.newInstance(null, null);
 		firstFragment.setOnSelectSubProjectsListener(this);
 		mSectionsPagerAdapter.addPage(firstFragment);
+		mSectionsPagerAdapter.notifyDataSetChanged();
 		mViewPager.setCurrentItem(0);
 	}
 
@@ -61,28 +67,62 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	
+	@Override
+	public void onSelectSubProjectsListener(final String parentProjectId, final String title) {
+		final SubProjectListFragment nextFragment = SubProjectListFragment.newInstance(parentProjectId, title);
+		nextFragment.setOnSelectSubProjectsListener(this);
+		mSectionsPagerAdapter.addPage(nextFragment);
+		mSectionsPagerAdapter.notifyDataSetChanged();
+		mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		for(int i = mSectionsPagerAdapter.getCount()-1; i > mViewPager.getCurrentItem(); i--){
+			mSectionsPagerAdapter.removePageAt(i);
+		}
+		mSectionsPagerAdapter.notifyDataSetChanged();
+	}
+
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public static class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-	    private List<SubProjectListFragment> pages;
-	    
+		private List<SubProjectListFragment> pages;
+		private final FragmentManager mFragmentManager;
+		private FragmentTransaction mCurTransaction = null;
+
+
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
+			mFragmentManager = fm;
 			pages = new ArrayList<SubProjectListFragment>();
 		}
 
-		public void addPage(SubProjectListFragment fragment){
+		public void addPage(SubProjectListFragment fragment) {
 			pages.add(fragment);
-			this.notifyDataSetChanged();
 		}
 
-		public void removePageAt(int position){
+		public void removePageAt(int position) {
 			pages.remove(position);
 		}
-		
+
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
@@ -98,76 +138,106 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		public CharSequence getPageTitle(int position) {
 			return pages.get(position).getTitle();
 		}
-		
-		//-----------------------------------------------------------------------------
-		  // Used by ViewPager.  "Object" represents the page; tell the ViewPager where the
-		  // page should be displayed, from left-to-right.  If the page no longer exists,
-		  // return POSITION_NONE.
-		  @Override
-		  public int getItemPosition (Object object)
-		  {
-		    int index = pages.indexOf (object);
-		    if (index == -1)
-		      return POSITION_NONE;
-		    else
-		      return index;
-		  }
 
-//		  //-----------------------------------------------------------------------------
-//		  // Used by ViewPager.  Called when ViewPager needs a page to display; it is our job
-//		  // to add the page to the container, which is normally the ViewPager itself.  Since
-//		  // all our pages are persistent, we simply retrieve it from our "views" ArrayList.
-//		  @Override
-//		  public Object instantiateItem (ViewGroup container, int position)
-//		  {
-//		    View v = pages.get(position).getView();
-//		    container.addView (v);
-//		    return v;
-//		  }
+		// -----------------------------------------------------------------------------
+		@Override
+		public int getItemPosition(Object object) {
+			int index = pages.indexOf(object);
+			if (index == -1)
+				return POSITION_NONE;
+			else
+				return index;
+		}
 
-		  //-----------------------------------------------------------------------------
-		  // Used by ViewPager.  Called when ViewPager no longer needs a page to display; it
-		  // is our job to remove the page from the container, which is normally the
-		  // ViewPager itself.  Since all our pages are persistent, we do nothing to the
-		  // contents of our "views" ArrayList.
-//		  @Override
-//		  public void destroyItem (ViewGroup container, int position, Object object)
-//		  {
-//			  super.destroyItem(container, position, object);
-//			  pages.remove(position);
-//			  this.notifyDataSetChanged();
-//		  }
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			if (mCurTransaction == null) {
+				mCurTransaction = mFragmentManager.beginTransaction();
+			}
 
-
-//		  //-----------------------------------------------------------------------------
-//		  // Used by ViewPager.
-//		  @Override
-//		  public boolean isViewFromObject (View view, Object object)
-//		  {
-//		    return view == object;
-//		  }
-
-	}
-	@Override
-	public void onSelectSubProjectsListener(final String parentProjectId, final String title) {
-		for(int i = mSectionsPagerAdapter.getCount()-1; i > mViewPager.getCurrentItem()+1; i--){
-//			if(i == mViewPager.getCurrentItem() && 
-//				((SubProjectListFragment)mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem())).getActivity() != null){
-//				break;
+			// Do we already have this fragment?
+//			String name = makeFragmentName(container.getId(), position);
+//			Fragment fragment = mFragmentManager.findFragmentByTag(name);
+//			if (fragment != null) {
+//				if (DEBUG)
+//					Log.v(TAG, "Attaching item #" + position + ": f="
+//							+ fragment);
+//				mCurTransaction.attach(fragment);
+//			} else {
+				Fragment fragment = getItem(position);
+				mCurTransaction.add(container.getId(), fragment,
+						makeFragmentName(container.getId(), position));
 //			}
-			mSectionsPagerAdapter.removePageAt(i);
-		}
-		mSectionsPagerAdapter.notifyDataSetChanged();
-		if(mSectionsPagerAdapter.getCount()-1 > mViewPager.getCurrentItem()){
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
-			((SubProjectListFragment)mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem())).requery(parentProjectId, title);
-		} else {
-			SubProjectListFragment nextFragment = SubProjectListFragment.newInstance(parentProjectId, title);
-			nextFragment.setOnSelectSubProjectsListener(this);
-			mSectionsPagerAdapter.addPage(nextFragment);
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
-//			nextFragment.requery(parentProjectId, title);
-		}
-	}
 
+			return fragment;
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			if (mCurTransaction == null) {
+				mCurTransaction = mFragmentManager.beginTransaction();
+			}
+			mCurTransaction.remove((Fragment) object);
+		}
+
+		@Override
+		public void finishUpdate(ViewGroup container) {
+			if (mCurTransaction != null) {
+				mCurTransaction.commit();
+				mCurTransaction = null;
+				mFragmentManager.executePendingTransactions();
+			}
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return ((Fragment) object).getView() == view;
+		}
+
+		private String makeFragmentName(int viewId, int index) {
+			return "android:switcher:"
+					+ viewId
+					+ ":"
+					+ getItem(index).getArguments()
+							.getString("parentProjectId");
+		}
+
+	}
+	
+	public class DepthPageTransformer implements ViewPager.PageTransformer {
+	    private static final float MIN_SCALE = 0.75f;
+
+	    public void transformPage(View view, float position) {
+	        int pageWidth = view.getWidth();
+
+	        if (position < -1) { // [-Infinity,-1)
+	            // This page is way off-screen to the left.
+	            view.setAlpha(0);
+
+	        } else if (position <= 0) { // [-1,0]
+	            // Use the default slide transition when moving to the left page
+	            view.setAlpha(1);
+	            view.setTranslationX(0);
+	            view.setScaleX(1);
+	            view.setScaleY(1);
+
+	        } else if (position <= 1) { // (0,1]
+	            // Fade the page out.
+	            view.setAlpha(1 - position);
+
+	            // Counteract the default slide transition
+	            view.setTranslationX(pageWidth * -position);
+
+	            // Scale the page down (between MIN_SCALE and 1)
+	            float scaleFactor = MIN_SCALE
+	                    + (1 - MIN_SCALE) * (1 - Math.abs(position));
+	            view.setScaleX(scaleFactor);
+	            view.setScaleY(scaleFactor);
+
+	        } else { // (1,+Infinity]
+	            // This page is way off-screen to the right.
+	            view.setAlpha(0);
+	        }
+	    }
+	}
 }
