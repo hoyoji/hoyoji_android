@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.activeandroid.ActiveAndroid;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -17,11 +18,16 @@ import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
+import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
@@ -280,99 +286,142 @@ public class LoginActivity extends HyjActivity {
 		User user = HyjApplication.getInstance().getCurrentUser();
 
 		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
-				user.getMessageBoxId());
+				user.getMessageBoxId1());
 		if (msgBox != null) {
 			this.dismissProgressDialog();
-			 Intent i = getPackageManager()
-			 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
-			 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-			 startActivity(i);
+			Intent i = getPackageManager().getLaunchIntentForPackage(
+					getApplicationContext().getPackageName());
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(i);
 			finish();
 			return;
 		}
 
-		UserData userData = HyjApplication.getInstance().getCurrentUser()
-				.getUserData();
+		// UserData userData = HyjApplication.getInstance().getCurrentUser()
+		// .getUserData();
 
 		// 下载一些用户必须的资料
 		JSONArray belongsToes = new JSONArray();
 		try {
-			JSONObject jsonObj1 = new JSONObject();
-			jsonObj1.put("__dataType", "MessageBox");
-			jsonObj1.put("id", user.getMessageBoxId());
-			belongsToes.put(jsonObj1);
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MessageBox");
+			// jsonObj1.put("id", user.getMessageBoxId());
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj2 = new JSONObject();
-			jsonObj2.put("__dataType", "Project");
-			jsonObj2.put("id", userData.getActiveProjectId());
-			belongsToes.put(jsonObj2);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Project");
+			jsonObj.put("pst.friendUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getActiveProjectId());
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj3 = new JSONObject();
-			jsonObj3.put("__dataType", "ProjectShareAuthorization");
-			jsonObj3.put("projectId", userData.getActiveProjectId());
-			jsonObj3.put("friendUserId", user.getId());
-			belongsToes.put(jsonObj3);
+			// jsonObj = new JSONObject();
+			// jsonObj.put("__dataType", "ProjectShareAuthorization");
+			// jsonObj.put("state", "Accept");
+			// jsonObj.put("friendUserId", user.getId());
+			//
+			// JSONObject notFilter = new JSONObject();
+			// notFilter.put("ownerUserId", user.getId());
+			// jsonObj.put("__NOT_FILTER__", notFilter);
+			// belongsToes.put(jsonObj);
 
-			JSONObject jsonObj4 = new JSONObject();
-			jsonObj4.put("__dataType", "ParentProject");
-			jsonObj4.put("parentProjectId", null);
-			jsonObj4.put("subProjectId", userData.getActiveProjectId());
-			jsonObj4.put("ownerUserId", user.getId());
-			belongsToes.put(jsonObj4);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectShareAuthorization");
+			// jsonObj.put("ownerUserId", user.getId());
 
-			JSONObject jsonObj5 = new JSONObject();
-			jsonObj5.put("__dataType", "FriendCategory");
-			jsonObj5.put("id", userData.getDefaultFriendCategoryId());
-			belongsToes.put(jsonObj5);
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectRemark");
+			// jsonObj.put("ownerUserId", user.getId());
 
-			JSONObject jsonObj6 = new JSONObject();
-			jsonObj6.put("__dataType", "Currency");
-			jsonObj6.put("id", userData.getActiveCurrencyId());
-			belongsToes.put(jsonObj6);
+			JSONObject notFilter = new JSONObject();
+			notFilter.put("ownerUserId", "");
+			jsonObj.put("__NOT_FILTER__", notFilter);
+			belongsToes.put(jsonObj);
 
-			JSONObject jsonObj7 = new JSONObject();
-			jsonObj7.put("__dataType", "MoneyAccount");
-			jsonObj7.put("id", userData.getActiveMoneyAccountId());
-			belongsToes.put(jsonObj7);
-			// 从服务器上下载用户数据
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ParentProject");
+			jsonObj.put("parentProjectId", null);
+			// jsonObj.put("subProjectId", userData.getActiveProjectId());
+			jsonObj.put("ownerUserId", user.getId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "FriendCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Friend");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Currency");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Exchange");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyAccount");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyExpenseCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
+
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "MoneyIncomeCategory");
+			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+			belongsToes.put(jsonObj);
+
+			// 从服务器上下载基础数据
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
-					JSONArray jsonArray = (JSONArray) object;
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONArray array = jsonArray.optJSONArray(i);
-						for (int j = 0; j < jsonArray.length(); j++) {
-							JSONObject obj = array.optJSONObject(j);
-							if (obj != null) {
-								try {
+					try {
+						ActiveAndroid.beginTransaction();
+						JSONArray jsonArray = (JSONArray) object;
+						for (int i = 0; i < jsonArray.length(); i++) {
+							JSONArray array = jsonArray.optJSONArray(i);
+							for (int j = 0; j < jsonArray.length(); j++) {
+								JSONObject obj = array.optJSONObject(j);
+								if (obj != null) {
 									if (obj.optString("__dataType").equals(
 											"MoneyAccount")) {
-										obj.put("currentBalance", 0);
 										MoneyAccount moneyAccount = new MoneyAccount();
-										moneyAccount.loadFromJSON(obj);
+										moneyAccount.loadFromJSON(obj, true);
 										moneyAccount.save();
 									} else if (obj
 											.optString("__dataType")
 											.equals("ProjectShareAuthorization")) {
-										obj.put("actualTotalIncome", 0);
-										obj.put("actualTotalExpense", 0);
-										obj.put("actualTotalBorrow", 0);
-										obj.put("actualTotalLend", 0);
-										obj.put("actualTotalReturn", 0);
-										obj.put("actualTotalPayback", 0);
-										obj.put("apportionedTotalIncome", 0);
-										obj.put("apportionedTotalExpense", 0);
-										obj.put("apportionedTotalBorrow", 0);
-										obj.put("apportionedTotalLend", 0);
-										obj.put("apportionedTotalReturn", 0);
-										obj.put("apportionedTotalPayback", 0);
 										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
 										newProjectShareAuthorization
-												.loadFromJSON(obj);
+												.loadFromJSON(obj, true);
 										newProjectShareAuthorization.save();
 									} else if (obj.optString("__dataType")
 											.equals("Currency")) {
-										if (obj.optString("symbol") == null) {
+										if (obj.isNull("symbol")) {
 											java.util.Currency localeCurrency = java.util.Currency
 													.getInstance(obj
 															.optString("code"));
@@ -380,47 +429,79 @@ public class LoginActivity extends HyjActivity {
 													localeCurrency.getSymbol());
 										}
 										Currency newCurrency = new Currency();
-										newCurrency.loadFromJSON(obj);
+										newCurrency.loadFromJSON(obj, true);
 										newCurrency.save();
-									} else if (obj.optString("__dataType")
-											.equals("Picture")) {
-
 									} else if (obj.optString("__dataType")
 											.equals("ParentProject")) {
 										ParentProject parentProject = new ParentProject();
-										parentProject.loadFromJSON(obj);
+										parentProject.loadFromJSON(obj, true);
 										parentProject.save();
 									} else if (obj.optString("__dataType")
 											.equals("FriendCategory")) {
 										FriendCategory friendCategory = new FriendCategory();
-										friendCategory.loadFromJSON(obj);
+										friendCategory.loadFromJSON(obj, true);
 										friendCategory.save();
 									} else if (obj.optString("__dataType")
 											.equals("Project")) {
 										Project project = new Project();
-										project.loadFromJSON(obj);
+										project.loadFromJSON(obj, true);
 										project.save();
 									} else if (obj.optString("__dataType")
 											.equals("MessageBox")) {
 										MessageBox messageBox = new MessageBox();
-										messageBox.loadFromJSON(obj);
+										messageBox.loadFromJSON(obj, true);
 										messageBox.save();
+									} else if (obj.optString("__dataType")
+											.equals("Friend")) {
+										Friend friend = new Friend();
+										friend.loadFromJSON(obj, true);
+										friend.save();
+									} else if (obj.optString("__dataType")
+											.equals("Exchange")) {
+										Exchange exchange = new Exchange();
+										exchange.loadFromJSON(obj, true);
+										exchange.save();
+									} else if (obj.optString("__dataType")
+											.equals("MoneyExpenseCategory")) {
+										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
+										moneyExpenseCategory.loadFromJSON(obj,
+												true);
+										moneyExpenseCategory.save();
+									} else if (obj.optString("__dataType")
+											.equals("MoneyIncomeCategory")) {
+										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
+										moneyIncomeCategory.loadFromJSON(obj,
+												true);
+										moneyIncomeCategory.save();
+									} else if (obj.optString("__dataType")
+											.equals("ProjectRemark")) {
+										ProjectRemark projectRemark = new ProjectRemark();
+										projectRemark.loadFromJSON(obj,
+												true);
+										projectRemark.save();
 									}
 
-								} catch (JSONException e) {
-									//
 								}
+
 							}
 						}
+
+						ActiveAndroid.setTransactionSuccessful();
+						ActiveAndroid.endTransaction();
+						LoginActivity.this.dismissProgressDialog();
+
+						Intent i = getPackageManager()
+								.getLaunchIntentForPackage(
+										getApplicationContext()
+												.getPackageName());
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(i);
+						finish();
+					} catch (Exception e) {
+						ActiveAndroid.endTransaction();
+						LoginActivity.this.dismissProgressDialog();
 					}
-
-					LoginActivity.this.dismissProgressDialog();
-
-					 Intent i = getPackageManager()
-					 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
-					 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-					 startActivity(i);
-					finish();
 				}
 
 				@Override

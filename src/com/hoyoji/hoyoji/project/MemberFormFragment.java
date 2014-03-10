@@ -1,6 +1,12 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,14 +15,20 @@ import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjBooleanView;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
@@ -234,7 +246,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
 		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-		
+		if(modelCopy.getFriendUserId() != null){
+			modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+		}
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
 		modelCopy.setProjectShareMoneyExpenseEdit(mCheckBoxShareAuthExpenseEdit.isChecked());
@@ -284,20 +298,142 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		if(mProjectShareAuthorizationEditor.hasValidationErrors()){
 			showValidatioErrors();
-		} else {
+		} else if(mProjectShareAuthorizationEditor.getModelCopy().get_mId() == null) {
+
+			saveAverageTotal();				
+			
+			//去服务器上查找是否已经添加过共享给该好友
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					JSONArray jsonArray = (JSONArray) object;
+					if (jsonArray.optJSONArray(0).length() > 0 && 
+							!jsonArray.optJSONArray(0).optJSONObject(0).optString("state").equalsIgnoreCase("Delete")) {
+						
+						ProjectShareAuthorization psa = new ProjectShareAuthorization();
+						psa.loadFromJSON(jsonArray.optJSONArray(0).optJSONObject(0), true);
+						psa.save();
+						((HyjActivity) MemberFormFragment.this.getActivity())
+								.dismissProgressDialog();
+						HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+					} else {
+						sendNewProjectShareAuthorizationToServer();
+					}
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					displayError(object);
+				}
+			};
+
 			try {
-				ActiveAndroid.beginTransaction();
-				saveAverageTotal();				
-				mProjectShareAuthorizationEditor.save();
-				HyjUtil.displayToast(R.string.app_save_success);
-				ActiveAndroid.setTransactionSuccessful();
-				getActivity().finish();
-			} finally {
-			    ActiveAndroid.endTransaction();
+				JSONObject data = new JSONObject();
+				data.put("__dataType", "ProjectShareAuthorization");
+				data.put("projectId", mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
+				data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				//data.put("state", "Accept");
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
+						"[" + data.toString() + "]", "getData");
+				((HyjActivity) this.getActivity()).displayProgressDialog(
+						R.string.memberFormFragment_title_addnew,
+						R.string.memberFormFragment_progress_adding);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
+
+		} else {
+			HyjUtil.displayToast("cannot edit");
 		}
 	}	
-	 
+
+	private void sendNewProjectShareAuthorizationToServer() {
+		
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				try {
+					ActiveAndroid.beginTransaction();
+					mProjectShareAuthorizationEditor.getModelCopy().setSyncFromServer(true);
+					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
+					mProjectShareAuthorizationEditor.save();
+					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+						mProjectShareAuthorizationEditor.getModelCopy().getProject().getClientSyncRecord().delete();
+					}
+					for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+						if(psa.isClientNew()){
+							psa.getClientSyncRecord().delete();
+						}
+					}
+					ActiveAndroid.setTransactionSuccessful();
+					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
+					getActivity().finish();
+				}  finally {
+				    ActiveAndroid.endTransaction();
+				}
+				
+				((HyjActivity) MemberFormFragment.this.getActivity())
+				.dismissProgressDialog();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+
+		try {
+			JSONObject msg = new JSONObject();
+			msg.put("__dataType", "Message");
+			msg.put("id", UUID.randomUUID().toString());
+			msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+			msg.put("fromUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			msg.put("type", "Project.Share.AddRequest");
+			msg.put("messageState", "new");
+			msg.put("messageTitle", "项目共享请求");
+			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+			msg.put("detail", "用户"
+					+ HyjApplication.getInstance().getCurrentUser()
+							.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
+			msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+			
+			JSONObject msgData = new JSONObject();
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
+			msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
+			msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
+//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
+			msgData.put("projectCurrencyIds", new JSONArray());
+			msg.put("messageData", msgData.toString());
+			
+
+			String data = "[";
+			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+			jsonPSA.put("state", "Wait");
+			data += jsonPSA.toString();
+			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+			}
+			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+				if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+						psa.isClientNew()){
+					data += "," + psa.toJSON().toString();
+				}
+			}
+			data += "," + msg.toString() + "]";
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
+					data, "postData");
+			
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+	}
+
 	 private void saveAverageTotal(){
 		 //重新计算所有均摊成员的占股比例并保存
 			double fixedPercentageTotal = 0.0;
@@ -311,7 +447,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			}
 			
 			double averageTotal = 0.0;
-			double averageAmount = HyjUtil.toFixed2((100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage);
+			double averageAmount = 0.0;
+			double averageTotalAmount = 100.0 - Math.min(fixedPercentageTotal, 100.0);
+			if(numOfAverage > 0) {
+				averageAmount = HyjUtil.toFixed2(averageTotalAmount / numOfAverage);
+			}
 			double diff = HyjUtil.toFixed2(100.0 - fixedPercentageTotal - averageAmount * numOfAverage);
 			double adjustedAverageTotal = HyjUtil.toFixed2(averageAmount + diff);
 			
@@ -320,11 +460,13 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					if(!psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId()) &&
 							(psa.getSharePercentage().doubleValue() != averageAmount && 
 							psa.getSharePercentage().doubleValue() != adjustedAverageTotal)){
-						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
-						editor.getModelCopy().setSharePercentage(averageAmount);
-						editor.save();
+//						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
+//						editor.getModelCopy().setSharePercentage(averageAmount);
+						averageTotal += averageAmount;
+//						editor.save();
+					} else {
+						averageTotal += psa.getSharePercentage();
 					}
-					averageTotal += psa.getSharePercentage();
 				}
 			}
 			if(HyjUtil.toFixed2(averageTotal) != HyjUtil.toFixed2(100.0 - fixedPercentageTotal)){
@@ -368,7 +510,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
  	         		 if(friend.getFriendUserId() != null){
  	         			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
 	 	       				if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
-	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_cannot_select_local_friend_already_exists);
+	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
 	 	       					return;
 	 	       				}
  	         			}
@@ -381,5 +523,14 @@ public class MemberFormFragment extends HyjUserFormFragment {
             	 break;
           }
     }
+	 
+
+		private void displayError(Object object){
+			((HyjActivity) this.getActivity())
+			.dismissProgressDialog();
+			JSONObject json = (JSONObject) object;
+			HyjUtil.displayToast(json.optJSONObject("__summary").optString(
+					"msg"));
+		}
 	 
 }

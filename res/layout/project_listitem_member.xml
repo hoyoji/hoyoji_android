@@ -52,30 +52,23 @@
 	     android:layout_gravity="right" 
 	     android:gravity="right" 
 	     android:orientation="vertical" >
-	
-	    <TextView
-	        android:id="@+id/memberListItem_expenseTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	    	android:textSize="12sp"
-	        android:text="已经支出:"/>
-	    <TextView
-	        android:id="@+id/memberListItem_expenseTotal_title"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="¥1000.00"/>
-	    <TextView
-	        android:id="@+id/memberListItem_incomeTotal_title"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	    	android:textSize="12sp"
-	        android:text="应该收入: "/>
-	    <TextView
-	        android:id="@+id/memberListItem_incomeTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="¥50.00" />
+		
+	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_actualTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥1000.00"/>
+	    
+	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_apportionTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥500.00"/>
+	    
+	     <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_settlement"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥30.00"/>
 	</LinearLayout>
 </FrameLayout>

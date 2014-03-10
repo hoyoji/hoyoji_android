@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.project;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,7 +26,9 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -50,8 +53,8 @@ public class MemberListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_member,
 				null,
-				new String[] { "friendUserId", "friendUserId", "sharePercentage", "remark" },
-				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark },
+				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "id"},
+				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement},
 				0); 
 	}	
 
@@ -148,13 +151,15 @@ public class MemberListFragment extends HyjUserListFragment{
 			String friendUserId = cursor.getString(columnIndex);
 			Friend friend = null;
 			if(friendUserId != null){
-				friend = HyjModel.getModel(Friend.class, friendUserId);
+				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
 				if(friend != null){
 					((TextView)view).setText(friend.getDisplayName());
 				} else {
 					User user = HyjModel.getModel(User.class, friendUserId);
 					if(user != null){
 						((TextView)view).setText(user.getDisplayName());
+					} else {
+						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 					}
 				}
 			} else {
@@ -165,15 +170,88 @@ public class MemberListFragment extends HyjUserListFragment{
 			String friendUserId = cursor.getString(columnIndex);
 			if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
-				((HyjImageView)view).setImage(user.getPictureId());
+				if(user == null){
+					((HyjImageView)view).setImage((Picture)null);
+				} else {
+					((HyjImageView)view).setImage(user.getPictureId());
+				}
 			} else {
 				((HyjImageView)view).setImage((Picture)null);
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
 			double percentage = cursor.getDouble(columnIndex);
+			((HyjNumericView)view).setPrefix(null);
 			((HyjNumericView)view).setSuffix("%");
 			((HyjNumericView)view).setNumber(percentage);
+			return true;
+		} else if(view.getId() == R.id.memberListItem_remark) {
+			String state = cursor.getString(columnIndex);
+			if(state.equalsIgnoreCase("Wait")){
+				((TextView)view).setText(R.string.memberListFragment_state_wait);
+			} else {
+				((TextView)view).setText("");
+			}
+			return true;
+		} else if(view.getId() == R.id.memberListItem_actualTotal) {
+			HyjNumericView numericView = (HyjNumericView)view;
+			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
+			Double actualTotal = projectShareAuthorization.getActualTotal();
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
+			if(actualTotal < 0){
+				actualTotal = -actualTotal;
+				numericView.setPrefix("已经收入:" + currencySymbol);
+//				numericView.setTextColor(Color.parseColor("#339900"));
+			}else{
+				numericView.setPrefix("已经支出:" + currencySymbol);
+//				if(actualTotal.equals(0.0)){
+//					numericView.setTextColor(Color.parseColor("#000000"));
+//				}else{
+//			    	numericView.setTextColor(Color.parseColor("#FF0000"));
+//				}
+			}
+			numericView.setSuffix(null);
+			numericView.setNumber(actualTotal);
+			return true;
+		} else if(view.getId() == R.id.memberListItem_apportionTotal) {
+			HyjNumericView numericView = (HyjNumericView)view;
+			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
+			Double apportionTotal = projectShareAuthorization.getApportionTotal();
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
+			if(apportionTotal < 0){
+				apportionTotal = -apportionTotal;
+				numericView.setPrefix("分摊收入:" + currencySymbol);
+//				numericView.setTextColor(Color.parseColor("#339900"));
+			}else{
+				numericView.setPrefix("分摊支出:" + currencySymbol);
+//				if(apportionTotal.equals(0.0)){
+//					numericView.setTextColor(Color.parseColor("#000000"));
+//				}else{
+//				numericView.setTextColor(Color.parseColor("#FF0000"));
+//				}
+			}
+			numericView.setSuffix(null);
+			numericView.setNumber(apportionTotal);
+			return true;
+		} else if(view.getId() == R.id.memberListItem_settlement) {
+			HyjNumericView numericView = (HyjNumericView)view;
+			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
+			Double settlement = projectShareAuthorization.getSettlement();
+			String currencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
+			if(settlement < 0){
+				settlement = -settlement;
+				numericView.setPrefix("还要支出:" + currencySymbol);
+				numericView.setTextColor(Color.parseColor("#FF0000"));
+			}else{
+				numericView.setPrefix("还要收入:" + currencySymbol);
+				if(settlement.equals(0.0)){
+					numericView.setTextColor(Color.parseColor("#000000"));
+				}else{
+				numericView.setTextColor(Color.parseColor("#339900"));
+				}
+			}
+			numericView.setSuffix(null);
+			numericView.setNumber(settlement);
 			return true;
 		} else {
 			return false;

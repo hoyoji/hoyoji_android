@@ -116,8 +116,8 @@ public class HyjTextField extends LinearLayout {
 		}
 	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getText();
+	public String getText(){
+		return mEditTextEdit.getText().toString();
 	}
 
 	public void setEnabled(boolean enabled){
@@ -126,6 +126,11 @@ public class HyjTextField extends LinearLayout {
 
 	public void setLabel(int resId){
 		mTextViewLabel.setText(resId);
+	}
+	
+
+	public void setHint(int resId){
+		mEditTextEdit.setHint(resId);
 	}
 	
 	public void showSoftKeyboard(){

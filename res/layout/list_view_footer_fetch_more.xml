@@ -8,5 +8,5 @@
     android:paddingRight="16dp"  
     android:minHeight="48dip"
     android:textColor="@android:color/black" 
-    android:background="@android:color/transparent"
+    android:background="@drawable/abc_tab_indicator_ab_holo"
     android:text="@string/app_listview_footer_fetch_more"/>

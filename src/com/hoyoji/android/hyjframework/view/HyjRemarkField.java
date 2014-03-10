@@ -88,8 +88,8 @@ public class HyjRemarkField extends LinearLayout {
 		mEditTextEdit.setText(text);
 	}
 	
-	public Editable getText(){
-		return mEditTextEdit.getText();
+	public String getText(){
+		return mEditTextEdit.getText().toString();
 	}
 
 	public void setEnabled(boolean enabled){

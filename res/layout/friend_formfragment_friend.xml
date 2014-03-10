@@ -17,9 +17,25 @@
             hyj:labelText="@string/friendFormFragment_textView_friend_category"
             hyj:hintText="@string/friendFormFragment_editText_hint_friend_category"
         />
-          
+
 	    <View 
         android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        />
+	
+    <com.hoyoji.android.hyjframework.view.HyjTextField 
+            android:id="@+id/friendFormFragment_textField_userName"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="@string/friendFormFragment_textView_userName"
+        />	
+	
+	    <View 
+        android:id="@+id/field_separator_userName"
         android:layout_width="match_parent"
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
@@ -32,7 +48,6 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content" 
             hyj:labelText="@string/friendFormFragment_textView_nickName"
-            hyj:hintText="@string/friendFormFragment_editText_hint_nickName"
         />
     
         <View 

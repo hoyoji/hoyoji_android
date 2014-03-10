@@ -13,6 +13,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
@@ -22,11 +23,11 @@ import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_CURRENCY_ID = 1;
 	
-	private HyjModelEditor mMoneyAccountEditor = null;
+	private HyjModelEditor<MoneyAccount> mMoneyAccountEditor = null;
 	private HyjTextField mTextFieldName = null;
 	private HyjSelectorField mSelectorFieldCurrency = null;
 	private HyjNumericField mNumericFieldCurrentBalance = null;
-	private HyjTextField mTextFieldAccountType = null;
+	private HyjSpinnerField mSpinnerFieldAccountType = null;
 	private HyjRemarkField mRemarkFieldAccountNumber = null;
 	private HyjRemarkField mRemarkFieldBankAddress = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
@@ -45,13 +46,15 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyAccount =  new Select().from(MoneyAccount.class).where("_id=?", modelId).executeSingle();
+		    
 		} else {
 			moneyAccount = new MoneyAccount();
 		}
 		mMoneyAccountEditor = moneyAccount.newModelEditor();
 		
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_name);
-		mTextFieldName.setText(moneyAccount.getName());
+		mTextFieldName.setText(moneyAccount.getDisplayName());
+		mTextFieldName.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		Currency currency = moneyAccount.getCurrency();
 		mSelectorFieldCurrency = (HyjSelectorField) getView().findViewById(R.id.moneyAccountFormFragment_selectorField_currency);
@@ -69,19 +72,25 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		
 		mNumericFieldCurrentBalance = (HyjNumericField) getView().findViewById(R.id.moneyAccountFormFragment_textField_currentBalance);		
 		mNumericFieldCurrentBalance.setNumber(moneyAccount.getCurrentBalance());
+		mNumericFieldCurrentBalance.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
-		mTextFieldAccountType = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
-		mTextFieldAccountType.setText(moneyAccount.getAccountType());
+		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
+		mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array, new String[] {"Cash", "Deposit", "Credit", "Online", "Debt"});
+	    mSpinnerFieldAccountType.setSelectedValue(moneyAccount.getAccountType());
+		mSpinnerFieldAccountType.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountNumber);
 		mRemarkFieldAccountNumber.setText(moneyAccount.getAccountNumber());
+		mRemarkFieldAccountNumber.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldBankAddress = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_bankAddress);
 		mRemarkFieldBankAddress.setText(moneyAccount.getBankAddress());
+		mRemarkFieldBankAddress.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyAccount.getRemark());
-
+		mRemarkFieldRemark.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
@@ -90,7 +99,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
-		modelCopy.setAccountType(mTextFieldAccountType.getText().toString().trim());
+		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
 		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
 		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -102,7 +111,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mTextFieldName.setError(mMoneyAccountEditor.getValidationError("name"));
 		mSelectorFieldCurrency.setError(mMoneyAccountEditor.getValidationError("currency"));
 		mNumericFieldCurrentBalance.setError(mMoneyAccountEditor.getValidationError("currentBalance"));
-		mTextFieldAccountType.setError(mMoneyAccountEditor.getValidationError("accountType"));
+		mSpinnerFieldAccountType.setError(mMoneyAccountEditor.getValidationError("accountType"));
 		mRemarkFieldAccountNumber.setError(mMoneyAccountEditor.getValidationError("accountNumber"));
 		mRemarkFieldBankAddress.setError(mMoneyAccountEditor.getValidationError("bankAddress"));
 		mRemarkFieldRemark.setError(mMoneyAccountEditor.getValidationError("remark"));

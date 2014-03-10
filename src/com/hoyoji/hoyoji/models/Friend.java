@@ -15,13 +15,16 @@ import android.provider.BaseColumns;
 public class Friend extends HyjModel {
 	
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 	
 	@Column(name = "nickName")
 	private String mNickName;
 	
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
+
+	@Column(name = "friendUserName")
+	private String mFriendUserName;
 	
 	@Column(name = "friendCategoryId")
 	private String mFriendCategoryId;
@@ -43,11 +46,23 @@ public class Friend extends HyjModel {
 	
 	@Column(name = "address")
 	private String mAddress;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	
 	public Friend(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 
 	public User getFriendUser(){
@@ -63,18 +78,23 @@ public class Friend extends HyjModel {
 
 	@Override
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getDisplayName(){
-		if(this.getNickName() != null){
+		if(this.getNickName() != null && this.getNickName().length() > 0){
 			return this.getNickName();
 		} else {
-			return this.getFriendUser().getDisplayName();
+			User friendUser = this.getFriendUser();
+			if(friendUser != null){
+				return friendUser .getDisplayName();
+			} else {
+				return this.getFriendUserName();
+			}
 		}
 	}
 	
@@ -94,6 +114,14 @@ public class Friend extends HyjModel {
 		this.mFriendUserId = mFriendUserId;
 	}
 
+	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+
+	public void setFriendUserName(String mFriendUserName) {
+		this.mFriendUserName = mFriendUserName;
+	}
+	
 	public FriendCategory getFriendCategory() {
 		if(mFriendCategoryId == null){
 			return null;
@@ -168,11 +196,13 @@ public class Friend extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("friendCategory");
 		}
-		if(this.getNickName().length() == 0){
-			modelEditor.setValidationError("nickName", R.string.friendFormFragment_editText_hint_nickName);
-		} else {
-			modelEditor.removeValidationError("nickName");
-		}		
+		if(this.getFriendUserId() == null){
+			if(this.getNickName().length() == 0){
+				modelEditor.setValidationError("nickName", R.string.friendFormFragment_editText_hint_friendName);
+			} else {
+				modelEditor.removeValidationError("nickName");
+			}		
+		}
 	}
 
 	@Override
@@ -181,5 +211,38 @@ public class Friend extends HyjModel {
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

@@ -16,7 +16,7 @@ import com.hoyoji.hoyoji.R;
 public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -38,19 +38,31 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyExpenseApportion(){
 		super();
-		mId = UUID.randomUUID().toString();
-		mApportionType = "Average";
+		mUUID = UUID.randomUUID().toString();
+		mApportionType = "Share";
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public Double getAmount() {
@@ -77,6 +89,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 	
 	public MoneyExpense getMoneyExpense(){
+		if(mMoneyExpenseId == null){
+			return null;
+		}
 		return getModel(MoneyExpense.class, mMoneyExpenseId);
 	}
 	
@@ -157,6 +172,22 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		super.save();
 	}
 
+	@Override
+	public void delete(){
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
+		projectShareAuthorizationEditor.save();
+		
+		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - this.getAmount0());
+			debtAccountEditor.save();
+		}
+		super.delete();
+	}
+	
 
 	public Project getProject() {
 		return this.getMoneyExpense().getProject();
@@ -171,7 +202,53 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
+//		if(rojectId == null){
+//			projectId = this.getMoneyExpense().getProjectId();
+//		
+//		}
+		if(this.getMoneyExpense() == null){
+			return null;
+		} else {
+			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+					this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
+		}
 	}
+	
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyExpenseId(moneyTransactionId);
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

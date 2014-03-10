@@ -3,9 +3,8 @@
 
     <string name="homeListFragment_action_report">报表</string>
     <string name="homeListFragment_action_sync">同步</string>
-    <string name="homeListFragment_action_display_transaction_type">显示</string>
-    <string name="homeListFragment_action_display_transaction_type_personal">个人流水</string>
-    <string name="homeListFragment_action_display_transaction_type_project">项目流水</string>
-    <string name="homeListFragment_action_display_exchangeAll">汇率</string>
+    <string name="homeListFragment_action_more">更多</string>
+    <string name="homeListFragment_action_display_transaction_type_personal">显示个人流水</string>
+    <string name="homeListFragment_action_display_transaction_type_project">显示项目流水</string>
 
 </resources>

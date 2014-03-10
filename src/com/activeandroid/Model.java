@@ -28,6 +28,9 @@ import com.activeandroid.query.Select;
 import com.activeandroid.serializer.TypeSerializer;
 import com.activeandroid.util.Log;
 import com.activeandroid.util.ReflectionUtils;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -47,7 +50,8 @@ public abstract class Model {
 
 	private final TableInfo mTableInfo;
 	private final String idName;
-
+	private boolean mSyncFromServer = false;
+	
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	// ////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +75,8 @@ public abstract class Model {
 		Cache.openDatabase().delete(mTableInfo.getTableName(), "id=?",
 				new String[] { getId() });
 		Cache.removeEntity(this);
-
+		HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), getId(), "Delete", mSyncFromServer);
+		mSyncFromServer = false;
 		Cache.getContext()
 				.getContentResolver()
 				.notifyChange(
@@ -79,6 +84,15 @@ public abstract class Model {
 						null);
 	}
 
+
+	public void setSyncFromServer(boolean b) {
+		mSyncFromServer = b;
+	}
+	
+	public Boolean getSyncFromServer() {
+		return mSyncFromServer;
+	}
+	
 	public void save() {
 		final SQLiteDatabase db = Cache.openDatabase();
 		final ContentValues values = new ContentValues();
@@ -178,10 +192,14 @@ public abstract class Model {
 						null, null, null);
 				if (cursor != null && cursor.moveToFirst()) {
 					mId = cursor.getLong(0);
+					cursor.close();
+					cursor = null;
 					db.update(mTableInfo.getTableName(), values, "id=?",
 							new String[] { values.getAsString("id") });
+					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
 				} else {
 					mId = db.insert(mTableInfo.getTableName(), null, values);
+					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Create", mSyncFromServer);
 				}
 				if (!alreadyInTrans) {
 					ActiveAndroid.setTransactionSuccessful();
@@ -192,10 +210,10 @@ public abstract class Model {
 				}
 			}
 		} else {
-			db.update(mTableInfo.getTableName(), values, idName + "=" + mId,
-					null);
+			db.update(mTableInfo.getTableName(), values, idName + "=" + mId, null);
+			HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
 		}
-
+		mSyncFromServer = false;
 		Cache.getContext()
 				.getContentResolver()
 				.notifyChange(
@@ -207,6 +225,7 @@ public abstract class Model {
 
 	public static void delete(Class<? extends Model> type, long id) {
 		TableInfo tableInfo = Cache.getTableInfo(type);
+		
 		new Delete().from(type).where(tableInfo.getIdName() + "=?", id)
 				.execute();
 	}
@@ -316,7 +335,8 @@ public abstract class Model {
 		}
 	}
 
-	public final void loadFromJSON(JSONObject json) {
+	public final void loadFromJSON(JSONObject json, boolean syncFromServer) {
+		mSyncFromServer = syncFromServer;
 		for (Field field : mTableInfo.getFields()) {
 			final String fieldName = mTableInfo.getColumnName(field);
 			boolean columnIsNull = json.isNull(fieldName);
@@ -425,7 +445,9 @@ public abstract class Model {
 		for (Field field : mTableInfo.getFields()) {
 			final String fieldName = mTableInfo.getColumnName(field);
 			Class<?> fieldType = field.getType();
-
+			if(fieldName == idName){
+				continue;
+			}
 			field.setAccessible(true);
 
 			try {
@@ -505,8 +527,7 @@ public abstract class Model {
 			jsonObj.put("__dataType", mTableInfo.getTableName());
 			String lastServerUpdateTime = jsonObj
 					.optString("lastServerUpdateTime");
-			if (lastServerUpdateTime != null
-					&& lastServerUpdateTime.length() > 0) {
+			if (lastServerUpdateTime.length() > 0) {
 				// jsonObj.remove("lastServerUpdateTime");
 				jsonObj.put("lastServerUpdateTime",
 						Long.valueOf(lastServerUpdateTime));

@@ -31,13 +31,16 @@ import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 public class HyjUtil {
 	public static void displayToast(int msg){
@@ -130,13 +133,18 @@ public class HyjUtil {
 		}
 		
 
-		public static void startRoateView(ImageView v){
+		public static void startRoateView(View v){
 //			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 				RotateAnimation anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 				anim.setInterpolator(new LinearInterpolator());
 				anim.setRepeatCount(Animation.INFINITE);
 				anim.setDuration(1000);
 				v.startAnimation(anim);
+				
+//				Animation rotation = AnimationUtils.loadAnimation(v.getContext(), R.anim.clockwise_rotate);
+//			     rotation.setRepeatCount(Animation.INFINITE);
+//			     v.startAnimation(rotation);
+				
 //			} else {
 //				RotateDrawable d = (RotateDrawable)v.getDrawable();
 //				ObjectAnimator anim = ObjectAnimator.ofInt(d, "Level", 10000);
@@ -146,8 +154,8 @@ public class HyjUtil {
 //			}
 		}
 		
-		public static void stopRoateView(ImageView v){
-			v.setAnimation(null);
+		public static void stopRoateView(View view){
+			view.setAnimation(null);
 		}
 		
 		public static int calculateInSampleSize(
@@ -267,5 +275,102 @@ public class HyjUtil {
 		
 		public static double toFixed4(Double number){
 			return Math.round(number*10000)/10000.0;
+		}
+		
+		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
+			
+			if(!tableName.equalsIgnoreCase("ClientSyncRecord")){
+				ClientSyncRecord clientSyncRecord = new Select().from(ClientSyncRecord.class).where("id=?", recordId).executeSingle();
+				
+				if(operation.equalsIgnoreCase("Delete")){
+					if(syncFromServer){
+
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+					
+						if(clientSyncRecord == null){
+							clientSyncRecord = new ClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							if(clientSyncRecord.getUploading()){
+								// 新记录，正在上传时被删除。如果上传失败，我们会回来删除它
+								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.save();
+							} else {
+								clientSyncRecord.delete();
+							}
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+							if(clientSyncRecord.getUploading()){
+								clientSyncRecord.setUploading(false);
+							}
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
+						}
+					
+					}
+				} else 
+				if(operation.equalsIgnoreCase("Update")){
+					if(syncFromServer){
+						
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+					
+						if(clientSyncRecord == null){
+							clientSyncRecord = new ClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							if(clientSyncRecord.getUploading()){
+								// 新记录，正在上传时被更新。如果上传失败，我们会回来将起改回到 "Create"
+								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.save();
+							}
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+							if(clientSyncRecord.getUploading()){
+								clientSyncRecord.setUploading(false);
+								clientSyncRecord.save();
+							}
+						}
+						
+					}
+				} else
+				if(operation.equalsIgnoreCase("Create")){
+					if(syncFromServer){
+						
+						if(clientSyncRecord != null){
+							clientSyncRecord.delete();
+						}
+						
+					} else {
+						if(clientSyncRecord == null){
+							clientSyncRecord = new ClientSyncRecord();
+							clientSyncRecord.setId(recordId);
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
+							//clientSyncRecord.delete();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
+						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Delete")) {
+							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.save();
+						}
+					
+					}
+				}
+			}
 		}
 }

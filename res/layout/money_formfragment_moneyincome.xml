@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.hoyoji.android.hyjframework.view.HyjTextField
+            <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyIncomeFormFragment_textField_moneyIncomeCategory"
                 hyj:style="top_label"
                 android:layout_width="0dip"
@@ -290,7 +290,16 @@
             android:id="@id/button_save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/app_action_save" />
+        
+        <Button
+            android:id="@id/button_delete"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/app_action_delete"
+            android:textColor="#FF0000" />
     </LinearLayout>
 
 </ScrollView>

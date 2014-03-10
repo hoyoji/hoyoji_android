@@ -34,7 +34,8 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
-import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
+import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -153,7 +154,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project) {
-			HyjUtil.displayToast(R.string.homeListFragment_action_display_transaction_type);
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -165,7 +166,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
 			loader = new HomeGroupListLoader(getActivity(), arg1);
-			return (Loader<Object>) loader;
 		} else {
 			loader = new HomeChildListLoader(getActivity(), arg1);
 		}
@@ -269,8 +269,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setText(null);
 			numericView.setPrefix(null);
+			numericView.setSuffix(null);
+			numericView.setNumber(null);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -302,6 +303,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpense)object).getAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -562,10 +564,22 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof Message){
 				Message msg = (Message)object;
 				if(msg.getType().equals("System.Friend.AddRequest") ){
-					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
 					return true;
 				} else if(msg.getType().equals("System.Friend.AddResponse") ){
-					openActivityWithFragment(FriendAddMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					return true;
+				} else if(msg.getType().equals("System.Friend.Delete") ){
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.AddRequest") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.Accept") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
+					return true;
+				} else if(msg.getType().equals("Project.Share.Delete") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
 					return true;
 				}
 			}

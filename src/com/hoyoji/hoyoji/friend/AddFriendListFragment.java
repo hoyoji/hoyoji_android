@@ -41,7 +41,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.message.FriendAddMessageFormFragment;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
@@ -223,8 +223,8 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 	}
 
 	@Override
-	public void doFetchMore(int offset, int pageSize) {
-		this.setFooterLoadStart();
+	public void doFetchMore(ListView l, int offset, int pageSize) {
+		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
 			data.put("userName", mSearchText);
@@ -325,7 +325,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "同意您的添加好友请求");
-		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
@@ -342,7 +342,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				msg.save();
+//				msg.save();
 //				((HyjActivity) AddFriendListFragment.this.getActivity())
 //						.dismissProgressDialog();
 				loadNewlyAddedFriend(jsonUser);
@@ -418,14 +418,14 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				if (newFriend == null) {
 					newFriend = new Friend();
 				}
-				newFriend.loadFromJSON(jsonFriend);
+				newFriend.loadFromJSON(jsonFriend, true);
 
 				User newUser = HyjModel.getModel(User.class,
 						jsonUser.optString("id"));
 				if (newUser == null) {
 					newUser = new User();
 				}
-				newUser.loadFromJSON(jsonUser);
+				newUser.loadFromJSON(jsonUser, true);
 
 				saveUserPictures(object);
 				newUser.save();
@@ -494,7 +494,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setMessageDetail("用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "请求将您添加为好友");
-		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
+//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
 		JSONObject msgData = new JSONObject();
 		try {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
@@ -507,7 +507,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				msg.save();
+//				msg.save();
 				((HyjActivity) AddFriendListFragment.this.getActivity())
 				.dismissProgressDialog();
 				HyjUtil.displayToast(R.string.friendListFragment_addFriend_toast_send_success);
@@ -534,7 +534,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			try {
 				JSONObject jsonPic = pictureArray.getJSONObject(i);
 				String base64PictureIcon = jsonPic.optString("base64PictureIcon");
-				if(base64PictureIcon != null){
+				if(base64PictureIcon.length() > 0){
 					 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
 				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
 				    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
@@ -544,7 +544,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 				    jsonPic.remove("base64PictureIcon");
 				}
 				Picture newPicture = new Picture();
-				newPicture.loadFromJSON(jsonPic);
+				newPicture.loadFromJSON(jsonPic, true);
 				
 				newPicture.save();
 				

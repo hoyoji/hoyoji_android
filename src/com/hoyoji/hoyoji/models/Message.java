@@ -21,7 +21,7 @@ import com.hoyoji.hoyoji.R;
 public class Message extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "date")
 	private String mDate;
@@ -52,10 +52,22 @@ public class Message extends HyjModel {
 
 	@Column(name = "messageBoxId")
 	private String mMessageBoxId;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public Message(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 	
 	@Override
@@ -68,11 +80,11 @@ public class Message extends HyjModel {
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getDate() {
@@ -112,7 +124,11 @@ public class Message extends HyjModel {
 	}
 
 	public void setToUserId(String mToUserId) {
-		this.mToUserId = mToUserId;
+		if(mToUserId.length() == 0){
+			this.mToUserId = null;
+		} else {
+			this.mToUserId = mToUserId;
+		}
 	}
 
 	private String getUserDisplayName(String friendUserId, String fromOrToUserDisplayName){
@@ -179,13 +195,13 @@ public class Message extends HyjModel {
 		this.mMessageType = mType;
 	}
 
-	public String getMessageBoxId() {
-		return mMessageBoxId;
-	}
-
-	public void setMessageBoxId(String mMessageBoxId) {
-		this.mMessageBoxId = mMessageBoxId;
-	}
+//	public String getMessageBoxId() {
+//		return mMessageBoxId;
+//	}
+//
+//	public void setMessageBoxId(String mMessageBoxId) {
+//		this.mMessageBoxId = mMessageBoxId;
+//	}
 
 
 	@Override
@@ -194,5 +210,38 @@ public class Message extends HyjModel {
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

@@ -60,7 +60,7 @@ public class HyjImageView extends ImageView {
 			} else {
 				this.setImageDrawable(null);
 			}
-		} else if(picture.getId() == mPictureId){
+		} else if(picture.getId().equals(mPictureId)){
 			return;
 		} else {
 			mPictureId = picture.getId();
@@ -75,7 +75,7 @@ public class HyjImageView extends ImageView {
 	}
 	
 	public void setImage(String id){
-		if(mPictureId == id){
+		if(id != null && mPictureId.equals(id)){
 			return;
 		}
 		
@@ -89,7 +89,7 @@ public class HyjImageView extends ImageView {
 	}
 	
 	public void loadRemoteImage(final String id){
-		if(id == null){
+		if(id == null || id.length() == 0){
 			setImage((Picture)null);
 			return;
 		}

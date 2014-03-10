@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -16,7 +17,7 @@ import com.hoyoji.hoyoji.R;
 public class ProjectShareAuthorization extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "shareType")
 	private String mShareType;
@@ -27,8 +28,11 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	@Column(name = "friendUserName")
+	private String mFriendUserName;
+	
 	@Column(name = "state")
-	private String mState;
+	private String mState = "Wait";
 	
 	@Column(name = "projectId")
 	private String mProjectId;
@@ -284,13 +288,21 @@ public class ProjectShareAuthorization extends HyjModel {
 	private Boolean mProjectShareMoneyReturnDelete = true;
 	
 
-	
-	
-	
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public ProjectShareAuthorization(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 	
 	@Override
@@ -307,12 +319,17 @@ public class ProjectShareAuthorization extends HyjModel {
 		}
 	}
 
+	public static ProjectShareAuthorization getSelfProjectShareAuthorization(String projectId) {
+		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+				projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	}
+	
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getState() {
@@ -364,12 +381,36 @@ public class ProjectShareAuthorization extends HyjModel {
 		if(mProjectId == null){
 			return null;
 		}
-		return (Project) getModel(Project.class, mProjectId);
+		return getModel(Project.class, mProjectId);
 	}
 
 	public User getFriendUser(){
-		return (User) getModel(User.class, mFriendUserId);
+		if(mFriendUserId != null){
+			return getModel(User.class, mFriendUserId);
+		}
+		return null;
 	}
+	
+	public Friend getFriend(){
+		if(mFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		}
+		return null;
+	}
+	
+	public String getFriendDisplayName(){
+		Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		if(friend != null){
+			return friend.getDisplayName();
+		} else {
+			User user = HyjModel.getModel(User.class, mFriendUserId);
+			if(user != null){
+				return user.getDisplayName();
+			}
+		}
+		return this.getFriendUserName();
+	}
+	
 	
 	public String getProjectId() {
 		return mProjectId;
@@ -385,6 +426,14 @@ public class ProjectShareAuthorization extends HyjModel {
 
 	public void setFriendUserId(String mFriendUserId) {
 		this.mFriendUserId = mFriendUserId;
+	}
+	
+	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+
+	public void setFriendUserName(String mFriendUserName) {
+		this.mFriendUserName = mFriendUserName;
 	}
 
 	public Boolean getShareAllSubProjects() {
@@ -890,5 +939,57 @@ public class ProjectShareAuthorization extends HyjModel {
 		super.save();
 	}
 
+	public Double getExpenseTotal() {
+		return mActualTotalExpense + mActualTotalLend + mActualTotalReturn;
+	}
+	
+	public Double getIncomeTotal() {
+		return mActualTotalIncome + mActualTotalBorrow + mActualTotalPayback;
+	}
+	
+	public Double getActualTotal() {		
+//		return mActualTotalExpense - mActualTotalIncome + mActualTotalLend - mActualTotalPayback - mActualTotalBorrow + mActualTotalReturn;
+	    return this.getExpenseTotal() - this.getIncomeTotal();
+	}
 
+	public Double getApportionTotal() {
+		return mApportionedTotalExpense - mApportionedTotalIncome + mApportionedTotalLend - mApportionedTotalPayback - mApportionedTotalBorrow + mApportionedTotalReturn;
+	}
+
+	public Double getSettlement() {
+		return this.getActualTotal() - this.getApportionTotal();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

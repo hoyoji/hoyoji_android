@@ -9,13 +9,14 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyPaybackApportion", id = BaseColumns._ID)
 public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -37,19 +38,31 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyPaybackApportion(){
 		super();
-		mId = UUID.randomUUID().toString();
-		mApportionType = "Average";
+		mUUID = UUID.randomUUID().toString();
+		mApportionType = "Share";
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public Double getAmount() {
@@ -64,6 +77,9 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public void setAmount(Double mAmount) {
+		if(mAmount != null){
+			mAmount = HyjUtil.toFixed2(mAmount);
+		}
 		this.mAmount = mAmount;
 	}
 	
@@ -174,4 +190,42 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void setMoneyId(String moneyTransactionId) {
+		this.setMoneyPaybackId(moneyTransactionId);
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

@@ -4,4 +4,6 @@
     <string name="memberListFragment_title">项目成员</string>
     <string name="memberListFragment_action_member_addnew">新增共享好友</string>
     
+    <string name="memberListFragment_state_wait">等待接受</string>
+    
 </resources>

@@ -14,7 +14,7 @@ import android.provider.BaseColumns;
 @Table(name = "User", id = BaseColumns._ID)
 public class User extends HyjModel {
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 	
 	@Column(name = "userDataId", index = true, unique = true)
 	private String mUserDataId;
@@ -48,10 +48,22 @@ public class User extends HyjModel {
 	
 	@Column(name = "address")
 	private String mAddress;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public User(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 
 	public UserData getUserData(){
@@ -71,11 +83,11 @@ public class User extends HyjModel {
 
 	@Override
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getUserDataId() {
@@ -117,13 +129,13 @@ public class User extends HyjModel {
 		this.mIsMerchant = mIsMerchant;
 	}
 
-	public String getMessageBoxId() {
+	public String getMessageBoxId1() {
 		return mMessageBoxId;
 	}
 
-	public void setMessageBoxId(String mMessageBoxId) {
-		this.mMessageBoxId = mMessageBoxId;
-	}
+//	public void setMessageBoxId(String mMessageBoxId) {
+//		this.mMessageBoxId = mMessageBoxId;
+//	}
 
 	public String getNewFriendAuthentication() {
 		return mNewFriendAuthentication;
@@ -182,6 +194,39 @@ public class User extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("userName");
 		}		
+	}	
+	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
 	
 	

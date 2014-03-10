@@ -19,18 +19,29 @@
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="right"
 	    android:gravity="right"
+	    android:layout_marginRight="50dp"
 	    android:orientation="vertical">
-	    <TextView
-	        android:id="@+id/projectListItem_expenseTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	        android:text="支出: ¥1000.00"/>
-	    <TextView
-	        android:id="@+id/projectListItem_incomeTotal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/darker_gray"
-	        android:text="收入: ¥50.00" />
+	    
+	     <com.hoyoji.android.hyjframework.view.HyjNumericView 
+	        android:id="@+id/projectListItem_expenseTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥0.00"/>
+	    
+	    <com.hoyoji.android.hyjframework.view.HyjNumericView 
+	        android:id="@+id/projectListItem_incomeTotal"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+	    	android:textColor="@android:color/darker_gray"
+	    	android:text="¥0.00"/>
 	</LinearLayout>
+	
+    <ImageButton
+        android:id="@+id/projectListItem_action_viewSubProjects"
+        android:layout_width="40dp"
+        android:layout_height="48dp"
+        android:layout_gravity="right"
+          android:background="@drawable/abc_tab_indicator_ab_holo"
+        android:src="@drawable/abc_ic_go_search_api_holo_light" />
 </FrameLayout>

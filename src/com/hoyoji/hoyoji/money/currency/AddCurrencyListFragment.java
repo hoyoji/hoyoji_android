@@ -94,7 +94,7 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 		if(id >= 0){
 			JSONObject object = (JSONObject) getListAdapter().getItem(position);
 			Currency newCurrency = new Currency();
-			newCurrency.loadFromJSON(object);
+			newCurrency.loadFromJSON(object, true);
 			
 			java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
 			newCurrency.setSymbol(localeCurrency.getSymbol());
@@ -148,8 +148,8 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 	}
 	
 	@Override
-	public void doFetchMore(int offset, int pageSize){
-		this.setFooterLoadStart();
+	public void doFetchMore(ListView l, int offset, int pageSize){
+		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
 			data.put("name", mSearchText);

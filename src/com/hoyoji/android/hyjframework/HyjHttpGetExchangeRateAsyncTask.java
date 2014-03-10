@@ -1,24 +1,23 @@
 package com.hoyoji.android.hyjframework;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
-
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -67,7 +66,26 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 		InputStream is = null;
 		String s = null;
 		try {
-			HttpClient client = new DefaultHttpClient();
+			DefaultHttpClient client = new DefaultHttpClient();
+
+			client.addResponseInterceptor(new HttpResponseInterceptor() {
+				@Override
+				public void process(HttpResponse response, HttpContext context)
+						throws HttpException, IOException {
+					// Inflate any responses compressed with gzip
+				    final HttpEntity entity = response.getEntity();
+				    final Header encoding = entity.getContentEncoding();
+				    if (encoding != null) {
+				      for (HeaderElement element : encoding.getElements()) {
+				        if (element.getName().equalsIgnoreCase("gzip")) {
+				          response.setEntity(new InflatingEntity(response.getEntity()));
+				          break;
+				        }
+				      }
+				    }
+					
+				}
+			});
 			HttpGet get = new HttpGet(serverUrl);
 
 			get.setHeader("Accept", "application/json");
@@ -76,19 +94,7 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 
 			HttpResponse response = client.execute(get);
 			HttpEntity entity = response.getEntity();
-			is = entity.getContent();
-			if (is != null) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buf = new byte[128];
-				int ch = -1;
-
-				while ((ch = is.read(buf)) != -1) {
-					baos.write(buf, 0, ch);
-					Thread.sleep(10);
-				}
-				s = new String(baos.toByteArray());
-				Log.i("Server", s);
-			}
+			s = EntityUtils.toString(entity, HTTP.UTF_8); 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return HyjApplication.getInstance().getString(
@@ -135,4 +141,19 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 		}
 		return null;
 	}
+	private static class InflatingEntity extends HttpEntityWrapper {
+        public InflatingEntity(HttpEntity wrapped) {
+            super(wrapped);
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+            return new GZIPInputStream(wrappedEntity.getContent());
+        }
+
+        @Override
+        public long getContentLength() {
+            return -1;
+        }
+    }
 }

@@ -1,9 +1,18 @@
 package com.hoyoji.hoyoji.models;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.activeandroid.Cache;
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.serializer.TypeSerializer;
+import com.activeandroid.util.Log;
+import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -15,7 +24,7 @@ import android.provider.BaseColumns;
 public class UserData extends HyjModel {
 	
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "userId", index = true, unique = true)
 	private String mUserId;
@@ -67,11 +76,23 @@ public class UserData extends HyjModel {
 	
 	@Column(name = "address")
 	private String mAddress;
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	
 	public UserData(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 	}
 
 	public User getUser(){
@@ -87,11 +108,11 @@ public class UserData extends HyjModel {
 
 	@Override
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getUserId() {
@@ -145,6 +166,14 @@ public class UserData extends HyjModel {
 	public String getActiveProjectId() {
 		return mActiveProjectId;
 	}
+	
+
+	public Project getActiveProject() {
+		if(mActiveProjectId == null){
+			return null;
+		}
+		return HyjModel.getModel(Project.class, mActiveProjectId);
+	}
 
 	public void setActiveProjectId(String mActiveProjectId) {
 		this.mActiveProjectId = mActiveProjectId;
@@ -159,6 +188,17 @@ public class UserData extends HyjModel {
 			return null;
 		}
 		return (Currency) getModel(Currency.class, mActiveCurrencyId);
+	}
+	
+	public String getActiveCurrencySymbol() {
+		if(mActiveCurrencyId == null){
+			return null;
+		}
+		Currency currency = getModel(Currency.class, mActiveCurrencyId);
+		if(currency != null){
+			return currency.getSymbol();
+		}
+		return mActiveCurrencyId;
 	}
 	
 	public void setActiveCurrencyId(String mActiveCurrencyId) {
@@ -257,4 +297,44 @@ public class UserData extends HyjModel {
 		}
 		super.save();
 	}
+	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+		jsonObj.remove("lastMessagesDownloadTime");
+		jsonObj.remove("lastSyncTime");
+		return jsonObj;
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
+	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

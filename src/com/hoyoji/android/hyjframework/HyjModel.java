@@ -4,25 +4,14 @@ import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
+import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
 public abstract class HyjModel extends Model  implements Cloneable {
 
-	@Column(name = "_creatorId")
-	private String m_creatorId;
-
-	@Column(name = "serverRecordHash")
-	private String mServerRecordHash;
-
-	@Column(name = "lastServerUpdateTime")
-	private String mLastServerUpdateTime;
-
-	@Column(name = "lastClientUpdateTime")
-	private Long mLastClientUpdateTime;
-	
 	public HyjModel(){
 		super();
 		if(HyjApplication.getInstance().getCurrentUser() != null){
-			m_creatorId = HyjApplication.getInstance().getCurrentUser().getId();
+			this.setCreatorId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 	}
 	
@@ -45,33 +34,48 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		return null;
 	}
 	
-	public void setCreator(HyjModel creator){
-		m_creatorId = creator.getId();
-	}
+	public abstract void setId(String id);
 	
-	public String getServerRecordHash() {
-		return mServerRecordHash;
-	}
+	public abstract String getId();
+	
+	public abstract void setCreatorId(String id);
+//	{
+//		m_creatorId = id;
+//	}
+	public abstract String getCreatorId();
+//	{
+//		return m_creatorId;
+//	}
+	
+	public abstract String getServerRecordHash();
+//	{
+//		return mServerRecordHash;
+//	}
 
-	public void setServerRecordHash(String mServerRecordHash) {
-		this.mServerRecordHash = mServerRecordHash;
-	}
+	public abstract void setServerRecordHash(String mServerRecordHash);
+//	{
+//		this.mServerRecordHash = mServerRecordHash;
+//	}
 
-	public String getLastServerUpdateTime() {
-		return mLastServerUpdateTime;
-	}
+	public abstract String getLastServerUpdateTime();
+//	{
+//		return mLastServerUpdateTime;
+//	}
 
-	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
-		this.mLastServerUpdateTime = mLastServerUpdateTime;
-	}
+	public abstract void setLastServerUpdateTime(String mLastServerUpdateTime);
+//	{
+//		this.mLastServerUpdateTime = mLastServerUpdateTime;
+//	}
 
-	public Long getLastClientUpdateTime() {
-		return mLastClientUpdateTime;
-	}
+	public abstract Long getLastClientUpdateTime();
+//	{
+//		return mLastClientUpdateTime;
+//	}
 
-	public void setLastClientUpdateTime(Long mLastClientUpdateTime) {
-		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}	
+	public abstract void setLastClientUpdateTime(Long mLastClientUpdateTime);
+//	{
+//		this.mLastClientUpdateTime = mLastClientUpdateTime;
+//	}	
 	
 	public HyjModelEditor newModelEditor(){
 		return new HyjModelEditor(this);
@@ -79,10 +83,30 @@ public abstract class HyjModel extends Model  implements Cloneable {
 
 	@Override
 	public void save(){
-		if(m_creatorId == null){
-			m_creatorId = this.getId();
+		if(this.getCreatorId() == null){
+			this.setCreatorId(HyjApplication.getInstance().getCurrentUser().getId());
+		}
+		if(!this.getSyncFromServer()){
+			this.setLastClientUpdateTime(System.currentTimeMillis());
 		}
 		super.save();
+	}
+	
+	public boolean isClientNew(){
+		ClientSyncRecord clientSyncRecord = this.getClientSyncRecord();
+		if(clientSyncRecord == null){
+			return false;
+		} else {
+			return clientSyncRecord.getOperation().equalsIgnoreCase("Create");
+		}
+	}
+	
+	public ClientSyncRecord getClientSyncRecord(){
+		return new Select().from(ClientSyncRecord.class).where("id=?", getId()).executeSingle();
+	}
+	
+	final public void deleteFromServer(){
+		super.delete();
 	}
 	
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);

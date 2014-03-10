@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -16,7 +18,7 @@ import com.hoyoji.hoyoji.R;
 public class Project extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "name")
 	private String mName;
@@ -33,8 +35,14 @@ public class Project extends HyjModel {
 	@Column(name = "defaultIncomeCategory")
 	private String mDefaultIncomeCategory;
 
+	@Column(name = "defaultIncomeCategoryMain")
+	private String mDefaultIncomeCategoryMain;
+
 	@Column(name = "defaultExpenseCategory")
 	private String mDefaultExpenseCategory;
+
+	@Column(name = "defaultExpenseCategoryMain")
+	private String mDefaultExpenseCategoryMain;
 
 	@Column(name = "depositeIncomeCategory")
 	private String mDepositeIncomeCategory;
@@ -42,55 +50,74 @@ public class Project extends HyjModel {
 	@Column(name = "depositeExpenseCategory")
 	private String mDepositeExpenseCategory;
 
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
-	public Project(){
+	public Project() {
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		setAutoApportion(false);
 	}
-	
+
 	@Override
 	public void validate(HyjModelEditor modelEditor) {
-		if(this.getName().length() == 0){
-			modelEditor.setValidationError("name", R.string.projectFormFragment_editText_hint_projectName);
+		if (this.getName().length() == 0) {
+			modelEditor.setValidationError("name",
+					R.string.projectFormFragment_editText_hint_projectName);
 		} else {
 			modelEditor.removeValidationError("name");
 		}
-		if(this.getCurrencyId() == null){
-			modelEditor.setValidationError("currency", R.string.projectFormFragment_editText_hint_projectCurrency);
+		if (this.getCurrencyId() == null) {
+			modelEditor.setValidationError("currency",
+					R.string.projectFormFragment_editText_hint_projectCurrency);
 		} else {
 			modelEditor.removeValidationError("currency");
 		}
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getName() {
 		return mName;
 	}
-	
-	public String getDisplayName(){
+
+	public String getDisplayName() {
 		return getName();
 	}
-	
+
 	public void setName(String mName) {
 		this.mName = mName;
 	}
-	
+
 	public List<ParentProject> getParentProjects() {
 		return getMany(ParentProject.class, "subProjectId");
 	}
-	
+
 	public List<ParentProject> getSubProjects() {
 		return getMany(ParentProject.class, "parentProjectId");
 	}
-	
+
+	public List<ProjectShareAuthorization> getProjectShareAuthorizations() {
+		return new Select().from(ProjectShareAuthorization.class)
+				.where("projectId =? AND state != 'Deleted'", getId())
+				.execute();
+	}
+
 	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
@@ -106,14 +133,25 @@ public class Project extends HyjModel {
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
-	
-	public Currency getCurrency(){
-		if(mCurrencyId == null){
+
+	public Currency getCurrency() {
+		if (mCurrencyId == null) {
 			return null;
 		}
-		return (Currency) getModel(Currency.class, mCurrencyId);
+		return getModel(Currency.class, mCurrencyId);
 	}
-	
+
+	public String getCurrencySymbol() {
+		if (mCurrencyId == null) {
+			return null;
+		}
+		Currency currency = getModel(Currency.class, mCurrencyId);
+		if (currency != null) {
+			return currency.getSymbol();
+		}
+		return mCurrencyId;
+	}
+
 	public void setCurrency(Currency mCurrency) {
 		this.mCurrencyId = mCurrency.getId();
 	}
@@ -142,6 +180,22 @@ public class Project extends HyjModel {
 		this.mDefaultExpenseCategory = mDefaultExpenseCategory;
 	}
 
+	public String getDefaultIncomeCategoryMain() {
+		return mDefaultIncomeCategoryMain;
+	}
+
+	public void setDefaultIncomeCategoryMain(String mDefaultIncomeCategoryMain) {
+		this.mDefaultIncomeCategoryMain = mDefaultIncomeCategoryMain;
+	}
+
+	public String getDefaultExpenseCategoryMain() {
+		return mDefaultExpenseCategoryMain;
+	}
+
+	public void setDefaultExpenseCategoryMain(String mDefaultExpenseCategoryMain) {
+		this.mDefaultExpenseCategoryMain = mDefaultExpenseCategoryMain;
+	}
+
 	public String getDepositeIncomeCategory() {
 		return mDepositeIncomeCategory;
 	}
@@ -158,15 +212,49 @@ public class Project extends HyjModel {
 		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
 	}
 
-	public List<ProjectShareAuthorization> getShareAuthorizations(){
+	public List<ProjectShareAuthorization> getShareAuthorizations() {
 		return this.getMany(ProjectShareAuthorization.class, "projectId");
 	}
-	
+
 	@Override
-	public void save(){
-		if(this.getOwnerUserId() == null){
-			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+	public void save() {
+		if (this.getOwnerUserId() == null) {
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
+					.getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

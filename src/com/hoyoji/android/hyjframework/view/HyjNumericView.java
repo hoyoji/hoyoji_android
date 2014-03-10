@@ -16,7 +16,7 @@ public class HyjNumericView extends TextView {
 	
 	public void setText(String number){
 		if(number != null){
-			setNumber(HyjUtil.toFixed2(Double.parseDouble(number)));
+			setNumber(Double.parseDouble(number));
 		} else {
 			setNumber(null);
 		}

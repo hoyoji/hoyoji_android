@@ -10,13 +10,14 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyAccount", id = BaseColumns._ID)
 public class MoneyAccount extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUID;
 
 	@Column(name = "name")
 	private String mName;
@@ -48,32 +49,88 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public MoneyAccount(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		mId = UUID.randomUUID().toString();
+		mUUID = UUID.randomUUID().toString();
 		mCurrencyId = userData.getActiveCurrencyId();
 		mCurrentBalance = 0.00;
 	}
 	
-	public static MoneyAccount getDebtAccount(String currencyId, Friend friend){
-		String friendId;
-		if(friend == null){
-			friendId = "";
-		}else{
-			friendId = friend.getId();
+	public String getDisplayName(){
+		if(this.getName() == null){
+			return null;
 		}
-		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+		if(this.getAccountType().equalsIgnoreCase("Debt")){
+			if(this.getFriendId() != null){
+				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
+				return friend.getDisplayName();
+			} else {
+				if(this.getName().equalsIgnoreCase("__ANONYMOUS__")){
+					return String.valueOf(R.string.app_moneyaccount_anonymous);
+				}
+				
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", this.getName()).executeSingle();
+				if(friend != null){
+					return friend.getDisplayName();
+				} else {
+					User user = HyjModel.getModel(User.class, this.getName());
+					if(user != null){
+						return user.getDisplayName();
+					} else {
+						return this.getName();
+					}
+				}
+			}
+		}else{
+			return this.getName();
+		}
+		
+	}
+	
+	public static MoneyAccount getDebtAccount(String currencyId, Friend friend){
+		if(friend == null){
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=? AND name=?", "Debt", currencyId, null,"__ANONYMOUS__").executeSingle();
+		}
+		
+		String friendId;
+		if(friend.getFriendUserId() == null){
+			friendId = friend.getId();
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+		} else {	
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
+		}
+	}
+	
+
+	public static MoneyAccount getDebtAccount(String currencyId, String friendUserId) {
+		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friendUserId).executeSingle();
 	}
 	
 	public static void createDebtAccount(Friend friend, String currencyId, Double amount){
 		MoneyAccount createDebtAccount = new MoneyAccount();
-		String debtAccountName = "匿名借贷账户";
-		String friendId = "";
+		String debtAccountName = "__ANONYMOUS__";
+		String friendId = null;
 		if(friend != null){
-			friendId = friend.getId();
-			debtAccountName = friendId;
+			if(friend.getFriendUserId() == null){
+				friendId = friend.getId();
+				debtAccountName = null;
+			}else{
+				debtAccountName = friend.getFriendUserId();
+			}
 		}
 		createDebtAccount.setName(debtAccountName);
 		createDebtAccount.setCurrencyId(currencyId);
@@ -81,6 +138,16 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setSharingType("Private");
 		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.setFriendId(friendId);
+		createDebtAccount.save();
+	}
+	
+	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
+		MoneyAccount createDebtAccount = new MoneyAccount();
+		createDebtAccount.setName(friendUserId);
+		createDebtAccount.setCurrencyId(currencyId);
+		createDebtAccount.setCurrentBalance(amount);
+		createDebtAccount.setSharingType("Private");
+		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.save();
 	}
 	
@@ -99,11 +166,11 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public String getId() {
-		return mId;
+		return mUUID;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String mUUID) {
+		this.mUUID = mUUID;
 	}
 
 	public String getName() {
@@ -138,6 +205,9 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public void setCurrentBalance(Double mCurrentBalance) {
+		if(mCurrentBalance != null) {
+			mCurrentBalance = HyjUtil.toFixed2(mCurrentBalance);
+		}
 		this.mCurrentBalance = mCurrentBalance;
 	}
 
@@ -182,11 +252,18 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public String getFriendId() {
+		if(mFriendId != null && mFriendId.length() == 0){
+			return null;
+		}
 		return mFriendId;
 	}
 
 	public void setFriendId(String mFriendId) {
-		this.mFriendId = mFriendId;
+		if(mFriendId != null && mFriendId.length() == 0){
+			this.mFriendId = null;
+		} else {
+			this.mFriendId = mFriendId;
+		}
 	}
 
 	public String getOwnerUserId() {
@@ -203,5 +280,39 @@ public class MoneyAccount extends HyjModel {
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
+
 }

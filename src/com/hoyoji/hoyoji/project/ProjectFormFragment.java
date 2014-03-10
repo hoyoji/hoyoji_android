@@ -35,6 +35,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment.ParentProjectListItem;
@@ -84,7 +85,9 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		Currency currency = project.getCurrency();
 		mSelectorFieldProjectCurrency = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_projectCurrency);
-		
+		if(modelId != -1){
+			mSelectorFieldProjectCurrency.setEnabled(false);
+		}
 		if(currency != null){
 			mSelectorFieldProjectCurrency.setModelId(currency.getId());
 			mSelectorFieldProjectCurrency.setText(currency.getName());
@@ -145,6 +148,20 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						pp.getParentProject().delete();
 					}
 				}
+				
+				if(mProjectEditor.getModelCopy().get_mId() == null){
+					ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+					newProjectShareAuthorization.setProjectId(mProjectEditor.getModelCopy().getId());
+					newProjectShareAuthorization.setState("Accept");
+					newProjectShareAuthorization.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					newProjectShareAuthorization.setSharePercentage(100.0);
+					newProjectShareAuthorization.setSharePercentageType("Average");
+					newProjectShareAuthorization.setShareAllSubProjects(false);
+					newProjectShareAuthorization.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					
+					newProjectShareAuthorization.save();
+				}
+				
 				mProjectEditor.save();
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
@@ -169,7 +186,6 @@ public class ProjectFormFragment extends HyjUserFormFragment {
             	 break;
              case GET_CURRENCY_ID:
             	 if(resultCode == Activity.RESULT_OK){
-            		 HyjUtil.displayToast(String.valueOf(data.getLongExtra("MODEL_ID", -1)));
             		 long _id = data.getLongExtra("MODEL_ID", -1);
  	         		 Currency currency = Currency.load(Currency.class, _id);
  	         		 mSelectorFieldProjectCurrency.setText(currency.getName());

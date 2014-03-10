@@ -12,13 +12,14 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "Exchange", id = BaseColumns._ID)
 public class Exchange extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
-	private String mId;
+	private String mUUId;
 
 	@Column(name = "rate")
 	private Double mRate;
@@ -35,10 +36,22 @@ public class Exchange extends HyjModel {
 	@Column(name = "autoUpdate")
 	private Boolean mAutoUpdate;
 
+
+	@Column(name = "_creatorId")
+	private String m_creatorId;
+
+	@Column(name = "serverRecordHash")
+	private String mServerRecordHash;
+
+	@Column(name = "lastServerUpdateTime")
+	private String mLastServerUpdateTime;
+
+	@Column(name = "lastClientUpdateTime")
+	private Long mLastClientUpdateTime;
 	
 	public Exchange(){
 		super();
-		mId = UUID.randomUUID().toString();
+		mUUId = UUID.randomUUID().toString();
 		setAutoUpdate(true);
 	}
 	
@@ -69,11 +82,11 @@ public class Exchange extends HyjModel {
 	}
 
 	public String getId() {
-		return mId;
+		return mUUId;
 	}
 
 	public void setId(String mId) {
-		this.mId = mId;
+		this.mUUId = mId;
 	}
 	
 	public String getOwnerUserId() {
@@ -89,6 +102,9 @@ public class Exchange extends HyjModel {
 	}
 
 	public void setRate(Double mRate) {
+		if(mRate != null){
+			mRate = HyjUtil.toFixed2(mRate);
+		}
 		this.mRate = mRate;
 	}
 
@@ -137,5 +153,38 @@ public class Exchange extends HyjModel {
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
 		super.save();
+	}	
+
+	public void setCreatorId(String id){
+		m_creatorId = id;
 	}
+	
+	public String getCreatorId(){
+		return m_creatorId;
+	}
+	
+	public String getServerRecordHash(){
+		return mServerRecordHash;
+	}
+
+	public void setServerRecordHash(String mServerRecordHash){
+		this.mServerRecordHash = mServerRecordHash;
+	}
+
+	public String getLastServerUpdateTime(){
+		return mLastServerUpdateTime;
+	}
+
+	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+		this.mLastServerUpdateTime = mLastServerUpdateTime;
+	}
+
+	public Long getLastClientUpdateTime(){
+		return mLastClientUpdateTime;
+	}
+
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}	
+	
 }

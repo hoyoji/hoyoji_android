@@ -4,14 +4,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,13 +51,33 @@ public class HyjServer {
 		InputStream is = null;
 		String s = null;
 		try {
-			HttpClient client = new DefaultHttpClient();
+			DefaultHttpClient client = new DefaultHttpClient();
+			client.addResponseInterceptor(new HttpResponseInterceptor() {
+				@Override
+				public void process(HttpResponse response, HttpContext context)
+						throws HttpException, IOException {
+					// Inflate any responses compressed with gzip
+				    final HttpEntity entity = response.getEntity();
+				    final Header encoding = entity.getContentEncoding();
+				    if (encoding != null) {
+				      for (HeaderElement element : encoding.getElements()) {
+				        if (element.getName().equalsIgnoreCase("gzip")) {
+				          response.setEntity(new InflatingEntity(response.getEntity()));
+				          break;
+				        }
+				      }
+				    }
+					
+				}
+			});
+				  
 			HttpPost post = new HttpPost(serverUrl);
 		
 			post.setEntity(new StringEntity(postData, HTTP.UTF_8));
 			post.setHeader("Accept", "application/json");
 			post.setHeader("Content-type", "application/json; charset=UTF-8");
 			post.setHeader("Accept-Encoding", "gzip");
+//	        post.setHeader("charset", HTTP.UTF_8);  
 			post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
 			if (currentUser != null) {
 				String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");
@@ -59,27 +87,8 @@ public class HyjServer {
 			
 			HttpResponse response = client.execute(post);
 			HttpEntity entity = response.getEntity();
-			long length = entity.getContentLength();
-			is = entity.getContent();
-			if (is != null) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buf = new byte[128];
-				int ch = -1;
-				int count = 0;
-
-				while ((ch = is.read(buf)) != -1) {
-					baos.write(buf, 0, ch);
-					count += ch;
-					if (length > 0) {
-						if(asyncTask instanceof HyjAsyncTask){
-							((HyjAsyncTask)asyncTask).doPublishProgress((int) ((count / (float) length) * 100));
-						}
-					}
-					Thread.sleep(10);
-				}
-				s = new String(baos.toByteArray());
-				Log.i("Server", s);
-			}
+			s = EntityUtils.toString(entity, HTTP.UTF_8); 
+			Log.i("Server", s);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if(returnJSONError){
@@ -114,4 +123,19 @@ public class HyjServer {
 		}
     }    
 	
+	private static class InflatingEntity extends HttpEntityWrapper {
+        public InflatingEntity(HttpEntity wrapped) {
+            super(wrapped);
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+            return new GZIPInputStream(wrappedEntity.getContent());
+        }
+
+        @Override
+        public long getContentLength() {
+            return -1;
+        }
+    }
 }

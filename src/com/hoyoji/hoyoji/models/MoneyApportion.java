@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.models;
 import com.hoyoji.android.hyjframework.HyjModel;
 
 public interface MoneyApportion {
+	public Long get_mId();
 	public String getId();
 	public Double getAmount();
 	public void setAmount(Double totalAmount);
@@ -11,4 +12,6 @@ public interface MoneyApportion {
 	public User getFriendUser();
 	public String getApportionType();
 	public void setApportionType(String type);
+	public void setMoneyId(String moneyTransactionId);
+	public void setFriendUserId(String friendUserId);
 }

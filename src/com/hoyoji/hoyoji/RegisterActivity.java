@@ -82,6 +82,8 @@ public class RegisterActivity extends HyjActivity {
 //	            }
 //	        }
 //	    });		
+		
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
 	private void fillData(){
