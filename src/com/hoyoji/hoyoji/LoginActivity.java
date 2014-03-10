@@ -306,7 +306,6 @@ public class LoginActivity extends HyjActivity {
 		try {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
-			// jsonObj1.put("id", user.getMessageBoxId());
 			jsonObj.put("ownerUserId", HyjApplication.getInstance()
 					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
@@ -331,15 +330,15 @@ public class LoginActivity extends HyjActivity {
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ProjectShareAuthorization");
 			// jsonObj.put("ownerUserId", user.getId());
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "ProjectRemark");
-			// jsonObj.put("ownerUserId", user.getId());
-
 			JSONObject notFilter = new JSONObject();
 			notFilter.put("ownerUserId", "");
 			jsonObj.put("__NOT_FILTER__", notFilter);
 			belongsToes.put(jsonObj);
+			
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectRemark");
+			 jsonObj.put("ownerUserId", user.getId());
+
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ParentProject");
