@@ -78,7 +78,13 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 				this.getResources().getDisplayMetrics());
 		mFrecentCategory.setPadding((int)px, 0, 0, 0);
 		
-		getListView().addHeaderView(mFrecentCategory);
+//		getListView().addHeaderView(mFrecentCategory);
+		
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+		} else {
+			getListView().addHeaderView(mFrecentCategory);
+		}
 		
 		View mainCategoryPanel = getView().findViewById(R.id.moneyExpenseCategory_list_panel_mainCategory);
 		mainCategoryPanel.setBackgroundColor(Color.LTGRAY);
