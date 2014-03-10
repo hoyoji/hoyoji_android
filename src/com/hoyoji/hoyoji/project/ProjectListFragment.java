@@ -27,8 +27,9 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager mViewPager;
-
+	public ViewPager mViewPager;
+	
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.project_listfragment_project;

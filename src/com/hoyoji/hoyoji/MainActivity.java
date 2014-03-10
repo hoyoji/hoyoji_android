@@ -103,6 +103,7 @@ import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
+import com.hoyoji.hoyoji.project.SubProjectListFragment;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
@@ -110,7 +111,7 @@ public class MainActivity extends HyjUserActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-
+	private ProjectListFragment mProjectListFragment;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -207,6 +208,14 @@ public class MainActivity extends HyjUserActivity {
 		if(HyjApplication.getInstance().getCurrentUser() == null){
 			super.onBackPressed();
 		} else {
+			if(mViewPager.getCurrentItem() == 1){
+				ProjectListFragment f = mProjectListFragment;
+				if(f != null && f.mViewPager.getCurrentItem() != 0){
+					f.mViewPager.setCurrentItem(f.mViewPager.getCurrentItem() - 1);
+					return;
+				}
+			}
+			
 			this.displayDialog(-1, R.string.app_confirm_exit, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
 				@Override
 				public void doPositiveClick(Object object){
@@ -382,6 +391,7 @@ public class MainActivity extends HyjUserActivity {
 				break;
 			case 1:
 				fragment = new ProjectListFragment();
+				mProjectListFragment = (ProjectListFragment) fragment;
 				break;
 			case 2:
 				fragment = new HomeListFragment();
