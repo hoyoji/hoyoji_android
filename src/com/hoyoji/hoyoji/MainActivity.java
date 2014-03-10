@@ -202,6 +202,20 @@ public class MainActivity extends HyjUserActivity {
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		if(HyjApplication.getInstance().getCurrentUser() == null){
+			super.onBackPressed();
+		} else {
+			this.displayDialog(-1, R.string.app_confirm_exit, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+				@Override
+				public void doPositiveClick(Object object){
+					MainActivity.super.onBackPressed();
+				}
+			});
+		}
+	}
+	
 	/* Called whenever we call invalidateOptionsMenu() */
 	// @Override
 	public boolean onPrepareOptionsMenu(Menu menu) {

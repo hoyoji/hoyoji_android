@@ -19,6 +19,7 @@
     <string name="app_no_remark">无备注</string>
     <string name="app_listfield_add">添加</string>
     <string name="app_confirm_delete">你确定要删除当前记录吗？</string>
+    <string name="app_confirm_exit">你确定退出吗？</string>
     <string name="app_delete_success">删除成功</string>
     <string name="app_delete_failed">删除不成功</string>
     

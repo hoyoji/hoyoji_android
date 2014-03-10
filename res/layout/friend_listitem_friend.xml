@@ -8,7 +8,8 @@
      android:paddingLeft="5dp"
      android:descendantFocusability="blocksDescendants">
 
-     <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/friendListItem_picture"
+     <com.hoyoji.android.hyjframework.view.HyjImageView 
+         android:id="@+id/friendListItem_picture"
          android:layout_width="56dp"
          android:layout_height="56dp"
          android:background="@drawable/ic_action_person"

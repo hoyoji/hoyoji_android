@@ -40,6 +40,7 @@ import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.SearchListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
 	public final static int ADD_SUB_PROJECT = 0;
@@ -81,8 +82,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
-				new String[] { "name", "id", "id", "id"},
-				new int[] { R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal, R.id.projectListItem_action_viewSubProjects },
+				new String[] {"_id", "name", "id", "id", "id"},
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
 
@@ -149,8 +150,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			getActivity().finish();
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+			bundle.putLong("project_id", id);
+			openActivityWithFragment(SearchListFragment.class, R.string.projectListFragment_view_transactions, bundle);
 		}
     }  
 
@@ -172,7 +173,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return super.onContextItemSelected(item);
 		}
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	    Long itemId = getListAdapter().getItemId(info.position);
+//	    Long itemId = getListAdapter().getItemId(info.position);
 		switch (item.getItemId()) {
 //			case ADD_SUB_PROJECT:
 //			    HyjUtil.displayToast("创建子项目" + itemId);
@@ -243,7 +244,20 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			}
 			view.setTag(cursor.getString(columnIndex));
 			return true;
-		}else {
+		} else if(view.getId() == R.id.projectListItem_picture){
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Bundle bundle = new Bundle();
+						bundle.putLong("MODEL_ID", (Long) v.getTag());
+						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+					}
+				});
+			}
+			view.setTag(cursor.getLong(columnIndex));
+			return true;
+		} else {
 			return false;
 		}
 	}	

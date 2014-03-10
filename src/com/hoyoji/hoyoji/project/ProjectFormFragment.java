@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,13 +64,27 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		Project project;
 		
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		final Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
 		} else {
 			project = new Project();
 		}
 		mProjectEditor = project.newModelEditor();
+		
+		View buttonMember = getView().findViewById(R.id.projectFormFragment_button_member);
+		if(modelId == -1){
+			buttonMember.setVisibility(View.GONE);
+		} else {
+			buttonMember.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", modelId);
+					openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
+				}
+			});
+		}
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getName());

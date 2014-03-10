@@ -90,8 +90,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		if(HyjApplication.getInstance().isLoggedIn()) {
 	        //setListShown(false);  
 			if(!mIsViewInited){
-				initLoader(0);
 				onInitViewData();
+				initLoader(0);
 				mIsViewInited = true;
 			}
 		}
