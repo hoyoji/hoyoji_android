@@ -529,13 +529,13 @@ public abstract class Model {
 		}
 		try {
 			jsonObj.put("__dataType", mTableInfo.getTableName());
-//			String lastServerUpdateTime = jsonObj
-//					.optString("lastServerUpdateTime");
-//			if (lastServerUpdateTime.length() > 0) {
-//				// jsonObj.remove("lastServerUpdateTime");
-//				jsonObj.put("lastServerUpdateTime",
-//						Long.valueOf(lastServerUpdateTime));
-//			}
+			String lastServerUpdateTime = jsonObj
+					.optString("lastServerUpdateTime");
+			if (lastServerUpdateTime.length() > 0) {
+				// jsonObj.remove("lastServerUpdateTime");
+				jsonObj.put("lastServerUpdateTime",
+						Long.valueOf(lastServerUpdateTime));
+			}
 			jsonObj.remove("serverRecordHash");
 		} catch (JSONException e) {
 			e.printStackTrace();
