@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.money;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +36,9 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
@@ -275,18 +278,30 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					if (fromCurrency != null && toCurrency != null) {
 						HyjUtil.startRoateView(mImageViewRefreshRate);
 						mImageViewRefreshRate.setEnabled(false);
+						final WeakReference<ImageView> refreshRateRefrence = new WeakReference<ImageView>(mImageViewRefreshRate);
+						final WeakReference<HyjNumericField> exchangeRateRefrence = new WeakReference<HyjNumericField>(mNumericExchangeRate);
+						
 						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 							@Override
 							public void finishCallback(Object object) {
-								HyjUtil.stopRoateView(mImageViewRefreshRate);
-								mImageViewRefreshRate.setEnabled(true);
-								mNumericExchangeRate.setNumber((Double) object);
+								ImageView imageViewRefreshRate = refreshRateRefrence.get();
+								HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+								if(imageViewRefreshRate != null){
+									HyjUtil.stopRoateView(imageViewRefreshRate);
+									imageViewRefreshRate.setEnabled(true);
+									numericExchangeRate.setNumber((Double) object);
+								}
 							}
 
 							@Override
 							public void errorCallback(Object object) {
-								HyjUtil.stopRoateView(mImageViewRefreshRate);
-								mImageViewRefreshRate.setEnabled(true);
+								ImageView imageViewRefreshRate = refreshRateRefrence.get();
+								HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+								if(imageViewRefreshRate != null){
+									HyjUtil.stopRoateView(imageViewRefreshRate);
+									imageViewRefreshRate.setEnabled(true);
+									numericExchangeRate.setEnabled(true);
+								}
 								if (object != null) {
 									HyjUtil.displayToast(object.toString());
 								} else {
