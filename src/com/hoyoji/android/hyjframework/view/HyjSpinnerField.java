@@ -78,13 +78,14 @@ public class HyjSpinnerField extends LinearLayout {
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
+			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 //		mEditTextEdit.setHint(mHintText);

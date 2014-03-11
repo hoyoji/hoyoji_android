@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 public class HyjTextField extends LinearLayout {
 	private String mLabelText;
@@ -67,13 +68,6 @@ public class HyjTextField extends LinearLayout {
 		if(bold){
 			mEditTextEdit.setTypeface(null, Typeface.BOLD);
 		}
-//		if(border.equals("none")){
-//			if(android.os.Build.VERSION.SDK_INT >= 16){
-//				mEditTextEdit.setBackground(null);
-//			} else {
-//				mEditTextEdit.setBackgroundDrawable(null);
-//			}
-//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -81,13 +75,13 @@ public class HyjTextField extends LinearLayout {
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
+			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
@@ -141,5 +135,12 @@ public class HyjTextField extends LinearLayout {
 			        inputMethodManager.toggleSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
 			    }
 			});
+	}
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		mEditTextEdit.setText(null);
+		mEditTextEdit.setHint("");
+		super.onDetachedFromWindow();
 	}
 }

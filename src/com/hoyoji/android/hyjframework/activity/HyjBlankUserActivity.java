@@ -1,6 +1,7 @@
 package com.hoyoji.android.hyjframework.activity;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 
 import android.content.Intent;
@@ -30,5 +31,10 @@ public class HyjBlankUserActivity extends HyjUserActivity {
 	    }
 	}
 
-	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		HyjUtil.detectMemoryLeak(this);
+	}
+
 }

@@ -278,39 +278,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					if (fromCurrency != null && toCurrency != null) {
 						HyjUtil.startRoateView(mImageViewRefreshRate);
 						mImageViewRefreshRate.setEnabled(false);
-						final WeakReference<ImageView> refreshRateRefrence = new WeakReference<ImageView>(mImageViewRefreshRate);
-						final WeakReference<HyjNumericField> exchangeRateRefrence = new WeakReference<HyjNumericField>(mNumericExchangeRate);
-						
-						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-							@Override
-							public void finishCallback(Object object) {
-								ImageView imageViewRefreshRate = refreshRateRefrence.get();
-								HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
-								if(imageViewRefreshRate != null){
-									HyjUtil.stopRoateView(imageViewRefreshRate);
-									imageViewRefreshRate.setEnabled(true);
-									numericExchangeRate.setNumber((Double) object);
-								}
-							}
-
-							@Override
-							public void errorCallback(Object object) {
-								ImageView imageViewRefreshRate = refreshRateRefrence.get();
-								HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
-								if(imageViewRefreshRate != null){
-									HyjUtil.stopRoateView(imageViewRefreshRate);
-									imageViewRefreshRate.setEnabled(true);
-									numericExchangeRate.setEnabled(true);
-								}
-								if (object != null) {
-									HyjUtil.displayToast(object.toString());
-								} else {
-									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-								}
-							}
-						};
-						HyjHttpGetExchangeRateAsyncTask.newInstance(
-								fromCurrency, toCurrency, serverCallbacks);
+						HyjUtil.updateExchangeRate(fromCurrency, toCurrency, mImageViewRefreshRate, mNumericExchangeRate);
 					} else {
 						HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_select_currency);
 					}

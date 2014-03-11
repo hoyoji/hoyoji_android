@@ -2,6 +2,7 @@ package com.hoyoji.android.hyjframework;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -29,6 +31,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -38,6 +42,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -372,5 +377,65 @@ public class HyjUtil {
 					}
 				}
 			}
+		}
+
+		public static void updateExchangeRate(String fromCurrency, String toCurrency, ImageView mImageViewRefreshRate, HyjNumericField mNumericExchangeRate) {
+			final WeakReference<ImageView> refreshRateRefrence = new WeakReference<ImageView>(mImageViewRefreshRate);
+			final WeakReference<HyjNumericField> exchangeRateRefrence = new WeakReference<HyjNumericField>(mNumericExchangeRate);
+			
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					System.gc();
+					ImageView imageViewRefreshRate = refreshRateRefrence.get();
+					HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+					if(imageViewRefreshRate != null){
+						HyjUtil.stopRoateView(imageViewRefreshRate);
+						imageViewRefreshRate.setEnabled(true);
+						numericExchangeRate.setEnabled(true);
+						numericExchangeRate.setNumber((Double) object);
+					}
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					ImageView imageViewRefreshRate = refreshRateRefrence.get();
+					HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+					if(imageViewRefreshRate != null){
+						HyjUtil.stopRoateView(imageViewRefreshRate);
+						imageViewRefreshRate.setEnabled(true);
+						numericExchangeRate.setEnabled(true);
+					}
+					if (object != null) {
+						HyjUtil.displayToast(object.toString());
+					} else {
+						HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+					}
+				}
+			};
+			HyjHttpGetExchangeRateAsyncTask.newInstance(
+					fromCurrency, toCurrency, serverCallbacks);
+			
+		}
+		
+		public static void detectMemoryLeak(Activity activity) {
+			if(activity == null){
+				return;
+			}
+			
+			final WeakReference<Activity> mActivity = new WeakReference<Activity>(activity);
+			Handler handler = new Handler(Looper
+					.getMainLooper());
+			handler.postDelayed(new Runnable() {
+				public void run() {
+					System.gc();
+					Activity activity = mActivity.get();
+					if(activity != null){
+						HyjUtil.displayToast("检测到内存泄漏啦...");
+					} else {
+						HyjUtil.displayToast("很好，无内存泄漏！");
+					}
+				}
+			}, 1000);
 		}
 }

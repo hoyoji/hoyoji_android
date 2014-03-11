@@ -52,13 +52,6 @@ public class HyjRemarkField extends LinearLayout {
 			inflater.inflate(R.layout.remark_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-//		if(border.equals("none")){
-//			if(android.os.Build.VERSION.SDK_INT >= 16){
-//				mEditTextEdit.setBackground(null);
-//			} else {
-//				mEditTextEdit.setBackgroundDrawable(null);
-//			}
-//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 //			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -66,13 +59,14 @@ public class HyjRemarkField extends LinearLayout {
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
+			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);

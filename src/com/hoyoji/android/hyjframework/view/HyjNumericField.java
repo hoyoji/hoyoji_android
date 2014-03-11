@@ -62,7 +62,6 @@ public class HyjNumericField extends LinearLayout {
 			inflater.inflate(R.layout.numeric_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
-		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
 		if(color != -1){
 			mEditTextEdit.setTextColor(color);
 			mEditTextEdit.setHintTextColor(color);
@@ -70,29 +69,19 @@ public class HyjNumericField extends LinearLayout {
 		if(bold){
 			mEditTextEdit.setTypeface(null, Typeface.BOLD);
 		}
-//		if(border.equals("none")){
-//			if(android.os.Build.VERSION.SDK_INT >= 16){
-//				mEditTextEdit.setBackground(null);
-//			} else {
-//				mEditTextEdit.setBackgroundDrawable(null);
-//			}
-//			border  = a.getString(R.styleable.HyjTextField_editTextBorder);
-//			if(border == null){
-//				border = "";
-//			}
-//		}		
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		} else if(style.equals("top_label")){
 			this.setOrientation(LinearLayout.VERTICAL);
 			this.setGravity(Gravity.CENTER_HORIZONTAL);
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
 			
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
+			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
@@ -165,4 +154,12 @@ public class HyjNumericField extends LinearLayout {
 			    }
 			});
 	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		mEditTextEdit.setText(null);
+		mEditTextEdit.setHint("");
+		super.onDetachedFromWindow();
+	}
+	
 }
