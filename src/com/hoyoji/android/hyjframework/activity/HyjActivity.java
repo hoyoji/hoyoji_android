@@ -27,8 +27,11 @@ import android.widget.EditText;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.fragment.HyjDialogFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
+import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public abstract class HyjActivity extends ActionBarActivity 
 //implements GestureDetector.OnGestureListener 
@@ -316,4 +319,36 @@ public abstract class HyjActivity extends ActionBarActivity
 //		
 //	}
 //	
+	
+
+	@Override
+	public void onBackPressed() {
+		if(HyjApplication.getInstance().getCurrentUser() == null){
+			super.onBackPressed();
+		} else {
+			boolean backPressedHandled = false;
+			if(getSupportFragmentManager().getFragments() != null){
+				for(Fragment f : getSupportFragmentManager().getFragments()){
+					if(f instanceof HyjFragment){
+						backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
+					} else if(f instanceof HyjUserListFragment){
+						backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
+					} 
+				}
+			}
+			if(!backPressedHandled){
+				if(this.isTaskRoot()){
+					this.displayDialog(-1, R.string.app_confirm_exit, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+						@Override
+						public void doPositiveClick(Object object){
+							HyjActivity.super.onBackPressed();
+						}
+					});
+				} else {
+					HyjActivity.super.onBackPressed();
+				}
+			}
+		}
+	}
+	
 }

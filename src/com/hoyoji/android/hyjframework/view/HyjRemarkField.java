@@ -89,5 +89,11 @@ public class HyjRemarkField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
-	
+
+	@Override
+	protected void onDetachedFromWindow() {
+		mEditTextEdit.setText(null);
+		mEditTextEdit.setHint("");
+		super.onDetachedFromWindow();
+	}
 }
