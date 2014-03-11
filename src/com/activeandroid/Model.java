@@ -198,6 +198,10 @@ public abstract class Model {
 							new String[] { values.getAsString("id") });
 					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
 				} else {
+					if(cursor != null){
+						cursor.close();
+						cursor = null;
+					}
 					mId = db.insert(mTableInfo.getTableName(), null, values);
 					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Create", mSyncFromServer);
 				}
@@ -525,13 +529,14 @@ public abstract class Model {
 		}
 		try {
 			jsonObj.put("__dataType", mTableInfo.getTableName());
-			String lastServerUpdateTime = jsonObj
-					.optString("lastServerUpdateTime");
-			if (lastServerUpdateTime.length() > 0) {
-				// jsonObj.remove("lastServerUpdateTime");
-				jsonObj.put("lastServerUpdateTime",
-						Long.valueOf(lastServerUpdateTime));
-			}
+//			String lastServerUpdateTime = jsonObj
+//					.optString("lastServerUpdateTime");
+//			if (lastServerUpdateTime.length() > 0) {
+//				// jsonObj.remove("lastServerUpdateTime");
+//				jsonObj.put("lastServerUpdateTime",
+//						Long.valueOf(lastServerUpdateTime));
+//			}
+			jsonObj.remove("serverRecordHash");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

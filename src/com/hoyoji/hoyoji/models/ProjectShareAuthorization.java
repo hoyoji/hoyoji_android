@@ -2,6 +2,8 @@ package com.hoyoji.hoyoji.models;
 
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
@@ -991,5 +993,50 @@ public class ProjectShareAuthorization extends HyjModel {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
-	
+
+
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+
+//		actualTotalIncome : 0,
+//		actualTotalExpense : 0,
+//		actualTotalBorrow : 0,
+//		actualTotalLend : 0,
+//		actualTotalReturn : 0,
+//		actualTotalPayback : 0,
+//		apportionedTotalIncome : 0,
+//		apportionedTotalExpense : 0,
+//		apportionedTotalBorrow : 0,
+//		apportionedTotalLend : 0,
+//		apportionedTotalReturn : 0,
+//		apportionedTotalPayback : 0,
+//		sharedTotalIncome : 0,
+//		sharedTotalExpense : 0,
+//		sharedTotalBorrow : 0,
+//		sharedTotalLend : 0,
+//		sharedTotalReturn : 0,
+//		sharedTotalPayback : 0,
+		
+		jsonObj.remove("actualTotalIncome");
+		jsonObj.remove("actualTotalExpense");
+		jsonObj.remove("actualTotalBorrow");
+		jsonObj.remove("actualTotalLend");
+		jsonObj.remove("actualTotalReturn");
+		jsonObj.remove("actualTotalPayback");
+		jsonObj.remove("apportionedTotalIncome");
+		jsonObj.remove("apportionedTotalExpense");
+		jsonObj.remove("apportionedTotalBorrow");
+		jsonObj.remove("apportionedTotalLend");
+		jsonObj.remove("apportionedTotalReturn");
+		jsonObj.remove("apportionedTotalPayback");
+		jsonObj.remove("sharedTotalIncome");
+		jsonObj.remove("sharedTotalExpense");
+		jsonObj.remove("sharedTotalBorrow");
+		jsonObj.remove("sharedTotalLend");
+		jsonObj.remove("sharedTotalReturn");
+		jsonObj.remove("sharedTotalPayback");
+		
+		return jsonObj;
+	}	
+
 }

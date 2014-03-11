@@ -761,7 +761,7 @@ public class MainActivity extends HyjUserActivity {
 						}
 					}
 					Object result = HyjServer.doHttpPost(null,
-							HyjApplication.getServerUrl() + "syncPush.php",
+							HyjApplication.getServerUrl() + "syncPush2.php",
 							postData.toString(), true);
 					if (result == null) {
 						rollbackUpload(syncRecords);
