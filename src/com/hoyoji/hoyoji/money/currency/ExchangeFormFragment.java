@@ -124,28 +124,8 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 				String fromCurrency = mSelectorFieldLocalCurrency.getModelId();
 				String toCurrency = mSelectorFieldForeignCurrency.getModelId();
 				if(fromCurrency != null && toCurrency != null){
-//					HyjUtil.startRoateView(mImageViewRefreshRate);
-//					mImageViewRefreshRate.setEnabled(false);
-//					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks(){
-//						@Override
-//						public void finishCallback(Object object) {
-//							HyjUtil.stopRoateView(mImageViewRefreshRate);
-//							mImageViewRefreshRate.setEnabled(true);
-//							mNumericFieldRate.setNumber((Double)object);
-//						}
-//						@Override
-//						public void errorCallback(Object object) {
-//							HyjUtil.stopRoateView(mImageViewRefreshRate);
-//							mImageViewRefreshRate.setEnabled(true);
-//							if(object != null){
-//								HyjUtil.displayToast(object.toString());
-//							} else {
-//								HyjUtil.displayToast(R.string.exchangeFormFragment_toast_cannot_refresh_rate);
-//							}
-//						}
-//					};
-//					HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
-					
+					HyjUtil.startRoateView(mImageViewRefreshRate);
+					mImageViewRefreshRate.setEnabled(false);
 					HyjUtil.updateExchangeRate(fromCurrency, toCurrency, mImageViewRefreshRate, mNumericFieldRate);
 					
 				} else {

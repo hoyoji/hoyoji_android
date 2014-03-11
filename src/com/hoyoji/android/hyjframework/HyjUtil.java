@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -431,7 +432,8 @@ public class HyjUtil {
 					System.gc();
 					Activity activity = mActivity.get();
 					if(activity != null){
-						HyjUtil.displayToast("检测到内存泄漏啦...");
+						HyjUtil.displayToast("检测到内存泄漏啦... " + Integer.toHexString(activity.hashCode()));
+						detectMemoryLeak(activity);
 					} else {
 						HyjUtil.displayToast("很好，无内存泄漏！");
 					}

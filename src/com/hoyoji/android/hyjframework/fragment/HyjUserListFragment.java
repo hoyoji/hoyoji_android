@@ -251,6 +251,22 @@ public abstract class HyjUserListFragment extends ListFragment implements
 			startActivity(intent);
 		}
 	}
+
+
+
+	public boolean handleBackPressed() {
+		boolean backPressedHandled = false;
+		if(getChildFragmentManager().getFragments() != null){
+			for(Fragment f : getFragmentManager().getFragments()){
+				if(f instanceof HyjFragment){
+					backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
+				} else if(f instanceof HyjUserListFragment){
+					backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
+				} 
+			}
+		}
+		return backPressedHandled;
+	}
 	
 //	@Override
 //	public boolean onContextItemSelected(MenuItem item) {

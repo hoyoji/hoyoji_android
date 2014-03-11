@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
@@ -98,7 +100,17 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		}
 		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
-
+	
+	@Override
+	public boolean handleBackPressed() {
+		boolean backPressedHandled = false; //super.handleBackPressed();
+		if(mViewPager.getCurrentItem() > 0){
+			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+			backPressedHandled = true;
+		}
+		return backPressedHandled;
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
