@@ -45,7 +45,7 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) getView().findViewById(R.id.projectListFragment_pager);
-		getView().findViewById(R.id.projectListFragment_pager_title_strip).setBackgroundColor(Color.LTGRAY);
+//		getView().findViewById(R.id.projectListFragment_pager_title_strip).setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOnPageChangeListener(this);
