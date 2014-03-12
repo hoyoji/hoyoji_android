@@ -103,6 +103,7 @@ import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.project.SubProjectListFragment;
 
@@ -268,11 +269,11 @@ public class MainActivity extends HyjUserActivity {
 			break;
 		case 5:
 			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-					R.string.currencyListFragment_title_manage_currency, null);
+					R.string.moneyCategoryFormDialogFragment_title_manage, null);
 			break;
 		case 6:
-//			openActivityWithFragment(CurrencyListFragment.class,
-//					R.string.currencyListFragment_title_manage_currency, null);
+			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
+					R.string.moneyCategoryFormDialogFragment_title_manage, null);
 			break;
 		case 8:
 			HyjApplication.getInstance().switchUser();
