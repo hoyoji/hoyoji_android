@@ -420,13 +420,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			SET_EXCHANGE_RATE_FLAG = 0;
 	}
 	
-	private void setTransferInAmount(){
-		if(mNumericTransferOutAmount.getNumber() != null && mNumericExchangeRate != null){
-			mNumericTransferInAmount.setNumber(mNumericTransferOutAmount.getNumber() * mNumericExchangeRate.getNumber());
-		}else{
-			mNumericTransferInAmount.setNumber(null);
-		}
-	}
+//	private void setTransferInAmount(){
+//		if(mNumericTransferOutAmount.getNumber() != null && mNumericExchangeRate != null){
+//			mNumericTransferInAmount.setNumber(mNumericTransferOutAmount.getNumber() * mNumericExchangeRate.getNumber());
+//		}else{
+//			mNumericTransferInAmount.setNumber(null);
+//		}
+//	}
 	
 	private void fillData(){
 		MoneyTransfer modelCopy = (MoneyTransfer) mMoneyTransferEditor.getModelCopy();
