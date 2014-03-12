@@ -348,7 +348,7 @@ public class MoneyIncome extends HyjModel{
 	}
 	
 	@Override
-	public void validate(HyjModelEditor modelEditor) {
+	public void validate(HyjModelEditor<?> modelEditor) {
 		if(this.getDate() == null){
 			modelEditor.setValidationError("date",R.string.moneyIncomeFormFragment_editText_hint_date);
 		}else{
@@ -364,6 +364,12 @@ public class MoneyIncome extends HyjModel{
 		}
 		else{
 			modelEditor.removeValidationError("amount");
+		}
+		
+		if(this.getMoneyIncomeCategory() == null || this.getMoneyIncomeCategory().length() == 0){
+			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
+		}else{
+			modelEditor.removeValidationError("moneyIncomeCategory");
 		}
 		
 		if(this.getExchangeRate() == null){
