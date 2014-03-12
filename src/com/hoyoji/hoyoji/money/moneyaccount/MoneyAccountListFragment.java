@@ -16,14 +16,17 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -102,7 +105,12 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		
+	}	
+	
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 //		super.onCreateLoader(groupPos, arg1);
