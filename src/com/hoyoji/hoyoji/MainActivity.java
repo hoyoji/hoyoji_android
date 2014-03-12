@@ -63,6 +63,7 @@ import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -737,9 +738,11 @@ public class MainActivity extends HyjUserActivity {
 									syncRec.getId());
 							if(model.get_mId() != null){
 								jsonObj.put("operation", "create");
-								jsonObj.put(
-										"recordData",
-										model.toJSON());
+								JSONObject recordData = model.toJSON();
+								if(model instanceof MoneyApportion){
+									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
+								}
+								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
 							}
 						} else if (syncRec.getOperation().equalsIgnoreCase(
@@ -774,7 +777,28 @@ public class MainActivity extends HyjUserActivity {
 					if (result instanceof JSONObject) {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
-							return true;
+							String lastUploadTime = jsonResult.optString("lastUploadTime");
+
+							try {
+								ActiveAndroid.beginTransaction();
+								for (ClientSyncRecord syncRec : syncRecords) {
+									if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
+										HyjModel model = getModel(syncRec.getTableName(),
+												syncRec.getId());
+										model.setSyncFromServer(true);
+										model.setLastServerUpdateTime(lastUploadTime);
+										model.save();
+									} 
+								}
+								ActiveAndroid.setTransactionSuccessful();
+								ActiveAndroid.endTransaction();
+								return true;
+							} catch (Exception e) {
+								ActiveAndroid.endTransaction();
+								rollbackUpload(syncRecords);
+								return "上传数据失败";
+							}
+							
 						} else {
 							rollbackUpload(syncRecords);
 							return jsonResult.optJSONObject("__summary")

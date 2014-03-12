@@ -4,6 +4,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 public interface MoneyApportion {
 	public Long get_mId();
 	public String getId();
+	public Project getProject();
 	public Double getAmount();
 	public void setAmount(Double totalAmount);
 //	public Project getProject();
