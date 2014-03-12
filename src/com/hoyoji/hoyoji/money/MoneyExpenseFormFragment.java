@@ -235,8 +235,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				R.id.moneyExpenseFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpense.getRemark());
 
-		ImageView takePictureButton = (ImageView) getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageView_camera);
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);
 		takePictureButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

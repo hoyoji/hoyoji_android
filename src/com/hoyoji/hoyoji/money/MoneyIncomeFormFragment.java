@@ -36,7 +36,6 @@ import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
-import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Exchange;
@@ -216,7 +215,23 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mImageFieldPicture.takePictureFromCamera();		
+				PopupMenu popup = new PopupMenu(getActivity(), v);
+				MenuInflater inflater = popup.getMenuInflater();
+				inflater.inflate(R.menu.picture_get_picture, popup.getMenu());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						if (item.getItemId() == R.id.picture_take_picture) {
+							mImageFieldPicture.takePictureFromCamera();
+							return true;
+						} else {
+							mImageFieldPicture.pickPictureFromGallery();
+							return true;
+						}
+						// return false;
+					}
+				});
+				popup.show();	
 			}
 		});
 		
@@ -382,18 +397,26 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncome.getAmount());
 										
+										int updateProjectShareAuthorizationFlag = 1;
 										//删除收入的同时删除分摊
 										Iterator<MoneyIncomeApportion> moneyIncomeApportions = moneyIncome.getApportions().iterator();
 										while (moneyIncomeApportions.hasNext()) {
 											MoneyIncomeApportion moneyIncomeAportion = moneyIncomeApportions.next();
-											moneyIncomeAportion.delete();
+											if(moneyIncomeAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+												updateProjectShareAuthorizationFlag = 0;
+												moneyIncomeAportion._delete();
+											}else{
+												moneyIncomeAportion.delete();
+											}
 										}
 										
-										ProjectShareAuthorization projectShareAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyIncome.getProjectId());
-										HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-										projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (moneyIncome.getAmount0() * moneyIncome.getExchangeRate()));
-										
-										projectShareAuthorizationEditor.save();
+										if(updateProjectShareAuthorizationFlag == 1){
+											ProjectShareAuthorization projectShareAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyIncome.getProjectId());
+											HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+											projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (moneyIncome.getAmount0() * moneyIncome.getExchangeRate()));
+											
+											projectShareAuthorizationEditor.save();
+										}
 										moneyIncome.delete();
 										moneyAccountEditor.save();
 
@@ -620,15 +643,18 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				MoneyIncomeApportion apportion = (MoneyIncomeApportion) pi.getApportion();
 				HyjModelEditor<MoneyIncomeApportion> apportionEditor = apportion.newModelEditor();
 	            
-				ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization(mMoneyIncomeEditor.getModelCopy().getProjectId());
+				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+						mMoneyIncomeEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
+				
 				HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 				
 				Double oldRate = mMoneyIncomeEditor.getModel().getExchangeRate(); 
 				Double rate = mMoneyIncomeEditor.getModelCopy().getExchangeRate();
 				Double oldApportionAmount = apportionEditor.getModel().getAmount0();
 				
-				if (pi.getState() == ApportionItem.NEW || pi.getState() == ApportionItem.CHANGED) {
+				if (pi.getState() != ApportionItem.DELETED) {
 					pi.saveToCopy(apportionEditor.getModelCopy());
+					savedCount++;
 					
 					//更新收入所有者的实际收入
 					if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -643,7 +669,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 							projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() + (mMoneyIncomeEditor.getModelCopy().getAmount0() * rate));
 							
 							//修改收入时 切换项目后保存 更新原项目的分摊金额  并把原项目和新项目都存在的分摊成员的oldApportionAmount设成0，这样维护新项目分摊金额时这条旧分摊就相当于新分摊
-							if(pi.getState() == ApportionItem.CHANGED && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId())){
+							if(apportionEditor.getModelCopy().get_mId() != null && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId())){
 								oldSelfProjectAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldSelfProjectAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate));
 								oldApportionAmount = 0.0;
 							}
@@ -651,7 +677,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						}
 					}else{
 						//修改收入时 切换项目后保存 更新原项目的分摊金额  并把原项目和新项目都存在的分摊成员的oldApportionAmount设成0，这样维护新项目分摊金额时这条旧分摊就相当于新分摊
-						if(pi.getState() == ApportionItem.CHANGED && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId())){
+						if(apportionEditor.getModelCopy().get_mId() != null && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId())){
 							ProjectShareAuthorization oldProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(mMoneyIncomeEditor.getModel().getProjectId());
 							HyjModelEditor<ProjectShareAuthorization> oldProjectAuthorizationEditor = oldProjectAuthorization.newModelEditor();
 							oldProjectAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate));
@@ -690,14 +716,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 					projectShareAuthorizationEditor.save();
 					
-					apportionEditor.save();
-					savedCount++;
-				} else if (pi.getState() == ApportionItem.DELETED) {
+					if(pi.getState() != ApportionItem.UNCHANGED) {
+						apportionEditor.save();
+					}
+				} else{
 					apportion.delete();
-				} else if(pi.getState() == ApportionItem.UNCHANGED) {
-					savedCount++;
 				}
-				
 			}
 
 			// 从隐藏掉的分摊里面删除原来的分摊
@@ -719,7 +743,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				apportion.setApportionType("Average");
 				
 				//更新项目成员的分摊金额
-				ProjectShareAuthorization projectShareAuthorization = apportion.getProjectShareAuthorization(mMoneyIncomeEditor.getModelCopy().getProjectId());
+				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+						mMoneyIncomeEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
 				HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() + (apportion.getAmount0() * mMoneyIncomeEditor.getModelCopy().getExchangeRate()));
 				
