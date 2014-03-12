@@ -25,6 +25,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -760,6 +761,7 @@ public class MainActivity extends HyjUserActivity {
 							postData.put(jsonObj);
 						}
 					}
+					Log.i("Push Data : ", postData.toString());
 					Object result = HyjServer.doHttpPost(null,
 							HyjApplication.getServerUrl() + "syncPush2.php",
 							postData.toString(), true);

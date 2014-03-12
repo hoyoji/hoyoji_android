@@ -106,6 +106,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	}
 	
 	final public void deleteFromServer(){
+		this.setSyncFromServer(true);
 		super.delete();
 	}
 	
