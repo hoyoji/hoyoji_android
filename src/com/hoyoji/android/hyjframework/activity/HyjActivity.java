@@ -48,7 +48,6 @@ public abstract class HyjActivity extends ActionBarActivity
 	}
 	
 	protected void onInitViewData() {
-		// init view data here
 	}
 	
 	public ProgressDialog displayProgressDialog(String title, String msg){

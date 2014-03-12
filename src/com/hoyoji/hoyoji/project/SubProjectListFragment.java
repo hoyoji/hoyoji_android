@@ -212,7 +212,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
             	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
             	projectExpenseTotal+= psa.getExpenseTotal();
             }
-			numericView.setPrefix("支出:" + project.getCurrencySymbol());
+			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setNumber(projectExpenseTotal);
@@ -226,7 +226,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
             	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
             	projectIncomeTotal+= psa.getIncomeTotal();
             }
-			numericView.setPrefix("收入:" + project.getCurrencySymbol());
+			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setTextColor(Color.parseColor("#339900"));
 			numericView.setNumber(projectIncomeTotal);

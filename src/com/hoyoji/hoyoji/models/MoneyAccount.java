@@ -182,7 +182,15 @@ public class MoneyAccount extends HyjModel {
 	public void setName(String mName) {
 		this.mName = mName;
 	}
-
+	
+	public String getCurrencySymbol(){
+		Currency currency = getCurrency();
+		if(currency == null){
+			return this.getCurrencyId();
+		}
+		return currency.getSymbol();
+	}
+	
 	public Currency getCurrency(){
 		if(mCurrencyId == null){
 			return null;
