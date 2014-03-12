@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -253,7 +257,23 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mImageFieldPicture.takePictureFromCamera();		
+				PopupMenu popup = new PopupMenu(getActivity(), v);
+				MenuInflater inflater = popup.getMenuInflater();
+				inflater.inflate(R.menu.picture_get_picture, popup.getMenu());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						if (item.getItemId() == R.id.picture_take_picture) {
+							mImageFieldPicture.takePictureFromCamera();
+							return true;
+						} else {
+							mImageFieldPicture.pickPictureFromGallery();
+							return true;
+						}
+						// return false;
+					}
+				});
+				popup.show();	
 			}
 		});
 		

@@ -175,7 +175,7 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization(null);
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
 		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
 		projectShareAuthorizationEditor.save();
@@ -186,6 +186,15 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
 			debtAccountEditor.save();
 		}
+		super.delete();
+	}
+	
+	public void _delete() {
+		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
+		projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (this.getMoneyIncome().getAmount0() * this.getMoneyIncome().getExchangeRate()));
+		projectShareAuthorizationEditor.save();
 		super.delete();
 	}
 
@@ -202,14 +211,17 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		return null;
 	}
 
-	public ProjectShareAuthorization getProjectShareAuthorization(String projectId) {
-		if(projectId == null){
-			projectId = this.getMoneyIncome().getProjectId();
+	public ProjectShareAuthorization getProjectShareAuthorization() {
+//		if(projectId == null){
+//			projectId = this.getMoneyIncome().getProjectId();
+//		}
+		if(this.getMoneyIncome() == null){
+			return null;
+		} else {	
+			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+				   this.getMoneyIncome().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
-			
-		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				projectId, this.getFriendUserId()).executeSingle();
-	}
+		}
 	
 	
 	@Override
