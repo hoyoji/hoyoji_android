@@ -389,7 +389,7 @@ public class MoneyIncome extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("moneyAccount");
 		}
-		if(this.getMoneyIncomeCategory() == null){
+		if(this.getMoneyIncomeCategory() == null || this.getMoneyIncomeCategory().length() == 0){
 			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
 		}else{
 			modelEditor.removeValidationError("moneyIncomeCategory");
