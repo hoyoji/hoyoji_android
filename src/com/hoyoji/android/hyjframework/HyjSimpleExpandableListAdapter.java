@@ -205,7 +205,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+        return ((HyjModel)getChild(groupPosition, childPosition)).get_mId();
     }
 
 //    public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
