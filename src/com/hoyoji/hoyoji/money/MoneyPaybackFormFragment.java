@@ -146,7 +146,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
@@ -455,15 +455,16 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPaybackModel.getProjectId());
 						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 					    if(moneyPaybackModel.get_mId() == null || oldMoneyPaybackModel.getProjectId().equals(moneyPaybackModel.getProjectId())){
-					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0() + moneyPaybackModel.getAmount0());
+					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0()*oldMoneyPaybackModel.getExchangeRate() + moneyPaybackModel.getAmount0()*moneyPaybackModel.getExchangeRate());
 						}else{
 							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyPaybackModel.getProjectId());
 							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(oldSelfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0());
-							selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() + moneyPaybackModel.getAmount0());
+							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(oldSelfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0()*oldMoneyPaybackModel.getExchangeRate());
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() + moneyPaybackModel.getAmount0()*moneyPaybackModel.getExchangeRate());
 							oldSelfProjectAuthorizationEditor.save();
 						}
 						 selfProjectAuthorizationEditor.save();
+					
 					
 					
 				mMoneyPaybackEditor.save();
