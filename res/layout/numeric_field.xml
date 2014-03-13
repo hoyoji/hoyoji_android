@@ -18,6 +18,7 @@
         android:gravity="center_vertical"
         android:ellipsize="end"
         android:background="@android:color/transparent"
+        android:imeOptions="actionDone"
         android:hint=""
         android:maxLines="1"
         android:singleLine="true" >
