@@ -355,6 +355,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyBorrowEditor.getValidationError("datetime"));
 		mNumericAmount.setError(mMoneyBorrowEditor.getValidationError("amount"));
+		if(mMoneyBorrowEditor.getValidationError("amount") != null){
+			mNumericAmount.showSoftKeyboard();
+		}
 		mDateTimeFieldReturnDate.setError(mMoneyBorrowEditor.getValidationError("returnDate"));
 		mSelectorFieldMoneyAccount.setError(mMoneyBorrowEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyBorrowEditor.getValidationError("project"));

@@ -458,6 +458,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyTransferEditor.getValidationError("datetime"));
 		mNumericTransferOutAmount.setError(mMoneyTransferEditor.getValidationError("transferOutAmount"));
+		if(mMoneyTransferEditor.getValidationError("transferOutAmount") != null){
+			mNumericTransferOutAmount.showSoftKeyboard();
+		}
 		mSelectorFieldTransferOutFriend.setError(mMoneyTransferEditor.getValidationError("transferOutFriend"));
 		mSelectorFieldTransferOut.setError(mMoneyTransferEditor.getValidationError("transferOut"));
 		mSelectorFieldTransferInFriend.setError(mMoneyTransferEditor.getValidationError("transferInFriend"));

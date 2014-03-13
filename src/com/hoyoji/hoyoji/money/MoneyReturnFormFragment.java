@@ -341,6 +341,9 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyReturnEditor.getValidationError("datetime"));
 		mNumericFieldAmount.setError(mMoneyReturnEditor.getValidationError("amount"));
+		if(mMoneyReturnEditor.getValidationError("amount") != null){
+			mNumericFieldAmount.showSoftKeyboard();
+		}
 		mNumericFieldInterest.setError(mMoneyReturnEditor.getValidationError("interest"));
 		mSelectorFieldMoneyAccount.setError(mMoneyReturnEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyReturnEditor.getValidationError("project"));
