@@ -720,7 +720,11 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						apportionEditor.save();
 					}
 				} else{
-					apportion.delete();
+					if(apportionEditor.getModelCopy().get_mId() != null && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId()) && projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						apportion._delete();
+					}else{
+						apportion.delete();
+					}
 				}
 			}
 
@@ -751,7 +755,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				//更新收入所有者的实际收入
 				if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
-				    projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome()- (mMoneyIncomeEditor.getModel().getAmount0() * mMoneyIncomeEditor.getModel().getExchangeRate()) + (mMoneyIncomeEditor.getModelCopy().getAmount0() * mMoneyIncomeEditor.getModelCopy().getExchangeRate()));
+					Double oldMoneyIncomeAmount = mMoneyIncomeEditor.getModel().getAmount0() * mMoneyIncomeEditor.getModel().getExchangeRate();
+					if(apportion.get_mId() != null && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId()))
+					{
+						oldMoneyIncomeAmount = 0.0;
+					}
+						projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - oldMoneyIncomeAmount + (mMoneyIncomeEditor.getModelCopy().getAmount0() * mMoneyIncomeEditor.getModelCopy().getExchangeRate()));
 					
 				}
 				

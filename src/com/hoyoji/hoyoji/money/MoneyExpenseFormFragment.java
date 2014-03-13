@@ -758,7 +758,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					 apportionEditor.save();
 				 }
 			}else{
-				apportion.delete();
+				if(apportionEditor.getModelCopy().get_mId() != null && !mMoneyExpenseEditor.getModel().getProjectId().equals(mMoneyExpenseEditor.getModelCopy().getProjectId()) && projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					apportion._delete();
+				}else{
+					apportion.delete();
+				}
 			}
 		}
 
@@ -789,7 +793,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			//更新支出所有者的实际支出
 			if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
-			    projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense()- (mMoneyExpenseEditor.getModel().getAmount0() * mMoneyExpenseEditor.getModel().getExchangeRate()) + (mMoneyExpenseEditor.getModelCopy().getAmount0() * mMoneyExpenseEditor.getModelCopy().getExchangeRate()));
+				Double oldMoneyExpenseAmount = mMoneyExpenseEditor.getModel().getAmount0() * mMoneyExpenseEditor.getModel().getExchangeRate();
+				if(apportion.get_mId() != null && !mMoneyExpenseEditor.getModel().getProjectId().equals(mMoneyExpenseEditor.getModelCopy().getProjectId()))
+				{
+					oldMoneyExpenseAmount = 0.0;
+				}
+					projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - oldMoneyExpenseAmount + (mMoneyExpenseEditor.getModelCopy().getAmount0() * mMoneyExpenseEditor.getModelCopy().getExchangeRate()));
 				
 			}
 			
