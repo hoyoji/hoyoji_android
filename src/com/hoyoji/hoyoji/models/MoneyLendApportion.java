@@ -174,8 +174,7 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 
 
 	public Project getProject() {
-		this.getMoneyLend().getProject();
-		return null;
+		return this.getMoneyLend().getProject();
 	}
 
 	@Override

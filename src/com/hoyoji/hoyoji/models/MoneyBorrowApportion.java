@@ -180,8 +180,7 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 	}
 
 	public Project getProject() {
-		this.getMoneyBorrow().getProject();
-		return null;
+		return this.getMoneyBorrow().getProject();
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {

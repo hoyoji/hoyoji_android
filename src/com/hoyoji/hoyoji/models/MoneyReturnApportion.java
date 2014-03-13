@@ -173,8 +173,7 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public Project getProject() {
-		this.getMoneyReturn().getProject();
-		return null;
+		return this.getMoneyReturn().getProject();
 	}
 
 	@Override
