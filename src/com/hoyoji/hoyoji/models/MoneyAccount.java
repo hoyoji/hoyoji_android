@@ -73,9 +73,9 @@ public class MoneyAccount extends HyjModel {
 	}
 	
 	public String getDisplayName(){
-		if(this.getName() == null){
-			return null;
-		}
+//		if(this.getName() == null){
+//			return null;
+//		}
 		if(this.getAccountType().equalsIgnoreCase("Debt")){
 			if(this.getFriendId() != null){
 				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());

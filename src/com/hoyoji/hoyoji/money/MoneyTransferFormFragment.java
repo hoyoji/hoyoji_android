@@ -601,7 +601,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
-             		mSelectorFieldTransferOutFriend.setText(friend.getNickName());
+             		mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
              		mViewSeparatorTransferOut.setVisibility(View.GONE);
              		mSelectorFieldTransferOut.setVisibility(View.GONE);
@@ -620,7 +620,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
-             		mSelectorFieldTransferInFriend.setText(friend.getNickName());
+             		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferInFriend.setModelId(friend.getId());
              		mViewSeparatorTransferIn.setVisibility(View.GONE);
              		mSelectorFieldTransferIn.setVisibility(View.GONE);

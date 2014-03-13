@@ -756,7 +756,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
 					Double oldMoneyIncomeAmount = mMoneyIncomeEditor.getModel().getAmount0() * mMoneyIncomeEditor.getModel().getExchangeRate();
-					if(apportion.get_mId() != null && !mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId()))
+					if(!mMoneyIncomeEditor.getModel().getProjectId().equals(mMoneyIncomeEditor.getModelCopy().getProjectId()))
 					{
 						oldMoneyIncomeAmount = 0.0;
 					}

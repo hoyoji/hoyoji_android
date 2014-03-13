@@ -790,7 +790,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if(projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				UPDATE_SELF_PROJECTSHAREAUTHORIZATION = 0;
 				Double oldMoneyExpenseAmount = mMoneyExpenseEditor.getModel().getAmount0() * mMoneyExpenseEditor.getModel().getExchangeRate();
-				if(apportion.get_mId() != null && !mMoneyExpenseEditor.getModel().getProjectId().equals(mMoneyExpenseEditor.getModelCopy().getProjectId()))
+				if(!mMoneyExpenseEditor.getModel().getProjectId().equals(mMoneyExpenseEditor.getModelCopy().getProjectId()))
 				{
 					oldMoneyExpenseAmount = 0.0;
 				}
