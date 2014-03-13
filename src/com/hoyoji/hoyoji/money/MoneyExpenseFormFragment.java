@@ -264,13 +264,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mSelectorFieldMoneyAccount.getModelId() != null
-						&& mSelectorFieldProject.getModelId() != null) {
-					MoneyAccount moneyAccount = HyjModel.getModel(
-							MoneyAccount.class,
-							mSelectorFieldMoneyAccount.getModelId());
-					Project project = HyjModel.getModel(Project.class,
-							mSelectorFieldProject.getModelId());
+				if (mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId() != null) {
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 
 					String fromCurrency = moneyAccount.getCurrencyId();
 					String toCurrency = project.getCurrencyId();
