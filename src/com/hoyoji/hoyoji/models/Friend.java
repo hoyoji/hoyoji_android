@@ -91,7 +91,7 @@ public class Friend extends HyjModel {
 		} else {
 			User friendUser = this.getFriendUser();
 			if(friendUser != null){
-				return friendUser .getDisplayName();
+				return friendUser.getDisplayName();
 			} else {
 				return this.getFriendUserName();
 			}

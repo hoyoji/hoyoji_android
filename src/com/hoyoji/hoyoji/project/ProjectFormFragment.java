@@ -26,14 +26,18 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjListField;
+import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -164,6 +168,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
+//				createExchange();
+				
 				if(mProjectEditor.getModelCopy().get_mId() == null){
 					ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
 					newProjectShareAuthorization.setProjectId(mProjectEditor.getModelCopy().getId());
@@ -187,6 +193,34 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		}
 	}	
 	
+//	 public void createExchange(){
+//		 Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+//		 Exchange exchange = Exchange.getExchange(activeCurrency.getId(), mProjectEditor.getModelCopy().getCurrencyId());
+//		 if(exchange == null){
+//			 HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//					@Override
+//					public void finishCallback(Object object) {
+//						Exchange newExchange = new Exchange();
+//						newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+//						newExchange.setForeignCurrencyId(mProjectEditor.getModelCopy().getCurrencyId());
+//						newExchange.setRate((Double) object);
+//						newExchange.save();
+//					}
+//
+//					@Override
+//					public void errorCallback(Object object) {
+//						if (object != null) {
+//							HyjUtil.displayToast(object.toString());
+//						} else {
+//							HyjUtil.displayToast("无法获取汇率");
+//						}
+//					}
+//				};
+//			 
+//			 HyjHttpGetExchangeRateAsyncTask.newInstance(activeCurrency.getId(), mProjectEditor.getModelCopy().getCurrencyId(), serverCallbacks);
+//		 }
+//	 }
+	 
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){

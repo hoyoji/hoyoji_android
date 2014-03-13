@@ -148,6 +148,33 @@ public class MoneyTransfer extends HyjModel{
 		}
 		return mTransferOutAmount;
 	}
+	
+	public Double getTransferOutLocalAmount() {
+		Double rate = null;
+		Currency userCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		if(this.getTransferOut() != null){
+			if(userCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(this.getTransferOut().getCurrencyId(),userCurrency.getId());
+			    if(exchange != null){
+			    	rate = exchange.getRate();
+			    }
+			}
+			return this.getTransferOutAmount0()*rate;
+		}else if(this.getTransferIn() != null){
+			if(userCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(this.getTransferIn().getCurrencyId(),userCurrency.getId());
+			    if(exchange != null){
+			    	rate = exchange.getRate();
+			    }
+			}
+			return this.getTransferInAmount0()*rate;
+		}
+		return null;
+	}
 
 	public void setTransferOutAmount(Double mTransferOutAmount) {
 		if(mTransferOutAmount != null) {
@@ -217,6 +244,33 @@ public class MoneyTransfer extends HyjModel{
 			return 0.00;
 		}
 		return mTransferInAmount;
+	}
+	
+	public Double getTransferInLocalAmount() {
+		Double rate = null;
+		Currency userCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		if(this.getTransferIn() != null){
+			if(userCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(this.getTransferIn().getCurrencyId(),userCurrency.getId());
+			    if(exchange != null){
+			    	rate = exchange.getRate();
+			    }
+			}
+			return this.getTransferInAmount0()*rate;
+		} else if(this.getTransferOut() != null){
+			if(userCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(this.getTransferOut().getCurrencyId(),userCurrency.getId());
+			    if(exchange != null){
+			    	rate = exchange.getRate();
+			    }
+			}
+			return this.getTransferOutAmount0()*rate;
+		}
+		return null;
 	}
 
 	public void setTransferInAmount(Double mTransferInAmount) {

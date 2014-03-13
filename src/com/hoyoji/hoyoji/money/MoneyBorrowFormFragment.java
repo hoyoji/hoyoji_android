@@ -160,7 +160,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
@@ -467,12 +467,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrowModel.getProjectId());
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    if(moneyBorrowModel.get_mId() == null || oldMoneyBorrowModel.getProjectId().equals(moneyBorrowModel.getProjectId())){
-				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0() + moneyBorrowModel.getAmount0());
+				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
 					}else{
 						ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyBorrowModel.getProjectId());
 						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldSelfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0());
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() + moneyBorrowModel.getAmount0());
+						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldSelfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate());
+						selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
 						oldSelfProjectAuthorizationEditor.save();
 					}
 					 selfProjectAuthorizationEditor.save();
@@ -513,7 +513,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
             		Friend friend = Friend.load(Friend.class, _id);
-            		mSelectorFieldFriend.setText(friend.getNickName());
+            		mSelectorFieldFriend.setText(friend.getDisplayName());
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;

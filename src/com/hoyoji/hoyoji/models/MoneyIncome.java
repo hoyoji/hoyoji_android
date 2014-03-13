@@ -156,6 +156,32 @@ public class MoneyIncome extends HyjModel{
 		}
 		return mAmount;
 	}
+	
+	public Double getLocalAmount(){
+		Double rate = null;
+		Currency userCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getMoneyAccount().getCurrencyId());
+			    if(exchange != null){
+			    	rate = exchange.getRate();
+			    }
+			}
+			return this.getAmount0()/rate;
+		}else{
+			if(userCurrency.getId().equals(this.getProject().getCurrency())){
+				rate = 1.0;
+			}else{
+				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getProject().getCurrencyId());
+				if(exchange != null){
+				   	rate = exchange.getRate();
+			    }
+			}
+			return this.getAmount0()*this.getExchangeRate()/rate;
+		}
+	}
 
 	public void setAmount(Double mAmount) {
 		if(mAmount != null){
@@ -389,7 +415,7 @@ public class MoneyIncome extends HyjModel{
 		}else{
 			modelEditor.removeValidationError("moneyAccount");
 		}
-		if(this.getMoneyIncomeCategory() == null){
+		if(this.getMoneyIncomeCategory() == null || this.getMoneyIncomeCategory().length() == 0){
 			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
 		}else{
 			modelEditor.removeValidationError("moneyIncomeCategory");
