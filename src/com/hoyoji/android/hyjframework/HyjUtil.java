@@ -435,7 +435,7 @@ public class HyjUtil {
 						HyjUtil.displayToast("检测到内存泄漏啦... " + Integer.toHexString(activity.hashCode()));
 						detectMemoryLeak(activity);
 					} else {
-						HyjUtil.displayToast("很好，无内存泄漏！");
+						//HyjUtil.displayToast("很好，无内存泄漏！");
 					}
 				}
 			}, 1000);

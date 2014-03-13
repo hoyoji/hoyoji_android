@@ -199,8 +199,7 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public Project getProject() {
-		this.getMoneyIncome().getProject();
-		return null;
+		return this.getMoneyIncome().getProject();
 	}
 
 	@Override
@@ -212,9 +211,6 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-//		if(projectId == null){
-//			projectId = this.getMoneyIncome().getProjectId();
-//		}
 		if(this.getMoneyIncome() == null){
 			return null;
 		} else {	

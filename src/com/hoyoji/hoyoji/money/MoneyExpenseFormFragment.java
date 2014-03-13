@@ -517,6 +517,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				.getValidationError("datetime"));
 		mNumericAmount.setError(mMoneyExpenseEditor
 				.getValidationError("amount"));
+		if(mMoneyExpenseEditor
+		.getValidationError("amount") != null){
+			mNumericAmount.showSoftKeyboard();
+		}
 		mSelectorFieldMoneyAccount.setError(mMoneyExpenseEditor
 				.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyExpenseEditor

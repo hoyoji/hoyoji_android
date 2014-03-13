@@ -13,9 +13,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -94,6 +96,20 @@ public class HyjNumericField extends LinearLayout {
 				if(hasFocus){
 					mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
 				}
+			}
+		});
+		mEditTextEdit
+		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id,
+					KeyEvent keyEvent) {
+				if (id == EditorInfo.IME_ACTION_DONE
+						|| id == EditorInfo.IME_NULL) {	
+					 InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				        inputMethodManager.hideSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(), 0);
+				   	return true;
+				}
+				return false;
 			}
 		});
 	}
