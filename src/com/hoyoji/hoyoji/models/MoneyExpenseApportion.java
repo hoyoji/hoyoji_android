@@ -211,10 +211,6 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-//		if(rojectId == null){
-//			projectId = this.getMoneyExpense().getProjectId();
-//		
-//		}
 		if(this.getMoneyExpense() == null){
 			return null;
 		} else {

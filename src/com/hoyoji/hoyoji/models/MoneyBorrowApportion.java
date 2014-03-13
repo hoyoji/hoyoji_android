@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -184,7 +185,12 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		return null;
+		if(this.getMoneyBorrow() == null){
+			return null;
+		} else {
+			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+					this.getMoneyBorrow().getProjectId(), this.getFriendUserId()).executeSingle();
+		}
 	}
 
 	@Override
