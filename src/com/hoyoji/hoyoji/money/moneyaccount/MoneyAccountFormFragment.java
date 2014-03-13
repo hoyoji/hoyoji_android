@@ -75,7 +75,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mNumericFieldCurrentBalance.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		
 		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
-		mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array, new String[] {"Cash", "Deposit", "Credit", "Online", "Debt"});
+		mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array, new String[] {"Cash", "Deposit", "Credit", "Online"/*, "Debt"*/});
 	    mSpinnerFieldAccountType.setSelectedValue(moneyAccount.getAccountType());
 		mSpinnerFieldAccountType.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		

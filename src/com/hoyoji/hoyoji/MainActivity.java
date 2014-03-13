@@ -741,6 +741,7 @@ public class MainActivity extends HyjUserActivity {
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
+									recordData.put("currencyId", ((MoneyApportion)model).getMoneyAccountId());
 								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
@@ -751,8 +752,12 @@ public class MainActivity extends HyjUserActivity {
 									syncRec.getId());
 							if(model.get_mId() != null){
 								jsonObj.put("operation", "update");
+								JSONObject recordData = model.toJSON();
+								if(model instanceof MoneyApportion){
+									recordData.put("currencyId", ((MoneyApportion)model).getMoneyAccountId());
+								}
 								jsonObj.put(
-										"recordData", model.toJSON());
+										"recordData", recordData);
 								postData.put(jsonObj);
 							}
 						} else if (syncRec.getOperation().equalsIgnoreCase(

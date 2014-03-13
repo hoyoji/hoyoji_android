@@ -31,6 +31,6 @@
         <item>金融账户</item>
         <item>信用卡账户</item>
         <item>虚拟账户</item>
-        <item>借贷账户</item>
+    <!--     <item>借贷账户</item> -->
    </string-array>
 </resources>

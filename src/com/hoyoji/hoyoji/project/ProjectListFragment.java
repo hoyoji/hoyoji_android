@@ -15,6 +15,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
@@ -30,6 +33,8 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	public ViewPager mViewPager;
+
+	private View mPageStrip;
 	
 	
 	@Override
@@ -45,7 +50,8 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) getView().findViewById(R.id.projectListFragment_pager);
-//		getView().findViewById(R.id.projectListFragment_pager_title_strip).setBackgroundColor(Color.LTGRAY);
+		mPageStrip = getView().findViewById(R.id.projectListFragment_pager_title_strip);
+		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOnPageChangeListener(this);
@@ -99,6 +105,24 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 			mSectionsPagerAdapter.removePageAt(i);
 		}
 		mSectionsPagerAdapter.notifyDataSetChanged();
+		mPageStrip.postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				if(mSectionsPagerAdapter.getCount() <= 1){
+					Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+					fadeInAnimation.setFillAfter(true);
+					mPageStrip.startAnimation(fadeInAnimation);
+					mPageStrip.setVisibility(View.GONE);
+				} else {
+					mPageStrip.setVisibility(View.VISIBLE);
+					Animation fadeOutAnimation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+					fadeOutAnimation.setFillBefore(true);
+					fadeOutAnimation.setFillAfter(true);
+					mPageStrip.startAnimation(fadeOutAnimation);
+				}
+			}
+		}, 100);
+		
 	}
 	
 	@Override

@@ -15,4 +15,6 @@ public interface MoneyApportion {
 	public void setApportionType(String type);
 	public void setMoneyId(String moneyTransactionId);
 	public void setFriendUserId(String friendUserId);
+	public Object getMoneyAccountId();
+	public String getCurrencyId();
 }
