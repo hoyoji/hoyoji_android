@@ -232,4 +232,12 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}	
 	
 
+	@Override
+	public Object getMoneyAccountId() {
+		return this.getMoneyReturn().getMoneyAccountId();
+	}	
+	@Override
+	public String getCurrencyId() {
+		return this.getMoneyReturn().getMoneyAccount().getCurrencyId();
+	}	
 }

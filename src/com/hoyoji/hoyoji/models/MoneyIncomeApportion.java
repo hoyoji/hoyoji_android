@@ -258,4 +258,12 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}	
 	
 
+	@Override
+	public Object getMoneyAccountId() {
+		return this.getMoneyIncome().getMoneyAccountId();
+	}	
+	@Override
+	public String getCurrencyId() {
+		return this.getMoneyIncome().getMoneyAccount().getCurrencyId();
+	}	
 }

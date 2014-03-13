@@ -231,5 +231,13 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
-	
+
+	@Override
+	public Object getMoneyAccountId() {
+		return this.getMoneyLend().getMoneyAccountId();
+	}	
+	@Override
+	public String getCurrencyId() {
+		return this.getMoneyLend().getMoneyAccount().getCurrencyId();
+	}	
 }
