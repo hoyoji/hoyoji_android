@@ -236,8 +236,11 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 	}	
 
 	@Override
-	public Object getMoneyAccountId() {
-		return this.getMoneyLend().getMoneyAccountId();
+	public String getMoneyAccountId() {
+		if(this.getMoneyLend() != null){
+			return this.getMoneyLend().getMoneyAccountId();
+		}
+		return null;
 	}	
 	@Override
 	public String getCurrencyId() {

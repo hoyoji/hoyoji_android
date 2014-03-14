@@ -10,7 +10,12 @@
       
    <string-array name="moneyApportionDialogFragment_spinnerField_apportionType_array">
         <item>平均分摊</item>
+        <item>定额分摊</item>
         <item>占股分摊</item>
+    </string-array>
+    
+   <string-array name="moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member">
+        <item>平均分摊</item>
         <item>定额分摊</item>
     </string-array>
 </resources>

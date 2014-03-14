@@ -109,12 +109,10 @@ public class MoneyAccount extends HyjModel {
 			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId IS NULL AND name=?", "Debt", currencyId, "__ANONYMOUS__").executeSingle();
 		}
 		
-		String friendId;
 		if(friend.getFriendUserId() == null){
-			friendId = friend.getId();
-			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friend.getId()).executeSingle();
 		} else {	
-			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=?", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
+			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
 		}
 	}
 	

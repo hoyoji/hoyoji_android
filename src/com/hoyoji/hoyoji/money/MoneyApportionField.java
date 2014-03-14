@@ -372,7 +372,7 @@ public class MoneyApportionField extends GridView {
 								}
 							};
 							
-							activity.mDialogFragment = MoneyApportionEditDialogFragment.newInstance(apportionItem.getAmount(), apportionItem.getApportionType());
+							activity.mDialogFragment = MoneyApportionEditDialogFragment.newInstance(apportionItem.getAmount(), apportionItem.getApportionType(), apportionItem.getProjectShareAuthorization() != null);
 							activity.mDialogFragment.show(activity.getSupportFragmentManager(), "dialog");
 						}
 					}
@@ -415,9 +415,11 @@ public class MoneyApportionField extends GridView {
 				vh.textViewApportionType.setPaintFlags(vh.textViewApportionType.getPaintFlags()
 						& (~Paint.STRIKE_THRU_TEXT_FLAG));
 			}
-			
-			vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
-
+			if(vh.apportionItem.getProjectShareAuthorization() == null){
+				vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_non_project_member));
+			} else {
+				vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
+			}
 			if(vh.apportionItem.getApportionType().equalsIgnoreCase("Average")){
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_average_apport);
 			} else if(vh.apportionItem.getApportionType().equalsIgnoreCase("Fixed")){
@@ -457,9 +459,9 @@ public class MoneyApportionField extends GridView {
 			mApportionType = apportion.getApportionType();
 		}
 		
-		public double getSharePercentage() {
+		public Double getSharePercentage() {
 			if(this.getProjectShareAuthorization() != null){
-				this.getProjectShareAuthorization().getSharePercentage();
+				return this.getProjectShareAuthorization().getSharePercentage();
 			} 
 			return 0.0;
 		}
@@ -522,8 +524,8 @@ public class MoneyApportionField extends GridView {
 		
 		public int getState(){
 			if(mState == UNCHANGED){
-				if(mApportion.getAmount().compareTo(mAmount) != 0
-						|| !mApportion.getApportionType().equalsIgnoreCase(mApportionType)){
+				if(mApportion.getAmount().compareTo(mAmount) != 0 || 
+						!mApportion.getApportionType().equalsIgnoreCase(mApportionType)){
 					return CHANGED;
 				}
 			}

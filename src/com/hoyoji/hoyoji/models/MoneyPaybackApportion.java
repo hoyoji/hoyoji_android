@@ -236,8 +236,11 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 	}	
 
 	@Override
-	public Object getMoneyAccountId() {
-		return this.getMoneyPayback().getMoneyAccountId();
+	public String getMoneyAccountId() {
+		if(this.getMoneyPayback() != null){
+			return this.getMoneyPayback().getMoneyAccountId();
+		}
+		return null;
 	}	
 	@Override
 	public String getCurrencyId() {

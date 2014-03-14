@@ -87,7 +87,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private Boolean authority = null;
+	private boolean authority = true;
 
 	@Override
 	public Integer useContentView() {
@@ -753,14 +753,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				// 该好友不是项目成员
 				if(api.getState() == ApportionItem.DELETED ){
 					apportion.delete();
-				} else if(api.getState() != ApportionItem.UNCHANGED) {
-					api.saveToCopy(apportionEditor.getModelCopy());
-					apportionEditor.save();
+				} else {
+					if(api.getState() != ApportionItem.UNCHANGED) {
+						api.saveToCopy(apportionEditor.getModelCopy());
+						apportionEditor.save();
+					}
 					savedCount++;
-
+					
 					// 该好友是网络好友 或 该好友是本地好友
 					Friend friend = HyjModel.getModel(Friend.class, apportion.getLocalFriendId());
-					MoneyAccount debtAccount = MoneyAccount.getDebtAccount(apportion.getMoneyExpense().getMoneyAccount().getCurrencyId(), friend);
+					MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), friend);
 					if(api.getState() == ApportionItem.NEW){
 		                if(debtAccount == null){
 		                	MoneyAccount.createDebtAccount(friend, mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), apportionEditor.getModelCopy().getAmount0());

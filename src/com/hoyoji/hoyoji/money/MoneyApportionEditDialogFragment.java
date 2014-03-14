@@ -22,11 +22,12 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 	private HyjNumericField mNumericFieldApportionAmount;
 	private HyjSpinnerField mSpinnerFieldApportionType;
 	
-	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType) {
+	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType, boolean isProjectMember) {
     	MoneyApportionEditDialogFragment f = new MoneyApportionEditDialogFragment();
         Bundle args = new Bundle();
         args.putDouble("apportionAmount", apportionAmount);
         args.putString("apportionType", apportionType);
+	    args.putBoolean("isProjectMember", isProjectMember);
         f.setArguments(args);
         return f;
     }
@@ -35,6 +36,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       	final String apportionType = getArguments().getString("apportionType");
     	Double apportionAmount = getArguments().getDouble("apportionAmount");
+    	boolean isProjectMember = getArguments().getBoolean("isProjectMember");
     	
         // Inflate layout for the view
         // Pass null as the parent view because its going in the dialog layout
@@ -46,14 +48,18 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
         mNumericFieldApportionAmount = numericFieldApportionAmount;
         final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
         mSpinnerFieldApportionType = spinnerFieldApportionType;
-        spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Share", "Fixed"});
+        if(isProjectMember){
+        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Fixed", "Share"});
+        } else {
+        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member, new String[] {"Average", "Fixed"});
+        }
         spinnerFieldApportionType.setSelectedValue(apportionType);
 		numericFieldApportionAmount.setEnabled(apportionType == "Fixed");
         spinnerFieldApportionType.setOnItemSelectedListener(new OnItemSelectedListener(){
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int pos, long arg3) {
-				if(pos == 2){
+				if(pos == 1){
 					numericFieldApportionAmount.setEnabled(true);
 					numericFieldApportionAmount.showSoftKeyboard();
 				} else {
