@@ -178,29 +178,26 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
-//		projectShareAuthorizationEditor.save();
-		
-		
 		// 维护借贷账户余额
-//		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			MoneyAccount debtAccount = null;
-			if(this.getFriendUserId() != null){
-				// 该好友是项目成员
+		MoneyAccount debtAccount = null;
+		if(this.getFriendUserId() != null){
+			// 该好友是项目成员（非自己）
+			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
-			} else {
-				// 该好友不是项目成员
-				Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
-					// 该好友是网络好友 或 该好友是本地好友
+			}
+		} else {
+			// 该好友不是项目成员
+			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
+			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
+			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), friend);
 			}
-			
+		}
+		if(debtAccount != null){
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - this.getAmount0());
 			debtAccountEditor.save();
-//		}
+		}
 		super.delete();
 	}
 	
