@@ -324,12 +324,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-			if(friend.getFriendUserId() != null){
-				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-			}
-			else{
-				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
-			}
+			modelCopy.setFriend(friend);
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
