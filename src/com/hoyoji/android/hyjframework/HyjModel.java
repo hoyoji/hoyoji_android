@@ -5,6 +5,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 
 public abstract class HyjModel extends Model  implements Cloneable {
 

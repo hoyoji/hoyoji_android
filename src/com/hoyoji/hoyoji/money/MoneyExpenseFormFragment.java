@@ -104,8 +104,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		} else {
 			moneyExpense = new MoneyExpense();
 		}
-
-		mMoneyExpenseEditor = (MoneyExpenseEditor) moneyExpense.newModelEditor();
+		
+//		mMoneyExpenseEditor = moneyExpense.newModelEditor();
+		mMoneyExpenseEditor = new MoneyExpenseEditor(moneyExpense);
 
 		setupDeleteButton(mMoneyExpenseEditor);
 
