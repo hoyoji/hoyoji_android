@@ -418,15 +418,16 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			mNumericTransferInAmount.setVisibility(View.GONE);
 		}
 			SET_EXCHANGE_RATE_FLAG = 0;
+			setTransferInAmount();
 	}
 	
-//	private void setTransferInAmount(){
-//		if(mNumericTransferOutAmount.getNumber() != null && mNumericExchangeRate != null){
-//			mNumericTransferInAmount.setNumber(mNumericTransferOutAmount.getNumber() * mNumericExchangeRate.getNumber());
-//		}else{
-//			mNumericTransferInAmount.setNumber(null);
-//		}
-//	}
+	private void setTransferInAmount(){
+		if(mNumericTransferOutAmount.getNumber() != null && mNumericExchangeRate.getNumber() != null){
+			mNumericTransferInAmount.setNumber(mNumericTransferOutAmount.getNumber() * mNumericExchangeRate.getNumber());
+		}else{
+			mNumericTransferInAmount.setNumber(mNumericTransferOutAmount.getNumber());
+		}
+	}
 	
 	private void fillData(){
 		MoneyTransfer modelCopy = (MoneyTransfer) mMoneyTransferEditor.getModelCopy();
@@ -458,6 +459,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyTransferEditor.getValidationError("datetime"));
 		mNumericTransferOutAmount.setError(mMoneyTransferEditor.getValidationError("transferOutAmount"));
+		if(mMoneyTransferEditor.getValidationError("transferOutAmount") != null){
+			mNumericTransferOutAmount.showSoftKeyboard();
+		}
 		mSelectorFieldTransferOutFriend.setError(mMoneyTransferEditor.getValidationError("transferOutFriend"));
 		mSelectorFieldTransferOut.setError(mMoneyTransferEditor.getValidationError("transferOut"));
 		mSelectorFieldTransferInFriend.setError(mMoneyTransferEditor.getValidationError("transferInFriend"));

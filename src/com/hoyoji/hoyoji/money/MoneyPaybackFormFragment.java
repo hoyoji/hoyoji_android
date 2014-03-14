@@ -324,12 +324,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-			if(friend.getFriendUserId() != null){
-				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-			}
-			else{
-				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
-			}
+			modelCopy.setFriend(friend);
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -341,6 +336,9 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyPaybackEditor.getValidationError("datetime"));
 		mNumericFieldAmount.setError(mMoneyPaybackEditor.getValidationError("amount"));
+		if(mMoneyPaybackEditor.getValidationError("amount") != null){
+			mNumericFieldAmount.showSoftKeyboard();
+		}
 		mNumericFieldInterest.setError(mMoneyPaybackEditor.getValidationError("interest"));
 		mSelectorFieldMoneyAccount.setError(mMoneyPaybackEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyPaybackEditor.getValidationError("project"));

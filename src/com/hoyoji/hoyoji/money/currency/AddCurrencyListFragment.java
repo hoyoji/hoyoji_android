@@ -22,12 +22,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.ActiveAndroid;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
 
 public class AddCurrencyListFragment extends HyjUserListFragment implements OnQueryTextListener {
 	protected SearchView mSearchView;
@@ -85,23 +90,61 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 				new String[] { "name" },
 				new int[] { R.id.currencyListItem_name }); 
 	}
+	
+	private int loading = 0;
+	
+	 public void createExchange(final Currency foreignCurrency){
+		 Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		 if(!foreignCurrency.getId().equals(activeCurrency.getId())){
 
+			 Exchange exchange = Exchange.getExchange(activeCurrency.getId(), foreignCurrency.getId());
+			 if(exchange == null && loading == 0){
+				 HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+						@Override
+						public void finishCallback(Object object) {
+							Exchange newExchange = new Exchange();
+							newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+							newExchange.setForeignCurrencyId(foreignCurrency.getId());
+							newExchange.setRate((Double) object);
+							foreignCurrency.save();
+							newExchange.save();
+							HyjUtil.displayToast(R.string.currencyListFragment_addCurrency_toast_success);
+						}
 
+						@Override
+						public void errorCallback(Object object) {
+							if (object != null) {
+								HyjUtil.displayToast(object.toString());
+							} else {
+								HyjUtil.displayToast("无法获取汇率");
+							}
+						}
+					};
+
+				 loading = 1;
+				 HyjHttpGetExchangeRateAsyncTask.newInstance(activeCurrency.getId(), foreignCurrency.getId(), serverCallbacks);
+			 }
+		 }
+	 }
 
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(id >= 0){
-			JSONObject object = (JSONObject) getListAdapter().getItem(position);
-			Currency newCurrency = new Currency();
-			newCurrency.loadFromJSON(object, true);
-			
-			java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
-			newCurrency.setSymbol(localeCurrency.getSymbol());
-			
-			newCurrency.save();
-			HyjUtil.displayToast(R.string.currencyListFragment_addCurrency_toast_success);
-			this.getActivity().finish();
+			try {
+				ActiveAndroid.beginTransaction();
+				JSONObject object = (JSONObject) getListAdapter().getItem(position);
+				Currency newCurrency = new Currency();
+				newCurrency.loadFromJSON(object, true);
+				
+				java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
+				newCurrency.setSymbol(localeCurrency.getSymbol());
+				
+				createExchange(newCurrency);
+				this.getActivity().finish();
+			} finally {
+			    ActiveAndroid.endTransaction();
+			}
 		}
     }
 

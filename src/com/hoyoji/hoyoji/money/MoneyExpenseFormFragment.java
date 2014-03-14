@@ -418,26 +418,38 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 										MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
+										MoneyExpenseEditor moneyExpenseEditor = (MoneyExpenseEditor) moneyExpense.newModelEditor();
+										
 										
 										int updateProjectShareAuthorizationFlag = 1;
 										//删除支出的同时删除分摊
 										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpense.getApportions().iterator();
 										while (moneyExpenseApportions.hasNext()) {
 											MoneyExpenseApportion moneyExpenseAportion = moneyExpenseApportions.next();
-											if(moneyExpenseAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-												updateProjectShareAuthorizationFlag = 0;
-												moneyExpenseAportion._delete();
-											}else{
-												moneyExpenseAportion.delete();
-											}
-										}
-										if(updateProjectShareAuthorizationFlag == 1){
-											ProjectShareAuthorization projectShareAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyExpense.getProjectId());
-											HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-											projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() - (moneyExpense.getAmount0() * moneyExpense.getExchangeRate()));
+											ProjectShareAuthorization oldProjectShareAuthorization;
 											
-											projectShareAuthorizationEditor.save();
+											if(moneyExpenseAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+												// 更新旧项目的分摊支出
+												oldProjectShareAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
+											} else {
+												// 更新旧项目分摊支出
+												oldProjectShareAuthorization = moneyExpenseAportion.getProjectShareAuthorization();
+											}
+											
+											HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+											oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (moneyExpenseAportion.getAmount0() * moneyExpenseAportion.getMoneyExpense().getExchangeRate()));
+											oldProjectShareAuthorizationEditor.save();
+											
+											moneyExpenseAportion.delete();
 										}
+										
+										//更新支出所有者的实际支出
+										MoneyExpense oldMoneyExpenseModel = moneyExpenseEditor.getModelCopy();
+										ProjectShareAuthorization oldSelfProjectAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
+										HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+										oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
+										oldSelfProjectAuthorizationEditor.save();
+									
 										moneyExpense.delete();
 										moneyAccountEditor.save();
 

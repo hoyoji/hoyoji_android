@@ -500,6 +500,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyIncomeEditor.getValidationError("datetime"));
 		mNumericAmount.setError(mMoneyIncomeEditor.getValidationError("amount"));
+		if(mMoneyIncomeEditor.getValidationError("amount") != null){
+					mNumericAmount.showSoftKeyboard();
+				}
 		mSelectorFieldMoneyAccount.setError(mMoneyIncomeEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyIncomeEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyIncomeEditor.getValidationError("exchangeRate"));
@@ -518,8 +521,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mMoneyIncomeEditor.validate();
 		
 		if (mApportionFieldApportions.getCount() > 0) {
-			if (!mNumericAmount.getNumber().equals(
-					mApportionFieldApportions.getTotalAmount())) {
+			if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(mApportionFieldApportions.getTotalAmount())) {
 				mMoneyIncomeEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
 			} else {
 				mMoneyIncomeEditor.removeValidationError("apportionTotalAmount");

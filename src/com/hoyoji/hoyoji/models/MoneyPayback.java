@@ -165,7 +165,7 @@ public class MoneyPayback extends HyjModel{
 			}
 			return this.getAmount0()/rate;
 		}else{
-			if(userCurrency.getId().equals(this.getProject().getCurrency())){
+			if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
 				rate = 1.0;
 			}else{
 				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getProject().getCurrencyId());
@@ -409,9 +409,9 @@ public class MoneyPayback extends HyjModel{
 		
 		if(this.getInterest() == null){
 			modelEditor.setValidationError("interest",R.string.moneyPaybackFormFragment_editText_hint_amount);
-		}else if(this.getAmount() < 0){
+		}else if(this.getInterest() < 0){
 			modelEditor.setValidationError("interest",R.string.moneyPaybackFormFragment_editText_validationError_negative_amount);
-		}else if(this.getAmount() > 99999999){
+		}else if(this.getInterest() > 99999999){
 			modelEditor.setValidationError("interest",R.string.moneyPaybackFormFragment_editText_validationError_beyondMAX_amount);
 		}
 		else{
