@@ -297,7 +297,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 						@Override
 						public boolean onMenuItemClick(MenuItem item) {
-							if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_all) {
+							if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_non_project_member) {
 								Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 								List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 								for (int i = 0; i < projectShareAuthorizations.size(); i++) {

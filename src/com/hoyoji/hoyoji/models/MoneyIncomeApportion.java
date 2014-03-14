@@ -28,6 +28,9 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+	
 	@Column(name = "apportionType")
 	private String mApportionType;
 
@@ -265,5 +268,14 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	@Override
 	public String getCurrencyId() {
 		return this.getMoneyIncome().getMoneyAccount().getCurrencyId();
-	}	
+	}
+
+	public void setLocalFriendId(String id) {
+		this.mLocalFriendId = id;
+	}
+	
+	@Override
+	public String getLocalFriendId() {
+		return this.mLocalFriendId;
+	}
 }

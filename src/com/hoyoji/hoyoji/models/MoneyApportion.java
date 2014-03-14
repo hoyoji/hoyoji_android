@@ -17,4 +17,5 @@ public interface MoneyApportion {
 	public void setFriendUserId(String friendUserId);
 	public Object getMoneyAccountId();
 	public String getCurrencyId();
+	public String getLocalFriendId();
 }

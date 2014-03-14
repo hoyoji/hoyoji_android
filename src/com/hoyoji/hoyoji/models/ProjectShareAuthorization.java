@@ -322,8 +322,10 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public static ProjectShareAuthorization getSelfProjectShareAuthorization(String projectId) {
+		
 		return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
 				projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	
 	}
 	
 	public String getId() {
