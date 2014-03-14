@@ -69,13 +69,14 @@ public class MoneyAccount extends HyjModel {
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mCurrencyId = userData.getActiveCurrencyId();
+		mAccountType = "Cash";
 		mCurrentBalance = 0.00;
 	}
 	
 	public String getDisplayName(){
-//		if(this.getName() == null){
-//			return null;
-//		}
+		if(this.get_mId() == null && this.getName() == null){
+			return null;
+		}
 		if(this.getAccountType().equalsIgnoreCase("Debt")){
 			if(this.getFriendId() != null){
 				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());

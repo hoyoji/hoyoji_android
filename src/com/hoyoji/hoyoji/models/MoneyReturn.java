@@ -410,9 +410,9 @@ public class MoneyReturn extends HyjModel{
 		
 		if(this.getInterest() == null){
 			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_hint_amount);
-		}else if(this.getAmount() < 0){
+		}else if(this.getInterest() < 0){
 			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_validationError_negative_amount);
-		}else if(this.getAmount() > 99999999){
+		}else if(this.getInterest() > 99999999){
 			modelEditor.setValidationError("interest",R.string.moneyReturnFormFragment_editText_validationError_beyondMAX_amount);
 		}
 		else{
