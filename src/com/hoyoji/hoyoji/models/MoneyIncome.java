@@ -410,6 +410,7 @@ public class MoneyIncome extends HyjModel{
 		else{
 			modelEditor.removeValidationError("exchangeRate");
 		}
+		
 		if(this.getMoneyAccountId() == null){
 			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
 		}else{

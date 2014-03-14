@@ -452,6 +452,19 @@ public class MoneyTransfer extends HyjModel{
 			modelEditor.removeValidationError("transferInFriend");
 		}
 		
+		if(this.getExchangeRate() == null){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_hint_exchangeRate);
+		}else if(this.getExchangeRate() == 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_zero_exchangeRate);
+		}else if(this.getExchangeRate() < 0){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_negative_exchangeRate);
+		}else if(this.getExchangeRate() > 99999999){
+			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		}
+		else{
+			modelEditor.removeValidationError("exchangeRate");
+		}
+		
 		 if(this.getTransferOutId() != null && this.getTransferOutId().equals(this.getTransferInId())){
 			 modelEditor.setValidationError("transferOut",R.string.moneyTransferFormFragment_editText_validationError_same_account);
 				modelEditor.setValidationError("transferIn",R.string.moneyTransferFormFragment_editText_validationError_same_account);
