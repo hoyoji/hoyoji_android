@@ -756,9 +756,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				} else {
 					if(api.getState() != ApportionItem.UNCHANGED) {
 						api.saveToCopy(apportionEditor.getModelCopy());
-						apportionEditor.save();
 					}
-					savedCount++;
 					
 					// 该好友是网络好友 或 该好友是本地好友
 					Friend friend = HyjModel.getModel(Friend.class, apportion.getLocalFriendId());
@@ -787,6 +785,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		                }
 						oldDebtAccountEditor.save();
 					}
+					if(api.getState() != ApportionItem.UNCHANGED) {
+						apportionEditor.save();
+					}
+					savedCount++;
 				}
 			} else {
 					if(api.getState() == ApportionItem.DELETED ){
@@ -809,12 +811,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						
 					} else {
 						 if(api.getState() != ApportionItem.UNCHANGED) {
-							api.saveToCopy(apportionEditor.getModelCopy());
-							apportionEditor.save();
-						 }
-						savedCount++;
-
-						
+								api.saveToCopy(apportionEditor.getModelCopy());
+							 }
 						Double oldRate = mMoneyExpenseEditor.getModel().getExchangeRate(); 
 						Double rate = mMoneyExpenseEditor.getModelCopy().getExchangeRate();
 						Double oldApportionAmount = apportionEditor.getModel().getAmount0();
@@ -882,6 +880,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 									oldDebtAccountEditor.save();
 								}
 							}
+							 if(api.getState() != ApportionItem.UNCHANGED) {
+									apportionEditor.save();
+								 }
+								savedCount++;
 					}
 				}
 		}
