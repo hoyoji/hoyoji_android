@@ -830,10 +830,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 							
 							if(mMoneyExpenseEditor.getModelCopy().get_mId() == null || 
 									mMoneyExpenseEditor.getModel().getProjectId().equals(mMoneyExpenseEditor.getModelCopy().getProjectId())){
-								
 								 // 无旧项目可更新
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorization.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
-									
 							}else{
 								//更新新项目分摊支出
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorization.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
@@ -880,6 +878,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 									oldDebtAccountEditor.save();
 								}
 							}
+							projectShareAuthorizationEditor.save();
 							 if(api.getState() != ApportionItem.UNCHANGED) {
 									apportionEditor.save();
 								 }
