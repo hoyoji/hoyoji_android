@@ -172,7 +172,7 @@ public class MoneyExpense extends HyjModel{
 			}
 			return this.getAmount0()/rate;
 		}else{
-			if(userCurrency.getId().equals(this.getProject().getCurrency())){
+			if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
 				rate = 1.0;
 			}else{
 				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getProject().getCurrencyId());
