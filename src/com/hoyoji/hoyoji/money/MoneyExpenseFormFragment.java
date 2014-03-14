@@ -750,15 +750,42 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
 			
 			if(apportion.getFriendUserId() == null) {
-				 if(api.getState() != ApportionItem.UNCHANGED) {
+				// 该好友不是项目成员
+				if(api.getState() == ApportionItem.DELETED ){
+					apportion.delete();
+				} else if(api.getState() != ApportionItem.UNCHANGED) {
 					api.saveToCopy(apportionEditor.getModelCopy());
 					apportionEditor.save();
-				 }
-				savedCount++;
-				
-				//更新相关好友的借贷账户
-				
-				
+					savedCount++;
+
+					// 该好友是网络好友 或 该好友是本地好友
+					Friend friend = HyjModel.getModel(Friend.class, apportion.getLocalFriendId());
+					MoneyAccount debtAccount = MoneyAccount.getDebtAccount(apportion.getMoneyExpense().getMoneyAccount().getCurrencyId(), friend);
+					if(api.getState() == ApportionItem.NEW){
+		                if(debtAccount == null){
+		                	MoneyAccount.createDebtAccount(friend, mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), apportionEditor.getModelCopy().getAmount0());
+		                }else{
+		                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+		                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0());
+		                	debtAccountEditor.save();
+		                }
+					} else{
+						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseEditor.getModel().getMoneyAccount().getCurrencyId(), friend);
+						HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+						if(debtAccount == null){
+							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0());
+		                	MoneyAccount.createDebtAccount(friend, mMoneyExpenseEditor.getModelCopy().getMoneyAccount().getCurrencyId(), apportionEditor.getModelCopy().getAmount0());
+		                }else if(debtAccount.getId().equals(oldDebtAccount.getId())){
+		                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0() + apportionEditor.getModelCopy().getAmount0());
+		                }else{
+		                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+		                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0());
+		                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0());
+		                	debtAccountEditor.save();
+		                }
+						oldDebtAccountEditor.save();
+					}
+				}
 			} else {
 					if(api.getState() == ApportionItem.DELETED ){
 						

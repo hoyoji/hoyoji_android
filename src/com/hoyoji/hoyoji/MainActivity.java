@@ -742,6 +742,7 @@ public class MainActivity extends HyjUserActivity {
 								if(model instanceof MoneyApportion){
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
 									recordData.put("currencyId", ((MoneyApportion)model).getMoneyAccountId());
+									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
 								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
@@ -755,6 +756,7 @@ public class MainActivity extends HyjUserActivity {
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
 									recordData.put("currencyId", ((MoneyApportion)model).getMoneyAccountId());
+									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
 								}
 								jsonObj.put(
 										"recordData", recordData);

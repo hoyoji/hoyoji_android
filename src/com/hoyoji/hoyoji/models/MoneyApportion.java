@@ -18,4 +18,5 @@ public interface MoneyApportion {
 	public Object getMoneyAccountId();
 	public String getCurrencyId();
 	public String getLocalFriendId();
+	public Double getExchangeRate();
 }

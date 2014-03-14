@@ -185,12 +185,22 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		
 		
 		// 维护借贷账户余额
-		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+//		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			MoneyAccount debtAccount = null;
+			if(this.getFriendUserId() != null){
+				// 该好友是项目成员
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			} else {
+				// 该好友不是项目成员
+				Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
+					// 该好友是网络好友 或 该好友是本地好友
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), friend);
+			}
+			
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - this.getAmount0());
 			debtAccountEditor.save();
-		}
+//		}
 		super.delete();
 	}
 	
@@ -278,5 +288,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	@Override
 	public String getLocalFriendId() {
 		return this.mLocalFriendId;
+	}
+	@Override
+	public Double getExchangeRate() {
+		return this.getMoneyExpense().getExchangeRate();
 	}
 }

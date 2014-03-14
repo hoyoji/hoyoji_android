@@ -251,4 +251,8 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 	public String getLocalFriendId() {
 		return this.mLocalFriendId;
 	}
+	@Override
+	public Double getExchangeRate() {
+		return this.getMoneyLend().getExchangeRate();
+	}
 }
