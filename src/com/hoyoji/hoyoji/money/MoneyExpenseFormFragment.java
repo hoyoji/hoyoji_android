@@ -86,6 +86,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
+	
+	private Boolean authority = null;
 
 	@Override
 	public Integer useContentView() {
@@ -98,9 +100,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final MoneyExpense moneyExpense;
 
 		Intent intent = getActivity().getIntent();
-		long modelId = intent.getLongExtra("MODEL_ID", -1);
+		final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
 			moneyExpense = new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
+			authority = moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyExpense = new MoneyExpense();
 		}
@@ -115,15 +118,20 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		setupApportionField(moneyExpense);
 				
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_textField_date);
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpense.getDate());
+			mDateTimeFieldDate.setEnabled(authority);
 		}
 
-		mNumericAmount = (HyjNumericField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_textField_amount);
-		mNumericAmount.setNumber(moneyExpense.getAmount());
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
+		
+		if(modelId != -1 && !authority){
+			mNumericAmount.setNumber(moneyExpense.getLocalAmount());
+			mNumericAmount.setEnabled(false);
+		}else{
+			mNumericAmount.setNumber(moneyExpense.getAmount());
+		}
 		mNumericAmount.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -164,6 +172,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								bundle, GET_MONEYACCOUNT_ID);
 			}
 		});
+		if(modelId != -1 && !authority){
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+		}
+		
 
 		Project project = moneyExpense.getProject();
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
@@ -184,10 +197,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								null, GET_PROJECT_ID);
 			}
 		});
+		mSelectorFieldProject.setEnabled(modelId == -1 || authority);
 
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_exchangeRate);
 		mNumericExchangeRate.setNumber(moneyExpense.getExchangeRate());
+		mNumericExchangeRate.setEnabled(modelId == -1 || authority);
 
 		mViewSeparatorExchange = (View) getView().findViewById(
 				R.id.moneyExpenseFormFragment_separatorField_exchange);
@@ -211,6 +226,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								null, GET_CATEGORY_ID);
 			}
 		});
+		mSelectorFieldMoneyExpenseCategory.setEnabled(modelId == -1 || authority);
 
 		Friend friend = moneyExpense.getFriend();
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(
@@ -230,10 +246,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								null, GET_FRIEND_ID);
 			}
 		});
+		mSelectorFieldFriend.setEnabled(modelId == -1 || authority);
 
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpense.getRemark());
+		mRemarkFieldRemark.setEnabled(modelId == -1 || authority);
 
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);
 		takePictureButton.setOnClickListener(new OnClickListener() {
@@ -255,6 +273,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();
 			}
 		});
@@ -294,6 +319,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 					}
 				});
+		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setEnabled(modelId == -1 || authority);
+		getView().findViewById(R.id.button_save).setEnabled(modelId == -1 || authority);		
 
 		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 					@Override
@@ -336,6 +363,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								return false;
 							}
 						});
+						
+						if(!authority){
+							for(int i = 0; i<popup.getMenu().size();i++){
+								popup.getMenu().setGroupEnabled(i, false);
+							}
+						}
+						
 						popup.show();
 					}
 				});
@@ -388,7 +422,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		
 		final MoneyExpense moneyExpense = moneyExpenseEditor.getModelCopy();
 		
-		if (moneyExpense.get_mId() == null) {
+		if (moneyExpense.get_mId() == null || !authority) {
 			buttonDelete.setVisibility(View.GONE);
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
