@@ -8,6 +8,7 @@
 	
 	<string name="moneyApportionField_moreActions_add">添加成员</string> 
 	<string name="moneyApportionField_moreActions_add_all">添加所有成员</string> 
+	<string name="moneyApportionField_moreActions_add_non_project_member">添加非项目成员</string> 
 	<string name="moneyApportionField_moreActions_clear">清空所有成员</string> 
 	<string name="moneyApportionField_moreActions_all_average">所有成员平均分摊</string> 
 	<string name="moneyApportionField_moreActions_all_share">所有成员占股分摊</string> 

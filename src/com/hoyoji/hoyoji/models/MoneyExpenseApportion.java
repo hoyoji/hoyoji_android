@@ -27,6 +27,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+	
 	@Column(name = "apportionType")
 	private String mApportionType;
 
@@ -50,6 +53,7 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
+
 	
 	public MoneyExpenseApportion(){
 		super();
@@ -174,11 +178,13 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
-		projectShareAuthorizationEditor.save();
+//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
+//		projectShareAuthorizationEditor.save();
 		
+		
+		// 维护借贷账户余额
 		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
@@ -188,15 +194,15 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		super.delete();
 	}
 	
-
-	public void _delete() {
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
-		projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - (this.getMoneyExpense().getAmount0() * this.getMoneyExpense().getExchangeRate()));
-		projectShareAuthorizationEditor.save();
-		super.delete();
-	}	
+//
+//	public void _delete() {
+//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
+//		projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - (this.getMoneyExpense().getAmount0() * this.getMoneyExpense().getExchangeRate()));
+//		projectShareAuthorizationEditor.save();
+//		super.delete();
+//	}	
 
 	public Project getProject() {
 		return this.getMoneyExpense().getProject();
@@ -263,5 +269,14 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	@Override
 	public String getCurrencyId() {
 		return this.getMoneyExpense().getMoneyAccount().getCurrencyId();
-	}	
+	}
+
+	public void setLocalFriendId(String id) {
+		this.mLocalFriendId = id;
+	}
+	
+	@Override
+	public String getLocalFriendId() {
+		return this.mLocalFriendId;
+	}
 }
