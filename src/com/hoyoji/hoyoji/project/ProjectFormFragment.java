@@ -201,7 +201,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 //						}
 
 						// 到网上获取汇率失败，问用户是否要手工添加该汇率
-						((HyjActivity)ProjectFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+						((HyjActivity)ProjectFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1, new DialogCallbackListener(){
 							@Override
 							public void doPositiveClick(Object object){
 								Bundle bundle = new Bundle();
@@ -209,6 +209,11 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 								bundle.putString("foreignCurrencyId", projectCurrencyId);
 								openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
 							}
+							@Override
+							public void doNegativeClick(){
+								HyjUtil.displayToast("未能获取项目币种到本币的汇率");
+							}
+							
 						});
 					}
 				};
@@ -311,6 +316,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						if(exchange != null){
 							doSave();
 							return;
+						} else {
+							HyjUtil.displayToast("未能获取项目币种到本币的汇率");
 						}
 	         	 }
 	        	 break;

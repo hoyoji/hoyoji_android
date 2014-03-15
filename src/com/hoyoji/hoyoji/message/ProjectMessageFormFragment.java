@@ -197,13 +197,17 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 //									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
 //								}
 								
-								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
 									@Override
 									public void doPositiveClick(Object object){
 										Bundle bundle = new Bundle();
 										bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
 										bundle.putString("foreignCurrencyId", projectCurrencyId);
 										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
+									}
+									@Override
+									public void doNegativeClick(){
+										HyjUtil.displayToast("未能获取项目币种到本币的汇率");
 									}
 								});
 							}
@@ -351,6 +355,8 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 						if(exchange != null){
 							sendAcceptMessageToServer(jsonMsgData);
 							return;
+						} else {
+							HyjUtil.displayToast("未能获取项目币种到本币的汇率");
 						}
 					} catch (JSONException e) {}
 	         	 }
