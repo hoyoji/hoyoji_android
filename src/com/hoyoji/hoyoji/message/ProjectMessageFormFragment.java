@@ -1,8 +1,5 @@
 package com.hoyoji.hoyoji.message;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,14 +9,9 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -33,21 +25,13 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListen
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
-import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.models.Exchange;
-import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyExpense;
-import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 
 public class ProjectMessageFormFragment extends HyjUserFormFragment {
