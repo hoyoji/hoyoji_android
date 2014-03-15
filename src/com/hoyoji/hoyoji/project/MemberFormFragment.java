@@ -408,7 +408,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 //			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
 			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
 			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
-			msgData.put("projectCurrencyIds", new JSONArray());
+			msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
 			msg.put("messageData", msgData.toString());
 			
 

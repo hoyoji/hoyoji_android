@@ -10,17 +10,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -29,6 +33,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListen
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
+import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
@@ -43,9 +48,11 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 
 public class ProjectMessageFormFragment extends HyjUserFormFragment {
 
+	protected static final int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 0;
 	private HyjModelEditor<Message> mMessageEditor = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjTextField mEditTextToUser = null;
@@ -153,60 +160,116 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				ProjectShareAuthorization newPSA = HyjModel.getModel(
 						ProjectShareAuthorization.class,
 						jsonMsgData.optString("projectShareAuthorizationId"));
-				if (newPSA != null) {
-					((HyjActivity) ProjectMessageFormFragment.this
-							.getActivity()).dismissProgressDialog();
+				if (newPSA != null && newPSA.getState().equalsIgnoreCase("Accept")) {
+					// 该项目共享已经存在
 					HyjUtil.displayToast(R.string.projectMessageFormFragment_addShare_already_exists);
 				} else {
-					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-						@Override
-						public void finishCallback(Object object) {
-							loadSharedProjectData(jsonMsgData);
+					final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
+					
+					((HyjActivity)ProjectMessageFormFragment.this.getActivity()).displayProgressDialog(R.string.projectMessageFormFragment_addShare_fetch_exchange, R.string.projectMessageFormFragment_addShare_fetching_exchange);
+					if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
+						sendAcceptMessageToServer(jsonMsgData);
+					} else {
+						Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+						if(exchange != null){
+							sendAcceptMessageToServer(jsonMsgData);
+							return;
 						}
+						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+							@Override
+							public void finishCallback(Object object) {
+								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).dismissProgressDialog();
+								Double exchangeRate = (Double) object;
+								Exchange newExchange = new Exchange();
+								newExchange.setForeignCurrencyId(projectCurrencyId);
+								newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+								newExchange.setRate(exchangeRate);
+								newExchange.save();
+								sendAcceptMessageToServer(jsonMsgData);
+							}
 
-						@Override
-						public void errorCallback(Object object) {
-							displayError(object);
-						}
-					};
-
-					JSONObject msg = new JSONObject();
-					msg.put("__dataType", "Message");
-					msg.put("id", UUID.randomUUID().toString());
-					msg.put("toUserId", mMessageEditor.getModelCopy()
-							.getFromUserId());
-					msg.put("fromUserId", HyjApplication.getInstance()
-							.getCurrentUser().getId());
-					msg.put("type", "Project.Share.Accept");
-					msg.put("messageState", "new");
-					msg.put("messageTitle", "接受项目共享");
-					msg.put("date", HyjUtil.formatDateToIOS(new Date()));
-					msg.put("detail", "用户"
-							+ HyjApplication.getInstance().getCurrentUser()
-									.getDisplayName() + "接受了您共享的项目: "
-							+ jsonMsgData.optString("projectName"));
-					msg.put("messageBoxId",
-							jsonMsgData.optString("fromMessageBoxId"));
-					msg.put("ownerUserId", mMessageEditor.getModelCopy()
-							.getFromUserId());
-
-					JSONObject msgData = new JSONObject();
-					msgData.put("fromUserDisplayName", HyjApplication
-							.getInstance().getCurrentUser().getDisplayName());
-					msgData.put("projectIds", jsonMsgData.opt("projectIds"));
-					msg.put("messageData", msgData.toString());
-
-					HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-							"[" + msg.toString() + "]", "postData");
-					((HyjActivity) this.getActivity())
-							.displayProgressDialog(
-									R.string.addFriendListFragment_title_add,
-									R.string.friendListFragment_addFriend_progress_adding);
+							@Override
+							public void errorCallback(Object object) {
+								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).dismissProgressDialog();
+//								if (object != null) {
+//									HyjUtil.displayToast(object.toString());
+//								} else {
+//									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+//								}
+								
+								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+									@Override
+									public void doPositiveClick(Object object){
+										Bundle bundle = new Bundle();
+										bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+										bundle.putString("foreignCurrencyId", projectCurrencyId);
+										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
+									}
+								});
+							}
+						};
+						HyjHttpGetExchangeRateAsyncTask.newInstance(
+								projectCurrencyId, 
+								HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
+								serverCallbacks);
+					}
 				}
 			} catch (JSONException e) {
 			}
 
 		}
+	}
+
+	private void sendAcceptMessageToServer(final JSONObject jsonMsgData) {
+		try {
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				loadSharedProjectData(jsonMsgData);
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+
+		JSONObject msg = new JSONObject();
+			msg.put("__dataType", "Message");
+		msg.put("id", UUID.randomUUID().toString());
+		msg.put("toUserId", mMessageEditor.getModelCopy()
+				.getFromUserId());
+		msg.put("fromUserId", HyjApplication.getInstance()
+				.getCurrentUser().getId());
+		msg.put("type", "Project.Share.Accept");
+		msg.put("messageState", "new");
+		msg.put("messageTitle", "接受项目共享");
+		msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+		msg.put("detail", "用户"
+				+ HyjApplication.getInstance().getCurrentUser()
+						.getDisplayName() + "接受了您共享的项目: "
+				+ jsonMsgData.optString("projectName"));
+		msg.put("messageBoxId",
+				jsonMsgData.optString("fromMessageBoxId"));
+		msg.put("ownerUserId", mMessageEditor.getModelCopy()
+				.getFromUserId());
+
+		JSONObject msgData = new JSONObject();
+		msgData.put("fromUserDisplayName", HyjApplication
+				.getInstance().getCurrentUser().getDisplayName());
+		msgData.put("projectIds", jsonMsgData.opt("projectIds"));
+		msg.put("messageData", msgData.toString());
+
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks,
+				"[" + msg.toString() + "]", "postData");
+		((HyjActivity) this.getActivity())
+				.displayProgressDialog(
+						R.string.addFriendListFragment_title_add,
+						R.string.friendListFragment_addFriend_progress_adding);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	protected void loadSharedProjectData(JSONObject jsonMsgData) {
@@ -274,6 +337,27 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 		}
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case FETCH_PROJECT_TO_LOCAL_EXCHANGE:
+	        	 if(resultCode == Activity.RESULT_OK){
+	        		JSONObject jsonMsgData;
+					try {
+						jsonMsgData = new JSONObject(mMessageEditor
+									.getModelCopy().getMessageData());
+						
+		        		Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", jsonMsgData.optJSONArray("projectCurrencyIds").optString(0), HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+						if(exchange != null){
+							sendAcceptMessageToServer(jsonMsgData);
+							return;
+						}
+					} catch (JSONException e) {}
+	         	 }
+	        	 break;
+         }
+   }
+	
 	//
 	// private void sendAddShareRequestMessage(JSONObject jsonUser) {
 	// final Message msg = new Message();

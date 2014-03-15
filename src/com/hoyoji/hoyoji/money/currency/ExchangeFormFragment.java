@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.RotateDrawable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -32,6 +33,7 @@ import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.FriendCategory;
+import com.hoyoji.hoyoji.money.SearchListFragment;
 
 public class ExchangeFormFragment extends HyjUserFormFragment {
 	private final static int GET_LOCAL_CURRENCY_ID = 1;
@@ -60,7 +62,12 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			exchange = new Select().from(Exchange.class)
 					.where("_id=?", modelId).executeSingle();
 		} else {
+
+			String foreignCurrencyId = intent.getStringExtra("foreignCurrencyId");
+			String localCurrencyId = intent.getStringExtra("localCurrencyId");
 			exchange = new Exchange();
+			exchange.setForeignCurrencyId(foreignCurrencyId);
+			exchange.setLocalCurrencyId(localCurrencyId);
 		}
 		mExchangeEditor = exchange.newModelEditor();
 
@@ -163,6 +170,10 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		 } else {
 			mExchangeEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
+
+			if(getActivity().getCallingActivity() != null){
+				getActivity().setResult(Activity.RESULT_OK, null);
+			}
 			getActivity().finish();
 		 }
 	}
