@@ -3,6 +3,9 @@ package com.hoyoji.hoyoji.project;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
@@ -36,12 +40,14 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
+import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment.ParentProjectListItem;
 
@@ -49,6 +55,7 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment.ParentProjectListItem;
 public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	private final static int GET_CURRENCY_ID = 2;
+	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 3;
 	
 	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
@@ -156,6 +163,65 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		if(mProjectEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
+			// 检查汇率存不存在
+			final String projectCurrencyId = mProjectEditor.getModelCopy().getCurrencyId();
+			((HyjActivity)ProjectFormFragment.this.getActivity()).displayProgressDialog(R.string.projectMessageFormFragment_addShare_fetch_exchange, R.string.projectMessageFormFragment_addShare_fetching_exchange);
+			if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
+				// 币种是一样的，不用新增汇率
+				doSave();
+			} else {
+				Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+				if(exchange != null){
+					// 汇率已经存在，直接保存新项目
+					doSave();
+					return;
+				}
+				// 尝试到网上获取汇率
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						// 到网上获取汇率成功，新建汇率然后保存
+						((HyjActivity)ProjectFormFragment.this.getActivity()).dismissProgressDialog();
+						Double exchangeRate = (Double) object;
+						Exchange newExchange = new Exchange();
+						newExchange.setForeignCurrencyId(projectCurrencyId);
+						newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+						newExchange.setRate(exchangeRate);
+						newExchange.save();
+						doSave();
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						((HyjActivity)ProjectFormFragment.this.getActivity()).dismissProgressDialog();
+//						if (object != null) {
+//							HyjUtil.displayToast(object.toString());
+//						} else {
+//							HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+//						}
+
+						// 到网上获取汇率失败，问用户是否要手工添加该汇率
+						((HyjActivity)ProjectFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, -1, R.string.alert_dialog_no, new DialogCallbackListener(){
+							@Override
+							public void doPositiveClick(Object object){
+								Bundle bundle = new Bundle();
+								bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+								bundle.putString("foreignCurrencyId", projectCurrencyId);
+								openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
+							}
+						});
+					}
+				};
+				HyjHttpGetExchangeRateAsyncTask.newInstance(
+						projectCurrencyId, 
+						HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
+						serverCallbacks);
+			}
+		}
+	}	
+	
+	 
+	 private void doSave(){
 			try {
 				ActiveAndroid.beginTransaction();
 				int count = mParentProjectListAdapter.getCount();
@@ -167,8 +233,6 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						pp.getParentProject().delete();
 					}
 				}
-				
-//				createExchange();
 				
 				if(mProjectEditor.getModelCopy().get_mId() == null){
 					ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
@@ -190,9 +254,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			} finally {
 			    ActiveAndroid.endTransaction();
 			}
-		}
-	}	
-	
+	 }
+	 
 //	 public void createExchange(){
 //		 Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
 //		 Exchange exchange = Exchange.getExchange(activeCurrency.getId(), mProjectEditor.getModelCopy().getCurrencyId());
@@ -220,7 +283,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 //			 HyjHttpGetExchangeRateAsyncTask.newInstance(activeCurrency.getId(), mProjectEditor.getModelCopy().getCurrencyId(), serverCallbacks);
 //		 }
 //	 }
-	 
+
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
@@ -241,6 +304,16 @@ public class ProjectFormFragment extends HyjUserFormFragment {
  	         		 mSelectorFieldProjectCurrency.setModelId(currency.getId());
             	 }
             	 break;
+             case FETCH_PROJECT_TO_LOCAL_EXCHANGE:
+	        	 if(resultCode == Activity.RESULT_OK){
+						//检查该汇率是否添加成功，如果是保存
+		        		Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", mProjectEditor.getModelCopy().getCurrencyId(), HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+						if(exchange != null){
+							doSave();
+							return;
+						}
+	         	 }
+	        	 break;
           }
     }
 	 

@@ -27,5 +27,9 @@
    <string name="projectMessageFormFragment_toast_cannot_get_user">无法从服务器上获取项目共享资料，操作失败</string>
    <string name="projectMessageFormFragment_addShare_already_exists">该共享成员已经存在</string>
    
+   <string name="projectMessageFormFragment_addShare_fetch_exchange">获取汇率</string>
+   <string name="projectMessageFormFragment_addShare_fetching_exchange">正在获取项目币种到本币的汇率</string>
+    <string name="projectMessageFormFragment_addShare_cannot_fetch_exchange">当前无法获取项目币种到本地的汇率，是否要手工创建该汇率？</string>
+   
     
 </resources>
