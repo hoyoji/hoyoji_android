@@ -66,7 +66,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
-	private final static int GET_APPORTION_FRIEND_ID = 5;
 	private final static int GET_CATEGORY_ID = 6;
 	
 	private int CREATE_EXCHANGE = 0;
@@ -300,7 +299,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						Bundle bundle = new Bundle();
 						Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 						bundle.putLong("MODEL_ID", project.get_mId());
-						openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 					}
 				});
 
@@ -320,13 +319,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
-								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_non_project_member) {
-									Bundle bundle = new Bundle();
-									Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-									bundle.putLong("PROJECT_ID", project.get_mId());
-									openActivityWithFragmentForResult(FriendListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_FRIEND_ID);
-									return true;
-								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
+//								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_non_project_member) {
+//									Bundle bundle = new Bundle();
+//									Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+//									bundle.putLong("PROJECT_ID", project.get_mId());
+//									openActivityWithFragmentForResult(FriendListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_FRIEND_ID);
+//									return true;
+//								} else 
+								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
 									mApportionFieldApportions.clearAll();
 									mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 									return true;
@@ -987,39 +987,35 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		case GET_APPORTION_MEMBER_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
-				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-				if(!psa.getState().equalsIgnoreCase("Accept")){
-					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
-					break;
-				}
+				String type = data.getStringExtra("MODEL_TYPE");
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-				apportion.setAmount(0.0);
-				apportion.setFriendUserId(psa.getFriendUserId());
-				apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModel().getId());
-				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
-					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
+					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+					if(!psa.getState().equalsIgnoreCase("Accept")){
+						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
+						break;
+					}
+					apportion.setFriendUserId(psa.getFriendUserId());
 				} else {
-					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
-				}
-			}
-			break;
-		case GET_APPORTION_FRIEND_ID:
-			if (resultCode == Activity.RESULT_OK) {
-				long _id = data.getLongExtra("MODEL_ID", -1);
-				Friend friend = Friend.load(Friend.class, _id);
-				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-				if(friend.getFriendUserId() != null){
-					//看一下该好友是不是项目成员, 如果是，作为项目成员添加
-					ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
-					if(psa != null){
-						apportion.setFriendUserId(psa.getFriendUserId());
+					Friend friend = Friend.load(Friend.class, _id);
+					if(friend.getFriendUserId() != null){
+						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
+						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+						if(psa != null){
+							if(!psa.getState().equalsIgnoreCase("Accept")){
+								HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
+								break;
+							} else {
+								apportion.setFriendUserId(psa.getFriendUserId());
+							}
+						} else {
+							apportion.setLocalFriendId(friend.getId());
+							apportion.setApportionType("Average");
+						}
 					} else {
 						apportion.setLocalFriendId(friend.getId());
 						apportion.setApportionType("Average");
 					}
-				} else {
-					apportion.setLocalFriendId(friend.getId());
-					apportion.setApportionType("Average");
 				}
 				apportion.setAmount(0.0);
 				apportion.setMoneyExpenseId(mMoneyExpenseEditor.getModel().getId());
@@ -1028,6 +1024,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				} else {
 					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
 				}
+			
 			}
 			break;
 		}

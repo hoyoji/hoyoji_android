@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -48,10 +50,10 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	
 	@Override
 	public ExpandableListAdapter useListViewAdapter() {
-		HyjSimpleExpandableListAdapter adapter = new HyjSimpleExpandableListAdapter(
+		MoneyAccountGroupListAdapter adapter = new MoneyAccountGroupListAdapter(
 				getActivity(), mListGroupData, R.layout.moneyaccount_listitem_group,
-				new String[] { "name" },
-				new int[] { R.id.moneyAccountListItem_group_name }, 
+				new String[] { "name", "balanceTotal" },
+				new int[] { R.id.moneyAccountListItem_group_name, R.id.moneyAccountListItem_group_balanceTotal }, 
 				mListChildData,
 				R.layout.moneyaccount_listitem_moneyaccount, 
 				new String[] {"id", "currentBalance"}, 
@@ -189,4 +191,47 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	    HyjUtil.displayToast("账户删除成功");
 	}
 	
+	private static class MoneyAccountGroupListAdapter extends HyjSimpleExpandableListAdapter{
+
+		public MoneyAccountGroupListAdapter(Context context,
+	            List<Map<String, Object>> groupData, int expandedGroupLayout,
+	                    String[] groupFrom, int[] groupTo,
+	                    List<? extends List<? extends HyjModel>> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super( context, groupData, expandedGroupLayout, groupFrom, groupTo,childData, childLayout, 
+					childFrom, childTo) ;
+		}
+		
+		@Override
+		 public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+		            ViewGroup parent) {
+		        View v;
+		        if (convertView == null) {
+		            v = newGroupView(isExpanded, parent);
+		        } else {
+		            v = convertView;
+		        }
+		        bindGroupView(v, (Map<String, ?>) this.getGroup(groupPosition), mGroupFrom, mGroupTo);
+		        
+		        return v;
+		    }
+		 
+		 private void bindGroupView(View view, Map<String, ?> data, String[] from, int[] to) {
+		        int len = to.length;
+
+		        for (int i = 0; i < len; i++) {
+		            View v = view.findViewById(to[i]);
+		            if (v != null) {
+		            	if(v instanceof HyjNumericView){
+		            		HyjNumericView balanceTotalView = (HyjNumericView)v;
+		            		balanceTotalView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+		            		balanceTotalView.setNumber(Double.valueOf(data.get(from[i]).toString()));
+		            	} else if(v instanceof TextView){
+		            		((TextView)v).setText((String)data.get(from[i]));
+		            	}
+		            }
+		        }
+		    }
+	}
 }

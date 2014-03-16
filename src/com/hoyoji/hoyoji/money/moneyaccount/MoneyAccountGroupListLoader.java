@@ -1,43 +1,17 @@
 package com.hoyoji.hoyoji.money.moneyaccount;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TimeZone;
-import java.util.TreeMap;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
-import com.hoyoji.hoyoji.models.MoneyIncome;
-import com.hoyoji.hoyoji.models.MoneyLend;
-import com.hoyoji.hoyoji.models.MoneyPayback;
-import com.hoyoji.hoyoji.models.MoneyReturn;
-import com.hoyoji.hoyoji.models.MoneyTransfer;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
@@ -83,37 +57,108 @@ public class MoneyAccountGroupListLoader extends
 //	        <item>虚拟账户</item>
 //	        <item>借贷账户</item>
 //	   </string-array>
-				HashMap<String, Object> groupObject = new HashMap<String, Object>();
-				groupObject.put("name", "现金账户");
-				groupObject.put("accountType", "Cash");
-				groupObject.put("expenseTotal", HyjUtil.toFixed2(0.0));
-				groupObject.put("incomeTotal", HyjUtil.toFixed2(0.0));
-				list.add(groupObject);
-				groupObject = new HashMap<String, Object>();
-				groupObject.put("name", "金融账户");
-				groupObject.put("accountType", "Deposit");
-				groupObject.put("expenseTotal", HyjUtil.toFixed2(0.0));
-				groupObject.put("incomeTotal", HyjUtil.toFixed2(0.0));
-				list.add(groupObject);
-				groupObject = new HashMap<String, Object>();
-				groupObject.put("name", "信用卡账户");
-				groupObject.put("accountType", "Credit");
-				groupObject.put("expenseTotal", HyjUtil.toFixed2(0.0));
-				groupObject.put("incomeTotal", HyjUtil.toFixed2(0.0));
-				list.add(groupObject);
-				groupObject = new HashMap<String, Object>();
-				groupObject.put("name", "虚拟账户");
-				groupObject.put("accountType", "Online");
-				groupObject.put("expenseTotal", HyjUtil.toFixed2(0.0));
-				groupObject.put("incomeTotal", HyjUtil.toFixed2(0.0));
-				list.add(groupObject);
-				groupObject = new HashMap<String, Object>();
-				groupObject.put("name", "借贷账户");
-				groupObject.put("accountType", "Debt");
-				groupObject.put("expenseTotal", HyjUtil.toFixed2(0.0));
-				groupObject.put("incomeTotal", HyjUtil.toFixed2(0.0));
-				list.add(groupObject);
-
+				HashMap<String, Object> groupObject = null; 
+				String localCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+				double balanceTotal = 0;
+				int count = 0;
+				String query = "SELECT COUNT(*) AS count, SUM(currentBalance / IFNULL(ex.rate, 1)) as balanceTotal " +
+						"FROM MoneyAccount ma LEFT JOIN Exchange ex ON ex.localCurrencyId = ? AND ma.currencyId = ex.foreignCurrencyId " +
+						"WHERE accountType = ?";
+				String[] args = new String[] {localCurrencyId, "Cash" };
+				Cursor cursor = Cache
+						.openDatabase()
+						.rawQuery(query, args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count = cursor.getInt(0);
+					balanceTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				if(count > 0){
+					groupObject = new HashMap<String, Object>();
+					groupObject.put("name", "现金账户");
+					groupObject.put("accountType", "Cash");
+					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+					list.add(groupObject);
+				}
+				
+				args = new String[] {localCurrencyId, "Deposit" };
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(query, args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count = cursor.getInt(0);
+					balanceTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				if(count > 0){
+					groupObject = new HashMap<String, Object>();
+					groupObject.put("name", "金融账户");
+					groupObject.put("accountType", "Deposit");
+					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+					list.add(groupObject);
+				}
+				
+				args = new String[] {localCurrencyId, "Credit" };
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(query, args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count = cursor.getInt(0);
+					balanceTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				if(count > 0){
+					groupObject = new HashMap<String, Object>();
+					groupObject.put("name", "信用卡账户");
+					groupObject.put("accountType", "Credit");
+					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+					list.add(groupObject);
+				}
+				
+				args = new String[] {localCurrencyId, "Online" };
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(query, args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count = cursor.getInt(0);
+					balanceTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				if(count > 0){
+					groupObject = new HashMap<String, Object>();
+					groupObject.put("name", "虚拟账户");
+					groupObject.put("accountType", "Online");
+					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+					list.add(groupObject);
+				}
+				
+				args = new String[] {localCurrencyId, "Debt" };
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(query, args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count = cursor.getInt(0);
+					balanceTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				if(count > 0){
+					groupObject = new HashMap<String, Object>();
+					groupObject.put("name", "借贷账户");
+					groupObject.put("accountType", "Debt");
+					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+					list.add(groupObject);
+				}
+				
 				return list;
 	}
 	

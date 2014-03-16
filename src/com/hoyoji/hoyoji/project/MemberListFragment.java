@@ -103,6 +103,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
+			intent.putExtra("MODEL_TYPE", "ProjectShareAuthorization");
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
 		} else {

@@ -166,6 +166,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
+			intent.putExtra("MODEL_TYPE", "Friend");
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
 			return true;

@@ -175,11 +175,11 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 							@Override
 							public void errorCallback(Object object) {
 								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).dismissProgressDialog();
-//								if (object != null) {
-//									HyjUtil.displayToast(object.toString());
-//								} else {
-//									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-//								}
+								if (object != null) {
+									HyjUtil.displayToast(object.toString());
+								} else {
+									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+								}
 								
 								((HyjActivity)ProjectMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
 									@Override

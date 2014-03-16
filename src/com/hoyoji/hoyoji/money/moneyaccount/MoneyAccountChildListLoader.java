@@ -44,7 +44,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 		private List<HyjModel> mChildList;
 	    private Integer mLoadLimit = null;
 	    private String mAccountType = null;
-	    private ChangeObserver mChangeObserver;
+//	    private ChangeObserver mChangeObserver;
 	    
 	    public MoneyAccountChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -153,19 +153,20 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	        mChildList = null;
 	    }
 	    
-	    private class ChangeObserver extends ContentObserver {
-	        public ChangeObserver() {
-	            super(new Handler());
-	        }
-
-	        @Override
-	        public boolean deliverSelfNotifications() {
-	            return true;
-	        }
-
-	        @Override
-	        public void onChange(boolean selfChange) {
-	            onContentChanged();
-	        }
-	    }
+//	    private class ChangeObserver extends ContentObserver {
+//	        public ChangeObserver() {
+//	            super(new Handler());
+//	        }
+//
+//	        @Override
+//	        public boolean deliverSelfNotifications() {
+//	            return true;
+//	        }
+//
+//	        @Override
+//	        public void onChange(boolean selfChange) {
+//	            onContentChanged();
+//	        }
+//	    }
+	    
 }

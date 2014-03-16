@@ -297,23 +297,24 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 						@Override
 						public boolean onMenuItemClick(MenuItem item) {
-							if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_non_project_member) {
-								Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-								List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-								for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-									if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept")){
-										continue;
-									}
-									MoneyIncomeApportion apportion = new MoneyIncomeApportion();
-									apportion.setAmount(0.0);
-									apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-									apportion.setMoneyIncomeId(moneyIncome.getId());
-
-									mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
-								}
-								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-								return true;
-							} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
+//							if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_add_non_project_member) {
+//								Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+//								List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+//								for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+//									if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept")){
+//										continue;
+//									}
+//									MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+//									apportion.setAmount(0.0);
+//									apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+//									apportion.setMoneyIncomeId(moneyIncome.getId());
+//
+//									mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+//								}
+//								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+//								return true;
+//							} else 
+								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
 								mApportionFieldApportions.clearAll();
 								mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 								return true;

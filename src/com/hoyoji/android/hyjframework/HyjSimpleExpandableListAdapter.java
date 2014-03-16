@@ -24,8 +24,8 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<? extends Map<String, ?>> mGroupData;
     private int mExpandedGroupLayout;
     private int mCollapsedGroupLayout;
-    private String[] mGroupFrom;
-    private int[] mGroupTo;
+    protected String[] mGroupFrom;
+    protected int[] mGroupTo;
     
     private List<? extends List<? extends HyjModel>> mChildData;
     private int mChildLayout;
