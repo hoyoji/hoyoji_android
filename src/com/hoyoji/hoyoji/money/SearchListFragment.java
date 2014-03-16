@@ -38,6 +38,7 @@ import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
@@ -63,10 +64,11 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
 	Project mProject;
+	MoneyAccount mMoneyAccount;
+	Friend mFriend;
 	
 	@Override
 	public Integer useContentView() {
-		
 		return R.layout.money_listfragment_search;
 	}
 
@@ -84,15 +86,26 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	public void onInitViewData() {
 		super.onInitViewData();
 		Intent intent = getActivity().getIntent();
+		String subTitle = null;
 		final Long project_id = intent.getLongExtra("project_id", -1);
 		if(project_id != -1){
 			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
-			String subTitle = mProject.getDisplayName();
-			if(subTitle != null){
-				((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
-			}
+			subTitle = mProject.getDisplayName();
+		}
+		final Long moneyAccount_id = intent.getLongExtra("moneyAccount_id", -1);
+		if(moneyAccount_id != -1){
+			mMoneyAccount =  new Select().from(MoneyAccount.class).where("_id=?", moneyAccount_id).executeSingle();
+			subTitle = mMoneyAccount.getDisplayName();
+		}
+		final Long friend_id = intent.getLongExtra("friend_id", -1);
+		if(friend_id != -1){
+			mFriend =  new Select().from(Friend.class).where("_id=?", friend_id).executeSingle();
+			subTitle = mFriend.getDisplayName();
 		}
 		
+		if(subTitle != null){
+			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
+		}
 		
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
@@ -103,11 +116,23 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 		if(mProject != null){
 			queryParams.putString("projectId", mProject.getId());
 		}
-		Loader<Object> loader = getLoaderManager().getLoader(loaderId);
-		if(loader != null && !loader.isReset()){
-			getLoaderManager().restartLoader(loaderId, queryParams,this);
-		} else {
-			getLoaderManager().initLoader(loaderId, queryParams,this);
+		if(mMoneyAccount != null){
+			queryParams.putString("accountId", mMoneyAccount.getId());
+		}
+		if(mFriend != null){
+			if(mFriend.getFriendUserId() != null){
+				queryParams.putString("friendUserId", mFriend.getFriendUserId());
+			} else {
+				queryParams.putString("localFriendId", mFriend.getId());
+			}
+		}
+		if(!queryParams.isEmpty()){
+			Loader<Object> loader = getLoaderManager().getLoader(loaderId);
+			if(loader != null && !loader.isReset()){
+				getLoaderManager().restartLoader(loaderId, queryParams, this);
+			} else {
+				getLoaderManager().initLoader(loaderId, queryParams, this);
+			}
 		}
 	}
 	
@@ -205,6 +230,20 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 				Bundle bundle = new Bundle();
 				bundle.putLong("dateFrom", dateInMilliSeconds);
 				bundle.putLong("dateTo", dateInMilliSeconds + 24*3600000);
+
+				if(mProject != null){
+					bundle.putString("projectId", mProject.getId());
+				}
+				if(mMoneyAccount != null){
+					bundle.putString("accountId", mMoneyAccount.getId());
+				}
+				if(mFriend != null){
+					if(mFriend.getFriendUserId() != null){
+						bundle.putString("friendUserId", mFriend.getFriendUserId());
+					} else {
+						bundle.putString("localFriendId", mFriend.getId());
+					}
+				}
 				getLoaderManager().restartLoader(groupPosition, bundle, this);
 //			}
 //			i++;

@@ -100,6 +100,7 @@ import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnListFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
+import com.hoyoji.hoyoji.money.SearchListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -252,14 +253,15 @@ public class MainActivity extends HyjUserActivity {
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
 		switch (position) {
+		 case 0 :
+				 openActivityWithFragment(SearchListFragment.class,
+				 R.string.moneySearchListFragment_title, null);
+				 break;
 		case 2:
 			openActivityWithFragment(MessageListFragment.class,
 					R.string.friendListFragment_title_manage_message, null);
 			break;
-		// case 2 :
-		// openActivityWithFragment(MoneyAccountListFragment.class,
-		// R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
-		// break;
+		
 		case 3:
 			openActivityWithFragment(ExchangeListFragment.class,
 					R.string.exchangeListFragment_title_manage_exchange, null);

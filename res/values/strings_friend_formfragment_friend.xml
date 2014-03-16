@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
+   <string name="friendFormFragment_title">好友资料</string>
    <string name="friendFormFragment_title_create">创建好友</string>
-   <string name="friendFormFragment_title_edit">修改好友资料</string>
    <string name="friendFormFragment_title_delete">删除好友资料</string>
       
    <string name="friendFormFragment_textView_userName">用户名称</string>

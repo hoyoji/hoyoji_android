@@ -17,6 +17,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -25,10 +27,14 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.friend.FriendCategoryFormFragment;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
+	private static final int EDIT_MONEYACCOUNT_DETAILS = 0;
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
@@ -69,12 +75,31 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if(!getUserVisibleHint()){
+			return super.onContextItemSelected(item);
+		}
+		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+		Bundle bundle = new Bundle();
+		bundle.putLong("MODEL_ID", info.id);
+		switch (item.getItemId()) {
+			case EDIT_MONEYACCOUNT_DETAILS:
+				openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
+				break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		
-	}	
-	
+		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
+		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
+			if(adapterContextMenuInfo.id != -1){
+				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "账户资料");
+			}
+		}
+	}
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 //		super.onCreateLoader(groupPos, arg1);
@@ -173,7 +198,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title_edit, bundle);
+			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
 		}
 		return true;
     } 

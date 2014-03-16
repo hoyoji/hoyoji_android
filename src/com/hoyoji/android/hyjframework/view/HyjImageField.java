@@ -309,7 +309,7 @@ public class HyjImageField extends GridView {
 					mImageGridAdapter.add(pi);
 				} else {
 					if (!mPhotoFile.exists()) {
-						HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
+						//HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 					} else {
 						mPhotoFile.delete();
 					}

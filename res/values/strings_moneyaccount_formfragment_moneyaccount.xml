@@ -3,7 +3,7 @@
     
     
    <string name="moneyAccountFormFragment_title_addnew">创建账户</string>
-   <string name="moneyAccountFormFragment_title_edit">修改账户</string>
+   <string name="moneyAccountFormFragment_title">账户资料</string>
    
    <string name="moneyAccountFormFragment_textView_name">账户名称</string>
    <string name="moneyAccountFormFragment_editText_hint_name">请输入账户名称</string>

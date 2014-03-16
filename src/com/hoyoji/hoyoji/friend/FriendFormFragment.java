@@ -63,7 +63,8 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		}
 		mFriendEditor = friend.newModelEditor();
 		
-		setupDeleteButton(mFriendEditor);
+//		暂不支持删除
+//		setupDeleteButton(mFriendEditor);
 		
 		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_userName);
 		mTextFieldUserName.setEnabled(false);

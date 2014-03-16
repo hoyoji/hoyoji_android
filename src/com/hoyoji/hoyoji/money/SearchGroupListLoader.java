@@ -51,6 +51,9 @@ public class SearchGroupListLoader extends
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
 	private String mProjectId;
+	private String mMoneyAccountId;
+	private String mFriendUserId;
+	private String mLocalFriendId;
 
 	public SearchGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
@@ -58,6 +61,9 @@ public class SearchGroupListLoader extends
 		if (queryParams != null) {
 			mLoadLimit = queryParams.getInt("limit", 10);
 			mProjectId = queryParams.getString("projectId");
+			mMoneyAccountId = queryParams.getString("moneyAccountId");
+			mFriendUserId = queryParams.getString("friendUserId");
+			mLocalFriendId = queryParams.getString("localFriendId");
 		}
 
 		mChangeObserver = new ChangeObserver();
@@ -93,10 +99,36 @@ public class SearchGroupListLoader extends
 		this.onContentChanged();
 	}
 
-	private String getSearchQuery(){
+	private String getSearchQuery(String type){
 		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 		if(mProjectId != null){
 			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
+		}
+		if(mMoneyAccountId != null){
+			queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
+		}
+		if(mFriendUserId != null){
+			queryStringBuilder.append(" AND (friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+		}
+		if(mLocalFriendId != null){
+			queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+		}
+		return queryStringBuilder.toString();
+	}
+	
+	private String getTransferSearchQuery(){
+		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
+		if(mProjectId != null){
+			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
+		}
+		if(mMoneyAccountId != null){
+			queryStringBuilder.append(" AND (transferInId = '" + mMoneyAccountId + "' OR transferOutId = '" + mMoneyAccountId + "') ");
+		}
+		if(mFriendUserId != null){
+			queryStringBuilder.append(" AND (transferInFriendUserId = '" + mFriendUserId + "' OR transferOutFriendUserId = '" + mFriendUserId + "') ");
+		}
+		if(mLocalFriendId != null){
+			queryStringBuilder.append(" AND (transferInLocalFriendId = '" + mLocalFriendId + "' OR transferOutLocalFriendId = '" + mLocalFriendId + "') ");
 		}
 		return queryStringBuilder.toString();
 	}
@@ -121,7 +153,6 @@ public class SearchGroupListLoader extends
 //		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
 		
-		String queryString = getSearchQuery();
 		int loadCount = 0;
 		while (loadCount < mLoadLimit) {
 			int count = 0;
@@ -133,7 +164,7 @@ public class SearchGroupListLoader extends
 			Cursor cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyExpense WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyExpense main WHERE date > ? AND date <= ? AND " + getSearchQuery("Expense"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -145,7 +176,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyIncome WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyIncome main WHERE date > ? AND date <= ? AND " + getSearchQuery("Income"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -157,7 +188,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer main WHERE date > ? AND date <= ? AND " + getTransferSearchQuery(),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -169,7 +200,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyBorrow WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyBorrow main WHERE date > ? AND date <= ? AND " + getSearchQuery("Borrow"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -181,7 +212,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyLend WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyLend main WHERE date > ? AND date <= ? AND " + getSearchQuery("Lend"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -193,7 +224,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyReturn WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyReturn main WHERE date > ? AND date <= ? AND " + getSearchQuery("Return"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -205,7 +236,7 @@ public class SearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyPayback WHERE date > ? AND date <= ? AND " + queryString,
+							"SELECT COUNT(*) AS count, SUM(amount) as total FROM MoneyPayback main WHERE date > ? AND date <= ? AND " + getSearchQuery("Payback"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -230,7 +261,7 @@ public class SearchGroupListLoader extends
 
 			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
 			if(count == 0){
-				long moreDataInMillis = getHasMoreDataDateInMillis(calToday.getTimeInMillis(), queryString);
+				long moreDataInMillis = getHasMoreDataDateInMillis(calToday.getTimeInMillis());
 				if(moreDataInMillis == -1){
 					break;
 				} else {
@@ -251,14 +282,14 @@ public class SearchGroupListLoader extends
 		return list;
 	}
 	
-	private long getHasMoreDataDateInMillis(long fromDateInMillis, String queryString){
+	private long getHasMoreDataDateInMillis(long fromDateInMillis){
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + getSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -269,7 +300,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + getSearchQuery("Income"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -285,7 +316,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyBorrow main WHERE date <= ? AND " + getSearchQuery("Borrow"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -301,7 +332,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyLend main WHERE date <= ? AND " + getSearchQuery("Lend"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -317,7 +348,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + getTransferSearchQuery(),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -333,7 +364,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND " + getSearchQuery("Return"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -349,7 +380,7 @@ public class SearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback WHERE date <= ? AND " + queryString,
+						"SELECT MAX(date) FROM MoneyPayback main WHERE date <= ? AND " + getSearchQuery("Payback"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

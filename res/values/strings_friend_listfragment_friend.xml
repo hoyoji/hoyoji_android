@@ -6,6 +6,9 @@
     <string name="friendListFragment_title_select_friend_payer">付款方</string>
     <string name="friendListFragment_title_select_friend_creditor">债权人</string>
     <string name="friendListFragment_title_select_friend_debtor">债务人</string>
+    
+    <string name="friendListFragment_title_friend_transactions">好友流水</string>
+    
     <string name="friendListFragment_action_friend_create">创建好友</string>
     
 </resources>

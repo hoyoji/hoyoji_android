@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
@@ -127,8 +130,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				    Bundle bundle = new Bundle();
 					bundle.putLong("MODEL_ID", itemId);
 					openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_edit, bundle);
-					return true;
-			    } 
+				} 
 				break;
 		}
 		return super.onContextItemSelected(item);
@@ -172,8 +174,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_edit, bundle);
+			bundle.putLong("friend_id", id);
+			openActivityWithFragment(SearchListFragment.class, R.string.friendListFragment_title_friend_transactions, bundle);
 			return true;
 		}
     }  
@@ -236,6 +238,17 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			} else {
 				((HyjImageView)view).setImage((Picture)null);
 			}
+	 		if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Bundle bundle = new Bundle();
+						bundle.putLong("MODEL_ID", (Long) v.getTag());
+						openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title, bundle);
+					}
+				});
+			}
+			view.setTag(cursor.getLong(cursor.getColumnIndex("_id")));
 			return true;
 		} else {
 			return false;

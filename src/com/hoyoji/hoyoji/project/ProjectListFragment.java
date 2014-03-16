@@ -135,6 +135,15 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		return backPressedHandled;
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	    super.setUserVisibleHint(isVisibleToUser);
+	    
+	    if(mViewPager != null && mViewPager.getCurrentItem() >= 0 && mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()) != null){
+	    	mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()).setUserVisibleHint(isVisibleToUser);
+	    }
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.

@@ -43,7 +43,8 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.SearchListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
-	public final static int ADD_SUB_PROJECT = 0;
+//	public final static int ADD_SUB_PROJECT = 0;
+	private static final int EDIT_PROJECT_DETAILS = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
 	
@@ -173,14 +174,13 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return super.onContextItemSelected(item);
 		}
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//	    Long itemId = getListAdapter().getItemId(info.position);
+		Bundle bundle = new Bundle();
+		bundle.putLong("MODEL_ID", info.id);
 		switch (item.getItemId()) {
-//			case ADD_SUB_PROJECT:
-//			    HyjUtil.displayToast("创建子项目" + itemId);
-//				break;
+			case EDIT_PROJECT_DETAILS:
+				openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+				break;
 			case VIEW_PROJECT_MEMBERS:
-				Bundle bundle = new Bundle();
-				bundle.putLong("MODEL_ID", info.id);
 				openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
 				break;
 		}
@@ -194,7 +194,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if(mi.id == -1){
 			return;
 		}
-		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
+		menu.add(0, EDIT_PROJECT_DETAILS, 0, "项目资料");
+		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "项目成员");
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 	}
 	
