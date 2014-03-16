@@ -339,7 +339,7 @@ public abstract class Model {
 		}
 	}
 
-	public final void loadFromJSON(JSONObject json, boolean syncFromServer) {
+	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
 		mSyncFromServer = syncFromServer;
 		for (Field field : mTableInfo.getFields()) {
 			final String fieldName = mTableInfo.getColumnName(field);

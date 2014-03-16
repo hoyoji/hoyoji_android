@@ -1,27 +1,20 @@
 package com.hoyoji.hoyoji.money.currency;
 
 import java.util.List;
-import java.util.Locale;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.activeandroid.ActiveAndroid;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -137,10 +130,9 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 				Currency newCurrency = new Currency();
 				newCurrency.loadFromJSON(object, true);
 				
-				java.util.Currency localeCurrency = java.util.Currency.getInstance(newCurrency.getCode());
-				newCurrency.setSymbol(localeCurrency.getSymbol());
+//				createExchange(newCurrency);
 				
-				createExchange(newCurrency);
+				ActiveAndroid.setTransactionSuccessful();
 				this.getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();
@@ -176,7 +168,6 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 			data.put("__offset", 0);
 			data.put("__orderBy", "name ASC");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

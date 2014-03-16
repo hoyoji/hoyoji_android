@@ -2,6 +2,9 @@ package com.hoyoji.hoyoji.models;
 
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -95,6 +98,26 @@ public class Currency extends HyjModel {
 		
 	}
 
+	@Override
+	public void loadFromJSON(JSONObject obj, boolean syncFromServer){
+		
+		//if (obj.isNull("symbol")) {
+			java.util.Currency localeCurrency = java.util.Currency
+					.getInstance(obj
+							.optString("code"));
+			try {
+				obj.put("symbol",
+						localeCurrency.getSymbol());
+				obj.put("name",
+						localeCurrency.getDisplayName());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		//}
+			
+		super.loadFromJSON(obj, syncFromServer);
+	}
+	
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){
