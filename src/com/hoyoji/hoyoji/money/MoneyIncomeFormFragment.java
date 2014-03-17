@@ -42,9 +42,9 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyIncome;
-import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -83,6 +83,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
+	private boolean authority = true;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneyincome;
@@ -97,6 +99,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyIncome =  new Select().from(MoneyIncome.class).where("_id=?", modelId).executeSingle();
+			authority = moneyIncome.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyIncome = new MoneyIncome();
 		}
@@ -231,6 +234,13 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();	
 			}
 		});
@@ -288,6 +298,13 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 			});
 			
+			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					addAllProjectMemberIntoApportionsField(moneyIncome);
+				}
+			});
+			
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -330,6 +347,13 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 							return false;
 						}
 					});
+					
+					if(!authority){
+						for(int i = 0; i<popup.getMenu().size();i++){
+							popup.getMenu().setGroupEnabled(i, false);
+						}
+					}
+					
 					popup.show();
 				}
 			});
@@ -337,6 +361,25 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			if (modelId == -1) {
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
+			setPermission();
+	}
+	
+	private void addAllProjectMemberIntoApportionsField(MoneyIncome moneyIncome) {
+		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+			if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept")){
+				continue;
+			}
+			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+			apportion.setAmount(0.0);
+			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+			apportion.setMoneyIncomeId(moneyIncome.getId());
+
+			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+		}
+		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+		
 	}
 	
 	private void setupApportionField(MoneyIncome moneyIncome) {
@@ -435,6 +478,34 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			});
 		}
 		
+	}
+	
+	private void setPermission(){
+
+		if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !authority){
+			mDateTimeFieldDate.setEnabled(false);
+			
+			mNumericAmount.setNumber(mMoneyIncomeEditor.getModel().getLocalAmount());
+			mNumericAmount.setEnabled(false);
+			
+			mSelectorFieldMoneyIncomeCategory.setEnabled(false);
+
+			mSelectorFieldFriend.setEnabled(false);
+			
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+
+			mSelectorFieldProject.setEnabled(false);
+			
+			mNumericExchangeRate.setEnabled(false);
+
+			mRemarkFieldRemark.setEnabled(false);
+			
+			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setEnabled(false);
+			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setEnabled(false);
+			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);
+		}
 	}
 	
 	private void setExchangeRate(){
