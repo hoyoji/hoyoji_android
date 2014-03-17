@@ -229,6 +229,13 @@
                 >
 
                 <ImageView
+                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_add_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_add_group" />
+                
+                <ImageView
                     android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
