@@ -57,7 +57,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
 	private HyjDateTimeField mDateTimeFieldReturnDate = null;
-	private HyjNumericField mNumerFieldReturnedAmount = null;
+	private HyjNumericField mNumericFieldReturnedAmount = null;
 	private View mSeparatorFieldReturnedAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
@@ -67,6 +67,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
+	
+	private boolean authority = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -82,6 +84,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyBorrow =  new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
+			authority = moneyBorrow.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyBorrow = new MoneyBorrow();
 			
@@ -104,15 +107,15 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldReturnDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnDate);
 		mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
 		
-		mNumerFieldReturnedAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnedAmount);	
-		mNumerFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
-		mNumerFieldReturnedAmount.setEnabled(false);
+		mNumericFieldReturnedAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnedAmount);	
+		mNumericFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
+		mNumericFieldReturnedAmount.setEnabled(false);
 		mSeparatorFieldReturnedAmount = (View) getView().findViewById(R.id.moneyBorrowFormFragment_separatorField_returnedAmount);
 		if(modelId == -1){
-			mNumerFieldReturnedAmount.setVisibility(View.GONE);
+			mNumericFieldReturnedAmount.setVisibility(View.GONE);
 			mSeparatorFieldReturnedAmount.setVisibility(View.GONE);
 		}else{
-			mNumerFieldReturnedAmount.setVisibility(View.VISIBLE);
+			mNumericFieldReturnedAmount.setVisibility(View.VISIBLE);
 			mSeparatorFieldReturnedAmount.setVisibility(View.VISIBLE);
 		}
 		
@@ -191,6 +194,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();
 			}
 		});
@@ -224,6 +234,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if (modelId == -1) {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
+		setPermission();
     }
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyBorrow> moneyBorrowEditor) {
@@ -268,7 +279,34 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				}
 			});
 		}
-		
+	}
+	
+	private void setPermission(){
+
+		if(mMoneyBorrowEditor.getModelCopy().get_mId() != null && !authority){
+			mDateTimeFieldDate.setEnabled(false);
+			
+			mNumericAmount.setNumber(mMoneyBorrowEditor.getModel().getLocalAmount());
+			mNumericAmount.setEnabled(false);
+			
+			mDateTimeFieldReturnDate.setEnabled(false);
+			
+			mSelectorFieldFriend.setEnabled(false);
+			
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+
+			mSelectorFieldProject.setEnabled(false);
+			
+			mNumericExchangeRate.setEnabled(false);
+
+			mNumericFieldReturnedAmount.setEnabled(false);
+			
+			mRemarkFieldRemark.setEnabled(false);
+
+			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);
+		}
 	}
 	
 	private void setExchangeRate(){

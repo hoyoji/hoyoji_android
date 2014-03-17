@@ -56,7 +56,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<MoneyPayback> mMoneyPaybackEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
-	private HyjNumericField mNumericFieldAmount = null;
+	private HyjNumericField mNumericAmount = null;
 	private HyjNumericField mNumericFieldInterest = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
@@ -66,6 +66,8 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
+	
+	private boolean authority = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -81,6 +83,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	    long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyPayback =  new Select().from(MoneyPayback.class).where("_id=?", modelId).executeSingle();
+			authority = moneyPayback.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyPayback = new MoneyPayback();
 			
@@ -97,8 +100,8 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			mDateTimeFieldDate.setText(moneyPayback.getDate());
 		}
 		
-		mNumericFieldAmount = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_amount);		
-		mNumericFieldAmount.setNumber(moneyPayback.getAmount());
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_amount);		
+		mNumericAmount.setNumber(moneyPayback.getAmount());
 		
 		mNumericFieldInterest = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_interest);		
 		mNumericFieldInterest.setNumber(moneyPayback.getInterest());
@@ -179,6 +182,13 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();	
 			}
 		});
@@ -206,12 +216,13 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
-		
-			// 只在新增时才自动打开软键盘， 修改时不自动打开
-			if (modelId == -1) {
-				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-			}
+		setExchangeRate();
+	
+		// 只在新增时才自动打开软键盘， 修改时不自动打开
+		if (modelId == -1) {
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
+		setPermission();
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyPayback> moneyPaybackEditor) {
@@ -259,6 +270,32 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		
 	}
 	
+	private void setPermission(){
+
+		if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !authority){
+			mDateTimeFieldDate.setEnabled(false);
+			
+			mNumericAmount.setNumber(mMoneyPaybackEditor.getModel().getLocalAmount());
+			mNumericAmount.setEnabled(false);
+			
+			mSelectorFieldFriend.setEnabled(false);
+			
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+
+			mSelectorFieldProject.setEnabled(false);
+			
+			mNumericExchangeRate.setEnabled(false);
+
+			mNumericFieldInterest.setEnabled(false);
+			
+			mRemarkFieldRemark.setEnabled(false);
+
+			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);
+		}
+	}
+	
 	private void setExchangeRate(){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
@@ -298,7 +335,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private void fillData(){
 		MoneyPayback modelCopy = (MoneyPayback) mMoneyPaybackEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
-		modelCopy.setAmount(mNumericFieldAmount.getNumber());
+		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setInterest(mNumericFieldInterest.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
@@ -317,9 +354,9 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyPaybackEditor.getValidationError("datetime"));
-		mNumericFieldAmount.setError(mMoneyPaybackEditor.getValidationError("amount"));
+		mNumericAmount.setError(mMoneyPaybackEditor.getValidationError("amount"));
 		if(mMoneyPaybackEditor.getValidationError("amount") != null){
-			mNumericFieldAmount.showSoftKeyboard();
+			mNumericAmount.showSoftKeyboard();
 		}
 		mNumericFieldInterest.setError(mMoneyPaybackEditor.getValidationError("interest"));
 		mSelectorFieldMoneyAccount.setError(mMoneyPaybackEditor.getValidationError("moneyAccount"));

@@ -67,6 +67,8 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
+	private boolean authority = true;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneyreturn;
@@ -81,6 +83,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyReturn =  new Select().from(MoneyReturn.class).where("_id=?", modelId).executeSingle();
+			authority = moneyReturn.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyReturn = new MoneyReturn();
 			
@@ -179,6 +182,13 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();	
 			}
 		});
@@ -206,12 +216,13 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
-		
-			// 只在新增时才自动打开软键盘， 修改时不自动打开
-			if (modelId == -1) {
-				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-			}
+		setExchangeRate();
+	
+		// 只在新增时才自动打开软键盘， 修改时不自动打开
+		if (modelId == -1) {
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
+		setPermission();
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyReturn> moneyReturnEditor) {
@@ -257,6 +268,32 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			});
 		}
 		
+	}
+	
+	private void setPermission(){
+
+		if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !authority){
+			mDateTimeFieldDate.setEnabled(false);
+			
+			mNumericFieldAmount.setNumber(mMoneyReturnEditor.getModel().getLocalAmount());
+			mNumericFieldAmount.setEnabled(false);
+			
+			mSelectorFieldFriend.setEnabled(false);
+			
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+
+			mSelectorFieldProject.setEnabled(false);
+			
+			mNumericExchangeRate.setEnabled(false);
+
+			mNumericFieldInterest.setEnabled(false);
+			
+			mRemarkFieldRemark.setEnabled(false);
+
+			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);
+		}
 	}
 	
 	private void setExchangeRate(){

@@ -68,6 +68,8 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
+	private boolean authority = true;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneylend;
@@ -82,6 +84,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	    long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyLend =  new Select().from(MoneyLend.class).where("_id=?", modelId).executeSingle();
+			authority = moneyLend.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyLend = new MoneyLend();
 			
@@ -192,6 +195,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(!authority){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();		
 			}
 		});
@@ -219,12 +229,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
-		
-			// 只在新增时才自动打开软键盘， 修改时不自动打开
-			if (modelId == -1) {
-				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-			}
+		setExchangeRate();
+	
+		// 只在新增时才自动打开软键盘， 修改时不自动打开
+		if (modelId == -1) {
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
+		setPermission();
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyLend> moneyLendEditor) {
@@ -271,6 +282,35 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		}
 		
 	}
+	
+	private void setPermission(){
+
+		if(mMoneyLendEditor.getModelCopy().get_mId() != null && !authority){
+			mDateTimeFieldDate.setEnabled(false);
+			
+			mNumericAmount.setNumber(mMoneyLendEditor.getModel().getLocalAmount());
+			mNumericAmount.setEnabled(false);
+			
+			mDateTimeFieldPaybackDate.setEnabled(false);
+			
+			mSelectorFieldFriend.setEnabled(false);
+			
+			mSelectorFieldMoneyAccount.setEnabled(false);
+			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+
+			mSelectorFieldProject.setEnabled(false);
+			
+			mNumericExchangeRate.setEnabled(false);
+
+			mNumericFieldPaybackedAmount.setEnabled(false);
+			
+			mRemarkFieldRemark.setEnabled(false);
+
+			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);
+		}
+	}
+	
 	
 	private void setExchangeRate(){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
