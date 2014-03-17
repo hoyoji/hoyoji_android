@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -167,10 +168,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		project.delete();
 	    HyjUtil.displayToast("项目删除成功");
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if(!getUserVisibleHint()){
+		if(!getUserVisibleHint() || !getParentFragment().getUserVisibleHint()){
 			return super.onContextItemSelected(item);
 		}
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -196,6 +197,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		}
 		menu.add(0, EDIT_PROJECT_DETAILS, 0, "项目资料");
 		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "项目成员");
+		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 	}
 	

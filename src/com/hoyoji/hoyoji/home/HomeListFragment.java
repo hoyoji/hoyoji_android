@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
@@ -139,7 +141,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public ExpandableListAdapter useListViewAdapter() {
-		HyjSimpleExpandableListAdapter adapter = new HyjSimpleExpandableListAdapter(
+		HomeGroupListAdapter adapter = new HomeGroupListAdapter(
 				getActivity(), mListGroupData, R.layout.home_listitem_group,
 				new String[] { "date", "expenseTotal", "incomeTotal" },
 				new int[] { R.id.homeListItem_group_date, 
@@ -594,5 +596,51 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		}
 		return false;
     } 
-	
+	private static class HomeGroupListAdapter extends HyjSimpleExpandableListAdapter{
+
+		public HomeGroupListAdapter(Context context,
+	            List<Map<String, Object>> groupData, int expandedGroupLayout,
+	                    String[] groupFrom, int[] groupTo,
+	                    List<? extends List<? extends HyjModel>> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super( context, groupData, expandedGroupLayout, groupFrom, groupTo,childData, childLayout, 
+					childFrom, childTo) ;
+		}
+		
+		@Override
+		 public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+		            ViewGroup parent) {
+		        View v;
+		        if (convertView == null) {
+		            v = newGroupView(isExpanded, parent);
+		        } else {
+		            v = convertView;
+		        }
+		        bindGroupView(v, (Map<String, ?>) this.getGroup(groupPosition), mGroupFrom, mGroupTo);
+		        
+		        return v;
+		    }
+		 
+		 private void bindGroupView(View view, Map<String, ?> data, String[] from, int[] to) {
+		        int len = to.length;
+
+		        for (int i = 0; i < len; i++) {
+		            View v = view.findViewById(to[i]);
+		            if (v != null) {
+		            	if(v instanceof HyjNumericView){
+		            		HyjNumericView balanceTotalView = (HyjNumericView)v;
+		            		if(v.getId() == R.id.homeListItem_group_expenseTotal){
+		            			balanceTotalView.setPrefix("支出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+			            	} else if(v.getId() == R.id.homeListItem_group_incomeTotal){
+		            			balanceTotalView.setPrefix("收入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+				            }
+		            		balanceTotalView.setNumber(Double.valueOf(data.get(from[i]).toString()));
+		            	} else if(v instanceof TextView){
+		            		((TextView)v).setText((String)data.get(from[i]));
+		            	}
+		            }
+		        }
+		    }
+	}
 }
