@@ -178,28 +178,49 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public void delete(){
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
-		projectShareAuthorizationEditor.save();
+//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
+//		projectShareAuthorizationEditor.save();
+//		
+//		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+//			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
+//			debtAccountEditor.save();
+//		}
 		
-		if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			MoneyAccount debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+		// 维护借贷账户余额
+		MoneyAccount debtAccount = null;
+		if(this.getFriendUserId() != null){
+			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			}
+		}else{
+			// 该好友不是项目成员
+			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
+			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
+			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), friend);
+			}
+		}
+		if(debtAccount != null){
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
 			debtAccountEditor.save();
 		}
+		
 		super.delete();
 	}
 	
-	public void _delete() {
-		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
-		projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (this.getMoneyIncome().getAmount0() * this.getMoneyIncome().getExchangeRate()));
-		projectShareAuthorizationEditor.save();
-		super.delete();
-	}
+//	public void _delete() {
+//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
+//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (this.getAmount0() * this.getMoneyIncome().getExchangeRate()));
+//		projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (this.getMoneyIncome().getAmount0() * this.getMoneyIncome().getExchangeRate()));
+//		projectShareAuthorizationEditor.save();
+//		super.delete();
+//	}
 
 	public Project getProject() {
 		return this.getMoneyIncome().getProject();
