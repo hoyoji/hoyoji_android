@@ -170,18 +170,18 @@ public class MoneySearchGroupListLoader extends
 		if(mDateTo == 0){
 			dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
 		}
-		
+
+		boolean lastTime = false;
 		long dateFromInMillis = mDateFrom;
-		if(mDateFrom == 0){
-			mDateFrom = dateFromInMillis;
-		} else {
+		if(mDateFrom != 0){
 			if(calDateFrom.getTimeInMillis() < dateFromInMillis){
-				calDateFrom.setTimeInMillis(dateFromInMillis);
+				calDateFrom.setTimeInMillis(dateFromInMillis-1);
+				lastTime = true;
 			}
 		}
 		
 		int loadCount = 0;
-		while (loadCount < mLoadLimit && (dateFromInMillis != 0 && calDateFrom.getTimeInMillis() >= dateFromInMillis)) {
+		while (loadCount < mLoadLimit) {
 			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calDateFrom.getTime()),
@@ -302,13 +302,25 @@ public class MoneySearchGroupListLoader extends
 				}
 			} else {
 				calDateFrom.add(Calendar.DAY_OF_YEAR, -1);
-				if(calDateFrom.getTimeInMillis() < dateFromInMillis){
-					calDateFrom.setTimeInMillis(dateFromInMillis);
+				if(dateFromInMillis != 0) {
+					if(lastTime){
+						break;
+					}
+					if(calDateFrom.getTimeInMillis() < dateFromInMillis){
+						calDateFrom.setTimeInMillis(dateFromInMillis-1);
+						lastTime = true;
+					}
 				}
 			}
+			Calendar calDateTo = Calendar.getInstance();
+			calDateTo.setTimeInMillis(calDateFrom.getTimeInMillis());
+			calDateTo.set(Calendar.HOUR_OF_DAY, 0);
+			calDateTo.clear(Calendar.MINUTE);
+			calDateTo.clear(Calendar.SECOND);
+			calDateTo.clear(Calendar.MILLISECOND);
+			dateTo = calDateTo.getTimeInMillis() + 24 * 3600000;
 		}
 		mHasMoreData = loadCount >= mLoadLimit;
-		dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
 		return list;
 	}
 	
