@@ -288,7 +288,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
-			numericView.setNumber(((MoneyExpense)object).getAmount());
+			numericView.setNumber(((MoneyExpense)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -320,7 +320,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setTextColor(Color.parseColor("#339900"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyIncome)object).getAmount());
+			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -382,7 +382,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyBorrow)object).getAmount());
+			numericView.setNumber(((MoneyBorrow)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -413,7 +413,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyLend)object).getAmount());
+			numericView.setNumber(((MoneyLend)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -444,7 +444,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyReturn)object).getAmount());
+			numericView.setNumber(((MoneyReturn)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -475,7 +475,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyPayback)object).getAmount());
+			numericView.setNumber(((MoneyPayback)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
