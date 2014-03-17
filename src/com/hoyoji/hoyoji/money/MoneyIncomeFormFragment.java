@@ -545,7 +545,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText().toString().trim());
+		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
 		
 		if(mSelectorFieldFriend.getModelId() != null){
@@ -616,6 +616,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyIncomeModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(moneyIncomeModel.getProjectId());
 					userDataEditor.save();
+				}
+				
+				// 更新项目的默认分类
+				if(moneyIncomeModel.get_mId() == null){
+					HyjModelEditor<Project> projectEditor = moneyIncomeModel.getProject().newModelEditor();
+					projectEditor.getModelCopy().setDefaultIncomeCategory(moneyIncomeModel.getMoneyIncomeCategory());
+					projectEditor.getModelCopy().setDefaultIncomeCategoryMain(moneyIncomeModel.getMoneyIncomeCategoryMain());
+					projectEditor.save();
 				}
 				
 				//当前汇率不存在时，创建汇率
