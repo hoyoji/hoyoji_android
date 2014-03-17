@@ -41,7 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
-public class SearchGroupListLoader extends
+public class MoneySearchGroupListLoader extends
 		AsyncTaskLoader<List<Map<String, Object>>> {
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
@@ -54,17 +54,13 @@ public class SearchGroupListLoader extends
 	private String mMoneyAccountId;
 	private String mFriendUserId;
 	private String mLocalFriendId;
+	private long mDateFrom = 0;
+	private long mDateTo = 0;
 
-	public SearchGroupListLoader(Context context, Bundle queryParams) {
+	public MoneySearchGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		if (queryParams != null) {
-			mLoadLimit = queryParams.getInt("limit", 10);
-			mProjectId = queryParams.getString("projectId");
-			mMoneyAccountId = queryParams.getString("moneyAccountId");
-			mFriendUserId = queryParams.getString("friendUserId");
-			mLocalFriendId = queryParams.getString("localFriendId");
-		}
+		copyQueryParams(queryParams);
 
 		mChangeObserver = new ChangeObserver();
 		context.getContentResolver().registerContentObserver(
@@ -90,12 +86,29 @@ public class SearchGroupListLoader extends
 				mChangeObserver);
 	}
 
-	public void fetchMore(Bundle queryParams) {
+	private void copyQueryParams(Bundle queryParams) {
 		if (queryParams != null) {
+			mDateFrom = queryParams.getLong("dateFrom", 0);
+			mDateTo = queryParams.getLong("dateTo", 0);
+			mLoadLimit = queryParams.getInt("limit", 10);
+			mProjectId = queryParams.getString("projectId");
+			mMoneyAccountId = queryParams.getString("moneyAccountId");
+			mFriendUserId = queryParams.getString("friendUserId");
+			mLocalFriendId = queryParams.getString("localFriendId");
 			mLoadLimit += queryParams.getInt("pageSize", 10);
 		} else {
 			mLoadLimit += 10;
 		}
+		
+	}
+
+	public void requery(Bundle queryParams){
+		copyQueryParams(queryParams);
+		this.onContentChanged();
+	}
+	
+	public void fetchMore(Bundle queryParams) {
+		copyQueryParams(queryParams);
 		this.onContentChanged();
 	}
 
@@ -147,17 +160,28 @@ public class SearchGroupListLoader extends
 
 		DateFormat df = SimpleDateFormat.getDateInstance();
 		Calendar calToday = Calendar.getInstance();
+		if(mDateTo != 0){
+			calToday.setTimeInMillis(mDateTo);
+		}
 		calToday.set(Calendar.HOUR_OF_DAY, 0);
 		calToday.clear(Calendar.MINUTE);
 		calToday.clear(Calendar.SECOND);
 		calToday.clear(Calendar.MILLISECOND);
 
+		Calendar dateFrom = Calendar.getInstance();
+		dateFrom.setTimeInMillis(mDateFrom);
+		dateFrom.set(Calendar.HOUR_OF_DAY, 0);
+		dateFrom.clear(Calendar.MINUTE);
+		dateFrom.clear(Calendar.SECOND);
+		dateFrom.clear(Calendar.MILLISECOND);
+		long dateFromInMillis = dateFrom.getTimeInMillis();
+		
 // get start of this week in milliseconds
 //		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
 		
 		int loadCount = 0;
-		while (loadCount < mLoadLimit) {
+		while (loadCount < mLoadLimit && calToday.getTimeInMillis() >= dateFromInMillis) {
 			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calToday.getTime()),

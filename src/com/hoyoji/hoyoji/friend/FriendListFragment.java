@@ -32,7 +32,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
@@ -191,7 +191,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("friend_id", id);
-			openActivityWithFragment(SearchListFragment.class, R.string.friendListFragment_title_friend_transactions, bundle);
+			openActivityWithFragment(MoneySearchListFragment.class, R.string.friendListFragment_title_friend_transactions, bundle);
 			return true;
 		}
     }  

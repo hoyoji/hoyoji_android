@@ -100,7 +100,7 @@ import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnListFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferListFragment;
-import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
@@ -254,7 +254,7 @@ public class MainActivity extends HyjUserActivity {
 		mDrawerList.setItemChecked(position, true);
 		switch (position) {
 		 case 0 :
-				 openActivityWithFragment(SearchListFragment.class,
+				 openActivityWithFragment(MoneySearchListFragment.class,
 				 R.string.moneySearchListFragment_title, null);
 				 break;
 		case 2:

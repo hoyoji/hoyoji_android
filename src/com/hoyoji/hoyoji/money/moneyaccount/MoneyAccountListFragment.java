@@ -30,7 +30,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendCategoryFormFragment;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
@@ -200,7 +200,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("moneyAccount_id", id);
-			openActivityWithFragment(SearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
+			openActivityWithFragment(MoneySearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
 		}
 		return true;
     } 

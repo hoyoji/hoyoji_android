@@ -31,6 +31,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMoreListener;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -60,14 +61,19 @@ import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 
-public class SearchListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
+public class MoneySearchListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
+	private static final int GET_SEARCH_QUERY = 0;
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
-	Project mProject;
-	MoneyAccount mMoneyAccount;
-	Friend mFriend;
+	private Project mProject;
+	private MoneyAccount mMoneyAccount;
+	private Friend mFriend;
+	private Long mDateFrom;
+	private Long mDateTo;
+	private String mDisplayType;
 	
 	@Override
 	public Integer useContentView() {
@@ -114,6 +120,18 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	}
 	
 	public void initLoader(int loaderId){
+		Bundle queryParams = buildQueryParams();
+		if(!queryParams.isEmpty()){
+			Loader<Object> loader = getLoaderManager().getLoader(loaderId);
+			if(loader != null && !loader.isReset()){
+				getLoaderManager().restartLoader(loaderId, queryParams, this);
+			} else {
+				getLoaderManager().initLoader(loaderId, queryParams, this);
+			}
+		}
+	}
+	
+	private Bundle buildQueryParams() {
 		Bundle queryParams = new Bundle();
 		if(mProject != null){
 			queryParams.putString("projectId", mProject.getId());
@@ -128,16 +146,19 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 				queryParams.putString("localFriendId", mFriend.getId());
 			}
 		}
-		if(!queryParams.isEmpty()){
-			Loader<Object> loader = getLoaderManager().getLoader(loaderId);
-			if(loader != null && !loader.isReset()){
-				getLoaderManager().restartLoader(loaderId, queryParams, this);
-			} else {
-				getLoaderManager().initLoader(loaderId, queryParams, this);
-			}
+
+		if(mDateFrom != null){
+			queryParams.putLong("dateFrom", mDateFrom);
 		}
+		if(mDateTo != null){
+			queryParams.putLong("dateTo", mDateTo);
+		}
+		if(mDisplayType != null){
+			queryParams.putString("displayType", mDisplayType);
+		}
+		return queryParams;
 	}
-	
+
 	@Override
 	public ExpandableListAdapter useListViewAdapter() {
 		SearchGroupListAdapter adapter = new SearchGroupListAdapter(
@@ -157,7 +178,9 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.searchListFragment_action_display_transaction_type_project) {
+		if (item.getItemId() == R.id.searchListFragment_action_search) {
+			Bundle queryParams = buildQueryParams();
+			openActivityWithFragmentForResult(MoneySearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
 			
 			return true;
 		}
@@ -169,9 +192,9 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 //		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
-			loader = new SearchGroupListLoader(getActivity(), arg1);
+			loader = new MoneySearchGroupListLoader(getActivity(), arg1);
 		} else {
-			loader = new SearchChildListLoader(getActivity(), arg1);
+			loader = new MoneySearchChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
 	}
@@ -193,7 +216,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((SearchGroupListLoader)loader).hasMoreData() ? this.mListPageSize : 0);
+			this.setFooterLoadFinished(((MoneySearchGroupListLoader)loader).hasMoreData() ? this.mListPageSize : 0);
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);
@@ -225,31 +248,12 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 
 	@Override
 	public void onGroupExpand(int groupPosition) {
-//		int i = 0;
-//		for(Map.Entry<String, Map<String, Object>> entry : mListGroupData.entrySet()){
-//			if(i == groupPosition){
-				long dateInMilliSeconds = (Long) mListGroupData.get(groupPosition).get("dateInMilliSeconds");
-				Bundle bundle = new Bundle();
-				bundle.putLong("dateFrom", dateInMilliSeconds);
-				bundle.putLong("dateTo", dateInMilliSeconds + 24*3600000);
+		long dateInMilliSeconds = (Long) mListGroupData.get(groupPosition).get("dateInMilliSeconds");
+		Bundle bundle = buildQueryParams();
+		bundle.putLong("dateFrom", dateInMilliSeconds);
+		bundle.putLong("dateTo", dateInMilliSeconds + 24*3600000);
 
-				if(mProject != null){
-					bundle.putString("projectId", mProject.getId());
-				}
-				if(mMoneyAccount != null){
-					bundle.putString("moneyAccountId", mMoneyAccount.getId());
-				}
-				if(mFriend != null){
-					if(mFriend.getFriendUserId() != null){
-						bundle.putString("friendUserId", mFriend.getFriendUserId());
-					} else {
-						bundle.putString("localFriendId", mFriend.getId());
-					}
-				}
-				getLoaderManager().restartLoader(groupPosition, bundle, this);
-//			}
-//			i++;
-//		}
+		getLoaderManager().restartLoader(groupPosition, bundle, this);
 	}
 
 	
@@ -505,7 +509,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	@Override
 	public void doFetchMore(int offset, int pageSize){
 		Loader loader = getLoaderManager().getLoader(-1);
-		((SearchGroupListLoader)loader).fetchMore(null);	
+		((MoneySearchGroupListLoader)loader).fetchMore(null);	
 	}
 	
 	@Override  
@@ -570,7 +574,40 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 		}
 		return false;
     } 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case GET_SEARCH_QUERY:
+			if (resultCode == Activity.RESULT_OK) {
+				mDateFrom = data.getLongExtra("dateFrom", 0);
+				if(mDateFrom == 0){
+					mDateFrom = null;
+				}
+				mDateTo= data.getLongExtra("dateTo", 0);
+				if(mDateTo == 0){
+					mDateTo = null;
+				}
+				mDisplayType = data.getStringExtra("displayType");
+				
+				String friendId = data.getStringExtra("friendId");
+				if(friendId != null){
+					mFriend = HyjModel.getModel(Friend.class, friendId);
+				}
+				String projectId = data.getStringExtra("projectId");
+				if(projectId != null){
+					mProject = HyjModel.getModel(Project.class, projectId);
+				}
+				String moneyAccountId = data.getStringExtra("moneyAccountId");
+				if(moneyAccountId != null){
+					mMoneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
+				}
 
+				initLoader(-1);
+			}
+			break;
+		}
+		
+	}
 	private static class SearchGroupListAdapter extends HyjSimpleExpandableListAdapter{
 
 		public SearchGroupListAdapter(Context context,

@@ -33,7 +33,7 @@ import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.FriendCategory;
-import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class ExchangeFormFragment extends HyjUserFormFragment {
 	private final static int GET_LOCAL_CURRENCY_ID = 1;

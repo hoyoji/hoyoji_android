@@ -39,7 +39,7 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
+public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -65,18 +65,11 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 		private String mLocalFriendId;
 
 	    
-	    public SearchChildListLoader(Context context, Bundle queryParams) {
+	    public MoneySearchChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
-	    		mDateFrom = queryParams.getLong("dateFrom");
-	    		mDateTo = queryParams.getLong("dateTo");
-				mProjectId = queryParams.getString("projectId");
-				mMoneyAccountId = queryParams.getString("moneyAccountId");
-				mFriendUserId = queryParams.getString("friendUserId");
-				mLocalFriendId = queryParams.getString("localFriendId");
-	    	}
+			copyQueryParams(queryParams);
+			
 //	    	mChangeObserver = new ChangeObserver();
 //	    	context.getContentResolver().registerContentObserver(
 //	    			ContentProvider.createUri(MoneyExpense.class, null), true, mChangeObserver);
@@ -85,13 +78,24 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	    }
 	    
-
+		private void copyQueryParams(Bundle queryParams) {
+			if (queryParams != null) {
+				mDateFrom = queryParams.getLong("dateFrom", 0);
+				mDateTo = queryParams.getLong("dateTo", 0);
+				mLoadLimit = queryParams.getInt("limit", 10);
+				mProjectId = queryParams.getString("projectId");
+				mMoneyAccountId = queryParams.getString("moneyAccountId");
+				mFriendUserId = queryParams.getString("friendUserId");
+				mLocalFriendId = queryParams.getString("localFriendId");
+				mLoadLimit += queryParams.getInt("pageSize", 10);
+			} else {
+				mLoadLimit += 10;
+			}
+			
+		}
+		
 	    public void changeQuery(Bundle queryParams){
-	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
-	    		mDateFrom = queryParams.getLong("dateFrom");
-	    		mDateTo = queryParams.getLong("dateTo");
-	    	}
+			copyQueryParams(queryParams);
 	    	this.onContentChanged();
 	    }
 

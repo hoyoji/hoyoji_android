@@ -137,12 +137,17 @@ public class HyjDateTimeField extends LinearLayout {
 	public void setDate(Date date){
 		mDate = date;
 		if(date == null){
-			mEditTextEdit.setText("");
+			mEditTextEdit.setText(null);
 		} else {
 			DateFormat df = DateFormat.getDateTimeInstance();
 			mEditTextEdit.setText(df.format(date));
 		}
 	}
+	
+	public Date getDate(){
+		return mDate;
+	}
+	
 	
 	public String getText(){
 		if(mDate == null){
@@ -157,5 +162,12 @@ public class HyjDateTimeField extends LinearLayout {
 	
 	public void setLabel(int resId){
 		mTextViewLabel.setText(resId);
+	}
+
+	public Long getDateInMillis() {
+		if(mDate != null){
+			return mDate.getTime();
+		}
+		return null;
 	}
 }

@@ -41,7 +41,7 @@ import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.money.SearchListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
 //	public final static int ADD_SUB_PROJECT = 0;
@@ -153,7 +153,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("project_id", id);
-			openActivityWithFragment(SearchListFragment.class, R.string.projectListFragment_view_transactions, bundle);
+			openActivityWithFragment(MoneySearchListFragment.class, R.string.projectListFragment_view_transactions, bundle);
 		}
     }  
 
