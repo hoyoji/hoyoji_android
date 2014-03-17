@@ -17,10 +17,11 @@
    <string name="moneyBorrowFormFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
    
    <string name="moneyBorrowFormFragment_textView_returnDate">还款时间</string>
-   <string name="moneyBorrowFormFragment_editText_hint_returnDate">请选择还款时间</string>
+   <string name="moneyBorrowFormFragment_editText_hint_returnDate">无</string>
    
    <string name="moneyBorrowFormFragment_textView_returnedAmount">已还金额</string>
    <string name="moneyBorrowFormFragment_editText_hint_returnedAmount">请输入已还金额</string>
+   <string name="moneyBorrowFormFragment_editText_validationError_returnDate_before_date">还款时间早于借入时间，请修正</string>
    
    <string name="moneyBorrowFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyBorrowFormFragment_editText_hint_moneyAccount">请选择账户</string>

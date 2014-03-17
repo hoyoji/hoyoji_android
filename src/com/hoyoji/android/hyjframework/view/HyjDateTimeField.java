@@ -127,7 +127,11 @@ public class HyjDateTimeField extends LinearLayout {
 	}
 	
 	public void setText(String dateString){
-		setDate(HyjUtil.parseDateFromISO(dateString));
+		if(dateString == null){
+			setDate(null);
+		}else{
+			setDate(HyjUtil.parseDateFromISO(dateString));
+		}
 	}
 	
 	public void setDate(Date date){
