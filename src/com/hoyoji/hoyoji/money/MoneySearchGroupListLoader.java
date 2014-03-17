@@ -159,33 +159,33 @@ public class MoneySearchGroupListLoader extends
 		String localCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 
 		DateFormat df = SimpleDateFormat.getDateInstance();
-		Calendar calToday = Calendar.getInstance();
-		if(mDateTo != 0){
-			calToday.setTimeInMillis(mDateTo);
-		}
-		calToday.set(Calendar.HOUR_OF_DAY, 0);
-		calToday.clear(Calendar.MINUTE);
-		calToday.clear(Calendar.SECOND);
-		calToday.clear(Calendar.MILLISECOND);
-
-		Calendar dateFrom = Calendar.getInstance();
-		dateFrom.setTimeInMillis(mDateFrom);
-		dateFrom.set(Calendar.HOUR_OF_DAY, 0);
-		dateFrom.clear(Calendar.MINUTE);
-		dateFrom.clear(Calendar.SECOND);
-		dateFrom.clear(Calendar.MILLISECOND);
-		long dateFromInMillis = dateFrom.getTimeInMillis();
+		Calendar calDateFrom = Calendar.getInstance();
+		calDateFrom.setTimeInMillis(mDateTo);
+		calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
+		calDateFrom.clear(Calendar.MINUTE);
+		calDateFrom.clear(Calendar.SECOND);
+		calDateFrom.clear(Calendar.MILLISECOND);
 		
-// get start of this week in milliseconds
-//		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-		// cal.add(Calendar.WEEK_OF_YEAR, -1);
+		long dateTo = mDateTo;	
+		if(mDateTo == 0){
+			dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
+		}
+		
+		long dateFromInMillis = mDateFrom;
+		if(mDateFrom == 0){
+			mDateFrom = dateFromInMillis;
+		} else {
+			if(calDateFrom.getTimeInMillis() < dateFromInMillis){
+				calDateFrom.setTimeInMillis(dateFromInMillis);
+			}
+		}
 		
 		int loadCount = 0;
-		while (loadCount < mLoadLimit && calToday.getTimeInMillis() >= dateFromInMillis) {
+		while (loadCount < mLoadLimit && (dateFromInMillis != 0 && calDateFrom.getTimeInMillis() >= dateFromInMillis)) {
 			int count = 0;
 			String[] args = new String[] {
-					mDateFormat.format(calToday.getTime()),
-					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24 * 3600000)) };
+					mDateFormat.format(calDateFrom.getTime()),
+					mDateFormat.format(new Date(dateTo)) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
 			Cursor cursor = Cache
@@ -279,11 +279,11 @@ public class MoneySearchGroupListLoader extends
 				cursor = null;
 			}
 			if (count > 0) {
-				String ds = df.format(calToday.getTime());
+				String ds = df.format(calDateFrom.getTime());
 //				ds = ds.replaceAll("Z$", "+0000");
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
 				groupObject.put("date", ds);
-				groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
+				groupObject.put("dateInMilliSeconds", calDateFrom.getTimeInMillis());
 				groupObject.put("expenseTotal",
 						HyjUtil.toFixed2(incomeTotal));
 				groupObject.put("incomeTotal",
@@ -294,24 +294,21 @@ public class MoneySearchGroupListLoader extends
 
 			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
 			if(count == 0){
-				long moreDataInMillis = getHasMoreDataDateInMillis(calToday.getTimeInMillis());
+				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis());
 				if(moreDataInMillis == -1){
 					break;
 				} else {
-					calToday.setTimeInMillis(moreDataInMillis);
+					calDateFrom.setTimeInMillis(moreDataInMillis);
 				}
 			} else {
-				calToday.add(Calendar.DAY_OF_YEAR, -1);
+				calDateFrom.add(Calendar.DAY_OF_YEAR, -1);
+				if(calDateFrom.getTimeInMillis() < dateFromInMillis){
+					calDateFrom.setTimeInMillis(dateFromInMillis);
+				}
 			}
 		}
 		mHasMoreData = loadCount >= mLoadLimit;
-		
-//		Collections.sort(list,new Comparator<Map<String, Object>>(){
-//			@Override
-//			public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {
-//				return (int) ((Long)lhs.get("dateInMilliSeconds") - (Long)rhs.get("dateInMilliSeconds"));
-//			}
-//		});
+		dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
 		return list;
 	}
 	
