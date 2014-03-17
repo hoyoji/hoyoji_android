@@ -381,6 +381,12 @@ public class MoneyBorrow extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
+		if(this.getReturnDate() != null && HyjUtil.parseDateFromISO(this.getReturnDate()).before(HyjUtil.parseDateFromISO(this.getDate()))){
+		    modelEditor.setValidationError("returnDate", R.string.moneyBorrowFormFragment_editText_validationError_returnDate_before_date);
+		}else{
+			modelEditor.removeValidationError("returnDate");
+		}
+		
 		if(this.getMoneyAccountId() == null){
 			modelEditor.setValidationError("moneyAccount",R.string.moneyBorrowFormFragment_editText_hint_moneyAccount);
 		}else{

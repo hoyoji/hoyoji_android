@@ -102,9 +102,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setNumber(moneyBorrow.getAmount());
 		
 		mDateTimeFieldReturnDate = (HyjDateTimeField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnDate);
-		if(modelId != -1){
-			mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
-		}
+		mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
 		
 		mNumerFieldReturnedAmount = (HyjNumericField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_returnedAmount);	
 		mNumerFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
@@ -342,18 +340,21 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
-		
-		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mDateTimeFieldDate.setError(mMoneyBorrowEditor.getValidationError("datetime"));
+		
 		mNumericAmount.setError(mMoneyBorrowEditor.getValidationError("amount"));
 		if(mMoneyBorrowEditor.getValidationError("amount") != null){
 			mNumericAmount.showSoftKeyboard();
 		}
 		mDateTimeFieldReturnDate.setError(mMoneyBorrowEditor.getValidationError("returnDate"));
+		if(mMoneyBorrowEditor.getValidationError("returnDate") != null){
+			HyjUtil.displayToast(mMoneyBorrowEditor.getValidationError("returnDate"));
+		}
+		
 		mSelectorFieldMoneyAccount.setError(mMoneyBorrowEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyBorrowEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyBorrowEditor.getValidationError("exchangeRate"));

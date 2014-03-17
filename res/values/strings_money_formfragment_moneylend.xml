@@ -17,7 +17,8 @@
    <string name="moneyLendFormFragment_editText_validationError_beyondMAX_amount">金额超出范围</string>
    
    <string name="moneyLendFormFragment_textView_paybackDate">收款时间</string>
-   <string name="moneyLendFormFragment_editText_hint_paybackDate">请选择收款时间</string>
+   <string name="moneyLendFormFragment_editText_hint_paybackDate">无</string>
+   <string name="moneyLendFormFragment_editText_validationError_paybackDate_before_date">收款时间早于借出时间，请修正</string>
    
    <string name="moneyLendFormFragment_textView_paybackedAmount">已收金额</string>
    <string name="moneyLendFormFragment_editText_hint_paybackedAmount">请输入已收金额</string>

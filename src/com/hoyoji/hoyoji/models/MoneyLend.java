@@ -381,6 +381,13 @@ public class MoneyLend extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
+		if(this.getPaybackDate() != null && HyjUtil.parseDateFromISO(this.getPaybackDate()).before(HyjUtil.parseDateFromISO(this.getDate()))){
+		    modelEditor.setValidationError("paybackDate", R.string.moneyLendFormFragment_editText_validationError_paybackDate_before_date);
+		}else{
+			modelEditor.removeValidationError("paybackDate");
+		}
+		
+		
 		if(this.getMoneyAccountId() == null){
 			modelEditor.setValidationError("moneyAccount",R.string.moneyLendFormFragment_editText_hint_moneyAccount);
 		}else{

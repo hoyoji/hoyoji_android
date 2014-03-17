@@ -102,10 +102,8 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setNumber(moneyLend.getAmount());
 		
 		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackDate);
-		if(modelId != -1){
-			mDateTimeFieldPaybackDate.setText(moneyLend.getPaybackDate());
-		}
-		
+		mDateTimeFieldPaybackDate.setText(moneyLend.getPaybackDate());
+	
 		mNumericFieldPaybackedAmount = (HyjNumericField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackedAmount);	
 		mNumericFieldPaybackedAmount.setNumber(moneyLend.getPaybackedAmount());
 		mNumericFieldPaybackedAmount.setEnabled(false);
@@ -355,6 +353,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			mNumericAmount.showSoftKeyboard();
 		}
 		mDateTimeFieldPaybackDate.setError(mMoneyLendEditor.getValidationError("paybackDate"));
+		if(mMoneyLendEditor.getValidationError("paybackDate") != null){
+			HyjUtil.displayToast(mMoneyLendEditor.getValidationError("paybackDate"));
+		}
 		mSelectorFieldMoneyAccount.setError(mMoneyLendEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyLendEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyLendEditor.getValidationError("exchangeRate"));
