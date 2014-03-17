@@ -60,7 +60,8 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		firstFragment.setOnSelectSubProjectsListener(this);
 		mSectionsPagerAdapter.addPage(firstFragment);
 		mSectionsPagerAdapter.notifyDataSetChanged();
-		mViewPager.setCurrentItem(0);
+		//mViewPager.setCurrentItem(0);
+		//firstFragment.setUserVisibleHint(this.getUserVisibleHint());
 	}
 
 	@Override
@@ -214,7 +215,6 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 				mCurTransaction.add(container.getId(), fragment,
 						makeFragmentName(container.getId(), position));
 //			}
-
 			return fragment;
 		}
 
@@ -247,6 +247,16 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 					+ getItem(index).getArguments()
 							.getString("parentProjectId");
 		}
+
+//		@Override
+//		public void setPrimaryItem(ViewGroup container, int position,
+//				Object object) {
+//			super.setPrimaryItem(container, position, object);
+//			if(object != null && getCount() == 1){
+//				((Fragment)object).getParentFragment().getUserVisibleHint();
+//				((Fragment)object).setUserVisibleHint(false);
+//			}
+//		}
 
 	}
 	

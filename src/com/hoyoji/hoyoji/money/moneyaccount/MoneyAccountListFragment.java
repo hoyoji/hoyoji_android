@@ -30,6 +30,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendCategoryFormFragment;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.SearchListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
@@ -97,6 +98,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
 			if(adapterContextMenuInfo.id != -1){
 				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "账户资料");
+				menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 			}
 		}
 	}
@@ -197,8 +199,8 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			getActivity().finish();
 		} else {
 			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
+			bundle.putLong("moneyAccount_id", id);
+			openActivityWithFragment(SearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
 		}
 		return true;
     } 

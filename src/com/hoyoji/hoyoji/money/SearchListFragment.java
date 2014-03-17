@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -117,7 +119,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 			queryParams.putString("projectId", mProject.getId());
 		}
 		if(mMoneyAccount != null){
-			queryParams.putString("accountId", mMoneyAccount.getId());
+			queryParams.putString("moneyAccountId", mMoneyAccount.getId());
 		}
 		if(mFriend != null){
 			if(mFriend.getFriendUserId() != null){
@@ -138,7 +140,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	
 	@Override
 	public ExpandableListAdapter useListViewAdapter() {
-		HyjSimpleExpandableListAdapter adapter = new HyjSimpleExpandableListAdapter(
+		SearchGroupListAdapter adapter = new SearchGroupListAdapter(
 				getActivity(), mListGroupData, R.layout.home_listitem_group,
 				new String[] { "date", "expenseTotal", "incomeTotal" },
 				new int[] { R.id.homeListItem_group_date, 
@@ -235,7 +237,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 					bundle.putString("projectId", mProject.getId());
 				}
 				if(mMoneyAccount != null){
-					bundle.putString("accountId", mMoneyAccount.getId());
+					bundle.putString("moneyAccountId", mMoneyAccount.getId());
 				}
 				if(mFriend != null){
 					if(mFriend.getFriendUserId() != null){
@@ -286,7 +288,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 			numericView.setTextColor(Color.parseColor("#FF0000"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
-			numericView.setNumber(((MoneyExpense)object).getAmount());
+			numericView.setNumber(((MoneyExpense)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -318,7 +320,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setTextColor(Color.parseColor("#339900"));
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyIncome)object).getAmount());
+			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -380,7 +382,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyBorrow)object).getAmount());
+			numericView.setNumber(((MoneyBorrow)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -411,7 +413,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyLend)object).getAmount());
+			numericView.setNumber(((MoneyLend)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -442,7 +444,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyReturn)object).getAmount());
+			numericView.setNumber(((MoneyReturn)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -473,7 +475,7 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyPayback)object).getAmount());
+			numericView.setNumber(((MoneyPayback)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -568,5 +570,52 @@ public class SearchListFragment extends HyjUserExpandableListFragment implements
 		}
 		return false;
     } 
-	
+
+	private static class SearchGroupListAdapter extends HyjSimpleExpandableListAdapter{
+
+		public SearchGroupListAdapter(Context context,
+	            List<Map<String, Object>> groupData, int expandedGroupLayout,
+	                    String[] groupFrom, int[] groupTo,
+	                    List<? extends List<? extends HyjModel>> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super( context, groupData, expandedGroupLayout, groupFrom, groupTo,childData, childLayout, 
+					childFrom, childTo) ;
+		}
+		
+		@Override
+		 public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+		            ViewGroup parent) {
+		        View v;
+		        if (convertView == null) {
+		            v = newGroupView(isExpanded, parent);
+		        } else {
+		            v = convertView;
+		        }
+		        bindGroupView(v, (Map<String, ?>) this.getGroup(groupPosition), mGroupFrom, mGroupTo);
+		        
+		        return v;
+		    }
+		 
+		 private void bindGroupView(View view, Map<String, ?> data, String[] from, int[] to) {
+		        int len = to.length;
+
+		        for (int i = 0; i < len; i++) {
+		            View v = view.findViewById(to[i]);
+		            if (v != null) {
+		            	if(v instanceof HyjNumericView){
+		            		HyjNumericView balanceTotalView = (HyjNumericView)v;
+		            		if(v.getId() == R.id.homeListItem_group_expenseTotal){
+		            			balanceTotalView.setPrefix("支出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+			            	} else if(v.getId() == R.id.homeListItem_group_incomeTotal){
+		            			balanceTotalView.setPrefix("收入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+				            }
+		            		balanceTotalView.setNumber(Double.valueOf(data.get(from[i]).toString()));
+		            	} else if(v instanceof TextView){
+		            		((TextView)v).setText((String)data.get(from[i]));
+		            	}
+		            }
+		        }
+		    }
+	}
 }

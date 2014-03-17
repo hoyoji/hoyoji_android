@@ -95,7 +95,7 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	this.onContentChanged();
 	    }
 
-		private String getSearchQuery(String type){
+		private String buildSearchQuery(String type){
 			StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 			if(mProjectId != null){
 				queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
@@ -104,7 +104,7 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
 			}
 			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND (friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 			}
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
@@ -112,7 +112,7 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 			return queryStringBuilder.toString();
 		}
 		
-		private String getTransferSearchQuery(){
+		private String buildTransferSearchQuery(){
 			StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 			if(mProjectId != null){
 				queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
@@ -121,7 +121,7 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				queryStringBuilder.append(" AND (transferInId = '" + mMoneyAccountId + "' OR transferOutId = '" + mMoneyAccountId + "') ");
 			}
 			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND (transferInFriendUserId = '" + mFriendUserId + "' OR transferOutFriendUserId = '" + mFriendUserId + "') ");
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR transferInFriendUserId = '" + mFriendUserId + "' OR transferOutFriendUserId = '" + mFriendUserId + "') ");
 			}
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND (transferInLocalFriendId = '" + mLocalFriendId + "' OR transferOutLocalFriendId = '" + mLocalFriendId + "') ");
@@ -141,25 +141,25 @@ public class SearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
-	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpense.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpense.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
-	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + getTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND " + getSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	

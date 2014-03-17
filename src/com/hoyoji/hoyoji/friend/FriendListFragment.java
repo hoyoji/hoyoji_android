@@ -37,6 +37,7 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
+	private static final int EDIT_FRIEND_DETAILS = 0;
 	
 	@Override
 	public Integer useContentView() {
@@ -117,13 +118,13 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		if(!getUserVisibleHint()){
 			return super.onContextItemSelected(item);
 		}
-		switch (item.getItemId()) {
-			case EDIT_CATEGORY_ITEM:
-				ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
-				int type = ExpandableListView
-			            .getPackedPositionType(info.packedPosition);
+		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+		int type = ExpandableListView
+	            .getPackedPositionType(info.packedPosition);
 
-			    if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+	    switch (item.getItemId()) {
+			case EDIT_CATEGORY_ITEM:
+				if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 			        int groupPos = ExpandableListView
 			                .getPackedPositionGroup(info.packedPosition);
 				    Long itemId = getListView().getExpandableListAdapter().getGroupId(groupPos);
@@ -132,6 +133,18 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 					openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_edit, bundle);
 				} 
 				break;
+			case EDIT_FRIEND_DETAILS:
+				if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+			        int groupPos = ExpandableListView
+			                .getPackedPositionGroup(info.packedPosition);
+			        int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
+				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", itemId);
+					openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title, bundle);
+				} 
+				break;
+				
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -142,6 +155,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
 			menu.add(EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, R.string.friendCategoryFormFragment_title_edit);
 			super.onCreateContextMenu(menu, v, menuInfo);
+		} else {
+			menu.add(0, EDIT_FRIEND_DETAILS, 0, "好友资料");
+			menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 		}
 	}		
 	
