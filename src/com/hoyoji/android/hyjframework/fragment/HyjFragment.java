@@ -16,6 +16,7 @@ public abstract class HyjFragment extends Fragment {
 
 	public abstract Integer useContentView();
 	private boolean mIsViewInited = false;
+	private Menu mOptionsMenu;
 	
 	public Integer useToolbarView(){
 		return null;
@@ -65,8 +66,13 @@ public abstract class HyjFragment extends Fragment {
 		super.onStart();
 	}
 
+	public Menu getOptionsMenu(){
+		return mOptionsMenu;
+	}
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		mOptionsMenu = menu;
 	    // Inflate the menu items for use in the action bar
 		if(useOptionsMenuView() != null){
 			inflater.inflate(useOptionsMenuView(), menu);

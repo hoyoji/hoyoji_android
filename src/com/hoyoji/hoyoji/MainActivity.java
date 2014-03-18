@@ -106,6 +106,7 @@ import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
+import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.project.SubProjectListFragment;
 
@@ -256,6 +257,10 @@ public class MainActivity extends HyjUserActivity {
 		 case 0 :
 				 openActivityWithFragment(MoneySearchListFragment.class,
 				 R.string.moneySearchListFragment_title, null);
+				 break;
+		 case 1 :
+				 openActivityWithFragment(MoneyReportFragment.class,
+				 R.string.moneyReportFragment_title, null);
 				 break;
 		case 2:
 			openActivityWithFragment(MessageListFragment.class,

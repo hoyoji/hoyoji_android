@@ -81,6 +81,11 @@ public class MoneySearchFormFragment extends HyjUserFormFragment {
 	}
 
 	@Override
+	public Integer useOptionsMenuView(){
+		return R.menu.money_formfragment_search;
+	}
+	
+	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
 
