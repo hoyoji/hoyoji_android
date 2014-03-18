@@ -52,6 +52,7 @@ public class Exchange extends HyjModel {
 	public Exchange(){
 		super();
 		mUUId = UUID.randomUUID().toString();
+		mLocalCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 		setAutoUpdate(true);
 	}
 	

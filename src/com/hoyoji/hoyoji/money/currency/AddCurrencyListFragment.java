@@ -84,41 +84,40 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 				new int[] { R.id.currencyListItem_name }); 
 	}
 	
-	private int loading = 0;
-	
-	 public void createExchange(final Currency foreignCurrency){
-		 Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
-		 if(!foreignCurrency.getId().equals(activeCurrency.getId())){
-
-			 Exchange exchange = Exchange.getExchange(activeCurrency.getId(), foreignCurrency.getId());
-			 if(exchange == null && loading == 0){
-				 HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-						@Override
-						public void finishCallback(Object object) {
-							Exchange newExchange = new Exchange();
-							newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
-							newExchange.setForeignCurrencyId(foreignCurrency.getId());
-							newExchange.setRate((Double) object);
-							foreignCurrency.save();
-							newExchange.save();
-							HyjUtil.displayToast(R.string.currencyListFragment_addCurrency_toast_success);
-						}
-
-						@Override
-						public void errorCallback(Object object) {
-							if (object != null) {
-								HyjUtil.displayToast(object.toString());
-							} else {
-								HyjUtil.displayToast("无法获取汇率");
-							}
-						}
-					};
-
-				 loading = 1;
-				 HyjHttpGetExchangeRateAsyncTask.newInstance(activeCurrency.getId(), foreignCurrency.getId(), serverCallbacks);
-			 }
-		 }
-	 }
+//	 private int loading = 0;
+//	 public void createExchange(final Currency foreignCurrency){
+//		 Currency activeCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+//		 if(!foreignCurrency.getId().equals(activeCurrency.getId())){
+//
+//			 Exchange exchange = Exchange.getExchange(activeCurrency.getId(), foreignCurrency.getId());
+//			 if(exchange == null && loading == 0){
+//				 HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//						@Override
+//						public void finishCallback(Object object) {
+//							Exchange newExchange = new Exchange();
+//							newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+//							newExchange.setForeignCurrencyId(foreignCurrency.getId());
+//							newExchange.setRate((Double) object);
+//							foreignCurrency.save();
+//							newExchange.save();
+//							HyjUtil.displayToast(R.string.currencyListFragment_addCurrency_toast_success);
+//						}
+//
+//						@Override
+//						public void errorCallback(Object object) {
+//							if (object != null) {
+//								HyjUtil.displayToast(object.toString());
+//							} else {
+//								HyjUtil.displayToast("无法获取汇率");
+//							}
+//						}
+//					};
+//
+//				 loading = 1;
+//				 HyjHttpGetExchangeRateAsyncTask.newInstance(activeCurrency.getId(), foreignCurrency.getId(), serverCallbacks);
+//			 }
+//		 }
+//	 }
 
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -129,7 +128,7 @@ public class AddCurrencyListFragment extends HyjUserListFragment implements OnQu
 				JSONObject object = (JSONObject) getListAdapter().getItem(position);
 				Currency newCurrency = new Currency();
 				newCurrency.loadFromJSON(object, true);
-				
+				newCurrency.save();
 //				createExchange(newCurrency);
 				
 				ActiveAndroid.setTransactionSuccessful();

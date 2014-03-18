@@ -65,9 +65,9 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			exchange = new Exchange();
 			
 			String foreignCurrencyId = intent.getStringExtra("foreignCurrencyId");
-			String localCurrencyId = intent.getStringExtra("localCurrencyId");
+//			String localCurrencyId = intent.getStringExtra("localCurrencyId");
 			exchange.setForeignCurrencyId(foreignCurrencyId);
-			exchange.setLocalCurrencyId(localCurrencyId);
+//			exchange.setLocalCurrencyId(localCurrencyId);
 		}
 		mExchangeEditor = exchange.newModelEditor();
 
@@ -78,7 +78,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			mSelectorFieldLocalCurrency.setText(localCurrency.getName());
 			mSelectorFieldLocalCurrency.setModelId(exchange.getLocalCurrencyId());
 		}
-		mSelectorFieldLocalCurrency.setEnabled(modelId == -1);
+		mSelectorFieldLocalCurrency.setEnabled(false);
 		mSelectorFieldLocalCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -98,7 +98,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			mSelectorFieldForeignCurrency
 					.setModelId(exchange.getForeignCurrencyId());
 		}
-		mSelectorFieldForeignCurrency.setEnabled(modelId == -1);
+		mSelectorFieldForeignCurrency.setEnabled(modelId == -1 && mSelectorFieldForeignCurrency.getText().length() == 0);
 		mSelectorFieldForeignCurrency.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

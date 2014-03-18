@@ -111,14 +111,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mNumericFieldPaybackedAmount.setNumber(moneyLend.getPaybackedAmount());
 		mNumericFieldPaybackedAmount.setEnabled(false);
 		mSeparatorFieldPaybackedAmount = (View) getView().findViewById(R.id.moneyLendFormFragment_separatorField_paybackedAmount);
-		if(modelId == -1){
-			mNumericFieldPaybackedAmount.setVisibility(View.GONE);
-			mSeparatorFieldPaybackedAmount.setVisibility(View.GONE);
-		}else{
-			mNumericFieldPaybackedAmount.setVisibility(View.VISIBLE);
-			mSeparatorFieldPaybackedAmount.setVisibility(View.VISIBLE);
-		}
-		
+		mNumericFieldPaybackedAmount.setVisibility(View.GONE);
+		mSeparatorFieldPaybackedAmount.setVisibility(View.GONE);
+			
 		MoneyAccount moneyAccount = moneyLend.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_moneyAccount);
 		

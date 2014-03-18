@@ -18,6 +18,15 @@
            hyj:hintText="@string/exchangeFormFragment_editText_hint_localCurrency"
        />
    	
+   	 <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        />
+   	
    	<com.hoyoji.android.hyjframework.view.HyjSelectorField 
            android:id="@+id/exchangeFormFragment_editText_foreignCurrency"
 	    android:layout_width="fill_parent"
@@ -25,6 +34,15 @@
            hyj:labelText="@string/exchangeFormFragment_textView_foreignCurrency"
            hyj:hintText="@string/exchangeFormFragment_editText_hint_foreignCurrency"
        />
+   	
+   	 <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        />
    	
    	<FrameLayout
         android:layout_width="match_parent"
@@ -60,10 +78,10 @@
 	    android:text="@string/exchangeFormFragment_textView_autoUpdate" />
 	
     <TextView
-        android:id="@+id/projectFormFragment_checkBox_hint_autoApportion"
+        android:id="@+id/exchangeFormFragment_checkBox_hint_autoUpdate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/projectFormFragment_checkBox_hint_autoApportion" />
+        android:text="@string/exchangeFormFragment_checkBox_hint_autoUpdate" />
 	<View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"

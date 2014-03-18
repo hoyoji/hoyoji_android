@@ -111,13 +111,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mNumericFieldReturnedAmount.setNumber(moneyBorrow.getReturnedAmount());
 		mNumericFieldReturnedAmount.setEnabled(false);
 		mSeparatorFieldReturnedAmount = (View) getView().findViewById(R.id.moneyBorrowFormFragment_separatorField_returnedAmount);
-		if(modelId == -1){
-			mNumericFieldReturnedAmount.setVisibility(View.GONE);
-			mSeparatorFieldReturnedAmount.setVisibility(View.GONE);
-		}else{
-			mNumericFieldReturnedAmount.setVisibility(View.VISIBLE);
-			mSeparatorFieldReturnedAmount.setVisibility(View.VISIBLE);
-		}
+		mNumericFieldReturnedAmount.setVisibility(View.GONE);
+		mSeparatorFieldReturnedAmount.setVisibility(View.GONE);
 		
 		MoneyAccount moneyAccount = moneyBorrow.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_moneyAccount);
