@@ -11,6 +11,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,7 +79,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private boolean authority = true;
+	private boolean hasEditPermission = true;
 
 	@Override
 	public Integer useContentView() {
@@ -94,11 +95,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
 			moneyExpense = new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
-			authority = moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
+			hasEditPermission = moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
 		} else {
 			moneyExpense = new MoneyExpense();
 		}
-		
+				
 //		mMoneyExpenseEditor = moneyExpense.newModelEditor();
 		mMoneyExpenseEditor = new MoneyExpenseEditor(moneyExpense);
 
@@ -249,7 +250,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(!authority){
+				if(!hasEditPermission){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -337,7 +338,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 						});
 						
-						if(!authority){
+						if(!hasEditPermission){
 							for(int i = 0; i<popup.getMenu().size();i++){
 								popup.getMenu().setGroupEnabled(i, false);
 							}
@@ -352,6 +353,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
 		setPermission();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    hideSaveAction();
 	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyExpense moneyExpense) {
@@ -484,7 +491,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !authority){
+		if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
 			mNumericAmount.setNumber(mMoneyExpenseEditor.getModel().getLocalAmount());

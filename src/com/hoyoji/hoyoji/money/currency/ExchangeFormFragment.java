@@ -62,10 +62,10 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 			exchange = new Select().from(Exchange.class)
 					.where("_id=?", modelId).executeSingle();
 		} else {
-
+			exchange = new Exchange();
+			
 			String foreignCurrencyId = intent.getStringExtra("foreignCurrencyId");
 			String localCurrencyId = intent.getStringExtra("localCurrencyId");
-			exchange = new Exchange();
 			exchange.setForeignCurrencyId(foreignCurrencyId);
 			exchange.setLocalCurrencyId(localCurrencyId);
 		}
