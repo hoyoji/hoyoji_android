@@ -1701,20 +1701,21 @@ containing a value of this type.
         public static final int home_listfragment_home=0x7f0e0009;
         public static final int message_listfragment_message=0x7f0e000a;
         public static final int money_apportionfield_more_actions=0x7f0e000b;
-        public static final int money_listfragment_moneyborrow=0x7f0e000c;
-        public static final int money_listfragment_moneyexpense=0x7f0e000d;
-        public static final int money_listfragment_moneyincome=0x7f0e000e;
-        public static final int money_listfragment_moneylend=0x7f0e000f;
-        public static final int money_listfragment_moneypayback=0x7f0e0010;
-        public static final int money_listfragment_moneyreturn=0x7f0e0011;
-        public static final int money_listfragment_moneytransfer=0x7f0e0012;
-        public static final int money_listfragment_search=0x7f0e0013;
-        public static final int moneyaccount_listfragment_moneyaccount=0x7f0e0014;
-        public static final int moneyexpensecategory_listfragment_moneyexpensecategory=0x7f0e0015;
-        public static final int moneyincomecategory_listfragment_moneyincomecategory=0x7f0e0016;
-        public static final int picture_get_picture=0x7f0e0017;
-        public static final int project_listfragment_member=0x7f0e0018;
-        public static final int project_listfragment_project=0x7f0e0019;
+        public static final int money_formfragment_search=0x7f0e000c;
+        public static final int money_listfragment_moneyborrow=0x7f0e000d;
+        public static final int money_listfragment_moneyexpense=0x7f0e000e;
+        public static final int money_listfragment_moneyincome=0x7f0e000f;
+        public static final int money_listfragment_moneylend=0x7f0e0010;
+        public static final int money_listfragment_moneypayback=0x7f0e0011;
+        public static final int money_listfragment_moneyreturn=0x7f0e0012;
+        public static final int money_listfragment_moneytransfer=0x7f0e0013;
+        public static final int money_listfragment_search=0x7f0e0014;
+        public static final int moneyaccount_listfragment_moneyaccount=0x7f0e0015;
+        public static final int moneyexpensecategory_listfragment_moneyexpensecategory=0x7f0e0016;
+        public static final int moneyincomecategory_listfragment_moneyincomecategory=0x7f0e0017;
+        public static final int picture_get_picture=0x7f0e0018;
+        public static final int project_listfragment_member=0x7f0e0019;
+        public static final int project_listfragment_project=0x7f0e001a;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
