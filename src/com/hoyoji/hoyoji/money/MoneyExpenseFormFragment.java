@@ -808,18 +808,18 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						 if(api.getState() != ApportionItem.UNCHANGED) {
 								api.saveToCopy(apportionEditor.getModelCopy());
 							 }
-						Double oldRate = mMoneyExpenseEditor.getModel().getExchangeRate(); 
-						Double rate = mMoneyExpenseEditor.getModelCopy().getExchangeRate();
-						Double oldApportionAmount = apportionEditor.getModel().getAmount0();
-						
-						ProjectShareAuthorization projectShareAuthorization;
-							//维护项目成员金额
-						if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							projectShareAuthorization = mMoneyExpenseEditor.getNewSelfProjectShareAuthorization();
-						} else {
-							projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-									mMoneyExpenseEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
-						}
+							Double oldRate = mMoneyExpenseEditor.getModel().getExchangeRate(); 
+							Double rate = mMoneyExpenseEditor.getModelCopy().getExchangeRate();
+							Double oldApportionAmount = apportionEditor.getModel().getAmount0();
+							
+							ProjectShareAuthorization projectShareAuthorization;
+								//维护项目成员金额
+							if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								projectShareAuthorization = mMoneyExpenseEditor.getNewSelfProjectShareAuthorization();
+							} else {
+								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+										mMoneyExpenseEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
+							}
 							HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 							
 							
