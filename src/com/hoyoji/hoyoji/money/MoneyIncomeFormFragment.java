@@ -82,7 +82,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private boolean authority = true;
+	private boolean hasEditPermission = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -98,7 +98,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyIncome =  new Select().from(MoneyIncome.class).where("_id=?", modelId).executeSingle();
-			authority = moneyIncome.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
+			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
 		}
@@ -235,7 +235,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(!authority){
+				if(!hasEditPermission){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -330,7 +330,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						}
 					});
 					
-					if(!authority){
+					if(!hasEditPermission){
 						for(int i = 0; i<popup.getMenu().size();i++){
 							popup.getMenu().setGroupEnabled(i, false);
 						}
@@ -412,6 +412,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(moneyIncome.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -468,6 +469,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 									} 
 								}
 							});
+					}else{
+						HyjUtil.displayToast(R.string.app_permission_no_delete);
+					}
 				}
 			});
 		}
@@ -476,7 +480,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !authority){
+		if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
 			mNumericAmount.setNumber(mMoneyIncomeEditor.getModel().getLocalAmount());
@@ -492,13 +496,18 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			mSelectorFieldProject.setEnabled(false);
 			
 			mNumericExchangeRate.setEnabled(false);
+			
+			mApportionFieldApportions.setEnabled(false);
 
 			mRemarkFieldRemark.setEnabled(false);
 			
+			hideSaveAction();
+			
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setEnabled(false);
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setEnabled(false);
-			getView().findViewById(R.id.button_save).setEnabled(false);	
+//			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
+			getView().findViewById(R.id.button_delete).setVisibility(View.GONE);
 		}
 	}
 	
@@ -583,6 +592,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		fillData();
+		
+		if(mMoneyIncomeEditor.getModelCopy().get_mId() == null && !mMoneyIncomeEditor.getModelCopy().hasAddNewPermission(mMoneyIncomeEditor.getModelCopy().getProjectId())){
+			HyjUtil.displayToast(R.string.app_permission_no_addnew);
+		}else if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else{
 		
 		mMoneyIncomeEditor.validate();
 		
@@ -684,7 +699,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			} finally {
 			    ActiveAndroid.endTransaction();
 			}
-		}
+		 }
+	  }
 	}	
 
 	private void savePictures(){
@@ -922,6 +938,17 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		Project project = Project.load(Project.class, _id);
+	         		
+	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					
+					if(mMoneyIncomeEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyIncomeAddNew()){
+						HyjUtil.displayToast(R.string.app_permission_no_addnew);
+						return;
+					}else if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyIncomeEdit()){
+						HyjUtil.displayToast(R.string.app_permission_no_edit);
+						return;
+					}
+	         		
 	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();
@@ -934,7 +961,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
             		Friend friend = Friend.load(Friend.class, _id);
-            		mSelectorFieldFriend.setText(friend.getNickName());
+            		mSelectorFieldFriend.setText(friend.getDisplayName());
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;

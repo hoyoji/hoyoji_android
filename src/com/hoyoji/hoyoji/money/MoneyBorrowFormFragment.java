@@ -68,7 +68,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private boolean authority = true;
+	private boolean hasEditPermission = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -84,7 +84,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyBorrow =  new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
-			authority = moneyBorrow.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
+			hasEditPermission = moneyBorrow.hasEditPermission();
 		} else {
 			moneyBorrow = new MoneyBorrow();
 			
@@ -190,7 +190,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(!authority){
+				if(!hasEditPermission){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -244,6 +244,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(moneyBorrow.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -271,6 +272,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 									} 
 								}
 							});
+					}else{
+						HyjUtil.displayToast(R.string.app_permission_no_delete);
+					}
 				}
 			});
 		}
@@ -278,7 +282,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(mMoneyBorrowEditor.getModelCopy().get_mId() != null && !authority){
+		if(mMoneyBorrowEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
 			mNumericAmount.setNumber(mMoneyBorrowEditor.getModel().getLocalAmount());
@@ -298,8 +302,10 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			mNumericFieldReturnedAmount.setEnabled(false);
 			
 			mRemarkFieldRemark.setEnabled(false);
+			
+			hideSaveAction();
 
-			getView().findViewById(R.id.button_save).setEnabled(false);	
+//			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
 		}
 	}
@@ -382,6 +388,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		fillData();
+		
+		if(mMoneyBorrowEditor.getModelCopy().get_mId() == null && !mMoneyBorrowEditor.getModelCopy().hasAddNewPermission(mMoneyBorrowEditor.getModelCopy().getProjectId())){
+			HyjUtil.displayToast(R.string.app_permission_no_addnew);
+		}else if(mMoneyBorrowEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else{
 		
 		mMoneyBorrowEditor.validate();
 		
@@ -500,6 +512,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			    ActiveAndroid.endTransaction();
 			}
 		}
+		}
 	}	
 
 	@Override
@@ -518,6 +531,17 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		Project project = Project.load(Project.class, _id);
+	         		
+	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					
+					if(mMoneyBorrowEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyBorrowAddNew()){
+						HyjUtil.displayToast(R.string.app_permission_no_addnew);
+						return;
+					}else if(mMoneyBorrowEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyBorrowEdit()){
+						HyjUtil.displayToast(R.string.app_permission_no_edit);
+						return;
+					}
+	         		
 	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();

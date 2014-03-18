@@ -457,5 +457,35 @@ public class MoneyBorrow extends HyjModel{
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
+	public boolean hasEditPermission(){
+		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			return false;
+		}
+		
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(psa == null){
+			return false;
+		}
+		return psa.getProjectShareMoneyBorrowEdit();
+	}
 	
+	public boolean hasAddNewPermission(String projectId){
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(psa == null){
+			return false;
+		}
+		return psa.getProjectShareMoneyBorrowAddNew();
+	}
+
+	public boolean hasDeletePermission(){
+		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			return false;
+		}
+		
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(psa == null){
+			return false;
+		}
+		return psa.getProjectShareMoneyBorrowDelete();
+	}
 }

@@ -95,7 +95,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if (modelId != -1) {
 			moneyExpense = new Select().from(MoneyExpense.class).where("_id=?", modelId).executeSingle();
-			hasEditPermission = moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
+			hasEditPermission = moneyExpense.hasEditPermission();
 		} else {
 			moneyExpense = new MoneyExpense();
 		}
@@ -352,14 +352,17 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		if (modelId == -1) {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
+		
 		setPermission();
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    super.onCreateOptionsMenu(menu, inflater);
-	    hideSaveAction();
-	}
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//	    super.onCreateOptionsMenu(menu, inflater);
+//	    if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+//	    	hideSaveAction();
+//	    }
+//	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyExpense moneyExpense) {
 		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
@@ -427,6 +430,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(moneyExpense.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -483,6 +487,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 									} 
 								}
 							});
+					}else{
+						HyjUtil.displayToast(R.string.app_permission_no_delete);
+					}
 				}
 			});
 		}
@@ -507,13 +514,18 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			mSelectorFieldProject.setEnabled(false);
 			
 			mNumericExchangeRate.setEnabled(false);
+			
+			mApportionFieldApportions.setEnabled(false);
 
 			mRemarkFieldRemark.setEnabled(false);
 			
+			hideSaveAction();
+			
 			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setEnabled(false);
 			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add_all).setEnabled(false);
-			getView().findViewById(R.id.button_save).setEnabled(false);	
-			getView().findViewById(R.id.button_delete).setEnabled(false);
+//			getView().findViewById(R.id.button_save).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setEnabled(false);	
+			getView().findViewById(R.id.button_delete).setVisibility(View.GONE);
 		}
 	}
 
@@ -612,111 +624,119 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 		fillData();
 
-		mMoneyExpenseEditor.validate();
-		
-		if (mApportionFieldApportions.getCount() > 0) {
-			if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(
-					mApportionFieldApportions.getTotalAmount())) {
-				mMoneyExpenseEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
+		if(mMoneyExpenseEditor.getModelCopy().get_mId() == null && !mMoneyExpenseEditor.getModelCopy().hasAddNewPermission(mMoneyExpenseEditor.getModelCopy().getProjectId())){
+			HyjUtil.displayToast(R.string.app_permission_no_addnew);
+		}else if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else{
+			mMoneyExpenseEditor.validate();
+			
+			if (mApportionFieldApportions.getCount() > 0) {
+				if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(
+						mApportionFieldApportions.getTotalAmount())) {
+					mMoneyExpenseEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
+				} else {
+					mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
+				}
 			} else {
 				mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
 			}
-		} else {
-			mMoneyExpenseEditor.removeValidationError("apportionTotalAmount");
-		}
 
-		if (mMoneyExpenseEditor.hasValidationErrors()) {
-			showValidatioErrors();
-		} else {
-			try {
-				ActiveAndroid.beginTransaction();
+			if (mMoneyExpenseEditor.hasValidationErrors()) {
+				showValidatioErrors();
+			} else {
+				try {
+					ActiveAndroid.beginTransaction();
 
-				savePictures();
+					savePictures();
 
-				saveApportions();
+					saveApportions();
 
-				MoneyExpense oldMoneyExpenseModel = mMoneyExpenseEditor.getModel();
-				MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
-				
-				//设置默认项目和账户
-				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(moneyExpenseModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
-					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
-					userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
-					userDataEditor.save();
-				}
-				
-				// 更新项目的默认分类
-				if(moneyExpenseModel.get_mId() == null){
-					HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
-					projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
-					projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseModel.getMoneyExpenseCategoryMain());
-					projectEditor.save();
-				}
-				
-				//当前汇率不存在时，创建汇率
-				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
-					Project project = moneyExpenseModel.getProject();
+					MoneyExpense oldMoneyExpenseModel = mMoneyExpenseEditor.getModel();
+					MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
 					
-					Exchange newExchange = new Exchange();
-					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
-					newExchange.setForeignCurrencyId(project.getCurrencyId());
-					newExchange.setRate(moneyExpenseModel.getExchangeRate());
-					newExchange.save();
-				}
-				
-				    MoneyAccount oldMoneyAccount = oldMoneyExpenseModel.getMoneyAccount();
-					MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
-					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
-					
-					//更新账户余额
-					if(moneyExpenseModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0() - moneyExpenseModel.getAmount0());
-					}else{
-						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0());
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseModel.getAmount0());
-						oldMoneyAccountEditor.save();
+					//设置默认项目和账户
+					UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+					if(moneyExpenseModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
+						HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+						userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
+						userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
+						userDataEditor.save();
 					}
-					newMoneyAccountEditor.save();
 					
+					// 更新项目的默认分类
+					if(moneyExpenseModel.get_mId() == null){
+						HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
+						projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
+						projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseModel.getMoneyExpenseCategoryMain());
+						projectEditor.save();
+					}
 					
-					//更新支出所有者的实际支出
-					ProjectShareAuthorization selfProjectAuthorization = mMoneyExpenseEditor.getNewSelfProjectShareAuthorization();
-					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
-				    
-					if(moneyExpenseModel.get_mId() == null || oldMoneyExpenseModel.getProjectId().equals(moneyExpenseModel.getProjectId())){
-					    // 无旧项目可更新
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
+					//当前汇率不存在时，创建汇率
+					if(CREATE_EXCHANGE == 1){
+						MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
+						Project project = moneyExpenseModel.getProject();
 						
-					} else {
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
-							
-						ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyExpenseEditor.getOldSelfProjectShareAuthorization();
-						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
-						oldSelfProjectAuthorizationEditor.save();
+						Exchange newExchange = new Exchange();
+						newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
+						newExchange.setForeignCurrencyId(project.getCurrencyId());
+						newExchange.setRate(moneyExpenseModel.getExchangeRate());
+						newExchange.save();
+					}
 					
+					    MoneyAccount oldMoneyAccount = oldMoneyExpenseModel.getMoneyAccount();
+						MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
+						HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
+						
+						//更新账户余额
+						if(moneyExpenseModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0() - moneyExpenseModel.getAmount0());
+						}else{
+							HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
+							oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0());
+							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseModel.getAmount0());
+							oldMoneyAccountEditor.save();
+						}
+						newMoneyAccountEditor.save();
+						
+						
+						//更新支出所有者的实际支出
+						ProjectShareAuthorization selfProjectAuthorization = mMoneyExpenseEditor.getNewSelfProjectShareAuthorization();
+						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
+					    
+						if(moneyExpenseModel.get_mId() == null || oldMoneyExpenseModel.getProjectId().equals(moneyExpenseModel.getProjectId())){
+						    // 无旧项目可更新
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
+							
+						} else {
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
+								
+							ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyExpenseEditor.getOldSelfProjectShareAuthorization();
+							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
+							oldSelfProjectAuthorizationEditor.save();
+						
+						}
+						selfProjectAuthorizationEditor.save();
+					
+					//更新分类，使之成为最近使用过的
+					if(this.mSelectorFieldMoneyExpenseCategory.getModelId() != null){
+						MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, this.mSelectorFieldMoneyExpenseCategory.getModelId());
+						if(category != null){
+							category.newModelEditor().save();
+						}
 					}
-					selfProjectAuthorizationEditor.save();
-				
-				//更新分类，使之成为最近使用过的
-				if(this.mSelectorFieldMoneyExpenseCategory.getModelId() != null){
-					MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, this.mSelectorFieldMoneyExpenseCategory.getModelId());
-					if(category != null){
-						category.newModelEditor().save();
-					}
+					mMoneyExpenseEditor.save();
+					ActiveAndroid.setTransactionSuccessful();
+					HyjUtil.displayToast(R.string.app_save_success);
+					getActivity().finish();
+				} finally {
+					ActiveAndroid.endTransaction();
 				}
-				mMoneyExpenseEditor.save();
-				ActiveAndroid.setTransactionSuccessful();
-				HyjUtil.displayToast(R.string.app_save_success);
-				getActivity().finish();
-			} finally {
-				ActiveAndroid.endTransaction();
 			}
 		}
+		
+		
 	}
 
 	private void savePictures() {
@@ -957,6 +977,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Project project = Project.load(Project.class, _id);
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				
+				if(mMoneyExpenseEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
+					HyjUtil.displayToast(R.string.app_permission_no_addnew);
+					return;
+				}else if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
+					HyjUtil.displayToast(R.string.app_permission_no_edit);
+					return;
+				}
+				
 				mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
 				setExchangeRate();

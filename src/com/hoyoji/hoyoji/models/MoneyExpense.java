@@ -468,7 +468,7 @@ public class MoneyExpense extends HyjModel{
 			return false;
 		}
 		
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? && friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
 		}
@@ -476,7 +476,7 @@ public class MoneyExpense extends HyjModel{
 	}
 	
 	public boolean hasAddNewPermission(String projectId){
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? && friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
 		}
@@ -488,7 +488,7 @@ public class MoneyExpense extends HyjModel{
 			return false;
 		}
 		
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? && friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
 		}

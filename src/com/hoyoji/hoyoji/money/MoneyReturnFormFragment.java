@@ -67,7 +67,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private boolean authority = true;
+	private boolean hasEditPermission = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -83,10 +83,9 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyReturn =  new Select().from(MoneyReturn.class).where("_id=?", modelId).executeSingle();
-			authority = moneyReturn.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId());
+			hasEditPermission = moneyReturn.hasEditPermission();
 		} else {
 			moneyReturn = new MoneyReturn();
-			
 		}
 		mMoneyReturnEditor = moneyReturn.newModelEditor();
 		
@@ -183,7 +182,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(!authority){
+				if(!hasEditPermission){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -237,6 +236,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(moneyReturn.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -264,6 +264,9 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 									} 
 								}
 							});
+					}else{
+						HyjUtil.displayToast(R.string.app_permission_no_delete);
+					}
 				}
 			});
 		}
@@ -272,7 +275,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !authority){
+		if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
 			mNumericFieldAmount.setNumber(mMoneyReturnEditor.getModel().getLocalAmount());
@@ -290,8 +293,10 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			mNumericFieldInterest.setEnabled(false);
 			
 			mRemarkFieldRemark.setEnabled(false);
+			
+			hideSaveAction();
 
-			getView().findViewById(R.id.button_save).setEnabled(false);	
+//			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
 		}
 	}
@@ -372,6 +377,11 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
+		if(mMoneyReturnEditor.getModelCopy().get_mId() == null && !mMoneyReturnEditor.getModelCopy().hasAddNewPermission(mMoneyReturnEditor.getModelCopy().getProjectId())){
+			HyjUtil.displayToast(R.string.app_permission_no_addnew);
+		}else if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else{
 		mMoneyReturnEditor.validate();
 		
 		if(mMoneyReturnEditor.hasValidationErrors()){
@@ -491,6 +501,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			    ActiveAndroid.endTransaction();
 			}
 		}
+		}
 	}	
 
 	@Override
@@ -509,6 +520,17 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		Project project = Project.load(Project.class, _id);
+	         		
+	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					
+					if(mMoneyReturnEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyReturnAddNew()){
+						HyjUtil.displayToast(R.string.app_permission_no_addnew);
+						return;
+					}else if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyReturnEdit()){
+						HyjUtil.displayToast(R.string.app_permission_no_edit);
+						return;
+					}
+	         		
 	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();
