@@ -285,7 +285,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_email);
+			imageView.setBackgroundResource(R.drawable.ic_action_unread);
 			imageView.setImage(((Message)object).getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){

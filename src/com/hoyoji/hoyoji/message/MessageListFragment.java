@@ -121,7 +121,7 @@ public class MessageListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			if(message.getMessageState().equalsIgnoreCase("new")){
-				imageView.setBackgroundResource(R.drawable.ic_action_email);
+				imageView.setBackgroundResource(R.drawable.ic_action_unread);
 			} else {
 				imageView.setBackgroundResource(R.drawable.ic_action_read);
 			}
