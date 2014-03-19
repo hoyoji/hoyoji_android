@@ -97,9 +97,9 @@ public abstract class HyjFragment extends Fragment {
 			intent.putExtras(bundle);
 		}
 		if(forResult){
-			startActivityForResult(intent, requestCode);
+			this.startActivityForResult(intent, requestCode);
 		} else {
-			startActivity(intent);
+			this.startActivity(intent);
 		}
 	}
 

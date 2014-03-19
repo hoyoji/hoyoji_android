@@ -160,7 +160,9 @@ public class MoneySearchGroupListLoader extends
 
 		DateFormat df = SimpleDateFormat.getDateInstance();
 		Calendar calDateFrom = Calendar.getInstance();
-		calDateFrom.setTimeInMillis(mDateTo);
+		if(mDateTo != 0){
+			calDateFrom.setTimeInMillis(mDateTo);
+		}
 		calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
 		calDateFrom.clear(Calendar.MINUTE);
 		calDateFrom.clear(Calendar.SECOND);
