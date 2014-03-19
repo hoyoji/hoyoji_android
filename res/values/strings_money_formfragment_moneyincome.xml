@@ -3,7 +3,7 @@
     
     
    <string name="moneyIncomeFormFragment_title_addnew">新增收入</string>
-   <string name="moneyIncomeFormFragment_title_edit">修改收入</string>
+   <string name="moneyIncomeFormFragment_title_edit">收入详细</string>
    
    <string name="moneyIncomeFormFragment_textView_picture">图片</string>
    <string name="moneyIncomeFormFragment_editText_hint_picture">请导入图片</string>

@@ -47,7 +47,9 @@ public class FriendCategoryFormFragment extends HyjUserFormFragment {
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.friendCategoryFormFragment_textField_name);
 		mTextFieldName.setText(friendCategory.getName());
 
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		if(modelId == -1){
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 	}
 	
 	private void fillData(){

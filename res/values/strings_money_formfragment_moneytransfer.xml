@@ -3,7 +3,7 @@
     
     
    <string name="moneyTransferFormFragment_title_addnew">新增转账</string>
-   <string name="moneyTransferFormFragment_title_edit">修改转账</string>
+   <string name="moneyTransferFormFragment_title_edit">转账详细</string>
    
    <string name="moneyTransferFormFragment_textView_picture">图片</string>
    <string name="moneyTransferFormFragment_editText_hint_picture">请导入图片</string>

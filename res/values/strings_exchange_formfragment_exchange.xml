@@ -3,7 +3,7 @@
     
     
    <string name="exchangeFormFragment_title_addnew">创建汇率</string>
-   <string name="exchangeFormFragment_title_edit">修改汇率</string>
+   <string name="exchangeFormFragment_title_edit">汇率详细</string>
    
    <string name="exchangeFormFragment_textView_localCurrency">本地币种</string>
    <string name="exchangeFormFragment_editText_hint_localCurrency">请选择本币币种</string>

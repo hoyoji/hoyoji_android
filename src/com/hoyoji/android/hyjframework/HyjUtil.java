@@ -47,6 +47,7 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
+import com.hoyoji.hoyoji.models.Exchange;
 
 public class HyjUtil {
 	public static void displayToast(int msg){
@@ -380,7 +381,7 @@ public class HyjUtil {
 			}
 		}
 
-		public static void updateExchangeRate(String fromCurrency, String toCurrency, ImageView mImageViewRefreshRate, HyjNumericField mNumericExchangeRate) {
+		public static void updateExchangeRate(final String fromCurrency, final String toCurrency, ImageView mImageViewRefreshRate, HyjNumericField mNumericExchangeRate) {
 			final WeakReference<ImageView> refreshRateRefrence = new WeakReference<ImageView>(mImageViewRefreshRate);
 			final WeakReference<HyjNumericField> exchangeRateRefrence = new WeakReference<HyjNumericField>(mNumericExchangeRate);
 			
@@ -395,6 +396,12 @@ public class HyjUtil {
 						imageViewRefreshRate.setEnabled(true);
 						numericExchangeRate.setEnabled(true);
 						numericExchangeRate.setNumber((Double) object);
+						
+						Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
+					    if(exchange != null){
+					    	exchange.setRate((Double) object);
+					    	exchange.save();
+					    }
 					}
 				}
 

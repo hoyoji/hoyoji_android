@@ -47,13 +47,15 @@
    	<FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-   	   	<com.hoyoji.android.hyjframework.view.HyjNumericField 
+   	   	<com.hoyoji.android.hyjframework.view.HyjNumericField
            android:id="@+id/exchangeFormFragment_editText_rate"
 	       android:layout_width="match_parent"
 	       android:layout_height="wrap_content" 
            hyj:labelText="@string/exchangeFormFragment_textView_rate"
-           hyj:hintText="@string/exchangeFormFragment_editText_hint_rate"
-        />
+           hyj:hintText="@string/exchangeFormFragment_editText_hint_rate">
+       
+        <requestFocus />
+        </com.hoyoji.android.hyjframework.view.HyjNumericField>
 
    	   	<ImageView
            	android:id="@+id/exchangeFormFragment_imageView_refresh_rate"
