@@ -63,7 +63,7 @@ import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 
-public class MoneySearchListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
+public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	private static final int GET_SEARCH_QUERY = 0;
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
@@ -115,7 +115,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment imple
 			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
 		}
 		
-		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
+//		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
 	}
 	
@@ -497,14 +497,14 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment imple
 		}
 	}
 
-	@Override
-	public void onFetchMore() {
-//		Bundle bundle = new Bundle();
-//		bundle.putString("target", "findData");
-//		bundle.putString("postData", (new JSONArray()).put(data).toString());
-//		Loader loader = getLoaderManager().getLoader(-1);
-//		((HomeGroupListLoader)loader).fetchMore(null);	
-	}
+//	@Override
+//	public void onFetchMore() {
+////		Bundle bundle = new Bundle();
+////		bundle.putString("target", "findData");
+////		bundle.putString("postData", (new JSONArray()).put(data).toString());
+////		Loader loader = getLoaderManager().getLoader(-1);
+////		((HomeGroupListLoader)loader).fetchMore(null);	
+//	}
 
 	@Override
 	public void doFetchMore(int offset, int pageSize){

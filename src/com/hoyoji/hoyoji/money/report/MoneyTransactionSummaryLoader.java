@@ -42,13 +42,11 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 public class MoneyTransactionSummaryLoader extends
-		AsyncTaskLoader<List<Map<String, Object>>> {
+		AsyncTaskLoader<Map<String, Object>> {
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	private List<Map<String, Object>> mGroupList;
-	private Integer mLoadLimit = 10;
-	private boolean mHasMoreData = true;
+	private Map<String, Object> mTransactionSummaryMap;
 	private ChangeObserver mChangeObserver;
 	private String mProjectId;
 	private String mMoneyAccountId;
@@ -90,373 +88,260 @@ public class MoneyTransactionSummaryLoader extends
 		if (queryParams != null) {
 			mDateFrom = queryParams.getLong("dateFrom", 0);
 			mDateTo = queryParams.getLong("dateTo", 0);
-			mLoadLimit = queryParams.getInt("limit", 10);
 			mProjectId = queryParams.getString("projectId");
 			mMoneyAccountId = queryParams.getString("moneyAccountId");
 			mFriendUserId = queryParams.getString("friendUserId");
 			mLocalFriendId = queryParams.getString("localFriendId");
-			mLoadLimit += queryParams.getInt("pageSize", 10);
-		} else {
-			mLoadLimit += 10;
 		}
-		
 	}
 
-	public void requery(Bundle queryParams){
+	public void requery(Bundle queryParams) {
 		copyQueryParams(queryParams);
 		this.onContentChanged();
 	}
-	
+
 	public void fetchMore(Bundle queryParams) {
 		copyQueryParams(queryParams);
 		this.onContentChanged();
 	}
 
-	private String buildSearchQuery(String type){
+	private String buildSearchQuery(String type) {
 		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
-		if(mProjectId != null){
+		if (mProjectId != null) {
 			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
 		}
-		if(mMoneyAccountId != null){
-			queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
+		if (mMoneyAccountId != null) {
+			queryStringBuilder.append(" AND moneyAccountId = '"
+					+ mMoneyAccountId + "' ");
 		}
-		if(mFriendUserId != null){
-			queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+		if (mFriendUserId != null) {
+			queryStringBuilder.append(" AND (main.ownerUserId = '"
+					+ mFriendUserId + "' OR friendUserId = '" + mFriendUserId
+					+ "' OR EXISTS(SELECT apr.id FROM Money" + type
+					+ "Apportion apr WHERE apr.money" + type
+					+ "Id = main.id AND apr.friendUserId = '" + mFriendUserId
+					+ "'))");
 		}
-		if(mLocalFriendId != null){
-			queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+		if (mLocalFriendId != null) {
+			queryStringBuilder.append(" AND (localFriendId = '"
+					+ mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"
+					+ type + "Apportion apr WHERE apr.money" + type
+					+ "Id = main.id AND apr.localFriendId = '" + mLocalFriendId
+					+ "'))");
 		}
 		return queryStringBuilder.toString();
 	}
-	
-	private String buildTransferSearchQuery(){
+
+	private String buildTransferSearchQuery() {
 		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
-		if(mProjectId != null){
+		if (mProjectId != null) {
 			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
 		}
-		if(mMoneyAccountId != null){
-			queryStringBuilder.append(" AND (transferInId = '" + mMoneyAccountId + "' OR transferOutId = '" + mMoneyAccountId + "') ");
+		if (mMoneyAccountId != null) {
+			queryStringBuilder.append(" AND (transferInId = '"
+					+ mMoneyAccountId + "' OR transferOutId = '"
+					+ mMoneyAccountId + "') ");
 		}
-		if(mFriendUserId != null){
-			queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR transferInFriendUserId = '" + mFriendUserId + "' OR transferOutFriendUserId = '" + mFriendUserId + "') ");
+		if (mFriendUserId != null) {
+			queryStringBuilder.append(" AND (main.ownerUserId = '"
+					+ mFriendUserId + "' OR transferInFriendUserId = '"
+					+ mFriendUserId + "' OR transferOutFriendUserId = '"
+					+ mFriendUserId + "') ");
 		}
-		if(mLocalFriendId != null){
-			queryStringBuilder.append(" AND (transferInLocalFriendId = '" + mLocalFriendId + "' OR transferOutLocalFriendId = '" + mLocalFriendId + "') ");
+		if (mLocalFriendId != null) {
+			queryStringBuilder.append(" AND (transferInLocalFriendId = '"
+					+ mLocalFriendId + "' OR transferOutLocalFriendId = '"
+					+ mLocalFriendId + "') ");
 		}
 		return queryStringBuilder.toString();
 	}
-	
+
 	/**
 	 * This is where the bulk of our work is done. This function is called in a
 	 * background thread and should generate a new set of data to be published
 	 * by the loader.
 	 */
 	@Override
-	public List<Map<String, Object>> loadInBackground() {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	public Map<String, Object> loadInBackground() {
+		Map<String, Object> transactionSummaryMap = new HashMap<String, Object>();
 
-		String currentUserId = HyjApplication.getInstance().getCurrentUser().getUserData().getId();
-		String localCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
-
-		DateFormat df = SimpleDateFormat.getDateInstance();
+		String currentUserId = HyjApplication.getInstance().getCurrentUser()
+				.getUserData().getId();
+		String localCurrencyId = HyjApplication.getInstance().getCurrentUser()
+				.getUserData().getActiveCurrencyId();
+		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
+		
 		Calendar calDateFrom = Calendar.getInstance();
-		calDateFrom.setTimeInMillis(mDateTo);
-		calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
-		calDateFrom.clear(Calendar.MINUTE);
-		calDateFrom.clear(Calendar.SECOND);
-		calDateFrom.clear(Calendar.MILLISECOND);
-		
-		long dateTo = mDateTo;	
-		if(mDateTo == 0){
-			dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
-		}
-
-		boolean lastTime = false;
-		long dateFromInMillis = mDateFrom;
-		if(mDateFrom != 0){
-			if(calDateFrom.getTimeInMillis() < dateFromInMillis){
-				calDateFrom.setTimeInMillis(dateFromInMillis-1);
-				lastTime = true;
-			}
+		if (mDateFrom != 0) {
+			calDateFrom.setTimeInMillis(mDateFrom);
+		} else {
+			calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
+			calDateFrom.clear(Calendar.MINUTE);
+			calDateFrom.clear(Calendar.SECOND);
+			calDateFrom.clear(Calendar.MILLISECOND);
 		}
 		
-		int loadCount = 0;
-		while (loadCount < mLoadLimit) {
-			int count = 0;
-			String[] args = new String[] {
-					mDateFormat.format(calDateFrom.getTime()),
-					mDateFormat.format(new Date(dateTo)) };
-			double expenseTotal = 0;
-			double incomeTotal = 0;
-			Cursor cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Expense"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				expenseTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Income"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer main WHERE date > ? AND date <= ? AND " + buildTransferSearchQuery(),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				transferTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Borrow"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Return"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			if (count > 0) {
-				String ds = df.format(calDateFrom.getTime());
-//				ds = ds.replaceAll("Z$", "+0000");
-				HashMap<String, Object> groupObject = new HashMap<String, Object>();
-				groupObject.put("date", ds);
-				groupObject.put("dateInMilliSeconds", calDateFrom.getTimeInMillis());
-				groupObject.put("expenseTotal",
-						HyjUtil.toFixed2(incomeTotal));
-				groupObject.put("incomeTotal",
-						HyjUtil.toFixed2(expenseTotal));
-				list.add(groupObject);
-				loadCount += count + 1;
-			}
-
-			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
-			if(count == 0){
-				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis());
-				if(moreDataInMillis == -1){
-					break;
-				} else {
-					calDateFrom.setTimeInMillis(moreDataInMillis);
-				}
-			} else {
-				calDateFrom.add(Calendar.DAY_OF_YEAR, -1);
-				if(dateFromInMillis != 0) {
-					if(lastTime){
-						break;
-					}
-					if(calDateFrom.getTimeInMillis() < dateFromInMillis){
-						calDateFrom.setTimeInMillis(dateFromInMillis-1);
-						lastTime = true;
-					}
-				}
-			}
-			Calendar calDateTo = Calendar.getInstance();
-			calDateTo.setTimeInMillis(calDateFrom.getTimeInMillis());
-			calDateTo.set(Calendar.HOUR_OF_DAY, 0);
-			calDateTo.clear(Calendar.MINUTE);
-			calDateTo.clear(Calendar.SECOND);
-			calDateTo.clear(Calendar.MILLISECOND);
-			dateTo = calDateTo.getTimeInMillis() + 24 * 3600000;
+		long dateTo = mDateTo;
+		if (mDateTo == 0) {
+			dateTo = (new Date()).getTime();
 		}
-		mHasMoreData = loadCount >= mLoadLimit;
-		return list;
-	}
-	
-	private long getHasMoreDataDateInMillis(long fromDateInMillis){
+
+//		long dateFromInMillis = mDateFrom;
+//		if (mDateFrom != 0) {
+//			if (calDateFrom.getTimeInMillis() < dateFromInMillis) {
+//				calDateFrom.setTimeInMillis(dateFromInMillis - 1);
+//			}
+//		}
+
 		String[] args = new String[] {
-				mDateFormat.format(fromDateInMillis) };
-		String dateString = null;
+				mDateFormat.format(calDateFrom.getTime()),
+				mDateFormat.format(new Date(dateTo)) };
+		double expenseTotal = 0.0;
+		double incomeTotal = 0.0;
+		double transferInTotal = 0.0;
+		double transferOutTotal = 0.0;
+		double borrowTotal = 0.0;
+		double lendTotal = 0.0;
+		double returnTotal = 0.0;
+		double paybackTotal = 0.0;
+		double inoutTotal = 0.0;
+		double debtTotal = 0.0;
+		double transferTotal = 0.0;
+		
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + buildSearchQuery("Expense"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Expense"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getString(0);
+			expenseTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("expenseTotal", localCurrencySymbol + HyjUtil.toFixed2(expenseTotal));
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + buildSearchQuery("Income"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Income"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			incomeTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("incomeTotal", localCurrencySymbol + HyjUtil.toFixed2(incomeTotal));
+		inoutTotal = incomeTotal - expenseTotal;
+		transactionSummaryMap.put("inoutTotal", localCurrencySymbol + HyjUtil.toFixed2(inoutTotal));
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow main WHERE date <= ? AND " + buildSearchQuery("Borrow"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(transferOutAmount), SUM(transferInAmount) as total FROM MoneyTransfer main WHERE date > ? AND date <= ? AND "
+								+ buildTransferSearchQuery(), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			 transferOutTotal += cursor.getDouble(1);
+			 transferInTotal += cursor.getDouble(2);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("transferOutTotal", localCurrencySymbol + HyjUtil.toFixed2(transferOutTotal));
+		transactionSummaryMap.put("transferInTotal", localCurrencySymbol + HyjUtil.toFixed2(transferInTotal));
+		transferTotal = transferInTotal - transferOutTotal;
+		transactionSummaryMap.put("transferTotal", localCurrencySymbol + HyjUtil.toFixed2(transferTotal));
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main WHERE date <= ? AND " + buildSearchQuery("Lend"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			 borrowTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("borrowTotal", localCurrencySymbol + HyjUtil.toFixed2(borrowTotal));
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + buildTransferSearchQuery(),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Lend"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			 lendTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("lendTotal", localCurrencySymbol + HyjUtil.toFixed2(lendTotal));
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND " + buildSearchQuery("Return"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Return"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			 returnTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
+		transactionSummaryMap.put("returnTotal", localCurrencySymbol + HyjUtil.toFixed2(returnTotal));
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main WHERE date <= ? AND " + buildSearchQuery("Payback"),
-						args);
+						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
+								+ currentUserId
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '"
+								+ localCurrencyId + "' "
+								+ "WHERE date > ? AND date <= ? AND "
+								+ buildSearchQuery("Payback"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
+			 paybackTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
-		if(dateString != null){
-			try {
-				dateString = dateString.replaceAll("Z$", "+0000");
-				Long dateInMillis = mDateFormat.parse(dateString).getTime();
-				Calendar calToday = Calendar.getInstance();
-				calToday.setTimeInMillis(dateInMillis);
-				calToday.set(Calendar.HOUR_OF_DAY, 0);
-				calToday.clear(Calendar.MINUTE);
-				calToday.clear(Calendar.SECOND);
-				calToday.clear(Calendar.MILLISECOND);
-				return calToday.getTimeInMillis();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return -1;
-			}
-		} else {
-			return -1;
-		}
-	}
-	
-	public boolean hasMoreData() {
-		return mHasMoreData;
+		transactionSummaryMap.put("paybackTotal", localCurrencySymbol + HyjUtil.toFixed2(paybackTotal));
+		debtTotal = borrowTotal - returnTotal - lendTotal + paybackTotal;
+		transactionSummaryMap.put("debtTotal", localCurrencySymbol + HyjUtil.toFixed2(debtTotal));
+		return transactionSummaryMap;
 	}
 
 	/**
@@ -465,10 +350,10 @@ public class MoneyTransactionSummaryLoader extends
 	 * little more logic.
 	 */
 	@Override
-	public void deliverResult(List<Map<String, Object>> objects) {
-		mGroupList = objects;
+	public void deliverResult(Map<String, Object> objects) {
+		mTransactionSummaryMap = objects;
 
-		if (isStarted() && mGroupList != null) {
+		if (isStarted() && mTransactionSummaryMap != null) {
 			// If the Loader is currently started, we can immediately
 			// deliver its results.
 			super.deliverResult(objects);
@@ -487,13 +372,13 @@ public class MoneyTransactionSummaryLoader extends
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (mGroupList != null) {
+		if (mTransactionSummaryMap != null) {
 			// If we currently have a result available, deliver it
 			// immediately.
-			deliverResult(mGroupList);
+			deliverResult(mTransactionSummaryMap);
 		}
 
-		if (takeContentChanged() || mGroupList == null) {
+		if (takeContentChanged() || mTransactionSummaryMap == null) {
 			// If the data has changed since the last time it was loaded
 			// or is not currently available, start a load.
 			forceLoad();
@@ -513,7 +398,7 @@ public class MoneyTransactionSummaryLoader extends
 	 * Handles a request to cancel a load.
 	 */
 	@Override
-	public void onCanceled(List<Map<String, Object>> objects) {
+	public void onCanceled(Map<String, Object> objects) {
 		super.onCanceled(objects);
 	}
 
@@ -527,7 +412,7 @@ public class MoneyTransactionSummaryLoader extends
 		// Ensure the loader is stopped
 		onStopLoading();
 
-		mGroupList = null;
+		mTransactionSummaryMap = null;
 	}
 
 	private class ChangeObserver extends ContentObserver {
@@ -545,5 +430,5 @@ public class MoneyTransactionSummaryLoader extends
 			onContentChanged();
 		}
 	}
-	
+
 }

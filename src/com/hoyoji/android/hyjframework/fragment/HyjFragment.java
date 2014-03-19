@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework.fragment;
 
+import java.util.List;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 
@@ -97,9 +99,9 @@ public abstract class HyjFragment extends Fragment {
 			intent.putExtras(bundle);
 		}
 		if(forResult){
-			startActivityForResult(intent, requestCode);
+			this.startActivityForResult(intent, requestCode);
 		} else {
-			startActivity(intent);
+			this.startActivity(intent);
 		}
 	}
 
@@ -117,4 +119,15 @@ public abstract class HyjFragment extends Fragment {
 		return backPressedHandled;
 	}
 	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 }
