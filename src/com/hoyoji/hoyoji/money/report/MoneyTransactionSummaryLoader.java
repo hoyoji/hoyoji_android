@@ -172,25 +172,26 @@ public class MoneyTransactionSummaryLoader extends
 		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
 		
 		Calendar calDateFrom = Calendar.getInstance();
-		if (mDateTo != 0) {
-			calDateFrom.setTimeInMillis(mDateTo);
+		if (mDateFrom != 0) {
+			calDateFrom.setTimeInMillis(mDateFrom);
+		} else {
+			calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
+			calDateFrom.clear(Calendar.MINUTE);
+			calDateFrom.clear(Calendar.SECOND);
+			calDateFrom.clear(Calendar.MILLISECOND);
 		}
-		calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
-		calDateFrom.clear(Calendar.MINUTE);
-		calDateFrom.clear(Calendar.SECOND);
-		calDateFrom.clear(Calendar.MILLISECOND);
-
+		
 		long dateTo = mDateTo;
 		if (mDateTo == 0) {
-			dateTo = calDateFrom.getTimeInMillis() + 24 * 3600000;
+			dateTo = (new Date()).getTime();
 		}
 
-		long dateFromInMillis = mDateFrom;
-		if (mDateFrom != 0) {
-			if (calDateFrom.getTimeInMillis() < dateFromInMillis) {
-				calDateFrom.setTimeInMillis(dateFromInMillis - 1);
-			}
-		}
+//		long dateFromInMillis = mDateFrom;
+//		if (mDateFrom != 0) {
+//			if (calDateFrom.getTimeInMillis() < dateFromInMillis) {
+//				calDateFrom.setTimeInMillis(dateFromInMillis - 1);
+//			}
+//		}
 
 		String[] args = new String[] {
 				mDateFormat.format(calDateFrom.getTime()),

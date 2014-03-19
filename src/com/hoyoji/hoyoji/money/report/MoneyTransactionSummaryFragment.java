@@ -201,7 +201,7 @@ public class MoneyTransactionSummaryFragment extends HyjUserFragment implements
 							moneyAccountId);
 				}
 
-				initLoader(-1);
+				initLoader(0);
 			}
 			break;
 		}
