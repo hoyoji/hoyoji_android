@@ -13,21 +13,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/projectFormFragment_button_member"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/memberListFragment_title" />
-        
-    <View 
-        android:id="@id/field_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-    	android:layout_marginTop="5dip"
-    	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
-        />
-    
     <com.hoyoji.android.hyjframework.view.HyjTextField 
             android:id="@+id/projectFormFragment_textField_projectName"
 		    android:layout_width="fill_parent"
@@ -123,5 +108,13 @@
 	    android:layout_height="wrap_content"
 	    android:text="@string/app_action_save" />
 	
+        <Button
+            android:id="@+id/projectFormFragment_button_member"
+            android:layout_width="match_parent"
+    		android:layout_marginTop="5dip"
+            android:layout_height="wrap_content"
+    		android:layout_marginBottom="5dip"
+            android:text="@string/memberListFragment_title" />
+        
 </LinearLayout>
 </ScrollView>
