@@ -336,6 +336,9 @@ public class MoneyApportionField extends GridView {
 				iv.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
+						if(!self.isEnabled()){
+							return;
+						}
 						final ApportionItem<MoneyApportion> apportionItem = (ApportionItem<MoneyApportion>) ((ViewHolder)v.getTag()).apportionItem;
 						if(apportionItem.getState() == ApportionItem.DELETED){
 							apportionItem.undelete();

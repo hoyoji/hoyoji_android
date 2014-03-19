@@ -120,7 +120,11 @@ public class MessageListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_email);
+			if(message.getMessageState().equalsIgnoreCase("new")){
+				imageView.setBackgroundResource(R.drawable.ic_action_email);
+			} else {
+				imageView.setBackgroundResource(R.drawable.ic_action_read);
+			}
 			imageView.setImage(message.getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){

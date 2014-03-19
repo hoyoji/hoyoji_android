@@ -54,6 +54,9 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
 
+	@Column(name = "moneyReturnId")
+	private Double mMoneyReturnId;
+	
 	@Column(name = "remark")
 	private String mRemark;
 

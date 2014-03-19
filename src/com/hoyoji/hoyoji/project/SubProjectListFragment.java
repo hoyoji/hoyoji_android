@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -35,6 +36,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -84,7 +86,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
-				new String[] {"_id", "name", "id", "id", "id"},
+				new String[] {"_id", "id", "id", "id", "id"},
 				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
@@ -204,7 +206,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.projectListItem_name){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+			((TextView)view).setText(project.getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -248,6 +251,13 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			view.setTag(cursor.getString(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.projectListItem_picture){
+			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
+			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				((ImageView)view).setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_local_project));
+			} else {
+				((ImageView)view).setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_share));
+			}
+			
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
 					@Override

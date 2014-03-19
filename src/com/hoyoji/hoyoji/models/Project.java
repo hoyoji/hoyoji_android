@@ -97,6 +97,10 @@ public class Project extends HyjModel {
 	}
 
 	public String getDisplayName() {
+		ProjectRemark projectRemark = new Select().from(ProjectRemark.class).where("projectId=?", this.getId()).executeSingle();
+		if(projectRemark != null){
+			return projectRemark.getRemark();
+		}
 		return getName();
 	}
 
@@ -255,6 +259,14 @@ public class Project extends HyjModel {
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}
+
+	public String getRemarkName() {
+		ProjectRemark projectRemark = new Select().from(ProjectRemark.class).where("projectId=?", this.getId()).executeSingle();
+		if(projectRemark != null){
+			return projectRemark.getRemark();
+		}
+		return null;
 	}	
 	
 }

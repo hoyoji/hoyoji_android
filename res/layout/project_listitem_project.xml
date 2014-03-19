@@ -9,14 +9,13 @@
 	android:gravity="center_vertical"
     android:descendantFocusability="blocksDescendants">
 
-    <com.hoyoji.android.hyjframework.view.HyjImageView
+    <ImageView
         android:id="@+id/projectListItem_picture"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_action_share"
         android:background="@drawable/abc_tab_indicator_ab_holo"
         android:clickable="true" />
     

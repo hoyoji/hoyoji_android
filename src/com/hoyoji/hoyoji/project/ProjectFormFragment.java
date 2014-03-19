@@ -45,6 +45,7 @@ import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
@@ -59,6 +60,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	
 	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
+	private HyjTextField mTextFieldProjectRemarkName = null;
 	private HyjListField mListFieldParentProject = null;
 	private HyjSelectorField mSelectorFieldProjectCurrency = null;
 	private CheckBox mCheckBoxAutoApportion = null;
@@ -99,6 +101,15 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getName());
+		
+		mTextFieldProjectRemarkName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectRemarkName);
+		if(modelId != -1 && !project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			mTextFieldProjectRemarkName.setText(project.getRemarkName());
+		} else {
+			mTextFieldProjectRemarkName.setVisibility(View.GONE);
+			getView().findViewById(R.id.projectFormFragment_textField_projectRemarkName_field_separator).setVisibility(View.GONE);
+		}
+		
 		
 		mListFieldParentProject = (HyjListField) getView().findViewById(R.id.projectFormFragment_listField_parentProject);
 		mListFieldParentProject.setOnAddItemListener(new OnClickListener(){
@@ -250,6 +261,29 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					newProjectShareAuthorization.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					
 					newProjectShareAuthorization.save();
+				}
+				
+				if(mProjectEditor.getModelCopy().get_mId() != null && 
+						!mProjectEditor.getModelCopy().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					
+					String projectRemarkName = mTextFieldProjectRemarkName.getText();
+					ProjectRemark projectRemark = new Select().from(ProjectRemark.class).where("projectId=?", mProjectEditor.getModelCopy().getId()).executeSingle();
+					if(projectRemarkName != null && projectRemarkName.trim().length() > 0){
+						if(projectRemark == null){
+							projectRemark = new ProjectRemark();
+							projectRemark.setRemark(projectRemarkName);
+							projectRemark.setProjectIdId(mProjectEditor.getModelCopy().getId());
+							projectRemark.save();
+						} else {
+							HyjModelEditor<ProjectRemark> projectRemarkEditor = projectRemark.newModelEditor();
+							projectRemarkEditor.getModelCopy().setRemark(projectRemarkName);
+							projectRemarkEditor.save();
+						}
+					} else {
+						if(projectRemark != null){
+							projectRemark.delete();
+						}
+					}
 				}
 				
 				mProjectEditor.save();

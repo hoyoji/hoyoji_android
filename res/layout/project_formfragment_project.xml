@@ -46,6 +46,24 @@
         android:background="@android:color/darker_gray" 
         />
     
+    <com.hoyoji.android.hyjframework.view.HyjTextField 
+            android:id="@+id/projectFormFragment_textField_projectRemarkName"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="@string/projectFormFragment_textView_projectRemarkName"
+            hyj:hintText="@string/projectFormFragment_editText_hint_projectRemarkName"
+        >
+   </com.hoyoji.android.hyjframework.view.HyjTextField>
+    
+    <View 
+        android:id="@+id/projectFormFragment_textField_projectRemarkName_field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        />
+    
     <com.hoyoji.android.hyjframework.view.HyjListField 
             android:id="@+id/projectFormFragment_listField_parentProject"
 		    android:layout_width="fill_parent"

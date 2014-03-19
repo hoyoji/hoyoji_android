@@ -56,6 +56,9 @@ public class MoneyIncome extends HyjModel{
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
+	@Column(name = "moneyExpenseId")
+	private Double mMoneyExpenseId;
+	
 	@Column(name = "remark")
 	private String mRemark;
 	

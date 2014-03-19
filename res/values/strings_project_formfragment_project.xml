@@ -8,6 +8,9 @@
    <string name="projectFormFragment_textView_projectName">项目名称</string>
    <string name="projectFormFragment_editText_hint_projectName">请输入项目名称</string>
    
+   <string name="projectFormFragment_textView_projectRemarkName">备注名称</string>
+   <string name="projectFormFragment_editText_hint_projectRemarkName">请输入备注名称</string>
+   
    <string name="projectFormFragment_textView_parentProject">上级项目</string>
    <string name="projectFormFragment_editText_hint_parentProject">无上级项目</string>
     
