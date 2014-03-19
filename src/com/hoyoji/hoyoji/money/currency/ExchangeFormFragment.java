@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -117,9 +118,16 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		mCheckBoxAutoUpdate = (CheckBox) getView().findViewById(
 				R.id.exchangeFormFragment_checkBox_autoUpdate);
 		mCheckBoxAutoUpdate.setChecked(exchange.getAutoUpdate());
-		mCheckBoxAutoUpdate.setChecked(exchange.getAutoUpdate());
-
+		mCheckBoxAutoUpdate.setVisibility(View.GONE);
+		getView().findViewById(R.id.exchangeFormFragment_checkBox_hint_autoUpdate).setVisibility(View.GONE);
+		getView().findViewById(R.id.exchangeFormFragment_separatorField_autoUpdate).setVisibility(View.GONE);
+		
 		setupRefreshRateButton();
+		
+		// 只在无网络下新增项目和账户时手动新增汇率时才自动打开软键盘， 修改时不自动打开
+		if (modelId == -1 && mSelectorFieldForeignCurrency.getModelId() != null) {
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 	}
 
 	private void setupRefreshRateButton(){

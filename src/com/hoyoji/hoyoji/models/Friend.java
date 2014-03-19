@@ -63,6 +63,7 @@ public class Friend extends HyjModel {
 	public Friend(){
 		super();
 		mUUID = UUID.randomUUID().toString();
+		mFriendCategoryId = HyjApplication.getInstance().getCurrentUser().getUserData().getDefaultFriendCategoryId();
 	}
 
 	public User getFriendUser(){

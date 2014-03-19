@@ -101,8 +101,9 @@ public class FriendFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
+		if(modelId == -1){
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 	}
 	
 	private void setupDeleteButton(

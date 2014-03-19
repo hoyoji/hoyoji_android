@@ -3,7 +3,7 @@
     
     
    <string name="projectFormFragment_title_addnew">创建项目</string>
-   <string name="projectFormFragment_title_edit">修改项目资料</string>
+   <string name="projectFormFragment_title_edit">项目资料</string>
    
    <string name="projectFormFragment_textView_projectName">项目名称</string>
    <string name="projectFormFragment_editText_hint_projectName">请输入项目名称</string>

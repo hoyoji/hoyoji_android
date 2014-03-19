@@ -126,10 +126,9 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mRemarkFieldRemark.setEnabled(modelId == -1
 				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 
-		this.getActivity()
-				.getWindow()
-				.setSoftInputMode(
-						WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		if (modelId == -1){
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 	}
 
 	private void fillData() {

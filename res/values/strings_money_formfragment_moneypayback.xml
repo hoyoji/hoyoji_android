@@ -3,7 +3,7 @@
     
     
    <string name="moneyPaybackFormFragment_title_addnew">新增收款</string>
-   <string name="moneyPaybackFormFragment_title_edit">修改收款</string>
+   <string name="moneyPaybackFormFragment_title_edit">收款详细</string>
    
    <string name="moneyPaybackFormFragment_textView_picture">图片</string>
    <string name="moneyPaybackFormFragment_editText_hint_picture">请导入图片</string>

@@ -3,7 +3,7 @@
     
     
    <string name="moneyReturnFormFragment_title_addnew">新增还款</string>
-   <string name="moneyReturnFormFragment_title_edit">修改还款</string>
+   <string name="moneyReturnFormFragment_title_edit">还款详细</string>
    
    <string name="moneyReturnFormFragment_textView_picture">图片</string>
    <string name="moneyReturnFormFragment_editText_hint_picture">请导入图片</string>

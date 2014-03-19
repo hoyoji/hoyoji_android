@@ -3,7 +3,7 @@
     
     
    <string name="moneyExpenseFormFragment_title_addnew">新增支出</string>
-   <string name="moneyExpenseFormFragment_title_edit">修改支出</string>
+   <string name="moneyExpenseFormFragment_title_edit">支出详细</string>
    
    <string name="moneyExpenseFormFragment_textView_picture">图片</string>
    <string name="moneyExpenseFormFragment_editText_hint_picture">请导入图片</string>
