@@ -178,18 +178,26 @@ public class MessageDownloadService extends Service {
 									}
 									ActiveAndroid.setTransactionSuccessful();
 									if (jsonArray.length() > 0) {
-										Handler handler = new Handler(Looper
-												.getMainLooper());
-										handler.post(new Runnable() {
-											public void run() {
-												HyjUtil.displayToast(String
-														.format(getApplicationContext()
-																.getString(
-																		R.string.app_toast_new_messages),
-																jsonArray
-																		.length()));
+										int newCount = 0;
+										for(int i=0; i < jsonArray.length(); i++){
+											if(jsonArray.optJSONObject(i).optString("messageState").equalsIgnoreCase("new")){
+												newCount++;
 											}
-										});
+										}
+										if(newCount > 0){
+											Handler handler = new Handler(Looper
+													.getMainLooper());
+											handler.post(new Runnable() {
+												public void run() {
+													HyjUtil.displayToast(String
+															.format(getApplicationContext()
+																	.getString(
+																			R.string.app_toast_new_messages),
+																	jsonArray
+																			.length()));
+												}
+											});
+										}
 									}
 								} catch (Exception e) {
 								} finally {

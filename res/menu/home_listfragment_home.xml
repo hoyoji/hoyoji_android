@@ -17,7 +17,7 @@
         android:title="@string/homeListFragment_action_report"
         android:icon="@drawable/ic_action_data_usage"
         hoyoji:showAsAction="always"/> -->
-    
+    <!-- 
     <item
         android:id="@+id/homeListFragment_action_more"
         android:title="@string/homeListFragment_action_more"
@@ -34,5 +34,5 @@
                 hoyoji:showAsAction="never"/>
         </menu>
 	</item>
-
+ -->
 </menu>

@@ -131,12 +131,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				popup.show();
 			}
 		});
-		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-			//	openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
-    		}
-		});			
 	}
 
 	@Override
@@ -158,10 +152,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project) {
-			
-			return true;
-		}
+//		if (item.getItemId() == R.id.homeListFragment_action_display_transaction_type_project) {
+//			
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 	

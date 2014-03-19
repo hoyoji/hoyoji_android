@@ -220,7 +220,7 @@ public class HomeGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ?",
+							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ? AND (messageState='new' OR messageState='unread') ",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -379,7 +379,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM Message WHERE date <= ?",
+						"SELECT MAX(date) FROM Message WHERE date <= ? AND (messageState='new' OR messageState='unread') ",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

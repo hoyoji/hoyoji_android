@@ -93,6 +93,7 @@
         android:id="@+id/searchDialogFragment_spinnerField_displayType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         hyj:labelText="@string/searchDialogFragment_spinnerField_displayType" >
     </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
     
