@@ -109,6 +109,7 @@ import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.project.SubProjectListFragment;
+import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
@@ -282,6 +283,10 @@ public class MainActivity extends HyjUserActivity {
 		case 6:
 			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
 					R.string.moneyCategoryFormDialogFragment_title_manage, null);
+			break;
+		case 7:
+			openActivityWithFragment(SystemSettingFormFragment.class,
+					R.string.systemSettingFormFragment_title, null);
 			break;
 		case 8:
 			HyjApplication.getInstance().switchUser();

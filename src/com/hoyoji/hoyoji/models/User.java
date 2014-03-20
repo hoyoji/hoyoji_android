@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.activeandroid.annotation.Column;
@@ -152,6 +153,21 @@ public class User extends HyjModel {
 	public void setPictureId(String mPictureId) {
 		this.mPictureId = mPictureId;
 	}
+	
+	public Picture getPicture(){
+		if(mPictureId == null){
+			return null;
+		}
+		return (Picture) getModel(Picture.class, mPictureId);
+	}
+
+	public void setPicture(Picture picture){
+		this.setPictureId(picture.getId());
+	}
+	
+	public List<Picture> getPictures(){
+		return getMany(Picture.class, "recordId");
+	}
 
 	public String getLocation() {
 		return mLocation;
@@ -227,7 +243,6 @@ public class User extends HyjModel {
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}	
-	
+	}
 	
 }

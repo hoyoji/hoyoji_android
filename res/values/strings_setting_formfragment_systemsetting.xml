@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="systemSettingFormFragment_title">用户资料</string>
+    
+     <string name="systemSettingFormFragment_textView_userName">用户名</string>
+</resources>
