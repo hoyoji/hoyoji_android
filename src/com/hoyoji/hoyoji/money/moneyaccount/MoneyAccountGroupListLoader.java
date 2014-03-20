@@ -69,6 +69,7 @@ public class MoneyAccountGroupListLoader extends
 						.openDatabase()
 						.rawQuery(query, args);
 				if (cursor != null) {
+					balanceTotal = 0;
 					cursor.moveToFirst();
 					count = cursor.getInt(0);
 					balanceTotal += cursor.getDouble(1);
@@ -88,6 +89,7 @@ public class MoneyAccountGroupListLoader extends
 						.openDatabase()
 						.rawQuery(query, args);
 				if (cursor != null) {
+					balanceTotal = 0;
 					cursor.moveToFirst();
 					count = cursor.getInt(0);
 					balanceTotal += cursor.getDouble(1);
@@ -107,6 +109,7 @@ public class MoneyAccountGroupListLoader extends
 						.openDatabase()
 						.rawQuery(query, args);
 				if (cursor != null) {
+					balanceTotal = 0;
 					cursor.moveToFirst();
 					count = cursor.getInt(0);
 					balanceTotal += cursor.getDouble(1);
@@ -126,6 +129,7 @@ public class MoneyAccountGroupListLoader extends
 						.openDatabase()
 						.rawQuery(query, args);
 				if (cursor != null) {
+					balanceTotal = 0;
 					cursor.moveToFirst();
 					count = cursor.getInt(0);
 					balanceTotal += cursor.getDouble(1);
@@ -145,6 +149,7 @@ public class MoneyAccountGroupListLoader extends
 						.openDatabase()
 						.rawQuery(query, args);
 				if (cursor != null) {
+					balanceTotal = 0;
 					cursor.moveToFirst();
 					count = cursor.getInt(0);
 					balanceTotal += cursor.getDouble(1);
