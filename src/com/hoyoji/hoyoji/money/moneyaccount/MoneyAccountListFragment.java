@@ -109,6 +109,11 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		if (groupPos < 0) { // 这个是分类
 			loader = new MoneyAccountGroupListLoader(getActivity(), arg1);
 		} else {
+			Intent intent = getActivity().getIntent();
+			String excludeType = intent.getStringExtra("excludeType");
+
+			arg1.putString("excludeType", excludeType);
+			
 			loader = new MoneyAccountChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
