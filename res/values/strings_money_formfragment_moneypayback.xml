@@ -33,6 +33,7 @@
    
    <string name="moneyPaybackFormFragment_textView_friend">债务人方</string>
    <string name="moneyPaybackFormFragment_editText_hint_friend">无债务人</string>
+   <string name="moneyPaybackFormFragment_editText_error_friend">自己不能作为债务人，请重新选择</string>
    
    <string name="moneyPaybackFormFragment_textView_remark">备注</string>
    <string name="moneyPaybackFormFragment_editText_hint_remark">无备注</string>

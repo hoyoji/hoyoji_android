@@ -33,6 +33,7 @@
    
    <string name="moneyExpenseFormFragment_textView_friend">收款方</string>
    <string name="moneyExpenseFormFragment_editText_hint_friend">无收款方</string>
+   <string name="moneyExpenseFormFragment_editText_error_friend">自己不能作为收款方，请重新选择</string>
    
    <string name="moneyExpenseFormFragment_textView_remark">备注</string>
    <string name="moneyExpenseFormFragment_editText_hint_remark">无备注</string>

@@ -77,6 +77,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyIncomeCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
+	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -207,6 +208,17 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
 			}
 		}); 
+		
+		mImageViewClearFriend = (ImageView) getView().findViewById(
+				R.id.moneyIncomeFormFragment_imageView_clear_friend);
+		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldFriend.setModelId(null);
+				mSelectorFieldFriend.setText("");
+			}
+		});
+		
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyIncome.getRemark());
@@ -559,12 +571,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-			if(friend.getFriendUserId() != null){
-				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-			}
-			else{
-				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
-			}
+			modelCopy.setFriend(friend);
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -961,6 +968,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
             		Friend friend = Friend.load(Friend.class, _id);
+            		
+            		if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
+    					return;
+    				}
+            		
             		mSelectorFieldFriend.setText(friend.getDisplayName());
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }

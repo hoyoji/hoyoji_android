@@ -74,6 +74,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
+	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -225,6 +226,17 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 								null, GET_FRIEND_ID);
 			}
 		});
+		
+		mImageViewClearFriend = (ImageView) getView().findViewById(
+				R.id.moneyExpenseFormFragment_imageView_clear_friend);
+		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldFriend.setModelId(null);
+				mSelectorFieldFriend.setText("");
+			}
+		});
+		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpense.getRemark());
@@ -579,14 +591,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
 		
-		if (mSelectorFieldFriend.getModelId() != null) {
-			Friend friend = HyjModel.getModel(Friend.class,
-					mSelectorFieldFriend.getModelId());
-			if (friend.getFriendUserId() != null) {
-				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-			} else {
-				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
-			}
+		if(mSelectorFieldFriend.getModelId() != null){
+			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+			modelCopy.setFriend(friend);
 		}
 
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -999,6 +1006,11 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Friend friend = Friend.load(Friend.class, _id);
+				
+				if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					HyjUtil.displayToast(R.string.moneyExpenseFormFragment_editText_error_friend);
+					return;
+				}
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				mSelectorFieldFriend.setModelId(friend.getId());
 			}

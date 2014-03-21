@@ -63,6 +63,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
+	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -165,6 +166,16 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_creditor, null, GET_FRIEND_ID);
 			}
 		}); 
+		
+		mImageViewClearFriend = (ImageView) getView().findViewById(
+				R.id.moneyBorrowFormFragment_imageView_clear_friend);
+		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldFriend.setModelId(null);
+				mSelectorFieldFriend.setText("");
+			}
+		});
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyBorrowFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyBorrow.getRemark());
@@ -551,6 +562,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
             		Friend friend = Friend.load(Friend.class, _id);
+            		
+            		if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+    					HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+    					return;
+    				}
+            		
             		mSelectorFieldFriend.setText(friend.getDisplayName());
             		mSelectorFieldFriend.setModelId(friend.getId());
             	 }

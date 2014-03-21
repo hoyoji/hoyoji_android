@@ -63,9 +63,11 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericTransferOutAmount = null;
 	private HyjSelectorField mSelectorFieldTransferOutFriend = null;
+	private ImageView mImageViewClearTransferOutFriend = null;
 	private View mViewSeparatorTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferInFriend = null;
+	private ImageView mImageViewClearTransferInFriend = null;
 	private View mViewSeparatorTransferIn = null;
 	private HyjSelectorField mSelectorFieldTransferIn = null;
 	private HyjNumericField mNumericTransferInAmount = null;
@@ -144,9 +146,21 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyTransferFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_TRANSFEROUT_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_transferOut, null, GET_TRANSFEROUT_FRIEND_ID);
 			}
 		}); 
+		
+		mImageViewClearTransferOutFriend = (ImageView) getView().findViewById(
+				R.id.moneyTransferFormFragment_imageView_clear_transferOutFriend);
+		mImageViewClearTransferOutFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldTransferOutFriend.setModelId(null);
+				mSelectorFieldTransferOutFriend.setText("");
+				mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
+         		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
+			}
+		});
 		
 		mViewSeparatorTransferOut = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferOut);
 		
@@ -176,13 +190,22 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferInFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putString("excludeType", "Debt");
-				
 				MoneyTransferFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, bundle, GET_TRANSFERIN_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_transferIn, null, GET_TRANSFERIN_FRIEND_ID);
 			}
 		}); 
+		
+		mImageViewClearTransferInFriend = (ImageView) getView().findViewById(
+				R.id.moneyTransferFormFragment_imageView_clear_transferInFriend);
+		mImageViewClearTransferInFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldTransferInFriend.setModelId(null);
+				mSelectorFieldTransferInFriend.setText("");
+				mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
+         		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
+			}
+		});
 		
 		mViewSeparatorTransferIn = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferIn);
 		
@@ -195,7 +218,10 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferIn.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyTransferFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, null, GET_TRANSFERIN_ID);
+				Bundle bundle = new Bundle();
+				bundle.putString("excludeType", "Debt");
+				
+				MoneyTransferFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_TRANSFERIN_ID);
 			}
 		});	
 		
@@ -416,18 +442,20 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setTransferOutAmount(mNumericTransferOutAmount.getNumber());
 		
+		modelCopy.setTransferOutId(mSelectorFieldTransferOut.getModelId());
 		if(mSelectorFieldTransferOutFriend.getModelId() != null){
 			Friend transferOutFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferOutFriend.getModelId());
 			modelCopy.setTransferOutFriend(transferOutFriend);
+			modelCopy.setTransferOutId(null);
 		}
 		
-		modelCopy.setTransferOutId(mSelectorFieldTransferOut.getModelId());
-		
+		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
 		if(mSelectorFieldTransferInFriend.getModelId() != null){
 			Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
 			modelCopy.setTransferInFriend(transferInFriend);
+			modelCopy.setTransferInId(null);
 		}
-		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
+		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
@@ -587,6 +615,15 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
+             		
+             		if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+             			mSelectorFieldTransferOutFriend.setText("");
+                 		mSelectorFieldTransferOutFriend.setModelId(null);
+                 		mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
+                 		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
+                 		return;
+             		}
+             		
              		mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
              		mViewSeparatorTransferOut.setVisibility(View.GONE);
@@ -606,6 +643,15 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
+             		
+             		if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+             			mSelectorFieldTransferInFriend.setText("");
+             			mSelectorFieldTransferInFriend.setModelId(null);
+                 		mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
+                 		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
+                 		return;
+             		}
+             		
              		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferInFriend.setModelId(friend.getId());
              		mViewSeparatorTransferIn.setVisibility(View.GONE);
