@@ -186,9 +186,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				// 币种是一样的，不用新增汇率
 				doSave();
 			} else {
-				Exchange exchange = new Select()
-						.from(Exchange.class)
-						.where("foreignCurrencyId=? AND localCurrencyId=?",
+				Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?",
 								moneyAccountCurrencyId,
 								HyjApplication.getInstance().getCurrentUser()
 										.getUserData().getActiveCurrencyId())
@@ -273,6 +271,11 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	}
 
 	protected void doSave() {
+		
+		if(mMoneyAccountEditor.getModelCopy().get_mId() != null){
+			
+		}
+		
 		mMoneyAccountEditor.save();
 		HyjUtil.displayToast(R.string.app_save_success);
 		getActivity().finish();
