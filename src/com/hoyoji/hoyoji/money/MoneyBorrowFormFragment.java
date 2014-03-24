@@ -275,7 +275,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrow.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
-									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() + moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
+									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
 										
 									    selfProjectAuthorizationEditor.save();
 										
