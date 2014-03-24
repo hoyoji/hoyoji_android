@@ -573,7 +573,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
             		long _id = data.getLongExtra("MODEL_ID", -1);
             		Friend friend = Friend.load(Friend.class, _id);
             		
-            		if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
     					HyjUtil.displayToast(R.string.moneyLendFormFragment_editText_error_friend);
     					return;
     				}
