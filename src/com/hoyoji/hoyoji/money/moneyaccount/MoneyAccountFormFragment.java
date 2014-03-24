@@ -175,13 +175,13 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			showValidatioErrors();
 		} else {
 			// 检查汇率存不存在
-			final String projectCurrencyId = mMoneyAccountEditor.getModelCopy()
+			final String moneyAccountCurrencyId = mMoneyAccountEditor.getModelCopy()
 					.getCurrencyId();
 			((HyjActivity) MoneyAccountFormFragment.this.getActivity())
 					.displayProgressDialog(
 							R.string.projectMessageFormFragment_addShare_fetch_exchange,
 							R.string.projectMessageFormFragment_addShare_fetching_exchange);
-			if (projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance()
+			if (moneyAccountCurrencyId.equalsIgnoreCase(HyjApplication.getInstance()
 					.getCurrentUser().getUserData().getActiveCurrencyId())) {
 				// 币种是一样的，不用新增汇率
 				doSave();
@@ -189,7 +189,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				Exchange exchange = new Select()
 						.from(Exchange.class)
 						.where("foreignCurrencyId=? AND localCurrencyId=?",
-								projectCurrencyId,
+								moneyAccountCurrencyId,
 								HyjApplication.getInstance().getCurrentUser()
 										.getUserData().getActiveCurrencyId())
 						.executeSingle();
@@ -207,7 +207,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 								.getActivity()).dismissProgressDialog();
 						Double exchangeRate = (Double) object;
 						Exchange newExchange = new Exchange();
-						newExchange.setForeignCurrencyId(projectCurrencyId);
+						newExchange.setForeignCurrencyId(moneyAccountCurrencyId);
 						newExchange.setLocalCurrencyId(HyjApplication
 								.getInstance().getCurrentUser().getUserData()
 								.getActiveCurrencyId());
@@ -248,7 +248,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 																.getActiveCurrencyId());
 												bundle.putString(
 														"foreignCurrencyId",
-														projectCurrencyId);
+														moneyAccountCurrencyId);
 												openActivityWithFragmentForResult(
 														ExchangeFormFragment.class,
 														R.string.exchangeFormFragment_title_addnew,
@@ -264,9 +264,9 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 										});
 					}
 				};
-				HyjHttpGetExchangeRateAsyncTask.newInstance(projectCurrencyId,
-						HyjApplication.getInstance().getCurrentUser()
-								.getUserData().getActiveCurrencyId(),
+				HyjHttpGetExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser()
+						.getUserData().getActiveCurrencyId(),
+						moneyAccountCurrencyId,
 						serverCallbacks);
 			}
 		}

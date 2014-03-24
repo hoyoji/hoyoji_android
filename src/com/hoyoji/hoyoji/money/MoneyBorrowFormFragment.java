@@ -36,6 +36,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -269,6 +270,15 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyBorrow.getAmount());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount());
+										
+										//更新支出所有者的实际支出
+										
+										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrow.getProjectId());
+										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
+									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() + moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
+										
+									    selfProjectAuthorizationEditor.save();
+										
 										moneyBorrow.delete();
 										moneyAccountEditor.save();
 										debtAccountEditor.save();

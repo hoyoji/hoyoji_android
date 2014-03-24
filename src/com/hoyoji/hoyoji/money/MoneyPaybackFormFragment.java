@@ -261,6 +261,13 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getAmount());
+										
+										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPayback.getProjectId());
+										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
+									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() + moneyPayback.getAmount0()*moneyPayback.getExchangeRate() - moneyPayback.getAmount0()*moneyPayback.getExchangeRate());
+										
+									    selfProjectAuthorizationEditor.save();
+										
 										moneyPayback.delete();
 										moneyAccountEditor.save();
 										debtAccountEditor.save();
