@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.money.moneyaccount;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
@@ -271,9 +275,23 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	}
 
 	protected void doSave() {
-		
-		if(mMoneyAccountEditor.getModelCopy().get_mId() != null){
-			
+		Double changeAmount = mMoneyAccountEditor.getModelCopy().getCurrentBalance() - mMoneyAccountEditor.getModel().getCurrentBalance();
+		if(mMoneyAccountEditor.getModelCopy().get_mId() != null && changeAmount != 0){
+			MoneyTransfer newMoneyTransfer = new MoneyTransfer();
+			if(changeAmount > 0){
+				newMoneyTransfer.setTransferOutAmount(changeAmount);
+				newMoneyTransfer.setTransferOutId(null);
+				newMoneyTransfer.setTransferInId(mMoneyAccountEditor.getModelCopy().getId());
+			}else{
+				newMoneyTransfer.setTransferOutAmount(-changeAmount);
+				newMoneyTransfer.setTransferOutId(mMoneyAccountEditor.getModelCopy().getId());
+				newMoneyTransfer.setTransferInId(null);
+			}
+			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
+			newMoneyTransfer.setTransferOutFriendUserId(null);
+			newMoneyTransfer.setTransferInFriendUserId(null);
+			newMoneyTransfer.setRemark("修改账户金额");
+			newMoneyTransfer.save();
 		}
 		
 		mMoneyAccountEditor.save();
