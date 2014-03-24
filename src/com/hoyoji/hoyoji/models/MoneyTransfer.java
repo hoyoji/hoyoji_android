@@ -232,6 +232,10 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public void setTransferOut(MoneyAccount mTransferOut) {
+		if(mTransferOut == null){
+			this.mTransferOutId = null;
+			return;
+		}
 		this.mTransferOutId = mTransferOut.getId();
 	}
 
@@ -329,6 +333,10 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public void setTransferIn(MoneyAccount mTransferIn) {
+		if(mTransferIn == null){
+			this.mTransferInId = null;
+			return;
+		}
 		this.mTransferInId = mTransferIn.getId();
 	}
 

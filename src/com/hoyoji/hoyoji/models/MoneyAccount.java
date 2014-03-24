@@ -164,6 +164,11 @@ public class MoneyAccount extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("currency");
 		}
+		if(this.getCurrentBalance() == null){
+			modelEditor.setValidationError("currentBalance", R.string.moneyAccountFormFragment_editText_hint_currentBalance);
+		} else {
+			modelEditor.removeValidationError("currentBalance");
+		}
 	}
 
 	public String getId() {
@@ -210,6 +215,13 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public Double getCurrentBalance() {
+		return mCurrentBalance;
+	}
+	
+	public Double getCurrentBalance0() {
+		if(mCurrentBalance == null){
+			return 0.0;
+		}
 		return mCurrentBalance;
 	}
 

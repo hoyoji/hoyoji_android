@@ -275,17 +275,17 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	}
 
 	protected void doSave() {
-		Double changeAmount = mMoneyAccountEditor.getModelCopy().getCurrentBalance() - mMoneyAccountEditor.getModel().getCurrentBalance();
+		Double changeAmount = mMoneyAccountEditor.getModelCopy().getCurrentBalance0() - mMoneyAccountEditor.getModel().getCurrentBalance0();
 		if(mMoneyAccountEditor.getModelCopy().get_mId() != null && changeAmount != 0){
 			MoneyTransfer newMoneyTransfer = new MoneyTransfer();
 			if(changeAmount > 0){
 				newMoneyTransfer.setTransferOutAmount(changeAmount);
-				newMoneyTransfer.setTransferOutId(null);
+				newMoneyTransfer.setTransferOut(null);
 				newMoneyTransfer.setTransferInId(mMoneyAccountEditor.getModelCopy().getId());
 			}else{
 				newMoneyTransfer.setTransferOutAmount(-changeAmount);
 				newMoneyTransfer.setTransferOutId(mMoneyAccountEditor.getModelCopy().getId());
-				newMoneyTransfer.setTransferInId(null);
+				newMoneyTransfer.setTransferIn(null);
 			}
 			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
 			newMoneyTransfer.setTransferOutFriendUserId(null);
