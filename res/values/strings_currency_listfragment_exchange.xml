@@ -5,7 +5,7 @@
     
     <string name="exchangeListFragment_action_exchange_addnew">创建汇率</string>
     <string name="exchangeListFragment_title_update_all_exchange">更新全部汇率</string>
-    <string name="exchangeListFragment_title_select_foreign_currency">选择外币账户</string>
-    <string name="exchangeListFragment_title_select_local_currency">选择本币账户</string>
+    <string name="exchangeListFragment_title_select_foreign_currency">选择外币</string>
+    <string name="exchangeListFragment_title_select_local_currency">选择本币</string>
     
 </resources>
