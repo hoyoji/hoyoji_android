@@ -1,48 +1,29 @@
 package com.hoyoji.hoyoji.setting;
 
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
-import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.activeandroid.query.Select;import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
-import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
-import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.FriendCategory;
-import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 
-
-public class SystemSettingFormFragment extends HyjUserFormFragment {
+public class ChangePasswordFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<User> mUserEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjTextField mTextFieldUserName = null;
