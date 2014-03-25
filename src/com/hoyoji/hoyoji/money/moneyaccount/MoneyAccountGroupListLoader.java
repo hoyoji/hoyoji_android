@@ -23,9 +23,14 @@ public class MoneyAccountGroupListLoader extends
 	private Integer mLoadLimit = 10;
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
+	private String mExcludeType;
 
 	public MoneyAccountGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
+		if(queryParams != null){
+    		mLoadLimit = queryParams.getInt("limit");
+    		mExcludeType = queryParams.getString("excludeType");
+    	}
 
 		mChangeObserver = new ChangeObserver();
 		context.getContentResolver().registerContentObserver(
@@ -144,24 +149,27 @@ public class MoneyAccountGroupListLoader extends
 					list.add(groupObject);
 				}
 				
-				args = new String[] {localCurrencyId, "Debt" };
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(query, args);
-				if (cursor != null) {
-					balanceTotal = 0;
-					cursor.moveToFirst();
-					count = cursor.getInt(0);
-					balanceTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
-				}
-				if(count > 0){
-					groupObject = new HashMap<String, Object>();
-					groupObject.put("name", "借贷账户");
-					groupObject.put("accountType", "Debt");
-					groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
-					list.add(groupObject);
+
+				if(mExcludeType == null || !"Debt".equalsIgnoreCase(mExcludeType)){
+					args = new String[] {localCurrencyId, "Debt" };
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(query, args);
+					if (cursor != null) {
+						balanceTotal = 0;
+						cursor.moveToFirst();
+						count = cursor.getInt(0);
+						balanceTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+					if(count > 0){
+						groupObject = new HashMap<String, Object>();
+						groupObject.put("name", "借贷账户");
+						groupObject.put("accountType", "Debt");
+						groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+						list.add(groupObject);
+					}
 				}
 				
 				return list;
