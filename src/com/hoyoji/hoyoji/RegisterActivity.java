@@ -102,17 +102,27 @@ public class RegisterActivity extends HyjActivity {
 		} else if(mUserName.length() < 3){
 	   		mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_too_short));
 	   		valiatePass = false;
-		} else {
+		} else if(mUserName.length() > 15){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_too_long));
+	   		valiatePass = false;
+		}else if(!mUserName.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9.-]+)$")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_char));
+	   		valiatePass = false;
+		}
+		else {
 			mEditTextUserName.setError(null);
 	   	}
 		
 		if(mPassword1.length() == 0){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_editText_hint_password1));
 	   		valiatePass = false;
-		} else if(mPassword1.length() < 6){
+		} else if(!mPassword1.matches("^.{6,18}$")){
 	   		mEditTextPassword1.setError(getString(R.string.registerActivity_validation_password_too_short));
 	   		valiatePass = false;
-		} else {
+		} else if(checkPassWordComplexity(mPassword1)){
+			mEditTextPassword1.setError(getString(R.string.registerActivity_validation_password_too_simple));
+	   		valiatePass = false;
+		}else {
 			mEditTextPassword1.setError(null);
 		}
 		
@@ -125,6 +135,20 @@ public class RegisterActivity extends HyjActivity {
 		return valiatePass;
 	}
 	
+	private boolean checkPassWordComplexity(String psw) {
+		boolean repeat = true;
+		boolean series = true;
+		char first = psw.charAt(0);
+		for (int i = 1; i < psw.length(); i++) {
+			repeat = repeat && psw.charAt(i) == first;
+			series = series && (int)psw.charAt(i) == (int)psw.charAt(i - 1) + 1;
+		}
+		if (repeat || series) {
+			return true;
+		}
+		return false;
+	}
+
 	public void onSave(){
 		onSave(null);
 	}

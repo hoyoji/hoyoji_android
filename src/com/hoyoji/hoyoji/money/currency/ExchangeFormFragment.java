@@ -165,17 +165,27 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		 mNumericFieldRate.setError(mExchangeEditor.getValidationError("rate"));
 	 }
 
+	 private boolean checkLocalExchange(){
+		 Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?",((Exchange) mExchangeEditor.getModelCopy()).getLocalCurrencyId(),((Exchange) mExchangeEditor.getModelCopy()).getForeignCurrencyId()).executeSingle();
+		 if(exchange != null){
+			 return true;
+		 }
+		 return false;
+	 }
+	 
 	@Override
 	public void onSave(View v) {
 		super.onSave(v);
 
 		 fillData();
 
-		mExchangeEditor.validate();
+		 mExchangeEditor.validate();
 
 		 if(mExchangeEditor.hasValidationErrors()){
 			 showValidatioErrors();
-		 } else {
+		 } else if(checkLocalExchange()){
+			 HyjUtil.displayToast(R.string.exchangeFormFragment_saveError_exchange_exist);
+		 }else {
 			mExchangeEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 

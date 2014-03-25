@@ -18,8 +18,11 @@
     <string name="registerActivity_editText_hint_password1">请输入密码</string>
     <string name="registerActivity_editText_hint_password2">请再次输入密码</string>
     
-    <string name="registerActivity_validation_username_too_short">用户名不能少于三个字符以</string>
- 	<string name="registerActivity_validation_password_too_short">密码不能少于三个字符</string>
+    <string name="registerActivity_validation_username_too_short">用户名不能少于3个字符</string>
+    <string name="registerActivity_validation_username_too_long">用户名不能超过15个字符</string>
+    <string name="registerActivity_validation_username_error_char">用户名至少包含一个字母且不能为.-以外的符号</string>
+ 	<string name="registerActivity_validation_password_too_short">密码长度不对（6~18个字符）</string>
+ 	<string name="registerActivity_validation_password_too_simple">密码太简单</string>
     <string name="registerActivity_validation_two_password_not_same">两次输入的密码不一样</string>
    
 </resources>

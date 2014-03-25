@@ -299,6 +299,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 						// return false;
 					}
 				});
+				
+				if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
+					for(int i = 0; i<popup.getMenu().size();i++){
+						popup.getMenu().setGroupEnabled(i, false);
+					}
+				}
+				
 				popup.show();	
 			}
 		});
@@ -328,12 +335,30 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 			setExchangeRate();
 		
+			setPermission();
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
 	}
 	
+	private void setPermission() {
+		if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
+			mDateTimeFieldDate.setEnabled(false);
+			mNumericTransferOutAmount.setEnabled(false);
+			mSelectorFieldTransferOutFriend.setEnabled(false);
+			mSelectorFieldTransferOut.setEnabled(false);
+			mNumericTransferInAmount.setEnabled(false);
+			mSelectorFieldTransferInFriend.setEnabled(false);
+			mSelectorFieldTransferIn.setEnabled(false);
+			mNumericExchangeRate.setEnabled(false);
+			mSelectorFieldProject.setEnabled(false);
+			mRemarkFieldRemark.setEnabled(false);
+			hideSaveAction();
+		}
+		
+	}
+
 	private void setupDeleteButton(HyjModelEditor<MoneyTransfer> moneyTransferEditor) {
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
