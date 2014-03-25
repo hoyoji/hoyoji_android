@@ -318,10 +318,35 @@ public class ProjectFormFragment extends HyjUserFormFragment {
              case GET_PARENT_PROJECT_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		 Project project = new Select().from(Project.class).where("_id=?",data.getLongExtra("MODEL_ID", -1)).executeSingle();
-            		 ParentProject parentProject = new ParentProject();
-            		 parentProject.setParentProjectId(project.getId());
-            		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
-            		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
+            		 if(project.getId().equals(mProjectEditor.getModel().getId())){
+            			 HyjUtil.displayToast("不能添加自己为上级项目");
+                 		 break;
+            		 }
+            		 //检查要增加的上级项目是不是已经是当前项目的下级项目
+            		 ParentProject pp = new Select().from(ParentProject.class).as("main").where("parentProjectId = ? AND (subProjectId = ? OR EXISTS (SELECT id FROM ParentProject WHERE parentProjectId = main.subProjectId AND subProjectId = ?))", mProjectEditor.getModel().getId(), project.getId(), project.getId()).executeSingle();
+            		 if(pp != null){
+            			 HyjUtil.displayToast("该项目已经是当前项目的下级项目，不能添加！");
+            		 } else {
+            			 for(int i=0; i < mParentProjectListAdapter.getCount(); i++){
+            				 ParentProjectListItem ppi = mParentProjectListAdapter.getItem(i);
+            				 if(ppi.getParentProject().getParentProjectId().equals(project.getId())){
+                    			 HyjUtil.displayToast("该项目已经是上级项目，不能重复添加！");
+                    			 return;
+            				 } 
+//            				 else {
+//            					 ParentProject pp1 = new Select().from(ParentProject.class).as("main").where("parentProjectId = ? AND (subProjectId = ? OR EXISTS (SELECT id FROM ParentProject WHERE parentProjectId = main.subProjectId AND subProjectId = ?))", project.getId(), mProjectEditor.getModel().getId(), mProjectEditor.getModel().getId()).executeSingle();
+//            					 if(pp1 != null){
+//                        			 HyjUtil.displayToast("该项目已经是上级项目，不能重复添加！");
+//                        			 break;
+//                        		 } 
+//            				 }
+            			 }
+            			 
+	            		 ParentProject parentProject = new ParentProject();
+	            		 parentProject.setParentProjectId(project.getId());
+	            		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
+	            		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
+            	 	 }
             	 }
             	 break;
              case GET_CURRENCY_ID:
@@ -338,7 +363,6 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		        		Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", mProjectEditor.getModelCopy().getCurrencyId(), HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
 						if(exchange != null){
 							doSave();
-							return;
 						} else {
 							HyjUtil.displayToast("未能获取项目币种到本币的汇率");
 						}

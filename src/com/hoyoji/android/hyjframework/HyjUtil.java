@@ -427,24 +427,24 @@ public class HyjUtil {
 		}
 		
 		public static void detectMemoryLeak(Activity activity) {
-			if(activity == null){
-				return;
-			}
-			
-			final WeakReference<Activity> mActivity = new WeakReference<Activity>(activity);
-			Handler handler = new Handler(Looper
-					.getMainLooper());
-			handler.postDelayed(new Runnable() {
-				public void run() {
-					System.gc();
-					Activity activity = mActivity.get();
-					if(activity != null){
-						HyjUtil.displayToast("检测到内存泄漏啦... " + Integer.toHexString(activity.hashCode()));
-						detectMemoryLeak(activity);
-					} else {
-						//HyjUtil.displayToast("很好，无内存泄漏！");
-					}
-				}
-			}, 1000);
+//			if(activity == null){
+//				return;
+//			}
+//			
+//			final WeakReference<Activity> mActivity = new WeakReference<Activity>(activity);
+//			Handler handler = new Handler(Looper
+//					.getMainLooper());
+//			handler.postDelayed(new Runnable() {
+//				public void run() {
+//					System.gc();
+//					Activity activity = mActivity.get();
+//					if(activity != null){
+//						HyjUtil.displayToast("检测到内存泄漏啦... " + Integer.toHexString(activity.hashCode()));
+//						detectMemoryLeak(activity);
+//					} else {
+//						//HyjUtil.displayToast("很好，无内存泄漏！");
+//					}
+//				}
+//			}, 1000);
 		}
 }
