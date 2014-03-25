@@ -106,14 +106,18 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 //		super.onCreateLoader(groupPos, arg1);
 		Object loader;
+
+		Intent intent = getActivity().getIntent();
+		String excludeType = intent.getStringExtra("excludeType");
+
+		if(arg1 == null){
+			arg1 = new Bundle();
+		}
+		arg1.putString("excludeType", excludeType);
+		
 		if (groupPos < 0) { // 这个是分类
 			loader = new MoneyAccountGroupListLoader(getActivity(), arg1);
 		} else {
-			Intent intent = getActivity().getIntent();
-			String excludeType = intent.getStringExtra("excludeType");
-
-			arg1.putString("excludeType", excludeType);
-			
 			loader = new MoneyAccountChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
