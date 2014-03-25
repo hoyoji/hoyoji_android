@@ -300,7 +300,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && mSelectorFieldTransferOut.getModelId().equals(mSelectorFieldTransferIn.getModelId())){
+				if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -343,7 +343,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void setPermission() {
-		if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && mSelectorFieldTransferOut.getModelId().equals(mSelectorFieldTransferIn.getModelId())){
+		if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
 			mDateTimeFieldDate.setEnabled(false);
 			mNumericTransferOutAmount.setEnabled(false);
 			mSelectorFieldTransferOutFriend.setEnabled(false);
