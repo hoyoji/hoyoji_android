@@ -386,14 +386,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 										MoneyAccount transferOut = moneyTransfer.getTransferOut();
 										MoneyAccount transferIn = moneyTransfer.getTransferIn();
 										
-										HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
-										HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
-										
 										if(transferOut != null){
+											HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
 											transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
 											transferOutEditor.save();
 										}
 										if(transferIn != null){
+											HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
 											transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
 											transferInEditor.save();
 										}
