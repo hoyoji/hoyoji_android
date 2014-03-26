@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.webkit.WebView.FindListener;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -132,6 +133,10 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}else{
+			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
+				getView().findViewById(R.id.button_save).setEnabled(false);
+			}
 		}
 	}
 

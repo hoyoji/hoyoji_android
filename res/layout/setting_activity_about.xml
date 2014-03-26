@@ -9,6 +9,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ChangePasswordActivity" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
+
    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -33,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="检查更新" />
 
     </LinearLayout>
     
@@ -47,13 +53,13 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/changePasswordActivity_textView_newPassword1" />
+            android:text="网址" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2.06"
             android:text="TextView" />
 
     </LinearLayout>
@@ -67,15 +73,36 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/changePasswordActivity_textView_newPassword2" />
+            android:text="邮箱" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:text="help@hoyoji.com" >
+
+        </EditText>
 
     </LinearLayout>
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
+
+	    <TextView
+	        android:id="@+id/textView3"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.55"
+	        android:text="新浪微博" />
+
+	    <TextView
+	        android:id="@+id/textView4"
+	        android:layout_width="82dp"
+	        android:layout_height="wrap_content"
+	        android:text="腾讯微博" />
+	</LinearLayout>
 	
 </LinearLayout>
