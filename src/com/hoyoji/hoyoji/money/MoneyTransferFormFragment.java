@@ -140,7 +140,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferOutFriend = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_transferOutFriend);
 		if(transferOutFriend != null){
 			mSelectorFieldTransferOutFriend.setModelId(transferOutFriend.getId());
-			mSelectorFieldTransferOutFriend.setText(transferOutFriend.getNickName());
+			mSelectorFieldTransferOutFriend.setText(transferOutFriend.getDisplayName());
 		}
 		mSelectorFieldTransferOutFriend.setOnClickListener(new OnClickListener(){
 			@Override
@@ -185,7 +185,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferInFriend = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_transferInFriend);
 		if(transferInFriend != null){
 			mSelectorFieldTransferInFriend.setModelId(transferInFriend.getId());
-			mSelectorFieldTransferInFriend.setText(transferInFriend.getNickName());
+			mSelectorFieldTransferInFriend.setText(transferInFriend.getDisplayName());
 		}
 		mSelectorFieldTransferInFriend.setOnClickListener(new OnClickListener(){
 			@Override
