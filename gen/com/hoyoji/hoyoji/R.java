@@ -1498,12 +1498,12 @@ containing a value of this type.
         public static final int moneyTransferFormFragment_imageView_clear_transferOutFriend=0x7f0600ff;
         public static final int moneyTransferFormFragment_linearLayout_exchangeRate=0x7f06010b;
         public static final int moneyTransferFormFragment_selectorField_project=0x7f060109;
-        public static final int moneyTransferFormFragment_selectorField_transferIn=0x7f060105;
+        public static final int moneyTransferFormFragment_selectorField_transferIn=0x7f060106;
         public static final int moneyTransferFormFragment_selectorField_transferInFriend=0x7f060104;
         public static final int moneyTransferFormFragment_selectorField_transferOut=0x7f060102;
         public static final int moneyTransferFormFragment_selectorField_transferOutFriend=0x7f060100;
         public static final int moneyTransferFormFragment_separatorField_exchange=0x7f06010a;
-        public static final int moneyTransferFormFragment_separatorField_transferIn=0x7f060106;
+        public static final int moneyTransferFormFragment_separatorField_transferIn=0x7f060105;
         public static final int moneyTransferFormFragment_separatorField_transferInamount=0x7f060108;
         public static final int moneyTransferFormFragment_separatorField_transferOut=0x7f060101;
         public static final int moneyTransferFormFragment_textField_date=0x7f0600fd;

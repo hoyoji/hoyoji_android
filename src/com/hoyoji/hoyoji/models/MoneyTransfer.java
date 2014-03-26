@@ -313,7 +313,7 @@ public class MoneyTransfer extends HyjModel{
 		if(mTransferInFriendUser.getFriendUserId() != null){
 			this.mTransferInFriendUserId = mTransferInFriendUser.getFriendUserId();
 		}else{
-			this.mTransferInFriendUserId = mTransferInFriendUser.getId();
+			this.mTransferInLocalFriendId = mTransferInFriendUser.getId();
 		}
 	}
 
