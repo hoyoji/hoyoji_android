@@ -96,8 +96,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				SystemSettingFormFragment.this.openActivityWithFragment(ChangePasswordActivity.class, R.string.changePasswordActivity_title, null);
 			}
 		});
 		
@@ -109,7 +108,6 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -139,6 +137,8 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		});
 	}
 	
+	
+
 	private void fillData(){
 		User modelCopy = (User) mUserEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText());
