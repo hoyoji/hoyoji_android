@@ -1169,8 +1169,8 @@ containing a value of this type.
         public static final int aboutActivity_textView_email=0x7f06017c;
         public static final int aboutActivity_textView_emailLabel=0x7f06017b;
         public static final int aboutActivity_textView_foot=0x7f06017f;
-        public static final int aboutActivity_textView_sinaWeibo=0x7f06017d;
-        public static final int aboutActivity_textView_tencentWeibo=0x7f06017e;
+        public static final int aboutActivity_textView_sinaBlog=0x7f06017d;
+        public static final int aboutActivity_textView_tencentBlog=0x7f06017e;
         public static final int aboutActivity_textView_version=0x7f060177;
         public static final int aboutActivity_textView_versionLabel=0x7f060176;
         public static final int aboutActivity_textView_website=0x7f06017a;
@@ -1810,8 +1810,8 @@ containing a value of this type.
         public static final int aboutActivity_textView_email=0x7f0b0238;
         public static final int aboutActivity_textView_emailLabel=0x7f0b0237;
         public static final int aboutActivity_textView_foot=0x7f0b023b;
-        public static final int aboutActivity_textView_sinaWeibo=0x7f0b0239;
-        public static final int aboutActivity_textView_tencentWeibo=0x7f0b023a;
+        public static final int aboutActivity_textView_sinaBlog=0x7f0b0239;
+        public static final int aboutActivity_textView_tencentBlog=0x7f0b023a;
         public static final int aboutActivity_textView_version=0x7f0b0233;
         public static final int aboutActivity_textView_versionLabel=0x7f0b0232;
         public static final int aboutActivity_textView_website=0x7f0b0236;

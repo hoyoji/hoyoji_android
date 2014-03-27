@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".about" >
+    tools:context=".AboutActivity" >
 
     <ImageView
         android:id="@+id/aboutActivity_imageView_logo"
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/aboutActivity_button_checkUpdate" />
+            android:text="@string/aboutActivity_button_checkUpdate"/>
     </LinearLayout>
     
 <View
@@ -119,20 +119,20 @@
         android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/aboutActivity_textView_sinaWeibo"
+            android:id="@+id/aboutActivity_textView_sinaBlog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/aboutActivity_textView_sinaWeibo" />
+            android:text="@string/aboutActivity_textView_sinaBlog" />
 
         <TextView
-            android:id="@+id/aboutActivity_textView_tencentWeibo"
+            android:id="@+id/aboutActivity_textView_tencentBlog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/aboutActivity_textView_tencentWeibo" />
+            android:text="@string/aboutActivity_textView_tencentBlog" />
     </LinearLayout>
 
     <View
