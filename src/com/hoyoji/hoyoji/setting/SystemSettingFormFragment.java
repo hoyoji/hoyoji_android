@@ -86,7 +86,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
 				
 			}
 		});
