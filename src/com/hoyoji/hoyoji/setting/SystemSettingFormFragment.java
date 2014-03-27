@@ -108,7 +108,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				SystemSettingFormFragment.this.openActivityWithFragment(AboutActivity.class, R.string.aboutActivity_title, null);
+				SystemSettingFormFragment.this.openActivityWithFragment(AboutFragment.class, R.string.aboutFragment_title, null);
 			}
 		});
 		

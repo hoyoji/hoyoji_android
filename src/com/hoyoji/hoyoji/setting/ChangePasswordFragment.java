@@ -26,7 +26,7 @@ public class ChangePasswordFragment extends HyjFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.setting_activity_changepassword;
+		return R.layout.setting_fragment_changepassword;
 	}
 	 
 	@Override

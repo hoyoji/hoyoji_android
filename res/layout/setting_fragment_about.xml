@@ -7,10 +7,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AboutActivity" >
+    tools:context=".AboutFragment" >
 
     <ImageView
-        android:id="@+id/aboutActivity_imageView_logo"
+        android:id="@+id/aboutFragment_imageView_logo"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:src="@drawable/ic_launcher" />
@@ -28,26 +28,26 @@
         android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/aboutActivity_textView_versionLabel"
+            android:id="@+id/aboutFragment_textView_versionLabel"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/aboutActivity_textView_versionLabel" />
+            android:text="@string/aboutFragment_textView_versionLabel" />
 
         <TextView
-            android:id="@+id/aboutActivity_textView_version"
+            android:id="@+id/aboutFragment_textView_version"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/aboutActivity_textView_version" />
+            android:text="@string/aboutFragment_textView_version" />
 
         <Button
-            android:id="@+id/aboutActivity_button_checkUpdate"
+            android:id="@+id/aboutFragment_button_checkUpdate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/aboutActivity_button_checkUpdate"/>
+            android:text="@string/aboutFragment_button_checkUpdate"/>
     </LinearLayout>
     
 <View
@@ -63,19 +63,19 @@
         android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/aboutActivity_textView_websiteLabel"
+            android:id="@+id/aboutFragment_textView_websiteLabel"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/aboutActivity_textView_websiteLabel" />
+            android:text="@string/aboutFragment_textView_websiteLabel" />
 
         <TextView
-            android:id="@+id/aboutActivity_textView_website"
+            android:id="@+id/aboutFragment_textView_website"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/aboutActivity_textView_website" />
+            android:text="@string/aboutFragment_textView_website" />
     </LinearLayout>
 
     <View
@@ -91,19 +91,19 @@
         android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/aboutActivity_textView_emailLabel"
+            android:id="@+id/aboutFragment_textView_emailLabel"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/aboutActivity_textView_emailLabel" />
+            android:text="@string/aboutFragment_textView_emailLabel" />
 
         <TextView
-            android:id="@+id/aboutActivity_textView_email"
+            android:id="@+id/aboutFragment_textView_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/aboutActivity_textView_email" />
+            android:text="@string/aboutFragment_textView_email" />
     </LinearLayout>
 
     <View
@@ -119,20 +119,20 @@
         android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/aboutActivity_textView_sinaBlog"
+            android:id="@+id/aboutFragment_textView_sinaBlog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/aboutActivity_textView_sinaBlog" />
+            android:text="@string/aboutFragment_textView_sinaBlog" />
 
         <TextView
-            android:id="@+id/aboutActivity_textView_tencentBlog"
+            android:id="@+id/aboutFragment_textView_tencentBlog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/aboutActivity_textView_tencentBlog" />
+            android:text="@string/aboutFragment_textView_tencentBlog" />
     </LinearLayout>
 
     <View
@@ -144,10 +144,10 @@
         android:background="@android:color/darker_gray" />
     
     <TextView
-        android:id="@+id/aboutActivity_textView_foot"
+        android:id="@+id/aboutFragment_textView_foot"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:gravity="center"
-        android:text="@string/aboutActivity_textView_foot" />
+        android:text="@string/aboutFragment_textView_foot" />
 
 </LinearLayout>

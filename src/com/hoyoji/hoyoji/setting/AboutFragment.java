@@ -9,16 +9,16 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.hoyoji.R;
 
-public class AboutActivity extends HyjFragment {
+public class AboutFragment extends HyjFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.setting_activity_about;
+		return R.layout.setting_fragment_about;
 	}
 
 	@Override
 	public void onInitViewData() {
-		getView().findViewById(R.id.aboutActivity_button_checkUpdate)
+		getView().findViewById(R.id.aboutFragment_button_checkUpdate)
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -27,7 +27,7 @@ public class AboutActivity extends HyjFragment {
 					}
 				});
 
-		getView().findViewById(R.id.aboutActivity_textView_website)
+		getView().findViewById(R.id.aboutFragment_textView_website)
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -38,7 +38,7 @@ public class AboutActivity extends HyjFragment {
 					}
 				});
 
-		getView().findViewById(R.id.aboutActivity_textView_email)
+		getView().findViewById(R.id.aboutFragment_textView_email)
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -61,7 +61,7 @@ public class AboutActivity extends HyjFragment {
 					}
 				});
 
-		getView().findViewById(R.id.aboutActivity_textView_sinaBlog)
+		getView().findViewById(R.id.aboutFragment_textView_sinaBlog)
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -72,7 +72,7 @@ public class AboutActivity extends HyjFragment {
 					}
 				});
 
-		getView().findViewById(R.id.aboutActivity_textView_tencentBlog)
+		getView().findViewById(R.id.aboutFragment_textView_tencentBlog)
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
