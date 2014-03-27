@@ -1198,10 +1198,10 @@ containing a value of this type.
         public static final int button_register=0x7f060051;
         public static final int button_save=0x7f06001b;
         public static final int button_sign_in=0x7f060050;
+        public static final int changePasswordActivity_button_onSave=0x7f060187;
         public static final int changePasswordActivity_editText_newPassword1=0x7f060183;
         public static final int changePasswordActivity_editText_newPassword2=0x7f060185;
         public static final int changePasswordActivity_editText_oldPassword=0x7f060181;
-        public static final int changePasswordActivity_submit=0x7f060187;
         public static final int changePasswordActivity_textView_newPassword1=0x7f060182;
         public static final int changePasswordActivity_textView_newPassword2=0x7f060184;
         public static final int changePasswordActivity_textView_oldPassword=0x7f060180;
@@ -1857,10 +1857,10 @@ containing a value of this type.
         public static final int app_take_picture=0x7f0b0025;
         public static final int app_toast_new_messages=0x7f0b002f;
         public static final int app_validation_error=0x7f0b0016;
+        public static final int changePasswordActivity_button_onSave=0x7f0b0247;
         public static final int changePasswordActivity_editText_hint_newPassword1=0x7f0b0240;
         public static final int changePasswordActivity_editText_hint_newPassword2=0x7f0b0242;
         public static final int changePasswordActivity_editText_hint_oldPassword=0x7f0b023e;
-        public static final int changePasswordActivity_onSave=0x7f0b0247;
         public static final int changePasswordActivity_textView_newPassword1=0x7f0b023f;
         public static final int changePasswordActivity_textView_newPassword2=0x7f0b0241;
         public static final int changePasswordActivity_textView_oldPassword=0x7f0b023d;

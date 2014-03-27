@@ -3,10 +3,8 @@ package com.hoyoji.hoyoji.setting;
 import android.view.KeyEvent;
 
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -15,7 +13,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.hoyoji.R;
 
 
-public class ChangePasswordActivity extends HyjFragment {
+public class aboutActivity extends HyjFragment {
 	private EditText mEditTextOldPassword = null;
 	private EditText mEditTextNewPassword1 = null;
 	private EditText mEditTextNewPassword2 = null;
@@ -46,15 +44,6 @@ public class ChangePasswordActivity extends HyjFragment {
 					}
 				});
 		
-		getView().findViewById(R.id.changePasswordActivity_button_onSave).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				changePassword_submit(v);
-				
-			}
-		});
-		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 
@@ -68,7 +57,7 @@ public class ChangePasswordActivity extends HyjFragment {
 		boolean validatePass = true;
 		fillData();
 		
-		if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+		if(!mOldPassword.equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
 			mEditTextOldPassword.setError(getString(R.string.changePasswordActivity_validation_wrong_oldPassword));
 	   		validatePass = false;
 		}else{
