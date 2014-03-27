@@ -15,7 +15,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.hoyoji.R;
 
 
-public class ChangePasswordActivity extends HyjFragment {
+public class ChangePasswordFragment extends HyjFragment {
 	private EditText mEditTextOldPassword = null;
 	private EditText mEditTextNewPassword1 = null;
 	private EditText mEditTextNewPassword2 = null;
@@ -31,9 +31,9 @@ public class ChangePasswordActivity extends HyjFragment {
 	 
 	@Override
 	public void onInitViewData(){
-		mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordActivity_editText_oldPassword);
-		mEditTextNewPassword1 = (EditText) getView().findViewById(R.id.changePasswordActivity_editText_newPassword1);
-		mEditTextNewPassword2 = (EditText) getView().findViewById(R.id.changePasswordActivity_editText_newPassword2);
+		mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_oldPassword);
+		mEditTextNewPassword1 = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_newPassword1);
+		mEditTextNewPassword2 = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_newPassword2);
 		mEditTextNewPassword2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
 					public boolean onEditorAction(TextView textView, int id,
@@ -46,7 +46,7 @@ public class ChangePasswordActivity extends HyjFragment {
 					}
 				});
 		
-		getView().findViewById(R.id.changePasswordActivity_button_onSave).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.changePasswordFragment_button_onSave).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -69,27 +69,27 @@ public class ChangePasswordActivity extends HyjFragment {
 		fillData();
 		
 		if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
-			mEditTextOldPassword.setError(getString(R.string.changePasswordActivity_validation_wrong_oldPassword));
+			mEditTextOldPassword.setError(getString(R.string.changePasswordFragment_validation_wrong_oldPassword));
 	   		validatePass = false;
 		}else{
 			mEditTextOldPassword.setError(null);
 		}
 		
 		if(mNewPassword1.length() == 0){
-	   		mEditTextNewPassword1.setError(getString(R.string.changePasswordActivity_editText_hint_newPassword1));
+	   		mEditTextNewPassword1.setError(getString(R.string.changePasswordFragment_editText_hint_newPassword1));
 	   		validatePass = false;
 		} else if(!mNewPassword1.matches("^.{6,18}$")){
-			mEditTextNewPassword1.setError(getString(R.string.changePasswordActivity_validation_password_too_short));
+			mEditTextNewPassword1.setError(getString(R.string.changePasswordFragment_validation_password_too_short));
 	   		validatePass = false;
 		} else if(checkPassWordComplexity(mNewPassword1)){
-			mEditTextNewPassword1.setError(getString(R.string.changePasswordActivity_validation_password_too_simple));
+			mEditTextNewPassword1.setError(getString(R.string.changePasswordFragment_validation_password_too_simple));
 			validatePass = false;
 		}else {
 			mEditTextNewPassword1.setError(null);
 		}
 		
 		if(!mNewPassword1.equals(mNewPassword2)){
-			mEditTextNewPassword2.setError(getString(R.string.changePasswordActivity_validation_two_password_not_same));
+			mEditTextNewPassword2.setError(getString(R.string.changePasswordFragment_validation_two_password_not_same));
 	   		validatePass = false;
 		} else {
 			mEditTextNewPassword2.setError(null);

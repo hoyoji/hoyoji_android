@@ -96,7 +96,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				SystemSettingFormFragment.this.openActivityWithFragment(ChangePasswordActivity.class, R.string.changePasswordActivity_title, null);
+				SystemSettingFormFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, null);
 			}
 		});
 		
