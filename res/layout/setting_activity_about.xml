@@ -10,99 +10,144 @@
     tools:context=".ChangePasswordActivity" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/aboutActivity_imageView_logo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:src="@drawable/ic_launcher" />
 
-   <LinearLayout
+    <View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/changePasswordActivity_textView_oldPassword"
+            android:id="@+id/aboutActivity_textView_versionLabel"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="当前版本" />
+            android:text="@string/aboutActivity_textView_versionLabel" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/aboutActivity_textView_version"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="1.0.1" />
+            android:text="@string/aboutActivity_textView_version" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/aboutActivity_button_checkUpdate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="检查更新" />
-
+            android:text="@string/aboutActivity_button_checkUpdate" />
     </LinearLayout>
     
-	<LinearLayout
+<View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/changePasswordActivity_textView_newPassword1"
+            android:id="@+id/aboutActivity_textView_websiteLabel"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="网址" />
+            android:text="@string/aboutActivity_textView_websiteLabel" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/aboutActivity_textView_website"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2.06"
-            android:text="TextView" />
-
+            android:layout_weight="2"
+            android:text="@string/aboutActivity_textView_website" />
     </LinearLayout>
-	<LinearLayout
+
+    <View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+    
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="43dp" >
 
         <TextView
-            android:id="@+id/changePasswordActivity_textView_newPassword2"
-            android:layout_width="0dip"
+            android:id="@+id/aboutActivity_textView_emailLabel"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="邮箱" />
+            android:text="@string/aboutActivity_textView_emailLabel" />
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/aboutActivity_textView_email"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:text="help@hoyoji.com" >
-
-        </EditText>
-
+            android:layout_weight="2"
+            android:text="@string/aboutActivity_textView_email" />
     </LinearLayout>
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
+    <View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp" >
 
-	    <TextView
-	        android:id="@+id/textView3"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.55"
-	        android:text="新浪微博" />
+        <TextView
+            android:id="@+id/aboutActivity_textView_sinaWeibo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/aboutActivity_textView_sinaWeibo" />
 
-	    <TextView
-	        android:id="@+id/textView4"
-	        android:layout_width="82dp"
-	        android:layout_height="wrap_content"
-	        android:text="腾讯微博" />
-	</LinearLayout>
-	
+        <TextView
+            android:id="@+id/aboutActivity_textView_tencentWeibo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/aboutActivity_textView_tencentWeibo" />
+    </LinearLayout>
+
+    <View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@android:color/darker_gray" />
+    
+    <TextView
+        android:id="@+id/aboutActivity_textView_foot"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:gravity="center"
+        android:text="@string/aboutActivity_textView_foot" />
+
 </LinearLayout>

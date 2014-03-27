@@ -135,7 +135,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
-				getView().findViewById(R.id.button_save).setEnabled(false);
+				setSaveActionEnable(false);
 			}
 		}
 	}

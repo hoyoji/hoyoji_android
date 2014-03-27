@@ -52,4 +52,9 @@ public abstract class HyjUserFormFragment extends HyjUserFragment {
 		mSaveButton.setVisibility(View.GONE);
 		getOptionsMenu().findItem(R.id.formFragment_action_save).setVisible(false);
 	}
+	
+	public void setSaveActionEnable(boolean enable){
+		mSaveButton.setEnabled(enable);
+		getOptionsMenu().findItem(R.id.formFragment_action_save).setEnabled(enable);
+	}
 }
