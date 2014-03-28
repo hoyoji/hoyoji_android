@@ -335,19 +335,20 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		});
 		
 			setExchangeRate();
-		
+			setPermission();
+			
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
 	}
 	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-
-		setPermission();
-	}
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//		super.onCreateOptionsMenu(menu, inflater);
+//
+//		setPermission();
+//	}
 	
 	private void setPermission() {
 		if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
@@ -362,6 +363,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			mSelectorFieldProject.setEnabled(false);
 			mRemarkFieldRemark.setEnabled(false);
 			hideSaveAction();
+			
+			if(mSelectorFieldTransferOut.getModelId() == null){
+				mSelectorFieldTransferOutFriend.setText("无转出人");
+			}else if(mSelectorFieldTransferIn.getModelId() == null){
+				mSelectorFieldTransferInFriend.setText("无转入人");
+			}
+			
 		}else if(mSelectorFieldTransferOutFriend.getModelId() != null){
      		mViewSeparatorTransferOut.setVisibility(View.GONE);
      		mSelectorFieldTransferOut.setVisibility(View.GONE);

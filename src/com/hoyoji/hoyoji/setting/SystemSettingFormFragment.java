@@ -91,6 +91,8 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		getView().findViewById(R.id.systemSettingFormFragment_linearLayout_email).setVisibility(View.GONE);
+		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
 			

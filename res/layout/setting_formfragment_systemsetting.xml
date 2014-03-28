@@ -40,7 +40,7 @@
 
                 <com.hoyoji.android.hyjframework.view.HyjTextField
                     android:id="@+id/systemSettingFormFragment_textField_userName"
-                    hyj:style="top_label"
+                    hyj:style="no_label"
                     android:layout_width="fill_parent"
                     android:layout_height="43dp"
                     hyj:labelText="@string/systemSettingFormFragment_textView_userName" />
@@ -71,6 +71,7 @@
             android:background="@android:color/darker_gray" />
 
         <LinearLayout
+            android:id="@+id/systemSettingFormFragment_linearLayout_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
