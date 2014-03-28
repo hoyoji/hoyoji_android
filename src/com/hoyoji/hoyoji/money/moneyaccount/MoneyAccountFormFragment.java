@@ -285,14 +285,14 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			MoneyTransfer newMoneyTransfer = new MoneyTransfer();
 			if(changeAmount > 0){
 				newMoneyTransfer.setTransferOutAmount(changeAmount);
-				newMoneyTransfer.setTransferOutId("null");
+				newMoneyTransfer.setTransferOutId(null);
 				newMoneyTransfer.setTransferInAmount(changeAmount);
 				newMoneyTransfer.setTransferInId(mMoneyAccountEditor.getModelCopy().getId());
 			}else{
 				newMoneyTransfer.setTransferOutAmount(-changeAmount);
 				newMoneyTransfer.setTransferOutId(mMoneyAccountEditor.getModelCopy().getId());
 				newMoneyTransfer.setTransferInAmount(-changeAmount);
-				newMoneyTransfer.setTransferInId("null");
+				newMoneyTransfer.setTransferInId(null);
 			}
 			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
 			newMoneyTransfer.setTransferOutFriendUserId(null);
