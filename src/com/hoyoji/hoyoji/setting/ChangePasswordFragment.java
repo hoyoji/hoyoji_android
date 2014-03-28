@@ -132,12 +132,6 @@ public class ChangePasswordFragment extends HyjFragment {
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
-//					$.$attrs.currentUser.xGet("userData").save({
-//						"password" : Ti.Utils.sha1(newPassword)
-//					}, {
-//						patch : true,
-//						wait : true
-//					});
 					
 					HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
 					editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
@@ -157,12 +151,6 @@ public class ChangePasswordFragment extends HyjFragment {
 				}
 			};
 
-//			var data = {
-//					userId : $.$attrs.currentUser.xGet("id"),
-//					oldPassword : Ti.Utils.sha1(oldPassword),
-//					newPassword : Ti.Utils.sha1(newPassword),
-//					newPassword2 : Ti.Utils.sha1(newPassword2)
-//				};
 			try {
 				JSONObject data = new JSONObject();
 				data.put("userId", HyjApplication.getInstance()
