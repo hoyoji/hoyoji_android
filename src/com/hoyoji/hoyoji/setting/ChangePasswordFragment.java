@@ -1,5 +1,9 @@
 package com.hoyoji.hoyoji.setting;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.view.KeyEvent;
 
 import android.view.View;
@@ -10,9 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
+import com.hoyoji.hoyoji.models.UserData;
 
 
 public class ChangePasswordFragment extends HyjFragment {
@@ -118,10 +128,60 @@ public class ChangePasswordFragment extends HyjFragment {
 	public void changePassword_submit(View v){
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
-		}else{
+		}else{			
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+//					$.$attrs.currentUser.xGet("userData").save({
+//						"password" : Ti.Utils.sha1(newPassword)
+//					}, {
+//						patch : true,
+//						wait : true
+//					});
+					
+					HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
+					editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
+					editor.getModel().setSyncFromServer(true);
+					editor.save();
+
+					((HyjActivity) ChangePasswordFragment.this.getActivity()).dismissProgressDialog();
+					HyjUtil.displayToast(R.string.app_save_success);
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					((HyjActivity) ChangePasswordFragment.this.getActivity()).dismissProgressDialog();
+					
+					JSONObject json = (JSONObject) object;
+					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				}
+			};
+
+//			var data = {
+//					userId : $.$attrs.currentUser.xGet("id"),
+//					oldPassword : Ti.Utils.sha1(oldPassword),
+//					newPassword : Ti.Utils.sha1(newPassword),
+//					newPassword2 : Ti.Utils.sha1(newPassword2)
+//				};
+			try {
+				JSONObject data = new JSONObject();
+				data.put("userId", HyjApplication.getInstance()
+						.getCurrentUser().getId());
+				data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
+				data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
+				data.put("newPassword2", HyjUtil.getSHA1(mNewPassword2));
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString() , "changePassword");
+				
+				((HyjActivity) this.getActivity())
+						.displayProgressDialog(
+								R.string.addFriendListFragment_title_add,
+								R.string.friendListFragment_addFriend_progress_adding);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			
 		}
-		HyjUtil.displayToast(R.string.app_save_success);
 		
 	}
 
