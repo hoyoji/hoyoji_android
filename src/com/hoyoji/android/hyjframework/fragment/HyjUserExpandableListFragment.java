@@ -107,7 +107,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public void setFooterLoadFinished(int count){
         ((TextView)mFooterView).setEnabled(true);
         ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
-		if(count >= mListPageSize){
+		if(count > mListPageSize){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);

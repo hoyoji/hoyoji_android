@@ -33,7 +33,7 @@ public class User extends HyjModel {
 	private String mMessageBoxId;
 	
 	@Column(name = "newFriendAuthentication")
-	private String mNewFriendAuthentication;
+	private boolean mNewFriendAuthentication;
 	
 	@Column(name = "pictureId")
 	private String mPictureId;
@@ -138,11 +138,11 @@ public class User extends HyjModel {
 //		this.mMessageBoxId = mMessageBoxId;
 //	}
 
-	public String getNewFriendAuthentication() {
+	public boolean getNewFriendAuthentication() {
 		return mNewFriendAuthentication;
 	}
 
-	public void setNewFriendAuthentication(String mNewFriendAuthentication) {
+	public void setNewFriendAuthentication(boolean mNewFriendAuthentication) {
 		this.mNewFriendAuthentication = mNewFriendAuthentication;
 	}
 

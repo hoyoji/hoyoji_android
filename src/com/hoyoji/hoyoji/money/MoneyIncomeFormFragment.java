@@ -199,7 +199,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
@@ -572,6 +572,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
 			modelCopy.setFriend(friend);
+		}else{
+			modelCopy.setFriend(null);
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());

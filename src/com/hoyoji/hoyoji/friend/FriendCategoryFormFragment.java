@@ -19,7 +19,7 @@ import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
-
+ 
 
 public class FriendCategoryFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor mFriendCategoryEditor = null;

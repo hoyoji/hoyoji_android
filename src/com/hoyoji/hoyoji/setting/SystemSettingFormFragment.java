@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -44,10 +46,16 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<User> mUserEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjTextField mTextFieldUserName = null;
+	private HyjTextField mTextFieldNickName = null;
+	private HyjTextField mTextFieldEmail = null;
+	private Button mButtonCheckEmail = null;
+	private Button mButtonChangePassword = null;
+	private CheckBox mCheckBoxAddFriendValidation = null;
+	private LinearLayout mLnearLayoutAbout = null;
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.setting_formfragment_system_setting;
+		return R.layout.setting_formfragment_systemsetting;
 	}
 	 
 	@Override
@@ -67,6 +75,42 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		mTextFieldUserName.setText(user.getUserName());
 		mTextFieldUserName.setEnabled(false);
 		
+		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
+		mTextFieldNickName.setText(user.getNickName());
+		
+		mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_email);
+		mTextFieldEmail.setText(user.getUserData().getEmail());
+		
+		mButtonCheckEmail = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_checkEmail);
+		mButtonCheckEmail.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
+				
+			}
+		});
+		
+		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
+		mButtonChangePassword.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SystemSettingFormFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, null);
+			}
+		});
+		
+		mCheckBoxAddFriendValidation = (CheckBox) getView().findViewById(R.id.systemSettingFormFragment_checkBox_validation_addFriend);
+		mCheckBoxAddFriendValidation.setChecked(user.getNewFriendAuthentication());
+		
+		mLnearLayoutAbout = (LinearLayout) getView().findViewById(R.id.systemSettingFormFragment_linearLayout_about);
+		mLnearLayoutAbout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SystemSettingFormFragment.this.openActivityWithFragment(AboutFragment.class, R.string.aboutFragment_title, null);
+			}
+		});
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.systemSettingFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
@@ -93,10 +137,18 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		});
 	}
 	
+	
+
 	private void fillData(){
+		User modelCopy = (User) mUserEditor.getModelCopy();
+		modelCopy.setNickName(mTextFieldNickName.getText());
+		modelCopy.setNewFriendAuthentication(this.mCheckBoxAddFriendValidation.isChecked());
+		modelCopy.getUserData().setEmail(mTextFieldEmail.getText());
 	}
 	
 	private void showValidatioErrors(){
+		HyjUtil.displayToast(R.string.app_validation_error);
+		
 	}
 
 	 @Override
@@ -111,7 +163,8 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			showValidatioErrors();
 		} else {
 			savePictures();
-			
+
+			mUserEditor.getModelCopy().getUserData().save();
 			mUserEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 			getActivity().finish();

@@ -200,10 +200,15 @@ public class MoneyLend extends HyjModel{
 	}
 	
 	public void setFriend(Friend mFriend) {
-		if(mFriend.getFriendUserId() != null){
+		if(mFriend == null){
+			this.mFriendUserId = null;
+			this.mLocalFriendId = null;
+		}else if(mFriend.getFriendUserId() != null){
 			this.mFriendUserId = mFriend.getFriendUserId();
+			this.mLocalFriendId= null;
 		}
-		else{
+		else {
+			this.mFriendUserId = null;
 			this.mLocalFriendId = mFriend.getId();
 		}
 	}

@@ -1,0 +1,183 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".SystemSettingFormFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.hoyoji.android.hyjframework.view.HyjImageField
+            android:id="@+id/systemSettingFormFragment_imageField_picture"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/systemSettingFormFragment_imageView_camera"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_action_new_picture" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="vertical"
+                android:paddingLeft="66dp" >
+
+                <com.hoyoji.android.hyjframework.view.HyjTextField
+                    android:id="@+id/systemSettingFormFragment_textField_userName"
+                    hyj:style="top_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="43dp"
+                    hyj:labelText="@string/systemSettingFormFragment_textView_userName" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <com.hoyoji.android.hyjframework.view.HyjTextField
+            android:id="@+id/systemSettingFormFragment_textField_nickName"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            hyj:hintText="@string/systemSettingFormFragment_editText_hint_nickName"
+            hyj:labelText="@string/systemSettingFormFragment_textView_nickName" />
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/systemSettingFormFragment_textField_email"
+                android:layout_width="fill_parent"
+                android:layout_height="43dp"
+                hyj:hintText="@string/systemSettingFormFragment_editText_hint_email"
+                hyj:labelText="@string/systemSettingFormFragment_textView_email" >
+
+                <Button
+                    android:id="@+id/systemSettingFormFragment_button_checkEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/systemSettingFormFragment_button_checkEmail" />
+
+            </com.hoyoji.android.hyjframework.view.HyjTextField>
+
+        </LinearLayout>
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/systemSettingFormFragment_textView_password"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/systemSettingFormFragment_textView_password" />
+
+            <Button
+                android:id="@+id/systemSettingFormFragment_button_changePassword"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_weight="4"
+                android:text="@string/systemSettingFormFragment_button_changePassword" />
+        </LinearLayout>
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <CheckBox
+            android:id="@+id/systemSettingFormFragment_checkBox_validation_addFriend"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:text="@string/systemSettingFormFragment_checkBox_validation_addFriend" />
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/systemSettingFormFragment_linearLayout_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/systemSettingFormFragment_textView_about"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/systemSettingFormFragment_textView_about" />
+
+            <TextView
+                android:id="@+id/systemSettingFormFragment_textView_version"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:text="@string/systemSettingFormFragment_textView_version" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            android:id="@id/button_save"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:text="@string/app_action_save" />
+    </LinearLayout>
+
+</ScrollView>

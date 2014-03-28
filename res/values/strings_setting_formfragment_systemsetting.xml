@@ -2,5 +2,21 @@
 <resources>
     <string name="systemSettingFormFragment_title">用户资料</string>
     
-     <string name="systemSettingFormFragment_textView_userName">用户名</string>
+    <string name="systemSettingFormFragment_textView_userName">用户名</string>
+    
+    <string name="systemSettingFormFragment_textView_nickName">昵称</string>
+    <string name="systemSettingFormFragment_editText_hint_nickName">请输入昵称</string>
+
+ 	<string name="systemSettingFormFragment_textView_email">邮箱</string>
+    <string name="systemSettingFormFragment_editText_hint_email">请输入邮箱</string>
+    <string name="systemSettingFormFragment_button_checkEmail">验证</string>
+    
+    <string name="systemSettingFormFragment_textView_password">密码</string>
+    <string name="systemSettingFormFragment_button_changePassword">修改密码</string>
+    
+    <string name="systemSettingFormFragment_checkBox_validation_addFriend">加我为好友时是否需要验证</string>
+
+    <string name="systemSettingFormFragment_textView_about">关于好友记</string>
+    <string name="systemSettingFormFragment_textView_version">1.0.2</string>
+    
 </resources>
