@@ -591,8 +591,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
 		
-		Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-		modelCopy.setFriend(friend);
+		if(mSelectorFieldFriend.getModelId() != null){
+			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+			modelCopy.setFriend(friend);
+		}else{
+			modelCopy.setFriend(null);
+		}
 
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}

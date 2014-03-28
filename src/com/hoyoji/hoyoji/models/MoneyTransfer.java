@@ -209,7 +209,10 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public void setTransferOutFriend(Friend mTransferOutFriendUser){
-		if(mTransferOutFriendUser.getFriendUserId() != null){
+		if(mTransferOutFriendUser == null){
+			this.mTransferOutFriendUserId = null;
+			this.mTransferOutLocalFriendId = null;
+		}else if(mTransferOutFriendUser.getFriendUserId() != null){
 			this.mTransferOutFriendUserId = mTransferOutFriendUser.getFriendUserId();
 		}else{
 			this.mTransferOutLocalFriendId = mTransferOutFriendUser.getId();
@@ -310,7 +313,10 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public void setTransferInFriend(Friend mTransferInFriendUser){
-		if(mTransferInFriendUser.getFriendUserId() != null){
+		if(mTransferInFriendUser == null) {
+			this.mTransferInFriendUserId = null;
+			this.mTransferInLocalFriendId = null;
+		}else if(mTransferInFriendUser.getFriendUserId() != null){
 			this.mTransferInFriendUserId = mTransferInFriendUser.getFriendUserId();
 		}else{
 			this.mTransferInLocalFriendId = mTransferInFriendUser.getId();

@@ -472,16 +472,22 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		modelCopy.setTransferOutAmount(mNumericTransferOutAmount.getNumber());
 		
 		modelCopy.setTransferOutId(mSelectorFieldTransferOut.getModelId());
-
-		Friend transferOutFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferOutFriend.getModelId());
-		modelCopy.setTransferOutFriend(transferOutFriend);
-		modelCopy.setTransferOutId(null);
+		if(mSelectorFieldTransferOutFriend.getModelId() != null){
+			Friend transferOutFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferOutFriend.getModelId());
+			modelCopy.setTransferOutFriend(transferOutFriend);
+			modelCopy.setTransferOutId(null);
+		}else{
+			modelCopy.setTransferOutFriend(null);
+		}
 		
 		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
-
-		Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
-		modelCopy.setTransferInFriend(transferInFriend);
-		modelCopy.setTransferInId(null);
+		if(mSelectorFieldTransferInFriend.getModelId() != null){
+			Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
+			modelCopy.setTransferInFriend(transferInFriend);
+			modelCopy.setTransferInId(null);
+		}else{
+			modelCopy.setTransferInFriend(null);
+		}
 		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
