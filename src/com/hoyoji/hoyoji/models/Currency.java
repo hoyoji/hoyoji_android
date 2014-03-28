@@ -12,6 +12,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji.R;
 
+import android.os.Build;
 import android.provider.BaseColumns;
 
 @Table(name = "Currency", id = BaseColumns._ID)
@@ -108,8 +109,11 @@ public class Currency extends HyjModel {
 			try {
 				obj.put("symbol",
 						localeCurrency.getSymbol());
-				obj.put("name",
+				
+				if(Build.VERSION.SDK_INT >= 19){
+					obj.put("name",
 						localeCurrency.getDisplayName());
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

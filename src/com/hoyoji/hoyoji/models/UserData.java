@@ -41,6 +41,12 @@ public class UserData extends HyjModel {
 	@Column(name = "phone")
 	private String mPhone;
 	
+	@Column(name = "incomeColor")
+	private String mIncomeColor;
+	
+	@Column(name = "expenseColor")
+	private String mExpenseColor;
+	
 	@Column(name = "phoneVerified")
 	private boolean mPhoneVerified;
 	
@@ -155,6 +161,22 @@ public class UserData extends HyjModel {
 		this.mPhone = mPhone;
 	}
 
+	public String getIncomeColor() {
+		return mIncomeColor;
+	}
+
+	public void setIncomeColor(String mIncomeColor) {
+		this.mIncomeColor = mIncomeColor;
+	}
+	
+	public String getExpenseColor() {
+		return mExpenseColor;
+	}
+
+	public void setExpenseColor(String mExpenseColor) {
+		this.mExpenseColor = mExpenseColor;
+	}
+	
 	public boolean ismPhoneVerified() {
 		return mPhoneVerified;
 	}
