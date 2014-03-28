@@ -9,6 +9,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -335,11 +336,17 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 			setExchangeRate();
 		
-			setPermission();
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+
+		setPermission();
 	}
 	
 	private void setPermission() {

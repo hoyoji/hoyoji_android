@@ -256,6 +256,18 @@ public abstract class Model {
 
 			try {
 				boolean columnIsNull = cursor.isNull(columnIndex);
+
+				if (columnIsNull) {
+					try {
+						field.set(this, null);
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					}
+					continue;
+				}
+				
 				TypeSerializer typeSerializer = Cache
 						.getParserForType(fieldType);
 				Object value = null;
