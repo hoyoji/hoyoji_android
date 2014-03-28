@@ -15,20 +15,20 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "MoneyIncome", id = BaseColumns._ID)
-public class MoneyIncome extends HyjModel{
+public class MoneyIncome extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
 	private String mUUID;
-	
+
 	@Column(name = "pictureId")
 	private String mPictureId;
-	
+
 	@Column(name = "date")
 	private String mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
-	
+
 	@Column(name = "incomeType")
 	private String mIncomeType;
 
@@ -43,25 +43,25 @@ public class MoneyIncome extends HyjModel{
 
 	@Column(name = "moneyAccountId")
 	private String mMoneyAccountId;
-	
+
 	@Column(name = "projectId")
 	private String mProjectId;
-	
+
 	@Column(name = "moneyIncomeCategory")
 	private String mMoneyIncomeCategory;
-	
+
 	@Column(name = "moneyIncomeCategoryMain")
 	private String mMoneyIncomeCategoryMain;
-	
+
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
 	@Column(name = "moneyExpenseId")
 	private Double mMoneyExpenseId;
-	
+
 	@Column(name = "remark")
 	private String mRemark;
-	
+
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
 
@@ -70,15 +70,15 @@ public class MoneyIncome extends HyjModel{
 
 	@Column(name = "location")
 	private String mLocation;
-	
+
 	@Column(name = "geoLon")
 	private String mGeoLon;
-	
+
 	@Column(name = "geoLat")
 	private String mGeoLat;
-	
+
 	@Column(name = "address")
-	private String mAddress;	
+	private String mAddress;
 
 	@Column(name = "_creatorId")
 	private String m_creatorId;
@@ -91,18 +91,20 @@ public class MoneyIncome extends HyjModel{
 
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
-	
-	public MoneyIncome(){
+
+	public MoneyIncome() {
 		super();
-		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+		UserData userData = HyjApplication.getInstance().getCurrentUser()
+				.getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mIncomeType = "MoneyIncome";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
-		if(mProjectId != null){
+		if (mProjectId != null) {
 			mMoneyIncomeCategory = this.getProject().getDefaultIncomeCategory();
-			mMoneyIncomeCategoryMain = this.getProject().getDefaultIncomeCategoryMain();
+			mMoneyIncomeCategoryMain = this.getProject()
+					.getDefaultIncomeCategoryMain();
 		}
 	}
 
@@ -122,25 +124,25 @@ public class MoneyIncome extends HyjModel{
 		this.mPictureId = mPictureId;
 	}
 
-	public Picture getPicture(){
-		if(mPictureId == null){
+	public Picture getPicture() {
+		if (mPictureId == null) {
 			return null;
 		}
 		return (Picture) getModel(Picture.class, mPictureId);
 	}
 
-	public void setPicture(Picture picture){
+	public void setPicture(Picture picture) {
 		this.setPictureId(picture.getId());
 	}
-	
-	public List<Picture> getPictures(){
+
+	public List<Picture> getPictures() {
 		return getMany(Picture.class, "recordId");
 	}
-	
-	public List<MoneyIncomeApportion> getApportions(){
+
+	public List<MoneyIncomeApportion> getApportions() {
 		return getMany(MoneyIncomeApportion.class, "moneyIncomeId");
 	}
-	
+
 	public String getDate() {
 		return mDate;
 	}
@@ -152,47 +154,62 @@ public class MoneyIncome extends HyjModel{
 	public Double getAmount() {
 		return mAmount;
 	}
-	
-	public Double getAmount0(){
-		if(mAmount == null){
+
+	public Double getAmount0() {
+		if (mAmount == null) {
 			return 0.00;
 		}
 		return mAmount;
 	}
-	
-	public Double getLocalAmount(){
-		Double rate = null;
-		Currency userCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
-		if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
-				rate = 1.0;
-			}else{
-				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getMoneyAccount().getCurrencyId());
-			    if(exchange != null){
-			    	rate = exchange.getRate();
-			    }
+
+	public Double getLocalAmount() {
+		// Double rate = null;
+		// Currency userCurrency =
+		// HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		// if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		// if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
+		// rate = 1.0;
+		// }else{
+		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
+		// this.getMoneyAccount().getCurrencyId());
+		// if(exchange != null){
+		// rate = exchange.getRate();
+		// }
+		// }
+		// return this.getAmount0()/rate;
+		// }else{
+		// if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
+		// rate = 1.0;
+		// }else{
+		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
+		// this.getProject().getCurrencyId());
+		// if(exchange != null){
+		// rate = exchange.getRate();
+		// }
+		// }
+		// return this.getAmount0()*this.getExchangeRate()/rate;
+		// }
+
+		Double rate = 1.0;
+		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
+			Exchange exchange = Exchange.getExchange(userCurrencyId, this
+					.getProject().getCurrencyId());
+			if (exchange != null) {
+				rate = exchange.getRate();
 			}
-			return this.getAmount0()/rate;
-		}else{
-			if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
-				rate = 1.0;
-			}else{
-				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getProject().getCurrencyId());
-				if(exchange != null){
-				   	rate = exchange.getRate();
-			    }
-			}
-			return this.getAmount0()*this.getExchangeRate()/rate;
 		}
+		return this.getAmount0() * this.getExchangeRate() / rate;
+
 	}
 
 	public void setAmount(Double mAmount) {
-		if(mAmount != null){
+		if (mAmount != null) {
 			mAmount = HyjUtil.toFixed2(mAmount);
 		}
 		this.mAmount = mAmount;
 	}
-	
+
 	public String getIncomeType() {
 		return mIncomeType;
 	}
@@ -201,29 +218,29 @@ public class MoneyIncome extends HyjModel{
 		this.mIncomeType = mIncomeType;
 	}
 
-	public Friend getFriend(){
-		if(mFriendUserId != null){
-			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
-		}else if(mLocalFriendId != null){
+	public Friend getFriend() {
+		if (mFriendUserId != null) {
+			return new Select().from(Friend.class)
+					.where("friendUserId=?", mFriendUserId).executeSingle();
+		} else if (mLocalFriendId != null) {
 			return getModel(Friend.class, mLocalFriendId);
 		}
 		return null;
 	}
-	
+
 	public void setFriend(Friend mFriend) {
-		if(mFriend == null){
+		if (mFriend == null) {
 			this.mFriendUserId = null;
 			this.mLocalFriendId = null;
-		}else if(mFriend.getFriendUserId() != null){
+		} else if (mFriend.getFriendUserId() != null) {
 			this.mFriendUserId = mFriend.getFriendUserId();
-			this.mLocalFriendId= null;
-		}
-		else {
+			this.mLocalFriendId = null;
+		} else {
 			this.mFriendUserId = null;
 			this.mLocalFriendId = mFriend.getId();
 		}
 	}
-	
+
 	public String getFriendUserId() {
 		return mFriendUserId;
 	}
@@ -248,17 +265,17 @@ public class MoneyIncome extends HyjModel{
 		this.mFriendAccountId = mFriendAccountId;
 	}
 
-	public MoneyAccount getMoneyAccount(){
-		if(mMoneyAccountId == null){
+	public MoneyAccount getMoneyAccount() {
+		if (mMoneyAccountId == null) {
 			return null;
 		}
 		return (MoneyAccount) getModel(MoneyAccount.class, mMoneyAccountId);
 	}
-	
+
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
 		this.mMoneyAccountId = mMoneyAccount.getId();
 	}
-	
+
 	public String getMoneyAccountId() {
 		return mMoneyAccountId;
 	}
@@ -267,17 +284,17 @@ public class MoneyIncome extends HyjModel{
 		this.mMoneyAccountId = mMoneyAccountId;
 	}
 
-	public Project getProject(){
-		if(mProjectId == null){
+	public Project getProject() {
+		if (mProjectId == null) {
 			return null;
 		}
 		return (Project) getModel(Project.class, mProjectId);
 	}
-	
+
 	public void setProject(Project mProject) {
 		this.mProjectId = mProject.getId();
 	}
-	
+
 	public String getProjectId() {
 		return mProjectId;
 	}
@@ -301,13 +318,13 @@ public class MoneyIncome extends HyjModel{
 	public void setMoneyIncomeCategoryMain(String mMoneyIncomeCategoryMain) {
 		this.mMoneyIncomeCategoryMain = mMoneyIncomeCategoryMain;
 	}
-	
+
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}
 
 	public void setExchangeRate(Double mExchangeRate) {
-		if(mExchangeRate != null){
+		if (mExchangeRate != null) {
 			mExchangeRate = HyjUtil.toFixed2(mExchangeRate);
 		}
 		this.mExchangeRate = mExchangeRate;
@@ -316,19 +333,20 @@ public class MoneyIncome extends HyjModel{
 	public String getRemark() {
 		return mRemark;
 	}
-	
+
 	public String getDisplayRemark() {
-		if(mRemark != null && mRemark.length() > 0){
+		if (mRemark != null && mRemark.length() > 0) {
 			return mRemark;
 		} else {
-			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+			return HyjApplication.getInstance().getString(
+					R.string.app_no_remark);
 		}
 	}
-	
+
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
-	
+
 	public String getLastSyncTime() {
 		return mLastSyncTime;
 	}
@@ -348,7 +366,7 @@ public class MoneyIncome extends HyjModel{
 	public User getOwnerUser() {
 		return getModel(User.class, mOwnerUserId);
 	}
-	
+
 	public String getLocation() {
 		return mLocation;
 	}
@@ -380,128 +398,174 @@ public class MoneyIncome extends HyjModel{
 	public void setAddress(String mAddress) {
 		this.mAddress = mAddress;
 	}
-	
+
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-		if(this.getDate() == null){
-			modelEditor.setValidationError("date",R.string.moneyIncomeFormFragment_editText_hint_date);
-		}else{
+		if (this.getDate() == null) {
+			modelEditor.setValidationError("date",
+					R.string.moneyIncomeFormFragment_editText_hint_date);
+		} else {
 			modelEditor.removeValidationError("date");
 		}
-		
-		if(this.getAmount() == null){
-			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_hint_amount);
-		}else if(this.getAmount() < 0){
-			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_validationError_negative_amount);
-		}else if(this.getAmount() > 99999999){
-			modelEditor.setValidationError("amount",R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_amount);
-		}
-		else{
+
+		if (this.getAmount() == null) {
+			modelEditor.setValidationError("amount",
+					R.string.moneyIncomeFormFragment_editText_hint_amount);
+		} else if (this.getAmount() < 0) {
+			modelEditor
+					.setValidationError(
+							"amount",
+							R.string.moneyIncomeFormFragment_editText_validationError_negative_amount);
+		} else if (this.getAmount() > 99999999) {
+			modelEditor
+					.setValidationError(
+							"amount",
+							R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_amount);
+		} else {
 			modelEditor.removeValidationError("amount");
 		}
-		
-		if(this.getMoneyIncomeCategory() == null || this.getMoneyIncomeCategory().length() == 0){
-			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
-		}else{
+
+		if (this.getMoneyIncomeCategory() == null
+				|| this.getMoneyIncomeCategory().length() == 0) {
+			modelEditor
+					.setValidationError(
+							"moneyIncomeCategory",
+							R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
+		} else {
 			modelEditor.removeValidationError("moneyIncomeCategory");
 		}
-		
-		if(this.getExchangeRate() == null){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_hint_exchangeRate);
-		}else if(this.getExchangeRate() == 0){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_zero_exchangeRate);
-		}else if(this.getExchangeRate() < 0){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_negative_exchangeRate);
-		}else if(this.getExchangeRate() > 99999999){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_exchangeRate);
-		}
-		else{
+
+		if (this.getExchangeRate() == null) {
+			modelEditor
+					.setValidationError(
+							"exchangeRate",
+							R.string.moneyIncomeFormFragment_editText_hint_exchangeRate);
+		} else if (this.getExchangeRate() == 0) {
+			modelEditor
+					.setValidationError(
+							"exchangeRate",
+							R.string.moneyIncomeFormFragment_editText_validationError_zero_exchangeRate);
+		} else if (this.getExchangeRate() < 0) {
+			modelEditor
+					.setValidationError(
+							"exchangeRate",
+							R.string.moneyIncomeFormFragment_editText_validationError_negative_exchangeRate);
+		} else if (this.getExchangeRate() > 99999999) {
+			modelEditor
+					.setValidationError(
+							"exchangeRate",
+							R.string.moneyIncomeFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		} else {
 			modelEditor.removeValidationError("exchangeRate");
 		}
-		
-		if(this.getMoneyAccountId() == null){
-			modelEditor.setValidationError("moneyAccount",R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
-		}else{
+
+		if (this.getMoneyAccountId() == null) {
+			modelEditor
+					.setValidationError(
+							"moneyAccount",
+							R.string.moneyIncomeFormFragment_editText_hint_moneyAccount);
+		} else {
 			modelEditor.removeValidationError("moneyAccount");
 		}
-		if(this.getMoneyIncomeCategory() == null || this.getMoneyIncomeCategory().length() == 0){
-			modelEditor.setValidationError("moneyIncomeCategory", R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
-		}else{
+		if (this.getMoneyIncomeCategory() == null
+				|| this.getMoneyIncomeCategory().length() == 0) {
+			modelEditor
+					.setValidationError(
+							"moneyIncomeCategory",
+							R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
+		} else {
 			modelEditor.removeValidationError("moneyIncomeCategory");
 		}
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.moneyIncomeFormFragment_editText_hint_project);
-		}else{
+		if (this.getProjectId() == null) {
+			modelEditor.setValidationError("project",
+					R.string.moneyIncomeFormFragment_editText_hint_project);
+		} else {
 			modelEditor.removeValidationError("project");
 		}
 	}
 
 	@Override
-	public void save(){
-		if(this.getOwnerUserId() == null){
-			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+	public void save() {
+		if (this.getOwnerUserId() == null) {
+			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser()
+					.getId());
 		}
 		super.save();
-	}	
+	}
 
-	public void setCreatorId(String id){
+	public void setCreatorId(String id) {
 		m_creatorId = id;
 	}
-	
-	public String getCreatorId(){
+
+	public String getCreatorId() {
 		return m_creatorId;
 	}
-	
-	public String getServerRecordHash(){
+
+	public String getServerRecordHash() {
 		return mServerRecordHash;
 	}
 
-	public void setServerRecordHash(String mServerRecordHash){
+	public void setServerRecordHash(String mServerRecordHash) {
 		this.mServerRecordHash = mServerRecordHash;
 	}
 
-	public String getLastServerUpdateTime(){
+	public String getLastServerUpdateTime() {
 		return mLastServerUpdateTime;
 	}
 
-	public void setLastServerUpdateTime(String mLastServerUpdateTime){
+	public void setLastServerUpdateTime(String mLastServerUpdateTime) {
 		this.mLastServerUpdateTime = mLastServerUpdateTime;
 	}
 
-	public Long getLastClientUpdateTime(){
+	public Long getLastClientUpdateTime() {
 		return mLastClientUpdateTime;
 	}
 
-	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
+	public void setLastClientUpdateTime(Long mLastClientUpdateTime) {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}	
-	public boolean hasEditPermission(){
-		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	}
+
+	public boolean hasEditPermission() {
+		if (!this.getOwnerUserId().equals(
+				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-		
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-		if(psa == null){
+
+		ProjectShareAuthorization psa = new Select()
+				.from(ProjectShareAuthorization.class)
+				.where("projectId = ? AND friendUserId=?", this.getProjectId(),
+						HyjApplication.getInstance().getCurrentUser().getId())
+				.executeSingle();
+		if (psa == null) {
 			return false;
 		}
 		return psa.getProjectShareMoneyIncomeEdit();
 	}
-	
-	public boolean hasAddNewPermission(String projectId){
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-		if(psa == null){
+
+	public boolean hasAddNewPermission(String projectId) {
+		ProjectShareAuthorization psa = new Select()
+				.from(ProjectShareAuthorization.class)
+				.where("projectId = ? AND friendUserId=?", projectId,
+						HyjApplication.getInstance().getCurrentUser().getId())
+				.executeSingle();
+		if (psa == null) {
 			return false;
 		}
 		return psa.getProjectShareMoneyIncomeAddNew();
 	}
 
-	public boolean hasDeletePermission(){
-		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	public boolean hasDeletePermission() {
+		if (!this.getOwnerUserId().equals(
+				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-		
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-		if(psa == null){
+
+		ProjectShareAuthorization psa = new Select()
+				.from(ProjectShareAuthorization.class)
+				.where("projectId = ? AND friendUserId=?", this.getProjectId(),
+						HyjApplication.getInstance().getCurrentUser().getId())
+				.executeSingle();
+		if (psa == null) {
 			return false;
 		}
 		return psa.getProjectShareMoneyIncomeDelete();
