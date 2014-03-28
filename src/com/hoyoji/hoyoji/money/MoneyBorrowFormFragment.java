@@ -376,10 +376,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
-		if(mSelectorFieldFriend.getModelId() != null){
-			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-			modelCopy.setFriend(friend);
-		}
+		Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+		modelCopy.setFriend(friend);
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}

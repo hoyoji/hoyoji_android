@@ -568,11 +568,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
-		
-		if(mSelectorFieldFriend.getModelId() != null){
-			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
-			modelCopy.setFriend(friend);
-		}
+	
+		Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+		modelCopy.setFriend(friend);
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 		
