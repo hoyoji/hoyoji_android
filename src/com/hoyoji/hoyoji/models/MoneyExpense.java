@@ -231,8 +231,10 @@ public class MoneyExpense extends HyjModel{
 			this.mLocalFriendId = null;
 		}else if(mFriend.getFriendUserId() != null){
 			this.mFriendUserId = mFriend.getFriendUserId();
+			this.mLocalFriendId = null;
 		}
 		else {
+			this.mFriendUserId= null;
 			this.mLocalFriendId = mFriend.getId();
 		}
 	}
