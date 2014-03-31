@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
@@ -39,11 +40,13 @@ import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 
 
 public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<User> mUserEditor = null;
+	private HyjModelEditor<UserData> mUserDataEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjTextField mTextFieldUserName = null;
 	private HyjTextField mTextFieldNickName = null;
@@ -51,7 +54,12 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private Button mButtonCheckEmail = null;
 	private Button mButtonChangePassword = null;
 	private CheckBox mCheckBoxAddFriendValidation = null;
+	private Button mButtonMoneyExpenseColorPicker = null;
+	private Button mButtonMoneyIncomeColorPicker = null;
 	private LinearLayout mLnearLayoutAbout = null;
+	
+	private int mExpenseColor = 0;
+	private int mIncomeColor = 0;
 	
 	@Override
 	public Integer useContentView() {
@@ -67,6 +75,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		user =  new Select().from(User.class).where("id=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		
 		mUserEditor = user.newModelEditor();
+		mUserDataEditor = user.getUserData().newModelEditor();
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.systemSettingFormFragment_imageField_picture);		
 		mImageFieldPicture.setImages(user.getPictures());
@@ -104,6 +113,57 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		
 		mCheckBoxAddFriendValidation = (CheckBox) getView().findViewById(R.id.systemSettingFormFragment_checkBox_validation_addFriend);
 		mCheckBoxAddFriendValidation.setChecked(user.getNewFriendAuthentication());
+		
+		mButtonMoneyExpenseColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyExpenseColorPicker);
+		mButtonMoneyExpenseColorPicker.setText(null);
+		mExpenseColor = Color.parseColor("#FF0000");
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+			mExpenseColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
+		}
+		mButtonMoneyExpenseColorPicker.setBackgroundColor(mExpenseColor);
+		mButtonMoneyExpenseColorPicker.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mButtonMoneyExpenseColorPicker.getTextColors().getDefaultColor(),   
+                        HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyExpenseColorPicker),   
+                        new ColorPickerDialog.OnColorChangedListener() {  
+                      
+                    @Override  
+                    public void colorChanged(int color) {  
+                    	mExpenseColor = color;
+                    	mButtonMoneyExpenseColorPicker.setBackgroundColor(color);
+                    }  
+                });  
+                dialog.show();  
+			}
+		});
+		
+		mButtonMoneyIncomeColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyIncomeColorPicker);
+		mButtonMoneyIncomeColorPicker.setText(null);
+		mIncomeColor = Color.parseColor("#339900");
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+			mIncomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
+		}
+		mButtonMoneyIncomeColorPicker.setBackgroundColor(mIncomeColor);
+		mButtonMoneyIncomeColorPicker.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mButtonMoneyIncomeColorPicker.getTextColors().getDefaultColor(),   
+                        HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyIncomeColorPicker),   
+                        new ColorPickerDialog.OnColorChangedListener() {  
+                      
+                    @Override  
+                    public void colorChanged(int color) { 
+                    	mIncomeColor = color;
+                    	mButtonMoneyIncomeColorPicker.setBackgroundColor(color);
+                    }  
+                });  
+                dialog.show();  
+			}
+		});
+		
 		
 		mLnearLayoutAbout = (LinearLayout) getView().findViewById(R.id.systemSettingFormFragment_linearLayout_about);
 		mLnearLayoutAbout.setOnClickListener(new OnClickListener() {
@@ -145,7 +205,12 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		User modelCopy = (User) mUserEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText());
 		modelCopy.setNewFriendAuthentication(this.mCheckBoxAddFriendValidation.isChecked());
-		modelCopy.getUserData().setEmail(mTextFieldEmail.getText());
+		
+
+		UserData userDataCopy = (UserData) mUserDataEditor.getModelCopy();
+		userDataCopy.setEmail(mTextFieldEmail.getText());
+		userDataCopy.setExpenseColor(Integer.toHexString(mExpenseColor));
+		userDataCopy.setIncomeColor(Integer.toHexString(mIncomeColor));
 	}
 	
 	private void showValidatioErrors(){
@@ -166,7 +231,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		} else {
 			savePictures();
 
-			mUserEditor.getModelCopy().getUserData().save();
+			mUserDataEditor.save();
 			mUserEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 			getActivity().finish();

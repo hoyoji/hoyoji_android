@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -119,6 +120,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
 		mNumericAmount.setNumber(moneyExpense.getAmount());
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {
 			@Override

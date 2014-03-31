@@ -220,7 +220,13 @@ public class SubProjectListFragment extends HyjUserListFragment {
             }
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
-			numericView.setTextColor(Color.parseColor("#FF0000"));
+			
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#FF0000"));
+			}
+			
 			numericView.setNumber(projectExpenseTotal);
 			return true;
 		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
@@ -234,7 +240,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
             }
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
-			numericView.setTextColor(Color.parseColor("#339900"));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#339900"));
+			}
+			
 			numericView.setNumber(projectIncomeTotal);
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){

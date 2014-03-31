@@ -305,7 +305,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(Color.parseColor("#FF0000"));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#FF0000"));
+			}
+			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpense)object).getLocalAmount());
@@ -338,7 +343,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(Color.parseColor("#339900"));
+			
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#339900"));
+			}
+			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
 			return true;
