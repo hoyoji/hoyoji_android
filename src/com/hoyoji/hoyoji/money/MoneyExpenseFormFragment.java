@@ -122,6 +122,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setNumber(moneyExpense.getAmount());
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {

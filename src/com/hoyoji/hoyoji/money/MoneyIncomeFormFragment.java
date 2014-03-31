@@ -123,6 +123,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mNumericAmount.setNumber(moneyIncome.getAmount());
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {
