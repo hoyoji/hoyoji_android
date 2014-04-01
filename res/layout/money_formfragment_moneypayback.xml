@@ -85,7 +85,7 @@
             <com.hoyoji.android.hyjframework.view.HyjNumericField
                 android:id="@+id/moneyPaybackFormFragment_textField_interest"
                 hyj:style="top_label"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 hyj:editTextBold="true"
