@@ -63,11 +63,15 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	public void onInitViewData(){
 		super.onInitViewData();
 		Project project;
+		Boolean editPermission = true;
 		
 		Intent intent = getActivity().getIntent();
 		final Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
+			if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				editPermission = false;
+			}
 		} else {
 			project = new Project();
 		}
@@ -89,6 +93,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getName());
+		mTextFieldProjectName.setEnabled(modelId != -1 && editPermission);
 		
 		mTextFieldProjectRemarkName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectRemarkName);
 		if(modelId != -1 && !project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -126,6 +131,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mCheckBoxAutoApportion = (CheckBox)getView().findViewById(R.id.projectFormFragment_checkBox_autoApportion);
 		mCheckBoxAutoApportion.setChecked(project.getAutoApportion());
+		mCheckBoxAutoApportion.setEnabled(modelId != -1 && editPermission);
 
 		ArrayList<ParentProjectListItem> parentProjectList = new ArrayList<ParentProjectListItem>();
 		for(ParentProject pp : project.getParentProjects()){

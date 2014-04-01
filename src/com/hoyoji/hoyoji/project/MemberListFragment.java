@@ -87,10 +87,18 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(item.getItemId() == R.id.memberListFragment_action_member_addnew){
 			Intent intent = getActivity().getIntent();
 			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			Bundle bundle = new Bundle();
-			bundle.putLong("PROJECT_ID", modelId);
-			openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
-			return true;
+			
+			Project project = Project.load(Project.class, modelId);
+			
+			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				Bundle bundle = new Bundle();
+				bundle.putLong("PROJECT_ID", modelId);
+				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
+				return true;
+			}else{
+				HyjUtil.displayToast("您不能再共享来的项目添加共享成员");
+				return false;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
