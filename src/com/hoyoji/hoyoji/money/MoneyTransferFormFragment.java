@@ -651,10 +651,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              		Friend friend = Friend.load(Friend.class, _id);
              		
              		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+             			MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
              			mSelectorFieldTransferOutFriend.setText("");
                  		mSelectorFieldTransferOutFriend.setModelId(null);
                  		mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
                  		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
+                 		mSelectorFieldTransferOut.setText(activeAccount.getName());
+                 		mSelectorFieldTransferOut.setModelId(activeAccount.getId());
                  		return;
              		}
              		
@@ -679,10 +682,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              		Friend friend = Friend.load(Friend.class, _id);
              		
              		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+             			MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
              			mSelectorFieldTransferInFriend.setText("");
              			mSelectorFieldTransferInFriend.setModelId(null);
                  		mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
                  		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
+                 		mSelectorFieldTransferIn.setText(activeAccount.getName());
+                 		mSelectorFieldTransferIn.setModelId(activeAccount.getId());
                  		return;
              		}
              		
