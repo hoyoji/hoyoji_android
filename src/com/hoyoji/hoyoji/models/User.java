@@ -112,6 +112,10 @@ public class User extends HyjModel {
 	}
 
 	public void setNickName(String mNickName) {
+		if(mNickName.length() == 0){
+			this.mNickName = null;
+			return;
+		}
 		this.mNickName = mNickName;
 	}
 
