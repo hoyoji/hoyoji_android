@@ -116,7 +116,7 @@ public class User extends HyjModel {
 	}
 
 	public String getDisplayName() {
-		if(this.getNickName() != null){
+		if(this.getNickName() != null && this.getNickName().length() != 0){
 			return this.getNickName();
 		}
 		return this.getUserName();
