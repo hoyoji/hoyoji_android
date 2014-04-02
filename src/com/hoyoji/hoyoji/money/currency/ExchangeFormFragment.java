@@ -183,7 +183,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 
 		 if(mExchangeEditor.hasValidationErrors()){
 			 showValidatioErrors();
-		 } else if(checkLocalExchange()){
+		 } else if(mExchangeEditor.getModelCopy().get_mId() == null && checkLocalExchange()){
 			 HyjUtil.displayToast(R.string.exchangeFormFragment_saveError_exchange_exist);
 		 }else {
 			mExchangeEditor.save();
