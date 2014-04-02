@@ -33,7 +33,7 @@ public class User extends HyjModel {
 	private String mMessageBoxId;
 	
 	@Column(name = "newFriendAuthentication")
-	private boolean mNewFriendAuthentication;
+	private String mNewFriendAuthentication;
 	
 	@Column(name = "pictureId")
 	private String mPictureId;
@@ -143,11 +143,18 @@ public class User extends HyjModel {
 //	}
 
 	public boolean getNewFriendAuthentication() {
-		return mNewFriendAuthentication;
+		if(mNewFriendAuthentication.equalsIgnoreCase("non")){
+			return false;
+		}
+		return true;
 	}
 
 	public void setNewFriendAuthentication(boolean mNewFriendAuthentication) {
-		this.mNewFriendAuthentication = mNewFriendAuthentication;
+        if(mNewFriendAuthentication){
+        	this.mNewFriendAuthentication = "required";
+        	return;
+        }
+        this.mNewFriendAuthentication = "non";
 	}
 
 	public String getPictureId() {
