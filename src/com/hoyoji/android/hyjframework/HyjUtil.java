@@ -421,8 +421,7 @@ public class HyjUtil {
 					}
 				}
 			};
-			HyjHttpGetExchangeRateAsyncTask.newInstance(
-					fromCurrency, toCurrency, serverCallbacks);
+			HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
 			
 		}
 		

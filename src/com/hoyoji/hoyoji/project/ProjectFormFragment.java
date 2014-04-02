@@ -224,7 +224,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						});
 					}
 				};
-				HyjHttpGetExchangeRateAsyncTask.newInstance(projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
+				HyjHttpGetExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(),projectCurrencyId,
 						serverCallbacks);
 			}
 		}
