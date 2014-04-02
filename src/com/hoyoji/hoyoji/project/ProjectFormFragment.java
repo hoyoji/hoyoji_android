@@ -93,7 +93,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getName());
-		mTextFieldProjectName.setEnabled(modelId != -1 && editPermission);
+		mTextFieldProjectName.setEnabled(editPermission);
 		
 		mTextFieldProjectRemarkName = (HyjTextField) getView().findViewById(R.id.projectFormFragment_textField_projectRemarkName);
 		if(modelId != -1 && !project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -131,7 +131,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mCheckBoxAutoApportion = (CheckBox)getView().findViewById(R.id.projectFormFragment_checkBox_autoApportion);
 		mCheckBoxAutoApportion.setChecked(project.getAutoApportion());
-		mCheckBoxAutoApportion.setEnabled(modelId != -1 && editPermission);
+		mCheckBoxAutoApportion.setEnabled(editPermission);
 
 		ArrayList<ParentProjectListItem> parentProjectList = new ArrayList<ParentProjectListItem>();
 		for(ParentProject pp : project.getParentProjects()){
