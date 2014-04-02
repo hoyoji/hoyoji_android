@@ -397,11 +397,11 @@ public class HyjUtil {
 						numericExchangeRate.setEnabled(true);
 						numericExchangeRate.setNumber((Double) object);
 						
-						Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
-					    if(exchange != null){
-					    	exchange.setRate((Double) object);
-					    	exchange.save();
-					    }
+//						Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
+//					    if(exchange != null){
+//					    	exchange.setRate((Double) object);
+//					    	exchange.save();
+//					    }
 					}
 				}
 
