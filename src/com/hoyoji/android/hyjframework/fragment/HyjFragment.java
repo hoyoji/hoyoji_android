@@ -18,7 +18,7 @@ public abstract class HyjFragment extends Fragment {
 
 	public abstract Integer useContentView();
 	private boolean mIsViewInited = false;
-	private Menu mOptionsMenu;
+	protected Menu mOptionsMenu;
 	
 	public Integer useToolbarView(){
 		return null;

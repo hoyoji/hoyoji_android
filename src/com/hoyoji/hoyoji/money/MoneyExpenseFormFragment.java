@@ -373,13 +373,13 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		setPermission();
 	}
 
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//	    super.onCreateOptionsMenu(menu, inflater);
-//	    if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
-//	    	hideSaveAction();
-//	    }
-//	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    if(mMoneyExpenseEditor!= null && mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+	    	hideSaveAction();
+	    }
+	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyExpense moneyExpense) {
 		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
@@ -515,6 +515,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
+		if(this.mOptionsMenu != null){
+	    	hideSaveAction();
+		}
+		
 		if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
