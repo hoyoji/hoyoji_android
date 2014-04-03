@@ -145,7 +145,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 						((HyjActivity) AddFriendListFragment.this.getActivity())
 								.dismissProgressDialog();
 						
-					} else if(jsonUser.optString("newFriendAuthentication").equals("non")) {
+					} else if(jsonUser.optString("newFriendAuthentication").equals("none")) {
 						
 						sendAddFriendResponseMessage(jsonUser);
 						
