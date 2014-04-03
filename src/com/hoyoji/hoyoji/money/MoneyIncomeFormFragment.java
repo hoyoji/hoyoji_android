@@ -167,7 +167,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
+			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -975,7 +975,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						return;
 					}
 	         		
-	         		mSelectorFieldProject.setText(project.getName() + "(" + project.getCurrencyId() + ")");
+	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate();
 	         		mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);

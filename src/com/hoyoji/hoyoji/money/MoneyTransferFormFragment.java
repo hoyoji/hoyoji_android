@@ -232,7 +232,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getName());
+			mSelectorFieldProject.setText(project.getDisplayName());
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -706,7 +706,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
 	         		Project project = Project.load(Project.class, _id);
-	         		mSelectorFieldProject.setText(project.getName());
+	         		mSelectorFieldProject.setText(project.getDisplayName());
 	         		mSelectorFieldProject.setModelId(project.getId());
 	        	 }
 	        	 break;
