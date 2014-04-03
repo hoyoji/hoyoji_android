@@ -143,7 +143,7 @@ public class User extends HyjModel {
 //	}
 
 	public boolean getNewFriendAuthentication() {
-		if(mNewFriendAuthentication.equalsIgnoreCase("non")){
+		if(mNewFriendAuthentication.equalsIgnoreCase("none")){
 			return false;
 		}
 		return true;
@@ -154,7 +154,7 @@ public class User extends HyjModel {
         	this.mNewFriendAuthentication = "required";
         	return;
         }
-        this.mNewFriendAuthentication = "non";
+        this.mNewFriendAuthentication = "none";
 	}
 
 	public String getPictureId() {
