@@ -12,6 +12,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -379,6 +380,14 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			setPermission();
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    if(mMoneyIncomeEditor!= null && mMoneyIncomeEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+	    	hideSaveAction();
+	    }
+	}
+	
 	private void addAllProjectMemberIntoApportionsField(MoneyIncome moneyIncome) {
 		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
@@ -534,7 +543,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 
 			mRemarkFieldRemark.setEnabled(false);
 			
-			hideSaveAction();
+			if(this.mOptionsMenu != null){
+		    	hideSaveAction();
+			}
 			
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setEnabled(false);
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setEnabled(false);

@@ -515,10 +515,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(this.mOptionsMenu != null){
-	    	hideSaveAction();
-		}
-		
 		if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
@@ -539,8 +535,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			mApportionFieldApportions.setEnabled(false);
 
 			mRemarkFieldRemark.setEnabled(false);
-			
-			hideSaveAction();
+
+			if(this.mOptionsMenu != null){
+		    	hideSaveAction();
+			}
 			
 			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setEnabled(false);
 			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add_all).setEnabled(false);

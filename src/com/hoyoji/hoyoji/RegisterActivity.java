@@ -1,28 +1,44 @@
 package com.hoyoji.hoyoji;
 
-import java.util.Currency;
 import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.ParentProject;
+import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 
 public class RegisterActivity extends HyjActivity {
+	private final static int GET_CURRENCY_ID = 1;
 	EditText mEditTextUserName;
 	EditText mEditTextPassword1;
 	EditText mEditTextPassword2;
+	HyjSelectorField mSelectFieldCurrency; 
 	String mUserName = "";
 	String mPassword1 = "";
 	String mPassword2 = "";
@@ -74,6 +90,23 @@ public class RegisterActivity extends HyjActivity {
 //	            }
 //	        }
 //	    });		
+		
+		java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+		mSelectFieldCurrency = (HyjSelectorField) findViewById(R.id.registerActivity_selectorField_localCurrency);
+		mSelectFieldCurrency.setModelId(currency.getCurrencyCode());
+		if(Build.VERSION.SDK_INT >= 19){
+			mSelectFieldCurrency.setText(currency.getDisplayName() + "(" + currency.getCurrencyCode() + ")");
+		}else{
+			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCurrencyCode() + ")");
+		}
+		mSelectFieldCurrency.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				RegisterActivity.this.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
+			}
+		});	
+		mSelectFieldCurrency.getEditText().setGravity(Gravity.CENTER_VERTICAL);
+		mSelectFieldCurrency.getEditText().setGravity(Gravity.RIGHT);
 		
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
@@ -150,7 +183,7 @@ public class RegisterActivity extends HyjActivity {
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {
 			final ProgressDialog progressDialog = this.displayProgressDialog(R.string.registerActivity_progress_register_title, R.string.registerActivity_progress_register_msg);  
-			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+			java.util.Currency currency = java.util.Currency.getInstance(mSelectFieldCurrency.getModelId());
 			String currencyId = currency.getCurrencyCode();
 			String currencySymbol = currency.getSymbol();
 			JSONObject postData = new JSONObject();
@@ -188,4 +221,22 @@ public class RegisterActivity extends HyjActivity {
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(), "registerUser");
 		}
 	}
+	
+	 @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case GET_CURRENCY_ID:
+           	 if(resultCode == Activity.RESULT_OK){
+           		 long _id = data.getLongExtra("MODEL_ID", -1);
+	         		Currency currency = Currency.load(Currency.class, _id);
+	         		mSelectFieldCurrency.setModelId(currency.getId());
+	         		if(Build.VERSION.SDK_INT >= 19){
+	        			mSelectFieldCurrency.setText(currency.getName() + "(" + currency.getCode() + ")");
+	        		}else{
+	        			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCode() + ")");
+	        		}
+           	 }
+           	 break;
+         }
+   }
 }
