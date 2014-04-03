@@ -125,7 +125,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mButtonMoneyExpenseColorPicker.getTextColors().getDefaultColor(),   
+				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mExpenseColor,   
                         HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyExpenseColorPicker),   
                         new ColorPickerDialog.OnColorChangedListener() {  
                       
@@ -150,7 +150,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			
 			@Override
 			public void onClick(View v) {
-				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mButtonMoneyIncomeColorPicker.getTextColors().getDefaultColor(),   
+				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mIncomeColor,   
                         HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyIncomeColorPicker),   
                         new ColorPickerDialog.OnColorChangedListener() {  
                       

@@ -80,7 +80,7 @@ public class ColorPickerDialog extends DialogFragment{
         // Set the layout for the dialog
 	      WindowManager manager = this.getActivity().getWindow().getWindowManager();  
 	      int height = (int) (manager.getDefaultDisplay().getHeight() * 0.5f);   
-	      int width = (int) (manager.getDefaultDisplay().getWidth());  
+	      int width = (int) (manager.getDefaultDisplay().getWidth() * 0.7f);  
     	final ColorPickerView myView = new ColorPickerView(context, height, width);
         builder.setView(myView);
 
