@@ -40,6 +40,7 @@ import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
+import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -595,6 +596,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					return true;
 				} else if(msg.getType().equals("Project.Share.Delete") ){
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
+					return true;
+				} else if(msg.getType().equals("Money.Share.AddExpense") ){
+					openActivityWithFragment(MoneyShareMessageFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle);
 					return true;
 				}
 			}

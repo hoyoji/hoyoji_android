@@ -103,6 +103,21 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyIncome.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyIncome.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				Project project = HyjModel.getModel(Project.class, projectId);
+				if(project != null){
+					moneyIncome.setProjectId(projectId);
+				}
+			}
 		}
 //		mMoneyIncomeEditor = moneyIncome.newModelEditor();
 		mMoneyIncomeEditor = new MoneyIncomeEditor(moneyIncome);
@@ -710,6 +725,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				mMoneyIncomeEditor.save();
 				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
+				this.getActivity().setResult(Activity.RESULT_OK);
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();
