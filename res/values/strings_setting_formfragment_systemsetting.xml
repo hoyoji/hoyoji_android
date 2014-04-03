@@ -17,10 +17,10 @@
     <string name="systemSettingFormFragment_checkBox_validation_addFriend">加我为好友时是否需要验证</string>
 
     <string name="systemSettingFormFragment_textView_moneyExpenseColor">支出金额颜色</string>
-    <string name="systemSettingFormFragment_button_moneyExpenseColorPicker">支出</string>
+    <string name="systemSettingFormFragment_button_moneyExpenseColorPicker">请选择支出金额颜色</string>
     
     <string name="systemSettingFormFragment_textView_moneyIncomeColor">收入金额颜色</string>
-    <string name="systemSettingFormFragment_button_moneyIncomeColorPicker">收入</string>
+    <string name="systemSettingFormFragment_button_moneyIncomeColorPicker">请选择收入金额颜色</string>
     
     <string name="systemSettingFormFragment_textView_about">关于好友记</string>
     <string name="systemSettingFormFragment_textView_version">1.0.2</string>
