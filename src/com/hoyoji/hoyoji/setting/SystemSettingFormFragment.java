@@ -135,7 +135,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
                     	mButtonMoneyExpenseColorPicker.setBackgroundColor(color);
                     }  
                 });  
-                dialog.show();  
+                dialog.show(getFragmentManager(), "ColorPickerDialog");  
 			}
 		});
 		
@@ -160,7 +160,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
                     	mButtonMoneyIncomeColorPicker.setBackgroundColor(color);
                     }  
                 });  
-                dialog.show();  
+                dialog.show(getFragmentManager(), "ColorPickerDialog");  
 			}
 		});
 		

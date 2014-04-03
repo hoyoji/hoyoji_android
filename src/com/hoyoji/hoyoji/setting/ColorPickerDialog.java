@@ -1,7 +1,14 @@
 package com.hoyoji.hoyoji.setting;
 
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.view.HyjNumericField;
+import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
+import com.hoyoji.hoyoji.R;
+
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -10,12 +17,18 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
-public class ColorPickerDialog extends Dialog{
+public class ColorPickerDialog extends DialogFragment{
 
 	private final boolean debug = true;  
     private final String TAG = "ColorPicker";  
@@ -45,27 +58,65 @@ public class ColorPickerDialog extends Dialog{
      */  
     public ColorPickerDialog(Context context, int initialColor,   
             String title, OnColorChangedListener listener) {  
-        super(context);  
+        super();  
         this.context = context;  
         mListener = listener;  
         mInitialColor = initialColor;  
         this.title = title;  
     }  
   
-    @Override  
-    protected void onCreate(Bundle savedInstanceState) {  
-        super.onCreate(savedInstanceState);  
-        WindowManager manager = getWindow().getWindowManager();  
-        int height = (int) (manager.getDefaultDisplay().getHeight() * 0.5f);  
-        int width = (int) (manager.getDefaultDisplay().getWidth() * 0.7f);  
-        ColorPickerView myView = new ColorPickerView(context, height, width);  
-        setContentView(myView);  
-        setTitle(title);  
-    }  
+//    @Override
+//	public void onCreate(Bundle savedInstanceState) {  
+//        super.onCreate(savedInstanceState);  
+//        WindowManager manager = getWindow().getWindowManager();  
+//        int height = (int) (manager.getDefaultDisplay().getHeight() * 0.5f);  
+//        int width = (int) (manager.getDefaultDisplay().getWidth() * 0.7f);  
+//        ColorPickerView myView = new ColorPickerView(context, height, width);  
+//        setContentView(myView);  
+//        setTitle(title);  
+//        
+//    }  
       
+	@Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Use the Builder class for convenient dialog construction
+    	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Set the layout for the dialog
+	      WindowManager manager = this.getActivity().getWindow().getWindowManager();  
+	      int height = (int) (manager.getDefaultDisplay().getHeight() * 0.5f);   
+	      int width = (int) (manager.getDefaultDisplay().getWidth());  
+    	final ColorPickerView myView = new ColorPickerView(context, height, width);
+        builder.setView(myView);
+
+        // Set title of dialog
+        builder.setTitle(title)
+                // Set Ok button
+                .setPositiveButton(R.string.alert_dialog_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+            			        if(mListener != null) {  
+                                    mListener.colorChanged(myView.mCenterPaint.getColor());  
+                                    ColorPickerDialog.this.dismiss();  
+                                }  
+                            }
+                        })
+                // Set Cancel button
+                .setNegativeButton(R.string.alert_dialog_cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                ColorPickerDialog.this.dismiss();  
+                            }
+                        }); 
+        
+
+        // Create the AlertDialog object and return it
+        return builder.create();
+    }
+    
+    
     private class ColorPickerView extends View {  
         private Paint mPaint;//渐变色环画笔  
-        private Paint mCenterPaint;//中间圆画笔  
+        public Paint mCenterPaint;//中间圆画笔  
         private Paint mLinePaint;//分隔线画笔  
         private Paint mRectPaint;//渐变方块画笔  
           
