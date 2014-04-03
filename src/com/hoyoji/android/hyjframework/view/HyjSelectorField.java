@@ -123,4 +123,8 @@ public class HyjSelectorField extends LinearLayout {
 	public String getLabel() {
 		return mTextViewLabel.getText().toString();
 	}
+	
+	public TextView getEditText(){
+		return mEditTextEdit;
+	}
 }

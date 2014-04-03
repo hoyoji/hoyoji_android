@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.view.KeyEvent;
 
 import android.view.View;
@@ -140,6 +141,7 @@ public class ChangePasswordFragment extends HyjFragment {
 
 					((HyjActivity) ChangePasswordFragment.this.getActivity()).dismissProgressDialog();
 					HyjUtil.displayToast(R.string.app_save_success);
+					getActivity().finish();
 				}
 
 				@Override
