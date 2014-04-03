@@ -150,7 +150,7 @@ public class RegisterActivity extends HyjActivity {
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {
 			final ProgressDialog progressDialog = this.displayProgressDialog(R.string.registerActivity_progress_register_title, R.string.registerActivity_progress_register_msg);  
-			Currency currency = Currency.getInstance(Locale.getDefault());
+			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
 			String currencyId = currency.getCurrencyCode();
 			String currencySymbol = currency.getSymbol();
 			JSONObject postData = new JSONObject();
