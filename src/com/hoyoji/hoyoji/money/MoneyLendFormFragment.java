@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -244,6 +245,14 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		setPermission();
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    if(mMoneyLendEditor!= null && mMoneyLendEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+	    	hideSaveAction();
+	    }
+	}
+	
 	private void setupDeleteButton(HyjModelEditor<MoneyLend> moneyLendEditor) {
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
@@ -323,7 +332,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			
 			mRemarkFieldRemark.setEnabled(false);
 			
-			hideSaveAction();
+			if(this.mOptionsMenu != null){
+		    	hideSaveAction();
+			}
 
 //			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
