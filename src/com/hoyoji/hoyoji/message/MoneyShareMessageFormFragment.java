@@ -161,7 +161,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 	        	 if(resultCode == Activity.RESULT_OK){
 	 				mMessageEditor.getModelCopy().setMessageState("closed");
 	 				mMessageEditor.save();
-	        		 this.getActivity().finish();
+	 				HyjUtil.displayToast("导入成功");
 	        	 }
 	        	 break;
          }
