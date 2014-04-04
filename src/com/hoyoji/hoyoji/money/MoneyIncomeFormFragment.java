@@ -85,6 +85,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
+	private String mAmountCurrencyId;
 	private boolean hasEditPermission = true;
 	
 	@Override
@@ -104,8 +105,22 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
+			mAmountCurrencyId = intent.getStringExtra("currencyId");
 			double amount = intent.getDoubleExtra("amount", -1.0);
 			if(amount >= 0.0){
+				if(mAmountCurrencyId != null && 
+						!mAmountCurrencyId.equalsIgnoreCase(moneyIncome.getMoneyAccount().getCurrencyId())){
+					Exchange exchange = Exchange.getExchange(mAmountCurrencyId, moneyIncome.getMoneyAccount().getCurrencyId());
+					if(exchange != null){
+						amount = amount * exchange.getRate();
+					} else {
+						exchange = Exchange.getExchange(moneyIncome.getMoneyAccount().getCurrencyId(), mAmountCurrencyId);
+						if(exchange != null){
+							amount = amount / exchange.getRate();
+						}
+					}
+					
+				}
 				moneyIncome.setAmount(amount);
 			}
 			String friendUserId = intent.getStringExtra("friendUserId");
@@ -114,10 +129,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			}
 			String projectId = intent.getStringExtra("projectId");
 			if(projectId != null){
-				Project project = HyjModel.getModel(Project.class, projectId);
-				if(project != null){
-					moneyIncome.setProjectId(projectId);
-				}
+				moneyIncome.setProjectId(projectId);
 			}
 		}
 //		mMoneyIncomeEditor = moneyIncome.newModelEditor();
@@ -428,7 +440,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 			} else if(moneyIncome.getProject() != null) {
 				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
-				apportion.setAmount(0.0);
+				apportion.setAmount(moneyIncome.getAmount0());
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				apportion.setMoneyIncomeId(moneyIncome.getId());
 				apportion.setApportionType("Average");

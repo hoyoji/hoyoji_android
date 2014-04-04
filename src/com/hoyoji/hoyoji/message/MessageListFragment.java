@@ -97,7 +97,7 @@ public class MessageListFragment extends HyjUserListFragment{
 			} else if(msg.getType().equals("Project.Share.Delete") ){
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
 			} else if(msg.getType().equals("Money.Share.AddExpense") ){
-				openActivityWithFragment(MoneyShareMessageFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle);
+				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 			}
 		}
     }  

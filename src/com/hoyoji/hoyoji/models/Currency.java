@@ -110,7 +110,7 @@ public class Currency extends HyjModel {
 				obj.put("symbol",
 						localeCurrency.getSymbol());
 				
-				if(Build.VERSION.SDK_INT >= 19){
+				if(Build.VERSION.SDK_INT >= 17){
 					obj.put("name",
 						localeCurrency.getDisplayName());
 				}

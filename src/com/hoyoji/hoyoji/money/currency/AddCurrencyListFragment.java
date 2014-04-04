@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.SearchView;
@@ -127,10 +129,16 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 			try {
 				ActiveAndroid.beginTransaction();
 				JSONObject object = (JSONObject) getListAdapter().getItem(position);
-				Currency newCurrency = new Currency();
-				newCurrency.loadFromJSON(object, true);
-				newCurrency.save();
-//				createExchange(newCurrency);
+				
+				if(getActivity().getCallingActivity() != null){
+					Intent intent = new Intent();
+					intent.putExtra("CURRENCY_ID", object.optString("id"));
+					getActivity().setResult(Activity.RESULT_OK, intent);
+				} else {
+					Currency newCurrency = new Currency();
+					newCurrency.loadFromJSON(object, true);
+					newCurrency.save();
+				}
 				
 				ActiveAndroid.setTransactionSuccessful();
 				this.getActivity().finish();

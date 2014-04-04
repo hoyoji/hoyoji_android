@@ -598,7 +598,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
 					return true;
 				} else if(msg.getType().equals("Money.Share.AddExpense") ){
-					openActivityWithFragment(MoneyShareMessageFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle);
+					openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 					return true;
 				}
 			}
