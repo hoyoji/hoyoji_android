@@ -61,6 +61,20 @@ public class Exchange extends HyjModel {
 		
 	}
 	
+	public static Double getExchangeRate(String fromCurrency, String toCurrency){
+		Double rate = null;
+		Exchange exchange =  new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
+	    if(exchange != null){
+	    	rate = exchange.getRate();
+	    }else{
+	    	exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", toCurrency, fromCurrency).executeSingle();
+	        if(exchange != null){
+	        	rate = 1/(exchange.getRate());
+	        }
+	    }
+	    return rate;
+	}
+	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
 		if(this.getLocalCurrencyId() == null){

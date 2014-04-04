@@ -570,10 +570,10 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 
-				Exchange exchange = Exchange.getExchange(fromCurrency,
+				Double rate = Exchange.getExchangeRate(fromCurrency,
 						toCurrency);
-				if (exchange != null) {
-					mNumericExchangeRate.setNumber(exchange.getRate());
+				if (rate != null) {
+					mNumericExchangeRate.setNumber(rate);
 					CREATE_EXCHANGE = 0;
 				} else {
 					mNumericExchangeRate.setText(null);

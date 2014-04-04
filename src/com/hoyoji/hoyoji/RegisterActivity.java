@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -193,10 +193,10 @@ public class MoneyIncome extends HyjModel {
 		Double rate = 1.0;
 		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
-			Exchange exchange = Exchange.getExchange(userCurrencyId, this
+			Double exchange = Exchange.getExchangeRate(userCurrencyId, this
 					.getProject().getCurrencyId());
 			if (exchange != null) {
-				rate = exchange.getRate();
+				rate = exchange;
 			}
 		}
 		return this.getAmount0() * this.getExchangeRate() / rate;

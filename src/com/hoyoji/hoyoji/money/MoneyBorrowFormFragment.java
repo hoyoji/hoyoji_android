@@ -361,9 +361,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				
-				Exchange exchange = Exchange.getExchange(fromCurrency, toCurrency);
-					if(exchange != null){
-						mNumericExchangeRate.setNumber(exchange.getRate());
+				Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
+					if(rate != null){
+						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					}else{
 						mNumericExchangeRate.setText(null);

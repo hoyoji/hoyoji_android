@@ -156,9 +156,9 @@ public class MoneyTransfer extends HyjModel{
 			if(userCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Exchange exchange = Exchange.getExchange(this.getTransferOut().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),userCurrency.getId());
 			    if(exchange != null){
-			    	rate = exchange.getRate();
+			    	rate = exchange;
 			    }
 			}
 			return this.getTransferOutAmount0()*rate;
@@ -166,9 +166,9 @@ public class MoneyTransfer extends HyjModel{
 			if(userCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Exchange exchange = Exchange.getExchange(this.getTransferIn().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),userCurrency.getId());
 			    if(exchange != null){
-			    	rate = exchange.getRate();
+			    	rate = exchange;
 			    }
 			}
 			return this.getTransferInAmount0()*rate;
@@ -262,9 +262,9 @@ public class MoneyTransfer extends HyjModel{
 			if(userCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Exchange exchange = Exchange.getExchange(this.getTransferIn().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),userCurrency.getId());
 			    if(exchange != null){
-			    	rate = exchange.getRate();
+			    	rate = exchange;
 			    }
 			}
 			return this.getTransferInAmount0()*rate;
@@ -272,9 +272,9 @@ public class MoneyTransfer extends HyjModel{
 			if(userCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Exchange exchange = Exchange.getExchange(this.getTransferOut().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),userCurrency.getId());
 			    if(exchange != null){
-			    	rate = exchange.getRate();
+			    	rate = exchange;
 			    }
 			}
 			return this.getTransferOutAmount0()*rate;

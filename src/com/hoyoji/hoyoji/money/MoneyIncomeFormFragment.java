@@ -110,14 +110,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			if(amount >= 0.0){
 				if(mAmountCurrencyId != null && 
 						!mAmountCurrencyId.equalsIgnoreCase(moneyIncome.getMoneyAccount().getCurrencyId())){
-					Exchange exchange = Exchange.getExchange(mAmountCurrencyId, moneyIncome.getMoneyAccount().getCurrencyId());
-					if(exchange != null){
-						amount = amount * exchange.getRate();
-					} else {
-						exchange = Exchange.getExchange(moneyIncome.getMoneyAccount().getCurrencyId(), mAmountCurrencyId);
-						if(exchange != null){
-							amount = amount / exchange.getRate();
-						}
+					Double rate = Exchange.getExchangeRate(mAmountCurrencyId, moneyIncome.getMoneyAccount().getCurrencyId());
+					if(rate != null){
+						amount = amount * rate;
 					}
 					
 				}
@@ -586,9 +581,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				
-				Exchange exchange = Exchange.getExchange(fromCurrency, toCurrency);
-					if(exchange != null){
-						mNumericExchangeRate.setNumber(exchange.getRate());
+				Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
+					if(rate != null){
+						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					}else{
 						mNumericExchangeRate.setText(null);

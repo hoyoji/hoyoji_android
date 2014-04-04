@@ -10,31 +10,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
+
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
-import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.RegisterActivity;
-import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
-import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
-import com.hoyoji.hoyoji.models.FriendCategory;
-import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class ExchangeFormFragment extends HyjUserFormFragment {
 	private final static int GET_LOCAL_CURRENCY_ID = 1;
