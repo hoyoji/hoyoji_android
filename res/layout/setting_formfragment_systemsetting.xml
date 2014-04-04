@@ -87,12 +87,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/systemSettingFormFragment_button_checkEmail" />
-
             </com.hoyoji.android.hyjframework.view.HyjTextField>
-
         </LinearLayout>
 
-        
+        <LinearLayout
+            android:id="@+id/systemSettingFormFragment_linearLayout_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/systemSettingFormFragment_textField_phone"
+                android:layout_width="fill_parent"
+                android:layout_height="43dp"
+                hyj:hintText="@string/systemSettingFormFragment_editText_hint_phone"
+                hyj:labelText="@string/systemSettingFormFragment_textView_phone" >
+
+                <Button
+                    android:id="@+id/systemSettingFormFragment_button_phoneBinding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/systemSettingFormFragment_button_phoneBinding" />
+            </com.hoyoji.android.hyjframework.view.HyjTextField>
+        </LinearLayout>
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@android:color/darker_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,8 +159,8 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
-        
-          <LinearLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -163,8 +187,8 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
-        
-          <LinearLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -191,7 +215,7 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
-        
+
         <LinearLayout
             android:id="@+id/systemSettingFormFragment_linearLayout_about"
             android:layout_width="match_parent"
@@ -212,7 +236,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|right"
                 android:text="@string/systemSettingFormFragment_textView_version" />
-
         </LinearLayout>
 
         <View

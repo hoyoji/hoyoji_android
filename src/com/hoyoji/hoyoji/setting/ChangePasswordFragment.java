@@ -122,11 +122,11 @@ public class ChangePasswordFragment extends HyjFragment {
 		return false;
 	}
 
-	public void onSave(){
+	private void onSave(){
 		changePassword_submit(null);
 	}
 	
-	public void changePassword_submit(View v){
+	private void changePassword_submit(View v){
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
 		}else{			

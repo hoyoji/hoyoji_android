@@ -52,6 +52,8 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private HyjTextField mTextFieldNickName = null;
 	private HyjTextField mTextFieldEmail = null;
 	private Button mButtonCheckEmail = null;
+	private HyjTextField mTextFieldPhone = null;
+	private Button mButtonPhone = null;
 	private Button mButtonChangePassword = null;
 	private CheckBox mCheckBoxAddFriendValidation = null;
 	private Button mButtonMoneyExpenseColorPicker = null;
@@ -99,8 +101,21 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				
 			}
 		});
-		
 		getView().findViewById(R.id.systemSettingFormFragment_linearLayout_email).setVisibility(View.GONE);
+		
+		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
+		mTextFieldPhone.setText(user.getUserData().getPhone());
+		mTextFieldPhone.setEnabled(false);
+		
+		mButtonPhone = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_phoneBinding);
+		mButtonPhone.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
+				
+			}
+		});
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
