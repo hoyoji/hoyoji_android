@@ -150,7 +150,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getNickName());
+			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override

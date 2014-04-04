@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bindPhoneFragment_title">绑定手机</string>
+    
+    <string name="bindPhoneFragment_textView_phone">手机</string>
+    <string name="bindPhoneFragment_editText_hint_phone">请输入手机号码</string>
+
+ 	<string name="bindPhoneFragment_textView_authCode">验证码</string>
+    <string name="bindPhoneFragment_editText_hint_authCode">请输入验证码</string>
+    <string name="bindPhoneFragment_button_sendAuthCode">向此发送短信验证码</string>
+    
+    <string name="bindPhoneFragment_button_bind">绑定</string>
+    <string name="bindPhoneFragment_button_unbind">解绑</string>
+</resources>

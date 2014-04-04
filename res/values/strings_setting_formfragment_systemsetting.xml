@@ -11,6 +11,10 @@
     <string name="systemSettingFormFragment_editText_hint_email">请输入邮箱</string>
     <string name="systemSettingFormFragment_button_checkEmail">验证</string>
     
+    <string name="systemSettingFormFragment_textView_phone">手机</string>
+    <string name="systemSettingFormFragment_editText_hint_phone">未绑定</string>
+    <string name="systemSettingFormFragment_button_phoneBinding">绑定</string>
+    
     <string name="systemSettingFormFragment_textView_password">密码</string>
     <string name="systemSettingFormFragment_button_changePassword">修改密码</string>
     
