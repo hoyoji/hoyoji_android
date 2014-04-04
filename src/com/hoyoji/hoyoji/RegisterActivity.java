@@ -95,7 +95,7 @@ public class RegisterActivity extends HyjActivity {
 		java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
 		mSelectFieldCurrency = (HyjSelectorField) findViewById(R.id.registerActivity_selectorField_localCurrency);
 		mSelectFieldCurrency.setModelId(currency.getCurrencyCode());
-		if(Build.VERSION.SDK_INT >= 17){
+		if(Build.VERSION.SDK_INT >= 15){
 			mSelectFieldCurrency.setText(currency.getDisplayName() + "(" + currency.getCurrencyCode() + ")");
 		}else{
 			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCurrencyCode() + ")");
@@ -229,7 +229,7 @@ public class RegisterActivity extends HyjActivity {
            		 	String currencyId = data.getStringExtra("CURRENCY_ID");
 	         		java.util.Currency currency = java.util.Currency.getInstance(currencyId);
 	         		mSelectFieldCurrency.setModelId(currencyId);
-	         		if(Build.VERSION.SDK_INT >= 17){
+	         		if(Build.VERSION.SDK_INT >= 15){
 	        			mSelectFieldCurrency.setText(currency.getDisplayName() + "(" + currency.getCurrencyCode() + ")");
 	        		}else{
 	        			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCurrencyCode() + ")");
