@@ -29,6 +29,7 @@ import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.currency.AddCurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
@@ -94,7 +95,7 @@ public class RegisterActivity extends HyjActivity {
 		java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
 		mSelectFieldCurrency = (HyjSelectorField) findViewById(R.id.registerActivity_selectorField_localCurrency);
 		mSelectFieldCurrency.setModelId(currency.getCurrencyCode());
-		if(Build.VERSION.SDK_INT >= 19){
+		if(Build.VERSION.SDK_INT >= 15){
 			mSelectFieldCurrency.setText(currency.getDisplayName() + "(" + currency.getCurrencyCode() + ")");
 		}else{
 			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCurrencyCode() + ")");
@@ -102,11 +103,9 @@ public class RegisterActivity extends HyjActivity {
 		mSelectFieldCurrency.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				RegisterActivity.this.openActivityWithFragmentForResult(CurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
+				RegisterActivity.this.openActivityWithFragmentForResult(AddCurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
 			}
 		});	
-		mSelectFieldCurrency.getEditText().setGravity(Gravity.CENTER_VERTICAL);
-		mSelectFieldCurrency.getEditText().setGravity(Gravity.RIGHT);
 		
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
@@ -227,13 +226,13 @@ public class RegisterActivity extends HyjActivity {
         switch(requestCode){
             case GET_CURRENCY_ID:
            	 if(resultCode == Activity.RESULT_OK){
-           		 long _id = data.getLongExtra("MODEL_ID", -1);
-	         		Currency currency = Currency.load(Currency.class, _id);
-	         		mSelectFieldCurrency.setModelId(currency.getId());
-	         		if(Build.VERSION.SDK_INT >= 19){
-	        			mSelectFieldCurrency.setText(currency.getName() + "(" + currency.getCode() + ")");
+           		 	String currencyId = data.getStringExtra("CURRENCY_ID");
+	         		java.util.Currency currency = java.util.Currency.getInstance(currencyId);
+	         		mSelectFieldCurrency.setModelId(currencyId);
+	         		if(Build.VERSION.SDK_INT >= 15){
+	        			mSelectFieldCurrency.setText(currency.getDisplayName() + "(" + currency.getCurrencyCode() + ")");
 	        		}else{
-	        			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCode() + ")");
+	        			mSelectFieldCurrency.setText(currency.getSymbol() + "(" + currency.getCurrencyCode() + ")");
 	        		}
            	 }
            	 break;

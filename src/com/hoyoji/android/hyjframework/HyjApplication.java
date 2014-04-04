@@ -122,25 +122,26 @@ public class HyjApplication extends Application {
 		
 		User user = new Select().from(User.class).where("id=?", userId).executeSingle();
 		UserData userData;
-		if(user == null){
-			user = new User();
-			userData = new UserData();
-			
-			user.loadFromJSON(jsonObject.getJSONObject("user"), true);
-			userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
-			
-			userData.setLastSyncTime(null);
-			user.setUserData(userData);
-			userData.setUser(user);
-			
-		} else {
-			userData = user.getUserData();
-		}
-		userData.setPassword(password);
-		
 		try {
 			ActiveAndroid.beginTransaction();
-			user.save();
+			if(user == null){
+				user = new User();
+				userData = new UserData();
+				
+				user.loadFromJSON(jsonObject.getJSONObject("user"), true);
+				userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
+				
+				userData.setLastSyncTime(null);
+				user.setUserData(userData);
+				userData.setUser(user);
+	
+				user.save();
+			} else {
+				userData = user.getUserData();
+			}
+			
+			userData.setPassword(password);
+			userData.setSyncFromServer(true);
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
 		} finally {

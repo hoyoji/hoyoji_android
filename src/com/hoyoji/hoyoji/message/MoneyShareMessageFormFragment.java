@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -18,6 +19,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
@@ -82,27 +84,27 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		mEditTextDetail.setText(shareAddMessage.getMessageDetail());
 		Button actionButton = (Button) getView().findViewById(R.id.button_save);
 		
-			mDateTimeFieldDate
-					.setLabel(R.string.moneyShareMessageFormFragment_textView_date_receive);
-			mEditTextToUser
-					.setLabel(R.string.moneyShareMessageFormFragment_textView_fromUser);
-			mEditTextToUser.setText(shareAddMessage.getFromUserDisplayName());
-			mEditTextDetail.setEnabled(false);
+		mDateTimeFieldDate
+				.setLabel(R.string.moneyShareMessageFormFragment_textView_date_receive);
+		mEditTextToUser
+				.setLabel(R.string.moneyShareMessageFormFragment_textView_fromUser);
+		mEditTextToUser.setText(shareAddMessage.getFromUserDisplayName());
+		mEditTextDetail.setEnabled(false);
 
-			
-			if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddExpense")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_income);
-			} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddIncome")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_expense);
-			} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddBorrow")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_lend);
-			} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddLend")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_borrow);
-			} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddReturn")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_payback);
-			} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddPayback")){
-				actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_return);
-			}
+		
+		if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddExpense")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_income);
+		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddIncome")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_expense);
+		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddBorrow")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_lend);
+		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddLend")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_borrow);
+		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddReturn")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_payback);
+		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddPayback")){
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_return);
+		}
 	}
 //
 //	private void fillData() {
@@ -127,8 +129,14 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddExpense")){
 					bundle.putDouble("amount", messageData.optDouble("amount"));
 					bundle.putString("currencyId", messageData.optString("currencyId"));
-					bundle.putString("friendUserId", messageData.optJSONObject("record").optString("ownerUserId"));
-					bundle.putString("projectId", messageData.optJSONObject("record").optString("projectId"));
+					bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
+					String projectId = messageData.optString("projectId");
+					if(projectId != null){
+						Project project = HyjModel.getModel(Project.class, projectId);
+						if(project != null){
+							bundle.putString("projectId", projectId);
+						}
+					}
 					openActivityWithFragmentForResult(MoneyIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddIncome")){
 				openActivityWithFragmentForResult(MoneyExpenseFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle, IMPORT_MONEY);
