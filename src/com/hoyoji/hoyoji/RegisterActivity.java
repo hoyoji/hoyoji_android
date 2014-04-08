@@ -130,7 +130,11 @@ public class RegisterActivity extends HyjActivity {
 		} else if(mUserName.length() > 15){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_too_long));
 	   		valiatePass = false;
-		}else if(!mUserName.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9.-]+)$")){
+		}else if(!mUserName.substring(0, 1).matches("^[a-zA-Z]$")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_firstChar));
+	   		valiatePass = false;
+		}
+		else if(!mUserName.matches("^([a-zA-Z0-9.-]+)$")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_char));
 	   		valiatePass = false;
 		}
