@@ -179,6 +179,10 @@ public class User extends HyjModel {
 	public List<Picture> getPictures(){
 		return getMany(Picture.class, "recordId");
 	}
+	
+	public List<Currency> getCurrencies(){
+		return getMany(Currency.class, "ownerUserId");
+	}
 
 	public String getLocation() {
 		return mLocation;

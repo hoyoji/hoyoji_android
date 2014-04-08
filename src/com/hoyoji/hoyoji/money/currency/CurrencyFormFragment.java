@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.money.currency;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -82,6 +84,10 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 
 
 	protected void setLocalCurrency() {
+		if(!mCurrencyEditor.getModelCopy().getId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
+			
+			List<Currency> currencies = HyjApplication.getInstance().getCurrentUser().getUserData().getCurrencies();
+		}
 		
 		
 	}

@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.models;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -99,6 +100,10 @@ public class UserData extends HyjModel {
 	public UserData(){
 		super();
 		mUUID = UUID.randomUUID().toString();
+	}
+	
+	public List<Currency> getCurrencies(){
+		return getMany(Currency.class, "ownerUserId");
 	}
 
 	public User getUser(){
