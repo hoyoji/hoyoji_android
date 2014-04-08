@@ -14,7 +14,6 @@
         android:id="@+id/bindPhoneFragment_textField_phone"
         android:layout_width="fill_parent"
         android:layout_height="43dp"
-        android:inputType="phone"
         hyj:hintText="@string/bindPhoneFragment_editText_hint_phone"
         hyj:labelText="@string/bindPhoneFragment_textView_phone" />
     

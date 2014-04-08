@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
+     android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
      android:gravity="center_vertical"  
      android:descendantFocusability="blocksDescendants">
 
@@ -12,4 +16,14 @@
     android:paddingLeft="16dp"  
     android:paddingRight="16dp" />
 
- </LinearLayout>
+<ImageView
+    android:id="@+id/currencyListItem_imageView_localCurrency"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:layout_gravity="right|center_vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="10dp"
+    android:visibility="gone"
+    android:src="@drawable/ic_action_accept" />
+
+</FrameLayout>

@@ -2,20 +2,26 @@ package com.hoyoji.hoyoji.money.currency;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.UserData;
 
 public class CurrencyListFragment extends HyjUserListFragment{
 	
@@ -34,8 +40,8 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.currency_listitem_currency,
 				null,
-				new String[] { "name" },
-				new int[] { R.id.currencyListItem_name },
+				new String[] { "name","id" },
+				new int[] { R.id.currencyListItem_name,R.id.currencyListItem_imageView_localCurrency },
 				0); 
 	}	
 
@@ -87,5 +93,23 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		Currency currency= Currency.load(Currency.class, id);
 		currency.delete();
 	    HyjUtil.displayToast(R.string.currencyFormFragment_toast_delete_success);
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		if(view.getId() == R.id.currencyListItem_name){
+			((TextView)view).setText(cursor.getString(columnIndex));
+			return true;
+		}else if(view.getId() == R.id.currencyListItem_imageView_localCurrency){
+			UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+		    if(userData.getActiveCurrencyId().equalsIgnoreCase(cursor.getString(columnIndex))){
+		    	((ImageView)view).setVisibility(View.VISIBLE);
+		    }else{
+		    	((ImageView)view).setVisibility(View.GONE);
+		    }
+		    return true;
+		}
+		
+		return false;
 	}
 }
