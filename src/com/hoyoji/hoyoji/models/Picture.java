@@ -218,17 +218,18 @@ public class Picture extends HyjModel {
 			baos.close();
 			baos = null;
 			
-//			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
-//			bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-//			baos = new ByteArrayOutputStream();  
-//			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
-//			jsonObj.put("base64Picture", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-//			f = null;
-//			bmp.recycle();
-//			bmp = null;
-//			baos.close();
-//			baos = null;
-//			
+			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+			bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+			baos = new ByteArrayOutputStream();  
+			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+			f = null;
+			bmp.recycle();
+			bmp = null;
+			
+			jsonObj.put("base64Picture", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+			baos.close();
+			baos = null;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {

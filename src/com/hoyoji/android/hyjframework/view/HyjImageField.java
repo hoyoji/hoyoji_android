@@ -249,10 +249,10 @@ public class HyjImageField extends GridView {
 						Activity.RESULT_CANCELED);
 				if (result == Activity.RESULT_OK) {
 					float pxW = TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 500,
+							TypedValue.COMPLEX_UNIT_DIP, 50,
 							r.getDisplayMetrics());
 					float pxH = TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 800,
+							TypedValue.COMPLEX_UNIT_DIP, 80,
 							r.getDisplayMetrics());
 					FileOutputStream out = null;
 					String picturePath;
@@ -284,14 +284,14 @@ public class HyjImageField extends GridView {
 					
 					try {
 						out = new FileOutputStream(mPhotoFile);
-						scaled.compress(Bitmap.CompressFormat.JPEG, 90, out);
+						scaled.compress(Bitmap.CompressFormat.JPEG, 60, out);
 						out.close();
 						out = null;
 						
 						out = new FileOutputStream(
 								HyjUtil.createImageFile(mPicture.getId()
 										+ "_icon"));
-						thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+						thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
 						out.close();
 						out = null;
 						thumbnail.recycle();
