@@ -8,8 +8,10 @@ import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -22,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -161,11 +164,14 @@ public class HyjImageField extends GridView {
 				iv.setLayoutParams(new LayoutParams((int) px, (int) px));
 				// iv.setPadding(0, 0, 0, 0);
 				iv.setOnClickListener(new OnClickListener() {
+					
 					@Override
 					public void onClick(View v) {
 						PictureItem pic = (PictureItem) v.getTag();
-						HyjUtil.displayToast("Show large pic "
-								+ pic.getPicture().getId());
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getPicture().getId());
+						bundle.putString("pictureType", pic.getPicture().getPictureType());
+						((HyjActivity) getContext()).openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
 					}
 				});
 			}
