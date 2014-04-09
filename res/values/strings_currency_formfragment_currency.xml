@@ -18,4 +18,9 @@
    
    <string name="currencyFormFragment_button_setAsLocalCurrency">设为本币</string>
     
+   <string name="currencyFormFragment_addShare_fetch_exchange">获取汇率</string>
+   <string name="currencyFormFragment_addShare_fetching_exchange">正在获取本地币种到本币的汇率</string>
+   <string name="currencyFormFragment_addShare_cannot_fetch_exchange">获取汇率失败</string>
+   
+   
 </resources>
