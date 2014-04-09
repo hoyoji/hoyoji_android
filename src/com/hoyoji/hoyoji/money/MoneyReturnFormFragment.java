@@ -443,7 +443,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					if(pi.getState() == PictureItem.NEW){
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyReturnEditor.getModel().getId());
-						newPic.setRecordType("Picture");
+						newPic.setRecordType("MoneyReturn");
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();

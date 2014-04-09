@@ -436,7 +436,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				}
 			} else if(moneyExpense.getProject() != null) {
 				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-				apportion.setAmount(0.0);
+				apportion.setAmount(moneyExpense.getAmount0());
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				apportion.setMoneyExpenseId(moneyExpense.getId());
 				apportion.setApportionType("Average");
@@ -779,7 +779,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == PictureItem.NEW) {
 				Picture newPic = pi.getPicture();
 				newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
-				newPic.setRecordType("Picture");
+				newPic.setRecordType("MoneyExpense");
 				newPic.save();
 			} else if (pi.getState() == PictureItem.DELETED) {
 				pi.getPicture().delete();

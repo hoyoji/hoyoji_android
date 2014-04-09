@@ -41,7 +41,7 @@ public class HyjDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString("title");
 		if(title == null){
-			int titleInt = getArguments().getInt("title");
+			int titleInt = getArguments().getInt("title", -1);
 			if(titleInt != -1){
 				title = getString(titleInt);
 			}

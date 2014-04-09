@@ -1,15 +1,34 @@
 package com.hoyoji.hoyoji.models;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
-import android.provider.BaseColumns;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.BaseColumns;
+import android.util.Base64;
+
+import com.activeandroid.Cache;
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+import com.activeandroid.serializer.TypeSerializer;
+import com.activeandroid.util.Log;
+import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "Picture", id = BaseColumns._ID)
@@ -181,5 +200,83 @@ public class Picture extends HyjModel {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+
+		try {
+
+			File f;
+			f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+			Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+			jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+			
+			f = null;
+			bmp.recycle();
+			bmp = null;
+			baos.close();
+			baos = null;
+			
+//			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+//			bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+//			baos = new ByteArrayOutputStream();  
+//			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+//			jsonObj.put("base64Picture", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+//			f = null;
+//			bmp.recycle();
+//			bmp = null;
+//			baos.close();
+//			baos = null;
+//			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return jsonObj;
+	}	
 	
+	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
+		super.loadFromJSON(json, syncFromServer);
+
+		try {
+
+			File f;
+		    FileOutputStream out;
+		    Bitmap bmp;
+			if(!json.isNull("base64PictureIcon")){
+				f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+				byte[] decodedByte = Base64.decode(json.getString("base64PictureIcon"), 0);
+			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+			     
+			    out = new FileOutputStream(f);
+				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				out.close();
+				out = null;
+				f = null;
+				bmp.recycle();
+				bmp = null;
+			}
+			if(!json.isNull("base64Picture")){
+				f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+				byte[] decodedByte = Base64.decode(json.getString("base64Picture"), 0);
+			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+			     
+			    out = new FileOutputStream(f);
+				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				out.close();
+				out = null;
+				f = null;
+				bmp.recycle();
+				bmp = null;
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 }
