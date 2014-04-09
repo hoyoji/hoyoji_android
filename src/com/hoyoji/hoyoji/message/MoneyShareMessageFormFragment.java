@@ -81,7 +81,14 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 
 		mEditTextDetail = (HyjRemarkField) getView().findViewById(
 				R.id.moneyShareMessageFormFragment_editText_detail);
-		mEditTextDetail.setText(shareAddMessage.getMessageDetail());
+
+		try {
+			JSONObject messageData = null;
+			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+			mEditTextDetail.setText(String.format(shareAddMessage.getMessageDetail(), shareAddMessage.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+		} catch (Exception e){
+		}
+		
 		Button actionButton = (Button) getView().findViewById(R.id.button_save);
 		
 		mDateTimeFieldDate
@@ -126,18 +133,19 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		JSONObject messageData;
 		try {
 			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+			bundle.putDouble("amount", messageData.optDouble("amount"));
+			bundle.putString("currencyId", messageData.optString("currencyId"));
+			bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
+			String projectId = messageData.optString("projectId");
+			if(projectId != null){
+				Project project = HyjModel.getModel(Project.class, projectId);
+				if(project != null){
+					bundle.putString("projectId", projectId);
+				}
+			}
+			
 			if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddExpense")){
-					bundle.putDouble("amount", messageData.optDouble("amount"));
-					bundle.putString("currencyId", messageData.optString("currencyId"));
-					bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
-					String projectId = messageData.optString("projectId");
-					if(projectId != null){
-						Project project = HyjModel.getModel(Project.class, projectId);
-						if(project != null){
-							bundle.putString("projectId", projectId);
-						}
-					}
-					openActivityWithFragmentForResult(MoneyIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle, IMPORT_MONEY);
+				openActivityWithFragmentForResult(MoneyIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddIncome")){
 				openActivityWithFragmentForResult(MoneyExpenseFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddBorrow")){

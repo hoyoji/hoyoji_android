@@ -755,6 +755,18 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
 									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+								} else if(model instanceof MoneyExpense){
+									recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyIncome){
+									recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyBorrow){
+									recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyLend){
+									recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyPayback){
+									recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyReturn){
+									recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);

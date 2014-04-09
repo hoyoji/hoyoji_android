@@ -85,7 +85,6 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private String mAmountCurrencyId;
 	private boolean hasEditPermission = true;
 	
 	@Override
@@ -105,17 +104,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
-			mAmountCurrencyId = intent.getStringExtra("currencyId");
 			double amount = intent.getDoubleExtra("amount", -1.0);
 			if(amount >= 0.0){
-				if(mAmountCurrencyId != null && 
-						!mAmountCurrencyId.equalsIgnoreCase(moneyIncome.getMoneyAccount().getCurrencyId())){
-					Double rate = Exchange.getExchangeRate(mAmountCurrencyId, moneyIncome.getMoneyAccount().getCurrencyId());
-					if(rate != null){
-						amount = amount * rate;
-					}
-					
-				}
 				moneyIncome.setAmount(amount);
 			}
 			String friendUserId = intent.getStringExtra("friendUserId");

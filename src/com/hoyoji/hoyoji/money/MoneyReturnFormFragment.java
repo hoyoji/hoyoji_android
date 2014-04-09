@@ -88,6 +88,18 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyReturn.hasEditPermission();
 		} else {
 			moneyReturn = new MoneyReturn();
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyReturn.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyReturn.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				moneyReturn.setProjectId(projectId);
+			}
 		}
 		mMoneyReturnEditor = moneyReturn.newModelEditor();
 		

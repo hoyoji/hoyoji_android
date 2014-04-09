@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.message;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -96,7 +98,7 @@ public class MessageListFragment extends HyjUserListFragment{
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
 			} else if(msg.getType().equals("Project.Share.Delete") ){
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
-			} else if(msg.getType().equals("Money.Share.AddExpense") ){
+			} else if(msg.getType().startsWith("Money.Share.Add") ){
 				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 			}
 		}
@@ -133,7 +135,13 @@ public class MessageListFragment extends HyjUserListFragment{
 			((TextView)view).setText(message.getToUserDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(message.getMessageDetail());
+			try {
+				JSONObject messageData = null;
+				messageData = new JSONObject(message.getMessageData());
+				((TextView)view).setText(String.format(message.getMessageDetail(), message.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+			} catch (Exception e){
+				((TextView)view).setText(message.getMessageDetail());
+			}
 			return true;
 		} else {
 			return false;

@@ -19,10 +19,10 @@
    <string name="moneyShareMessageFormFragment_editText_hint_detail">请输入消息内容</string>
  
    <string name="moneyShareMessageFormFragment_button_import_income">导入成我的收入</string>
-   <string name="moneyShareMessageFormFragment_button_import_expense">倒入成我的支出</string>
-   <string name="moneyShareMessageFormFragment_button_import_borrow">倒入成我的借入</string>
-   <string name="moneyShareMessageFormFragment_button_import_lend">倒入成我的借出</string>
-   <string name="moneyShareMessageFormFragment_button_import_payback">倒入成我的收款</string>
-   <string name="moneyShareMessageFormFragment_button_import_return">倒入成我的还款</string>
+   <string name="moneyShareMessageFormFragment_button_import_expense">导入成我的支出</string>
+   <string name="moneyShareMessageFormFragment_button_import_borrow">导入成我的借入</string>
+   <string name="moneyShareMessageFormFragment_button_import_lend">导入成我的借出</string>
+   <string name="moneyShareMessageFormFragment_button_import_payback">导入成我的收款</string>
+   <string name="moneyShareMessageFormFragment_button_import_return">导入成我的还款</string>
     
 </resources>

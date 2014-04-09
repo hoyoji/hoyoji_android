@@ -288,7 +288,15 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(msg.getToUserDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(((Message)object).getMessageDetail());
+			Message msg = (Message)object;
+			try {
+				JSONObject messageData = null;
+				messageData = new JSONObject(msg.getMessageData());
+				((TextView)view).setText(String.format(msg.getMessageDetail(), msg.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+			} catch (Exception e){
+				((TextView)view).setText(msg.getMessageDetail());
+			}
+
 			return true;
 		} else {
 			return false;
@@ -597,7 +605,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				} else if(msg.getType().equals("Project.Share.Delete") ){
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
 					return true;
-				} else if(msg.getType().equals("Money.Share.AddExpense") ){
+				} else if(msg.getType().startsWith("Money.Share.Add") ){
 					openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 					return true;
 				}

@@ -89,6 +89,18 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyLend.hasEditPermission();
 		} else {
 			moneyLend = new MoneyLend();
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyLend.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyLend.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				moneyLend.setProjectId(projectId);
+			}
 			
 		}
 		mMoneyLendEditor = moneyLend.newModelEditor();

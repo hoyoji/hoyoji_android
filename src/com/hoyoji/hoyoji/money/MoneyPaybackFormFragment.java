@@ -88,6 +88,18 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyPayback.hasEditPermission();
 		} else {
 			moneyPayback = new MoneyPayback();
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyPayback.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyPayback.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				moneyPayback.setProjectId(projectId);
+			}
 		}
 		mMoneyPaybackEditor = moneyPayback.newModelEditor();
 		
