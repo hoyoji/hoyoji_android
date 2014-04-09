@@ -100,6 +100,18 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyExpense.hasEditPermission();
 		} else {
 			moneyExpense = new MoneyExpense();
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyExpense.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyExpense.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				moneyExpense.setProjectId(projectId);
+			}
 		}
 				
 //		mMoneyExpenseEditor = moneyExpense.newModelEditor();
