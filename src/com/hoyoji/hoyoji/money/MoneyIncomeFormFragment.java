@@ -1038,21 +1038,45 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
              case GET_APPORTION_MEMBER_ID:
      			if (resultCode == Activity.RESULT_OK) {
      				long _id = data.getLongExtra("MODEL_ID", -1);
-     				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-     				if(!psa.getState().equalsIgnoreCase("Accept")){
-     					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
-     					break;
-     				}
-     				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
-     				apportion.setAmount(0.0);
-     				apportion.setFriendUserId(psa.getFriendUserId());
-     				apportion.setMoneyIncomeId(mMoneyIncomeEditor.getModel().getId());
-     				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
-     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-     				} else {
-     					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
-     				}
-     			}
+    				String type = data.getStringExtra("MODEL_TYPE");
+    				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+    				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
+    					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+    					if(!psa.getState().equalsIgnoreCase("Accept")){
+    						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
+    						break;
+    					}
+    					apportion.setFriendUserId(psa.getFriendUserId());
+    				} else {
+    					Friend friend = Friend.load(Friend.class, _id);
+    					if(friend.getFriendUserId() != null){
+    						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
+    						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+    						if(psa != null){
+    							if(!psa.getState().equalsIgnoreCase("Accept")){
+    								HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_accepted);
+    								break;
+    							} else {
+    								apportion.setFriendUserId(psa.getFriendUserId());
+    							}
+    						} else {
+    							apportion.setLocalFriendId(friend.getId());
+    							apportion.setApportionType("Average");
+    						}
+    					} else {
+    						apportion.setLocalFriendId(friend.getId());
+    						apportion.setApportionType("Average");
+    					}
+    				}
+    				apportion.setAmount(0.0);
+    				apportion.setMoneyIncomeId(mMoneyIncomeEditor.getModel().getId());
+    				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+    					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+    				} else {
+    					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
+    				}
+    			
+    			}
      			break;
           }
     }

@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -372,6 +374,13 @@ public class ProjectShareAuthorization extends HyjModel {
 //	public List<ParentProject> getParentProjects() {
 //		return getMany(ParentProject.class, "");
 //	}
+	
+//	public List<Project> getSubProjects() {
+//		List<ParentProject> subProjectRecords = getMany(ParentProject.class, "parentProject");
+//		for (Iterator<ParentProject> it = subProjectRecords.iterator(); it.hasNext();) {
+//			Project project = it.next().getSubProject();
+//		}
+//    }
 	
 	public String getOwnerUserId() {
 		return mOwnerUserId;
@@ -944,6 +953,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 
 	public Double getExpenseTotal() {
+		
 		return mActualTotalExpense + mActualTotalLend + mActualTotalReturn;
 	}
 	
