@@ -54,7 +54,7 @@ public class MoneyLend extends HyjModel{
 	private Double mPaybackedAmount;
 
 	@Column(name = "moneyBorrowId")
-	private Double mMoneyBorrowId;
+	private String mMoneyBorrowId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -507,5 +507,9 @@ public class MoneyLend extends HyjModel{
 			return false;
 		}
 		return psa.getProjectShareMoneyLendDelete();
+	}
+
+	public void setMoneyBorrowId(String moneyBorrowId) {
+		this.mMoneyBorrowId = moneyBorrowId;
 	}
 }

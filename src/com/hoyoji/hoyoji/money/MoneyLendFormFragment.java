@@ -89,6 +89,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyLend.hasEditPermission();
 		} else {
 			moneyLend = new MoneyLend();
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
+			}
 			double amount = intent.getDoubleExtra("amount", -1.0);
 			if(amount >= 0.0){
 				moneyLend.setAmount(amount);

@@ -135,6 +135,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
 			bundle.putDouble("amount", messageData.optDouble("amount"));
 			bundle.putString("currencyId", messageData.optString("currencyId"));
+			bundle.putString("counterpartId", messageData.optString("counterpartId"));
 			bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
 			String projectId = messageData.optString("projectId");
 			if(projectId != null){

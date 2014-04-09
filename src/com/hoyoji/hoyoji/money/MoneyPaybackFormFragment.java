@@ -88,6 +88,9 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyPayback.hasEditPermission();
 		} else {
 			moneyPayback = new MoneyPayback();
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
+			}
 			double amount = intent.getDoubleExtra("amount", -1.0);
 			if(amount >= 0.0){
 				moneyPayback.setAmount(amount);

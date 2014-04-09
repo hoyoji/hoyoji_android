@@ -513,4 +513,8 @@ public class MoneyReturn extends HyjModel{
 		}
 		return psa.getProjectShareMoneyReturnDelete();
 	}
+
+	public void setMoneyPaybackId(String moneyPaybackId) {
+		this.mMoneyPaybackId = moneyPaybackId;
+	}
 }
