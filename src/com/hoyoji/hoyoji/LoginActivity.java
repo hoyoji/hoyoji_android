@@ -552,7 +552,7 @@ public class LoginActivity extends HyjActivity {
 				LoginActivity.this.dismissProgressDialog();
 				try {
 					JSONObject json = (JSONObject) object;
-					LoginActivity.this.displayDialog(null,
+					LoginActivity.this.displayDialog("登录失败",
 							json.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();

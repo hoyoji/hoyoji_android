@@ -186,15 +186,14 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			// 检查汇率存不存在
 			final String moneyAccountCurrencyId = mMoneyAccountEditor.getModelCopy()
 					.getCurrencyId();
-			((HyjActivity) MoneyAccountFormFragment.this.getActivity())
-					.displayProgressDialog(
-							R.string.projectMessageFormFragment_addShare_fetch_exchange,
-							R.string.projectMessageFormFragment_addShare_fetching_exchange);
 			if (moneyAccountCurrencyId.equalsIgnoreCase(HyjApplication.getInstance()
 					.getCurrentUser().getUserData().getActiveCurrencyId())) {
 				// 币种是一样的，不用新增汇率
 				doSave();
 			} else {
+				((HyjActivity) MoneyAccountFormFragment.this.getActivity()).displayProgressDialog(
+						R.string.projectMessageFormFragment_addShare_fetch_exchange,
+						R.string.projectMessageFormFragment_addShare_fetching_exchange);
 				Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?",
 								moneyAccountCurrencyId,
 								HyjApplication.getInstance().getCurrentUser()

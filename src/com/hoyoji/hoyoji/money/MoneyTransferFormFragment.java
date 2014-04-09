@@ -9,6 +9,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -335,12 +336,15 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			}
 	}
 	
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//		super.onCreateOptionsMenu(menu, inflater);
-//
-//		setPermission();
-//	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    if(mMoneyTransferEditor!= null && mMoneyTransferEditor.getModelCopy().get_mId() != null && (mSelectorFieldTransferOutFriend.getModelId() == null 
+				&& mSelectorFieldTransferInFriend.getModelId() == null 
+				&& (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null))){
+	    	hideSaveAction();
+	    }
+	}
 	
 	private void setPermission() {
 		if(mSelectorFieldTransferOutFriend.getModelId() == null 
@@ -357,7 +361,10 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			mNumericExchangeRate.setEnabled(false);
 			mSelectorFieldProject.setEnabled(false);
 			mRemarkFieldRemark.setEnabled(false);
-			hideSaveAction();
+			
+			if(this.mOptionsMenu != null){
+		    	hideSaveAction();
+			}
 			
 			if(mSelectorFieldTransferOut.getModelId() == null){
 				mSelectorFieldTransferOutFriend.setText("无转出人");
