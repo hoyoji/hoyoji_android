@@ -337,6 +337,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -389,6 +392,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -435,6 +441,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -481,6 +490,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -527,6 +539,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -573,6 +588,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
@@ -619,6 +637,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
 						Bundle bundle = new Bundle();
 						bundle.putString("pictureName", pic.getId());
 						bundle.putString("pictureType", pic.getPictureType());
