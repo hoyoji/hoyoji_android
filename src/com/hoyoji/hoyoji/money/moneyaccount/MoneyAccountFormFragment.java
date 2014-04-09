@@ -191,20 +191,17 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				// 币种是一样的，不用新增汇率
 				doSave();
 			} else {
-				((HyjActivity) MoneyAccountFormFragment.this.getActivity()).displayProgressDialog(
-						R.string.projectMessageFormFragment_addShare_fetch_exchange,
-						R.string.projectMessageFormFragment_addShare_fetching_exchange);
-				Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?",
-								moneyAccountCurrencyId,
-								HyjApplication.getInstance().getCurrentUser()
-										.getUserData().getActiveCurrencyId())
-						.executeSingle();
-				if (exchange != null) {
+				Double rate = Exchange.getExchangeRate(moneyAccountCurrencyId, HyjApplication.getInstance()
+					.getCurrentUser().getUserData().getActiveCurrencyId());
+				if (rate != null) {
 					// 汇率已经存在，直接保存新项目
 					doSave();
 					return;
 				}
 				// 尝试到网上获取汇率
+				((HyjActivity) MoneyAccountFormFragment.this.getActivity()).displayProgressDialog(
+						R.string.projectMessageFormFragment_addShare_fetch_exchange,
+						R.string.projectMessageFormFragment_addShare_fetching_exchange);
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
