@@ -392,6 +392,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyTransfer)object).getTransferOutLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -423,6 +424,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyBorrow)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -454,6 +456,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyLend)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -485,6 +488,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyReturn)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -516,6 +520,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyPayback)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
