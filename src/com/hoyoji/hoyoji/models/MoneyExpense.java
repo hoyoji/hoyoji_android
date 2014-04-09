@@ -58,7 +58,7 @@ public class MoneyExpense extends HyjModel{
 	private Double mExchangeRate;
 
 	@Column(name = "moneyIncomeId")
-	private Double mMoneyIncomeId;
+	private String mMoneyIncomeId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -501,6 +501,10 @@ public class MoneyExpense extends HyjModel{
 			return false;
 		}
 		return psa.getProjectShareMoneyExpenseDelete();
+	}
+
+	public void setMoneyIncomeId(String moneyIncomeId) {
+		this.mMoneyIncomeId = moneyIncomeId;
 	}
 
 }

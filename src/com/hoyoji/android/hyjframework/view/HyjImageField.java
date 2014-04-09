@@ -239,6 +239,11 @@ public class HyjImageField extends GridView {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			try {
+				getContext().unregisterReceiver(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if (intent.getAction().equals("REQUEST_TAKE_PHOTO")) {
 				int result = intent.getIntExtra("resultCode",
 						Activity.RESULT_CANCELED);
@@ -313,11 +318,6 @@ public class HyjImageField extends GridView {
 					} else {
 						mPhotoFile.delete();
 					}
-				}
-				try {
-					getContext().unregisterReceiver(this);
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 		}

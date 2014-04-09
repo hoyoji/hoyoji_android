@@ -90,6 +90,21 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyBorrow.hasEditPermission();
 		} else {
 			moneyBorrow = new MoneyBorrow();
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyBorrow.setMoneyLendId(intent.getStringExtra("counterpartId"));
+			}
+			double amount = intent.getDoubleExtra("amount", -1.0);
+			if(amount >= 0.0){
+				moneyBorrow.setAmount(amount);
+			}
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				moneyBorrow.setFriendUserId(friendUserId);
+			}
+			String projectId = intent.getStringExtra("projectId");
+			if(projectId != null){
+				moneyBorrow.setProjectId(projectId);
+			}
 			
 		}
 		mMoneyBorrowEditor = moneyBorrow.newModelEditor();

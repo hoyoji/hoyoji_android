@@ -104,6 +104,9 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyIncome.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
+			}
 			double amount = intent.getDoubleExtra("amount", -1.0);
 			if(amount >= 0.0){
 				moneyIncome.setAmount(amount);
