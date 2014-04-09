@@ -444,7 +444,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					if(pi.getState() == PictureItem.NEW){
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyPaybackEditor.getModel().getId());
-						newPic.setRecordType("Picture");
+						newPic.setRecordType("MoneyPayback");
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();

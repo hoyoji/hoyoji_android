@@ -779,7 +779,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == PictureItem.NEW) {
 				Picture newPic = pi.getPicture();
 				newPic.setRecordId(mMoneyExpenseEditor.getModel().getId());
-				newPic.setRecordType("Picture");
+				newPic.setRecordType("MoneyExpense");
 				newPic.save();
 			} else if (pi.getState() == PictureItem.DELETED) {
 				pi.getPicture().delete();
