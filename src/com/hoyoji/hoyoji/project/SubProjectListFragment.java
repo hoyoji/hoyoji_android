@@ -212,12 +212,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
-            Double projectExpenseTotal = 0.0;
-			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-            	projectExpenseTotal+= psa.getExpenseTotal();
-            }
+			
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
@@ -227,17 +222,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			
-			numericView.setNumber(projectExpenseTotal);
+			numericView.setNumber(project.getExpenseTotal());
 			return true;
 		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-			List<ProjectShareAuthorization> projectShareAuthorizations = project.getProjectShareAuthorizations();
-            Double projectIncomeTotal = 0.0;
-			for(int i= 0; i<projectShareAuthorizations.size(); i++){
-            	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-            	projectIncomeTotal+= psa.getIncomeTotal();
-            }
+			
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
@@ -246,7 +236,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setNumber(projectIncomeTotal);
+			numericView.setNumber(project.getIncomeTotal());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
 			if(view.getTag() == null){

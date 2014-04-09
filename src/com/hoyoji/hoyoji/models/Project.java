@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -112,10 +114,20 @@ public class Project extends HyjModel {
 		return getMany(ParentProject.class, "subProjectId");
 	}
 
-	public List<ParentProject> getSubProjects() {
-		return getMany(ParentProject.class, "parentProjectId");
-	}
+//	public List<ParentProject> getSubProjects() {
+//		return getMany(ParentProject.class, "parentProjectId");
+//	}
 
+	public List<Project> getSubProjects() {
+		List<ParentProject> subProjectRecords = getMany(ParentProject.class, "parentProjectId");
+		List<Project> subProjects = new ArrayList<Project>(); 
+		for (Iterator<ParentProject> it = subProjectRecords.iterator(); it.hasNext();) {
+			Project project = it.next().getSubProject();
+			subProjects.add(project);
+		}
+		return subProjects;
+    }
+	
 	public List<ProjectShareAuthorization> getProjectShareAuthorizations() {
 		return new Select().from(ProjectShareAuthorization.class)
 				.where("projectId =? AND state != 'Deleted'", getId())
@@ -261,6 +273,60 @@ public class Project extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
+	public Double getExpenseTotal(){
+		List<ProjectShareAuthorization> projectShareAuthorizations = this.getProjectShareAuthorizations();
+        Double projectExpenseTotal = 0.0;
+		for(int i= 0; i<projectShareAuthorizations.size(); i++){
+        	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
+        	projectExpenseTotal+= psa.getExpenseTotal();
+        }
+		for(Iterator<Project> it = this.getSubProjects().iterator(); it.hasNext();){
+			Project subProject = it.next();
+			Double subProjectExpenseTotal = 0.0;
+			List<ProjectShareAuthorization> subProjectShareAuthorizations = subProject.getProjectShareAuthorizations();
+			for(int i = 0; i < subProjectShareAuthorizations.size(); i++){
+				subProjectExpenseTotal += subProjectShareAuthorizations.get(i).getExpenseTotal();
+			}
+			Double rate = 1.0;
+			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
+				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
+				if(rate == null){
+					return null;
+				}
+			}
+			projectExpenseTotal += subProjectExpenseTotal*rate;
+		}
+		return projectExpenseTotal;
+	}
+	
+	public Double getIncomeTotal(){
+		List<ProjectShareAuthorization> projectShareAuthorizations = this.getProjectShareAuthorizations();
+        Double projectIncomeTotal = 0.0;
+		for(int i= 0; i<projectShareAuthorizations.size(); i++){
+        	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
+        	projectIncomeTotal+= psa.getIncomeTotal();
+        }
+		
+		for(Iterator<Project> it = this.getSubProjects().iterator(); it.hasNext();){
+			Project subProject = it.next();
+			Double subProjectIncomeTotal = 0.0;
+			List<ProjectShareAuthorization> subProjectShareAuthorizations = subProject.getProjectShareAuthorizations();
+			for(int i = 0; i < subProjectShareAuthorizations.size(); i++){
+				subProjectIncomeTotal += subProjectShareAuthorizations.get(i).getIncomeTotal();
+			}
+			Double rate = 1.0;
+			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
+				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
+				if(rate == null){
+					return null;
+				}
+			}
+			projectIncomeTotal += subProjectIncomeTotal*rate;
+		}
+		
+		return projectIncomeTotal;
+	}
+	
 	public String getRemarkName() {
 		ProjectRemark projectRemark = new Select().from(ProjectRemark.class).where("projectId=?", this.getId()).executeSingle();
 		if(projectRemark != null){
