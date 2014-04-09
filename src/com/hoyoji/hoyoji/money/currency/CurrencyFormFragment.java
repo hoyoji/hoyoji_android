@@ -102,47 +102,49 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 
 		try {
 			ActiveAndroid.beginTransaction();
-			((HyjActivity)CurrencyFormFragment.this.getActivity()).displayProgressDialog(R.string.currencyFormFragment_addShare_fetch_exchange, R.string.currencyFormFragment_addShare_fetching_exchange);
-			if (!currentCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())) {
-				
-					List<Currency> currencies = HyjApplication.getInstance().getCurrentUser().getUserData().getCurrencies();
-					for (Iterator<Currency> it = currencies.iterator(); it.hasNext();) {
-						final Currency currency = it.next();
-						if (Exchange.getExchangeRate(currency.getId(),currentCurrencyId) == null) {
-							// 尝试到网上获取汇率
-							HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-								@Override
-								public void finishCallback(Object object) {
-									// 到网上获取汇率成功，新建汇率然后保存
-									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-									Double exchangeRate = (Double) object;
-									Exchange newExchange = new Exchange();
-									newExchange.setForeignCurrencyId(currency.getId());
-									newExchange.setLocalCurrencyId(currentCurrencyId);
-									newExchange.setRate(exchangeRate);
-									newExchange.save();
-								}
-
-								@Override
-								public void errorCallback(Object object) {
-									
-									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-									if (object != null) {
-										HyjUtil.displayToast(object.toString());
-									} else {
-										HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
-									}
-								}
-							};
-							HyjHttpGetExchangeRateAsyncTask.newInstance(currency.getId(),currentCurrencyId,serverCallbacks);
-						}
-					}
-			}
+//			((HyjActivity)CurrencyFormFragment.this.getActivity()).displayProgressDialog(R.string.currencyFormFragment_addShare_fetch_exchange, R.string.currencyFormFragment_addShare_fetching_exchange);
+//			if (!currentCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())) {
+//				
+//					List<Currency> currencies = HyjApplication.getInstance().getCurrentUser().getUserData().getCurrencies();
+//					for (Iterator<Currency> it = currencies.iterator(); it.hasNext();) {
+//						final Currency currency = it.next();
+//						if (Exchange.getExchangeRate(currency.getId(),currentCurrencyId) == null) {
+//							// 尝试到网上获取汇率
+//							HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//								@Override
+//								public void finishCallback(Object object) {
+//									// 到网上获取汇率成功，新建汇率然后保存
+//									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+//									Double exchangeRate = (Double) object;
+//									Exchange newExchange = new Exchange();
+//									newExchange.setForeignCurrencyId(currency.getId());
+//									newExchange.setLocalCurrencyId(currentCurrencyId);
+//									newExchange.setRate(exchangeRate);
+//									newExchange.save();
+//								}
+//
+//								@Override
+//								public void errorCallback(Object object) {
+//									
+//									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+//									if (object != null) {
+//										HyjUtil.displayToast(object.toString());
+//									} else {
+//										HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
+//									}
+//								}
+//							};
+//							HyjHttpGetExchangeRateAsyncTask.newInstance(currency.getId(),currentCurrencyId,serverCallbacks);
+//						}
+//					}
+//			}
 				HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
 				userDataEditor.getModelCopy().setActiveCurrencyId(currentCurrencyId);
 				userDataEditor.save();
+				ActiveAndroid.endTransaction();
+				getActivity().finish();
 			} catch (Exception e) {
-				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+//				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
 				ActiveAndroid.endTransaction();
 				HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
 			}
