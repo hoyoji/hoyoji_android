@@ -155,8 +155,7 @@ public class ChangePasswordFragment extends HyjFragment {
 
 			try {
 				JSONObject data = new JSONObject();
-				data.put("userId", HyjApplication.getInstance()
-						.getCurrentUser().getId());
+				data.put("userId", HyjApplication.getInstance().getCurrentUser().getId());
 				data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
 				data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
 				data.put("newPassword2", HyjUtil.getSHA1(mNewPassword2));
