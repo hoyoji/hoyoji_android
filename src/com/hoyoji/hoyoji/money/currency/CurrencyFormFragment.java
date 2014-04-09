@@ -138,7 +138,6 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 						}
 					}
 			}
-			
 				HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
 				userDataEditor.getModelCopy().setActiveCurrencyId(currentCurrencyId);
 				userDataEditor.save();
