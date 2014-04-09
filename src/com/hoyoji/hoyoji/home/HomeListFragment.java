@@ -33,6 +33,7 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMoreListener;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -51,6 +52,7 @@ import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
@@ -61,6 +63,7 @@ import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -328,6 +331,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyExpense)object).getPicture());
+			
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyExpense)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyExpense)object).getOwnerUser().getDisplayName());
@@ -366,6 +383,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyIncome)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyIncome)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyIncome)object).getOwnerUser().getDisplayName());
@@ -398,6 +429,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyTransfer)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyTransfer)object).getOwnerUser().getDisplayName());
@@ -430,6 +475,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyBorrow)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyBorrow)object).getOwnerUser().getDisplayName());
@@ -462,6 +521,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyLend)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyLend)object).getOwnerUser().getDisplayName());
@@ -494,6 +567,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyReturn)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyReturn)object).getOwnerUser().getDisplayName());
@@ -526,6 +613,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyPayback)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(((MoneyPayback)object).getOwnerUser().getDisplayName());
