@@ -1,15 +1,25 @@
 package com.hoyoji.hoyoji.models;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.graphics.Bitmap;
 import android.provider.BaseColumns;
+import android.util.Base64;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
 @Table(name = "Picture", id = BaseColumns._ID)
@@ -181,5 +191,53 @@ public class Picture extends HyjModel {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
-	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+
+//		var f = Ti.Filesystem.getFile(imgDir, attributes.id + "." + attributes.pictureType);
+//		var blob1;
+//		if (f.exists()) {
+//			blob1 = f.read();
+//			attributes.base64Picture = Ti.Utils.base64encode(blob1).toString();
+//		}
+//		
+//		var f1 = Ti.Filesystem.getFile(imgDir, attributes.id + "_icon." + attributes.pictureType);
+//		var blob0;
+//		if (f1.exists()) {
+//			blob0 = f1.read();
+//			attributes.base64PictureIcon = Ti.Utils.base64encode(blob0).toString();
+//			blob0 = null;
+//		} else if(blob1){
+//			blob0 = Alloy.Globals.creatImageThumbnail(blob1, 56);;
+//			attributes.base64PictureIcon = Ti.Utils.base64encode(blob0).toString();
+//			blob0 = null;				
+//		}
+//		f1 = null;
+//		
+		
+
+		try {
+
+			File f;
+			f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+			File dir = HyjApplication.getInstance().getCacheDir();
+			Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(dir+"/"+f.getAbsolutePath(), null, null);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+			jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+			
+			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+			bmp = HyjUtil.decodeSampledBitmapFromFile(dir+"/"+f.getAbsolutePath(), null, null);
+			baos = new ByteArrayOutputStream();  
+			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+			jsonObj.put("base64Picture", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return jsonObj;
+	}	
 }
