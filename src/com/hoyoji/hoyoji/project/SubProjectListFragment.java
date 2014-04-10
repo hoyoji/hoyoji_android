@@ -243,11 +243,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
 			if(view.getTag() == null){
 				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-				ImageButton imageButonView = (ImageButton)view;
 				if(!project.getSubProjects().isEmpty()){
-					imageButonView.setImageResource(R.drawable.ic_action_next_item_blue);
+					((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
 				}else{
-					imageButonView.setImageResource(R.drawable.ic_action_next_item);
+					((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
 				}
 				view.setOnClickListener(new OnClickListener(){
 					@Override
