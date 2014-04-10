@@ -246,19 +246,17 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				ImageButton imageButonView = (ImageButton)view;
 				if(!project.getSubProjects().isEmpty()){
 					imageButonView.setImageResource(R.drawable.ic_action_next_item_blue);
-					
-					view.setOnClickListener(new OnClickListener(){
-						@Override
-						public void onClick(View v) {
-							String parentProjectId = v.getTag().toString();
-							Project project = HyjModel.getModel(Project.class, parentProjectId);
-							mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
-						}
-					});
-					
 				}else{
 					imageButonView.setImageResource(R.drawable.ic_action_next_item);
 				}
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						String parentProjectId = v.getTag().toString();
+						Project project = HyjModel.getModel(Project.class, parentProjectId);
+						mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
+					}
+				});
 			}
 			view.setTag(cursor.getString(columnIndex));
 			return true;
