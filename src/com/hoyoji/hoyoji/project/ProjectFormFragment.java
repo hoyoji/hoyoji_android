@@ -347,72 +347,10 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 //                        		 } 
 //            				 }
             			 }
-            			 if(project.getCurrencyId().equalsIgnoreCase(mProjectEditor.getModelCopy().getCurrencyId())){
-        					 ParentProject parentProject = new ParentProject();
-    	            		 parentProject.setParentProjectId(project.getId());
-    	            		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
-    	            		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
-        				 }else{
-        						Double rate = Exchange.getExchangeRate(project.getCurrencyId(), mProjectEditor.getModelCopy().getCurrencyId());
-        						if(rate != null){
-        							// 汇率已经存在，直接保存新项目
-        							 ParentProject parentProject = new ParentProject();
-            	            		 parentProject.setParentProjectId(project.getId());
-            	            		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
-            	            		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
-        							 return;
-        						}
-        						
-        						// 尝试到网上获取汇率
-        						((HyjActivity)ProjectFormFragment.this.getActivity()).displayProgressDialog(R.string.projectMessageFormFragment_addShare_fetch_exchange, R.string.projectMessageFormFragment_addShare_fetching_exchange);
-        						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-        							@Override
-        							public void finishCallback(Object object) {
-        								// 到网上获取汇率成功，新建汇率然后保存
-        								((HyjActivity)ProjectFormFragment.this.getActivity()).dismissProgressDialog();
-        								Double exchangeRate = (Double) object;
-        								Exchange newExchange = new Exchange();
-        								newExchange.setForeignCurrencyId(project.getCurrencyId());
-        								newExchange.setLocalCurrencyId(mProjectEditor.getModelCopy().getCurrencyId());
-        								newExchange.setRate(exchangeRate);
-        								newExchange.save();
-        								
-        								ParentProject parentProject = new ParentProject();
-	               	            		parentProject.setParentProjectId(project.getId());
-		               	            	parentProject.setSubProjectId(mProjectEditor.getModel().getId());
-		               	            	mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
-        							}
-
-        							@Override
-        							public void errorCallback(Object object) {
-        								((HyjActivity)ProjectFormFragment.this.getActivity()).dismissProgressDialog();
-        								if (object != null) {
-        									HyjUtil.displayToast(object.toString());
-        								} else {
-        									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-        								}
-
-        								// 到网上获取汇率失败，问用户是否要手工添加该汇率
-        								((HyjActivity)ProjectFormFragment.this.getActivity()).displayDialog(-1, R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1, new DialogCallbackListener(){
-        									@Override
-        									public void doPositiveClick(Object object){
-        										Bundle bundle = new Bundle();
-        										bundle.putString("localCurrencyId", mProjectEditor.getModelCopy().getCurrencyId());
-        										bundle.putString("foreignCurrencyId", project.getCurrencyId());
-        										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
-        									}
-        									@Override
-        									public void doNegativeClick(){
-        										HyjUtil.displayToast("未能获取项目币种到本币的汇率");
-        									}
-        									
-        								});
-        							}
-        						};
-        						HyjHttpGetExchangeRateAsyncTask.newInstance(mProjectEditor.getModelCopy().getCurrencyId(),project.getCurrencyId(),
-        								serverCallbacks);
-        				 }
-	            		 
+            			 ParentProject parentProject = new ParentProject();
+	            		 parentProject.setParentProjectId(project.getId());
+	            		 parentProject.setSubProjectId(mProjectEditor.getModel().getId());
+	            		 mParentProjectListAdapter.add(new ParentProjectListItem(parentProject, ParentProjectListItem.NEW));
             	 	 }
             	 }
             	 break;
