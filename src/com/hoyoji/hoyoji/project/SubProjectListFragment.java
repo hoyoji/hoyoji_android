@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -240,14 +242,23 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
 			if(view.getTag() == null){
-				view.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v) {
-						String parentProjectId = v.getTag().toString();
-						Project project = HyjModel.getModel(Project.class, parentProjectId);
-						mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
-					}
-				});
+				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+				ImageButton imageButonView = (ImageButton)view;
+				if(!project.getSubProjects().isEmpty()){
+					imageButonView.setImageResource(R.drawable.ic_action_next_item_blue);
+					
+					view.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v) {
+							String parentProjectId = v.getTag().toString();
+							Project project = HyjModel.getModel(Project.class, parentProjectId);
+							mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
+						}
+					});
+					
+				}else{
+					imageButonView.setImageResource(R.drawable.ic_action_next_item);
+				}
 			}
 			view.setTag(cursor.getString(columnIndex));
 			return true;
