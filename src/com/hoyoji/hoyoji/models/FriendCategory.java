@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.activeandroid.annotation.Column;
@@ -75,6 +76,10 @@ public class FriendCategory extends HyjModel {
 
 	public void setOwnerUserId(String mOwnerUserId) {
 		this.mOwnerUserId = mOwnerUserId;
+	}
+	
+	public List<Friend> getFriends(){
+		return getMany(Friend.class, "friendCategoryId");
 	}
 	
 	@Override

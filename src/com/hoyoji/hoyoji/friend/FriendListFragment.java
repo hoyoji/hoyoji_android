@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -205,8 +207,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	@Override 
 	public void onDeleteListGroup(int groupPos, Long id){
-		if(getListView().getExpandableListAdapter().getChildrenCount(groupPos) > 0){
-			//new Select().from(Friend.class).where("friendCategoryId=?", id);
+		List<Friend> friends = HyjModel.load(FriendCategory.class, id).getFriends();
+		if(getListView().getExpandableListAdapter().getChildrenCount(groupPos) > 0 || !friends.isEmpty()){
 			HyjUtil.displayToast("该好友分类下包含好友，不能被删除");
 		} else {
 			FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
