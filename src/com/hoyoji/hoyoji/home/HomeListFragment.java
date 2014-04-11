@@ -76,7 +76,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 	private ContentObserver mUserChangeObserver = null;
-	private ContentObserver mLocalCurrencyChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -148,11 +147,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			mUserChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 					mUserChangeObserver);
-		}
-		if (mLocalCurrencyChangeObserver == null) {
-			mLocalCurrencyChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
-					mLocalCurrencyChangeObserver);
 		}
 	}
 
@@ -850,10 +844,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		if (mUserChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mUserChangeObserver);
-		}
-		if (mLocalCurrencyChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mLocalCurrencyChangeObserver);
 		}
 		super.onDestroy();
 	}
