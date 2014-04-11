@@ -7,7 +7,11 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -17,9 +21,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
+import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
@@ -27,17 +31,15 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.friend.FriendCategoryFormFragment;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	private static final int EDIT_MONEYACCOUNT_DETAILS = 0;
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
+	private ContentObserver mUserChangeObserver = null;
 
 	@Override
 	public Integer useContentView() {
@@ -53,6 +55,12 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		getListView().setGroupIndicator(null);
+		
+		if (mUserChangeObserver == null) {
+			mUserChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+					mUserChangeObserver);
+		}
 	}
 	
 	@Override
@@ -269,5 +277,52 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		            }
 		        }
 		    }
+	}
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(0);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+						((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	@Override
+	public void onDestroy() {
+		if (mUserChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mUserChangeObserver);
+		}
+		super.onDestroy();
 	}
 }
