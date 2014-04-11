@@ -92,19 +92,6 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
 			}
-			double amount = intent.getDoubleExtra("amount", -1.0);
-			if(amount >= 0.0){
-				moneyLend.setAmount(amount);
-			}
-			String friendUserId = intent.getStringExtra("friendUserId");
-			if(friendUserId != null){
-				moneyLend.setFriendUserId(friendUserId);
-			}
-			String projectId = intent.getStringExtra("projectId");
-			if(projectId != null){
-				moneyLend.setProjectId(projectId);
-			}
-			
 		}
 		mMoneyLendEditor = moneyLend.newModelEditor();
 		
@@ -119,7 +106,12 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyLendFormFragment_textField_amount);		
-		mNumericAmount.setNumber(moneyLend.getAmount());
+		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
+		if(amount >= 0.0){
+			mNumericAmount.setNumber(amount);
+		}else{
+			mNumericAmount.setNumber(moneyLend.getAmount());
+		}
 		
 		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackDate);
 		mDateTimeFieldPaybackDate.setText(moneyLend.getPaybackDate());
@@ -148,7 +140,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
-		Project project = moneyLend.getProject();
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyLend.getProject();
+		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_project);
 		
 		if(project != null){
@@ -169,7 +167,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyLendFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyLendFormFragment_linearLayout_exchangeRate);
 		
-		Friend friend = moneyLend.getFriend();
+		Friend friend;
+		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+		if(friendUserId != null){
+			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+		}else{
+			friend = moneyLend.getFriend();
+		}
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_friend);
 		
 		if(friend != null){

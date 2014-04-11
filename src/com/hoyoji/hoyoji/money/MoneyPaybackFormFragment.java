@@ -91,18 +91,6 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
 			}
-			double amount = intent.getDoubleExtra("amount", -1.0);
-			if(amount >= 0.0){
-				moneyPayback.setAmount(amount);
-			}
-			String friendUserId = intent.getStringExtra("friendUserId");
-			if(friendUserId != null){
-				moneyPayback.setFriendUserId(friendUserId);
-			}
-			String projectId = intent.getStringExtra("projectId");
-			if(projectId != null){
-				moneyPayback.setProjectId(projectId);
-			}
 		}
 		mMoneyPaybackEditor = moneyPayback.newModelEditor();
 		
@@ -117,7 +105,12 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_amount);		
-		mNumericAmount.setNumber(moneyPayback.getAmount());
+		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
+		if(amount >= 0.0){
+			mNumericAmount.setNumber(amount);
+		}else{
+			mNumericAmount.setNumber(moneyPayback.getAmount());
+		}
 		
 		mNumericFieldInterest = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_interest);		
 		mNumericFieldInterest.setNumber(moneyPayback.getInterest());
@@ -139,7 +132,13 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
-		Project project = moneyPayback.getProject();
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyPayback.getProject();
+		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyPaybackFormFragment_selectorField_project);
 		
 		if(project != null){
@@ -160,7 +159,13 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyPaybackFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyPaybackFormFragment_linearLayout_exchangeRate);
 		
-		Friend friend = moneyPayback.getFriend();
+		Friend friend;
+		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+		if(friendUserId != null){
+			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+		}else{
+			friend = moneyPayback.getFriend();
+		}
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyPaybackFormFragment_selectorField_friend);
 		
 		if(friend != null){
