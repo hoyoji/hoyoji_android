@@ -103,18 +103,6 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyExpense.setMoneyIncomeId(intent.getStringExtra("counterpartId"));
 			}
-			double amount = intent.getDoubleExtra("amount", -1.0);
-			if(amount >= 0.0){
-				moneyExpense.setAmount(amount);
-			}
-			String friendUserId = intent.getStringExtra("friendUserId");
-			if(friendUserId != null){
-				moneyExpense.setFriendUserId(friendUserId);
-			}
-			String projectId = intent.getStringExtra("projectId");
-			if(projectId != null){
-				moneyExpense.setProjectId(projectId);
-			}
 		}
 				
 //		mMoneyExpenseEditor = moneyExpense.newModelEditor();
@@ -134,7 +122,12 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		}
 
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
-		mNumericAmount.setNumber(moneyExpense.getAmount());
+		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
+		if(amount >= 0.0){
+			mNumericAmount.setNumber(amount);
+		}else{
+			mNumericAmount.setNumber(moneyExpense.getAmount());
+		}
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
@@ -181,7 +174,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		Project project = moneyExpense.getProject();
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyExpense.getProject();
+		}
+		
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_selectorField_project);
 
@@ -228,14 +228,22 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		Friend friend = moneyExpense.getFriend();
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_selectorField_friend);
+		Friend friend;
+		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+		if(friendUserId != null){
+			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+		}else{
+			friend = moneyExpense.getFriend();
+		}
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_friend);
 
 		if (friend != null) {
 			mSelectorFieldFriend.setModelId(friend.getId());
 			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
+		
+		
+		
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

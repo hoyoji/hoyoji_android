@@ -68,6 +68,7 @@ public class Project extends HyjModel {
 		super();
 		mUUID = UUID.randomUUID().toString();
 		setAutoApportion(false);
+		mCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 	}
 
 	@Override

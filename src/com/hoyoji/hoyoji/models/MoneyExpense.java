@@ -503,6 +503,10 @@ public class MoneyExpense extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
+	public String getMoneyIncomeId(){
+		return mMoneyIncomeId;
+	}
+	
 	public void setMoneyIncomeId(String moneyIncomeId) {
 		this.mMoneyIncomeId = moneyIncomeId;
 	}
