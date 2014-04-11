@@ -10,9 +10,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.ContextMenu;
@@ -27,6 +32,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -54,6 +60,7 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
@@ -68,7 +75,9 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment;
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
-
+	private ContentObserver mUserChangeObserver = null;
+	private ContentObserver mLocalCurrencyChangeObserver = null;
+	
 	@Override
 	public Integer useContentView() {
 		
@@ -135,6 +144,16 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				popup.show();
 			}
 		});
+		if (mUserChangeObserver == null) {
+			mUserChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+					mUserChangeObserver);
+		}
+		if (mLocalCurrencyChangeObserver == null) {
+			mLocalCurrencyChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+					mLocalCurrencyChangeObserver);
+		}
 	}
 
 	@Override
@@ -786,5 +805,56 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		            }
 		        }
 		    }
+	}
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(0);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+						((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	@Override
+	public void onDestroy() {
+		if (mUserChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mUserChangeObserver);
+		}
+		if (mLocalCurrencyChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mLocalCurrencyChangeObserver);
+		}
+		super.onDestroy();
 	}
 }
