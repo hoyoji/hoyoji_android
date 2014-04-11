@@ -42,6 +42,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
+import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
@@ -52,6 +53,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	private static final int EDIT_PROJECT_DETAILS = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
+	private ContentObserver mParentProjectChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	
@@ -139,6 +141,14 @@ public class SubProjectListFragment extends HyjUserListFragment {
 							ContentProvider.createUri(
 									ProjectShareAuthorization.class, null), true,
 							mChangeObserver);
+		}
+		if (mParentProjectChangeObserver == null) {
+			mParentProjectChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver()
+					.registerContentObserver(
+							ContentProvider.createUri(
+									ParentProject.class, null), true,
+									mParentProjectChangeObserver);
 		}
 	}
 
@@ -241,13 +251,13 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			numericView.setNumber(project.getIncomeTotal());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
+			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+			if(!project.getSubProjects().isEmpty()){
+				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
+			}else{
+				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
+			}
 			if(view.getTag() == null){
-				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-				if(!project.getSubProjects().isEmpty()){
-					((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
-				}else{
-					((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
-				}
 				view.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
@@ -330,6 +340,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if (mChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
+		}
+		if (mParentProjectChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mParentProjectChangeObserver);
 		}
 		super.onDestroy();
 	}
