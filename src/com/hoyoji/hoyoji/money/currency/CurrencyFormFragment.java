@@ -100,8 +100,8 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 	protected void setLocalCurrency() {
 		final String currentCurrencyId = mCurrencyEditor.getModelCopy().getId();
 
-		try {
-			ActiveAndroid.beginTransaction();
+//		try {
+//			ActiveAndroid.beginTransaction();
 //			((HyjActivity)CurrencyFormFragment.this.getActivity()).displayProgressDialog(R.string.currencyFormFragment_addShare_fetch_exchange, R.string.currencyFormFragment_addShare_fetching_exchange);
 //			if (!currentCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())) {
 //				
@@ -141,13 +141,13 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 				HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
 				userDataEditor.getModelCopy().setActiveCurrencyId(currentCurrencyId);
 				userDataEditor.save();
-				ActiveAndroid.endTransaction();
+//				ActiveAndroid.endTransaction();
 				getActivity().finish();
-			} catch (Exception e) {
-//				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-				ActiveAndroid.endTransaction();
-				HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
-			}
+//			} catch (Exception e) {
+////				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+//				ActiveAndroid.endTransaction();
+//				HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
+//			}
 
 	}
 

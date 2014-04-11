@@ -2,8 +2,12 @@ package com.hoyoji.hoyoji.money.currency;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -21,9 +25,12 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.Currency;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 
 public class CurrencyListFragment extends HyjUserListFragment{
+	private ContentObserver mChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -55,10 +62,14 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		return (Loader<Object>)loader;
 	}
 
-
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+							mChangeObserver);
+		}
 	}
 
 	@Override
@@ -112,4 +123,53 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		
 		return false;
 	}
+	
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(0);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		super.onDestroy();
+	}
+
 }
