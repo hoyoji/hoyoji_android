@@ -116,17 +116,18 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyIncomeFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyIncome.getPictures());
 		
-		setupApportionField(moneyIncome);
-		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);	
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyIncome.getDate());
 		}
+
+		setupApportionField(moneyIncome);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
+			mApportionFieldApportions.setTotalAmount(amount);
 		}else{
 			mNumericAmount.setNumber(moneyIncome.getAmount());
 		}

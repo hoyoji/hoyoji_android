@@ -113,18 +113,19 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mImageFieldPicture = (HyjImageField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyExpense.getPictures());
-		
-		setupApportionField(moneyExpense);
 				
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpense.getDate());
 		}
 
+		setupApportionField(moneyExpense);
+		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
+			mApportionFieldApportions.setTotalAmount(amount);
 		}else{
 			mNumericAmount.setNumber(moneyExpense.getAmount());
 		}
@@ -150,7 +151,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					int count) {
 			}
 		});
-
+		
 		MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_selectorField_moneyAccount);
