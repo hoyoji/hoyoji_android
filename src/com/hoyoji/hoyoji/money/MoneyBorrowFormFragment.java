@@ -358,6 +358,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 //			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
+			getView().findViewById(R.id.button_delete).setVisibility(View.GONE);
 		}
 	}
 	
