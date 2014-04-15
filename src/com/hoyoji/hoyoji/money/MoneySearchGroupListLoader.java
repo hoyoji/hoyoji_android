@@ -287,9 +287,9 @@ public class MoneySearchGroupListLoader extends
 				groupObject.put("date", ds);
 				groupObject.put("dateInMilliSeconds", calDateFrom.getTimeInMillis());
 				groupObject.put("expenseTotal",
-						HyjUtil.toFixed2(incomeTotal));
-				groupObject.put("incomeTotal",
 						HyjUtil.toFixed2(expenseTotal));
+				groupObject.put("incomeTotal",
+						HyjUtil.toFixed2(incomeTotal));
 				list.add(groupObject);
 				loadCount += count + 1;
 			}
