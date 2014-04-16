@@ -45,7 +45,7 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment;
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
 	private static final int EDIT_FRIEND_DETAILS = 0;
-	private ContentObserver mFriendChangeObserver = null;
+	private ContentObserver mUserChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -71,10 +71,10 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		if (mFriendChangeObserver == null) {
-			mFriendChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Friend.class, null), true,
-					mFriendChangeObserver);
+		if (mUserChangeObserver == null) {
+			mUserChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
+					mUserChangeObserver);
 		}
 	}
 
@@ -325,9 +325,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	}
 	@Override
 	public void onDestroy() {
-		if (mFriendChangeObserver != null) {
+		if (mUserChangeObserver != null) {
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mFriendChangeObserver);
+					.unregisterContentObserver(mUserChangeObserver);
 		}
 		super.onDestroy();
 	}
