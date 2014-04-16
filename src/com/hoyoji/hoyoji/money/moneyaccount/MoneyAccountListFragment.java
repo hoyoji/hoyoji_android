@@ -195,8 +195,20 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(view.getId() == R.id.moneyAccountListItem_currentBalance){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(moneyAccount.getCurrencySymbol());
-			numericView.setNumber(moneyAccount.getCurrentBalance());
+			Double balance = moneyAccount.getCurrentBalance();
+			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
+				if(balance > 0){
+					numericView.setPrefix("借出" + moneyAccount.getCurrencySymbol());
+					numericView.setNumber(balance);	
+				}else{
+					numericView.setPrefix("借入" + moneyAccount.getCurrencySymbol());
+					numericView.setNumber(-balance);	
+				}
+			}else{
+				numericView.setPrefix(moneyAccount.getCurrencySymbol());
+				numericView.setNumber(balance);	
+			}
+			
 			return true;
 		} else {
 			return false;
