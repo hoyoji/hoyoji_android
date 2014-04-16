@@ -308,7 +308,6 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setExchangeRate();
 			
 			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 				@Override
@@ -381,6 +380,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			});
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
+				setExchangeRate();
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
 			setPermission();
