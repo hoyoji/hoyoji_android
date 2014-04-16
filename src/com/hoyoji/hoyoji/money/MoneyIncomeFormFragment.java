@@ -380,8 +380,10 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			});
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
-				setExchangeRate();
+				setExchangeRate(false);
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			}else{
+				setExchangeRate(true);
 			}
 			setPermission();
 	}
@@ -561,7 +563,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		}
 	}
 	
-	private void setExchangeRate(){
+	private void setExchangeRate(Boolean editInit){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
 			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
@@ -580,7 +582,8 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				
-				Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
+				if(!editInit){//修改时init不需要set Rate
+					Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
 					if(rate != null){
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
@@ -588,6 +591,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						mNumericExchangeRate.setText(null);
 						CREATE_EXCHANGE = 1;
 					}
+				}
 			}
 			
 		}else{
@@ -998,7 +1002,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
 	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-	         		setExchangeRate();
+	         		setExchangeRate(false);
 	         	 }
 	        	 break;
              case GET_PROJECT_ID:
@@ -1018,7 +1022,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	         		
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
-	         		setExchangeRate();
+	         		setExchangeRate(false);
 	         		mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	         	 }
