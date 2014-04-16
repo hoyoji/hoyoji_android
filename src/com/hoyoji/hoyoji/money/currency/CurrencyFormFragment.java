@@ -1,11 +1,31 @@
 package com.hoyoji.hoyoji.money.currency;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
+
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.HttpEntityWrapper;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +34,7 @@ import android.widget.Button;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -100,49 +121,68 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 	protected void setLocalCurrency() {
 		final String currentCurrencyId = mCurrencyEditor.getModelCopy().getId();
 
-//		try {
-//			ActiveAndroid.beginTransaction();
-//			((HyjActivity)CurrencyFormFragment.this.getActivity()).displayProgressDialog(R.string.currencyFormFragment_addShare_fetch_exchange, R.string.currencyFormFragment_addShare_fetching_exchange);
-//			if (!currentCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())) {
-//				
-//					List<Currency> currencies = HyjApplication.getInstance().getCurrentUser().getUserData().getCurrencies();
-//					for (Iterator<Currency> it = currencies.iterator(); it.hasNext();) {
-//						final Currency currency = it.next();
-//						if (Exchange.getExchangeRate(currency.getId(),currentCurrencyId) == null) {
-//							// 尝试到网上获取汇率
-//							HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//								@Override
-//								public void finishCallback(Object object) {
-//									// 到网上获取汇率成功，新建汇率然后保存
-//									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-//									Double exchangeRate = (Double) object;
-//									Exchange newExchange = new Exchange();
-//									newExchange.setForeignCurrencyId(currency.getId());
-//									newExchange.setLocalCurrencyId(currentCurrencyId);
-//									newExchange.setRate(exchangeRate);
-//									newExchange.save();
-//								}
-//
-//								@Override
-//								public void errorCallback(Object object) {
-//									
-//									((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-//									if (object != null) {
-//										HyjUtil.displayToast(object.toString());
-//									} else {
-//										HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
-//									}
-//								}
-//							};
-//							HyjHttpGetExchangeRateAsyncTask.newInstance(currency.getId(),currentCurrencyId,serverCallbacks);
-//						}
-//					}
+			((HyjActivity)CurrencyFormFragment.this.getActivity()).displayProgressDialog(R.string.currencyFormFragment_addShare_fetch_exchange, R.string.currencyFormFragment_addShare_fetching_exchange);
+			if (!currentCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())) {
+				
+					List<Currency> currencies = HyjApplication.getInstance().getCurrentUser().getCurrencies();
+					final List<String> toCurrencyList = new ArrayList<String>();
+					for (Iterator<Currency> it = currencies.iterator(); it.hasNext();) {
+						final Currency currency = it.next();
+						if (!currency.getId().equalsIgnoreCase(currentCurrencyId) && Exchange.getExchangeRate(currency.getId(),currentCurrencyId) == null) {
+							// 尝试到网上获取汇率
+							toCurrencyList.add(currency.getId());
+						}
+					}
+					List<String> fromCurrencyList = new ArrayList<String>();
+					fromCurrencyList.add(currentCurrencyId);
+
+					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						// 到网上获取汇率成功，新建汇率然后保存
+						((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+						List<Double> exchangeRates = (List<Double>) object;
+
+						try {
+							ActiveAndroid.beginTransaction();
+							for(int i=0; i<exchangeRates.size(); i++){
+								Double exchangeRate = (Double) exchangeRates.get(i);
+								Exchange newExchange = new Exchange();
+								newExchange.setForeignCurrencyId(toCurrencyList.get(i));
+								newExchange.setLocalCurrencyId(currentCurrencyId);
+								newExchange.setRate(exchangeRate);
+								newExchange.save();
+							}
+
+							HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
+							userDataEditor.getModelCopy().setActiveCurrencyId(currentCurrencyId);
+							userDataEditor.save();
+							ActiveAndroid.setTransactionSuccessful();
+							getActivity().finish();
+							
+						} catch (Exception e) {
+							HyjUtil.displayToast(e.getMessage());
+						} finally {
+							ActiveAndroid.endTransaction();
+						}
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						
+						((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
+						if (object != null) {
+							HyjUtil.displayToast(object.toString());
+						} else {
+							HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
+						}
+					}
+				};
+
+					
+					HttpGetExchangeRateAsyncTask.newInstance(fromCurrencyList,toCurrencyList, serverCallbacks);
+
 //			}
-				HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
-				userDataEditor.getModelCopy().setActiveCurrencyId(currentCurrencyId);
-				userDataEditor.save();
-//				ActiveAndroid.endTransaction();
-				getActivity().finish();
 //			} catch (Exception e) {
 ////				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
 //				ActiveAndroid.endTransaction();
@@ -186,4 +226,140 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 	// getActivity().finish();
 	// }
 	// }
+	
+	
+	}
+	
+	private static class HttpGetExchangeRateAsyncTask extends AsyncTask<List<String>, Integer, Object> {
+
+		HyjAsyncTaskCallbacks mCallbacks = null;
+		
+		public HttpGetExchangeRateAsyncTask(HyjAsyncTaskCallbacks callbacks) {
+			mCallbacks = callbacks;
+		}
+
+		public static HttpGetExchangeRateAsyncTask newInstance(
+				List<String> fromCurrency, List<String> toCurrency,
+				HyjAsyncTaskCallbacks callbacks) {
+			HttpGetExchangeRateAsyncTask newTask = new HttpGetExchangeRateAsyncTask(callbacks);
+			newTask.execute(fromCurrency, toCurrency);
+			return newTask;
+		}
+
+		@Override
+		protected Object doInBackground(List<String>... params) {
+			if (HyjUtil.hasNetworkConnection()) {
+				List<Double> results = new ArrayList<Double>();
+				String fromCurrency = params[0].get(0);
+				
+				for(int i=0; i < params[1].size(); i++){
+					String toCurrency = params[1].get(i);
+					String target = "https://www.google.com/finance/converter?a=1&from=" + fromCurrency + "&to=" + toCurrency;
+					Object resultObject = doHttpGet(target);
+					if(resultObject instanceof Double){
+						results.add((Double) resultObject);
+					} else {
+						return resultObject;
+					}
+				}
+				return results;
+			
+			} else {
+				return HyjApplication.getInstance().getString(R.string.server_connection_disconnected);
+			}
+		}
+
+		public void doPublishProgress(Integer progress) {
+			this.publishProgress(progress);
+		}
+
+		// onPostExecute displays the results of the AsyncTask.
+		@Override
+		protected void onPostExecute(Object result) {
+			if(result instanceof String){
+				mCallbacks.errorCallback(result);
+			} else {
+				mCallbacks.finishCallback(result);
+			}
+		}
+
+		private Object doHttpGet(String serverUrl) {
+			InputStream is = null;
+			String s = null;
+			try {
+				DefaultHttpClient client = new DefaultHttpClient();
+
+				client.addResponseInterceptor(new HttpResponseInterceptor() {
+					@Override
+					public void process(HttpResponse response, HttpContext context)
+							throws HttpException, IOException {
+						// Inflate any responses compressed with gzip
+					    final HttpEntity entity = response.getEntity();
+					    final Header encoding = entity.getContentEncoding();
+					    if (encoding != null) {
+					      for (HeaderElement element : encoding.getElements()) {
+					        if (element.getName().equalsIgnoreCase("gzip")) {
+					          response.setEntity(new InflatingEntity(response.getEntity()));
+					          break;
+					        }
+					      }
+					    }
+						
+					}
+				});
+				HttpGet get = new HttpGet(serverUrl);
+
+				get.setHeader("Accept", "application/json");
+				get.setHeader("Content-type", "application/json; charset=UTF-8");
+				get.setHeader("Accept-Encoding", "gzip");
+
+				HttpResponse response = client.execute(get);
+				HttpEntity entity = response.getEntity();
+				s = EntityUtils.toString(entity, HTTP.UTF_8); 
+			} catch (Exception e) {
+				e.printStackTrace();
+				return HyjApplication.getInstance().getString(
+						R.string.server_connection_error)
+						+ ":\\n" + e.getLocalizedMessage();
+			} finally {
+				try {
+					if (is != null)
+						is.close();
+				} catch (Exception squish) {
+				}
+			}
+
+			if (s != null) {
+				try {
+					String[] tokens = s.split("<span class=bld>");
+					tokens = tokens[1].split("</span>");
+					s = tokens[0];
+					Pattern p = Pattern.compile("([^\\s]+).+");
+					Matcher m = p.matcher(s);
+					if (m.find()) {
+						return Double.valueOf(m.group(1));
+					}
+				} catch(Exception e) {
+					return null;
+				}
+			}
+			return null;
+		}
+		
+		private static class InflatingEntity extends HttpEntityWrapper {
+	        public InflatingEntity(HttpEntity wrapped) {
+	            super(wrapped);
+	        }
+
+	        @Override
+	        public InputStream getContent() throws IOException {
+	            return new GZIPInputStream(wrappedEntity.getContent());
+	        }
+
+	        @Override
+	        public long getContentLength() {
+	            return -1;
+	        }
+	    }
+	}
 }

@@ -180,9 +180,7 @@ public class User extends HyjModel {
 		return getMany(Picture.class, "recordId");
 	}
 	
-	public List<Currency> getCurrencies(){
-		return getMany(Currency.class, "ownerUserId");
-	}
+
 
 	public String getLocation() {
 		return mLocation;
@@ -214,6 +212,10 @@ public class User extends HyjModel {
 
 	public void setAddress(String mAddress) {
 		this.mAddress = mAddress;
+	}
+	
+	public List<Currency> getCurrencies(){
+		return getMany(Currency.class, "ownerUserId");
 	}
 
 	@Override
