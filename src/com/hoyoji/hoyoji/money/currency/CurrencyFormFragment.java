@@ -182,12 +182,6 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 					
 					HttpGetExchangeRateAsyncTask.newInstance(fromCurrencyList,toCurrencyList, serverCallbacks);
 
-//			}
-//			} catch (Exception e) {
-////				((HyjActivity)CurrencyFormFragment.this.getActivity()).dismissProgressDialog();
-//				ActiveAndroid.endTransaction();
-//				HyjUtil.displayToast(R.string.currencyFormFragment_addShare_cannot_fetch_exchange);
-//			}
 
 	}
 

@@ -255,11 +255,13 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		setExchangeRate();
 	
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
+			setExchangeRate(false);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}else{
+			setExchangeRate(true);
 		}
 		setPermission();
 	}
@@ -362,7 +364,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	}
 	
 	
-	private void setExchangeRate(){
+	private void setExchangeRate(Boolean editInit){
 		if(mSelectorFieldMoneyAccount.getModelId() != null && mSelectorFieldProject.getModelId()!= null){
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,mSelectorFieldMoneyAccount.getModelId());
 			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
@@ -381,7 +383,8 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				mViewSeparatorExchange.setVisibility(View.VISIBLE);
 				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				
-				Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
+				if(!editInit){//修改时init不需要set Rate
+					Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
 					if(rate != null){
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
@@ -389,6 +392,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 						mNumericExchangeRate.setText(null);
 						CREATE_EXCHANGE = 1;
 					}
+				}
 			}
 			
 		}else{
@@ -487,6 +491,8 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					userDataEditor.save();
 				}
 				
+				String localCurrencyId = moneyLendModel.getMoneyAccount().getCurrencyId();
+				String foreignCurrencyId = moneyLendModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyLendModel.getMoneyAccount().getCurrencyId());
@@ -494,6 +500,23 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					newExchange.setRate(moneyLendModel.getExchangeRate());
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
+				}else if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+					Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+					Double rate = HyjUtil.toFixed2(moneyLendModel.getExchangeRate());
+					if(exchange != null){
+						if(exchange.getRate() != rate){
+							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+							exchangModelEditor.getModelCopy().setRate(rate);
+							exchangModelEditor.save();
+						}
+					}else{
+						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+						if(exchange.getRate() != 1/rate){
+							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+							exchangModelEditor.getModelCopy().setRate(1/rate);
+							exchangModelEditor.save();
+						}
+					}
 				}
 				
 //				if(mSelectorFieldMoneyAccount.getModelId() != null){
@@ -578,7 +601,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
 	         		mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-	         		setExchangeRate();
+	         		setExchangeRate(false);
 	        	 }
 	        	 break;
              case GET_PROJECT_ID:
@@ -597,7 +620,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	         		
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
-	         		setExchangeRate();
+	         		setExchangeRate(false);
 	        	 }
 	        	 break;
              case GET_FRIEND_ID:
