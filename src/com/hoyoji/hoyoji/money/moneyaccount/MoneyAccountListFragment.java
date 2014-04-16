@@ -200,6 +200,9 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 				if(balance > 0){
 					numericView.setPrefix("借出" + moneyAccount.getCurrencySymbol());
 					numericView.setNumber(balance);	
+				}else if(balance == 0){
+					numericView.setPrefix(moneyAccount.getCurrencySymbol());
+					numericView.setNumber(balance);	
 				}else{
 					numericView.setPrefix("借入" + moneyAccount.getCurrencySymbol());
 					numericView.setNumber(-balance);	
