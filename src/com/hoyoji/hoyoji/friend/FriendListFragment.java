@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
@@ -315,7 +316,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			        }
 			        @Override
 			        protected void onPostExecute(String result) {
-						((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+						((CursorTreeAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
 						mTask = null;
 			        }
 			    };
