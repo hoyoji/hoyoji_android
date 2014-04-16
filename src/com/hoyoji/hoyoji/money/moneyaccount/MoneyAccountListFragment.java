@@ -335,8 +335,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	@Override
 	public void onDestroy() {
 		if (mUserChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mUserChangeObserver);
+			this.getActivity().getContentResolver().unregisterContentObserver(mUserChangeObserver);
 		}
 		super.onDestroy();
 	}
