@@ -32,9 +32,9 @@ public class AboutFragment extends HyjFragment {
 
 					@Override
 					public void onClick(View v) {
-						Uri uri = Uri.parse("http://www.hoyoji.com");
-						Intent it = new Intent(Intent.ACTION_VIEW,uri);
-						startActivity(it);
+//						Uri uri = Uri.parse("http://www.hoyoji.com");
+//						Intent it = new Intent(Intent.ACTION_VIEW,uri);
+//						startActivity(it);
 					}
 				});
 
@@ -66,9 +66,9 @@ public class AboutFragment extends HyjFragment {
 
 					@Override
 					public void onClick(View v) {
-						Uri uri = Uri.parse("http://weibo.com/hoyoji");
-						Intent it = new Intent(Intent.ACTION_VIEW,uri);
-						startActivity(it);
+//						Uri uri = Uri.parse("http://weibo.com/hoyoji");
+//						Intent it = new Intent(Intent.ACTION_VIEW,uri);
+//						startActivity(it);
 					}
 				});
 
@@ -77,9 +77,9 @@ public class AboutFragment extends HyjFragment {
 
 					@Override
 					public void onClick(View v) {
-						Uri uri = Uri.parse("http://weibo.com/hoyoji");
-						Intent it = new Intent(Intent.ACTION_VIEW,uri);
-						startActivity(it);
+//						Uri uri = Uri.parse("http://weibo.com/hoyoji");
+//						Intent it = new Intent(Intent.ACTION_VIEW,uri);
+//						startActivity(it);
 					}
 				});
 	}
