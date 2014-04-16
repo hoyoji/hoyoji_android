@@ -186,9 +186,30 @@ public abstract class HyjActivity extends ActionBarActivity
 	public void openActivityWithFragmentForResult(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle, int requestCode){
 		openActivityWithFragment(fragmentClass, getString(titleRes), bundle, true, requestCode);
 	}
+	public void openBlankActivityWithFragment(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle){
+		openBlankActivityWithFragment(fragmentClass, getString(titleRes), bundle, false, null);
+	}
 	
+	public void openBlankActivityWithFragmentForResult(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle, int requestCode){
+		openBlankActivityWithFragment(fragmentClass, getString(titleRes), bundle, true, requestCode);
+	}
 	public void openActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
 		Intent intent = new Intent(this, HyjBlankUserActivity.class);
+		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+		intent.putExtra("TITLE", title);
+		if(bundle != null){
+			intent.putExtras(bundle);
+		}
+		if(forResult){
+			startActivityForResult(intent, requestCode);
+		} else {
+			startActivity(intent);
+		}
+	}
+	
+	public void openBlankActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
+		Intent intent = new Intent(this, HyjBlankActivity.class);
 		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
 		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
 		intent.putExtra("TITLE", title);

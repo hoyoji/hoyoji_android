@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
+import com.hoyoji.android.hyjframework.activity.HyjBlankActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji.R;
 import android.content.Intent;
@@ -249,7 +250,20 @@ public abstract class HyjListFragment extends ListFragment implements
 		}
 	}
 
-
+	public void openBlankActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
+		Intent intent = new Intent(this.getActivity(), HyjBlankActivity.class);
+		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+		intent.putExtra("TITLE", title);
+		if(bundle != null){
+			intent.putExtras(bundle);
+		}
+		if(forResult){
+			startActivityForResult(intent, requestCode);
+		} else {
+			startActivity(intent);
+		}
+	}
 
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;

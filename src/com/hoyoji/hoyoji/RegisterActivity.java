@@ -104,13 +104,13 @@ public class RegisterActivity extends HyjActivity {
 		mSelectFieldCurrency.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				RegisterActivity.this.openActivityWithFragmentForResult(AddCurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
+				RegisterActivity.this.openBlankActivityWithFragmentForResult(AddCurrencyListFragment.class, R.string.currencyListFragment_title_select_currency, null, GET_CURRENCY_ID);
 			}
 		});	
 		
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
-	
+
 	private void fillData(){
     	mUserName = mEditTextUserName.getText().toString().trim();
     	mPassword1 = mEditTextPassword1.getText().toString();

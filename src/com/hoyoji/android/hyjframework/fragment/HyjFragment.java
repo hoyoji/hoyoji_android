@@ -3,6 +3,7 @@ package com.hoyoji.android.hyjframework.fragment;
 import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.activity.HyjBlankActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 
 import android.content.Intent;
@@ -104,7 +105,20 @@ public abstract class HyjFragment extends Fragment {
 			this.startActivity(intent);
 		}
 	}
-
+	public void openBlankActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
+		Intent intent = new Intent(this.getActivity(), HyjBlankActivity.class);
+		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+		intent.putExtra("TITLE", title);
+		if(bundle != null){
+			intent.putExtras(bundle);
+		}
+		if(forResult){
+			this.startActivityForResult(intent, requestCode);
+		} else {
+			this.startActivity(intent);
+		}
+	}
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;
 		if(getChildFragmentManager().getFragments() != null){

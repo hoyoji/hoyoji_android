@@ -60,6 +60,11 @@
             android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name="com.hoyoji.android.hyjframework.activity.HyjBlankActivity"
+            android:windowSoftInputMode="adjustPan" 
+            android:screenOrientation="portrait">
+        </activity>
         
         <provider
             android:name="com.activeandroid.content.ContentProvider"

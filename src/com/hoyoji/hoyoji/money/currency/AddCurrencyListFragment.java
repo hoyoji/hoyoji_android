@@ -126,8 +126,6 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
     public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(id >= 0){
-			try {
-				ActiveAndroid.beginTransaction();
 				JSONObject object = (JSONObject) getListAdapter().getItem(position);
 				
 				if(getActivity().getCallingActivity() != null){
@@ -135,16 +133,18 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 					intent.putExtra("CURRENCY_ID", object.optString("id"));
 					getActivity().setResult(Activity.RESULT_OK, intent);
 				} else {
-					Currency newCurrency = new Currency();
-					newCurrency.loadFromJSON(object, true);
-					newCurrency.save();
+					try {
+						ActiveAndroid.beginTransaction();
+						Currency newCurrency = new Currency();
+						newCurrency.loadFromJSON(object, true);
+						newCurrency.save();
+						ActiveAndroid.setTransactionSuccessful();
+					} finally {
+					    ActiveAndroid.endTransaction();
+					}
 				}
 				
-				ActiveAndroid.setTransactionSuccessful();
 				this.getActivity().finish();
-			} finally {
-			    ActiveAndroid.endTransaction();
-			}
 		}
     }
 
