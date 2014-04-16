@@ -594,7 +594,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				}else if(moneyTransferModel.getTransferOut() != null && moneyTransferModel.getTransferIn() != null){
 					String localCurrencyId = moneyTransferModel.getTransferOut().getCurrencyId();
 					String foreignCurrencyId = moneyTransferModel.getTransferIn().getCurrencyId();
-					if(localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+					if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
 						Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
 						Double rate = HyjUtil.toFixed2(moneyTransferModel.getExchangeRate());
 						if(exchange != null){
