@@ -59,6 +59,7 @@ import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
@@ -76,6 +77,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 	private ContentObserver mUserChangeObserver = null;
+	private ContentObserver mProjectChangeObserver = null;
+	private ContentObserver mFriendChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -147,6 +150,16 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			mUserChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 					mUserChangeObserver);
+		}
+		if (mProjectChangeObserver == null) {
+			mProjectChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Project.class, null), true,
+					mProjectChangeObserver);
+		}
+		if (mFriendChangeObserver == null) {
+			mFriendChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Friend.class, null), true,
+					mFriendChangeObserver);
 		}
 	}
 
@@ -844,6 +857,14 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		if (mUserChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mUserChangeObserver);
+		}
+		if (mProjectChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mProjectChangeObserver);
+		}
+		if (mFriendChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mFriendChangeObserver);
 		}
 		super.onDestroy();
 	}
