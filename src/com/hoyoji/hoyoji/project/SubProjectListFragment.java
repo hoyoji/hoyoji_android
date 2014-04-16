@@ -54,6 +54,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
 	private ContentObserver mParentProjectChangeObserver = null;
+	private ContentObserver mUserDataChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	
@@ -149,6 +150,14 @@ public class SubProjectListFragment extends HyjUserListFragment {
 							ContentProvider.createUri(
 									ParentProject.class, null), true,
 									mParentProjectChangeObserver);
+		}
+		if (mUserDataChangeObserver == null) {
+			mUserDataChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver()
+					.registerContentObserver(
+							ContentProvider.createUri(
+									UserData.class, null), true,
+									mUserDataChangeObserver);
 		}
 	}
 
@@ -345,6 +354,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if (mParentProjectChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mParentProjectChangeObserver);
+		}
+		if (mUserDataChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mUserDataChangeObserver);
 		}
 		super.onDestroy();
 	}
