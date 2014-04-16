@@ -322,9 +322,16 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		msg.setToUserId(jsonUser.optString("id"));
 		msg.setMessageTitle("好友请求");
-		msg.setMessageDetail("用户"
-				+ HyjApplication.getInstance().getCurrentUser()
-						.getDisplayName() + "同意您的添加好友请求");
+		if(jsonUser.optString("newFriendAuthentication").equals("none")){
+			msg.setMessageDetail("用户"
+					+ HyjApplication.getInstance().getCurrentUser()
+							.getDisplayName() + "已成功添加您为好友");
+		}else{
+			msg.setMessageDetail("用户"
+					+ HyjApplication.getInstance().getCurrentUser()
+							.getDisplayName() + "同意您的添加好友请求");
+		}
+		
 //		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
 		JSONObject msgData = new JSONObject();
 		try {
