@@ -58,23 +58,6 @@
     	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
         />
-       
-    <com.hoyoji.android.hyjframework.view.HyjRemarkField 
-            android:id="@+id/friendFormFragment_textField_remark"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
-            hyj:labelText="备注"
-            hyj:hintText="请输入备注"
-        />
-    
-        <View 
-        android:id="@id/field_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-    	android:layout_marginTop="5dip"
-    	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
-        />
         
 	<Button
 	    android:id="@id/button_save"
