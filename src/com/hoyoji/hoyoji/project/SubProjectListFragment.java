@@ -256,6 +256,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
 			}else{
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
+				((ImageButton)view).setEnabled(false);
 			}
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
