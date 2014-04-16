@@ -712,6 +712,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					}
 					
 					//当前汇率不存在时，创建汇率
+					String localCurrencyId = moneyExpenseModel.getMoneyAccount().getCurrencyId();
+					String foreignCurrencyId = moneyExpenseModel.getProject().getCurrencyId();
 					if(CREATE_EXCHANGE == 1){
 						MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
 						Project project = moneyExpenseModel.getProject();
@@ -721,6 +723,23 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						newExchange.setForeignCurrencyId(project.getCurrencyId());
 						newExchange.setRate(moneyExpenseModel.getExchangeRate());
 						newExchange.save();
+					}else if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+						Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+						Double rate = HyjUtil.toFixed2(moneyExpenseModel.getExchangeRate());
+						if(exchange != null){
+							if(exchange.getRate() != rate){
+								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+								exchangModelEditor.getModelCopy().setRate(rate);
+								exchangModelEditor.save();
+							}
+						}else{
+							exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+							if(exchange.getRate() != 1/rate){
+								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+								exchangModelEditor.getModelCopy().setRate(1/rate);
+								exchangModelEditor.save();
+							}
+						}
 					}
 					
 					    MoneyAccount oldMoneyAccount = oldMoneyExpenseModel.getMoneyAccount();

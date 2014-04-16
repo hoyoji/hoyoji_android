@@ -576,6 +576,8 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				MoneyTransfer oldMoneyTransferModel = mMoneyTransferEditor.getModel();
 				MoneyTransfer moneyTransferModel = mMoneyTransferEditor.getModelCopy();
 				
+				String localCurrencyId = moneyTransferModel.getTransferOut().getCurrencyId();
+				String foreignCurrencyId = moneyTransferModel.getTransferIn().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount transferOut = moneyTransferModel.getTransferOut();
 					MoneyAccount transferIn = moneyTransferModel.getTransferIn();
@@ -586,6 +588,23 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					newExchange.setRate(moneyTransferModel.getExchangeRate());
 					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
+				}else if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+					Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+					Double rate = HyjUtil.toFixed2(moneyTransferModel.getExchangeRate());
+					if(exchange != null){
+						if(exchange.getRate() != rate){
+							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+							exchangModelEditor.getModelCopy().setRate(rate);
+							exchangModelEditor.save();
+						}
+					}else{
+						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+						if(exchange.getRate() != 1/rate){
+							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+							exchangModelEditor.getModelCopy().setRate(1/rate);
+							exchangModelEditor.save();
+						}
+					}
 				}
 				
 				MoneyAccount newTransferOut = moneyTransferModel.getTransferOut();
