@@ -154,8 +154,12 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				mSelectorFieldTransferOutFriend.setModelId(null);
 				mSelectorFieldTransferOutFriend.setText("");
+				MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
+				mSelectorFieldTransferOut.setText(activeAccount.getName());
+				mSelectorFieldTransferOut.setModelId(activeAccount.getId());
 				mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
          		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
+         		
 			}
 		});
 		
@@ -199,6 +203,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				mSelectorFieldTransferInFriend.setModelId(null);
 				mSelectorFieldTransferInFriend.setText("");
+				MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
+				mSelectorFieldTransferIn.setText(activeAccount.getName());
+				mSelectorFieldTransferIn.setModelId(activeAccount.getId());
 				mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
          		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
 			}
