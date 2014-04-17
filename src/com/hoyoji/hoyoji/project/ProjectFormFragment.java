@@ -619,8 +619,10 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						R.string.currencyFormFragment_addShare_fetching_exchange);
 		final List<String> toCurrencyList = new ArrayList<String>();
 		for (int i = 0; i < mParentProjectListAdapter.getCount(); i++) {
-			toCurrencyList.add(mParentProjectListAdapter.getItem(i)
-					.getParentProject().getParentProject().getCurrencyId());
+			Project parentProject = mParentProjectListAdapter.getItem(i).getParentProject().getParentProject();
+			if(!parentProject.getCurrencyId().equalsIgnoreCase(currency.getId()) && Exchange.getExchangeRate(currency.getId(), parentProject.getCurrencyId()) == null){
+				toCurrencyList.add(parentProject.getCurrencyId());
+			}
 		}
 
 		List<String> fromCurrencyList = new ArrayList<String>();
@@ -643,12 +645,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						newExchange.setRate(exchangeRate);
 						newExchange.save();
 					}
-
-					HyjModelEditor<UserData> userDataEditor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
-					userDataEditor.getModelCopy().setActiveCurrencyId(projectCurrencyId);
-					userDataEditor.save();
 					ActiveAndroid.setTransactionSuccessful();
-					getActivity().finish();
 
 				} catch (Exception e) {
 					HyjUtil.displayToast(e.getMessage());
