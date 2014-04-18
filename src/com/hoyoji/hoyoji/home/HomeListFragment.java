@@ -64,6 +64,8 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositeIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
@@ -336,7 +338,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			if(((MoneyExpense)object).getExpenseType().equalsIgnoreCase("Deposite")){
+				((TextView)view).setText("这是充值支出");
+			}else{
+				((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyExpense)object).getProject().getDisplayName());
@@ -397,7 +403,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+			if(((MoneyIncome)object).getIncomeType().equalsIgnoreCase("Deposite")){
+				((TextView)view).setText("这是充值收入");
+			}else{
+				((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyIncome)object).getProject().getDisplayName());
@@ -760,10 +770,21 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
-				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				MoneyExpense moneExpense = (MoneyExpense) object;
+				if(moneExpense.getExpenseType().equalsIgnoreCase("Deposite")){
+					openActivityWithFragment(MoneyDepositeFormFragment.class, R.string.moneyDepositeFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyIncome){
-				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				MoneyIncome moneIncome = (MoneyIncome) object;
+				if(moneIncome.getIncomeType().equalsIgnoreCase("Deposite")){
+					openActivityWithFragment(MoneyDepositeIncomeFormFragment.class, R.string.moneyDepositeIncomeFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				}
+				
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);

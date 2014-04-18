@@ -88,6 +88,8 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowListFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositeIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
@@ -357,6 +359,15 @@ public class MainActivity extends HyjUserActivity {
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
 			openActivityWithFragment(MoneyPaybackFormFragment.class,
 					R.string.moneyPaybackFormFragment_title_addnew, null);
+			return true;
+		}
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_deposite) {
+			openActivityWithFragment(MoneyDepositeFormFragment.class,
+					R.string.moneyDepositeFormFragment_title_addnew, null);
+			return true;
+		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
+			openActivityWithFragment(MoneyDepositeIncomeFormFragment.class,
+					R.string.moneyDepositeIncomeFormFragment_title_addnew, null);
 			return true;
 		}
 
