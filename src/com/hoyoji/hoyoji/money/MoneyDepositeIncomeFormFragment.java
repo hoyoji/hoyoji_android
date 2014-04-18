@@ -370,8 +370,6 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 			mSelectorFieldProject.setEnabled(false);
 			
 			mNumericExchangeRate.setEnabled(false);
-			
-			mApportionFieldApportions.setEnabled(false);
 
 			mRemarkFieldRemark.setEnabled(false);
 			
