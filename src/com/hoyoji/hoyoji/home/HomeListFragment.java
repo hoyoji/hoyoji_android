@@ -148,6 +148,29 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				popup.show();
 			}
 		});
+		
+		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				PopupMenu popup = new PopupMenu(getActivity(), v);
+				MenuInflater inflater = popup.getMenuInflater();
+				inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposite) {
+							openActivityWithFragment(MoneyDepositeFormFragment.class, R.string.moneyDepositeFormFragment_title_addnew, null);
+						} 
+						else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
+							openActivityWithFragment(MoneyDepositeIncomeFormFragment.class, R.string.moneyDepositeIncomeFormFragment_title_addnew, null);
+						} 
+						return false;
+					}
+				});
+				popup.show();
+			}
+		});
+		
 		if (mUserChangeObserver == null) {
 			mUserChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
@@ -339,7 +362,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyExpense)object).getExpenseType().equalsIgnoreCase("Deposite")){
-				((TextView)view).setText("这是充值支出");
+				((TextView)view).setText("(充值)"+((MoneyExpense)object).getMoneyExpenseCategory());
 			}else{
 				((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
 			}
@@ -404,7 +427,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyIncome)object).getIncomeType().equalsIgnoreCase("Deposite")){
-				((TextView)view).setText("这是充值收入");
+				((TextView)view).setText("(充值)" + ((MoneyIncome)object).getMoneyIncomeCategory());
 			}else{
 				((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
 			}
