@@ -73,7 +73,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
 	private boolean hasEditPermission = true;
-	
+	 
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneydepositeincome;
