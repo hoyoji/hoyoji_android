@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.setting;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,13 +41,29 @@ public class BindPhoneFragment extends HyjFragment {
 					}
 				});
 
-		getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+		Intent intent = getActivity().getIntent();
+		String clickType = intent.getStringExtra("clickType");
+		
+		if(clickType.equalsIgnoreCase("unBindPhone")){
+			((Button) getView().findViewById(R.id.bindPhoneFragment_button_submit)).setText("解绑");
+			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						bindPhone_submit(v);
-					}
-				});
+				@Override
+				public void onClick(View v) {
+					unBindPhone_submit(v);
+				}
+			});
+		}else{
+			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					bindPhone_submit(v);
+				}
+			});
+		}
+		
+		
 
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
@@ -70,6 +87,11 @@ public class BindPhoneFragment extends HyjFragment {
        }
 	}
 
+    private void unBindPhone_submit(View v) {
+		// TODO Auto-generated method stub
+		
+	}
+    
     private class TimeCount extends CountDownTimer{
 
     	public TimeCount(long millisInFuture, long countDownInterval) {

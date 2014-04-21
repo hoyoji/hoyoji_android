@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
@@ -108,14 +109,30 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		mTextFieldPhone.setEnabled(false);
 		
 		mButtonPhone = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_phoneBinding);
-		mButtonPhone.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
+		if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
+			mButtonPhone.setText("解绑");
+			mButtonPhone.setOnClickListener(new OnClickListener() {
 				
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putString("clickType", "unBindPhone");
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, bundle);
+					
+				}
+			});
+		}else{
+			mButtonPhone.setText("绑定");
+			mButtonPhone.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
+					
+				}
+			});
+		}
+		
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
