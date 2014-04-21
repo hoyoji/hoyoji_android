@@ -64,8 +64,8 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositeFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositeIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
@@ -159,10 +159,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposite) {
-							openActivityWithFragment(MoneyDepositeFormFragment.class, R.string.moneyDepositeFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositFormFragment_title_addnew, null);
 						} 
 						else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
-							openActivityWithFragment(MoneyDepositeIncomeFormFragment.class, R.string.moneyDepositeIncomeFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
 						} 
 						return false;
 					}
@@ -361,7 +361,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyExpense)object).getExpenseType().equalsIgnoreCase("Deposite")){
+			if(((MoneyExpense)object).getExpenseType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("(充值)"+((MoneyExpense)object).getMoneyExpenseCategory());
 			}else{
 				((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
@@ -426,7 +426,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyIncome)object).getIncomeType().equalsIgnoreCase("Deposite")){
+			if(((MoneyIncome)object).getIncomeType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("(充值)" + ((MoneyIncome)object).getMoneyIncomeCategory());
 			}else{
 				((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
@@ -794,16 +794,16 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
 				MoneyExpense moneExpense = (MoneyExpense) object;
-				if(moneExpense.getExpenseType().equalsIgnoreCase("Deposite")){
-					openActivityWithFragment(MoneyDepositeFormFragment.class, R.string.moneyDepositeFormFragment_title_edit, bundle);
+				if(moneExpense.getExpenseType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				}
 				return true;
 			} else if(object instanceof MoneyIncome){
 				MoneyIncome moneIncome = (MoneyIncome) object;
-				if(moneIncome.getIncomeType().equalsIgnoreCase("Deposite")){
-					openActivityWithFragment(MoneyDepositeIncomeFormFragment.class, R.string.moneyDepositeIncomeFormFragment_title_edit, bundle);
+				if(moneIncome.getIncomeType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				}

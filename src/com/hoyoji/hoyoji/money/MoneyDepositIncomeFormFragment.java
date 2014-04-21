@@ -47,7 +47,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
+public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -76,7 +76,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 	 
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_formfragment_moneydepositeincome;
+		return R.layout.money_formfragment_moneydepositincome;
 	}
 	 
 	@Override
@@ -91,7 +91,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncome.hasEditPermission();
 		} else {
 			moneyIncome = new MoneyIncome();
-			moneyIncome.setIncomeType("Deposite");
+			moneyIncome.setIncomeType("Deposit");
 			moneyIncome.setMoneyIncomeCategory("充值收入");
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyIncome.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
@@ -101,15 +101,15 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		
 		setupDeleteButton(mMoneyIncomeEditor);
 		
-		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_imageField_picture);
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyIncome.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_textField_date);	
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_textField_date);	
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyIncome.getDate());
 		}
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_textField_amount);		
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
@@ -123,7 +123,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		}
 		
 		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
-		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_selectorField_moneyAccount);
+		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_selectorField_moneyAccount);
 		
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
@@ -135,7 +135,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyDepositeIncomeFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				MoneyDepositIncomeFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -146,7 +146,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		}else{
 			project = moneyIncome.getProject();
 		}
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_selectorField_project);
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_selectorField_project);
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
@@ -155,19 +155,19 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositeIncomeFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyDepositIncomeFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
-		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_textField_exchangeRate);		
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyIncome.getExchangeRate());
 		//mNumericExchangeRate.setVisibility(View.GONE);
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_separatorField_exchange);
-		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_linearLayout_exchangeRate);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositIncomeFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositIncomeFormFragment_linearLayout_exchangeRate);
 		
 		mSelectorFieldMoneyIncomeCategory = (HyjSelectorField) getView().findViewById(
-				R.id.moneyDepositeIncomeFormFragment_textField_moneyDepositeIncomeCategory);
+				R.id.moneyDepositIncomeFormFragment_textField_moneyDepositIncomeCategory);
 		mSelectorFieldMoneyIncomeCategory.setText(moneyIncome
 				.getMoneyIncomeCategory());
 		if(moneyIncome.getMoneyIncomeCategoryMain() != null && moneyIncome.getMoneyIncomeCategoryMain().length() > 0){
@@ -177,7 +177,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 //		mSelectorFieldMoneyIncomeCategory.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
-//				MoneyDepositeIncomeFormFragment.this
+//				MoneyDepositIncomeFormFragment.this
 //						.openActivityWithFragmentForResult(
 //								MoneyIncomeCategoryListFragment.class,
 //								R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory,
@@ -192,7 +192,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		}else{
 			friend = moneyIncome.getFriend();
 		}
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_selectorField_friend);
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_selectorField_friend);
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
@@ -201,13 +201,13 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositeIncomeFormFragment.this
+				MoneyDepositIncomeFormFragment.this
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
 			}
 		}); 
 		
 		mImageViewClearFriend = (ImageView) getView().findViewById(
-				R.id.moneyDepositeIncomeFormFragment_imageView_clear_friend);
+				R.id.moneyDepositIncomeFormFragment_imageView_clear_friend);
 		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -217,13 +217,13 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 		});
 		
 		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_textField_remark);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyIncome.getRemark());
 		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_textField_remark);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyIncome.getRemark());
 		
-		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_imageView_camera);	
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositIncomeFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -254,7 +254,7 @@ public class MoneyDepositeIncomeFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositeIncomeFormFragment_imageButton_refresh_exchangeRate);	
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositIncomeFormFragment_imageButton_refresh_exchangeRate);	
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

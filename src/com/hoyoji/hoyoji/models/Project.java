@@ -46,11 +46,11 @@ public class Project extends HyjModel {
 	@Column(name = "defaultExpenseCategoryMain")
 	private String mDefaultExpenseCategoryMain;
 
-	@Column(name = "depositeIncomeCategory")
-	private String mDepositeIncomeCategory;
-
-	@Column(name = "depositeExpenseCategory")
-	private String mDepositeExpenseCategory;
+//	@Column(name = "depositeIncomeCategory")
+//	private String mDepositIncomeCategory;
+//
+//	@Column(name = "depositeExpenseCategory")
+//	private String mDepositExpenseCategory;
 
 	@Column(name = "_creatorId")
 	private String m_creatorId;
@@ -213,21 +213,21 @@ public class Project extends HyjModel {
 		this.mDefaultExpenseCategoryMain = mDefaultExpenseCategoryMain;
 	}
 
-	public String getDepositeIncomeCategory() {
-		return mDepositeIncomeCategory;
-	}
-
-	public void setDepositeIncomeCategoryId(String mDepositeIncomeCategory) {
-		this.mDepositeIncomeCategory = mDepositeIncomeCategory;
-	}
-
-	public String getDepositeExpenseCategory() {
-		return mDepositeExpenseCategory;
-	}
-
-	public void setDepositeExpenseCategory(String mDepositeExpenseCategory) {
-		this.mDepositeExpenseCategory = mDepositeExpenseCategory;
-	}
+//	public String getDepositIncomeCategory() {
+//		return mDepositIncomeCategory;
+//	}
+//
+//	public void setDepositIncomeCategoryId(String mDepositIncomeCategory) {
+//		this.mDepositIncomeCategory = mDepositIncomeCategory;
+//	}
+//
+//	public String getDepositExpenseCategory() {
+//		return mDepositExpenseCategory;
+//	}
+//
+//	public void setDepositExpenseCategory(String mDepositExpenseCategory) {
+//		this.mDepositExpenseCategory = mDepositExpenseCategory;
+//	}
 
 	public List<ProjectShareAuthorization> getShareAuthorizations() {
 		return this.getMany(ProjectShareAuthorization.class, "projectId");
