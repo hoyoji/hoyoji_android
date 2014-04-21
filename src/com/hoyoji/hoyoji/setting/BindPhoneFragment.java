@@ -44,7 +44,7 @@ public class BindPhoneFragment extends HyjFragment {
 		Intent intent = getActivity().getIntent();
 		String clickType = intent.getStringExtra("clickType");
 		
-		if(clickType.equalsIgnoreCase("unBindPhone")){
+		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
 			((Button) getView().findViewById(R.id.bindPhoneFragment_button_submit)).setText("解绑");
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
