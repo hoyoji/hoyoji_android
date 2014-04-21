@@ -6,6 +6,8 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -134,12 +136,21 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
-			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
+			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt") && this.mOptionsMenu != null){
 				setSaveActionEnable(false);
 			}
 		}
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    super.onCreateOptionsMenu(menu, inflater);
+	    if(mMoneyAccountEditor!= null){
+	    	hideSaveAction();
+	    }
+	}
+	
+	
 	private void fillData() {
 		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor
 				.getModelCopy();

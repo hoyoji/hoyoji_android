@@ -510,13 +510,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 							exchangModelEditor.getModelCopy().setRate(rate);
 							exchangModelEditor.save();
 						}
-					}else{
-						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-						if(exchange.getRate() != 1/rate){
-							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-							exchangModelEditor.getModelCopy().setRate(1/rate);
-							exchangModelEditor.save();
-						}
+//					else{
+//						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+//						if(exchange.getRate() != 1/rate){
+//							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+//							exchangModelEditor.getModelCopy().setRate(1/rate);
+//							exchangModelEditor.save();
+//						}
 					}
 				}
 				    Double oldAmount = oldMoneyBorrowModel.getAmount0();

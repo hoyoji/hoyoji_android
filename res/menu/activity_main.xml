@@ -45,7 +45,18 @@
             <item
                 android:id="@+id/mainActivity_action_money_addnew_topup"
                 android:title="充值"
-                hoyoji:showAsAction="never"/>
+                hoyoji:showAsAction="never">
+                <menu>
+		            <item
+		                android:id="@+id/mainActivity_action_money_addnew_deposite"
+		                android:title="充值支出"
+		                hoyoji:showAsAction="never"/>
+		            <item
+		                android:id="@+id/mainActivity_action_money_addnew_depositeIncome"
+		                android:title="充值收入"
+		                hoyoji:showAsAction="never"/>
+		        </menu>
+		    </item>
         </menu>
     </item>
 

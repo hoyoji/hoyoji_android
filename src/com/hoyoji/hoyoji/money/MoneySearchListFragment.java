@@ -289,7 +289,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(Color.parseColor("#FF0000"));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#FF0000"));
+			}
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpense)object).getLocalAmount());
@@ -328,7 +332,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(Color.parseColor("#339900"));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#339900"));
+			}
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
 			return true;
@@ -368,6 +376,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyTransfer)object).getTransferOutAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -405,6 +414,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyBorrow)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -442,6 +452,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyLend)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -479,6 +490,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyReturn)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -516,6 +528,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setNumber(((MoneyPayback)object).getLocalAmount());
+			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;

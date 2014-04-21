@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
+
+		            <item
+		                android:id="@+id/homeTopup_action_money_addnew_deposite"
+		                android:title="充值支出"
+		                hoyoji:showAsAction="never"/>
+		            <item
+		                android:id="@+id/homeTopup_action_money_addnew_depositeIncome"
+		                android:title="充值收入"
+		                hoyoji:showAsAction="never"/>
+
+</menu>
