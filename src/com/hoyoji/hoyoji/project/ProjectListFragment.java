@@ -129,7 +129,7 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 	@Override
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false; //super.handleBackPressed();
-		if(mViewPager.getCurrentItem() > 0){
+		if(mViewPager != null && mViewPager.getCurrentItem() > 0){
 			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			backPressedHandled = true;
 		}

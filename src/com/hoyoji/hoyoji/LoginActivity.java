@@ -500,9 +500,9 @@ public class LoginActivity extends HyjActivity {
 					LoginActivity.this.dismissProgressDialog();
 					try {
 						JSONObject json = (JSONObject) object;
-						LoginActivity.this.displayDialog(
+						LoginActivity.this.displayDialog(null,
 								json.getJSONObject("__summary")
-										.getString("msg"), json.toString());
+										.getString("msg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -335,10 +335,10 @@ public class MoneyAccount extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
 
-//	public JSONObject toJSON() {
-//		final JSONObject jsonObj = super.toJSON();
-//		jsonObj.remove("currentBalance");
-//		return jsonObj;
-//	}	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+		jsonObj.remove("currentBalance");
+		return jsonObj;
+	}	
 
 }
