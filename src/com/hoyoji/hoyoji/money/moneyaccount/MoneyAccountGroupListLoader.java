@@ -9,6 +9,8 @@ import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.UserData;
+
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -36,6 +38,10 @@ public class MoneyAccountGroupListLoader extends
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyAccount.class, null), true,
 				mChangeObserver);
+		
+		context.getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+				mChangeObserver);
+		
 	}
 
 	public void fetchMore(Bundle queryParams) {

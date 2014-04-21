@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.models.UserData;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -82,6 +83,8 @@ public class HomeGroupListLoader extends
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(Message.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 				mChangeObserver);
 	}
 
