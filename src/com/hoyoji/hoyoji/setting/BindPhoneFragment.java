@@ -66,6 +66,7 @@ public class BindPhoneFragment extends HyjFragment {
     	   HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
     	   userDataEditor.getModelCopy().setPhone(mTextViewPhone.getText().toString().trim());
     	   userDataEditor.save();
+    	   getActivity().finish();
        }
 	}
 
