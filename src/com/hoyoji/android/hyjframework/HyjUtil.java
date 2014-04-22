@@ -3,6 +3,7 @@ package com.hoyoji.android.hyjframework;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -278,6 +279,9 @@ public class HyjUtil {
 		
 		public static double toFixed2(Double number){
 			return Math.round(number*100)/100.0;
+//			BigDecimal bd = new BigDecimal(number);
+//			bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);  
+//			return bd.doubleValue();
 		}
 		
 		public static double toFixed4(Double number){
