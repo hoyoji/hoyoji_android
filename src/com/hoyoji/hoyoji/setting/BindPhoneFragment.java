@@ -28,6 +28,7 @@ public class BindPhoneFragment extends HyjFragment {
 	private HyjTextField mTextViewPhone = null;
 	private HyjTextField mTextViewAuthCode = null;
 	private Button mButtonSendAuthCode = null;
+	private Button mButtonSubmit = null;
 	private String mAuthCodeFromServer = null;
 	private String mPhoneText = null;
 	private String mAuthCodeText = null;
@@ -55,20 +56,26 @@ public class BindPhoneFragment extends HyjFragment {
 		mTextViewAuthCode.setEnabled(false);
 		
 		mButtonSendAuthCode = (Button) getView().findViewById(R.id.bindPhoneFragment_button_sendAuthCode);
+		mButtonSubmit = (Button) getView().findViewById(R.id.bindPhoneFragment_button_submit);
+		mButtonSubmit.setClickable(false);
+		
 		final TimeCount time = new TimeCount(60000, 1000);
 		mButtonSendAuthCode.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mTextViewAuthCode.setEnabled(true);
-						sendAuthCodeToPhone();
-						time.start();
+						if(mTextViewPhone.getText().length() != 0){
+							mTextViewAuthCode.setEnabled(true);
+							mButtonSubmit.setClickable(true);
+							sendAuthCodeToPhone();
+							time.start();
+						}
 					}
 				});
 
 		
 		
 		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
-			((Button) getView().findViewById(R.id.bindPhoneFragment_button_submit)).setText("解绑");
+			mButtonSubmit.setText("解绑");
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -77,7 +84,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}else if(clickType != null && clickType.equalsIgnoreCase("findPassword")){
-			((Button) getView().findViewById(R.id.bindPhoneFragment_button_submit)).setText("确定");
+			mButtonSubmit.setText("确定");
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -190,7 +197,9 @@ public class BindPhoneFragment extends HyjFragment {
 	       }else{
 	    	   Bundle bundle = new Bundle();
 			   bundle.putString("openType", "findPassword");
+			   bundle.putString("phone", mPhoneText);
 	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, bundle);
+	    	   getActivity().finish();
 	       }
 	}
     
