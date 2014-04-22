@@ -31,6 +31,8 @@ import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.setting.BindPhoneFragment;
+import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -130,8 +132,12 @@ public class LoginActivity extends HyjActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.loginActivity_action_forgot_password:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+//			Intent intent = new Intent(this, SettingsActivity.class);
+//			startActivity(intent);
+			
+			   Bundle bundle = new Bundle();
+			   bundle.putString("clickType", "findPassword");
+	    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.changePasswordFragment_title, bundle);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
