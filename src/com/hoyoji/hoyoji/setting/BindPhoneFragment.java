@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -75,6 +76,15 @@ public class BindPhoneFragment extends HyjFragment {
 					unBindPhone_submit(v);
 				}
 			});
+		}else if(clickType != null && clickType.equalsIgnoreCase("findPassword")){
+			((Button) getView().findViewById(R.id.bindPhoneFragment_button_submit)).setText("确定");
+			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					findPassword_submit(v);
+				}
+			});
 		}else{
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
@@ -95,7 +105,7 @@ public class BindPhoneFragment extends HyjFragment {
 		SmsManager smsManager = SmsManager.getDefault(); 
 		PendingIntent sentPI = PendingIntent.getBroadcast(this.getActivity(), 0, sentIntent, 0);  
 
-		String msg = "尊敬的用户，您正在进行好友记账号（绑定/解绑）手机操作，短信验证码为：" + mAuthCodeFromServer;
+		String msg = "尊敬的用户，您正在进行好友记账号（绑定/解绑）手机或找回密码操作，短信验证码为：" + mAuthCodeFromServer;
 		try{  
 			smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, msg, sentPI, null); 
         }catch(Exception e){  
@@ -163,7 +173,6 @@ public class BindPhoneFragment extends HyjFragment {
 	}
 
     private void unBindPhone_submit(View v) {
-		// TODO Auto-generated method stub
     	if(!validateData()){
      	   HyjUtil.displayToast(R.string.app_validation_error);
         }else{
@@ -173,6 +182,16 @@ public class BindPhoneFragment extends HyjFragment {
 	 	   userDataEditor.save();
 	 	   getActivity().finish();
         }
+	}
+    
+	protected void findPassword_submit(View v) {
+		 if(!validateData()){
+	    	   HyjUtil.displayToast(R.string.app_validation_error);
+	       }else{
+	    	   Bundle bundle = new Bundle();
+			   bundle.putString("openType", "findPassword");
+	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, bundle);
+	       }
 	}
     
     private class TimeCount extends CountDownTimer{

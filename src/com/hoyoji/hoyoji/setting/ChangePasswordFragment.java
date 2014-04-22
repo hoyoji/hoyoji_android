@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.KeyEvent;
 
 import android.view.View;
@@ -34,6 +35,7 @@ public class ChangePasswordFragment extends HyjFragment {
 	String mNewPassword1 = "";
 	String mNewPassword2 = "";
 	boolean mHasError = false;
+	private String mOpenType;
 	
 	@Override
 	public Integer useContentView() {
@@ -42,7 +44,14 @@ public class ChangePasswordFragment extends HyjFragment {
 	 
 	@Override
 	public void onInitViewData(){
+		Intent intent = getActivity().getIntent();
+		mOpenType = intent.getStringExtra("openType");
+		
 		mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_oldPassword);
+		if(mOpenType.equalsIgnoreCase("findPassword")){
+			getView().findViewById(R.id.changePasswordFragment_linearLayout_oldPassword).setVisibility(View.GONE);
+		}
+		
 		mEditTextNewPassword1 = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_newPassword1);
 		mEditTextNewPassword2 = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_newPassword2);
 		mEditTextNewPassword2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -79,7 +88,7 @@ public class ChangePasswordFragment extends HyjFragment {
 		boolean validatePass = true;
 		fillData();
 		
-		if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+		if(!mOpenType.equalsIgnoreCase("findPassword") && !HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
 			mEditTextOldPassword.setError(getString(R.string.changePasswordFragment_validation_wrong_oldPassword));
 	   		validatePass = false;
 		}else{
@@ -129,7 +138,9 @@ public class ChangePasswordFragment extends HyjFragment {
 	private void changePassword_submit(View v){
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
-		}else{			
+		}else if(mOpenType.equalsIgnoreCase("findPassword")){
+			
+		}else{	
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
