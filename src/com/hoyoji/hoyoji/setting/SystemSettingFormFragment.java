@@ -7,8 +7,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
@@ -60,6 +63,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private Button mButtonMoneyExpenseColorPicker = null;
 	private Button mButtonMoneyIncomeColorPicker = null;
 	private LinearLayout mLnearLayoutAbout = null;
+	private ChangeObserver mChangeObserver;
 	
 	private int mExpenseColor = 0;
 	private int mIncomeColor = 0;
@@ -105,34 +109,11 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		getView().findViewById(R.id.systemSettingFormFragment_linearLayout_email).setVisibility(View.GONE);
 		
 		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
-		mTextFieldPhone.setText(user.getUserData().getPhone());
 		mTextFieldPhone.setEnabled(false);
 		
 		mButtonPhone = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_phoneBinding);
-		if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
-			mButtonPhone.setText("解绑");
-			mButtonPhone.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Bundle bundle = new Bundle();
-					bundle.putString("clickType", "unBindPhone");
-					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, bundle);
-					
-				}
-			});
-		}else{
-			mButtonPhone.setText("绑定");
-			mButtonPhone.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
-					
-				}
-			});
-		}
 		
+		setPhoneField();
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
@@ -229,9 +210,40 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				popup.show();
 			}
 		});
+		
+		mChangeObserver = new ChangeObserver();
+		this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+				mChangeObserver);
 	}
 	
 	
+
+	private void setPhoneField() {
+		mTextFieldPhone.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getPhone());
+		if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
+			mButtonPhone.setText("解绑");
+			mButtonPhone.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putString("clickType", "unBindPhone");
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, bundle);
+					
+				}
+			});
+		}else{
+			mButtonPhone.setText("绑定");
+			mButtonPhone.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
+					
+				}
+			});
+		}
+	}
 
 	private void fillData(){
 		User modelCopy = (User) mUserEditor.getModelCopy();
@@ -300,4 +312,20 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
              case 1:
           }
     }
+	 
+	 private class ChangeObserver extends ContentObserver {
+			public ChangeObserver() {
+				super(new Handler());
+			}
+
+			@Override
+			public boolean deliverSelfNotifications() {
+				return true;
+			}
+
+			@Override
+			public void onChange(boolean selfChange) {
+				setPhoneField();
+			}
+		}
 }
