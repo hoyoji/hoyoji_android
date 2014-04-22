@@ -198,7 +198,7 @@ public class BindPhoneFragment extends HyjFragment {
 	    	   Bundle bundle = new Bundle();
 			   bundle.putString("openType", "findPassword");
 			   bundle.putString("phone", mPhoneText);
-	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, bundle);
+	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
 	    	   getActivity().finish();
 	       }
 	}
