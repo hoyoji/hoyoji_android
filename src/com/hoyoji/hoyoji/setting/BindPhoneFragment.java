@@ -94,8 +94,14 @@ public class BindPhoneFragment extends HyjFragment {
 		Intent sentIntent = new Intent("SENT_SMS_ACTION");  
 		SmsManager smsManager = SmsManager.getDefault(); 
 		PendingIntent sentPI = PendingIntent.getBroadcast(this.getActivity(), 0, sentIntent, 0);  
-		
-		smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, mAuthCodeFromServer, sentPI, null); 
+
+		String msg = "尊敬的用户，您正在进行好友记账号（绑定/解绑）手机操作，短信验证码为：" + mAuthCodeFromServer;
+		try{  
+			smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, msg, sentPI, null); 
+        }catch(Exception e){  
+            Toast.makeText(this.getActivity(), "短信发送失败，请检查是系统否限制本应用发送短信", 5000).show();  
+            e.printStackTrace();  
+        }  
 		
 		//短信发送状态监控  
 		this.getActivity().registerReceiver(new BroadcastReceiver(){  
