@@ -78,9 +78,7 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment;
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
-	private ContentObserver mUserChangeObserver = null;
-	private ContentObserver mProjectChangeObserver = null;
-	private ContentObserver mFriendChangeObserver = null;
+	private ContentObserver mChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -171,21 +169,18 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 		});
 		
-		if (mUserChangeObserver == null) {
-			mUserChangeObserver = new ChangeObserver();
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
-					mUserChangeObserver);
-		}
-		if (mProjectChangeObserver == null) {
-			mProjectChangeObserver = new ChangeObserver();
+					mChangeObserver);
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Project.class, null), true,
-					mProjectChangeObserver);
-		}
-		if (mFriendChangeObserver == null) {
-			mFriendChangeObserver = new ChangeObserver();
+					mChangeObserver);
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Friend.class, null), true,
-					mFriendChangeObserver);
+					mChangeObserver);
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
+					mChangeObserver);
 		}
+		
 	}
 
 	@Override
@@ -940,18 +935,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	}
 	@Override
 	public void onDestroy() {
-		if (mUserChangeObserver != null) {
+		if (mChangeObserver != null) {
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mUserChangeObserver);
-		}
-		if (mProjectChangeObserver != null) {
+					.unregisterContentObserver(mChangeObserver);
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mProjectChangeObserver);
-		}
-		if (mFriendChangeObserver != null) {
+					.unregisterContentObserver(mChangeObserver);
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mFriendChangeObserver);
+					.unregisterContentObserver(mChangeObserver);
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
 		}
+	
 		super.onDestroy();
 	}
 }

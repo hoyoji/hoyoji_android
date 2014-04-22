@@ -32,6 +32,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
@@ -39,7 +40,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	private static final int EDIT_MONEYACCOUNT_DETAILS = 0;
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
-	private ContentObserver mUserChangeObserver = null;
+	private ContentObserver mChangeObserver = null;
 
 	@Override
 	public Integer useContentView() {
@@ -56,10 +57,12 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		super.onInitViewData();
 		getListView().setGroupIndicator(null);
 		
-		if (mUserChangeObserver == null) {
-			mUserChangeObserver = new ChangeObserver();
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
-					mUserChangeObserver);
+					mChangeObserver);
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
+					mChangeObserver);
 		}
 	}
 	
@@ -334,8 +337,8 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	}
 	@Override
 	public void onDestroy() {
-		if (mUserChangeObserver != null) {
-			this.getActivity().getContentResolver().unregisterContentObserver(mUserChangeObserver);
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver().unregisterContentObserver(mChangeObserver);
 		}
 		super.onDestroy();
 	}

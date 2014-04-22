@@ -53,8 +53,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	private static final int EDIT_PROJECT_DETAILS = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
-	private ContentObserver mParentProjectChangeObserver = null;
-	private ContentObserver mUserDataChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	
@@ -142,22 +140,16 @@ public class SubProjectListFragment extends HyjUserListFragment {
 							ContentProvider.createUri(
 									ProjectShareAuthorization.class, null), true,
 							mChangeObserver);
-		}
-		if (mParentProjectChangeObserver == null) {
-			mParentProjectChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									ParentProject.class, null), true,
-									mParentProjectChangeObserver);
-		}
-		if (mUserDataChangeObserver == null) {
-			mUserDataChangeObserver = new ChangeObserver();
+			.registerContentObserver(
+					ContentProvider.createUri(
+							ParentProject.class, null), true,
+							mChangeObserver);
 			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									UserData.class, null), true,
-									mUserDataChangeObserver);
+			.registerContentObserver(
+					ContentProvider.createUri(
+							UserData.class, null), true,
+							mChangeObserver);
 		}
 	}
 
@@ -350,15 +342,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if (mChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
-		}
-		if (mParentProjectChangeObserver != null) {
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mParentProjectChangeObserver);
-		}
-		if (mUserDataChangeObserver != null) {
+					.unregisterContentObserver(mChangeObserver);
 			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mUserDataChangeObserver);
+					.unregisterContentObserver(mChangeObserver);
 		}
+		
 		super.onDestroy();
 	}
 
