@@ -1,7 +1,11 @@
 package com.hoyoji.hoyoji.setting;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.CountDownTimer;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -80,15 +85,39 @@ public class BindPhoneFragment extends HyjFragment {
 			});
 		}
 		
-		
-
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 
 	protected void sendAuthCodeToPhone() {
 		mAuthCodeFromServer = Double.toString((Math.random() + 0.1)*10000).substring(0, 4);
+		
+		Intent sentIntent = new Intent("SENT_SMS_ACTION");  
 		SmsManager smsManager = SmsManager.getDefault(); 
-		smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, mAuthCodeFromServer, null, null); 
+		PendingIntent sentPI = PendingIntent.getBroadcast(this.getActivity(), 0, sentIntent, 0);  
+		
+		smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, mAuthCodeFromServer, sentPI, null); 
+		
+		//短信发送状态监控  
+		this.getActivity().registerReceiver(new BroadcastReceiver(){  
+            @Override  
+            public void onReceive(Context context, Intent intent) {  
+                switch(getResultCode()){  
+                    case Activity.RESULT_OK:  
+                    	Toast.makeText(context,"信息已发出",Toast.LENGTH_LONG).show();  
+                        break;  
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
+                        Toast.makeText(context, mAuthCodeFromServer +")未指定失败 \n 信息未发出，请重试", Toast.LENGTH_LONG).show();  
+                        break;  
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:  
+                        Toast.makeText(context, mAuthCodeFromServer +")无线连接关闭 \n 信息未发出，请重试", Toast.LENGTH_LONG).show();  
+                        break;  
+                    case SmsManager.RESULT_ERROR_NULL_PDU:  
+                        Toast.makeText(context, mAuthCodeFromServer +")PDU失败 \n 信息未发出，请重试", Toast.LENGTH_LONG).show();  
+                        break;  
+                }  
+  
+            }  
+        }, new IntentFilter("SENT_SMS_ACTION")); 
 	}
 
 	private void fillData() {
