@@ -143,7 +143,9 @@ public class BindPhoneFragment extends HyjFragment {
             }  
         };
 		//短信发送状态监控  
-		this.getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("SENT_SMS_ACTION")); 
+        if(mBroadcastReceiver == null){
+        	this.getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("SENT_SMS_ACTION")); 
+        }
 	}
 
 	private void fillData() {
@@ -288,7 +290,9 @@ public class BindPhoneFragment extends HyjFragment {
     }
     @Override
 	public void onDestroy() {
-    	this.getActivity().unregisterReceiver(mBroadcastReceiver);
+    	if(mBroadcastReceiver != null){
+    		this.getActivity().unregisterReceiver(mBroadcastReceiver);
+    	}
 		super.onDestroy();
 	}
 }
