@@ -32,6 +32,8 @@ public class BindPhoneFragment extends HyjFragment {
 	private String mAuthCodeFromServer = null;
 	private String mPhoneText = null;
 	private String mAuthCodeText = null;
+	private BroadcastReceiver mBroadcastReceiver = null;
+	private TimeCount mTime = null;
 
 	@Override
 	public Integer useContentView() {
@@ -57,9 +59,8 @@ public class BindPhoneFragment extends HyjFragment {
 		
 		mButtonSendAuthCode = (Button) getView().findViewById(R.id.bindPhoneFragment_button_sendAuthCode);
 		mButtonSubmit = (Button) getView().findViewById(R.id.bindPhoneFragment_button_submit);
-		mButtonSubmit.setClickable(false);
 		
-		final TimeCount time = new TimeCount(60000, 1000);
+		mTime = new TimeCount(60000, 1000);
 		mButtonSendAuthCode.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -67,7 +68,7 @@ public class BindPhoneFragment extends HyjFragment {
 							mTextViewAuthCode.setEnabled(true);
 							mButtonSubmit.setClickable(true);
 							sendAuthCodeToPhone();
-							time.start();
+							mTime.start();
 						}
 					}
 				});
@@ -76,7 +77,7 @@ public class BindPhoneFragment extends HyjFragment {
 		
 		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
 			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_unbind));
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -85,7 +86,7 @@ public class BindPhoneFragment extends HyjFragment {
 			});
 		}else if(clickType != null && clickType.equalsIgnoreCase("findPassword")){
 			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_submit));
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -93,7 +94,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}else{
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -101,6 +102,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}
+		mButtonSubmit.setClickable(false);
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
@@ -120,8 +122,7 @@ public class BindPhoneFragment extends HyjFragment {
             e.printStackTrace();  
         }  
 		
-		//短信发送状态监控  
-		this.getActivity().registerReceiver(new BroadcastReceiver(){  
+		mBroadcastReceiver = new BroadcastReceiver(){  
             @Override  
             public void onReceive(Context context, Intent intent) {  
                 switch(getResultCode()){  
@@ -140,7 +141,9 @@ public class BindPhoneFragment extends HyjFragment {
                 }  
   
             }  
-        }, new IntentFilter("SENT_SMS_ACTION")); 
+        };
+		//短信发送状态监控  
+		this.getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("SENT_SMS_ACTION")); 
 	}
 
 	private void fillData() {
@@ -199,6 +202,7 @@ public class BindPhoneFragment extends HyjFragment {
 			   bundle.putString("openType", "findPassword");
 			   bundle.putString("phone", mPhoneText);
 	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
+	    	   mTime.cancel();
 	    	   getActivity().finish();
 	       }
 	}
@@ -282,6 +286,11 @@ public class BindPhoneFragment extends HyjFragment {
             return ProvidersName;
         }
     }
+    @Override
+	public void onDestroy() {
+    	this.getActivity().unregisterReceiver(mBroadcastReceiver);
+		super.onDestroy();
+	}
 }
 
 

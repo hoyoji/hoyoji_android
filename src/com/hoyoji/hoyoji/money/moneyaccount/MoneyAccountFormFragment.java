@@ -158,10 +158,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
 		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
-		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText()
-				.toString().trim());
-		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString()
-				.trim());
+		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
+		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}
 
