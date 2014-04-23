@@ -14,6 +14,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		if(HyjApplication.getInstance().getCurrentUser() != null){
 			this.setCreatorId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
+		setLastClientUpdateTime(System.currentTimeMillis());
 	}
 	
 	public static <T extends HyjModel> T getModel(Class<T> modelClass, String id){
