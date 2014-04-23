@@ -228,7 +228,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
 					bundle.putString("clickType", "unBindPhone");
-					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, bundle);
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_unBindPhone_title, bundle);
 					
 				}
 			});
@@ -238,7 +238,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				
 				@Override
 				public void onClick(View v) {
-					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.aboutFragment_title, null);
+					SystemSettingFormFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_title, null);
 					
 				}
 			});
