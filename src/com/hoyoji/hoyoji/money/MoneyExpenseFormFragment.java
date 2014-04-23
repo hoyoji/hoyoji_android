@@ -839,7 +839,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				if(api.getState() == ApportionItem.DELETED ){
 					apportion.delete();
 				} else {
-					if(api.getState() != ApportionItem.UNCHANGED) {
+					if(api.getState() != ApportionItem.UNCHANGED 
+							|| !mMoneyExpenseEditor.getModelCopy().getProjectId().equals(mMoneyExpenseEditor.getModel().getProjectId())
+							|| !mMoneyExpenseEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseEditor.getModel().getMoneyAccountId())) {
 						api.saveToCopy(apportionEditor.getModelCopy());
 					}
 					
@@ -870,7 +872,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		                }
 						oldDebtAccountEditor.save();
 					}
-					if(api.getState() != ApportionItem.UNCHANGED) {
+					if(api.getState() != ApportionItem.UNCHANGED
+							|| !mMoneyExpenseEditor.getModelCopy().getProjectId().equals(mMoneyExpenseEditor.getModel().getProjectId())
+							|| !mMoneyExpenseEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseEditor.getModel().getMoneyAccountId())) {
 						apportionEditor.save();
 					}
 					savedCount++;
@@ -895,7 +899,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						apportion.delete();
 						
 					} else {
-						 if(api.getState() != ApportionItem.UNCHANGED) {
+						 if(api.getState() != ApportionItem.UNCHANGED
+									|| !mMoneyExpenseEditor.getModelCopy().getProjectId().equals(mMoneyExpenseEditor.getModel().getProjectId())
+									|| !mMoneyExpenseEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseEditor.getModel().getMoneyAccountId())) {
 								api.saveToCopy(apportionEditor.getModelCopy());
 							 }
 							Double oldRate = mMoneyExpenseEditor.getModel().getExchangeRate(); 
@@ -968,7 +974,9 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 							    }
 						    }
 							
-							 if(api.getState() != ApportionItem.UNCHANGED) {
+							 if(api.getState() != ApportionItem.UNCHANGED
+										|| !mMoneyExpenseEditor.getModelCopy().getProjectId().equals(mMoneyExpenseEditor.getModel().getProjectId())
+										|| !mMoneyExpenseEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseEditor.getModel().getMoneyAccountId())) {
 									apportionEditor.save();
 								 }
 								savedCount++;
