@@ -232,7 +232,7 @@ public class BindPhoneFragment extends HyjFragment {
      * class name：SIMCardInfo<BR>
      * class description：读取Sim卡信息<BR>
      * PS： 必须在加入各种权限 <BR>
-     * Date:2012-3-12<BR>
+     * Date:2014-4-22<BR>
      * @version 1.00
      * @author CODYY)peijiangping
      */
@@ -252,7 +252,7 @@ public class BindPhoneFragment extends HyjFragment {
         }
         /**
          * Role:获取当前设置的电话号码
-         * <BR>Date:2012-3-12
+         * <BR>Date:2014-4-22
          * <BR>@author CODYY)peijiangping
          */
         public String getNativePhoneNumber() {
@@ -265,7 +265,7 @@ public class BindPhoneFragment extends HyjFragment {
          * Role:Telecom service providers获取手机服务商信息 <BR>
          * 需要加入权限<uses-permission
          * android:name="android.permission.READ_PHONE_STATE"/> <BR>
-         * Date:2012-3-12 <BR>
+         * Date:2014-4-22 <BR>
          *
          * @author CODYY)peijiangping
          */
