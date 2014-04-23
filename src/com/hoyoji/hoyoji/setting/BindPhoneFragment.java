@@ -75,7 +75,7 @@ public class BindPhoneFragment extends HyjFragment {
 		
 		
 		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
-			mButtonSubmit.setText("解绑");
+			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_unbind));
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -84,7 +84,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}else if(clickType != null && clickType.equalsIgnoreCase("findPassword")){
-			mButtonSubmit.setText("确定");
+			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_submit));
 			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -204,7 +204,6 @@ public class BindPhoneFragment extends HyjFragment {
 	}
     
     private class TimeCount extends CountDownTimer{
-
     	public TimeCount(long millisInFuture, long countDownInterval) {
     		super(millisInFuture, countDownInterval);//参数为总时长，和计时的时间间隔
     		// TODO Auto-generated constructor stub
@@ -213,7 +212,7 @@ public class BindPhoneFragment extends HyjFragment {
     	@Override
     	public void onFinish() {
     		// TODO Auto-generated method stub
-    		mButtonSendAuthCode.setText("重新发送验证码");
+    		mButtonSendAuthCode.setText(getString(R.string.bindPhoneFragment_button_sendAuthCodeAgain));
     		mButtonSendAuthCode.setClickable(true);
     	}
 
@@ -221,13 +220,12 @@ public class BindPhoneFragment extends HyjFragment {
     	public void onTick(long millisUntilFinished) {
     		// TODO Auto-generated method stub
     		mButtonSendAuthCode.setClickable(false);
-    		mButtonSendAuthCode.setText(millisUntilFinished/1000 + "秒后可重新发送");
+    		mButtonSendAuthCode.setText(millisUntilFinished/1000 + getString(R.string.bindPhoneFragment_button_sendAuthCodeAgainTimeCount));
     	}
 
     }
 
     /**
-
      * class name：SIMCardInfo<BR>
      * class description：读取Sim卡信息<BR>
      * PS： 必须在加入各种权限 <BR>
@@ -235,7 +233,6 @@ public class BindPhoneFragment extends HyjFragment {
      * @version 1.00
      * @author CODYY)peijiangping
      */
-    
     public class SIMCardInfo {
         /**
          * TelephonyManager提供设备上获取通讯服务信息的入口。 应用程序可以使用这个类方法确定的电信服务商和国家 以及某些类型的用户访问信息。
@@ -247,23 +244,16 @@ public class BindPhoneFragment extends HyjFragment {
          * 国际移动用户识别码
          */
         private String IMSI;
-        
         public SIMCardInfo(Context context) {
             telephonyManager = (TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
     
         }
-    
         /**
-    
          * Role:获取当前设置的电话号码
-    
          * <BR>Date:2012-3-12
-    
          * <BR>@author CODYY)peijiangping
-    
          */
-    
         public String getNativePhoneNumber() {
             String NativePhoneNumber=null;
             NativePhoneNumber=telephonyManager.getLine1Number();
@@ -278,23 +268,20 @@ public class BindPhoneFragment extends HyjFragment {
          * Date:2012-3-12 <BR>
          *
          * @author CODYY)peijiangping
-    
          */
     
         public String getProvidersName() {
-    
             String ProvidersName = null;
             // 返回唯一的用户ID;就是这张卡的编号神马的
             IMSI = telephonyManager.getSubscriberId();
             // IMSI号前面3位460是国家，紧接着后面2位00 02是中国移动，01是中国联通，03是中国电信。
             System.out.println(IMSI);
             if (IMSI.startsWith("46000") || IMSI.startsWith("46002")) {
-                ProvidersName = "中国移动";
-    
+                ProvidersName = getString(R.string.bindPhoneFragment_providersName_CMCC);
             } else if (IMSI.startsWith("46001")) {
-                ProvidersName = "中国联通";
+                ProvidersName = getString(R.string.bindPhoneFragment_providersName_WCDMA);
             } else if (IMSI.startsWith("46003")) {
-                ProvidersName = "中国电信";
+                ProvidersName = getString(R.string.bindPhoneFragment_providersName_CHA);
             }
             return ProvidersName;
         }
