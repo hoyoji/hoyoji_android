@@ -88,7 +88,7 @@ public class ChangePasswordFragment extends HyjFragment {
 		boolean validatePass = true;
 		fillData();
 		
-		if(!mOpenType.equalsIgnoreCase("findPassword") && !HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+		if(mOpenType == null && !HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
 			mEditTextOldPassword.setError(getString(R.string.changePasswordFragment_validation_wrong_oldPassword));
 	   		validatePass = false;
 		}else{
@@ -138,7 +138,7 @@ public class ChangePasswordFragment extends HyjFragment {
 	private void changePassword_submit(View v){
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
-		}else if(mOpenType.equalsIgnoreCase("findPassword")){
+		}else if(mOpenType != null && mOpenType.equalsIgnoreCase("findPassword")){
 			
 		}else{	
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
