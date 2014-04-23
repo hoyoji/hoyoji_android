@@ -48,7 +48,7 @@ public class ChangePasswordFragment extends HyjFragment {
 		mOpenType = intent.getStringExtra("openType");
 		
 		mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_oldPassword);
-		if(mOpenType.equalsIgnoreCase("findPassword")){
+		if(mOpenType != null && mOpenType.equalsIgnoreCase("findPassword")){
 			getView().findViewById(R.id.changePasswordFragment_linearLayout_oldPassword).setVisibility(View.GONE);
 		}
 		
