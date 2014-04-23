@@ -145,8 +145,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    if(mMoneyAccountEditor!= null && mMoneyAccountEditor.getModelCopy().get_mId() != null){
-	    	hideSaveAction();
+	    if(mMoneyAccountEditor!= null && mMoneyAccountEditor.getModel().get_mId() != null && mMoneyAccountEditor.getModel().getAccountType().equalsIgnoreCase("Debt")){
+	    	setSaveActionEnable(false);
 	    }
 	}
 	
