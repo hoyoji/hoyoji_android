@@ -224,7 +224,6 @@ public class BindPhoneFragment extends HyjFragment {
     	}
 
     }
-
     /**
      * class name：SIMCardInfo<BR>
      * class description：读取Sim卡信息<BR>
@@ -245,9 +244,7 @@ public class BindPhoneFragment extends HyjFragment {
          */
         private String IMSI;
         public SIMCardInfo(Context context) {
-            telephonyManager = (TelephonyManager) context
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-    
+            telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         }
         /**
          * Role:获取当前设置的电话号码
@@ -258,7 +255,6 @@ public class BindPhoneFragment extends HyjFragment {
             String NativePhoneNumber=null;
             NativePhoneNumber=telephonyManager.getLine1Number();
             return NativePhoneNumber;
-    
         }
     
         /**
