@@ -71,6 +71,7 @@ public class MoneyAccount extends HyjModel {
 		mCurrencyId = userData.getActiveCurrencyId();
 		mAccountType = "Cash";
 		mCurrentBalance = 0.00;
+		mSharingType = "Private";
 	}
 	
 	public String getDisplayName(){
