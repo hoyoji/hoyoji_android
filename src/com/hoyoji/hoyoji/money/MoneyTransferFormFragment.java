@@ -522,8 +522,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
-		
-		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){

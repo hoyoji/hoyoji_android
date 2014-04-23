@@ -250,12 +250,22 @@ public class MoneyTransactionSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(transferOutAmount), SUM(transferInAmount) as total FROM MoneyTransfer main WHERE date > ? AND date <= ? AND "
+						"SELECT COUNT(*) AS count, SUM(transferInAmount) as total FROM MoneyTransfer main WHERE transferInFriendUserId IS NULL AND transferInLocalFriendId IS NULL AND date > ? AND date <= ? AND "
 								+ buildTransferSearchQuery(), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			 transferOutTotal += cursor.getDouble(1);
-			 transferInTotal += cursor.getDouble(2);
+			 transferInTotal = cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer main WHERE transferOutFriendUserId IS NULL AND transferOutLocalFriendId IS NULL AND date > ? AND date <= ? AND "
+								+ buildTransferSearchQuery(), args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			 transferOutTotal = cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}

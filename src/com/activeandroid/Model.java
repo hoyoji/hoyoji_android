@@ -543,7 +543,10 @@ public abstract class Model {
 			jsonObj.put("__dataType", mTableInfo.getTableName());
 			String lastServerUpdateTime = jsonObj
 					.optString("lastServerUpdateTime");
-			if (lastServerUpdateTime.length() > 0) {
+			if (lastServerUpdateTime != null 
+					&& lastServerUpdateTime.length() > 0
+					&& !lastServerUpdateTime.equals("null")
+					&& lastServerUpdateTime != JSONObject.NULL) {
 				// jsonObj.remove("lastServerUpdateTime");
 				jsonObj.put("lastServerUpdateTime",
 						Long.valueOf(lastServerUpdateTime));
