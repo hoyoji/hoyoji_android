@@ -687,7 +687,7 @@ public class MainActivity extends HyjUserActivity {
 						Cache.openDatabase()
 								.execSQL(
 										"DELETE FROM ClientSyncRecord WHERE uploading = 1");
-
+						
 						// HyjUtil.displayToast("上传数据成功");
 
 						HyjApplication.getInstance().setIsSyncing(downloadData);
@@ -734,11 +734,17 @@ public class MainActivity extends HyjUserActivity {
 				List<ClientSyncRecord> syncRecords = null;
 				try {
 					ActiveAndroid.beginTransaction();
-					Cache.openDatabase()
-							.execSQL(
-									"Update ClientSyncRecord SET uploading = 1 WHERE uploading = 0");
+//					Cache.openDatabase()
+//							.execSQL(
+//									"Update ClientSyncRecord SET uploading = 1 WHERE uploading = 0");
 					syncRecords = new Select().from(ClientSyncRecord.class)
 							.execute();
+					for (ClientSyncRecord syncRec : syncRecords) {
+						if(!syncRec.getUploading()){
+							syncRec.setUploading(true);
+							syncRec.save();
+						}
+					}
 					ActiveAndroid.setTransactionSuccessful();
 					ActiveAndroid.endTransaction();
 				} catch (Exception e) {
@@ -867,12 +873,14 @@ public class MainActivity extends HyjUserActivity {
 						ClientSyncRecord rec = HyjModel.getModel(
 								ClientSyncRecord.class, syncRec.getId());
 						if (rec.getUploading() == true) {
+							rec.setUploading(false);
 							if (rec.getOperation().equalsIgnoreCase("Delete")) {
 								rec.delete();
 							} else if (rec.getOperation().equalsIgnoreCase(
 									"Update")) {
-								rec.setUploading(false);
 								rec.setOperation("Create");
+								rec.save();
+							} else {
 								rec.save();
 							}
 						}
