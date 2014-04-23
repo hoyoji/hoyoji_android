@@ -137,7 +137,7 @@ public class LoginActivity extends HyjActivity {
 			
 			   Bundle bundle = new Bundle();
 			   bundle.putString("clickType", "findPassword");
-	    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.changePasswordFragment_title, bundle);
+	    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

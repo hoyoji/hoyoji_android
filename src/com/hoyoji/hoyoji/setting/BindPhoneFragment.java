@@ -57,7 +57,6 @@ public class BindPhoneFragment extends HyjFragment {
 		
 		mButtonSendAuthCode = (Button) getView().findViewById(R.id.bindPhoneFragment_button_sendAuthCode);
 		mButtonSubmit = (Button) getView().findViewById(R.id.bindPhoneFragment_button_submit);
-		mButtonSubmit.setClickable(false);
 		
 		final TimeCount time = new TimeCount(60000, 1000);
 		mButtonSendAuthCode.setOnClickListener(new OnClickListener() {
@@ -76,7 +75,7 @@ public class BindPhoneFragment extends HyjFragment {
 		
 		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
 			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_unbind));
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -85,7 +84,7 @@ public class BindPhoneFragment extends HyjFragment {
 			});
 		}else if(clickType != null && clickType.equalsIgnoreCase("findPassword")){
 			mButtonSubmit.setText(getString(R.string.bindPhoneFragment_button_submit));
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -93,7 +92,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}else{
-			getView().findViewById(R.id.bindPhoneFragment_button_submit).setOnClickListener(new OnClickListener() {
+			mButtonSubmit.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -101,6 +100,7 @@ public class BindPhoneFragment extends HyjFragment {
 				}
 			});
 		}
+		mButtonSubmit.setClickable(false);
 		
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
