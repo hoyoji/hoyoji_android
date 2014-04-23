@@ -496,7 +496,7 @@ public abstract class Model {
 				// necessary because we
 				// can't know the type until runtime.
 				if (value == null) {
-					jsonObj.put(fieldName, null);
+					jsonObj.put(fieldName, JSONObject.NULL);
 				} else if (fieldType.equals(Byte.class)
 						|| fieldType.equals(byte.class)) {
 					jsonObj.put(fieldName, (Byte) value);
@@ -549,6 +549,7 @@ public abstract class Model {
 						Long.valueOf(lastServerUpdateTime));
 			}
 			jsonObj.remove("serverRecordHash");
+			jsonObj.remove("lastSyncTime");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
