@@ -255,6 +255,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			if(!project.getSubProjects().isEmpty()){
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
+				((ImageButton)view).setEnabled(true);
 			}else{
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
 				((ImageButton)view).setEnabled(false);
