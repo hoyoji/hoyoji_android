@@ -34,6 +34,7 @@ public class BindPhoneFragment extends HyjFragment {
 	private String mAuthCodeText = null;
 	private BroadcastReceiver mBroadcastReceiver = null;
 	private TimeCount mTime = null;
+	private String clickType = null;
 
 	@Override
 	public Integer useContentView() {
@@ -43,7 +44,7 @@ public class BindPhoneFragment extends HyjFragment {
 	@Override
 	public void onInitViewData() {
 		Intent intent = getActivity().getIntent();
-		String clickType = intent.getStringExtra("clickType");
+		clickType = intent.getStringExtra("clickType");
 		
 		mTextViewPhone = (HyjTextField) getView().findViewById(R.id.bindPhoneFragment_textField_phone);
 		if(clickType != null && clickType.equalsIgnoreCase("unBindPhone")){
@@ -290,7 +291,7 @@ public class BindPhoneFragment extends HyjFragment {
     }
     @Override
 	public void onDestroy() {
-    	if(mBroadcastReceiver != null){
+    	if(clickType.equalsIgnoreCase("findPassword") && mBroadcastReceiver != null){
     		this.getActivity().unregisterReceiver(mBroadcastReceiver);
     	}
 		super.onDestroy();
