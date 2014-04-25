@@ -123,7 +123,8 @@ public class BindPhoneFragment extends HyjFragment {
             e.printStackTrace();  
         }  
 		
-		mBroadcastReceiver = new BroadcastReceiver(){  
+		if(mBroadcastReceiver == null){
+			mBroadcastReceiver = new BroadcastReceiver(){  
             @Override  
             public void onReceive(Context context, Intent intent) {  
                 switch(getResultCode()){  
@@ -144,8 +145,8 @@ public class BindPhoneFragment extends HyjFragment {
             }  
         };
 		//短信发送状态监控  
-        if(mBroadcastReceiver == null){
-        	this.getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("SENT_SMS_ACTION")); 
+        
+        this.getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("SENT_SMS_ACTION")); 
         }
 	}
 
@@ -181,6 +182,7 @@ public class BindPhoneFragment extends HyjFragment {
     	   HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
     	   userDataEditor.getModelCopy().setPhone(mTextViewPhone.getText().toString().trim());
     	   userDataEditor.save();
+    	   mTime.cancel();
     	   getActivity().finish();
        }
 	}
@@ -193,6 +195,7 @@ public class BindPhoneFragment extends HyjFragment {
 	 	   HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
 	 	   userDataEditor.getModelCopy().setPhone(null);
 	 	   userDataEditor.save();
+	       mTime.cancel();
 	 	   getActivity().finish();
         }
 	}
@@ -291,7 +294,7 @@ public class BindPhoneFragment extends HyjFragment {
     }
     @Override
 	public void onDestroy() {
-    	if(clickType.equalsIgnoreCase("findPassword") && mBroadcastReceiver != null){
+    	if(mBroadcastReceiver != null){
     		this.getActivity().unregisterReceiver(mBroadcastReceiver);
     	}
 		super.onDestroy();
