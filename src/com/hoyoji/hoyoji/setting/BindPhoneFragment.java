@@ -294,6 +294,10 @@ public class BindPhoneFragment extends HyjFragment {
     }
     @Override
 	public void onDestroy() {
+    	if(mTime != null){
+    		mTime.cancel();
+    	}
+    	
     	if(mBroadcastReceiver != null){
     		this.getActivity().unregisterReceiver(mBroadcastReceiver);
     	}
