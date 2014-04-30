@@ -892,11 +892,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 					moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 					moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
-					moneyLend.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFriendUserId());
+					moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
 					moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
 					moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
-					moneyLend.setLocalFriendId(mMoneyExpenseContainerEditor.getModelCopy().getLocalFriendId());
+					moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 					moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
 					moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 					moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
@@ -1055,11 +1055,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
-								moneyLend.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFriendUserId());
+								moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
 								moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 								moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
 								moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
-								moneyLend.setLocalFriendId(mMoneyExpenseContainerEditor.getModelCopy().getLocalFriendId());
+								moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 								moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
 								moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
