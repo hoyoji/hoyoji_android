@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +14,8 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.R;
 
-@Table(name = "MoneyExpense", id = BaseColumns._ID)
-public class MoneyExpense extends HyjModel{
+@Table(name = "MoneyExpenseContainer", id = BaseColumns._ID)
+public class MoneyExpenseContainer extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
 	private String mUUID;
@@ -57,12 +56,8 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
-	// 如果有，说明该支出是从该收入导入生成的
 	@Column(name = "moneyIncomeId")
 	private String mMoneyIncomeId;
-	
-	@Column(name = "moneyExpenseApportionId")
-	private String mMoneyExpenseApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -97,7 +92,7 @@ public class MoneyExpense extends HyjModel{
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
 	
-	public MoneyExpense(){
+	public MoneyExpenseContainer(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
@@ -140,6 +135,10 @@ public class MoneyExpense extends HyjModel{
 	
 	public List<Picture> getPictures(){
 		return getMany(Picture.class, "recordId");
+	}
+
+	public List<MoneyExpenseApportion> getApportions(){
+		return getMany(MoneyExpenseApportion.class, "moneyExpenseContainerId");
 	}
 	
 	public String getDate() {
@@ -511,10 +510,4 @@ public class MoneyExpense extends HyjModel{
 		this.mMoneyIncomeId = moneyIncomeId;
 	}
 
-	public void setMoneyExpenseApportionId(String id) {
-		this.mMoneyExpenseApportionId = id;
-	}
-	public String getMoneyExpenseApportionId() {
-		return mMoneyExpenseApportionId;
-	}
 }

@@ -54,8 +54,12 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "returnedAmount")
 	private Double mReturnedAmount;
 
+	// 如果有，说明该借入是从该借出导入生成的
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
+
+	@Column(name = "moneyIncomeApportionId")
+	private String mMoneyIncomeApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;

@@ -23,6 +23,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -70,7 +71,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	}
 //	    	mChangeObserver = new ChangeObserver();
 //	    	context.getContentResolver().registerContentObserver(
-//	    			ContentProvider.createUri(MoneyExpense.class, null), true, mChangeObserver);
+//	    			ContentProvider.createUri(MoneyExpenseContainer.class, null), true, mChangeObserver);
 //	    	context.getContentResolver().registerContentObserver(
 //	    			ContentProvider.createUri(MoneyIncome.class, null), true, mChangeObserver);
 
@@ -99,7 +100,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 	    	
-	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpense.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
 	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
@@ -132,11 +133,11 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 			public int compare(HyjModel lhs, HyjModel rhs) {
 				String lhsStr = "";
 				String rhsStr = "";
-				if(lhs instanceof MoneyExpense){
-					lhsStr = ((MoneyExpense) lhs).getDate();
+				if(lhs instanceof MoneyExpenseContainer){
+					lhsStr = ((MoneyExpenseContainer) lhs).getDate();
 				}
-				if(rhs instanceof MoneyExpense){
-					rhsStr = ((MoneyExpense) rhs).getDate();
+				if(rhs instanceof MoneyExpenseContainer){
+					rhsStr = ((MoneyExpenseContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyIncome){

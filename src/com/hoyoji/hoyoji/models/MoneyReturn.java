@@ -54,9 +54,12 @@ public class MoneyReturn extends HyjModel{
 	@Column(name = "moneyBorrowId")
 	private String mMoneyBorrowId;
 
-	// 用户进行双方同时增加账务时使用
+	// 如果有，说明该还款是从该收款导入生成的
 	@Column(name = "moneyPaybackId")
 	private String mMoneyPaybackId;
+
+	@Column(name = "moneyReturnApportionId")
+	private String mMoneyReturnApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;

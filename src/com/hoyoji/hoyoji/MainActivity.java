@@ -69,6 +69,7 @@ import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -944,6 +945,11 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(MoneyExpense.class, id);
 			if(model == null){
 				model = new MoneyExpense();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyExpenseContainer")) {
+			model = HyjModel.getModel(MoneyExpenseContainer.class, id);
+			if(model == null){
+				model = new MoneyExpenseContainer();
 			}
 		} else if (tableName.equalsIgnoreCase("MoneyExpenseApportion")) {
 			model = HyjModel.getModel(MoneyExpenseApportion.class, id);

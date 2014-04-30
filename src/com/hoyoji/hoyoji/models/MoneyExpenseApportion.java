@@ -21,8 +21,8 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "amount")
 	private Double mAmount;
 
-	@Column(name = "moneyExpenseId")
-	private String mMoneyExpenseId;
+	@Column(name = "moneyExpenseContainerId")
+	private String mMoneyExpenseContainerId;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -84,19 +84,19 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		this.mAmount = mAmount;
 	}
 	
-	public String getMoneyExpenseId() {
-		return mMoneyExpenseId;
+	public String getMoneyExpenseContainerId() {
+		return mMoneyExpenseContainerId;
 	}
 
-	public void setMoneyExpenseId(String mMoneyExpenseId) {
-		this.mMoneyExpenseId = mMoneyExpenseId;
+	public void setMoneyExpenseContainerId(String mMoneyExpenseContainerId) {
+		this.mMoneyExpenseContainerId = mMoneyExpenseContainerId;
 	}
 	
-	public MoneyExpense getMoneyExpense(){
-		if(mMoneyExpenseId == null){
+	public MoneyExpenseContainer getMoneyExpenseContainer(){
+		if(mMoneyExpenseContainerId == null){
 			return null;
 		}
-		return getModel(MoneyExpense.class, mMoneyExpenseId);
+		return getModel(MoneyExpenseContainer.class, mMoneyExpenseContainerId);
 	}
 	
 	public String getFriendUserId() {
@@ -168,12 +168,15 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 			modelEditor.removeValidationError("amount");
 		}
 	}
+	
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 		}
+		
 		super.save();
+		
 	}
 
 	@Override
@@ -183,14 +186,14 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		if(this.getFriendUserId() != null){
 			// 该好友是项目成员（非自己）
 			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpenseContainer().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
 			}
 		} else {
 			// 该好友不是项目成员
 			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpense().getMoneyAccount().getCurrencyId(), friend);
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyExpenseContainer().getMoneyAccount().getCurrencyId(), friend);
 			}
 		}
 		if(debtAccount != null){
@@ -201,18 +204,9 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		super.delete();
 	}
 	
-//
-//	public void _delete() {
-//		ProjectShareAuthorization projectShareAuthorization = this.getProjectShareAuthorization();
-//		HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-//		projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (this.getAmount0() * this.getMoneyExpense().getExchangeRate()));
-//		projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - (this.getMoneyExpense().getAmount0() * this.getMoneyExpense().getExchangeRate()));
-//		projectShareAuthorizationEditor.save();
-//		super.delete();
-//	}	
 
 	public Project getProject() {
-		return this.getMoneyExpense().getProject();
+		return this.getMoneyExpenseContainer().getProject();
 	}
 
 	@Override
@@ -224,17 +218,17 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		if(this.getMoneyExpense() == null){
+		if(this.getMoneyExpenseContainer() == null){
 			return null;
 		} else {
 			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-					this.getMoneyExpense().getProjectId(), this.getFriendUserId()).executeSingle();
+					this.getMoneyExpenseContainer().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
 	}
 	
 	@Override
 	public void setMoneyId(String moneyTransactionId) {
-		this.setMoneyExpenseId(moneyTransactionId);
+		this.setMoneyExpenseContainerId(moneyTransactionId);
 	}	
 
 	public void setCreatorId(String id){
@@ -271,14 +265,14 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public String getMoneyAccountId() {
-		if(this.getMoneyExpense() != null){
-			return this.getMoneyExpense().getMoneyAccountId();
+		if(this.getMoneyExpenseContainer() != null){
+			return this.getMoneyExpenseContainer().getMoneyAccountId();
 		}
 		return null;
 	}	
 	@Override
 	public String getCurrencyId() {
-		return this.getMoneyExpense().getMoneyAccount().getCurrencyId();
+		return this.getMoneyExpenseContainer().getMoneyAccount().getCurrencyId();
 	}
 
 	public void setLocalFriendId(String id) {
@@ -291,6 +285,6 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	}
 	@Override
 	public Double getExchangeRate() {
-		return this.getMoneyExpense().getExchangeRate();
+		return this.getMoneyExpenseContainer().getExchangeRate();
 	}
 }
