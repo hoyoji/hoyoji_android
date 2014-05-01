@@ -44,6 +44,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -259,7 +260,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	
 	@Override
 	public boolean setViewValue(View view, Object object, String name) {
-		if(object instanceof MoneyExpense){
+		if(object instanceof MoneyExpenseContainer){
 			return setMoneyExpenseItemValue(view, object, name);
 		} else if(object instanceof MoneyIncome){
 			return setMoneyIncomeItemValue(view, object, name);
@@ -279,13 +280,13 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
+			((HyjDateTimeView)view).setText(((MoneyExpenseContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyExpense)object).getProject().getDisplayName());
+			((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -296,15 +297,15 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			}
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
-			numericView.setNumber(((MoneyExpense)object).getLocalAmount());
+			numericView.setNumber(((MoneyExpenseContainer)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
-			imageView.setImage(((MoneyExpense)object).getPicture());
+			imageView.setImage(((MoneyExpenseContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyExpense)object).getOwnerUserId();
+			String ownerUserId = ((MoneyExpenseContainer)object).getOwnerUserId();
 			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 				((TextView)view).setText("");
 			}else{
@@ -313,7 +314,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(((MoneyExpense)object).getDisplayRemark());
+			((TextView)view).setText(((MoneyExpenseContainer)object).getDisplayRemark());
 			return true;
 		} else {
 			return false;
