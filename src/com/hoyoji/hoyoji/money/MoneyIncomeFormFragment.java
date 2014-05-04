@@ -25,8 +25,6 @@ import android.widget.LinearLayout;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -54,7 +52,6 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -406,7 +403,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 			apportion.setAmount(0.0);
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-			apportion.setMoneyIncomeId(moneyIncome.getId());
+			apportion.setMoneyIncomeContainerId(moneyIncome.getId());
 
 			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 		}
@@ -429,7 +426,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 					apportion.setAmount(0.0);
 					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-					apportion.setMoneyIncomeId(moneyIncome.getId());
+					apportion.setMoneyIncomeContainerId(moneyIncome.getId());
 					apportion.setApportionType("Share");
 					
 					moneyApportions.add(apportion);
@@ -438,7 +435,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 				apportion.setAmount(moneyIncome.getAmount0());
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				apportion.setMoneyIncomeId(moneyIncome.getId());
+				apportion.setMoneyIncomeContainerId(moneyIncome.getId());
 				apportion.setApportionType("Average");
 				moneyApportions.add(apportion);
 			}
@@ -492,7 +489,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 												}
 												
 												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-												oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncome().getExchangeRate()));
+												oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
 												oldProjectShareAuthorizationEditor.save();
 											}
 											
@@ -862,7 +859,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 						}
 						
 						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-						oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncome().getExchangeRate()));
+						oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
 						oldProjectShareAuthorizationEditor.save();
 						
 						apportion.delete();
@@ -968,7 +965,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 					
 					HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-					oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncome().getExchangeRate()));
+					oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
 					oldProjectShareAuthorizationEditor.save();
 					
 					apportion.delete();
@@ -980,7 +977,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 				apportion.setAmount(mMoneyIncomeEditor.getModelCopy().getAmount0());
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				apportion.setMoneyIncomeId(mMoneyIncomeEditor.getModelCopy().getId());
+				apportion.setMoneyIncomeContainerId(mMoneyIncomeEditor.getModelCopy().getId());
 				apportion.setApportionType("Average");
 				
 				//更新项目成员的分摊金额
@@ -1092,7 +1089,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
     					}
     				}
     				apportion.setAmount(0.0);
-    				apportion.setMoneyIncomeId(mMoneyIncomeEditor.getModel().getId());
+    				apportion.setMoneyIncomeContainerId(mMoneyIncomeEditor.getModel().getId());
     				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
     				} else {

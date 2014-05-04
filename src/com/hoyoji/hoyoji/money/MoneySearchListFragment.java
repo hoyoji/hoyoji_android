@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +11,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -29,40 +22,29 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
-import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMoreListener;
-import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
-import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
-import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
-import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
-import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 
 public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	private static final int GET_SEARCH_QUERY = 0;
@@ -262,7 +244,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	public boolean setViewValue(View view, Object object, String name) {
 		if(object instanceof MoneyExpenseContainer){
 			return setMoneyExpenseItemValue(view, object, name);
-		} else if(object instanceof MoneyIncome){
+		} else if(object instanceof MoneyIncomeContainer){
 			return setMoneyIncomeItemValue(view, object, name);
 		} else if(object instanceof MoneyTransfer){
 			return setMoneyTransferItemValue(view, object, name);
@@ -323,13 +305,13 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	
 	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
+			((HyjDateTimeView)view).setText(((MoneyIncomeContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+			((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyIncome)object).getProject().getDisplayName());
+			((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -339,15 +321,15 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
+			numericView.setNumber(((MoneyIncomeContainer)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
-			imageView.setImage(((MoneyIncome)object).getPicture());
+			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyIncome)object).getOwnerUserId();
+			String ownerUserId = ((MoneyIncomeContainer)object).getOwnerUserId();
 			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 				((TextView)view).setText("");
 			}else{
@@ -356,7 +338,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(((MoneyIncome)object).getDisplayRemark());
+			((TextView)view).setText(((MoneyIncomeContainer)object).getDisplayRemark());
 			return true;
 		} else {
 			return false;
@@ -584,11 +566,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			HyjModel object = (HyjModel) ((HyjSimpleExpandableListAdapter)parent.getExpandableListAdapter()).getChild(groupPosition, childPosition);
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
-			if(object instanceof MoneyExpense){
-				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+			if(object instanceof MoneyExpenseContainer){
+				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				return true;
-			} else if(object instanceof MoneyIncome){
-				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+			} else if(object instanceof MoneyIncomeContainer){
+				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);

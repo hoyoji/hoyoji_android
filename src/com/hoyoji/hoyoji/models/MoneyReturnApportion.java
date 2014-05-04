@@ -22,8 +22,8 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "amount")
 	private Double mAmount;
 
-	@Column(name = "moneyReturnId")
-	private String mMoneyReturnId;
+	@Column(name = "moneyReturnContainerId")
+	private String mMoneyReturnContainerId;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -87,16 +87,16 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 		this.mAmount = mAmount;
 	}
 	
-	public String getMoneyReturnId() {
-		return mMoneyReturnId;
+	public String getMoneyReturnContainerId() {
+		return mMoneyReturnContainerId;
 	}
 
-	public void setMoneyReturnId(String mMoneyReturnId) {
-		this.mMoneyReturnId = mMoneyReturnId;
+	public void setMoneyReturnContainerId(String mMoneyReturnContainerId) {
+		this.mMoneyReturnContainerId = mMoneyReturnContainerId;
 	}
 	
-	public MoneyReturn getMoneyReturn(){
-		return getModel(MoneyReturn.class, mMoneyReturnId);
+	public MoneyReturnContainer getMoneyReturnContainer(){
+		return getModel(MoneyReturnContainer.class, mMoneyReturnContainerId);
 	}
 	
 	public String getFriendUserId() {
@@ -177,7 +177,7 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public Project getProject() {
-		return this.getMoneyReturn().getProject();
+		return this.getMoneyReturnContainer().getProject();
 	}
 
 	@Override
@@ -189,17 +189,17 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}
 	
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		if(this.getMoneyReturn() == null){
+		if(this.getMoneyReturnContainer() == null){
 			return null;
 		} else {
 			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-					this.getMoneyReturn().getProjectId(), this.getFriendUserId()).executeSingle();
+					this.getMoneyReturnContainer().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
 	}
 	
 	@Override
 	public void setMoneyId(String moneyTransactionId) {
-		this.setMoneyReturnId(moneyTransactionId);
+		this.setMoneyReturnContainerId(moneyTransactionId);
 	}	
 
 	public void setCreatorId(String id){
@@ -237,14 +237,14 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public String getMoneyAccountId() {
-		if(this.getMoneyReturn() != null){
-			return this.getMoneyReturn().getMoneyAccountId();
+		if(this.getMoneyReturnContainer() != null){
+			return this.getMoneyReturnContainer().getMoneyAccountId();
 		}
 		return null;
 	}	
 	@Override
 	public String getCurrencyId() {
-		return this.getMoneyReturn().getMoneyAccount().getCurrencyId();
+		return this.getMoneyReturnContainer().getMoneyAccount().getCurrencyId();
 	}	
 	public void setLocalFriendId(String id) {
 		this.mLocalFriendId = id;
@@ -256,6 +256,6 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}
 	@Override
 	public Double getExchangeRate() {
-		return this.getMoneyReturn().getExchangeRate();
+		return this.getMoneyReturnContainer().getExchangeRate();
 	}
 }

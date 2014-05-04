@@ -22,8 +22,8 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "amount")
 	private Double mAmount;
 
-	@Column(name = "moneyPaybackId")
-	private String mMoneyPaybackId;
+	@Column(name = "moneyPaybackContainerId")
+	private String mMoneyPaybackContainerId;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -87,16 +87,16 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 		this.mAmount = mAmount;
 	}
 	
-	public String getMoneyPaybackId() {
-		return mMoneyPaybackId;
+	public String getMoneyPaybackContainerId() {
+		return mMoneyPaybackContainerId;
 	}
 
-	public void setMoneyPaybackId(String mMoneyPaybackId) {
-		this.mMoneyPaybackId = mMoneyPaybackId;
+	public void setMoneyPaybackContainerId(String mMoneyPaybackContainerId) {
+		this.mMoneyPaybackContainerId = mMoneyPaybackContainerId;
 	}
 	
-	public MoneyPayback getMoneyPayback(){
-		return getModel(MoneyPayback.class, mMoneyPaybackId);
+	public MoneyPaybackContainer getMoneyPaybackContainer(){
+		return getModel(MoneyPaybackContainer.class, mMoneyPaybackContainerId);
 	}
 	
 	public String getFriendUserId() {
@@ -178,7 +178,7 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 
 
 	public Project getProject() {
-		return this.getMoneyPayback().getProject();
+		return this.getMoneyPaybackContainer().getProject();
 	}
 
 	@Override
@@ -190,17 +190,17 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		if(this.getMoneyPayback() == null){
+		if(this.getMoneyPaybackContainer() == null){
 			return null;
 		} else {
 			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-					this.getMoneyPayback().getProjectId(), this.getFriendUserId()).executeSingle();
+					this.getMoneyPaybackContainer().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
 	}
 	
 	@Override
 	public void setMoneyId(String moneyTransactionId) {
-		this.setMoneyPaybackId(moneyTransactionId);
+		this.setMoneyPaybackContainerId(moneyTransactionId);
 	}	
 
 	public void setCreatorId(String id){
@@ -237,14 +237,14 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public String getMoneyAccountId() {
-		if(this.getMoneyPayback() != null){
-			return this.getMoneyPayback().getMoneyAccountId();
+		if(this.getMoneyPaybackContainer() != null){
+			return this.getMoneyPaybackContainer().getMoneyAccountId();
 		}
 		return null;
 	}	
 	@Override
 	public String getCurrencyId() {
-		return this.getMoneyPayback().getMoneyAccount().getCurrencyId();
+		return this.getMoneyPaybackContainer().getMoneyAccount().getCurrencyId();
 	}	
 	public void setLocalFriendId(String id) {
 		this.mLocalFriendId = id;
@@ -256,6 +256,6 @@ public class MoneyPaybackApportion extends HyjModel implements MoneyApportion{
 	}
 	@Override
 	public Double getExchangeRate() {
-		return this.getMoneyPayback().getExchangeRate();
+		return this.getMoneyPaybackContainer().getExchangeRate();
 	}
 }

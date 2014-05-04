@@ -54,6 +54,7 @@ import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
@@ -70,6 +71,7 @@ import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
@@ -112,7 +114,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		getView().findViewById(R.id.homeListFragment_action_money_income).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
     		}
 		});
 		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
@@ -295,7 +297,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	public boolean setViewValue(View view, Object object, String name) {
 		if(object instanceof MoneyExpenseContainer){
 			return setMoneyExpenseItemValue(view, object, name);
-		} else if(object instanceof MoneyIncome){
+		} else if(object instanceof MoneyIncomeContainer){
 			return setMoneyIncomeItemValue(view, object, name);
 		} else if(object instanceof MoneyTransfer){
 			return setMoneyTransferItemValue(view, object, name);
@@ -420,17 +422,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	
 	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
+			((HyjDateTimeView)view).setText(((MoneyIncomeContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyIncome)object).getIncomeType().equalsIgnoreCase("Deposit")){
-				((TextView)view).setText("(充值)" + ((MoneyIncome)object).getMoneyIncomeCategory());
+			if(((MoneyIncomeContainer)object).getIncomeType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("(充值)" + ((MoneyIncomeContainer)object).getMoneyIncomeCategory());
 			}else{
-				((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+				((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyIncome)object).getProject().getDisplayName());
+			((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -442,12 +444,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyIncome)object).getLocalAmount());
+			numericView.setNumber(((MoneyIncomeContainer)object).getLocalAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
-			imageView.setImage(((MoneyIncome)object).getPicture());
+			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
@@ -464,10 +466,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					}
 				});
 			}
-			view.setTag(((MoneyIncome)object).getPicture());
+			view.setTag(((MoneyIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyIncome)object).getOwnerUserId();
+			String ownerUserId = ((MoneyIncomeContainer)object).getOwnerUserId();
 			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 				((TextView)view).setText("");
 			}else{
@@ -476,7 +478,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(((MoneyIncome)object).getDisplayRemark());
+			((TextView)view).setText(((MoneyIncomeContainer)object).getDisplayRemark());
 			return true;
 		} else {
 			return false;
@@ -797,12 +799,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				}
 				return true;
-			} else if(object instanceof MoneyIncome){
-				MoneyIncome moneIncome = (MoneyIncome) object;
-				if(moneIncome.getIncomeType().equalsIgnoreCase("Deposit")){
+			} else if(object instanceof MoneyIncomeContainer){
+				MoneyIncomeContainer moneIncomeContainer = (MoneyIncomeContainer) object;
+				if(moneIncomeContainer.getIncomeType().equalsIgnoreCase("Deposit")){
 					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_edit, bundle);
 				}else{
-					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				}
 				
 				return true;

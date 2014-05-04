@@ -25,6 +25,7 @@ import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
@@ -109,10 +110,10 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
 			}
 			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 			}
 			if(mLocalFriendId != null){
-				queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"Id = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+				queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 			}
 			return queryStringBuilder.toString();
 		}
@@ -149,13 +150,13 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncome.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("moneyIncomeApportionId IS NULL AND date > ? AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
 	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).as("main").where("moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
@@ -184,11 +185,11 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 					rhsStr = ((MoneyExpenseContainer) rhs).getDate();
 				}
 				
-				if(lhs instanceof MoneyIncome){
-					lhsStr = ((MoneyIncome) lhs).getDate();
+				if(lhs instanceof MoneyIncomeContainer){
+					lhsStr = ((MoneyIncomeContainer) lhs).getDate();
 				}
-				if(rhs instanceof MoneyIncome){
-					rhsStr = ((MoneyIncome) rhs).getDate();
+				if(rhs instanceof MoneyIncomeContainer){
+					rhsStr = ((MoneyIncomeContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyTransfer){

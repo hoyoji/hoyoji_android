@@ -22,8 +22,8 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	@Column(name = "amount")
 	private Double mAmount;
 
-	@Column(name = "moneyIncomeId")
-	private String mMoneyIncomeId;
+	@Column(name = "moneyIncomeContainerId")
+	private String mMoneyIncomeContainerId;
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -87,16 +87,16 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		this.mAmount = mAmount;
 	}
 	
-	public String getMoneyIncomeId() {
-		return mMoneyIncomeId;
+	public String getMoneyIncomeContainerId() {
+		return mMoneyIncomeContainerId;
 	}
 
-	public void setMoneyIncomeId(String mMoneyIncomeId) {
-		this.mMoneyIncomeId = mMoneyIncomeId;
+	public void setMoneyIncomeContainerId(String mMoneyIncomeContainerId) {
+		this.mMoneyIncomeContainerId = mMoneyIncomeContainerId;
 	}
 	
-	public MoneyIncome getMoneyIncome(){
-		return getModel(MoneyIncome.class, mMoneyIncomeId);
+	public MoneyIncomeContainer getMoneyIncomeContainer(){
+		return getModel(MoneyIncomeContainer.class, mMoneyIncomeContainerId);
 	}
 	
 	public String getFriendUserId() {
@@ -194,14 +194,14 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		MoneyAccount debtAccount = null;
 		if(this.getFriendUserId() != null){
 			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
 			}
 		}else{
 			// 该好友不是项目成员
 			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncome().getMoneyAccount().getCurrencyId(), friend);
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), friend);
 			}
 		}
 		if(debtAccount != null){
@@ -223,7 +223,7 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 //	}
 
 	public Project getProject() {
-		return this.getMoneyIncome().getProject();
+		return this.getMoneyIncomeContainer().getProject();
 	}
 
 	@Override
@@ -235,18 +235,18 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		if(this.getMoneyIncome() == null){
+		if(this.getMoneyIncomeContainer() == null){
 			return null;
 		} else {	
 			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				   this.getMoneyIncome().getProjectId(), this.getFriendUserId()).executeSingle();
+				   this.getMoneyIncomeContainer().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
 		}
 	
 	
 	@Override
 	public void setMoneyId(String moneyTransactionId) {
-		this.setMoneyIncomeId(moneyTransactionId);
+		this.setMoneyIncomeContainerId(moneyTransactionId);
 	}	
 
 	public void setCreatorId(String id){
@@ -284,14 +284,14 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 
 	@Override
 	public String getMoneyAccountId() {
-		if(this.getMoneyIncome() != null){
-			return this.getMoneyIncome().getMoneyAccountId();
+		if(this.getMoneyIncomeContainer() != null){
+			return this.getMoneyIncomeContainer().getMoneyAccountId();
 		}
 		return null;
 	}	
 	@Override
 	public String getCurrencyId() {
-		return this.getMoneyIncome().getMoneyAccount().getCurrencyId();
+		return this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId();
 	}
 
 	public void setLocalFriendId(String id) {
@@ -304,6 +304,6 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	}
 	@Override
 	public Double getExchangeRate() {
-		return this.getMoneyIncome().getExchangeRate();
+		return this.getMoneyIncomeContainer().getExchangeRate();
 	}
 }

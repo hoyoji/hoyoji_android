@@ -66,6 +66,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
+import com.hoyoji.hoyoji.models.MoneyBorrowContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
@@ -73,12 +74,16 @@ import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyLendApportion;
+import com.hoyoji.hoyoji.models.MoneyLendContainer;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
+import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Picture;
@@ -773,6 +778,18 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
 									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+								} else if(model instanceof MoneyExpenseContainer){
+									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyIncomeContainer){
+									recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyBorrowContainer){
+									recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyLendContainer){
+									recordData.put("currencyId", ((MoneyLendContainer)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyPaybackContainer){
+									recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
+								} else if(model instanceof MoneyReturnContainer){
+									recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyExpense){
 									recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyIncome){
@@ -961,6 +978,11 @@ public class MainActivity extends HyjUserActivity {
 			if(model == null){
 				model = new MoneyIncome();
 			}
+		}  else if (tableName.equalsIgnoreCase("MoneyIncomeContainer")) {
+			model = HyjModel.getModel(MoneyIncomeContainer.class, id);
+			if(model == null){
+				model = new MoneyIncomeContainer();
+			}
 		} else if (tableName.equalsIgnoreCase("MoneyIncomeApportion")) {
 			model = HyjModel.getModel(MoneyIncomeApportion.class, id);
 			if(model == null){
@@ -970,6 +992,11 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(MoneyLend.class, id);
 			if(model == null){
 				model = new MoneyLend();
+			}
+		}  else if (tableName.equalsIgnoreCase("MoneyLendContainer")) {
+			model = HyjModel.getModel(MoneyLendContainer.class, id);
+			if(model == null){
+				model = new MoneyLendContainer();
 			}
 		} else if (tableName.equalsIgnoreCase("MoneyLendApportion")) {
 			model = HyjModel.getModel(MoneyLendApportion.class, id);
@@ -981,6 +1008,11 @@ public class MainActivity extends HyjUserActivity {
 			if(model == null){
 				model = new MoneyPayback();
 			}
+		}  else if (tableName.equalsIgnoreCase("MoneyPaybackContainer")) {
+			model = HyjModel.getModel(MoneyPaybackContainer.class, id);
+			if(model == null){
+				model = new MoneyPaybackContainer();
+			}
 		} else if (tableName.equalsIgnoreCase("MoneyPaybackApportion")) {
 			model = HyjModel.getModel(MoneyPaybackApportion.class, id);
 			if(model == null){
@@ -990,6 +1022,11 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(MoneyReturn.class, id);
 			if(model == null){
 				model = new MoneyReturn();
+			}
+		}  else if (tableName.equalsIgnoreCase("MoneyReturnContainer")) {
+			model = HyjModel.getModel(MoneyReturnContainer.class, id);
+			if(model == null){
+				model = new MoneyReturnContainer();
 			}
 		} else if (tableName.equalsIgnoreCase("MoneyReturnApportion")) {
 			model = HyjModel.getModel(MoneyReturnApportion.class, id);

@@ -461,11 +461,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
 	}
 
-	private void setupDeleteButton(MoneyExpenseContainerEditor moneyExpenseEditor) {
+	private void setupDeleteButton(MoneyExpenseContainerEditor moneyExpenseContainerEditor) {
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
 		
-		final MoneyExpenseContainer moneyExpense = moneyExpenseEditor.getModelCopy();
+		final MoneyExpenseContainer moneyExpense = moneyExpenseContainerEditor.getModelCopy();
 		
 		if (moneyExpense.get_mId() == null) {
 			buttonDelete.setVisibility(View.GONE);
@@ -484,7 +484,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
-										MoneyExpenseContainerEditor moneyExpenseEditor = new MoneyExpenseContainerEditor(moneyExpense);
+										MoneyExpenseContainerEditor moneyExpenseContainerEditor = new MoneyExpenseContainerEditor(moneyExpense);
 										
 										//删除支出的同时删除分摊
 										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpense.getApportions().iterator();
@@ -496,7 +496,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 											if(moneyExpenseAportion.getFriendUserId() != null){
 												if(moneyExpenseAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 													// 更新旧项目的分摊支出
-													oldProjectShareAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
+													oldProjectShareAuthorization = moneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 												} else {
 													// 更新旧项目分摊支出
 													oldProjectShareAuthorization = moneyExpenseAportion.getProjectShareAuthorization();
@@ -511,8 +511,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										}
 										
 										//更新支出所有者的实际支出
-										MoneyExpenseContainer oldMoneyExpenseModel = moneyExpenseEditor.getModelCopy();
-										ProjectShareAuthorization oldSelfProjectAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
+										MoneyExpenseContainer oldMoneyExpenseModel = moneyExpenseContainerEditor.getModelCopy();
+										ProjectShareAuthorization oldSelfProjectAuthorization = moneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 										HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
 										oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
 										oldSelfProjectAuthorizationEditor.save();
@@ -815,7 +815,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			if (pi.getState() == PictureItem.NEW) {
 				Picture newPic = pi.getPicture();
 				newPic.setRecordId(mMoneyExpenseContainerEditor.getModel().getId());
-				newPic.setRecordType("MoneyExpense");
+				newPic.setRecordType("MoneyExpenseContainer");
 				newPic.save();
 			} else if (pi.getState() == PictureItem.DELETED) {
 				pi.getPicture().delete();

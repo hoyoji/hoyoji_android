@@ -5,29 +5,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TimeZone;
-import java.util.TreeMap;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
-import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
@@ -37,8 +27,6 @@ import com.hoyoji.hoyoji.models.UserData;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
@@ -65,7 +53,7 @@ public class HomeGroupListLoader extends
 				ContentProvider.createUri(MoneyExpenseContainer.class, null), true,
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyIncome.class, null), true,
+				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyTransfer.class, null), true,
@@ -147,7 +135,7 @@ public class HomeGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
+							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
 							"WHERE date > ? AND date <= ?",
 							args);
 			if (cursor != null) {
@@ -173,7 +161,7 @@ public class HomeGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ?",
+							"WHERE moneyIncomeApportionId IS NULL AND date > ? AND date <= ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -287,7 +275,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome WHERE date <= ?",
+						"SELECT MAX(date) FROM MoneyIncomeContainer WHERE date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -303,7 +291,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow WHERE date <= ?",
+						"SELECT MAX(date) FROM MoneyBorrow WHERE moneyIncomeApportionId IS NULL AND  date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

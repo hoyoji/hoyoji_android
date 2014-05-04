@@ -577,4 +577,8 @@ public class MoneyIncome extends HyjModel {
 	public void setMoneyExpenseId(String moneyExpenseId) {
 		this.mMoneyExpenseId = moneyExpenseId;
 	}
+
+	public void setMoneyIncomeApportionId(String id) {
+		this.mMoneyIncomeApportionId = id;
+	}
 }
