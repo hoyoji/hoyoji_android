@@ -841,7 +841,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			if(apportion.getFriendUserId() == null) {
 				// 该好友不是项目成员
 				if(api.getState() == ApportionItem.DELETED ){
-					MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId", apportion.getId()).executeSingle();
+					MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
 					if(moneyLend != null){
 						moneyLend.delete();
 					} 
@@ -885,7 +885,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					if(apportion.get_mId() == null){
 						moneyLend = new MoneyLend();
 					} else {
-						moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId", apportion.getId()).executeSingle();
+						moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
 					}
 					moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 					moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
@@ -1023,7 +1023,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								if(apportion.get_mId() == null){
 									moneyExpense = new MoneyExpense();
 								} else {
-									moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId", apportion.getId()).executeSingle();
+									moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
 								}
 								moneyExpense.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyExpense.setAmount(apportionEditor.getModelCopy().getAmount0());
