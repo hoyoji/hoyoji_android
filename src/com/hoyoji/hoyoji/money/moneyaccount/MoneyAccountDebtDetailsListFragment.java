@@ -165,7 +165,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			Bundle queryParams = buildQueryParams();
-			openActivityWithFragmentForResult(MoneyAccountSearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
+			openActivityWithFragmentForResult(MoneyAccountDebtSearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
 			
 			return true;
 		}

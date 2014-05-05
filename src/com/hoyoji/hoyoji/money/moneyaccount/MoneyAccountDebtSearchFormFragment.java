@@ -20,7 +20,7 @@ import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
-public class MoneyAccountSearchFormFragment extends HyjUserFormFragment {
+public class MoneyAccountDebtSearchFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	
@@ -32,7 +32,7 @@ public class MoneyAccountSearchFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.moneyaccount_dialogfragment_search;
+		return R.layout.moneyaccount_dialogfragment_debtsearch;
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class MoneyAccountSearchFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyAccountSearchFormFragment.this
+				MoneyAccountDebtSearchFormFragment.this
 						.openActivityWithFragmentForResult(
 								ProjectListFragment.class,
 								R.string.projectListFragment_title_select_project,
