@@ -235,7 +235,12 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("moneyAccount_id", id);
-			openActivityWithFragment(MoneySearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
+			MoneyAccount moneyAccount = HyjModel.load(MoneyAccount.class, id);
+			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
+				openActivityWithFragment(MoneyAccountDebtDetailsListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
+			} else {
+				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
+			}
 		}
 		return true;
     } 

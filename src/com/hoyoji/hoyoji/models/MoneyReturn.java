@@ -58,8 +58,8 @@ public class MoneyReturn extends HyjModel{
 	@Column(name = "moneyPaybackId")
 	private String mMoneyPaybackId;
 
-	@Column(name = "moneyReturnApportionId")
-	private String mMoneyReturnApportionId;
+//	@Column(name = "moneyReturnApportionId")
+//	private String mMoneyReturnApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -520,4 +520,15 @@ public class MoneyReturn extends HyjModel{
 	public void setMoneyPaybackId(String moneyPaybackId) {
 		this.mMoneyPaybackId = moneyPaybackId;
 	}
+	public String getMoneyPaybackId() {
+		return this.mMoneyPaybackId;
+	}
+	public MoneyPayback getMoneyPayback() {
+		if(this.mMoneyPaybackId == null){
+			return null;
+		}
+		return HyjModel.getModel(MoneyPayback.class, this.mMoneyPaybackId);
+	}
+
+
 }
