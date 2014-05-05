@@ -262,7 +262,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyLend)object).getMoneyExpenseApportionId() != null){
+			if(((MoneyBorrow)object).getMoneyIncomeApportionId() != null){
 				((TextView)view).setText("(分摊)借入");
 			} else {
 				((TextView)view).setText("借入");

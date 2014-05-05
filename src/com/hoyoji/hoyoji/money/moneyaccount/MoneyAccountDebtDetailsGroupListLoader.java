@@ -121,13 +121,13 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
 				if(moneyAccount.getFriendId() == null && moneyAccount.getName().equalsIgnoreCase("__ANONYMOUS__")){
 					// 匿名借贷账户
-					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL)");
+					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
 					// 本地用户
-					queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL)");
+					queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else {
 					// 网络用户
-					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "')");
+					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "' AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				}
 			}
 		}
@@ -283,7 +283,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow main WHERE date <= ? AND " + buildSearchQuery("Borrow"),
+						"SELECT MAX(date) FROM MoneyBorrow main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Borrow"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -299,7 +299,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main WHERE date <= ? AND " + buildSearchQuery("Lend"),
+						"SELECT MAX(date) FROM MoneyLend main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Lend"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -315,7 +315,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND " + buildSearchQuery("Return"),
+						"SELECT MAX(date) FROM MoneyReturn main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Return"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -331,7 +331,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main WHERE date <= ? AND " + buildSearchQuery("Payback"),
+						"SELECT MAX(date) FROM MoneyPayback main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Payback"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
