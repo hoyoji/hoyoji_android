@@ -262,7 +262,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("借入");
+			if(((MoneyLend)object).getMoneyExpenseApportionId() != null){
+				((TextView)view).setText("(分摊)借入");
+			} else {
+				((TextView)view).setText("借入");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
@@ -300,7 +304,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("借出");
+			if(((MoneyLend)object).getMoneyExpenseApportionId() != null){
+				((TextView)view).setText("(分摊)借出");
+			} else {
+				((TextView)view).setText("借出");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
