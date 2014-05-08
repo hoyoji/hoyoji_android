@@ -308,7 +308,7 @@ public class MainActivity extends HyjUserActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		this.mOptionsMenu = menu;
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		//getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
@@ -337,45 +337,7 @@ public class MainActivity extends HyjUserActivity {
 		// setRefreshActionButtonState(true);
 		// }
 
-		// Handle your other action bar items...
-		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
-			openActivityWithFragment(MoneyExpenseFormFragment.class,
-					R.string.moneyExpenseFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_income) {
-			openActivityWithFragment(MoneyIncomeFormFragment.class,
-					R.string.moneyIncomeFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-			openActivityWithFragment(MoneyTransferFormFragment.class,
-					R.string.moneyTransferFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
-			openActivityWithFragment(MoneyBorrowFormFragment.class,
-					R.string.moneyBorrowFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
-			openActivityWithFragment(MoneyLendFormFragment.class,
-					R.string.moneyLendFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
-			openActivityWithFragment(MoneyReturnFormFragment.class,
-					R.string.moneyReturnFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
-			openActivityWithFragment(MoneyPaybackFormFragment.class,
-					R.string.moneyPaybackFormFragment_title_addnew, null);
-			return true;
-		}
-		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_deposite) {
-			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-					R.string.moneyDepositFormFragment_title_addnew, null);
-			return true;
-		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
-			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
-					R.string.moneyDepositIncomeFormFragment_title_addnew, null);
-			return true;
-		}
+		
 
 		return super.onOptionsItemSelected(item);
 	}

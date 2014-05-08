@@ -41,8 +41,12 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -170,6 +174,45 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			
 			return true;
 		}
+		// Handle your other action bar items...
+				if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
+					openActivityWithFragment(MoneyExpenseFormFragment.class,
+							R.string.moneyExpenseFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_income) {
+					openActivityWithFragment(MoneyIncomeFormFragment.class,
+							R.string.moneyIncomeFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
+					openActivityWithFragment(MoneyTransferFormFragment.class,
+							R.string.moneyTransferFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
+					openActivityWithFragment(MoneyBorrowFormFragment.class,
+							R.string.moneyBorrowFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
+					openActivityWithFragment(MoneyLendFormFragment.class,
+							R.string.moneyLendFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
+					openActivityWithFragment(MoneyReturnFormFragment.class,
+							R.string.moneyReturnFormFragment_title_addnew, null);
+					return true;
+				} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
+					openActivityWithFragment(MoneyPaybackFormFragment.class,
+							R.string.moneyPaybackFormFragment_title_addnew, null);
+					return true;
+				}
+				else if (item.getItemId() == R.id.mainActivity_action_money_addnew_deposite) {
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+							R.string.moneyDepositFormFragment_title_addnew, null);
+					return true;
+				}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
+					openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
+							R.string.moneyDepositIncomeFormFragment_title_addnew, null);
+					return true;
+				}
 		return super.onOptionsItemSelected(item);
 	}
 

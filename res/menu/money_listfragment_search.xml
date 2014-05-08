@@ -7,6 +7,65 @@
         android:icon="@drawable/ic_action_search"
         hoyoji:showAsAction="always"/>
         
+    	<item
+        android:id="@+id/mainActivity_action_money_addnew"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/mainActivity_action_money_addnew"
+        hoyoji:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_expense"
+                android:title="支出"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_income"
+                android:title="收入"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_transfer"
+                android:title="转账"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_debt"
+                android:title="借贷"
+                hoyoji:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_borrow"
+                        android:title="借入"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_lend"
+                        android:title="借出"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_return"
+                        android:title="还款"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_payback"
+                        android:title="收款"
+                        hoyoji:showAsAction="never"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/mainActivity_action_money_addnew_topup"
+                android:title="充值"
+                hoyoji:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_deposite"
+                        android:title="充值支出"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_depositeIncome"
+                        android:title="充值收入"
+                        hoyoji:showAsAction="never"/>
+                </menu>
+            </item>
+        </menu>
+    </item>
+    	
     
     <!-- <item
         android:id="@+id/searchListFragment_action_more"
