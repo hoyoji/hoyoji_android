@@ -1058,6 +1058,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 					oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
 					oldProjectShareAuthorizationEditor.save();
+
+					if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+						if(moneyIncome != null){
+							moneyIncome.delete();
+						}
+					} else {
+						MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+						if(moneyBorrow != null){
+							moneyBorrow.delete();
+						} 
+					}
 					
 					apportion.delete();
 				}
@@ -1078,6 +1090,28 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() + (apportion.getAmount0() * mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate()));
 				
 				projectShareAuthorizationEditor.save();
+				
+				MoneyIncome moneyIncome = null;
+				moneyIncome = new MoneyIncome();
+				
+				moneyIncome.setMoneyIncomeApportionId(apportion.getId());
+				moneyIncome.setAmount(apportion.getAmount0());
+				moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
+				moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
+				moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
+				moneyIncome.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFriendUserId());
+				moneyIncome.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
+				moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
+				moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
+				moneyIncome.setLocalFriendId(mMoneyIncomeContainerEditor.getModelCopy().getLocalFriendId());
+				moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+				moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
+				moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
+				moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
+				moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
+				moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
+				moneyIncome.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+				moneyIncome.save();
 				apportion.save();
 			}
 	}
