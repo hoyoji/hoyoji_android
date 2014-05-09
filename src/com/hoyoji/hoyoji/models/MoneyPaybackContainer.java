@@ -56,9 +56,9 @@ public class MoneyPaybackContainer extends HyjModel{
 
 	@Column(name = "moneyReturnId")
 	private String mMoneyReturnId;
-
-	@Column(name = "moneyPaybackApportionId")
-	private String mMoneyPaybackApportionId;
+//
+//	@Column(name = "moneyPaybackApportionId")
+//	private String mMoneyPaybackApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;

@@ -57,8 +57,8 @@ public class MoneyBorrowContainer extends HyjModel{
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
 
-	@Column(name = "moneyIncomeApportionId")
-	private String mMoneyIncomeApportionId;
+//	@Column(name = "moneyIncomeApportionId")
+//	private String mMoneyIncomeApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;

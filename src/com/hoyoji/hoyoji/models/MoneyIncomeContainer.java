@@ -58,9 +58,9 @@ public class MoneyIncomeContainer extends HyjModel {
 
 	@Column(name = "moneyExpenseId")
 	private String mMoneyExpenseId;
-
-	@Column(name = "moneyIncomeApportionId")
-	private String mMoneyIncomeApportionId;
+//
+//	@Column(name = "moneyIncomeApportionId")
+//	private String mMoneyIncomeApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;

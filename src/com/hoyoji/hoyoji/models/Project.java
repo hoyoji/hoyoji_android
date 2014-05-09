@@ -46,6 +46,15 @@ public class Project extends HyjModel {
 	@Column(name = "defaultExpenseCategoryMain")
 	private String mDefaultExpenseCategoryMain;
 
+	@Column(name = "totalIncome")
+	private Double totalIncome = 0.0;
+	
+	@Column(name = "totalExpense")
+	private Double totalExpense = 0.0;
+	
+	@Column(name = "totalTopup")
+	private Double totalTopup = 0.0;
+	
 //	@Column(name = "depositeIncomeCategory")
 //	private String mDepositIncomeCategory;
 //
