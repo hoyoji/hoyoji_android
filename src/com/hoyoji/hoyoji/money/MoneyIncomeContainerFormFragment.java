@@ -501,12 +501,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 											}
 											
 											if(moneyIncomeAportion.getFriendUserId().equals(moneyIncomeContainer.getOwnerUserId())){
-												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId", moneyIncomeAportion.getId()).executeSingle();
+												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
 												if(moneyIncome != null){
 													moneyIncome.delete();
 												}
 											} else {
-												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId", moneyIncomeAportion.getId()).executeSingle();
+												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
 												if(moneyBorrow != null){
 													moneyBorrow.delete();
 												} 
@@ -902,12 +902,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						oldProjectShareAuthorizationEditor.save();
 						
 						if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId", apportion.getId()).executeSingle();
+							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 							if(moneyIncome != null){
 								moneyIncome.delete();
 							}
 						} else {
-							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId", apportion.getId()).executeSingle();
+							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 							if(moneyBorrow != null){
 								moneyBorrow.delete();
 							} 
