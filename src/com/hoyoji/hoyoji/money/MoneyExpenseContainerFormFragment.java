@@ -465,15 +465,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
 		
-		final MoneyExpenseContainer moneyExpense = moneyExpenseContainerEditor.getModelCopy();
+		final MoneyExpenseContainer moneyExpenseContainer = moneyExpenseContainerEditor.getModelCopy();
 		
-		if (moneyExpense.get_mId() == null) {
+		if (moneyExpenseContainer.get_mId() == null) {
 			buttonDelete.setVisibility(View.GONE);
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(moneyExpense.hasDeletePermission()){
+					if(moneyExpenseContainer.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -481,13 +481,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
+										MoneyAccount moneyAccount = moneyExpenseContainer.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
-										MoneyExpenseContainerEditor moneyExpenseContainerEditor = new MoneyExpenseContainerEditor(moneyExpense);
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpenseContainer.getAmount());
+										MoneyExpenseContainerEditor moneyExpenseContainerEditor = new MoneyExpenseContainerEditor(moneyExpenseContainer);
 										
 										//删除支出的同时删除分摊
-										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpense.getApportions().iterator();
+										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpenseContainer.getApportions().iterator();
 										while (moneyExpenseApportions.hasNext()) {
 											MoneyExpenseApportion moneyExpenseAportion = moneyExpenseApportions.next();
 											ProjectShareAuthorization oldProjectShareAuthorization;
@@ -507,6 +507,18 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												oldProjectShareAuthorizationEditor.save();
 											}
 											
+											if(moneyExpenseAportion.getFriendUserId().equals(moneyExpenseContainer.getOwnerUserId())){
+												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId", moneyExpenseAportion.getId()).executeSingle();
+												if(moneyExpense != null){
+													moneyExpense.delete();
+												}
+											} else {
+												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId", moneyExpenseAportion.getId()).executeSingle();
+												if(moneyLend != null){
+													moneyLend.delete();
+												} 
+											}
+											
 											moneyExpenseAportion.delete();
 										}
 										
@@ -517,7 +529,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
 										oldSelfProjectAuthorizationEditor.save();
 									
-										moneyExpense.delete();
+										moneyExpenseContainer.delete();
 										moneyAccountEditor.save();
 
 										HyjUtil.displayToast(R.string.app_delete_success);

@@ -500,6 +500,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 												oldProjectShareAuthorizationEditor.save();
 											}
 											
+											if(moneyIncomeAportion.getFriendUserId().equals(moneyIncomeContainer.getOwnerUserId())){
+												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId", moneyIncomeAportion.getId()).executeSingle();
+												if(moneyIncome != null){
+													moneyIncome.delete();
+												}
+											} else {
+												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId", moneyIncomeAportion.getId()).executeSingle();
+												if(moneyBorrow != null){
+													moneyBorrow.delete();
+												} 
+											}
+											
 											moneyIncomeAportion.delete();
 										}
 										
