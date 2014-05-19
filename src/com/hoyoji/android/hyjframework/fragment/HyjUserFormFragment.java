@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 public abstract class HyjUserFormFragment extends HyjUserFragment {
 	private Button mSaveButton = null;

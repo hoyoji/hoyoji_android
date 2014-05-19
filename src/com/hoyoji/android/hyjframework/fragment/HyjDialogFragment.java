@@ -1,7 +1,7 @@
 package com.hoyoji.android.hyjframework.fragment;
 
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

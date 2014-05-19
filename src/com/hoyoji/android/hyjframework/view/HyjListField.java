@@ -1,6 +1,6 @@
 package com.hoyoji.android.hyjframework.view;
 
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;

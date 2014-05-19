@@ -27,7 +27,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 
 public class MoneyIncomeCategoryListFragment extends HyjUserListFragment implements 

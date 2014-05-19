@@ -12,7 +12,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.Project;

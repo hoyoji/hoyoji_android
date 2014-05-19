@@ -33,6 +33,7 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
+import com.hoyoji.hoyoji_android.R;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

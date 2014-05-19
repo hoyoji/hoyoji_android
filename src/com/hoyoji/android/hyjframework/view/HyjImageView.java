@@ -15,7 +15,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjBitmapWorkerAsyncTask;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.Picture;
 

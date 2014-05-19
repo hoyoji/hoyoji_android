@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji"
+    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji_android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"

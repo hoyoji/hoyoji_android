@@ -11,7 +11,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "MoneyLendApportion", id = BaseColumns._ID)
 public class MoneyLendApportion extends HyjModel implements MoneyApportion {

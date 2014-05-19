@@ -21,7 +21,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.server.HyjServer;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;

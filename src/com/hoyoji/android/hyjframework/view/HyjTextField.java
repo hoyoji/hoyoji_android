@@ -1,7 +1,7 @@
 package com.hoyoji.android.hyjframework.view;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;

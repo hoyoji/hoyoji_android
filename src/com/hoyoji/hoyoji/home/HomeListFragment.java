@@ -39,7 +39,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;

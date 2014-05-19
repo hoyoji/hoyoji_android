@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

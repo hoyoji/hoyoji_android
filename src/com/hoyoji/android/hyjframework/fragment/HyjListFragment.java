@@ -6,7 +6,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;

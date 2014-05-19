@@ -29,7 +29,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.fragment.HyjDialogFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 

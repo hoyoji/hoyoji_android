@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji.LoginActivity;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.SettingsActivity;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 

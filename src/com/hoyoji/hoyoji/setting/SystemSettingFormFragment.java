@@ -38,7 +38,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;

@@ -118,6 +118,7 @@ import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.project.SubProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
+import com.hoyoji.hoyoji_android.R;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;

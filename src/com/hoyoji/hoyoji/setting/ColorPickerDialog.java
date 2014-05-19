@@ -3,7 +3,7 @@ package com.hoyoji.hoyoji.setting;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

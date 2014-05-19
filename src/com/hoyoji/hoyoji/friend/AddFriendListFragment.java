@@ -40,7 +40,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;

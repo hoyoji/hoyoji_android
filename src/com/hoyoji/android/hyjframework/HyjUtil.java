@@ -45,7 +45,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
-import com.hoyoji.hoyoji.R;
+import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;
