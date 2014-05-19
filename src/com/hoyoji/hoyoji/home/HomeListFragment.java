@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -17,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.ContextMenu;
@@ -30,30 +28,24 @@ import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
-
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMoreListener;
-import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.R;
-import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
-import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -64,20 +56,15 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
-import com.hoyoji.hoyoji.money.MoneyExpenseListFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -212,11 +199,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //		}
 		// Handle your other action bar items...
 		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
-			openActivityWithFragment(MoneyExpenseFormFragment.class,
+			openActivityWithFragment(MoneyExpenseContainerFormFragment.class,
 					R.string.moneyExpenseFormFragment_title_addnew, null);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_income) {
-			openActivityWithFragment(MoneyIncomeFormFragment.class,
+			openActivityWithFragment(MoneyIncomeContainerFormFragment.class,
 					R.string.moneyIncomeFormFragment_title_addnew, null);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
