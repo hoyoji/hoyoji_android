@@ -1,6 +1,5 @@
 package com.hoyoji.android.hyjframework.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -12,7 +11,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
@@ -25,12 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.hoyoji.R;
 import com.hoyoji.hoyoji.models.User;
 
