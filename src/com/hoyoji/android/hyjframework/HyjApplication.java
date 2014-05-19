@@ -75,7 +75,7 @@ public class HyjApplication extends Application {
 	
 	public void initContentProvider(){
 		ContentResolver resolver = getApplicationContext().getContentResolver();
-		ContentProviderClient client = resolver.acquireContentProviderClient("com.hoyoji.hoyoji");
+		ContentProviderClient client = resolver.acquireContentProviderClient("com.hoyoji.hoyoji_android");
 		ContentProvider provider = (ContentProvider) client.getLocalContentProvider();
 		provider.initialize();
 	}
