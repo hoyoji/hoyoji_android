@@ -97,17 +97,17 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				moneyTransfer.setTransferInId(moneyAccountId);
 				moneyTransfer.setTransferOutId(moneyAccountId);
 			}
-			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-			if(friendUserId != null){
-				moneyTransfer.setTransferInFriendUserId(friendUserId);
-				moneyTransfer.setTransferOutFriendUserId(friendUserId);
-			} else {
-				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-				if(localFriendId != null){
-					moneyTransfer.setTransferInLocalFriendId(localFriendId);
-					moneyTransfer.setTransferOutLocalFriendId(localFriendId);
-				}
-			}
+//			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+//			if(friendUserId != null){
+//				moneyTransfer.setTransferInFriendUserId(friendUserId);
+//				moneyTransfer.setTransferOutFriendUserId(friendUserId);
+//			} else {
+//				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+//				if(localFriendId != null){
+//					moneyTransfer.setTransferInLocalFriendId(localFriendId);
+//					moneyTransfer.setTransferOutLocalFriendId(localFriendId);
+//				}
+//			}
 		}
 		mMoneyTransferEditor = moneyTransfer.newModelEditor();
 		
