@@ -102,6 +102,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
+			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+			if(moneyAccountId != null){
+				moneyExpenseContainer.setMoneyAccountId(moneyAccountId);
+			}
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyExpenseContainer.setMoneyIncomeId(intent.getStringExtra("counterpartId"));
 			}
@@ -178,7 +182,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
+		if(moneyExpenseContainer.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyExpenseContainer.getProject();
@@ -231,9 +235,18 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 
 		Friend friend;
-		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-		if(friendUserId != null){
-			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+		if(moneyExpenseContainer.get_mId() == null){
+			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			if(friendUserId != null){
+				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+				if(localFriendId != null){
+					friend = HyjModel.getModel(Friend.class, localFriendId);
+				} else {
+					friend = moneyExpenseContainer.getFriend();
+				}
+			}
 		}else{
 			friend = moneyExpenseContainer.getFriend();
 		}

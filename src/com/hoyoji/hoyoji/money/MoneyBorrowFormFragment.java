@@ -90,6 +90,10 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyBorrow.hasEditPermission();
 		} else {
 			moneyBorrow = new MoneyBorrow();
+			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+			if(moneyAccountId != null){
+				moneyBorrow.setMoneyAccountId(moneyAccountId);
+			}	
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyBorrow.setMoneyLendId(intent.getStringExtra("counterpartId"));
 			}
@@ -126,7 +130,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		
 		MoneyAccount moneyAccount = moneyBorrow.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyBorrowFormFragment_selectorField_moneyAccount);
-		
+
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
 			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
@@ -142,7 +146,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
+		if(moneyBorrow.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyBorrow.getProject();
@@ -168,9 +172,18 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyBorrowFormFragment_linearLayout_exchangeRate);
 		
 		Friend friend;
-		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-		if(friendUserId != null){
-			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+		if(moneyBorrow.get_mId() == null){
+			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			if(friendUserId != null){
+				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+				if(localFriendId != null){
+					friend = HyjModel.getModel(Friend.class, localFriendId);
+				} else {
+					friend = moneyBorrow.getFriend();
+				}
+			}
 		}else{
 			friend = moneyBorrow.getFriend();
 		}

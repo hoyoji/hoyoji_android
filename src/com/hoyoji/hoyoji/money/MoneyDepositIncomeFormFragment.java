@@ -93,6 +93,11 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 			moneyIncome = new MoneyIncome();
 			moneyIncome.setIncomeType("Deposit");
 			moneyIncome.setMoneyIncomeCategory("充值收入");
+
+			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+			if(moneyAccountId != null){
+				moneyIncome.setMoneyAccountId(moneyAccountId);
+			}
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyIncome.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
 			}
@@ -124,7 +129,7 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 		
 		MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_selectorField_moneyAccount);
-		
+
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
 			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
@@ -141,7 +146,7 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
+		if(moneyIncome.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyIncome.getProject();
@@ -186,10 +191,19 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 //		});
 		
 		Friend friend;
-		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-		if(friendUserId != null){
-			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-		}else{
+		if(moneyIncome.get_mId() == null){
+			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			if(friendUserId != null){
+				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+				if(localFriendId != null){
+					friend = HyjModel.getModel(Friend.class, localFriendId);
+				} else {
+					friend = moneyIncome.getFriend();
+				}
+			}
+		} else {
 			friend = moneyIncome.getFriend();
 		}
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeFormFragment_selectorField_friend);

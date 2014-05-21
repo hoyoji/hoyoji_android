@@ -108,6 +108,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncomeContainer.hasEditPermission();
 		} else {
 			moneyIncomeContainer = new MoneyIncomeContainer();
+			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+			if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
+				moneyIncomeContainer.setMoneyAccountId(moneyAccountId);
+			}
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyIncomeContainer.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
 			}
@@ -160,7 +164,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		MoneyAccount moneyAccount = moneyIncomeContainer.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
-		
+
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
 			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
@@ -221,10 +225,19 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		});
 		
 		Friend friend;
-		String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-		if(friendUserId != null){
-			friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-		}else{
+		if(moneyIncomeContainer.get_mId() == null){
+			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			if(friendUserId != null){
+				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+				if(localFriendId != null){
+					friend = HyjModel.getModel(Friend.class, localFriendId);
+				} else {
+					friend = moneyIncomeContainer.getFriend();
+				}
+			}
+		} else {
 			friend = moneyIncomeContainer.getFriend();
 		}
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_friend);

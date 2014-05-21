@@ -92,7 +92,22 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			moneyTransfer =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyTransfer = new MoneyTransfer();
-			
+			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+			if(moneyAccountId != null){
+				moneyTransfer.setTransferInId(moneyAccountId);
+				moneyTransfer.setTransferOutId(moneyAccountId);
+			}	
+			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			if(friendUserId != null){
+				moneyTransfer.setTransferInFriendUserId(friendUserId);
+				moneyTransfer.setTransferOutFriendUserId(friendUserId);
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+				if(localFriendId != null){
+					moneyTransfer.setTransferInLocalFriendId(localFriendId);
+					moneyTransfer.setTransferOutLocalFriendId(localFriendId);
+				}
+			}
 		}
 		mMoneyTransferEditor = moneyTransfer.newModelEditor();
 		
@@ -165,9 +180,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mViewSeparatorTransferOut = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferOut);
 		
-		
 		MoneyAccount transferOut = moneyTransfer.getTransferOut();
 		mSelectorFieldTransferOut = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_transferOut);
+
 		if(transferOut != null){
 			mSelectorFieldTransferOut.setModelId(transferOut.getId());
 			mSelectorFieldTransferOut.setText(transferOut.getName() + "(" + transferOut.getCurrencyId() + ")");
@@ -215,6 +230,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		MoneyAccount transferIn = moneyTransfer.getTransferIn();
 		mSelectorFieldTransferIn = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_transferIn);
+
 		if(transferIn != null){
 			mSelectorFieldTransferIn.setModelId(transferIn.getId());
 			mSelectorFieldTransferIn.setText(transferIn.getName() + "(" + transferIn.getCurrencyId() + ")");
@@ -235,7 +251,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mViewSeparatorTransferInAmount = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferInamount);
 		
-		Project project = moneyTransfer.getProject();
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(moneyTransfer.get_mId() == null && projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyTransfer.getProject();
+		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_project);
 		
 		if(project != null){
@@ -248,7 +270,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				MoneyTransferFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
-		
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyTransfer.getExchangeRate());
