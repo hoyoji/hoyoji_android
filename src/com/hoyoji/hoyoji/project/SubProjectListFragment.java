@@ -168,7 +168,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("project_id", id);
-			openActivityWithFragment(MoneySearchListFragment.class, R.string.projectListFragment_view_transactions, bundle);
+			openActivityWithFragment(ProjectMoneySearchListFragment.class, R.string.projectListFragment_view_transactions, bundle);
 		}
     }  
 

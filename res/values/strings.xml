@@ -6,6 +6,8 @@
     <string name="app_please_select">请选择</string>
     
     <string name="app_action_more">更多</string>
+    <string name="app_action_member">成员</string>
+    <string name="app_action_edit">修改</string>
     <string name="app_action_search">查找</string>
     <string name="app_action_save">保存</string>
     <string name="app_action_remove">移除</string>
