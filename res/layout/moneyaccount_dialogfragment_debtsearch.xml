@@ -81,14 +81,14 @@
         hyj:labelText="@string/searchDialogFragment_spinnerField_displayType" >
     </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
     
-    
+    <!-- 
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray" /> -->
 
         <Button
             android:id="@id/button_save"

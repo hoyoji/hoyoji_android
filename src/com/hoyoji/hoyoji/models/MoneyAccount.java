@@ -127,10 +127,12 @@ public class MoneyAccount extends HyjModel {
 		String debtAccountName = "__ANONYMOUS__";
 		String friendId = null;
 		if(friend != null){
+			// 如果是本地好友，我们将MoneyAccount.friendId设为该好友的Id
 			if(friend.getFriendUserId() == null){
 				friendId = friend.getId();
 				debtAccountName = null;
 			}else{
+				//如果是网络好友，我们将MoneyAccount.name设为该好友的用户ID
 				debtAccountName = friend.getFriendUserId();
 			}
 		}
