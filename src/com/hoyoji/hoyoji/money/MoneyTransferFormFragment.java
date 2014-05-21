@@ -96,7 +96,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			if(moneyAccountId != null){
 				moneyTransfer.setTransferInId(moneyAccountId);
 				moneyTransfer.setTransferOutId(moneyAccountId);
-			}	
+			}
 			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
 			if(friendUserId != null){
 				moneyTransfer.setTransferInFriendUserId(friendUserId);
