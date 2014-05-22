@@ -27,6 +27,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
@@ -45,6 +46,7 @@ import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 
 public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	private static final int GET_SEARCH_QUERY = 0;
@@ -164,9 +166,9 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		Bundle queryParams = buildQueryParams();
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			openActivityWithFragmentForResult(MoneySearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
-			
 			return true;
 		}
+		
 		// Handle your other action bar items...
 		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class,
