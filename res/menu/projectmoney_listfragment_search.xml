@@ -1,16 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
             
-    	<item
-        android:id="@+id/searchListFragment_action_group"
-        android:title="@string/app_action_member"
-        android:icon="@drawable/ic_action_group"
-        hoyoji:showAsAction="always"/>
-    	<item
-        android:id="@+id/searchListFragment_action_edit"
-        android:title="@string/app_action_edit"
-        android:icon="@drawable/ic_action_edit"
-        hoyoji:showAsAction="always"/>
+    	
     	<item
         android:id="@+id/searchListFragment_action_search"
         android:title="@string/app_action_search"
@@ -77,13 +68,25 @@
     </item>
     	
     
-    <!-- <item
+    <item
         android:id="@+id/searchListFragment_action_more"
         android:title="@string/homeListFragment_action_more"
         android:icon="@drawable/ic_action_overflow"
         hoyoji:showAsAction="always">
         <menu>
-            <item
+            
+    	<item
+        android:id="@+id/searchListFragment_action_member"
+        android:title="@string/app_action_member"
+        android:icon="@drawable/ic_action_group"
+        hoyoji:showAsAction="always"/>
+    	<item
+        android:id="@+id/searchListFragment_action_edit"
+        android:title="@string/app_action_edit"
+        android:icon="@drawable/ic_action_edit"
+        hoyoji:showAsAction="always"/>
+    	
+        <!--     <item
                 android:id="@+id/searchListFragment_action_display_transaction_type_personal"
                 android:title="@string/homeListFragment_action_display_transaction_type_personal"
                 hoyoji:showAsAction="never"/>
@@ -91,7 +94,7 @@
                 android:id="@+id/searchListFragment_action_display_transaction_type_project"
                 android:title="@string/homeListFragment_action_display_transaction_type_project"
                 hoyoji:showAsAction="never"/>
-        </menu>
+         -->
+         </menu>
 	</item>
- -->
-</menu>
+ </menu>
