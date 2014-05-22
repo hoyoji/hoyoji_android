@@ -77,7 +77,7 @@
             
     	<item
         android:id="@+id/searchListFragment_action_member"
-        android:title="@string/app_action_member"
+        android:title="@string/memberListFragment_title"
         android:icon="@drawable/ic_action_group"
         hoyoji:showAsAction="always"/>
     	<item

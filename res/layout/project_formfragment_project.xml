@@ -108,13 +108,13 @@
 	    android:layout_height="wrap_content"
 	    android:text="@string/app_action_save" />
 	
-        <Button
+       <!--  <Button
             android:id="@+id/projectFormFragment_button_member"
             android:layout_width="match_parent"
     		android:layout_marginTop="5dip"
             android:layout_height="wrap_content"
     		android:layout_marginBottom="5dip"
-            android:text="@string/memberListFragment_title" />
+            android:text="@string/memberListFragment_title" /> -->
         
 </LinearLayout>
 </ScrollView>

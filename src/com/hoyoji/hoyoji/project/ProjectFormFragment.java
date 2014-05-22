@@ -101,21 +101,21 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		}
 		mProjectEditor = project.newModelEditor();
 
-		View buttonMember = getView().findViewById(
-				R.id.projectFormFragment_button_member);
-		if (modelId == -1) {
-			buttonMember.setVisibility(View.GONE);
-		} else {
-			buttonMember.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Bundle bundle = new Bundle();
-					bundle.putLong("MODEL_ID", modelId);
-					openActivityWithFragment(MemberListFragment.class,
-							R.string.memberListFragment_title, bundle);
-				}
-			});
-		}
+//		View buttonMember = getView().findViewById(
+//				R.id.projectFormFragment_button_member);
+//		if (modelId == -1) {
+//			buttonMember.setVisibility(View.GONE);
+//		} else {
+//			buttonMember.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					Bundle bundle = new Bundle();
+//					bundle.putLong("MODEL_ID", modelId);
+//					openActivityWithFragment(MemberListFragment.class,
+//							R.string.memberListFragment_title, bundle);
+//				}
+//			});
+//		}
 
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(
 				R.id.projectFormFragment_textField_projectName);
