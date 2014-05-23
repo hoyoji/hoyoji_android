@@ -929,9 +929,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						apportion.delete();
 						
 					} else {
-						 if(api.getState() != ApportionItem.UNCHANGED) {
+						if(api.getState() != ApportionItem.UNCHANGED) {
 								api.saveToCopy(apportionEditor.getModelCopy());
-							 }
+						}
 						Double oldRate = mMoneyIncomeContainerEditor.getModel().getExchangeRate(); 
 						Double rate = mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate();
 						Double oldApportionAmount = apportionEditor.getModel().getAmount0();
@@ -1032,7 +1032,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								if(apportion.get_mId() == null){
 									moneyBorrow = new MoneyBorrow();
 								} else {
-									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyBorrowApportionId", apportion.getId()).executeSingle();
+									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId", apportion.getId()).executeSingle();
 								}
 								moneyBorrow.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());

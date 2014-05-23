@@ -61,6 +61,9 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "moneyIncomeApportionId")
 	private String mMoneyIncomeApportionId;
 	
+	@Column(name = "moneyExpenseApportionId")
+	private String mMoneyExpenseApportionId;
+	
 	@Column(name = "remark")
 	private String mRemark;
 
@@ -527,5 +530,13 @@ public class MoneyBorrow extends HyjModel{
 			return null;
 		}
 		return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
+	}
+
+	public void setMoneyExpenseApportionId(String id) {
+		this.mMoneyExpenseApportionId = id;
+	}
+	
+	public String getMoneyExpenseApportionId() {
+		return this.mMoneyExpenseApportionId;
 	}
 }
