@@ -521,7 +521,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												oldProjectShareAuthorizationEditor.save();
 											}
 											
-											if(moneyExpenseAportion.getFriendUserId().equals(moneyExpenseContainer.getOwnerUserId())){
+											if(moneyExpenseAportion.getFriendUserId() != null && moneyExpenseAportion.getFriendUserId().equals(moneyExpenseContainer.getOwnerUserId())){
 												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId()).executeSingle();
 												if(moneyExpense != null){
 													moneyExpense.delete();
@@ -531,11 +531,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												if(moneyLend != null){
 													moneyLend.delete();
 												} 
-												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId(), moneyExpenseAportion.getFriendUserId()).executeSingle();
+												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId()).executeSingle();
 												if(moneyBorrow != null){
 													moneyBorrow.delete();
 												} 
-												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId(), moneyExpenseAportion.getFriendUserId()).executeSingle();
+												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId()).executeSingle();
 												if(moneyExpense != null){
 													moneyExpense.delete();
 												} 
