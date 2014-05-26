@@ -974,7 +974,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					if(apportion.get_mId() == null){
 						moneyExpense = new MoneyExpense();
 					} else {
-						moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
+						moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
 					}
 					moneyExpense.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 					moneyExpense.setAmount(apportionEditor.getModelCopy().getAmount0());
