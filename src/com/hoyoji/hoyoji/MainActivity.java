@@ -766,7 +766,9 @@ public class MainActivity extends HyjUserActivity {
 										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
 									}
 								} else if(model instanceof MoneyLend){
-									recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+									if(((MoneyLend)model).getMoneyAccount() != null){
+										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+									}
 								} else if(model instanceof MoneyPayback){
 									recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyReturn){
