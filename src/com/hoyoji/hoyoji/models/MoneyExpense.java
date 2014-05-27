@@ -519,4 +519,11 @@ public class MoneyExpense extends HyjModel{
 	public String getMoneyExpenseApportionId() {
 		return mMoneyExpenseApportionId;
 	}
+
+	public MoneyExpenseApportion getMoneyExpenseApportion() {
+		if(mMoneyExpenseApportionId == null){
+			return null;
+		}
+		return HyjModel.getModel(MoneyExpenseApportion.class, mMoneyExpenseApportionId);
+	}
 }

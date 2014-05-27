@@ -756,6 +756,8 @@ public class MainActivity extends HyjUserActivity {
 								} else if(model instanceof MoneyExpense){
 									if(((MoneyExpense)model).getMoneyAccount() != null){
 										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+									} else {
+										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
 									}
 								} else if(model instanceof MoneyIncome){
 									if(((MoneyIncome)model).getMoneyAccount() != null){
@@ -764,11 +766,20 @@ public class MainActivity extends HyjUserActivity {
 								} else if(model instanceof MoneyBorrow){
 									if(((MoneyBorrow)model).getMoneyAccount() != null){
 										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
+									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
 									}
 								} else if(model instanceof MoneyLend){
 									if(((MoneyLend)model).getMoneyAccount() != null){
 										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
 									}
+//									else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
+//									}
 								} else if(model instanceof MoneyPayback){
 									if(((MoneyPayback)model).getMoneyAccount() != null){
 										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
@@ -821,27 +832,30 @@ public class MainActivity extends HyjUserActivity {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
 							String lastUploadTime = jsonResult.optString("lastUploadTime");
-
-							try {
-								ActiveAndroid.beginTransaction();
-								for (ClientSyncRecord syncRec : syncRecords) {
-									if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
-										HyjModel model = getModel(syncRec.getTableName(),
-												syncRec.getId());
-										model.setSyncFromServer(true);
-										model.setLastServerUpdateTime(lastUploadTime);
-										model.save();
-									} 
+							if(lastUploadTime != null){
+								try {
+									ActiveAndroid.beginTransaction();
+									for (ClientSyncRecord syncRec : syncRecords) {
+										if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
+											HyjModel model = getModel(syncRec.getTableName(),
+													syncRec.getId());
+											model.setSyncFromServer(true);
+											model.setLastServerUpdateTime(lastUploadTime);
+											model.save();
+										} 
+									}
+									ActiveAndroid.setTransactionSuccessful();
+									ActiveAndroid.endTransaction();
+									return true;
+								} catch (Exception e) {
+									ActiveAndroid.endTransaction();
+									rollbackUpload(syncRecords);
+									return "上传数据失败";
 								}
-								ActiveAndroid.setTransactionSuccessful();
-								ActiveAndroid.endTransaction();
-								return true;
-							} catch (Exception e) {
-								ActiveAndroid.endTransaction();
+							} else {
 								rollbackUpload(syncRecords);
 								return "上传数据失败";
 							}
-							
 						} else {
 							rollbackUpload(syncRecords);
 							return jsonResult.optJSONObject("__summary")

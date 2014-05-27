@@ -541,4 +541,10 @@ public class MoneyBorrow extends HyjModel{
 	public String getMoneyExpenseApportionId() {
 		return this.mMoneyExpenseApportionId;
 	}
+	public MoneyExpenseApportion getMoneyExpenseApportion() {
+		if(this.mMoneyExpenseApportionId == null){
+			return null;
+		}
+		return HyjModel.getModel(MoneyExpenseApportion.class, this.mMoneyExpenseApportionId);
+	}
 }

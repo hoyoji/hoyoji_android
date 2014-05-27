@@ -731,43 +731,43 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 					saveApportions();
 
-					MoneyExpenseContainer oldMoneyExpenseModel = mMoneyExpenseContainerEditor.getModel();
-					MoneyExpenseContainer moneyExpenseModel = mMoneyExpenseContainerEditor.getModelCopy();
+					MoneyExpenseContainer oldMoneyExpenseContainerModel = mMoneyExpenseContainerEditor.getModel();
+					MoneyExpenseContainer moneyExpenseContainerModel = mMoneyExpenseContainerEditor.getModelCopy();
 					
 					//设置默认项目和账户
 					UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-					if(moneyExpenseModel.get_mId() == null 
-							&& !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) 
-							|| !userData.getActiveProjectId().equals(moneyExpenseModel.getProjectId())){
+					if(moneyExpenseContainerModel.get_mId() == null 
+							&& !userData.getActiveMoneyAccountId().equals(moneyExpenseContainerModel.getMoneyAccountId()) 
+							|| !userData.getActiveProjectId().equals(moneyExpenseContainerModel.getProjectId())){
 						HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-						userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseModel.getMoneyAccountId());
-						userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseModel.getProjectId());
+						userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseContainerModel.getMoneyAccountId());
+						userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseContainerModel.getProjectId());
 						userDataEditor.save();
 					}
 					
 					// 更新项目的默认分类
-					if(moneyExpenseModel.get_mId() == null){
-						HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
-						projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
-						projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseModel.getMoneyExpenseCategoryMain());
+					if(moneyExpenseContainerModel.get_mId() == null){
+						HyjModelEditor<Project> projectEditor = moneyExpenseContainerModel.getProject().newModelEditor();
+						projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseContainerModel.getMoneyExpenseCategory());
+						projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseContainerModel.getMoneyExpenseCategoryMain());
 						projectEditor.save();
 					}
 					
 					//当前汇率不存在时，创建汇率
-					String localCurrencyId = moneyExpenseModel.getMoneyAccount().getCurrencyId();
-					String foreignCurrencyId = moneyExpenseModel.getProject().getCurrencyId();
+					String localCurrencyId = moneyExpenseContainerModel.getMoneyAccount().getCurrencyId();
+					String foreignCurrencyId = moneyExpenseContainerModel.getProject().getCurrencyId();
 					if(CREATE_EXCHANGE == 1){
-						MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
-						Project project = moneyExpenseModel.getProject();
+						MoneyAccount moneyAccount = moneyExpenseContainerModel.getMoneyAccount();
+						Project project = moneyExpenseContainerModel.getProject();
 						
 						Exchange newExchange = new Exchange();
 						newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
 						newExchange.setForeignCurrencyId(project.getCurrencyId());
-						newExchange.setRate(moneyExpenseModel.getExchangeRate());
+						newExchange.setRate(moneyExpenseContainerModel.getExchangeRate());
 						newExchange.save();
 					}else if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
 						Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-						Double rate = HyjUtil.toFixed2(moneyExpenseModel.getExchangeRate());
+						Double rate = HyjUtil.toFixed2(moneyExpenseContainerModel.getExchangeRate());
 						if(exchange != null){
 							if(exchange.getRate() != rate){
 								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
@@ -785,17 +785,17 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 //						}
 					}
 					
-					    MoneyAccount oldMoneyAccount = oldMoneyExpenseModel.getMoneyAccount();
-						MoneyAccount newMoneyAccount = moneyExpenseModel.getMoneyAccount();
+					    MoneyAccount oldMoneyAccount = oldMoneyExpenseContainerModel.getMoneyAccount();
+						MoneyAccount newMoneyAccount = moneyExpenseContainerModel.getMoneyAccount();
 						HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 						
 						//更新账户余额
-						if(moneyExpenseModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0() - moneyExpenseModel.getAmount0());
+						if(moneyExpenseContainerModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyExpenseContainerModel.getAmount0() - moneyExpenseContainerModel.getAmount0());
 						}else{
 							HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-							oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyExpenseModel.getAmount0());
-							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseModel.getAmount0());
+							oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyExpenseContainerModel.getAmount0());
+							newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyExpenseContainerModel.getAmount0());
 							oldMoneyAccountEditor.save();
 						}
 						newMoneyAccountEditor.save();
@@ -805,16 +805,16 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						ProjectShareAuthorization selfProjectAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
 						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 					    
-						if(moneyExpenseModel.get_mId() == null || oldMoneyExpenseModel.getProjectId().equals(moneyExpenseModel.getProjectId())){
+						if(moneyExpenseContainerModel.get_mId() == null || oldMoneyExpenseContainerModel.getProjectId().equals(moneyExpenseContainerModel.getProjectId())){
 						    // 无旧项目可更新
-							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 							
 						} else {
-							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 								
 							ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate());
+							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
 							oldSelfProjectAuthorizationEditor.save();
 						
 						}

@@ -132,9 +132,12 @@ public class Message extends HyjModel {
 	}
 
 	private String getUserDisplayName(String friendUserId, String fromOrToUserDisplayName){
+		if(friendUserId == null){
+			return "";
+		}
 		if(friendUserId.equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return HyjApplication.getInstance().getApplicationContext().getString(R.string.messageListItem_user_self);
-			}
+		}
 		Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
 		if(friend != null){
 			return friend.getDisplayName();
