@@ -1029,6 +1029,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								 // 无旧项目可更新
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 								projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+								if(!apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(projectShareAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+									projectShareAuthorizationEditor.save();
+									
+									projectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
+									projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectShareAuthorization.getActualTotalBorrow() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+									projectShareAuthorizationEditor.save();
+								} else {
+									projectShareAuthorizationEditor.save();
+								}
+							
 							}else{
 								//更新新项目分摊支出
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
