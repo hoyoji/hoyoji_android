@@ -257,9 +257,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			mSelectorFieldFriend.setModelId(friend.getId());
 			mSelectorFieldFriend.setText(friend.getDisplayName());
 		}
-		
-		
-		
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -794,14 +791,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								exchangModelEditor.save();
 							}
 						}
-//						else{
-//							exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-//							if(exchange.getRate() != 1/rate){
-//								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-//								exchangModelEditor.getModelCopy().setRate(1/rate);
-//								exchangModelEditor.save();
-//							}
-//						}
 					}
 					
 				    MoneyAccount oldMoneyAccount = oldMoneyExpenseContainerModel.getMoneyAccount();
@@ -964,16 +953,30 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					moneyLend.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
 					moneyLend.save();
 
-					// 更新旧项目分摊支出
-					ProjectShareAuthorization newProjectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
-					HyjModelEditor<ProjectShareAuthorization> newProjectShareAuthorizationEditor = newProjectShareAuthorization.newModelEditor();
-					newProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(newProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() + (apportionEditor.getModelCopy().getAmount0() * mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate()));
-					newProjectShareAuthorizationEditor.save();
-					
+					if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
+							mMoneyExpenseContainerEditor.getModel().getProjectId().equals(mMoneyExpenseContainerEditor.getModelCopy().getProjectId())){
+						// 更新新项目分摊支出
+						ProjectShareAuthorization newProjectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
+						HyjModelEditor<ProjectShareAuthorization> newProjectShareAuthorizationEditor = newProjectShareAuthorization.newModelEditor();
+						newProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(newProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend()  - (apportionEditor.getModel().getAmount0() * mMoneyExpenseContainerEditor.getModel().getExchangeRate()) + (apportionEditor.getModelCopy().getAmount0() * mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate()));
+						newProjectShareAuthorizationEditor.save();
+					} else {
+						ProjectShareAuthorization oldProjectShareAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
+						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+						oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportionEditor.getModel().getAmount0() * mMoneyExpenseContainerEditor.getModel().getExchangeRate()));
+						oldProjectShareAuthorizationEditor.save();
+						
+						// 更新新项目分摊支出
+						ProjectShareAuthorization newProjectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
+						HyjModelEditor<ProjectShareAuthorization> newProjectShareAuthorizationEditor = newProjectShareAuthorization.newModelEditor();
+						newProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(newProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() + (apportionEditor.getModelCopy().getAmount0() * mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate()));
+						newProjectShareAuthorizationEditor.save();
+					}
+						
+						
 					if(api.getState() != ApportionItem.UNCHANGED
 							|| !mMoneyExpenseContainerEditor.getModelCopy().getProjectId().equals(mMoneyExpenseContainerEditor.getModel().getProjectId())
 							|| !mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseContainerEditor.getModel().getMoneyAccountId())) {
-						
 						apportionEditor.save();
 					}
 					savedCount++;

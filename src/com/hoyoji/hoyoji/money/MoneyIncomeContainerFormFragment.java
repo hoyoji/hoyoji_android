@@ -116,7 +116,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyIncomeContainer.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
 			}
 		}
-//		mMoneyIncomeEditor = moneyIncome.newModelEditor();
+		
 		mMoneyIncomeContainerEditor = new MoneyIncomeContainerEditor(moneyIncomeContainer);
 		
 		setupDeleteButton(mMoneyIncomeContainerEditor);
@@ -201,7 +201,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyIncomeContainer.getExchangeRate());
-		//mNumericExchangeRate.setVisibility(View.GONE);
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyIncomeFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyIncomeFormFragment_linearLayout_exchangeRate);
@@ -499,42 +498,69 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 											ProjectShareAuthorization oldProjectShareAuthorization;
 											
 											// 非项目好友不用更新项目分摊
-											if(moneyIncomeAportion.getFriendUserId() != null){
-												if(moneyIncomeAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-													// 更新旧项目的分摊收入
-													oldProjectShareAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
-												} else {
-													// 更新旧项目分摊收入
-													oldProjectShareAuthorization = moneyIncomeAportion.getProjectShareAuthorization();
-												}
-												
-												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-												oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
-												oldProjectShareAuthorizationEditor.save();
-											}
-											
-											if(moneyIncomeAportion.getFriendUserId().equals(moneyIncomeContainer.getOwnerUserId())){
-												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
-												if(moneyIncome != null){
-													moneyIncome.delete();
-												}
-											} else {
+											if(moneyIncomeAportion.getFriendUserId() == null){
 												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
 												if(moneyBorrow != null){
 													moneyBorrow.delete();
 												} 
+												// 更新旧项目分摊支出
+												oldProjectShareAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+												oldProjectShareAuthorizationEditor.save();
+											} else {
+												if(moneyIncomeAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+													// 更新旧项目的分摊支出
+													oldProjectShareAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+													HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+													oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													oldProjectShareAuthorizationEditor.save();
+													
+													MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
+													if(moneyIncome != null){
+														moneyIncome.delete();
+													}
+												} else {
+													// 更新旧项目分摊收入// 更新旧项目分摊支出
+													oldProjectShareAuthorization = moneyIncomeAportion.getProjectShareAuthorization();
+													HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+													
+													oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
+													if(moneyIncome != null){
+														moneyIncome.delete();
+													} 
+												
+													oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
+													if(moneyLend != null){
+														moneyLend.delete();
+													} 
+													oldProjectShareAuthorizationEditor.save();
+													
+													oldProjectShareAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+													oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+													oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (moneyIncomeAportion.getAmount0() * moneyIncomeAportion.getMoneyIncomeContainer().getExchangeRate()));
+													oldProjectShareAuthorizationEditor.save();
+													MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeAportion.getId()).executeSingle();
+													if(moneyBorrow != null){
+														moneyBorrow.delete();
+													} 
+												}
 											}
 											
 											moneyIncomeAportion.delete();
 										}
-										
+										/*
 										//更新支出所有者的实际支出
 										MoneyIncomeContainer oldMoneyIncomeContainerModel = moneyIncomeContainerEditor.getModelCopy();
 										ProjectShareAuthorization oldSelfProjectAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
 										HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
 										oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalIncome(oldSelfProjectAuthorization.getActualTotalIncome() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate());
 										oldSelfProjectAuthorizationEditor.save();
-										
+										*/
 										moneyIncomeContainer.delete();
 										moneyAccountEditor.save();
 
@@ -760,6 +786,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 
+					/*
 					//更新支出所有者的实际收入
 					ProjectShareAuthorization selfProjectAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
@@ -775,7 +802,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						oldSelfProjectAuthorizationEditor.save();
 					}
 					selfProjectAuthorizationEditor.save();
-			
+					 */
+					
 					//更新分类，使之成为最近使用过的
 					if(this.mSelectorFieldMoneyIncomeCategory.getModelId() != null){
 						MoneyIncomeCategory category = HyjModel.getModel(MoneyIncomeCategory.class, this.mSelectorFieldMoneyIncomeCategory.getModelId());
@@ -835,9 +863,16 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						if(moneyBorrow != null){
 							moneyBorrow.delete();
 						} 
+						// 更新旧项目分摊支出
+						ProjectShareAuthorization oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+						oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+						oldProjectShareAuthorizationEditor.save();
 						apportion.delete();
 					} else {
-						if(api.getState() != ApportionItem.UNCHANGED) {
+						if(api.getState() != ApportionItem.UNCHANGED		
+								|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+								|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
 							api.saveToCopy(apportionEditor.getModelCopy());
 						}
 						
@@ -892,7 +927,30 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						moneyBorrow.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
 						moneyBorrow.save();
 						
-						if(api.getState() != ApportionItem.UNCHANGED) {
+						if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
+								mMoneyIncomeContainerEditor.getModel().getProjectId().equals(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
+							// 更新新项目分摊支出
+							ProjectShareAuthorization newProjectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
+							HyjModelEditor<ProjectShareAuthorization> newProjectShareAuthorizationEditor = newProjectShareAuthorization.newModelEditor();
+							newProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(newProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow()  - (apportionEditor.getModel().getAmount0() * mMoneyIncomeContainerEditor.getModel().getExchangeRate()) + (apportionEditor.getModelCopy().getAmount0() * mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate()));
+							newProjectShareAuthorizationEditor.save();
+						} else {
+							ProjectShareAuthorization oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+							HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportionEditor.getModel().getAmount0() * mMoneyIncomeContainerEditor.getModel().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.save();
+							
+							// 更新新项目分摊支出
+							ProjectShareAuthorization newProjectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
+							HyjModelEditor<ProjectShareAuthorization> newProjectShareAuthorizationEditor = newProjectShareAuthorization.newModelEditor();
+							newProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(newProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() + (apportionEditor.getModelCopy().getAmount0() * mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate()));
+							newProjectShareAuthorizationEditor.save();
+						}
+						
+						
+						if(api.getState() != ApportionItem.UNCHANGED
+								|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+								|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
 							apportionEditor.save();
 						}
 						savedCount++;
@@ -903,34 +961,53 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						ProjectShareAuthorization oldProjectShareAuthorization;
 						
 						if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							// 更新旧项目的分摊收入
+							// 更新旧项目的分摊支出
 							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
-						} else {
-							// 更新旧项目分摊收入
-							oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
-						}
-						
-						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-						oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
-						oldProjectShareAuthorizationEditor.save();
-						
-						if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+							oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.save();
+							
 							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 							if(moneyIncome != null){
 								moneyIncome.delete();
 							}
 						} else {
+							// 更新旧项目分摊支出
+							oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
+							HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+							
+							oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+							if(moneyIncome != null){
+								moneyIncome.delete();
+							}
+						
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+							if(moneyLend != null){
+								moneyLend.delete();
+							} 
+							oldProjectShareAuthorizationEditor.save();
+							
+							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+							oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.save();
 							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 							if(moneyBorrow != null){
 								moneyBorrow.delete();
-							} 
+							}
 						}
 						
 						apportion.delete();
 						
 					} else {
-						if(api.getState() != ApportionItem.UNCHANGED) {
-								api.saveToCopy(apportionEditor.getModelCopy());
+						if(api.getState() != ApportionItem.UNCHANGED
+							|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+							|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
+							api.saveToCopy(apportionEditor.getModelCopy());
 						}
 						Double oldRate = mMoneyIncomeContainerEditor.getModel().getExchangeRate(); 
 						Double rate = mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate();
@@ -951,10 +1028,23 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									mMoneyIncomeContainerEditor.getModel().getProjectId().equals(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
 								 // 无旧项目可更新
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+								projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 							}else{
 								//更新新项目分摊支出
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
-
+								projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
+								if(!apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(projectShareAuthorization.getActualTotalLend() + (apportionEditor.getModelCopy().getAmount0() * rate));
+									projectShareAuthorizationEditor.save();
+										
+									projectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
+									projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectShareAuthorization.getActualTotalBorrow() + (apportionEditor.getModelCopy().getAmount0() * rate));
+									projectShareAuthorizationEditor.save();
+								} else {
+									projectShareAuthorizationEditor.save();
+								}
+								
 								//更新老项目分摊支出
 								ProjectShareAuthorization oldProjectAuthorization;
 
@@ -968,10 +1058,20 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								if(oldProjectAuthorization != null){
 									HyjModelEditor<ProjectShareAuthorization> oldProjectAuthorizationEditor = oldProjectAuthorization.newModelEditor();
 									oldProjectAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate));
-									oldProjectAuthorizationEditor.save();
+									oldProjectAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectAuthorization.getActualTotalIncome() - (oldApportionAmount * oldRate));
+									if(!apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+										oldProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate));
+										oldProjectAuthorizationEditor.save();
+
+										oldProjectAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+										oldProjectAuthorizationEditor = oldProjectAuthorization.newModelEditor();
+										oldProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectAuthorization.getActualTotalBorrow() - (oldApportionAmount * oldRate));
+										oldProjectAuthorizationEditor.save();
+									} else {
+										oldProjectAuthorizationEditor.save();
+									}
 								}
 							}
-							projectShareAuthorizationEditor.save();
 							
 							//更新相关好友的借贷账户
 							if(!apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -1049,12 +1149,60 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyBorrow.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyBorrow.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
 								moneyBorrow.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
-								
 								moneyBorrow.save();
+							
+								MoneyLend moneyLend = null;
+								if(apportion.get_mId() == null){
+									moneyLend = new MoneyLend();
+								} else {
+									moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+								}
+								moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
+								moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
+								moneyLend.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
+								moneyLend.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
+								moneyLend.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
+								moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyLend.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
+								moneyLend.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
+								moneyLend.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
+								moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+								moneyLend.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+								moneyLend.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
+								moneyLend.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
+								moneyLend.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
+								moneyLend.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyLend.save();
+								
+								MoneyIncome moneyIncome = null;
+								if(apportion.get_mId() == null){
+									moneyIncome = new MoneyIncome();
+								} else {
+									moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+								}
+								moneyIncome.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
+								moneyIncome.setAmount(apportionEditor.getModelCopy().getAmount0());
+								moneyIncome.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
+								moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
+								moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
+								moneyIncome.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+								moneyIncome.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
+								moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
+								moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
+								moneyIncome.setLocalFriendId(null);
+								moneyIncome.setMoneyAccountId(null);
+								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
+								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
+								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
+								moneyIncome.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyIncome.save();
 							}
 							
 							
-							 if(api.getState() != ApportionItem.UNCHANGED) {
+							 if(api.getState() != ApportionItem.UNCHANGED
+										|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+										|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
 									apportionEditor.save();
 								 }
 								savedCount++;
@@ -1062,6 +1210,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 				}
 			}
+			
 			// 从隐藏掉的分摊里面删除原来的分摊
 			Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions.getHiddenApportions().iterator();
 			while (it.hasNext()) {
@@ -1071,20 +1220,32 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					MoneyIncomeApportion apportion = ((MoneyIncomeApportion) item.getApportion());
 					
 					ProjectShareAuthorization oldProjectShareAuthorization;
+					if(apportion.getFriendUserId() != null){
+						if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							// 更新旧项目的分摊支出
+							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+						} else {
+							// 更新旧项目分摊支出
+							oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
+						}
+						
+						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+						oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+						oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+						if(!apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.save();
 					
-					if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-						// 更新旧项目的分摊支出
-						oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
-					} else {
-						// 更新旧项目分摊支出
-						oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
+							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
+							oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
+							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+							oldProjectShareAuthorizationEditor.save();
+						} else {
+							oldProjectShareAuthorizationEditor.save();
+						}
 					}
 					
-					HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-					oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
-					oldProjectShareAuthorizationEditor.save();
-
-					if(apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					if(apportion.getFriendUserId() != null && apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 						MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 						if(moneyIncome != null){
 							moneyIncome.delete();
@@ -1094,9 +1255,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						if(moneyBorrow != null){
 							moneyBorrow.delete();
 						} 
+						if(apportion.getFriendUserId() != null){
+							MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+							if(moneyLend != null){
+								moneyLend.delete();
+							} 
+							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+							if(moneyIncome != null){
+								moneyIncome.delete();
+							} 
+						}
 					}
-					
-					apportion.delete();
+				apportion.delete();
 				}
 			}
 			
@@ -1113,7 +1283,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						mMoneyIncomeContainerEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
 				HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 				projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() + (apportion.getAmount0() * mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate()));
-				
+				projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorizationEditor.getModelCopy().getActualTotalIncome() + (apportion.getAmount0() * mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate()));
 				projectShareAuthorizationEditor.save();
 				
 				MoneyIncome moneyIncome = null;
