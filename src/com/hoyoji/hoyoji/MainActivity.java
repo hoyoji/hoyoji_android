@@ -27,6 +27,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -214,7 +215,6 @@ public class MainActivity extends HyjUserActivity {
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(4);
 		mViewPager.setCurrentItem(2, false);
-
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
@@ -225,27 +225,27 @@ public class MainActivity extends HyjUserActivity {
 		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
 
-		MenuItem refreshItem = menu.findItem(R.id.homeListFragment_action_sync);
-		if (refreshItem != null) {
-			final View view = MenuItemCompat.getActionView(refreshItem);
-			if(HyjApplication.getInstance().getIsSyncing()){
-				setRefreshActionButtonState(true, updateUploadCount(view, null));
-			} else {
-				updateUploadCount(view, null);
-			}
-			view.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if(!HyjUtil.hasNetworkConnection()){
-						HyjUtil.displayToast(R.string.server_connection_disconnected);
-						return;
-					}
-					if (!HyjApplication.getInstance().getIsSyncing()) {
-						uploadData(true);
-					}
-				}
-			});
-		}
+//		MenuItem refreshItem = menu.findItem(R.id.mainActivity_action_sync);
+//		if (refreshItem != null) {
+//			final View view = MenuItemCompat.getActionView(refreshItem);
+//			if(HyjApplication.getInstance().getIsSyncing()){
+////				setRefreshActionButtonState(true, updateUploadCount(view, null));
+//			} else {
+//				updateUploadCount(view, null);
+//			}
+//			view.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					if(!HyjUtil.hasNetworkConnection()){
+//						HyjUtil.displayToast(R.string.server_connection_disconnected);
+//						return;
+//					}
+//					if (!HyjApplication.getInstance().getIsSyncing()) {
+//						uploadData(true);
+//					}
+//				}
+//			});
+//		}
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -309,7 +309,27 @@ public class MainActivity extends HyjUserActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		this.mOptionsMenu = menu;
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		
+		MenuItem refreshItem = menu.findItem(R.id.mainActivity_action_sync);
+		if (refreshItem != null) {
+			final View view = MenuItemCompat.getActionView(refreshItem);
+			updateUploadCount(view, null);
+			view.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(!HyjUtil.hasNetworkConnection()){
+						HyjUtil.displayToast(R.string.server_connection_disconnected);
+						return;
+					}
+					if (!HyjApplication.getInstance().getIsSyncing()) {
+						uploadData(true);
+					}
+				}
+			});
+		}
+
+		
 		return true;
 	}
 
@@ -334,9 +354,16 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		// if(item.getItemId() == R.id.homeListFragment_action_sync){
-		// setRefreshActionButtonState(true);
-		// }
+//		 if(item.getItemId() == R.id.mainActivity_action_sync){
+//			 	if(!HyjUtil.hasNetworkConnection()){
+//					HyjUtil.displayToast(R.string.server_connection_disconnected);
+//					return true;
+//				}
+//				if (!HyjApplication.getInstance().getIsSyncing()) {
+//					uploadData(true);
+//					return true;
+//				}
+//		 }
 
 		
 
@@ -406,7 +433,7 @@ public class MainActivity extends HyjUserActivity {
 		if (view == null) {
 			if (mOptionsMenu != null) {
 				final MenuItem refreshItem = mOptionsMenu
-						.findItem(R.id.homeListFragment_action_sync);
+						.findItem(R.id.mainActivity_action_sync);
 				if (refreshItem != null) {
 					view = MenuItemCompat.getActionView(refreshItem);
 				}
@@ -428,7 +455,7 @@ public class MainActivity extends HyjUserActivity {
 		if (view == null) {
 			if (mOptionsMenu != null) {
 				final MenuItem refreshItem = mOptionsMenu
-						.findItem(R.id.homeListFragment_action_sync);
+						.findItem(R.id.mainActivity_action_sync);
 				if (refreshItem != null) {
 					view = MenuItemCompat.getActionView(refreshItem);
 				}
