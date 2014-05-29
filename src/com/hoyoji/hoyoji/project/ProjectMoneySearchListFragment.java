@@ -90,16 +90,6 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
 			subTitle = mProject.getDisplayName();
 		}
-		final Long moneyAccount_id = intent.getLongExtra("moneyAccount_id", -1);
-		if(moneyAccount_id != -1){
-			mMoneyAccount =  new Select().from(MoneyAccount.class).where("_id=?", moneyAccount_id).executeSingle();
-			subTitle = mMoneyAccount.getDisplayName();
-		}
-		final Long friend_id = intent.getLongExtra("friend_id", -1);
-		if(friend_id != -1){
-			mFriend =  new Select().from(Friend.class).where("_id=?", friend_id).executeSingle();
-			subTitle = mFriend.getDisplayName();
-		}
 		
 		if(subTitle != null){
 			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
@@ -172,11 +162,11 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			openActivityWithFragmentForResult(MoneySearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
 			return true;
-		} else if (item.getItemId() == R.id.searchListFragment_action_member) {
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", mProject.get_mId());
-			openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
-			return true;
+//		} else if (item.getItemId() == R.id.searchListFragment_action_member) {
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("MODEL_ID", mProject.get_mId());
+//			openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
+//			return true;
 		} else if (item.getItemId() == R.id.searchListFragment_action_edit) {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", mProject.get_mId());

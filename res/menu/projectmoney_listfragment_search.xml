@@ -9,6 +9,12 @@
         hoyoji:showAsAction="always"/>
         
     	<item
+        android:id="@+id/searchListFragment_action_edit"
+        android:title="@string/app_action_edit"
+        android:icon="@drawable/ic_action_edit"
+        hoyoji:showAsAction="always"/>
+    	
+    	<item
         android:id="@+id/mainActivity_action_money_addnew"
         android:icon="@drawable/ic_action_new"
         android:title="@string/mainActivity_action_money_addnew"
@@ -67,7 +73,7 @@
         </menu>
     </item>
     	
-    
+   <!--  
     <item
         android:id="@+id/searchListFragment_action_more"
         android:title="@string/homeListFragment_action_more"
@@ -75,18 +81,8 @@
         hoyoji:showAsAction="always">
         <menu>
             
-    	<item
-        android:id="@+id/searchListFragment_action_member"
-        android:title="@string/memberListFragment_title"
-        android:icon="@drawable/ic_action_group"
-        hoyoji:showAsAction="always"/>
-    	<item
-        android:id="@+id/searchListFragment_action_edit"
-        android:title="@string/app_action_edit"
-        android:icon="@drawable/ic_action_edit"
-        hoyoji:showAsAction="always"/>
     	
-        <!--     <item
+            <item
                 android:id="@+id/searchListFragment_action_display_transaction_type_personal"
                 android:title="@string/homeListFragment_action_display_transaction_type_personal"
                 hoyoji:showAsAction="never"/>
@@ -94,7 +90,7 @@
                 android:id="@+id/searchListFragment_action_display_transaction_type_project"
                 android:title="@string/homeListFragment_action_display_transaction_type_project"
                 hoyoji:showAsAction="never"/>
-         -->
+        
          </menu>
-	</item>
+	</item> -->
  </menu>
