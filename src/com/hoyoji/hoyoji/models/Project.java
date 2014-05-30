@@ -46,14 +46,14 @@ public class Project extends HyjModel {
 	@Column(name = "defaultExpenseCategoryMain")
 	private String mDefaultExpenseCategoryMain;
 
-	@Column(name = "totalIncome")
-	private Double totalIncome = 0.0;
+	@Column(name = "incomeTotal")
+	private Double mIncomeTotal = 0.0;
 	
-	@Column(name = "totalExpense")
-	private Double totalExpense = 0.0;
+	@Column(name = "expenseTotal")
+	private Double mExpenseTotal = 0.0;
 	
-	@Column(name = "totalTopup")
-	private Double totalTopup = 0.0;
+	@Column(name = "depositTotal")
+	private Double mDepositTotal = 0.0;
 	
 //	@Column(name = "depositeIncomeCategory")
 //	private String mDepositIncomeCategory;
@@ -124,11 +124,11 @@ public class Project extends HyjModel {
 		return getMany(ParentProject.class, "subProjectId");
 	}
 
-//	public List<ParentProject> getSubProjects() {
-//		return getMany(ParentProject.class, "parentProjectId");
-//	}
+	public List<ParentProject> getSubProjects() {
+		return getMany(ParentProject.class, "parentProjectId");
+	}
 
-	public List<Project> getSubProjects() {
+	public List<Project> getSubProjectsArray() {
 		List<ParentProject> subProjectRecords = getMany(ParentProject.class, "parentProjectId");
 		List<Project> subProjects = new ArrayList<Project>(); 
 		for (Iterator<ParentProject> it = subProjectRecords.iterator(); it.hasNext();) {
@@ -284,19 +284,10 @@ public class Project extends HyjModel {
 	}
 
 	public Double getExpenseTotal(){
-		List<ProjectShareAuthorization> projectShareAuthorizations = this.getProjectShareAuthorizations();
-        Double projectExpenseTotal = 0.0;
-		for(int i= 0; i<projectShareAuthorizations.size(); i++){
-        	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-        	projectExpenseTotal+= psa.getExpenseTotal();
-        }
-		for(Iterator<Project> it = this.getSubProjects().iterator(); it.hasNext();){
+        Double projectExpenseTotal = this.mExpenseTotal;
+
+		for(Iterator<Project> it = this.getSubProjectsArray().iterator(); it.hasNext();){
 			Project subProject = it.next();
-			Double subProjectExpenseTotal = 0.0;
-			List<ProjectShareAuthorization> subProjectShareAuthorizations = subProject.getProjectShareAuthorizations();
-			for(int i = 0; i < subProjectShareAuthorizations.size(); i++){
-				subProjectExpenseTotal += subProjectShareAuthorizations.get(i).getExpenseTotal();
-			}
 			Double rate = 1.0;
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
@@ -304,26 +295,16 @@ public class Project extends HyjModel {
 					return null;
 				}
 			}
-			projectExpenseTotal += subProjectExpenseTotal*rate;
+			projectExpenseTotal += subProject.getExpenseTotal() * rate;
 		}
 		return projectExpenseTotal;
 	}
 	
 	public Double getIncomeTotal(){
-		List<ProjectShareAuthorization> projectShareAuthorizations = this.getProjectShareAuthorizations();
-        Double projectIncomeTotal = 0.0;
-		for(int i= 0; i<projectShareAuthorizations.size(); i++){
-        	ProjectShareAuthorization psa = projectShareAuthorizations.get(i); 
-        	projectIncomeTotal+= psa.getIncomeTotal();
-        }
+        Double projectIncomeTotal = this.mIncomeTotal;
 		
-		for(Iterator<Project> it = this.getSubProjects().iterator(); it.hasNext();){
+		for(Iterator<Project> it = this.getSubProjectsArray().iterator(); it.hasNext();){
 			Project subProject = it.next();
-			Double subProjectIncomeTotal = 0.0;
-			List<ProjectShareAuthorization> subProjectShareAuthorizations = subProject.getProjectShareAuthorizations();
-			for(int i = 0; i < subProjectShareAuthorizations.size(); i++){
-				subProjectIncomeTotal += subProjectShareAuthorizations.get(i).getIncomeTotal();
-			}
 			Double rate = 1.0;
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
@@ -331,10 +312,26 @@ public class Project extends HyjModel {
 					return null;
 				}
 			}
-			projectIncomeTotal += subProjectIncomeTotal*rate;
+			projectIncomeTotal += subProject.getIncomeTotal() * rate;
 		}
-		
 		return projectIncomeTotal;
+	}
+	
+	public Double getDepositTotal(){
+        Double projectDepositTotal = this.mDepositTotal;
+		
+		for(Iterator<Project> it = this.getSubProjectsArray().iterator(); it.hasNext();){
+			Project subProject = it.next();
+			Double rate = 1.0;
+			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
+				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
+				if(rate == null){
+					return null;
+				}
+			}
+			projectDepositTotal += subProject.getDepositTotal() * rate;
+		}
+		return projectDepositTotal;
 	}
 	
 	public String getRemarkName() {

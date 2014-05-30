@@ -90,7 +90,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				R.layout.project_listitem_project,
 				null,
 				new String[] {"_id", "id", "id", "id", "id"},
-				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_expenseTotal, R.id.projectListItem_incomeTotal, R.id.projectListItem_action_viewSubProjects },
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_inOutTotal, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
 
@@ -223,34 +223,34 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			((TextView)view).setText(project.getDisplayName());
 			return true;
-		} else if(view.getId() == R.id.projectListItem_expenseTotal) {
+		} else if(view.getId() == R.id.projectListItem_inOutTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+			if(project.getExpenseTotal() - project.getIncomeTotal() < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			
-			numericView.setNumber(project.getExpenseTotal());
+			numericView.setNumber(project.getExpenseTotal() - project.getIncomeTotal());
 			return true;
-		}else if(view.getId() == R.id.projectListItem_incomeTotal) {
+		}else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+			if(project.getDepositTotal() > 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}else{
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setNumber(project.getIncomeTotal());
+			numericView.setNumber(project.getDepositTotal());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
