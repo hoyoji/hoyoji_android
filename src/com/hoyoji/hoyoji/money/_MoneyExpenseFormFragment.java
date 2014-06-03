@@ -55,7 +55,7 @@ import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
-public class MoneyExpenseFormFragment extends HyjUserFormFragment {
+public class _MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -148,7 +148,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyExpenseFormFragment.this
+				_MoneyExpenseFormFragment.this
 						.openActivityWithFragmentForResult(
 								MoneyAccountListFragment.class,
 								R.string.moneyAccountListFragment_title_select_moneyAccount,
@@ -175,7 +175,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseFormFragment.this
+				_MoneyExpenseFormFragment.this
 						.openActivityWithFragmentForResult(
 								ProjectListFragment.class,
 								R.string.projectListFragment_title_select_project,
@@ -202,7 +202,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyExpenseCategory.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseFormFragment.this
+				_MoneyExpenseFormFragment.this
 						.openActivityWithFragmentForResult(
 								MoneyExpenseCategoryListFragment.class,
 								R.string.moneyExpenseFormFragment_editText_hint_moneyExpenseCategory,
@@ -238,7 +238,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseFormFragment.this
+				_MoneyExpenseFormFragment.this
 						.openActivityWithFragmentForResult(
 								FriendListFragment.class,
 								R.string.friendListFragment_title_select_friend_payee,

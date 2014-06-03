@@ -167,6 +167,9 @@ public class UserData extends HyjModel {
 	}
 
 	public String getIncomeColor() {
+		if(mIncomeColor == null){
+			return "#FF0000";
+		}
 		return mIncomeColor;
 	}
 
@@ -175,6 +178,9 @@ public class UserData extends HyjModel {
 	}
 	
 	public String getExpenseColor() {
+		if(mExpenseColor == null){
+			return "#339900";
+		}
 		return mExpenseColor;
 	}
 

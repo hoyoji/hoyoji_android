@@ -230,13 +230,14 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
-			if(project.getExpenseTotal() - project.getIncomeTotal() < 0){
+			Double projectBalance = project.getBalance();
+			if(projectBalance < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			
-			numericView.setNumber(project.getExpenseTotal() - project.getIncomeTotal());
+			numericView.setNumber(projectBalance);
 			return true;
 		}else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -244,13 +245,15 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			
 			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
-			if(project.getDepositTotal() > 0){
+			
+			Double depositBalance = project.getDepositBalance();
+			if(depositBalance > 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}else{
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setNumber(project.getDepositTotal());
+			numericView.setNumber(depositBalance);
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));

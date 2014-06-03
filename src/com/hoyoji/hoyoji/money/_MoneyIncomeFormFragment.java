@@ -56,7 +56,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyIncomeFormFragment extends HyjUserFormFragment {
+public class _MoneyIncomeFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -168,7 +168,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyIncomeFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				_MoneyIncomeFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -188,7 +188,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyIncomeFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				_MoneyIncomeFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -209,7 +209,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldMoneyIncomeCategory.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyIncomeFormFragment.this
+				_MoneyIncomeFormFragment.this
 						.openActivityWithFragmentForResult(
 								MoneyIncomeCategoryListFragment.class,
 								R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory,
@@ -242,7 +242,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyIncomeFormFragment.this
+				_MoneyIncomeFormFragment.this
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
 			}
 		}); 

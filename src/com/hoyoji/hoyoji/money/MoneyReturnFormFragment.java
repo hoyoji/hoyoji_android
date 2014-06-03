@@ -306,6 +306,12 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getAmount());
 									
+										//更新项目余额
+										Project newProject = moneyReturn.getProject();
+										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyReturn.getAmount0());
+										newProjectEditor.save();
+										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyReturn.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
 									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalReturn(projectAuthorization.getActualTotalReturn() - moneyReturn.getAmount0()*moneyReturn.getExchangeRate());
@@ -536,7 +542,23 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
+					
+					Project oldProject = oldMoneyReturnModel.getProject();
+					Project newProject = moneyReturnModel.getProject();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+					
+					//更新项目余额
+					if(moneyReturnModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + oldMoneyReturnModel.getAmount0() - moneyReturnModel.getAmount0());
+					} else {
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() + oldMoneyReturnModel.getAmount0());
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturnModel.getAmount0());
+						oldProjectEditor.save();
+					}
+					newProjectEditor.save();
 //				}	
+					
 					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getMoneyAccount().getCurrencyId(), moneyReturnModel.getFriend());
 					if(moneyReturnModel.get_mId() == null){
 				    	if(newDebtAccount != null) {

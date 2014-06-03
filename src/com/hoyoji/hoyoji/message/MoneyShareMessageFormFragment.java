@@ -21,8 +21,8 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
-import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money._MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -146,9 +146,9 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			}
 			
 			if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddExpense")){
-				openActivityWithFragmentForResult(MoneyIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle, IMPORT_MONEY);
+				openActivityWithFragmentForResult(_MoneyIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_income, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddIncome")){
-				openActivityWithFragmentForResult(MoneyExpenseFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle, IMPORT_MONEY);
+				openActivityWithFragmentForResult(_MoneyExpenseFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddBorrow")){
 				openActivityWithFragmentForResult(MoneyLendFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_lend, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddLend")){

@@ -314,6 +314,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyBorrow.getAmount());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount());
 										
+										//更新项目余额
+										Project newProject = moneyBorrow.getProject();
+										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrow.getAmount0());
+										newProjectEditor.save();
+										
 										//更新支出所有者的实际支出
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrow.getProjectId());
@@ -548,7 +554,21 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 				
-				
+					Project oldProject = oldMoneyBorrowModel.getProject();
+					Project newProject = moneyBorrowModel.getProject();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+					
+					//更新项目余额
+					if(moneyBorrowModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + oldMoneyBorrowModel.getAmount0() - moneyBorrowModel.getAmount0());
+					} else {
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() + oldMoneyBorrowModel.getAmount0());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyBorrowModel.getAmount0());
+						oldProjectEditor.save();
+					}
+					newProjectEditor.save();
+					
 				MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyBorrowModel.getMoneyAccount().getCurrencyId(), moneyBorrowModel.getFriend());
 				if(moneyBorrowModel.get_mId() == null){
 			    	if(newDebtAccount != null) {

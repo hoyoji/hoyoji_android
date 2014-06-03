@@ -491,6 +491,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncomeContainer.getAmount());
 										MoneyIncomeContainerEditor moneyIncomeContainerEditor = new MoneyIncomeContainerEditor(moneyIncomeContainer);
 										
+										//更新项目余额
+										Project newProject = moneyIncomeContainer.getProject();
+										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyIncomeContainer.getAmount0());
+										newProjectEditor.save();
+										
 										//删除收入的同时删除分摊
 										Iterator<MoneyIncomeApportion> moneyIncomeApportions = moneyIncomeContainer.getApportions().iterator();
 										while (moneyIncomeApportions.hasNext()) {
@@ -786,6 +792,21 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 
+					Project oldProject = oldMoneyIncomeContainerModel.getProject();
+					Project newProject = moneyIncomeContainerModel.getProject();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+					
+					//更新项目余额
+					if(moneyIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + oldMoneyIncomeContainerModel.getAmount0() - moneyIncomeContainerModel.getAmount0());
+					} else {
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() + oldMoneyIncomeContainerModel.getAmount0());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyIncomeContainerModel.getAmount0());
+						oldProjectEditor.save();
+					}
+					newProjectEditor.save();
+					
 					/*
 					//更新支出所有者的实际收入
 					ProjectShareAuthorization selfProjectAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();

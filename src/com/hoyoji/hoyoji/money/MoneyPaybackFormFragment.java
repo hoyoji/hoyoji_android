@@ -306,6 +306,12 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getAmount());
 										
+										//更新项目余额
+										Project newProject = moneyPayback.getProject();
+										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyPayback.getAmount0());
+										newProjectEditor.save();
+										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPayback.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
 									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(projectAuthorization.getActualTotalPayback() - moneyPayback.getAmount0()*moneyPayback.getExchangeRate());
@@ -529,7 +535,6 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					
 					if(moneyPaybackModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
 						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldAmount + moneyPaybackModel.getAmount0());
-							
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
 						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldAmount);
@@ -537,6 +542,23 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
+					
+
+					Project oldProject = oldMoneyPaybackModel.getProject();
+					Project newProject = moneyPaybackModel.getProject();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
+					
+					//更新项目余额
+					if(moneyPaybackModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + oldMoneyPaybackModel.getAmount0() - moneyPaybackModel.getAmount0());
+					} else {
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() + oldMoneyPaybackModel.getAmount0());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyPaybackModel.getAmount0());
+						oldProjectEditor.save();
+					}
+					newProjectEditor.save();
+					
 //				}	
 					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyPaybackModel.getMoneyAccount().getCurrencyId(), moneyPaybackModel.getFriend());
 					if(moneyPaybackModel.get_mId() == null){
