@@ -500,7 +500,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										//更新项目余额
 										Project newProject = moneyExpenseContainer.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyExpenseContainer.getAmount0());
+										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate());
 										newProjectEditor.save();
 										
 										//删除支出的同时删除分摊
@@ -820,11 +820,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					
 					//更新项目余额
 					if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + oldMoneyExpenseContainerModel.getAmount0() - moneyExpenseContainerModel.getAmount0());
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() + oldMoneyExpenseContainerModel.getAmount0());
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyExpenseContainerModel.getAmount0());
+						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();

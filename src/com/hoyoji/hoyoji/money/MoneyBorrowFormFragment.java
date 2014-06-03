@@ -317,7 +317,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										//更新项目余额
 										Project newProject = moneyBorrow.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrow.getAmount0());
+										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
 										newProjectEditor.save();
 										
 										//更新支出所有者的实际支出
@@ -560,11 +560,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					
 					//更新项目余额
 					if(moneyBorrowModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + oldMoneyBorrowModel.getAmount0() - moneyBorrowModel.getAmount0());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() + oldMoneyBorrowModel.getAmount0());
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyBorrowModel.getAmount0());
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();

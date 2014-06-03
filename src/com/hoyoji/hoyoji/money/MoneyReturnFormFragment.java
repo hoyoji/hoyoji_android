@@ -309,7 +309,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 										//更新项目余额
 										Project newProject = moneyReturn.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyReturn.getAmount0());
+										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturn.getAmount0()*moneyReturn.getExchangeRate());
 										newProjectEditor.save();
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyReturn.getProjectId());
@@ -549,11 +549,11 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					
 					//更新项目余额
 					if(moneyReturnModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + oldMoneyReturnModel.getAmount0() - moneyReturnModel.getAmount0());
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyReturnModel.getAmount0()*oldMoneyReturnModel.getExchangeRate() + moneyReturnModel.getAmount0()*moneyReturnModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() + oldMoneyReturnModel.getAmount0());
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturnModel.getAmount0());
+						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyReturnModel.getAmount0()*oldMoneyReturnModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyReturnModel.getAmount0()*moneyReturnModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();
