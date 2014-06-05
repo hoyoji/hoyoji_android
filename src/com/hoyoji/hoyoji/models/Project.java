@@ -319,6 +319,14 @@ public class Project extends HyjModel {
 		return this.mIncomeTotal;
 	}
 	
+	public Double getDepositTotal(){
+		return mDepositTotal;
+	}
+	
+	public void setDepositTotal(Double mDepositTotal){
+		this.mDepositTotal = mDepositTotal;
+	}
+	
 	public Double getBalance(){
         Double projectBalance = this.mIncomeTotal - this.mExpenseTotal;
 		
@@ -335,23 +343,6 @@ public class Project extends HyjModel {
 		}
 		return projectBalance;
 	}
-	
-//	public Double getDepositTotal(){
-//        Double projectDepositTotal = this.mDepositTotal;
-//		
-//		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
-//			Project subProject = it.next().getSubProject();
-//			Double rate = 1.0;
-//			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
-//				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
-//				if(rate == null){
-//					return null;
-//				}
-//			}
-//			projectDepositTotal += subProject.getDepositTotal() * rate;
-//		}
-//		return projectDepositTotal;
-//	}
 	
 	public Double getDepositBalance(){
         Double depositBalance = this.mIncomeTotal - this.mExpenseTotal + this.mDepositTotal;

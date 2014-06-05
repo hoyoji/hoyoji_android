@@ -58,7 +58,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    private Integer mLoadLimit = null;
 	    private long mDateFrom = 0;
 	    private long mDateTo = 0;
-	    private ChangeObserver mChangeObserver;
+//	    private ChangeObserver mChangeObserver;
 	    private DateComparator mDateComparator = new DateComparator();
 	    
 	    public HomeChildListLoader(Context context, Bundle queryParams) {
@@ -112,7 +112,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
 	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();

@@ -210,9 +210,9 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
 			return true;
 		}
-		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_deposite) {
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeExpense) {
 			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-					R.string.moneyDepositFormFragment_title_addnew, queryParams);
+					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,

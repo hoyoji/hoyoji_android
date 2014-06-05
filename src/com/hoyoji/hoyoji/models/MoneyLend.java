@@ -61,6 +61,9 @@ public class MoneyLend extends HyjModel{
 	
 	@Column(name = "moneyIncomeApportionId")
 	private String mMoneyIncomeApportionId;
+
+	@Column(name = "lendType")
+	private String mLendType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -103,6 +106,7 @@ public class MoneyLend extends HyjModel{
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		mPaybackedAmount = 0.00;
+		mLendType = "Lend";
 	}
 
 	public String getId() {
@@ -320,6 +324,17 @@ public class MoneyLend extends HyjModel{
 			mPaybackedAmount = HyjUtil.toFixed2(mPaybackedAmount);
 		}
 		this.mPaybackedAmount = mPaybackedAmount;
+	}
+
+	public String getLendType() {
+		if(mLendType == null){
+			return "Lend";
+		}
+		return mLendType;
+	}
+	
+	public void setLendType(String mLendType) {
+		this.mLendType = mLendType;
 	}
 	
 	public String getRemark() {

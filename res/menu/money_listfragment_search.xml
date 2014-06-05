@@ -54,12 +54,12 @@
                 hoyoji:showAsAction="never">
                 <menu>
                     <item
-                        android:id="@+id/mainActivity_action_money_addnew_deposite"
-                        android:title="充值支出"
+                        android:id="@+id/mainActivity_action_money_addnew_depositeExpense"
+                        android:title="预缴会费"
                         hoyoji:showAsAction="never"/>
                     <item
                         android:id="@+id/mainActivity_action_money_addnew_depositeIncome"
-                        android:title="充值收入"
+                        android:title="预收会费"
                         hoyoji:showAsAction="never"/>
                 </menu>
             </item>

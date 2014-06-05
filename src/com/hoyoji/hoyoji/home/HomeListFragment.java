@@ -148,7 +148,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposite) {
-							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 						} 
 						else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
 							openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
@@ -227,9 +227,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					R.string.moneyPaybackFormFragment_title_addnew, null);
 			return true;
 		}
-		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_deposite) {
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeExpense) {
 			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-					R.string.moneyDepositFormFragment_title_addnew, null);
+					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
@@ -451,11 +451,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyIncomeContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyIncomeContainer)object).getIncomeType().equalsIgnoreCase("Deposit")){
-				((TextView)view).setText("(充值)" + ((MoneyIncomeContainer)object).getMoneyIncomeCategory());
-			}else{
-				((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
-			}
+			((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
@@ -571,7 +567,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("借入");
+			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("会费预收");
+			} else {
+				((TextView)view).setText("借入");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
@@ -626,7 +626,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("借出");
+			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("会费预缴");
+			}else{
+				((TextView)view).setText("借出");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
@@ -820,7 +824,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(object instanceof MoneyExpenseContainer){
 				MoneyExpenseContainer moneExpenseContainer = (MoneyExpenseContainer) object;
 				if(moneExpenseContainer.getExpenseType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				}
