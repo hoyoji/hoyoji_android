@@ -568,7 +568,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
-				((TextView)view).setText("会费预收");
+				((TextView)view).setText("预收会费");
 			} else {
 				((TextView)view).setText("借入");
 			}
@@ -627,7 +627,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
-				((TextView)view).setText("会费预缴");
+				((TextView)view).setText("预缴会费");
 			}else{
 				((TextView)view).setText("借出");
 			}

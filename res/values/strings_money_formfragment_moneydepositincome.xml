@@ -2,8 +2,8 @@
 <resources>
     
     
-   <string name="moneyDepositIncomeFormFragment_title_addnew">新增充值收入</string>
-   <string name="moneyDepositIncomeFormFragment_title_edit">充值收入详细</string>
+   <string name="moneyDepositIncomeFormFragment_title_addnew">预收会费</string>
+   <string name="moneyDepositIncomeFormFragment_title_edit">预收会费详细</string>
    
    <string name="moneyDepositIncomeFormFragment_textView_picture">图片</string>
    <string name="moneyDepositIncomeFormFragment_editText_hint_picture">请导入图片</string>
