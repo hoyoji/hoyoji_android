@@ -2,8 +2,8 @@
 <resources>
     
     
-   <string name="moneyDepositExpenseFormFragment_title_addnew">新增充值支出</string>
-   <string name="moneyDepositExpenseFormFragment_title_edit">充值支出详细</string>
+   <string name="moneyDepositExpenseFormFragment_title_addnew">预缴会费</string>
+   <string name="moneyDepositExpenseFormFragment_title_edit">预缴会费详细</string>
    
    <string name="moneyDepositExpenseFormFragment_textView_picture">图片</string>
    <string name="moneyDepositExpenseFormFragment_editText_hint_picture">请导入图片</string>
