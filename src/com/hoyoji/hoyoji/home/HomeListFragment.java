@@ -386,11 +386,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyExpenseContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyExpenseContainer)object).getExpenseType().equalsIgnoreCase("Deposit")){
-				((TextView)view).setText("(充值)"+((MoneyExpenseContainer)object).getMoneyExpenseCategory());
-			}else{
-				((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
-			}
+			((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
@@ -822,30 +818,29 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpenseContainer){
-				MoneyExpenseContainer moneExpenseContainer = (MoneyExpenseContainer) object;
-				if(moneExpenseContainer.getExpenseType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
-				}else{
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-				}
 				return true;
 			} else if(object instanceof MoneyIncomeContainer){
-				MoneyIncomeContainer moneIncomeContainer = (MoneyIncomeContainer) object;
-				if(moneIncomeContainer.getIncomeType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_edit, bundle);
-				}else{
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
-				}
-				
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyBorrow){
-				openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
+				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyLend){
-				openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+				MoneyLend moneyLend = (MoneyLend) object;
+				if(moneyLend.getLendType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyReturn){
 				openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);

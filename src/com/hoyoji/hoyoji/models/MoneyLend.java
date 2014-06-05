@@ -551,4 +551,8 @@ public class MoneyLend extends HyjModel{
 	public void setMoneyIncomeApportionId(String id) {
 		this.mMoneyIncomeApportionId = id;
 	}
+
+	public String getMoneyIncomeApportionId() {
+		return this.mMoneyIncomeApportionId;
+	}
 }

@@ -57,14 +57,14 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
-	private HyjDateTimeField mDateTimeFieldPaybackDate = null;
-	private HyjNumericField mNumericFieldPaybackedAmount = null;
+//	private HyjDateTimeField mDateTimeFieldPaybackDate = null;
+//	private HyjNumericField mNumericFieldPaybackedAmount = null;
 //	private View mSeparatorFieldPaybackedAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private ImageView mImageViewClearFriend = null;
+//	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -319,7 +319,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 										Project newProject = moneyLend.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
-										newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
+//										newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
 										newProjectEditor.save();
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
@@ -359,7 +359,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 			mNumericAmount.setNumber(mMoneyLendEditor.getModel().getLocalAmount());
 			mNumericAmount.setEnabled(false);
 			
-			mDateTimeFieldPaybackDate.setEnabled(false);
+//			mDateTimeFieldPaybackDate.setEnabled(false);
 			
 			mSelectorFieldFriend.setEnabled(false);
 			
@@ -370,7 +370,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 			
 			mNumericExchangeRate.setEnabled(false);
 
-			mNumericFieldPaybackedAmount.setEnabled(false);
+//			mNumericFieldPaybackedAmount.setEnabled(false);
 			
 			mRemarkFieldRemark.setEnabled(false);
 			
@@ -451,10 +451,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		if(mMoneyLendEditor.getValidationError("amount") != null){
 			mNumericAmount.showSoftKeyboard();
 		}
-		mDateTimeFieldPaybackDate.setError(mMoneyLendEditor.getValidationError("paybackDate"));
-		if(mMoneyLendEditor.getValidationError("paybackDate") != null){
-			HyjUtil.displayToast(mMoneyLendEditor.getValidationError("paybackDate"));
-		}
+//		mDateTimeFieldPaybackDate.setError(mMoneyLendEditor.getValidationError("paybackDate"));
+//		if(mMoneyLendEditor.getValidationError("paybackDate") != null){
+//			HyjUtil.displayToast(mMoneyLendEditor.getValidationError("paybackDate"));
+//		}
 		mSelectorFieldMoneyAccount.setError(mMoneyLendEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyLendEditor.getValidationError("project"));
 		mNumericExchangeRate.setError(mMoneyLendEditor.getValidationError("exchangeRate"));
@@ -564,13 +564,13 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					//更新项目余额
 					if(moneyLendModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
 						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*moneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+//						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
 						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+//						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
+//						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();

@@ -250,7 +250,7 @@ public class MoneyAccountSearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
+							"WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -381,7 +381,7 @@ public class MoneyAccountSearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main WHERE moneyExpenseApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Lend"),
+						"SELECT MAX(date) FROM MoneyLend main WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Lend"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

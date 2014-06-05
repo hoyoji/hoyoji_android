@@ -21,6 +21,8 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
@@ -106,9 +108,25 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddIncome")){
 			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_expense);
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddBorrow")){
-			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_lend);
+			try {
+				JSONObject messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+				if("Deposit".equalsIgnoreCase(messageData.optString("borrowType"))){
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_depositExpense);
+				} else {
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_lend);
+				}
+			} catch (JSONException e) {
+			}
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddLend")){
-			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_borrow);
+			try {
+				JSONObject messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+				if("Deposit".equalsIgnoreCase(messageData.optString("lendType"))){
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_depositIncome);
+				} else {
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_borrow);
+				}
+			} catch (JSONException e) {
+			}
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddReturn")){
 			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_payback);
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddPayback")){
@@ -152,9 +170,17 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddIncome")){
 				openActivityWithFragmentForResult(MoneyExpenseContainerFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_expense, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddBorrow")){
-				openActivityWithFragmentForResult(MoneyLendFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_lend, bundle, IMPORT_MONEY);
+				if("Deposit".equalsIgnoreCase(messageData.optString("borrowType"))){
+					openActivityWithFragmentForResult(MoneyDepositExpenseFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositExpense, bundle, IMPORT_MONEY);
+				} else {
+					openActivityWithFragmentForResult(MoneyLendFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_lend, bundle, IMPORT_MONEY);
+				}
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddLend")){
-				openActivityWithFragmentForResult(MoneyBorrowFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_borrow, bundle, IMPORT_MONEY);
+				if("Deposit".equalsIgnoreCase(messageData.optString("lendType"))){
+					openActivityWithFragmentForResult(MoneyDepositIncomeFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositIncome, bundle, IMPORT_MONEY);
+				} else {
+					openActivityWithFragmentForResult(MoneyBorrowFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_borrow, bundle, IMPORT_MONEY);
+				}
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddReturn")){
 				openActivityWithFragmentForResult(MoneyPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_payback, bundle, IMPORT_MONEY);
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddPayback")){
