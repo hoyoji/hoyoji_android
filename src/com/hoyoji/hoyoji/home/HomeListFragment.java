@@ -64,6 +64,7 @@ import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
@@ -147,11 +148,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
-						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposite) {
+						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeExpense) {
 							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-						} 
-						else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
 							openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
+							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
 						return false;
 					}

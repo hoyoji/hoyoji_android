@@ -270,7 +270,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 											@Override
 											public void doNegativeClick() {
-												HyjUtil.displayToast("未能获取项目币种到本币的汇率");
+												HyjUtil.displayToast("未能获取账户币种到本币的汇率");
 											}
 
 										});
@@ -339,7 +339,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				if (exchange != null) {
 					doSave();
 				} else {
-					HyjUtil.displayToast("未能获取项目币种到本币的汇率");
+					HyjUtil.displayToast("未能获取账户币种到本币的汇率");
 				}
 			}
 			break;
