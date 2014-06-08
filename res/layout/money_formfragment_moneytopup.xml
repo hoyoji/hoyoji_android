@@ -78,15 +78,51 @@
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
 
-        <com.hoyoji.android.hyjframework.view.HyjSelectorField
-            android:id="@+id/moneyTopupFormFragment_selectorField_transferInFriend"
-            hyj:style="top_label"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferInFriend"
-            hyj:labelText="@string/moneyTopupFormFragment_textView_transferInFriend" >
-        </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+            android:layout_height="wrap_content" >
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/moneyTopupFormFragment_imageView_clear_transferOutFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="0dp"
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyTopupFormFragment_selectorField_transferOutFriend"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferOutFriend"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferOutFriend" >
+                </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+            </FrameLayout>
+
+            <View
+                android:id="@+id/moneyTopupFormFragment_separatorField_transferOut"
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="@android:color/darker_gray" />
+
+            <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                android:id="@+id/moneyTopupFormFragment_selectorField_transferOut"
+                hyj:style="top_label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                hyj:editTextBorder="none"
+                hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferOut"
+                hyj:labelText="@string/moneyTopupFormFragment_textView_transferOut" />
+        </LinearLayout>
 
         <View
             android:id="@id/field_separator"
@@ -96,14 +132,51 @@
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
 
-        <com.hoyoji.android.hyjframework.view.HyjSelectorField
-            android:id="@+id/moneyTopupFormFragment_selectorField_transferIn"
-            hyj:style="top_label"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferIn"
-            hyj:labelText="@string/moneyTopupFormFragment_textView_transferIn" />
+            android:layout_height="wrap_content" >
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/moneyTopupFormFragment_imageView_clear_transferInFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="0dp"
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyTopupFormFragment_selectorField_transferInFriend"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferInFriend"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferInFriend" >
+                </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+            </FrameLayout>
+
+            <View
+                android:id="@+id/moneyTopupFormFragment_separatorField_transferIn"
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="@android:color/darker_gray" />
+
+            <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                android:id="@+id/moneyTopupFormFragment_selectorField_transferIn"
+                hyj:style="top_label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                hyj:editTextBorder="none"
+                hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferIn"
+                hyj:labelText="@string/moneyTopupFormFragment_textView_transferIn" />
+        </LinearLayout>
 
         <View
             android:id="@id/field_separator"
@@ -113,14 +186,77 @@
             android:layout_marginTop="5dip"
             android:background="@android:color/darker_gray" />
 
-        <com.hoyoji.android.hyjframework.view.HyjSelectorField
-            android:id="@+id/moneyTopupFormFragment_selectorField_project"
-            hyj:style="top_label"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyTopupFormFragment_editText_hint_project"
-            hyj:labelText="@string/moneyTopupFormFragment_textView_project" />
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTopupFormFragment_textField_transferInAmount"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferInAmount"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferInAmount" />
+
+                <View
+                    android:id="@+id/moneyTopupFormFragment_separatorField_transferInamount"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:background="@android:color/darker_gray" />
+
+                <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:id="@+id/moneyTopupFormFragment_selectorField_project"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_project"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_project" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/moneyTopupFormFragment_separatorField_exchange"
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:id="@+id/moneyTopupFormFragment_linearLayout_exchangeRate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTopupFormFragment_textField_exchangeRate"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_exchangeRate"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_exchangeRate" />
+
+                <ImageView
+                    android:id="@+id/moneyTopupFormFragment_imageButton_refresh_exchangeRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_refresh_rotate" />
+            </LinearLayout>
+        </LinearLayout>
 
         <View
             android:id="@id/field_separator"
@@ -153,7 +289,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/app_action_save" />
-
+        
         <Button
             android:id="@id/button_delete"
             android:layout_width="fill_parent"
