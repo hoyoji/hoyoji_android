@@ -303,8 +303,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				}
 				// 尝试到网上获取汇率
 				((HyjActivity) MoneyAccountFormFragment.this.getActivity()).displayProgressDialog(
-						R.string.projectMessageFormFragment_addShare_fetch_exchange,
-						R.string.projectMessageFormFragment_addShare_fetching_exchange);
+						R.string.moneyAccountFormFragment_addShare_fetch_exchange,
+						R.string.moneyAccountFormFragment_addShare_fetching_exchange);
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
@@ -329,7 +329,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 						if (object != null) {
 							HyjUtil.displayToast(object.toString());
 						} else {
-							HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+							HyjUtil.displayToast(R.string.moneyAccountFormFragment_addShare_cannot_fetch_exchange);
 						}
 
 						// 到网上获取汇率失败，问用户是否要手工添加该汇率
@@ -337,7 +337,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 								.getActivity())
 								.displayDialog(
 										-1,
-										R.string.projectMessageFormFragment_addShare_cannot_fetch_exchange,
+										R.string.moneyAccountFormFragment_addShare_cannot_fetch_exchange,
 										R.string.alert_dialog_yes,
 										R.string.alert_dialog_no, -1,
 										new DialogCallbackListener() {

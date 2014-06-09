@@ -517,13 +517,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		}else{
 			mMoneyTransferEditor.removeValidationError("transferOutAmount");
 		}
-
-
-		if(mMoneyTransferEditor.getModelCopy().getTransferOutId() == null){
-			mMoneyTransferEditor.setValidationError("transferOut",R.string.moneyTopupFormFragment_editText_hint_transferOut);
-		}else{
-			mMoneyTransferEditor.removeValidationError("transferOut");
-		}
 		
 		if(mMoneyTransferEditor.getModelCopy().getTransferInFriendUserId() == null
 			&& mMoneyTransferEditor.getModelCopy().getTransferInLocalFriendId() == null){
@@ -531,15 +524,26 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		} else {
 			mMoneyTransferEditor.removeValidationError("transferInFriend");
 		}
-
-		if(mMoneyTransferEditor.getModelCopy().getTransferInId() == null){
-			mMoneyTransferEditor.setValidationError("transferIn",R.string.moneyTopupFormFragment_editText_hint_transferIn);
-		}else{
-			mMoneyTransferEditor.removeValidationError("transferIn");
+		
+		if(mMoneyTransferEditor.getModelCopy().getTransferOutId() != null &&
+				mMoneyTransferEditor.getModelCopy().getTransferOutId().equalsIgnoreCase(mMoneyTransferEditor.getModelCopy().getTransferInId())){
+			mMoneyTransferEditor.setValidationError("transferIn", R.string.moneyTopupFormFragment_editText_validationError_same_account);
+			mMoneyTransferEditor.setValidationError("transferOut", R.string.moneyTopupFormFragment_editText_validationError_same_account);
+		} else {
+			if(mMoneyTransferEditor.getModelCopy().getTransferInId() == null){
+				mMoneyTransferEditor.setValidationError("transferIn", R.string.moneyTopupFormFragment_editText_hint_transferIn);
+			}else{
+				mMoneyTransferEditor.removeValidationError("transferIn");
+			}
+			if(mMoneyTransferEditor.getModelCopy().getTransferOutId() == null){
+				mMoneyTransferEditor.setValidationError("transferOut", R.string.moneyTopupFormFragment_editText_hint_transferOut);
+			}else{
+				mMoneyTransferEditor.removeValidationError("transferOut");
+			}
 		}
 		
 		if(mMoneyTransferEditor.getModelCopy().getProjectId() == null){
-			mMoneyTransferEditor.setValidationError("project",R.string.moneyTopupFormFragment_editText_hint_project);
+			mMoneyTransferEditor.setValidationError("project", R.string.moneyTopupFormFragment_editText_hint_project);
 		}else{
 			mMoneyTransferEditor.removeValidationError("project");
 		}
@@ -700,7 +704,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
                  		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
                  		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
              		} else {
-             			mSelectorFieldTransferIn.setText(friend.getDisplayName()+"储值卡1");
+             			mSelectorFieldTransferIn.setText(null);
                  		mSelectorFieldTransferIn.setModelId(null);
              		}
              	 }
