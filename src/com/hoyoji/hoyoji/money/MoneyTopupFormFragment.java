@@ -695,7 +695,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
          			mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferInFriend.setModelId(friend.getId());
         
-             		MoneyAccount moneyAccount = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ?", "Topup", friend.getId()).executeSingle();
+             		MoneyAccount moneyAccount = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId=?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
              		if(moneyAccount != null){
                  		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
                  		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
