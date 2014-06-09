@@ -530,11 +530,11 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			mMoneyTransferEditor.setValidationError("transferIn", R.string.moneyTopupFormFragment_editText_validationError_same_account);
 			mMoneyTransferEditor.setValidationError("transferOut", R.string.moneyTopupFormFragment_editText_validationError_same_account);
 		} else {
-			if(mMoneyTransferEditor.getModelCopy().getTransferInId() == null){
-				mMoneyTransferEditor.setValidationError("transferIn", R.string.moneyTopupFormFragment_editText_hint_transferIn);
-			}else{
-				mMoneyTransferEditor.removeValidationError("transferIn");
-			}
+//			if(mMoneyTransferEditor.getModelCopy().getTransferInId() == null){
+//				mMoneyTransferEditor.setValidationError("transferIn", R.string.moneyTopupFormFragment_editText_hint_transferIn);
+//			}else{
+//				mMoneyTransferEditor.removeValidationError("transferIn");
+//			}
 			if(mMoneyTransferEditor.getModelCopy().getTransferOutId() == null){
 				mMoneyTransferEditor.setValidationError("transferOut", R.string.moneyTopupFormFragment_editText_hint_transferOut);
 			}else{
@@ -669,7 +669,16 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 						}
 					}
 				}
-				
+				if(newTransferIn == null && mSelectorFieldTransferIn.getText() != null){
+					newTransferIn = new MoneyAccount();
+					newTransferIn.setName(mSelectorFieldTransferIn.getText());
+					newTransferIn.setFriendId(mMoneyTransferEditor.getModelCopy().getTransferInFriend().getId());
+					newTransferIn.setAccountType("Topup");
+					newTransferIn.setCurrencyId(mMoneyTransferEditor.getModelCopy().getTransferOut().getCurrencyId());
+					newTransferIn.setCurrentBalance(mMoneyTransferEditor.getModelCopy().getTransferInAmount0());
+					newTransferIn.save();
+					mMoneyTransferEditor.getModelCopy().setTransferInId(newTransferIn.getId());
+				}
 				mMoneyTransferEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
@@ -704,7 +713,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
                  		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
                  		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
              		} else {
-             			mSelectorFieldTransferIn.setText(null);
+             			mSelectorFieldTransferIn.setText(friend.getDisplayName() + "储值卡1");
                  		mSelectorFieldTransferIn.setModelId(null);
              		}
              	 }
