@@ -52,6 +52,7 @@ import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneySearchChildListLoader;
 import com.hoyoji.hoyoji.money.MoneySearchFormFragment;
 import com.hoyoji.hoyoji.money.MoneySearchGroupListLoader;
+import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 
@@ -191,7 +192,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 					R.string.moneyIncomeFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-			openActivityWithFragment(MoneyTransferFormFragment.class,
+				openActivityWithFragment(MoneyTransferFormFragment.class,
 					R.string.moneyTransferFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
@@ -403,7 +404,12 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			((HyjDateTimeView)view).setText(((MoneyTransfer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("转账");
+			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
+			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+				((TextView)view).setText("储值卡充值");
+			} else {
+				((TextView)view).setText("转账");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyTransfer)object).getProject().getDisplayName());
@@ -634,7 +640,12 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
-				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
+				if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+					openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;

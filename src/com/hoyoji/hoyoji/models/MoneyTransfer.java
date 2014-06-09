@@ -55,6 +55,9 @@ public class MoneyTransfer extends HyjModel{
 	
 	@Column(name = "projectId")
 	private String mProjectId;
+
+	@Column(name = "transferType")
+	private String mTransferType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -97,6 +100,7 @@ public class MoneyTransfer extends HyjModel{
 		mTransferInId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
+		mTransferType = "Transfer";
 	}
 	
 	public String getId() {
@@ -538,6 +542,18 @@ public class MoneyTransfer extends HyjModel{
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}
+
+	public void setTransferType(String mTransferType) {
+		this.mTransferType = mTransferType;
+	}
+	
+	
+	public String getTransferType() {
+		if(mTransferType == null){
+			return "Transfer";
+		}
+		return mTransferType;
 	}	
 	
 }

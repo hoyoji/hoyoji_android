@@ -47,6 +47,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    
 	    private String mExcludeType = null;
 //	    private ChangeObserver mChangeObserver;
+		private String mFriendId;
 	    
 	    public MoneyAccountChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -54,6 +55,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    		mLoadLimit = queryParams.getInt("limit");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
+	    		mFriendId = queryParams.getString("friendId");
 	    	}
 //	    	mChangeObserver = new ChangeObserver();
 //	    	context.getContentResolver().registerContentObserver(
@@ -69,6 +71,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    		mLoadLimit = queryParams.getInt("limit");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
+	    		mFriendId = queryParams.getString("friendId");
 	    	}
 	    	this.onContentChanged();
 	    }
@@ -82,9 +85,13 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-		if(!mAccountType.equalsIgnoreCase(mExcludeType)){
-			return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name").execute();
-		}
+			if(!mAccountType.equalsIgnoreCase(mExcludeType)){
+				if(mFriendId == null){
+					return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name").execute();
+				} else {
+					return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name").execute();
+				}
+			}
 	    	return mChildList;
 	    	
 		}

@@ -45,6 +45,7 @@ import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money._MoneyIncomeFormFragment;
@@ -402,7 +403,12 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((HyjDateTimeView)view).setText(((MoneyTransfer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("转账");
+			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
+			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+				((TextView)view).setText("储值卡充值");
+			} else {
+				((TextView)view).setText("转账");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyTransfer)object).getProject().getDisplayName());
@@ -633,7 +639,12 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
-				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
+				if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+					openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;

@@ -77,15 +77,33 @@
         hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" >
     </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
     
-        <View 
+    <View 
+        android:id="@+id/field_separator_friend"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@android:color/darker_gray" 
+        android:visibility="gone"
+     />
+    
+    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/moneyAccountFormFragment_selectorField_friend"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        hyj:hintText="@string/moneyAccountFormFragment_editText_hint_friend"
+        hyj:labelText="@string/moneyAccountFormFragment_textView_friend" />
+    
+     <View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
-        />
-    
+     />
+        
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_accountNumber"
         android:layout_width="fill_parent"

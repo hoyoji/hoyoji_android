@@ -342,6 +342,13 @@ public class MoneyAccount extends HyjModel {
 		final JSONObject jsonObj = super.toJSON();
 		jsonObj.remove("currentBalance");
 		return jsonObj;
+	}
+
+	public Friend getFriend() {
+		if(mFriendId == null || mFriendId.length() == 0){
+			return null;
+		}
+		return HyjModel.getModel(Friend.class, mFriendId);
 	}	
 
 }

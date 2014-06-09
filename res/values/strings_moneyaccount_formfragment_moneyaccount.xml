@@ -3,7 +3,9 @@
     
     
    <string name="moneyAccountFormFragment_title_addnew">创建账户</string>
+    
    <string name="moneyAccountFormFragment_title">账户资料</string>
+   
    
    <string name="moneyAccountFormFragment_textView_name">账户名称</string>
    <string name="moneyAccountFormFragment_editText_hint_name">请输入账户名称</string>
@@ -17,6 +19,9 @@
    <string name="moneyAccountFormFragment_textView_accountType">账户类型</string>
    <string name="moneyAccountFormFragment_editText_hint_accountType">请选择账户类型</string>
    
+   <string name="moneyAccountFormFragment_textView_friend">商家好友</string>
+   <string name="moneyAccountFormFragment_editText_hint_friend">请选择商家好友</string>
+   
    <string name="moneyAccountFormFragment_textView_accountNumber">账号</string>
    <string name="moneyAccountFormFragment_editText_hint_accountNumber">添加账号</string>
    
@@ -28,6 +33,7 @@
     
    <string-array name="moneyAccountFormFragment_spinnerField_accountType_array">
         <item>现金账户</item>
+        <item>储值卡账户</item>
         <item>金融账户</item>
         <item>信用卡账户</item>
         <item>虚拟账户</item>

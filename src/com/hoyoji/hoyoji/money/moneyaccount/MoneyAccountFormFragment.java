@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money.moneyaccount;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,11 +13,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.webkit.WebView.FindListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -28,8 +32,10 @@ import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjSpinnerField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
@@ -38,11 +44,13 @@ import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_CURRENCY_ID = 1;
-	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 2;
+	private final static int GET_FRIEND_ID = 2;
+	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 3;
 
 	private HyjModelEditor<MoneyAccount> mMoneyAccountEditor = null;
 	private HyjTextField mTextFieldName = null;
 	private HyjSelectorField mSelectorFieldCurrency = null;
+	private HyjSelectorField mSelectorFieldFriend = null;
 	private HyjNumericField mNumericFieldCurrentBalance = null;
 	private HyjSpinnerField mSpinnerFieldAccountType = null;
 	private HyjRemarkField mRemarkFieldAccountNumber = null;
@@ -61,12 +69,23 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		String intentAccountType = intent.getStringExtra("accountType");
 		if (modelId != -1) {
 			moneyAccount = new Select().from(MoneyAccount.class)
 					.where("_id=?", modelId).executeSingle();
-
 		} else {
 			moneyAccount = new MoneyAccount();
+			moneyAccount.setFriendId(intent.getStringExtra("friendId"));
+			if(intentAccountType != null && intentAccountType.equalsIgnoreCase("Topup")){
+				moneyAccount.setAccountType("Topup");
+//				if(moneyAccount.getFriendId() != null){
+//					List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
+//					int numberOfCards = topupAccounts.size() + 1;
+//					
+//					Friend friend = HyjModel.getModel(Friend.class, moneyAccount.getFriendId());
+//					moneyAccount.setName(friend.getDisplayName() + "储值卡" + numberOfCards);
+//				} 
+			}
 		}
 		mMoneyAccountEditor = moneyAccount.newModelEditor();
 
@@ -106,7 +125,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mSpinnerFieldAccountType
 				.setItems(
 						R.array.moneyAccountFormFragment_spinnerField_accountType_array,
-						new String[] { "Cash", "Deposit", "Credit", "Online"/*
+						new String[] { "Cash", "Topup", "Deposit", "Credit", "Online"/*
 																			 * ,
 																			 * "Debt"
 																			 */});
@@ -114,7 +133,47 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				.setSelectedValue(moneyAccount.getAccountType());
 		mSpinnerFieldAccountType.setEnabled(modelId == -1
 				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mSpinnerFieldAccountType.setOnItemSelectedListener(new OnItemSelectedListener(){
 
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				Friend friend = null;
+				if(mSelectorFieldFriend.getModelId() != null){
+					friend = Friend.getModel(Friend.class, mSelectorFieldFriend.getModelId());
+				}
+				setupFriendField(friend);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(
+				R.id.moneyAccountFormFragment_selectorField_friend);
+		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyAccountFormFragment.this
+						.openActivityWithFragmentForResult(
+								FriendListFragment.class,
+								R.string.moneyAccountFormFragment_editText_hint_friend,
+								null, GET_FRIEND_ID);
+			}
+		});		
+		
+		Friend friend = moneyAccount.getFriend();
+		setupFriendField(friend);
+		
+		// 当创建的类型就指定为Topup时（从储值卡账户列表打开），商家和类型不让修改
+		if(intentAccountType != null && intentAccountType.equalsIgnoreCase("Topup")){
+			mSelectorFieldFriend.setEnabled(false);
+			mSpinnerFieldAccountType.setEnabled(false);
+		}
+		
 		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(
 				R.id.moneyAccountFormFragment_textField_accountNumber);
 		mRemarkFieldAccountNumber.setText(moneyAccount.getAccountNumber());
@@ -142,6 +201,28 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		}
 	}
 
+	private void setupFriendField(Friend friend) {
+		if(mSpinnerFieldAccountType.getSelectedValue().equalsIgnoreCase("Topup")){
+			mSelectorFieldFriend.setVisibility(View.VISIBLE);
+			getView().findViewById(R.id.field_separator_friend).setVisibility(View.VISIBLE);
+
+			if (friend != null) {
+				mSelectorFieldFriend.setModelId(friend.getId());
+				mSelectorFieldFriend.setText(friend.getDisplayName());
+				List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
+				int numberOfCards = topupAccounts.size() + 1;
+				mTextFieldName.setText(friend.getDisplayName() + "储值卡" + numberOfCards);
+			}
+		} else {
+			mSelectorFieldFriend.setVisibility(View.GONE);
+			getView().findViewById(R.id.field_separator_friend).setVisibility(View.GONE);
+
+			mSelectorFieldFriend.setModelId(null);
+			mSelectorFieldFriend.setText(null);
+			mTextFieldName.setText(null);
+		}
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
@@ -155,6 +236,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor
 				.getModelCopy();
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
+		modelCopy.setFriendId(mSelectorFieldFriend.getModelId());
 		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
 		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
@@ -173,6 +255,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				.getValidationError("currentBalance"));
 		mSpinnerFieldAccountType.setError(mMoneyAccountEditor
 				.getValidationError("accountType"));
+		mSelectorFieldFriend.setError(mMoneyAccountEditor
+				.getValidationError("friend"));
 		mRemarkFieldAccountNumber.setError(mMoneyAccountEditor
 				.getValidationError("accountNumber"));
 		mRemarkFieldBankAddress.setError(mMoneyAccountEditor
@@ -189,6 +273,16 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 		mMoneyAccountEditor.validate();
 
+		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
+			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
+				mMoneyAccountEditor.setValidationError("friend", R.string.moneyAccountFormFragment_editText_hint_friend);
+			} else {
+				mMoneyAccountEditor.removeValidationError("friend");
+			}
+		} else {
+			mMoneyAccountEditor.removeValidationError("friend");
+		}
+		
 		if (mMoneyAccountEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
@@ -314,10 +408,16 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
+		case GET_FRIEND_ID:
+			if (resultCode == Activity.RESULT_OK) {
+				long _id = data.getLongExtra("MODEL_ID", -1);
+				Friend friend = Friend.load(Friend.class, _id);
+				setupFriendField(friend);
+			}
+			break;
+
 		case GET_CURRENCY_ID:
 			if (resultCode == Activity.RESULT_OK) {
-				HyjUtil.displayToast(String.valueOf(data.getLongExtra(
-						"MODEL_ID", -1)));
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Currency currency = Currency.load(Currency.class, _id);
 				mSelectorFieldCurrency.setText(currency.getName());

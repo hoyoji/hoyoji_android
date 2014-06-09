@@ -1,9 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
-import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -42,12 +40,12 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountTopupListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
 public class MoneyTopupFormFragment extends HyjUserFormFragment {
-	private final static int GET_TRANSFEROUT_FRIEND_ID = 1;
 	private final static int GET_TRANSFEROUT_ID = 2;
 	private final static int GET_TRANSFERIN_FRIEND_ID = 3;
 	private final static int GET_TRANSFERIN_ID = 4;
@@ -59,13 +57,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericTransferOutAmount = null;
-	private HyjSelectorField mSelectorFieldTransferOutFriend = null;
-	private ImageView mImageViewClearTransferOutFriend = null;
-	private View mViewSeparatorTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferInFriend = null;
-	private ImageView mImageViewClearTransferInFriend = null;
-	private View mViewSeparatorTransferIn = null;
 	private HyjSelectorField mSelectorFieldTransferIn = null;
 	private HyjNumericField mNumericTransferInAmount = null;
 	private View mViewSeparatorTransferInAmount = null;
@@ -92,11 +85,14 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			moneyTopup =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyTopup = new MoneyTransfer();
+			moneyTopup.setTransferInId(null);
+			moneyTopup.setTransferType("Topup");
+			
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
-				moneyTopup.setTransferInId(moneyAccountId);
 				moneyTopup.setTransferOutId(moneyAccountId);
 			}
+			
 //			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
 //			if(friendUserId != null){
 //				moneyTopup.setTransferInFriendUserId(friendUserId);
@@ -148,38 +144,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			
 		});
 		
-		Friend transferOutFriend = moneyTopup.getTransferOutFriend();
-		mSelectorFieldTransferOutFriend = (HyjSelectorField) getView().findViewById(R.id.moneyTopupFormFragment_selectorField_transferOutFriend);
-		if(transferOutFriend != null){
-			mSelectorFieldTransferOutFriend.setModelId(transferOutFriend.getId());
-			mSelectorFieldTransferOutFriend.setText(transferOutFriend.getDisplayName());
-		}
-		mSelectorFieldTransferOutFriend.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				MoneyTopupFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_transferOut, null, GET_TRANSFEROUT_FRIEND_ID);
-			}
-		}); 
-		
-		mImageViewClearTransferOutFriend = (ImageView) getView().findViewById(
-				R.id.moneyTopupFormFragment_imageView_clear_transferOutFriend);
-		mImageViewClearTransferOutFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldTransferOutFriend.setModelId(null);
-				mSelectorFieldTransferOutFriend.setText("");
-				MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
-				mSelectorFieldTransferOut.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
-				mSelectorFieldTransferOut.setModelId(activeAccount.getId());
-				mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
-         		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
-         		
-			}
-		});
-		
-		mViewSeparatorTransferOut = (View) getView().findViewById(R.id.moneyTopupFormFragment_separatorField_transferOut);
-		
 		MoneyAccount transferOut = moneyTopup.getTransferOut();
 		mSelectorFieldTransferOut = (HyjSelectorField) getView().findViewById(R.id.moneyTopupFormFragment_selectorField_transferOut);
 
@@ -207,26 +171,9 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyTopupFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_transferIn, null, GET_TRANSFERIN_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.moneyTopupFormFragment_editText_hint_transferInFriend, null, GET_TRANSFERIN_FRIEND_ID);
 			}
 		}); 
-		
-		mImageViewClearTransferInFriend = (ImageView) getView().findViewById(
-				R.id.moneyTopupFormFragment_imageView_clear_transferInFriend);
-		mImageViewClearTransferInFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldTransferInFriend.setModelId(null);
-				mSelectorFieldTransferInFriend.setText("");
-				MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
-				mSelectorFieldTransferIn.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
-				mSelectorFieldTransferIn.setModelId(activeAccount.getId());
-				mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
-         		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
-			}
-		});
-		
-		mViewSeparatorTransferIn = (View) getView().findViewById(R.id.moneyTopupFormFragment_separatorField_transferIn);
 		
 		MoneyAccount transferIn = moneyTopup.getTransferIn();
 		mSelectorFieldTransferIn = (HyjSelectorField) getView().findViewById(R.id.moneyTopupFormFragment_selectorField_transferIn);
@@ -238,10 +185,16 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferIn.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				if(mSelectorFieldTransferInFriend.getModelId() == null){
+					HyjUtil.displayToast(R.string.moneyTopupFormFragment_editText_hint_transferInFriend);
+					return;
+				} 
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
+				bundle.putString("friendId", mSelectorFieldTransferInFriend.getModelId());
+				bundle.putString("friendDisplayName", mSelectorFieldTransferInFriend.getText());
 				
-				MoneyTopupFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_TRANSFERIN_ID);
+				MoneyTopupFormFragment.this.openActivityWithFragmentForResult(MoneyAccountTopupListFragment.class, R.string.moneyTopupFormFragment_editText_hint_transferIn, bundle, GET_TRANSFERIN_ID);
 			}
 		});	
 		
@@ -267,7 +220,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyTopupFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyTopupFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.moneyTopupFormFragment_editText_hint_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -322,7 +275,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 					}
 				});
 				
-				if(mSelectorFieldTransferOutFriend.getModelId() == null && mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
+				if(mSelectorFieldTransferInFriend.getModelId() == null && (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
 					for(int i = 0; i<popup.getMenu().size();i++){
 						popup.getMenu().setGroupEnabled(i, false);
 					}
@@ -355,60 +308,52 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-			setPermission();
-			
-			// 只在新增时才自动打开软键盘， 修改时不自动打开
-			if (modelId == -1) {
-				setExchangeRate(false);
-				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-			}else{
-				setExchangeRate(true);
-			}
+		setPermission();
+		
+		// 只在新增时才自动打开软键盘， 修改时不自动打开
+		if (modelId == -1) {
+			setExchangeRate(false);
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}else{
+			setExchangeRate(true);
+		}
 	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    if(mMoneyTransferEditor!= null && mMoneyTransferEditor.getModelCopy().get_mId() != null && (mSelectorFieldTransferOutFriend.getModelId() == null 
-				&& mSelectorFieldTransferInFriend.getModelId() == null 
+	    if(mMoneyTransferEditor!= null && mMoneyTransferEditor.getModelCopy().get_mId() != null && (mSelectorFieldTransferInFriend.getModelId() == null 
 				&& (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null))){
 	    	hideSaveAction();
 	    }
 	}
 	
 	private void setPermission() {
-		if(mSelectorFieldTransferOutFriend.getModelId() == null 
-				&& mSelectorFieldTransferInFriend.getModelId() == null 
-				&& (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
-			
-			mDateTimeFieldDate.setEnabled(false);
-			mNumericTransferOutAmount.setEnabled(false);
-			mSelectorFieldTransferOutFriend.setEnabled(false);
-			mSelectorFieldTransferOut.setEnabled(false);
-			mNumericTransferInAmount.setEnabled(false);
-			mSelectorFieldTransferInFriend.setEnabled(false);
-			mSelectorFieldTransferIn.setEnabled(false);
-			mNumericExchangeRate.setEnabled(false);
-			mSelectorFieldProject.setEnabled(false);
-			mRemarkFieldRemark.setEnabled(false);
-			
-			if(this.mOptionsMenu != null){
-		    	hideSaveAction();
-			}
-			
-			if(mSelectorFieldTransferOut.getModelId() == null){
-				mSelectorFieldTransferOutFriend.setText("无转出人");
-			}else if(mSelectorFieldTransferIn.getModelId() == null){
-				mSelectorFieldTransferInFriend.setText("无转入人");
-			}
-			
-		}else if(mSelectorFieldTransferOutFriend.getModelId() != null){
-     		mViewSeparatorTransferOut.setVisibility(View.GONE);
-     		mSelectorFieldTransferOut.setVisibility(View.GONE);
-		}else if(mSelectorFieldTransferInFriend.getModelId() != null){
-     		mViewSeparatorTransferIn.setVisibility(View.GONE);
-     		mSelectorFieldTransferIn.setVisibility(View.GONE);
-		}
+//		if(mSelectorFieldTransferInFriend.getModelId() == null 
+//				&& (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
+//			
+//			mDateTimeFieldDate.setEnabled(false);
+//			mNumericTransferOutAmount.setEnabled(false);
+//			mSelectorFieldTransferOut.setEnabled(false);
+//			mNumericTransferInAmount.setEnabled(false);
+//			mSelectorFieldTransferInFriend.setEnabled(false);
+//			mSelectorFieldTransferIn.setEnabled(false);
+//			mNumericExchangeRate.setEnabled(false);
+//			mSelectorFieldProject.setEnabled(false);
+//			mRemarkFieldRemark.setEnabled(false);
+//			
+//			if(this.mOptionsMenu != null){
+//		    	hideSaveAction();
+//			}
+//			
+////			if(mSelectorFieldTransferIn.getModelId() == null){
+////				mSelectorFieldTransferInFriend.setText("请选择商家好友");
+////			}
+//		} 
+//		else if(mSelectorFieldTransferInFriend.getModelId() != null){
+//     		mViewSeparatorTransferIn.setVisibility(View.GONE);
+//     		mSelectorFieldTransferIn.setVisibility(View.GONE);
+//		}
 	}
 
 	private void setupDeleteButton(HyjModelEditor<MoneyTransfer> moneyTopupEditor) {
@@ -521,22 +466,11 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		modelCopy.setTransferOutAmount(mNumericTransferOutAmount.getNumber());
 		
 		modelCopy.setTransferOutId(mSelectorFieldTransferOut.getModelId());
-		if(mSelectorFieldTransferOutFriend.getModelId() != null){
-			Friend transferOutFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferOutFriend.getModelId());
-			modelCopy.setTransferOutFriend(transferOutFriend);
-			modelCopy.setTransferOutId(null);
-		}else{
-			modelCopy.setTransferOutFriend(null);
-		}
+		modelCopy.setTransferOutFriend(null);
 		
 		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
-		if(mSelectorFieldTransferInFriend.getModelId() != null){
-			Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
-			modelCopy.setTransferInFriend(transferInFriend);
-			modelCopy.setTransferInId(null);
-		}else{
-			modelCopy.setTransferInFriend(null);
-		}
+		Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
+		modelCopy.setTransferInFriend(transferInFriend);
 		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
@@ -552,7 +486,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		if(mMoneyTransferEditor.getValidationError("transferOutAmount") != null){
 			mNumericTransferOutAmount.showSoftKeyboard();
 		}
-		mSelectorFieldTransferOutFriend.setError(mMoneyTransferEditor.getValidationError("transferOutFriend"));
 		mSelectorFieldTransferOut.setError(mMoneyTransferEditor.getValidationError("transferOut"));
 		mSelectorFieldTransferInFriend.setError(mMoneyTransferEditor.getValidationError("transferInFriend"));
 		mSelectorFieldTransferIn.setError(mMoneyTransferEditor.getValidationError("transferIn"));
@@ -568,7 +501,62 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		mMoneyTransferEditor.validate();
+//		mMoneyTransferEditor.validate();
+		if(mMoneyTransferEditor.getModelCopy().getDate() == null){
+			mMoneyTransferEditor.setValidationError("date",R.string.moneyTopupFormFragment_editText_hint_date);
+		}else{
+			mMoneyTransferEditor.removeValidationError("date");
+		}
+		
+		if(mMoneyTransferEditor.getModelCopy().getTransferOutAmount() == null){
+			mMoneyTransferEditor.setValidationError("transferOutAmount",R.string.moneyTopupFormFragment_editText_hint_transferOutAmount);
+		}else if(mMoneyTransferEditor.getModelCopy().getTransferOutAmount() < 0){
+			mMoneyTransferEditor.setValidationError("transferOutAmount",R.string.moneyTopupFormFragment_editText_validationError_negative_transferOutAmount);
+		}else if(mMoneyTransferEditor.getModelCopy().getTransferOutAmount() > 99999999){
+			mMoneyTransferEditor.setValidationError("transferOutAmount",R.string.moneyTopupFormFragment_editText_validationError_beyondMAX_transferOutAmount);
+		}else{
+			mMoneyTransferEditor.removeValidationError("transferOutAmount");
+		}
+
+
+		if(mMoneyTransferEditor.getModelCopy().getTransferOutId() == null){
+			mMoneyTransferEditor.setValidationError("transferOut",R.string.moneyTopupFormFragment_editText_hint_transferOut);
+		}else{
+			mMoneyTransferEditor.removeValidationError("transferOut");
+		}
+		
+		if(mMoneyTransferEditor.getModelCopy().getTransferInFriendUserId() == null
+			&& mMoneyTransferEditor.getModelCopy().getTransferInLocalFriendId() == null){
+			mMoneyTransferEditor.setValidationError("transferInFriend", R.string.moneyTopupFormFragment_editText_hint_transferInFriend);
+		} else {
+			mMoneyTransferEditor.removeValidationError("transferInFriend");
+		}
+
+		if(mMoneyTransferEditor.getModelCopy().getTransferInId() == null){
+			mMoneyTransferEditor.setValidationError("transferIn",R.string.moneyTopupFormFragment_editText_hint_transferIn);
+		}else{
+			mMoneyTransferEditor.removeValidationError("transferIn");
+		}
+		
+		if(mMoneyTransferEditor.getModelCopy().getProjectId() == null){
+			mMoneyTransferEditor.setValidationError("project",R.string.moneyTopupFormFragment_editText_hint_project);
+		}else{
+			mMoneyTransferEditor.removeValidationError("project");
+		}
+				
+		if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == null){
+			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_hint_exchangeRate);
+		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == 0){
+			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_zero_exchangeRate);
+		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() < 0){
+			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_negative_exchangeRate);
+		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() > 99999999){
+			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		}
+		else{
+			mMoneyTransferEditor.removeValidationError("exchangeRate");
+		}
+		
 		
 		if(mMoneyTransferEditor.hasValidationErrors()){
 			showValidatioErrors();
@@ -598,7 +586,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 				
 				MoneyTransfer oldMoneyTransferModel = mMoneyTransferEditor.getModel();
 				MoneyTransfer moneyTopupModel = mMoneyTransferEditor.getModelCopy();
-				
 
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount transferOut = moneyTopupModel.getTransferOut();
@@ -623,14 +610,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 								exchangModelEditor.save();
 							}
 						}
-//						else{
-//							exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
-//							if(exchange.getRate() != 1/rate){
-//								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-//								exchangModelEditor.getModelCopy().setRate(1/rate);
-//								exchangModelEditor.save();
-//							}
-//						}
 					}
 				}
 				
@@ -700,28 +679,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
-             case GET_TRANSFEROUT_FRIEND_ID :
-            	 if(resultCode == Activity.RESULT_OK){
-             		long _id = data.getLongExtra("MODEL_ID", -1);
-             		Friend friend = Friend.load(Friend.class, _id);
-             		
-             		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-             			MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
-             			mSelectorFieldTransferOutFriend.setText("");
-                 		mSelectorFieldTransferOutFriend.setModelId(null);
-                 		mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
-                 		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
-                 		mSelectorFieldTransferOut.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
-                 		mSelectorFieldTransferOut.setModelId(activeAccount.getId());
-                 		return;
-             		}
-             		
-             		mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
-             		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
-             		mViewSeparatorTransferOut.setVisibility(View.GONE);
-             		mSelectorFieldTransferOut.setVisibility(View.GONE);
-             	 }
-             	 break;
              case GET_TRANSFEROUT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
@@ -735,22 +692,17 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
-             		
-             		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-             			MoneyAccount activeAccount = HyjModel.getModel(MoneyAccount.class, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveMoneyAccountId());
-             			mSelectorFieldTransferInFriend.setText("");
-             			mSelectorFieldTransferInFriend.setModelId(null);
-                 		mViewSeparatorTransferIn.setVisibility(View.VISIBLE);
-                 		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
-                 		mSelectorFieldTransferIn.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
-                 		mSelectorFieldTransferIn.setModelId(activeAccount.getId());
-                 		return;
-             		}
-             		
-             		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
+         			mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferInFriend.setModelId(friend.getId());
-             		mViewSeparatorTransferIn.setVisibility(View.GONE);
-             		mSelectorFieldTransferIn.setVisibility(View.GONE);
+        
+             		MoneyAccount moneyAccount = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ?", "Topup", friend.getId()).executeSingle();
+             		if(moneyAccount != null){
+                 		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
+                 		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
+             		} else {
+             			mSelectorFieldTransferIn.setText(friend.getDisplayName()+"储值卡1");
+                 		mSelectorFieldTransferIn.setModelId(null);
+             		}
              	 }
              	 break;
              case GET_TRANSFERIN_ID:
