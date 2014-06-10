@@ -106,6 +106,9 @@ public class HyjSpinnerField extends LinearLayout {
 	}
 	
 	public String getSelectedValue(){
+		if(mEditTextEdit.getSelectedItemPosition() < 0){
+			return null;
+		}
 		return mValues[mEditTextEdit.getSelectedItemPosition()];
 	}
 	

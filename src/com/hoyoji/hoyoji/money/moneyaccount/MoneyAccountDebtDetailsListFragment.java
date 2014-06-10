@@ -76,7 +76,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.money_listfragment_search;
+		return R.menu.money_listfragment_search_edit;
 	}
 
 	@Override
@@ -177,7 +177,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 		Bundle queryParams = buildQueryParams();
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			openActivityWithFragmentForResult(MoneyAccountDebtSearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
-			
+			return true;
+		} else if (item.getItemId() == R.id.searchListFragment_action_edit) {
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", mMoneyAccount.get_mId());
+			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
 			return true;
 		}
 		// Handle your other action bar items...

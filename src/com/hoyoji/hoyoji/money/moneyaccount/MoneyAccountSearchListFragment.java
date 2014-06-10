@@ -178,7 +178,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", mMoneyAccount.get_mId());
 			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
-		return true;
+			return true;
 		}
 		
 		// Handle your other action bar items...

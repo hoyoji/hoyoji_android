@@ -199,7 +199,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	}
 
 	private void setupFriendField(Friend friend) {
-		if(mSpinnerFieldAccountType.getSelectedValue().equalsIgnoreCase("Topup")){
+		if(mSpinnerFieldAccountType.getSelectedValue() != null && mSpinnerFieldAccountType.getSelectedValue().equalsIgnoreCase("Topup")){
 			mSelectorFieldFriend.setVisibility(View.VISIBLE);
 			getView().findViewById(R.id.field_separator_friend).setVisibility(View.VISIBLE);
 
@@ -216,7 +216,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 			mSelectorFieldFriend.setModelId(null);
 			mSelectorFieldFriend.setText(null);
-			mTextFieldName.setText(null);
+			mTextFieldName.setText(mMoneyAccountEditor.getModel().getDisplayName());
 		}
 	}
 
