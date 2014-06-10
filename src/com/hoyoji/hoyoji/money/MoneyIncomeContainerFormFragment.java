@@ -1165,7 +1165,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								if(apportion.get_mId() == null){
 									moneyBorrow = new MoneyBorrow();
 								} else {
-									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId", apportion.getId()).executeSingle();
+									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
 								}
 								moneyBorrow.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
