@@ -111,7 +111,7 @@ public class MemberListFragment extends HyjUserListFragment{
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
 				return true;
 			}else{
-				HyjUtil.displayToast("您不能再共享来的项目添加共享成员");
+				HyjUtil.displayToast("您不能在共享来的项目添加共享成员");
 				return false;
 			}
 		}
