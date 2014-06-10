@@ -86,7 +86,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyBorrow =  new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
+			moneyBorrow = HyjModel.load(MoneyBorrow.class, modelId); // new Select().from(MoneyBorrow.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyBorrow.hasEditPermission();
 		} else {
 			moneyBorrow = new MoneyBorrow();

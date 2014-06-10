@@ -138,16 +138,16 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	
