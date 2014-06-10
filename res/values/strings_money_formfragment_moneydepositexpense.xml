@@ -28,12 +28,8 @@
    <string name="moneyDepositExpenseFormFragment_editText_validationError_negative_exchangeRate">汇率不能为负数</string>
    <string name="moneyDepositExpenseFormFragment_editText_validationError_beyondMAX_exchangeRate">汇率超出范围</string>
    
-   <string name="moneyDepositExpenseFormFragment_textView_moneyDepositCategory">分类</string>
-   <string name="moneyDepositExpenseFormFragment_editText_hint_moneyDepositCategory">请选择分类</string>
-   
    <string name="moneyDepositExpenseFormFragment_textView_friend">收款方</string>
-   <string name="moneyDepositExpenseFormFragment_editText_hint_friend">无收款方</string>
-   <string name="moneyDepositExpenseFormFragment_editText_error_friend">自己不能作为收款方，请重新选择</string>
+   <string name="moneyDepositExpenseFormFragment_editText_hint_friend">请选择会费收款人</string>
    
    <string name="moneyDepositExpenseFormFragment_textView_remark">备注</string>
    <string name="moneyDepositExpenseFormFragment_editText_hint_remark">无备注</string>
