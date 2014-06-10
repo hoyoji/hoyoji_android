@@ -469,7 +469,11 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		modelCopy.setTransferOutFriend(null);
 		
 		modelCopy.setTransferInId(mSelectorFieldTransferIn.getModelId());
-		Friend transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
+		
+		Friend transferInFriend = null;
+		if(mSelectorFieldTransferInFriend.getModelId() != null){
+			transferInFriend = HyjModel.getModel(Friend.class, mSelectorFieldTransferInFriend.getModelId());
+		}
 		modelCopy.setTransferInFriend(transferInFriend);
 		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
