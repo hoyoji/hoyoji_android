@@ -234,7 +234,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			if(projectBalance < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
-				numericView.setTextColor(Color.parseColor("#FF0000"));
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			
 			numericView.setNumber(Math.abs(projectBalance));
@@ -250,7 +250,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			if(depositBalance < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
-				numericView.setTextColor(Color.parseColor("#FF0000"));
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			
 			numericView.setNumber(Math.abs(depositBalance));
