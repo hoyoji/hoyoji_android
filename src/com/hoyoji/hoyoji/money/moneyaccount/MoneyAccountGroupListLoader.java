@@ -68,7 +68,7 @@ public class MoneyAccountGroupListLoader extends
 //		   <string-array name="moneyAccountFormFragment_spinnerField_accountType_array">
 //	        <item>现金账户</item>
 //	        <item>银行卡账户</item>
-//    		<item>储值卡账户</item>
+//    		<item>充值卡账户</item>
 //	        <item>信用卡账户</item>
 //	        <item>虚拟账户</item>
 //	        <item>借贷账户</item>
@@ -156,7 +156,7 @@ public class MoneyAccountGroupListLoader extends
 					}
 					if(count > 0){
 						groupObject = new HashMap<String, Object>();
-						groupObject.put("name", "储值卡账户");
+						groupObject.put("name", "充值卡账户");
 						groupObject.put("accountType", "Topup");
 						groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
 						list.add(groupObject);

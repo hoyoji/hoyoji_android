@@ -120,7 +120,7 @@ public class MoneyAccountTopupListFragment extends HyjUserExpandableListFragment
 		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
 			if(adapterContextMenuInfo.id != -1){
-				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "储值卡账户资料");
+				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "充值卡账户资料");
 				menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 			}
 		}
@@ -271,7 +271,7 @@ public class MoneyAccountTopupListFragment extends HyjUserExpandableListFragment
 			return;
 		}
 		moneyAccount.delete();
-	    HyjUtil.displayToast("储值卡账户删除成功");
+	    HyjUtil.displayToast("充值卡账户删除成功");
 	}
 	
 	private static class MoneyAccountGroupListAdapter extends HyjSimpleExpandableListAdapter{

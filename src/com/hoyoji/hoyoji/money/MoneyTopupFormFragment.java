@@ -717,7 +717,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
                  		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
                  		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
              		} else {
-             			mSelectorFieldTransferIn.setText(friend.getDisplayName() + "储值卡1");
+             			mSelectorFieldTransferIn.setText(friend.getDisplayName() + "充值卡1");
                  		mSelectorFieldTransferIn.setModelId(null);
              		}
              	 }

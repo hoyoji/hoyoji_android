@@ -83,7 +83,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 //					int numberOfCards = topupAccounts.size() + 1;
 //					
 //					Friend friend = HyjModel.getModel(Friend.class, moneyAccount.getFriendId());
-//					moneyAccount.setName(friend.getDisplayName() + "储值卡" + numberOfCards);
+//					moneyAccount.setName(friend.getDisplayName() + "充值卡" + numberOfCards);
 //				} 
 			}
 		}
@@ -165,7 +165,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		Friend friend = moneyAccount.getFriend();
 		setupFriendField(friend);
 		
-		// 当创建的类型就指定为Topup时（从储值卡账户列表打开），商家和类型不让修改
+		// 当创建的类型就指定为Topup时（从充值卡账户列表打开），商家和类型不让修改
 		if(intentAccountType != null && intentAccountType.equalsIgnoreCase("Topup")){
 			mSelectorFieldFriend.setEnabled(false);
 			mSpinnerFieldAccountType.setEnabled(false);
@@ -208,7 +208,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
 				int numberOfCards = topupAccounts.size() + 1;
-				mTextFieldName.setText(friend.getDisplayName() + "储值卡" + numberOfCards);
+				mTextFieldName.setText(friend.getDisplayName() + "充值卡" + numberOfCards);
 			}
 		} else {
 			mSelectorFieldFriend.setVisibility(View.GONE);

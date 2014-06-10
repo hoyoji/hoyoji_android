@@ -405,7 +405,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 		}  else if(view.getId() == R.id.homeListItem_title){
 			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
 			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
-				((TextView)view).setText("储值卡充值");
+				((TextView)view).setText("充值卡充值");
 			} else {
 				((TextView)view).setText("转账");
 			}
