@@ -125,10 +125,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mSpinnerFieldAccountType
 				.setItems(
 						R.array.moneyAccountFormFragment_spinnerField_accountType_array,
-						new String[] { "Cash", "Topup", "Deposit", "Credit", "Online"/*
-																			 * ,
-																			 * "Debt"
-																			 */});
+						new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"/*, "Debt" */});
 		mSpinnerFieldAccountType
 				.setSelectedValue(moneyAccount.getAccountType());
 		mSpinnerFieldAccountType.setEnabled(modelId == -1

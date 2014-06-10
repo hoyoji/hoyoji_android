@@ -67,7 +67,8 @@ public class MoneyAccountGroupListLoader extends
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 //		   <string-array name="moneyAccountFormFragment_spinnerField_accountType_array">
 //	        <item>现金账户</item>
-//	        <item>金融账户</item>
+//	        <item>银行卡账户</item>
+//    		<item>储值卡账户</item>
 //	        <item>信用卡账户</item>
 //	        <item>虚拟账户</item>
 //	        <item>借贷账户</item>
@@ -110,6 +111,32 @@ public class MoneyAccountGroupListLoader extends
 						list.add(groupObject);
 					}
 				}
+
+				if(mAccountType == null || mAccountType.equalsIgnoreCase("Deposit")){
+					if(mFriendId == null){
+						args = new String[] {localCurrencyId, "Deposit" };
+					} else {
+						args = new String[] {localCurrencyId, "Deposit", mFriendId };
+					}
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(query, args);
+					if (cursor != null) {
+						balanceTotal = 0;
+						cursor.moveToFirst();
+						count = cursor.getInt(0);
+						balanceTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+					if(count > 0){
+						groupObject = new HashMap<String, Object>();
+						groupObject.put("name", "银行卡账户");
+						groupObject.put("accountType", "Deposit");
+						groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+						list.add(groupObject);
+					}
+				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Topup")){
 					if(mFriendId == null){
 						args = new String[] {localCurrencyId, "Topup" };
@@ -131,31 +158,6 @@ public class MoneyAccountGroupListLoader extends
 						groupObject = new HashMap<String, Object>();
 						groupObject.put("name", "储值卡账户");
 						groupObject.put("accountType", "Topup");
-						groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
-						list.add(groupObject);
-					}
-				}
-				if(mAccountType == null || mAccountType.equalsIgnoreCase("Deposit")){
-					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Deposit" };
-					} else {
-						args = new String[] {localCurrencyId, "Deposit", mFriendId };
-					}
-					cursor = Cache
-							.openDatabase()
-							.rawQuery(query, args);
-					if (cursor != null) {
-						balanceTotal = 0;
-						cursor.moveToFirst();
-						count = cursor.getInt(0);
-						balanceTotal += cursor.getDouble(1);
-						cursor.close();
-						cursor = null;
-					}
-					if(count > 0){
-						groupObject = new HashMap<String, Object>();
-						groupObject.put("name", "金融账户");
-						groupObject.put("accountType", "Deposit");
 						groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
 						list.add(groupObject);
 					}
