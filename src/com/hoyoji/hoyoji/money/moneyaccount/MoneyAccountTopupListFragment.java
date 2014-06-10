@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +62,8 @@ public class MoneyAccountTopupListFragment extends HyjUserExpandableListFragment
 		Intent intent = getActivity().getIntent();
 		String friendDisplayName = intent.getStringExtra("friendDisplayName");
 		if(friendDisplayName != null){
-			this.getActivity().getActionBar().setSubtitle(friendDisplayName);
+//			this.getActivity().getActionBar().setSubtitle(friendDisplayName);
+			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(friendDisplayName);
 		}
 		
 		if (mChangeObserver == null) {
