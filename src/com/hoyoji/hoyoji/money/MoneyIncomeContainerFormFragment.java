@@ -1192,15 +1192,16 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
+								moneyLend.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
 								moneyLend.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyLend.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyLend.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
-								moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyBorrow.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 								moneyLend.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
 								moneyLend.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyLend.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
-								moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-								moneyLend.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+								moneyLend.setLocalFriendId(null);
+								moneyLend.setMoneyAccountId(null);
 								moneyLend.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyLend.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyLend.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
@@ -1220,6 +1221,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
 								moneyIncome.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//								moneyIncome.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFriendUserId());
 								moneyIncome.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
 								moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
