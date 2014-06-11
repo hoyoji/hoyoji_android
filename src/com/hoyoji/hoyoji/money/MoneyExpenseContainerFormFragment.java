@@ -509,6 +509,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 											MoneyExpenseApportion moneyExpenseAportion = moneyExpenseApportions.next();
 											ProjectShareAuthorization oldProjectShareAuthorization;
 
+											// 非项目好友不用更新项目分摊
 											if(moneyExpenseAportion.getFriendUserId() == null){
 												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId()).executeSingle();
 												if(moneyLend != null){
