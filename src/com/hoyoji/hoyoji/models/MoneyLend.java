@@ -555,4 +555,13 @@ public class MoneyLend extends HyjModel{
 	public String getMoneyIncomeApportionId() {
 		return this.mMoneyIncomeApportionId;
 	}
+
+	public MoneyIncomeApportion getMoneyIncomeApportion() {
+		if(this.mMoneyIncomeApportionId == null){
+			return null;
+		}
+		return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
+	}
+
+
 }
