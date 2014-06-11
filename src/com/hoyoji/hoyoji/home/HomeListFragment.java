@@ -58,7 +58,7 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
@@ -151,7 +151,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeExpense) {
 							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
-							openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
@@ -234,7 +234,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
-			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
+			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
 					R.string.moneyDepositIncomeFormFragment_title_addnew, null);
 			return true;
 		}
@@ -841,7 +841,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
 				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}

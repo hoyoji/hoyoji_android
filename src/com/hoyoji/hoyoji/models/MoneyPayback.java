@@ -101,7 +101,7 @@ public class MoneyPayback extends HyjModel{
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
-		mMoneyAccountId = userData.getActiveMoneyAccountId();
+		this.setMoneyAccount(userData.getActiveMoneyAccount());
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
@@ -258,9 +258,13 @@ public class MoneyPayback extends HyjModel{
 		}
 		return (MoneyAccount) getModel(MoneyAccount.class, mMoneyAccountId);
 	}
-	
+
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
-		this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		if(mMoneyAccount == null){
+			this.setMoneyAccountId(null, null);
+		} else {
+			this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		}
 	}
 	
 	public String getMoneyAccountId() {

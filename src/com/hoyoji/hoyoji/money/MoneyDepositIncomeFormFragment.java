@@ -324,7 +324,6 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 										newProjectEditor.save();
 										
 										//更新支出所有者的实际支出
-										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrow.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
 									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
@@ -610,7 +609,7 @@ public class MoneyDepositIncomeFormFragment extends HyjUserFormFragment {
 					}
 				}
 				
-				//更新支出所有者的实际借入
+				//更新收入所有者的实际借入
 					ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrowModel.getProjectId());
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    if(moneyBorrowModel.get_mId() == null || oldMoneyBorrowModel.getProjectId().equals(moneyBorrowModel.getProjectId())){

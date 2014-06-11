@@ -238,6 +238,13 @@ public class UserData extends HyjModel {
 		this.mActiveCurrencyId = mActiveCurrencyId;
 	}
 
+	public MoneyAccount getActiveMoneyAccount(){
+		if(mActiveMoneyAccountId == null) {
+			return null;
+		}
+		return HyjModel.getModel(MoneyAccount.class, mActiveMoneyAccountId);
+	}
+	
 	public String getActiveMoneyAccountId() {
 		return mActiveMoneyAccountId;
 	}

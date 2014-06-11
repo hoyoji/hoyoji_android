@@ -105,7 +105,7 @@ public class MoneyIncome extends HyjModel {
 				.getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mIncomeType = "MoneyIncome";
-		mMoneyAccountId = userData.getActiveMoneyAccountId();
+		this.setMoneyAccount(userData.getActiveMoneyAccount());
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		if (mProjectId != null) {
@@ -280,7 +280,11 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
-		this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		if(mMoneyAccount == null){
+			this.setMoneyAccountId(null, null);
+		} else {
+			this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		}
 	}
 
 	public String getMoneyAccountId() {

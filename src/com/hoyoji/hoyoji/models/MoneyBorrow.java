@@ -116,7 +116,7 @@ public class MoneyBorrow extends HyjModel{
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
-		mMoneyAccountId = userData.getActiveMoneyAccountId();
+		this.setMoneyAccount(userData.getActiveMoneyAccount());
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		mReturnedAmount = 0.00; 
@@ -280,7 +280,11 @@ public class MoneyBorrow extends HyjModel{
 	}
 	
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
-		this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		if(mMoneyAccount == null){
+			this.setMoneyAccountId(null, null);
+		} else {
+			this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		}
 	}
 	
 	public String getMoneyAccountId() {
@@ -550,6 +554,12 @@ public class MoneyBorrow extends HyjModel{
 		}
 		return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
 	}
+	public MoneyDepositIncomeApportion getMoneyDepositIncomeApportion() {
+		if(this.mMoneyDepositIncomeApportionId == null){
+			return null;
+		}
+		return HyjModel.getModel(MoneyDepositIncomeApportion.class, this.mMoneyDepositIncomeApportionId);
+	}
 
 	public void setMoneyExpenseApportionId(String id) {
 		this.mMoneyExpenseApportionId = id;
@@ -582,5 +592,10 @@ public class MoneyBorrow extends HyjModel{
 
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
+	}
+
+	public void setMoneyDepositIncomeApportionId(String id) {
+		this.mMoneyDepositIncomeApportionId = id;
+		
 	}
 }

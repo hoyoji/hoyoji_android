@@ -112,8 +112,8 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 		return getMany(Picture.class, "recordId");
 	}
 
-	public List<MoneyIncomeApportion> getApportions() {
-		return getMany(MoneyIncomeApportion.class, "moneyIncomeId");
+	public List<MoneyDepositIncomeApportion> getApportions() {
+		return getMany(MoneyDepositIncomeApportion.class, "moneyDepositIncomeContainerId");
 	}
 
 	public String getDate() {

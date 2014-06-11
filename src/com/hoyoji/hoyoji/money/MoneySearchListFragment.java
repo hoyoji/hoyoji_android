@@ -637,7 +637,8 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
 				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositIncomeFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}

@@ -95,7 +95,7 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		this.mMoneyDepositIncomeContainerId = mMoneyDepositIncomeContainerId;
 	}
 	
-	public MoneyDepositIncomeContainer getMoneyIncomeContainer(){
+	public MoneyDepositIncomeContainer getMoneyDepositIncomeContainer(){
 		return getModel(MoneyDepositIncomeContainer.class, mMoneyDepositIncomeContainerId);
 	}
 	
@@ -194,14 +194,14 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		MoneyAccount debtAccount = null;
 		if(this.getFriendUserId() != null){
 			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyDepositIncomeContainer().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
 			}
 		}else{
 			// 该好友不是项目成员
 			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), friend);
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyDepositIncomeContainer().getMoneyAccount().getCurrencyId(), friend);
 			}
 		}
 		if(debtAccount != null){
@@ -223,7 +223,7 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 //	}
 
 	public Project getProject() {
-		return this.getMoneyIncomeContainer().getProject();
+		return this.getMoneyDepositIncomeContainer().getProject();
 	}
 
 	@Override
@@ -235,11 +235,11 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 	}
 
 	public ProjectShareAuthorization getProjectShareAuthorization() {
-		if(this.getMoneyIncomeContainer() == null){
+		if(this.getMoneyDepositIncomeContainer() == null){
 			return null;
 		} else {	
 			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
-				   this.getMoneyIncomeContainer().getProjectId(), this.getFriendUserId()).executeSingle();
+				   this.getMoneyDepositIncomeContainer().getProjectId(), this.getFriendUserId()).executeSingle();
 		}
 		}
 	
@@ -284,14 +284,14 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 
 	@Override
 	public String getMoneyAccountId() {
-		if(this.getMoneyIncomeContainer() != null){
-			return this.getMoneyIncomeContainer().getMoneyAccountId();
+		if(this.getMoneyDepositIncomeContainer() != null){
+			return this.getMoneyDepositIncomeContainer().getMoneyAccountId();
 		}
 		return null;
 	}	
 	@Override
 	public String getCurrencyId() {
-		return this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId();
+		return this.getMoneyDepositIncomeContainer().getMoneyAccount().getCurrencyId();
 	}
 
 	public void setLocalFriendId(String id) {
@@ -304,6 +304,7 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 	}
 	@Override
 	public Double getExchangeRate() {
-		return this.getMoneyIncomeContainer().getExchangeRate();
+		return this.getMoneyDepositIncomeContainer().getExchangeRate();
 	}
+
 }
