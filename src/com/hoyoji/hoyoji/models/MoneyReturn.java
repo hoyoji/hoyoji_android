@@ -48,6 +48,10 @@ public class MoneyReturn extends HyjModel{
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 	
+	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
+	@Column(name = "currencyId")
+	private String mCurrencyId;
+	
 	@Column(name = "interest")
 	private Double mInterest;
 	
@@ -528,6 +532,14 @@ public class MoneyReturn extends HyjModel{
 			return null;
 		}
 		return HyjModel.getModel(MoneyPayback.class, this.mMoneyPaybackId);
+	}
+	
+	public String getCurrencyId() {
+		return mCurrencyId;
+	}
+
+	public void setCurrencyId(String mCurrencyId) {
+		this.mCurrencyId = mCurrencyId;
 	}
 
 

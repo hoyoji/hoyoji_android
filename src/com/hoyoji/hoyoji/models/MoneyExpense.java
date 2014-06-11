@@ -56,6 +56,10 @@ public class MoneyExpense extends HyjModel{
 	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
+	
+	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
+	@Column(name = "currencyId")
+	private String mCurrencyId;
 
 	// 如果有，说明该支出是从该收入导入生成的
 	@Column(name = "moneyIncomeId")
@@ -523,5 +527,13 @@ public class MoneyExpense extends HyjModel{
 			return null;
 		}
 		return HyjModel.getModel(MoneyExpenseApportion.class, mMoneyExpenseApportionId);
+	}
+	
+	public String getCurrencyId() {
+		return mCurrencyId;
+	}
+
+	public void setCurrencyId(String mCurrencyId) {
+		this.mCurrencyId = mCurrencyId;
 	}
 }

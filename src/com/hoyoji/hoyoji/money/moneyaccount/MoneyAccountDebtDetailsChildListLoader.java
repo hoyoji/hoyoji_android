@@ -24,6 +24,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
@@ -88,8 +89,8 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 				mLoadLimit = queryParams.getInt("limit", 10);
 				mProjectId = queryParams.getString("projectId");
 				mMoneyAccountId = queryParams.getString("moneyAccountId");
-				mFriendUserId = queryParams.getString("friendUserId");
-				mLocalFriendId = queryParams.getString("localFriendId");
+//				mFriendUserId = queryParams.getString("friendUserId");
+//				mLocalFriendId = queryParams.getString("localFriendId");
 				mLoadLimit += queryParams.getInt("pageSize", 10);
 			} else {
 				mLoadLimit += 10;
@@ -102,10 +103,10 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	this.onContentChanged();
 	    }
 
-		private String buildSearchQuery(String type){
+		private String buildSearchQuery(){
 			StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 			if(mProjectId != null){
-				queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
+				queryStringBuilder.append(" AND main.projectId = '" + mProjectId + "' ");
 			}
 			if(mMoneyAccountId != null){
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyAccountId);
@@ -113,13 +114,13 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 				if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
 					if(moneyAccount.getFriendId() == null && moneyAccount.getName().equalsIgnoreCase("__ANONYMOUS__")){
 						// 匿名借贷账户
-						queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 					} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
-						// 本地用户
-						queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
-					} else {
 						// 网络用户
-						queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "' AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+						queryStringBuilder.append(" AND (main.friendUserId = '" + moneyAccount.getName() + "' AND main.localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+					} else {
+						// 本地用户
+						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId ='" + moneyAccount.getFriendId() + "' AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 					}
 				}
 			}
@@ -137,17 +138,21 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
-
-	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	String searchQuery = buildSearchQuery();
+	    	
+	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
+//	    	moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").join(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").join(MoneyExpenseContainer.class).as("mec").on("mea.moneyExpenseContainerId = mec.id").join(MoneyAccount.class).as("ma").on("ma.id = mec.moneyAccountId").where("main.date > ? AND main.date <= ? AND " + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
+//	    	list.addAll(moneyBorrows);
+	    	
+	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").join(MoneyAccount.class).as("ma").on("ma.id = main.moneyAccountId").where("date > ? AND date <= ? AND " + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	

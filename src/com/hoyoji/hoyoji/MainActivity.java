@@ -780,41 +780,42 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyReturnContainer){
 									recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyExpense){
-									if(((MoneyExpense)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
-									} else {
-										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyIncome){
-									if(((MoneyIncome)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
-									}
-								} else if(model instanceof MoneyBorrow){
-									if(((MoneyBorrow)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
-									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyLend){
-									if(((MoneyLend)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
-									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyPayback){
-									if(((MoneyPayback)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
-									}
-								} else if(model instanceof MoneyReturn){
-									if(((MoneyReturn)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
-									}
-								}
+								} 
+//								else if(model instanceof MoneyExpense){
+//									if(((MoneyExpense)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+//									} else {
+//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyIncome){
+//									if(((MoneyIncome)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyBorrow){
+//									if(((MoneyBorrow)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+//									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
+//									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyLend){
+//									if(((MoneyLend)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+//									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
+//									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyPayback){
+//									if(((MoneyPayback)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyReturn){
+//									if(((MoneyReturn)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
+//									}
+//								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
 							}
@@ -842,41 +843,42 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyReturnContainer){
 									recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyExpense){
-									if(((MoneyExpense)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
-									} else {
-										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyIncome){
-									if(((MoneyIncome)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
-									}
-								} else if(model instanceof MoneyBorrow){
-									if(((MoneyBorrow)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
-									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyLend){
-									if(((MoneyLend)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
-									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
-									}
-								} else if(model instanceof MoneyPayback){
-									if(((MoneyPayback)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
-									}
-								} else if(model instanceof MoneyReturn){
-									if(((MoneyReturn)model).getMoneyAccount() != null){
-										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
-									}
-								}
+								} 
+//								else if(model instanceof MoneyExpense){
+//									if(((MoneyExpense)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+//									} else {
+//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyIncome){
+//									if(((MoneyIncome)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyBorrow){
+//									if(((MoneyBorrow)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+//									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
+//									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyLend){
+//									if(((MoneyLend)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+//									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
+//									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+//										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyPayback){
+//									if(((MoneyPayback)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
+//									}
+//								} else if(model instanceof MoneyReturn){
+//									if(((MoneyReturn)model).getMoneyAccount() != null){
+//										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
+//									}
+//								}
 								jsonObj.put(
 										"recordData", recordData);
 								postData.put(jsonObj);

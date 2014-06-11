@@ -50,6 +50,10 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "paybackDate")
 	private String mPaybackDate;
 	
+	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
+	@Column(name = "currencyId")
+	private String mCurrencyId;
+	
 	@Column(name = "paybackedAmount")
 	private Double mPaybackedAmount;
 
@@ -561,6 +565,14 @@ public class MoneyLend extends HyjModel{
 			return null;
 		}
 		return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
+	}
+	
+	public String getCurrencyId() {
+		return mCurrencyId;
+	}
+
+	public void setCurrencyId(String mCurrencyId) {
+		this.mCurrencyId = mCurrencyId;
 	}
 
 

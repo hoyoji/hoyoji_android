@@ -134,7 +134,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			}
 		} else {
 			if(mMoneyAccount != null){
-//				queryParams.putString("moneyAccountId", mMoneyAccount.getId());
+				queryParams.putString("moneyAccountId", mMoneyAccount.getId());
 				if(mMoneyAccount.getFriendId() != null){
 					queryParams.putString("localFriendId", mMoneyAccount.getFriendId());
 				} else if(!mMoneyAccount.getName().equals("__ANONYMOUS__")){
@@ -175,6 +175,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Bundle queryParams = buildQueryParams();
+		queryParams.remove("moneyAccountId"); // 借贷账户不用传入Forms, 只需传入借贷账户相关的好友即可
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			openActivityWithFragmentForResult(MoneyAccountDebtSearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
 			return true;

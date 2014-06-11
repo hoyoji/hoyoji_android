@@ -56,8 +56,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 	private ChangeObserver mChangeObserver;
 	private String mProjectId;
 	private String mMoneyAccountId;
-	private String mFriendUserId;
-	private String mLocalFriendId;
+//	private String mFriendUserId;
+//	private String mLocalFriendId;
 	private long mDateFrom = 0;
 	private long mDateTo = 0;
 
@@ -91,8 +91,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			mLoadLimit = queryParams.getInt("limit", 10);
 			mProjectId = queryParams.getString("projectId");
 			mMoneyAccountId = queryParams.getString("moneyAccountId");
-			mFriendUserId = queryParams.getString("friendUserId");
-			mLocalFriendId = queryParams.getString("localFriendId");
+//			mFriendUserId = queryParams.getString("friendUserId");
+//			mLocalFriendId = queryParams.getString("localFriendId");
 			mLoadLimit += queryParams.getInt("pageSize", 10);
 		} else {
 			mLoadLimit += 10;
@@ -110,7 +110,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		this.onContentChanged();
 	}
 
-	private String buildSearchQuery(String type){
+	private String buildSearchQuery(){
 		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 		if(mProjectId != null){
 			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
@@ -123,10 +123,10 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					// 匿名借贷账户
 					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
-					// 本地用户
+					// 网络用户
 					queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else {
-					// 网络用户
+					// 本地用户
 					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "' AND ma.currencyId = '" + moneyAccount.getCurrencyId() + "')");
 				}
 			}
@@ -171,6 +171,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		}
 		
 		int loadCount = 0;
+		String searchQuery = buildSearchQuery();
 		while (loadCount < mLoadLimit) {
 			int count = 0;
 			String[] args = new String[] {
@@ -182,7 +183,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Borrow"),
+							"WHERE date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -195,7 +196,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
+							"WHERE date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -208,7 +209,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Return"),
+							"WHERE date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -221,7 +222,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
+							"WHERE date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -246,7 +247,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 
 			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
 			if(count == 0){
-				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis());
+				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis(), searchQuery);
 				if(moreDataInMillis == -1){
 					break;
 				} else {
@@ -276,14 +277,14 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		return list;
 	}
 	
-	private long getHasMoreDataDateInMillis(long fromDateInMillis){
+	private long getHasMoreDataDateInMillis(long fromDateInMillis, String searchQuery){
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Borrow"),
+						"SELECT MAX(date) FROM MoneyBorrow main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -299,7 +300,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Lend"),
+						"SELECT MAX(date) FROM MoneyLend main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -315,7 +316,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Return"),
+						"SELECT MAX(date) FROM MoneyReturn main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -331,7 +332,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + buildSearchQuery("Payback"),
+						"SELECT MAX(date) FROM MoneyPayback main LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId WHERE date <= ? AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

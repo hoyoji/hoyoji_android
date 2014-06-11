@@ -14,8 +14,8 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
-@Table(name = "MoneyIncome", id = BaseColumns._ID)
-public class MoneyIncome extends HyjModel {
+@Table(name = "MoneyDepositIncomeContainer", id = BaseColumns._ID)
+public class MoneyDepositIncomeContainer extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
 	private String mUUID;
@@ -29,42 +29,14 @@ public class MoneyIncome extends HyjModel {
 	@Column(name = "amount")
 	private Double mAmount;
 
-	@Column(name = "incomeType")
-	private String mIncomeType;
-
-	@Column(name = "friendUserId")
-	private String mFriendUserId;
-
-	@Column(name = "localFriendId")
-	private String mLocalFriendId;
-
-	@Column(name = "friendAccountId")
-	private String mFriendAccountId;
-
 	@Column(name = "moneyAccountId")
 	private String mMoneyAccountId;
 
 	@Column(name = "projectId")
 	private String mProjectId;
-
-	@Column(name = "moneyIncomeCategory")
-	private String mMoneyIncomeCategory;
-
-	@Column(name = "moneyIncomeCategoryMain")
-	private String mMoneyIncomeCategoryMain;
-
+	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
-	
-	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
-	@Column(name = "currencyId")
-	private String mCurrencyId;
-
-	@Column(name = "moneyExpenseId")
-	private String mMoneyExpenseId;
-
-	@Column(name = "moneyIncomeApportionId")
-	private String mMoneyIncomeApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -99,20 +71,14 @@ public class MoneyIncome extends HyjModel {
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
 
-	public MoneyIncome() {
+	public MoneyDepositIncomeContainer() {
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser()
 				.getUserData();
 		mUUID = UUID.randomUUID().toString();
-		mIncomeType = "MoneyIncome";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
-		if (mProjectId != null) {
-			mMoneyIncomeCategory = this.getProject().getDefaultIncomeCategory();
-			mMoneyIncomeCategoryMain = this.getProject()
-					.getDefaultIncomeCategoryMain();
-		}
 	}
 
 	public String getId() {
@@ -217,61 +183,6 @@ public class MoneyIncome extends HyjModel {
 		this.mAmount = mAmount;
 	}
 
-	public String getIncomeType() {
-		return mIncomeType;
-	}
-
-	public void setIncomeType(String mIncomeType) {
-		this.mIncomeType = mIncomeType;
-	}
-
-	public Friend getFriend() {
-		if (mFriendUserId != null) {
-			return new Select().from(Friend.class)
-					.where("friendUserId=?", mFriendUserId).executeSingle();
-		} else if (mLocalFriendId != null) {
-			return getModel(Friend.class, mLocalFriendId);
-		}
-		return null;
-	}
-
-	public void setFriend(Friend mFriend) {
-		if (mFriend == null) {
-			this.mFriendUserId = null;
-			this.mLocalFriendId = null;
-		} else if (mFriend.getFriendUserId() != null) {
-			this.mFriendUserId = mFriend.getFriendUserId();
-			this.mLocalFriendId = null;
-		} else {
-			this.mFriendUserId = null;
-			this.mLocalFriendId = mFriend.getId();
-		}
-	}
-
-	public String getFriendUserId() {
-		return mFriendUserId;
-	}
-
-	public void setFriendUserId(String mFriendUserId) {
-		this.mFriendUserId = mFriendUserId;
-	}
-
-	public String getLocalFriendId() {
-		return mLocalFriendId;
-	}
-
-	public void setLocalFriendId(String mLocalFriendId) {
-		this.mLocalFriendId = mLocalFriendId;
-	}
-
-	public String getFriendAccountId() {
-		return mFriendAccountId;
-	}
-
-	public void setFriendAccountId(String mFriendAccountId) {
-		this.mFriendAccountId = mFriendAccountId;
-	}
-
 	public MoneyAccount getMoneyAccount() {
 		if (mMoneyAccountId == null) {
 			return null;
@@ -308,22 +219,6 @@ public class MoneyIncome extends HyjModel {
 
 	public void setProjectId(String mProjectId) {
 		this.mProjectId = mProjectId;
-	}
-
-	public String getMoneyIncomeCategory() {
-		return mMoneyIncomeCategory;
-	}
-
-	public void setMoneyIncomeCategory(String mMoneyIncomeCategory) {
-		this.mMoneyIncomeCategory = mMoneyIncomeCategory;
-	}
-
-	public String getMoneyIncomeCategoryMain() {
-		return mMoneyIncomeCategoryMain;
-	}
-
-	public void setMoneyIncomeCategoryMain(String mMoneyIncomeCategoryMain) {
-		this.mMoneyIncomeCategoryMain = mMoneyIncomeCategoryMain;
 	}
 
 	public Double getExchangeRate() {
@@ -432,16 +327,6 @@ public class MoneyIncome extends HyjModel {
 			modelEditor.removeValidationError("amount");
 		}
 
-		if (this.getMoneyIncomeCategory() == null
-				|| this.getMoneyIncomeCategory().length() == 0) {
-			modelEditor
-					.setValidationError(
-							"moneyIncomeCategory",
-							R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
-		} else {
-			modelEditor.removeValidationError("moneyIncomeCategory");
-		}
-
 		if (this.getExchangeRate() == null) {
 			modelEditor
 					.setValidationError(
@@ -474,15 +359,7 @@ public class MoneyIncome extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("moneyAccount");
 		}
-		if (this.getMoneyIncomeCategory() == null
-				|| this.getMoneyIncomeCategory().length() == 0) {
-			modelEditor
-					.setValidationError(
-							"moneyIncomeCategory",
-							R.string.moneyIncomeFormFragment_editText_hint_moneyIncomeCategory);
-		} else {
-			modelEditor.removeValidationError("moneyIncomeCategory");
-		}
+
 		if (this.getProjectId() == null) {
 			modelEditor.setValidationError("project",
 					R.string.moneyIncomeFormFragment_editText_hint_project);
@@ -575,21 +452,5 @@ public class MoneyIncome extends HyjModel {
 			return false;
 		}
 		return psa.getProjectShareMoneyIncomeDelete();
-	}
-
-	public void setMoneyExpenseId(String moneyExpenseId) {
-		this.mMoneyExpenseId = moneyExpenseId;
-	}
-
-	public void setMoneyIncomeApportionId(String id) {
-		this.mMoneyIncomeApportionId = id;
-	}
-	
-	public String getCurrencyId() {
-		return mCurrencyId;
-	}
-
-	public void setCurrencyId(String mCurrencyId) {
-		this.mCurrencyId = mCurrencyId;
 	}
 }
