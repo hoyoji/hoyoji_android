@@ -57,12 +57,21 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
 
+	// 该借入是由 收入分摊（MoneyIncomeApportion） 生成的
 	@Column(name = "moneyIncomeApportionId")
 	private String mMoneyIncomeApportionId;
-	
+
+	// 该借入是由 支出分摊（MoneyExpenseApportion） 生成的。
+	// 帮别人（被分摊人）生成的, 所以借入的 moneyAccountId 为 null，ownerUserId 会是别人，friendUserId 会是自己
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
 
+	// 该借入是由 预收会费分摊（MoneyDepositIncome） 生成的
+	@Column(name = "moneyDepositIncomeApportionId")
+	private String mMoneyDepositIncomeApportionId;
+	
+	// Borrow :
+	// Deposit :
 	@Column(name = "borrowType")
 	private String mBorrowType;
 	
