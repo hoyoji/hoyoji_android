@@ -280,15 +280,16 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
-		this.mMoneyAccountId = mMoneyAccount.getId();
+		this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
 	}
 
 	public String getMoneyAccountId() {
 		return mMoneyAccountId;
 	}
 
-	public void setMoneyAccountId(String mMoneyAccountId) {
+	public void setMoneyAccountId(String mMoneyAccountId, String currencyId) {
 		this.mMoneyAccountId = mMoneyAccountId;
+		this.mCurrencyId = currencyId;
 	}
 
 	public Project getProject() {

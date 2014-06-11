@@ -941,7 +941,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						moneyBorrow.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 						moneyBorrow.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 						moneyBorrow.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-						moneyBorrow.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+
+						if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+							MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+							moneyBorrow.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+						} else {
+							moneyBorrow.setMoneyAccountId(null, null);
+						}
+
 						moneyBorrow.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 						moneyBorrow.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 						moneyBorrow.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
@@ -1152,7 +1159,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 								moneyIncome.setLocalFriendId(mMoneyIncomeContainerEditor.getModelCopy().getLocalFriendId());
-								moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+
+								if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+									moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+								} else {
+									moneyIncome.setMoneyAccountId(null, null);
+								}
+
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
@@ -1177,7 +1191,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyBorrow.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyBorrow.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 								moneyBorrow.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-								moneyBorrow.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+
+								if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+									moneyBorrow.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+								} else {
+									moneyBorrow.setMoneyAccountId(null, null);
+								}
+
 								moneyBorrow.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyBorrow.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyBorrow.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
@@ -1201,7 +1222,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyLend.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyLend.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 								moneyLend.setLocalFriendId(null);
-								moneyLend.setMoneyAccountId(null);
+
+								if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+									moneyLend.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+								} else {
+									moneyLend.setMoneyAccountId(null, null);
+								}
+
 								moneyLend.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyLend.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyLend.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
@@ -1226,7 +1254,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 								moneyIncome.setLocalFriendId(null);
-								moneyIncome.setMoneyAccountId(null);
+
+								if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+									moneyIncome.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+								} else {
+									moneyIncome.setMoneyAccountId(null, null);
+								}
+
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
@@ -1334,7 +1369,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 				moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
 				moneyIncome.setLocalFriendId(mMoneyIncomeContainerEditor.getModelCopy().getLocalFriendId());
-				moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+
+				if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+					MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+					moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+				} else {
+					moneyIncome.setMoneyAccountId(null, null);
+				}
+
 				moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 				moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 				moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());

@@ -90,7 +90,8 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			moneyReturn = new MoneyReturn();
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
-				moneyReturn.setMoneyAccountId(moneyAccountId);
+				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
+				moneyReturn.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyReturn.setMoneyPaybackId(intent.getStringExtra("counterpartId"));
@@ -415,7 +416,12 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericFieldAmount.getNumber());
 		modelCopy.setInterest(mNumericFieldInterest.getNumber());
-		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
+		if(mSelectorFieldMoneyAccount.getModelId() != null){
+			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
+			modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId(), moneyAccount.getCurrencyId());
+		} else {
+			modelCopy.setMoneyAccountId(null, null);
+		}
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		

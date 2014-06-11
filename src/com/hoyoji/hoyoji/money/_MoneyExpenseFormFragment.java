@@ -100,7 +100,8 @@ public class _MoneyExpenseFormFragment extends HyjUserFormFragment {
 			moneyExpense = new MoneyExpense();
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
-				moneyExpense.setMoneyAccountId(moneyAccountId);
+				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
+				moneyExpense.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
 				moneyExpense.setMoneyIncomeId(intent.getStringExtra("counterpartId"));
@@ -467,7 +468,12 @@ public class _MoneyExpenseFormFragment extends HyjUserFormFragment {
 		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
-		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
+		if(mSelectorFieldMoneyAccount.getModelId() != null){
+			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
+			modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId(), moneyAccount.getCurrencyId());
+		} else {
+			modelCopy.setMoneyAccountId(null, null);
+		}
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
