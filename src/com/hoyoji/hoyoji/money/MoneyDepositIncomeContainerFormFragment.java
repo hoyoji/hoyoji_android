@@ -733,11 +733,6 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							
 							moneyBorrow.delete();
 						} 
-//						// 更新旧项目实际借入
-//						ProjectShareAuthorization oldProjectShareAuthorization = mMoneyDepositIncomeContainerEditor.getOldSelfProjectShareAuthorization();
-//						HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-//						oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyDepositIncomeContainer().getExchangeRate()));
-//						oldProjectShareAuthorizationEditor.save();
 						apportion.delete();
 					} else {
 						HyjModelEditor<MoneyDepositIncomeApportion> apportionEditor = apportion.newModelEditor();
