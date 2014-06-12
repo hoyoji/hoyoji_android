@@ -22,6 +22,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
@@ -109,11 +110,20 @@ public class MoneyAccountSearchChildListLoader extends AsyncTaskLoader<List<HyjM
 			if(mMoneyAccountId != null){
 				queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
 			}
-			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
-			}
-			if(mLocalFriendId != null){
-				queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+			if(type.equalsIgnoreCase("DepositIncome")){
+				if(mFriendUserId != null){
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+				}
+				if(mLocalFriendId != null){
+					queryStringBuilder.append(" AND (EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+				}
+			} else {
+				if(mFriendUserId != null){
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+				}
+				if(mLocalFriendId != null){
+					queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+				}
 			}
 			return queryStringBuilder.toString();
 		}
@@ -153,6 +163,9 @@ public class MoneyAccountSearchChildListLoader extends AsyncTaskLoader<List<HyjM
 	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
+	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositIncomes);
+	    	
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
@@ -190,6 +203,13 @@ public class MoneyAccountSearchChildListLoader extends AsyncTaskLoader<List<HyjM
 				}
 				if(rhs instanceof MoneyIncomeContainer){
 					rhsStr = ((MoneyIncomeContainer) rhs).getDate();
+				}
+
+				if(lhs instanceof MoneyDepositIncomeContainer){
+					lhsStr = ((MoneyDepositIncomeContainer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyDepositIncomeContainer){
+					rhsStr = ((MoneyDepositIncomeContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyTransfer){

@@ -22,6 +22,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
@@ -106,6 +107,9 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
+	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositIncomes);
+	    	
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
@@ -145,6 +149,13 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				}
 				if(rhs instanceof MoneyIncomeContainer){
 					rhsStr = ((MoneyIncomeContainer) rhs).getDate();
+				}
+
+				if(lhs instanceof MoneyDepositIncomeContainer){
+					lhsStr = ((MoneyDepositIncomeContainer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyDepositIncomeContainer){
+					rhsStr = ((MoneyDepositIncomeContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyTransfer){
