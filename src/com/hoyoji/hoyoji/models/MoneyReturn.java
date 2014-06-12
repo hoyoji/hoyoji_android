@@ -57,6 +57,9 @@ public class MoneyReturn extends HyjModel{
 	
 	@Column(name = "moneyBorrowId")
 	private String mMoneyBorrowId;
+	
+	@Column(name = "returnType")
+	private String mReturnType;
 
 	// 如果有，说明该还款是从该收款导入生成的
 	@Column(name = "moneyPaybackId")
@@ -110,6 +113,7 @@ public class MoneyReturn extends HyjModel{
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
+		mReturnType = "Return";
 	}
 
 	public String getId() {
@@ -560,6 +564,16 @@ public class MoneyReturn extends HyjModel{
 
 	public String getMoneyDepositReturnApportionId() {
 		return mMoneyDepositReturnApportionId;
+	}
+
+	public void setReturnType(String type) {
+		this.mReturnType = type;
+		
+	}
+
+	public String getReturnType() {
+		return this.mReturnType;
+		
 	}
 
 }

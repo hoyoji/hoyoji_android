@@ -14,7 +14,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
-@Table(name = "MoneyDepositIncomeContainer", id = BaseColumns._ID)
+@Table(name = "MoneyDepositReturnContainer", id = BaseColumns._ID)
 public class MoneyDepositReturnContainer extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
@@ -112,8 +112,8 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		return getMany(Picture.class, "recordId");
 	}
 
-	public List<MoneyDepositIncomeApportion> getApportions() {
-		return getMany(MoneyDepositIncomeApportion.class, "moneyDepositIncomeContainerId");
+	public List<MoneyDepositReturnApportion> getApportions() {
+		return getMany(MoneyDepositReturnApportion.class, "moneyDepositReturnContainerId");
 	}
 
 	public String getDate() {
