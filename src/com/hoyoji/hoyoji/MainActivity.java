@@ -62,6 +62,8 @@ import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrowContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
@@ -1028,6 +1030,11 @@ public class MainActivity extends HyjUserActivity {
 			if(model == null){
 				model = new MoneyDepositIncomeContainer();
 			}
+		}   else if (tableName.equalsIgnoreCase("MoneyDepositReturnContainer")) {
+			model = HyjModel.getModel(MoneyDepositReturnContainer.class, id);
+			if(model == null){
+				model = new MoneyDepositReturnContainer();
+			}
 		} else if (tableName.equalsIgnoreCase("MoneyIncomeApportion")) {
 			model = HyjModel.getModel(MoneyIncomeApportion.class, id);
 			if(model == null){
@@ -1037,6 +1044,11 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(MoneyDepositIncomeApportion.class, id);
 			if(model == null){
 				model = new MoneyDepositIncomeApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyDepositReturnApportion")) {
+			model = HyjModel.getModel(MoneyDepositReturnApportion.class, id);
+			if(model == null){
+				model = new MoneyDepositReturnApportion();
 			}
 		} else if (tableName.equalsIgnoreCase("MoneyLend")) {
 			model = HyjModel.getModel(MoneyLend.class, id);

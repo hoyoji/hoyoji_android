@@ -23,6 +23,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
@@ -110,6 +111,9 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
+	    	List<HyjModel> moneyDepositReturns = new Select().from(MoneyDepositReturnContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositReturns);
+	    	
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
@@ -119,7 +123,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
 	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
@@ -156,6 +160,13 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				}
 				if(rhs instanceof MoneyDepositIncomeContainer){
 					rhsStr = ((MoneyDepositIncomeContainer) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyDepositReturnContainer){
+					lhsStr = ((MoneyDepositReturnContainer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyDepositReturnContainer){
+					rhsStr = ((MoneyDepositReturnContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyTransfer){

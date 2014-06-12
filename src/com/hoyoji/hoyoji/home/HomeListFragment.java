@@ -46,6 +46,7 @@ import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
@@ -337,6 +338,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return setMoneyIncomeItemValue(view, object, name);
 		} else if(object instanceof MoneyDepositIncomeContainer){
 			return setMoneyDepositIncomeItemValue(view, object, name);
+		}  else if(object instanceof MoneyDepositReturnContainer){
+			return setMoneyDepositReturnItemValue(view, object, name);
 		} else if(object instanceof MoneyTransfer){
 			return setMoneyTransferItemValue(view, object, name);
 		} else if(object instanceof MoneyBorrow){
@@ -575,6 +578,68 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return false;
 		}
 	}
+	
+	private boolean setMoneyDepositReturnItemValue(View view, Object object, String name){
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyDepositReturnContainer)object).getDate());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("会费还款");
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(((MoneyDepositReturnContainer)object).getProject().getDisplayName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}else{
+				numericView.setTextColor(Color.parseColor("#339900"));
+			}
+			
+			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setNumber(((MoneyDepositReturnContainer)object).getLocalAmount());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setImage(((MoneyDepositReturnContainer)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyDepositReturnContainer)object).getPicture());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_owner){
+			String ownerUserId = ((MoneyDepositReturnContainer)object).getOwnerUserId();
+			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+				((TextView)view).setText("");
+			}else{
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
+				((TextView)view).setText(friend.getDisplayName());
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyDepositReturnContainer)object).getDisplayRemark());
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	
 	private boolean setMoneyTransferItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
@@ -901,8 +966,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof MoneyIncomeContainer){
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
-			}  else if(object instanceof MoneyDepositIncomeContainer){
+			} else if(object instanceof MoneyDepositIncomeContainer){
 				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyDepositReturnContainer){
+				openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
@@ -930,7 +998,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				}
 				return true;
 			} else if(object instanceof MoneyReturn){
-				openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
+				MoneyReturn moneyReturn = (MoneyReturn) object;
+				if(moneyReturn.getReturnType().equalsIgnoreCase("Deposit")){
+					bundle.putLong("MODEL_ID", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
+					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyPayback){
 				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);

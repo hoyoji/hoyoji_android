@@ -14,6 +14,6 @@
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositeReturn"
-           android:title="会费退款"
+           android:title="会费还款"
            hoyoji:showAsAction="never"/>
 </menu>
