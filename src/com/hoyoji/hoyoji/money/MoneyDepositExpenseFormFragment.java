@@ -315,13 +315,6 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyLend.getAmount());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getAmount());
-
-										//更新项目余额
-										Project newProject = moneyLend.getProject();
-										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
-//										newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
-										newProjectEditor.save();
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
@@ -562,25 +555,6 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
-
-				    Project oldProject = oldMoneyLendModel.getProject();
-					Project newProject = moneyLendModel.getProject();
-					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-					
-					//更新项目余额
-					if(moneyLendModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*moneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-//						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-					} else {
-						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-//						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
-//						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
-						oldProjectEditor.save();
-					}
-					newProjectEditor.save();
-					
 //				}	
 					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getFriend());
 					if(moneyLendModel.get_mId() == null){

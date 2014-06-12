@@ -208,8 +208,8 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
-			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
-					R.string.moneyDepositIncomeFormFragment_title_addnew, queryParams);
+			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

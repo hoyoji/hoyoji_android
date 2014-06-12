@@ -416,7 +416,6 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 										//更新项目余额
 										Project oldProject = moneyDepositIncomeContainer.getProject();
 										HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-										oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - moneyDepositIncomeContainer.getAmount0()*moneyDepositIncomeContainer.getExchangeRate());
 										oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - moneyDepositIncomeContainer.getAmount0()*moneyDepositIncomeContainer.getExchangeRate());
 										oldProjectEditor.save();
 										
@@ -653,13 +652,10 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					
 					//更新项目余额
 					if(moneyDepositIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyDepositIncomeContainerModel.getAmount0()*oldMoneyDepositIncomeContainerModel.getExchangeRate() + moneyDepositIncomeContainerModel.getAmount0()*moneyDepositIncomeContainerModel.getExchangeRate());
 						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyDepositIncomeContainerModel.getAmount0()*oldMoneyDepositIncomeContainerModel.getExchangeRate() + moneyDepositIncomeContainerModel.getAmount0()*moneyDepositIncomeContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyDepositIncomeContainerModel.getAmount0()*oldMoneyDepositIncomeContainerModel.getExchangeRate());
 						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - oldMoneyDepositIncomeContainerModel.getAmount0()*oldMoneyDepositIncomeContainerModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyDepositIncomeContainerModel.getAmount0()*moneyDepositIncomeContainerModel.getExchangeRate());
 						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + moneyDepositIncomeContainerModel.getAmount0()*moneyDepositIncomeContainerModel.getExchangeRate());
 						oldProjectEditor.save();
 					}

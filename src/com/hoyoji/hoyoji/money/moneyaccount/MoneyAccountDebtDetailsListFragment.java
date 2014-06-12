@@ -43,7 +43,6 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
@@ -221,8 +220,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
-			openActivityWithFragment(MoneyDepositIncomeFormFragment.class,
-					R.string.moneyDepositIncomeFormFragment_title_addnew, queryParams);
+			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
