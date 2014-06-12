@@ -152,7 +152,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeExpense) {
 							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
-							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
@@ -236,7 +236,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-					R.string.moneyDepositIncomeFormFragment_title_addnew, null);
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -895,7 +895,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			}  else if(object instanceof MoneyDepositIncomeContainer){
-				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
@@ -909,7 +909,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
 				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
 					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
-					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}

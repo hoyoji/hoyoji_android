@@ -104,17 +104,17 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		
 		setupDeleteButton(mMoneyDepositIncomeContainerEditor);
 		
-		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyIncomeFormFragment_imageField_picture);
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyDepositIncomeContainer.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);	
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_date);	
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyDepositIncomeContainer.getDate());
 		}
 
 		setupApportionField(moneyDepositIncomeContainer);
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
@@ -146,7 +146,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		});
 		
 		MoneyAccount moneyAccount = moneyDepositIncomeContainer.getMoneyAccount();
-		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_moneyAccount);
+		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_selectorField_moneyAccount);
 
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
@@ -169,7 +169,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		}else{
 			project = moneyDepositIncomeContainer.getProject();
 		}
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_project);
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_selectorField_project);
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
@@ -182,18 +182,18 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			}
 		});	
 		
-		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_exchangeRate);		
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyDepositIncomeContainer.getExchangeRate());
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyIncomeFormFragment_separatorField_exchange);
-		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyIncomeFormFragment_linearLayout_exchangeRate);
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_remark);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_linearLayout_exchangeRate);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
 		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_remark);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
 		
-		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyIncomeFormFragment_imageView_camera);	
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -224,7 +224,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			}
 		});
 		
-		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_refresh_exchangeRate);	
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_refresh_exchangeRate);	
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -239,33 +239,33 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						mImageViewRefreshRate.setEnabled(false);
 						HyjUtil.updateExchangeRate(fromCurrency, toCurrency, mImageViewRefreshRate, mNumericExchangeRate);
 					} else {
-						HyjUtil.displayToast(R.string.moneyIncomeFormFragment_toast_select_currency);
+						HyjUtil.displayToast(R.string.moneyDepositIncomeContainerFormFragment_toast_select_currency);
 					}
 				}else{
-					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_toast_select_currency);
+					HyjUtil.displayToast(R.string.moneyDepositIncomeContainerFormFragment_toast_select_currency);
 				}
 			}
 		});
 		
 			
-			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 				}
 			});
 			
-			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					addAllProjectMemberIntoApportionsField(moneyDepositIncomeContainer);
 				}
 			});
 			
-			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -355,7 +355,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 	
 	private void setupApportionField(MoneyDepositIncomeContainer moneyDepositIncomeContainer) {
 
-		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyIncomeFormFragment_apportionField);
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_apportionField);
 		
 		List<MoneyDepositIncomeApportion> moneyApportions = null;
 		
@@ -490,8 +490,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		    	hideSaveAction();
 			}
 			
-			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add).setEnabled(false);
-			getView().findViewById(R.id.moneyIncomeFormFragment_imageButton_apportion_add_all).setEnabled(false);
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_apportion_add).setEnabled(false);
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_apportion_add_all).setEnabled(false);
 //			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);
 			getView().findViewById(R.id.button_delete).setVisibility(View.GONE);

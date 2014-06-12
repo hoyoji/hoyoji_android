@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="._MoneyDepositIncomeContainerFormFragment" >
+    tools:context=".MoneyDepositIncomeContainerFormFragment" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:orientation="vertical" >
 
         <com.hoyoji.android.hyjframework.view.HyjImageField
-            android:id="@+id/moneyIncomeFormFragment_imageField_picture"
+            android:id="@+id/moneyDepositIncomeContainerFormFragment_imageField_picture"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip" />
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/moneyIncomeFormFragment_imageView_camera"
+                android:id="@+id/moneyDepositIncomeContainerFormFragment_imageView_camera"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
@@ -39,13 +39,13 @@
                 android:paddingLeft="66dp" >
 
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-                    android:id="@+id/moneyIncomeFormFragment_textField_date"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_textField_date"
                     hyj:style="no_label"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_date"
-                    hyj:labelText="@string/moneyIncomeFormFragment_textView_date" />
+                    hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_date"
+                    hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_date" />
 
                 <View
                     android:id="@id/field_separator"
@@ -56,15 +56,15 @@
                     android:background="@android:color/darker_gray" />
 
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
-                    android:id="@+id/moneyIncomeFormFragment_textField_amount"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_textField_amount"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     hyj:style="no_label"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
                     hyj:editTextColor="#339900"
-                    hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_amount"
-                    hyj:labelText="@string/moneyIncomeFormFragment_textView_amount" >
+                    hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_amount"
+                    hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_amount" >
 
                     <requestFocus />
                 </com.hoyoji.android.hyjframework.view.HyjNumericField>
@@ -90,13 +90,13 @@
                 android:orientation="vertical" >
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                    android:id="@+id/moneyIncomeFormFragment_selectorField_moneyAccount"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_selectorField_moneyAccount"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_moneyAccount"
-                    hyj:labelText="@string/moneyIncomeFormFragment_textView_moneyAccount" />
+                    hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_moneyAccount"
+                    hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_moneyAccount" />
 
                 <View
                     android:id="@id/field_separator"
@@ -107,24 +107,24 @@
                     android:background="@android:color/darker_gray" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
-                    android:id="@+id/moneyIncomeFormFragment_selectorField_project"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_selectorField_project"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_project"
-                    hyj:labelText="@string/moneyIncomeFormFragment_textView_project" />
+                    hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_project"
+                    hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_project" />
             </LinearLayout>
 
             <View
-                android:id="@+id/moneyIncomeFormFragment_separatorField_exchange"
+                android:id="@+id/moneyDepositIncomeContainerFormFragment_separatorField_exchange"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
-                android:id="@+id/moneyIncomeFormFragment_linearLayout_exchangeRate"
+                android:id="@+id/moneyDepositIncomeContainerFormFragment_linearLayout_exchangeRate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -132,17 +132,17 @@
                 android:orientation="vertical" >
 
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
-                    android:id="@+id/moneyIncomeFormFragment_textField_exchangeRate"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_textField_exchangeRate"
                     hyj:style="top_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_exchangeRate"
-                    hyj:labelText="@string/moneyIncomeFormFragment_textView_exchangeRate" />
+                    hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_exchangeRate"
+                    hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_exchangeRate" />
 
                 <ImageView
-                    android:id="@+id/moneyIncomeFormFragment_imageButton_refresh_exchangeRate"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_imageButton_refresh_exchangeRate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -165,7 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/moneyApportionField_title">
+            android:text="@string/moneyDepositIncomeContainerFormFragment_moneyApportionField_title">
             </TextView>
             <LinearLayout 
                 android:layout_width="wrap_content"
@@ -175,21 +175,21 @@
                 >
 
                 <ImageView
-                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_add_all"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_imageButton_apportion_add_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/ic_action_add_group" />
                 
                 <ImageView
-                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_add"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_imageButton_apportion_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/ic_action_add_person" />
                 
                 <ImageView
-                    android:id="@+id/moneyIncomeFormFragment_imageButton_apportion_more_actions"
+                    android:id="@+id/moneyDepositIncomeContainerFormFragment_imageButton_apportion_more_actions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -209,7 +209,7 @@
             android:background="@android:color/darker_gray" />
         
         <com.hoyoji.hoyoji.money.MoneyApportionField
-            android:id="@+id/moneyIncomeFormFragment_apportionField"
+            android:id="@+id/moneyDepositIncomeContainerFormFragment_apportionField"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" 
             android:layout_marginBottom="5dip"/>
@@ -223,13 +223,13 @@
             android:background="@android:color/darker_gray" />
 
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
-            android:id="@+id/moneyIncomeFormFragment_textField_remark"
+            android:id="@+id/moneyDepositIncomeContainerFormFragment_textField_remark"
             hyj:style="no_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_remark"
-            hyj:labelText="@string/moneyIncomeFormFragment_textView_remark" />
+            hyj:hintText="@string/moneyDepositIncomeContainerFormFragment_editText_hint_remark"
+            hyj:labelText="@string/moneyDepositIncomeContainerFormFragment_textView_remark" />
 
         <View
             android:id="@id/field_separator"

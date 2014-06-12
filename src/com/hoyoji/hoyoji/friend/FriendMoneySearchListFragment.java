@@ -223,7 +223,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			return true;
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-					R.string.moneyDepositIncomeFormFragment_title_addnew, queryParams);
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -706,7 +706,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyDepositIncomeContainer){
-				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyTransfer){
 				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
@@ -720,7 +720,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
 				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
 					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
-					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}
