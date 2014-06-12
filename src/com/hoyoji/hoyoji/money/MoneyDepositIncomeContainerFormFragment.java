@@ -855,6 +855,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				
 				MoneyBorrow moneyBorrow = null;
 				moneyBorrow = new MoneyBorrow();
+				moneyBorrow.setBorrowType("Deposit");
 				
 				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", apportion.getFriendUserId()).executeSingle();
 				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), friend);
