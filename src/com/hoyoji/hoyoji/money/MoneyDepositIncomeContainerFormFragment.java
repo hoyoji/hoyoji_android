@@ -120,7 +120,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			mNumericAmount.setNumber(amount);
 			mApportionFieldApportions.setTotalAmount(amount);
 		}else{
-			mNumericAmount.setNumber(moneyDepositIncomeContainer.getAmount0());
+			mNumericAmount.setNumber(moneyDepositIncomeContainer.getAmount());
 		}
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
