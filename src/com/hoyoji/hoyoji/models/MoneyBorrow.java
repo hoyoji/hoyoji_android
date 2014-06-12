@@ -598,4 +598,8 @@ public class MoneyBorrow extends HyjModel{
 		this.mMoneyDepositIncomeApportionId = id;
 		
 	}
+
+	public String getMoneyDepositIncomeApportionId() {
+		return mMoneyDepositIncomeApportionId;
+	}
 }

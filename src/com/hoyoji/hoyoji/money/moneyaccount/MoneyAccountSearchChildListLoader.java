@@ -156,7 +156,7 @@ public class MoneyAccountSearchChildListLoader extends AsyncTaskLoader<List<HyjM
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyTransfers);
 	    	
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
 	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).as("main").where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();

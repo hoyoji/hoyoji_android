@@ -42,6 +42,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
@@ -514,6 +515,12 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				if(((MoneyBorrow)object).getMoneyIncomeApportionId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyIncomeApportion().getMoneyIncomeContainer().get_mId());
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				} else if(((MoneyBorrow)object).getMoneyExpenseApportionId() != null){
+					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyExpenseApportion().getMoneyExpenseContainer().get_mId());
+					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				} else if(((MoneyBorrow)object).getMoneyDepositIncomeApportionId() != null){
+					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				} else {
 					bundle.putLong("MODEL_ID", object.get_mId());
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
