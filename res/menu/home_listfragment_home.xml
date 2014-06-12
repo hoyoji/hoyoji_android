@@ -87,6 +87,10 @@
                         android:id="@+id/mainActivity_action_money_addnew_depositeIncome"
                         android:title="预收会费"
                         hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_depositeReturn"
+                        android:title="会费退款"
+                        hoyoji:showAsAction="never"/>
                 </menu>
             </item>
         </menu>

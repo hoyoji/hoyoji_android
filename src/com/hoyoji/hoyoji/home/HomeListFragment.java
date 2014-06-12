@@ -60,6 +60,7 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
@@ -153,6 +154,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
 							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeReturn) {
+							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
@@ -237,6 +240,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
 					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+			return true;
+		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeReturn) {
+			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

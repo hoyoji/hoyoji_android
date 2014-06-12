@@ -64,6 +64,10 @@ public class MoneyReturn extends HyjModel{
 
 	@Column(name = "moneyReturnApportionId")
 	private String mMoneyReturnApportionId;
+
+	// 该借入是由 会费退款分摊（MoneyDepositReturnContainer） 生成的
+	@Column(name = "moneyDepositReturnApportionId")
+	private String mMoneyDepositReturnApportionId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -548,5 +552,14 @@ public class MoneyReturn extends HyjModel{
 		this.mCurrencyId = mCurrencyId;
 	}
 
+
+	public void setMoneyDepositReturnApportionId(String id) {
+		this.mMoneyDepositReturnApportionId = id;
+		
+	}
+
+	public String getMoneyDepositReturnApportionId() {
+		return mMoneyDepositReturnApportionId;
+	}
 
 }
