@@ -140,18 +140,18 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 	    	String searchQuery = buildSearchQuery();
 
-			String currentUserId = HyjApplication.getInstance().getCurrentUser().getUserData().getId();
+			String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			
-	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	

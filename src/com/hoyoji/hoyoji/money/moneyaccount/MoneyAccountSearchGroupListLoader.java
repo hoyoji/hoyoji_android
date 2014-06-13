@@ -181,7 +181,7 @@ public class MoneyAccountSearchGroupListLoader extends
 	public List<Map<String, Object>> loadInBackground() {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-		String currentUserId = HyjApplication.getInstance().getCurrentUser().getUserData().getId();
+		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 		String localCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 
 		DateFormat df = SimpleDateFormat.getDateInstance();
