@@ -36,7 +36,7 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -46,14 +46,14 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
+public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
-	private HyjModelEditor<MoneyLend> mMoneyLendEditor = null;
+	private HyjModelEditor<MoneyPayback> mMoneyPaybackEditor = null;
 	private HyjImageField mImageFieldPicture = null;
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericAmount = null;
@@ -74,63 +74,63 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_formfragment_moneydepositexpense;
+		return R.layout.money_formfragment_moneydepositpayback;
 	}
 	 
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyLend moneyLend;
+		MoneyPayback moneyPayback;
 		
 		Intent intent = getActivity().getIntent();
 	    long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyLend =  new Select().from(MoneyLend.class).where("_id=?", modelId).executeSingle();
-			hasEditPermission = moneyLend.hasEditPermission();
+			moneyPayback =  new Select().from(MoneyPayback.class).where("_id=?", modelId).executeSingle();
+			hasEditPermission = moneyPayback.hasEditPermission();
 		} else {
-			moneyLend = new MoneyLend();
-			moneyLend.setLendType("Deposit");
+			moneyPayback = new MoneyPayback();
+			moneyPayback.setPaybackType("Deposit");
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
-				moneyLend.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
+				moneyPayback.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
+				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
 			}
 		}
-		mMoneyLendEditor = moneyLend.newModelEditor();
+		mMoneyPaybackEditor = moneyPayback.newModelEditor();
 		
-		setupDeleteButton(mMoneyLendEditor);
+		setupDeleteButton(mMoneyPaybackEditor);
 		
-		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_imageField_picture);		
-		mImageFieldPicture.setImages(moneyLend.getPictures());
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_imageField_picture);		
+		mImageFieldPicture.setImages(moneyPayback.getPictures());
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_date);		
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyLend.getDate());
+			mDateTimeFieldDate.setText(moneyPayback.getDate());
 		}
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_amount);		
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
 		}else{
-			mNumericAmount.setNumber(moneyLend.getAmount());
+			mNumericAmount.setNumber(moneyPayback.getAmount());
 		}
 		
-//		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_paybackDate);
-//		mDateTimeFieldPaybackDate.setText(moneyLend.getPaybackDate());
+//		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_paybackDate);
+//		mDateTimeFieldPaybackDate.setText(moneyPayback.getPaybackDate());
 //	
-//		mNumericFieldPaybackedAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_paybackedAmount);	
-//		mNumericFieldPaybackedAmount.setNumber(moneyLend.getPaybackedAmount());
+//		mNumericFieldPaybackedAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_paybackedAmount);	
+//		mNumericFieldPaybackedAmount.setNumber(moneyPayback.getPaybackedAmount());
 //		mNumericFieldPaybackedAmount.setEnabled(false);
-//		mSeparatorFieldPaybackedAmount = (View) getView().findViewById(R.id.moneyDepositExpenseFormFragment_separatorField_paybackedAmount);
+//		mSeparatorFieldPaybackedAmount = (View) getView().findViewById(R.id.moneyDepositPaybackFormFragment_separatorField_paybackedAmount);
 //		mNumericFieldPaybackedAmount.setVisibility(View.GONE);
 //		mSeparatorFieldPaybackedAmount.setVisibility(View.GONE);
 			
-		MoneyAccount moneyAccount = moneyLend.getMoneyAccount();
-		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_selectorField_moneyAccount);
+		MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
+		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_moneyAccount);
 
 		if(moneyAccount != null){
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
@@ -142,18 +142,18 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyDepositExpenseFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				MoneyDepositPaybackFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(moneyLend.get_mId() == null && projectId != null){
+		if(moneyPayback.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
-			project = moneyLend.getProject();
+			project = moneyPayback.getProject();
 		}
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_selectorField_project);
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_project);
 		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
@@ -162,19 +162,19 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositExpenseFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyDepositPaybackFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
 		
-		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_exchangeRate);		
-		mNumericExchangeRate.setNumber(moneyLend.getExchangeRate());
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_exchangeRate);		
+		mNumericExchangeRate.setNumber(moneyPayback.getExchangeRate());
 		
-		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositExpenseFormFragment_separatorField_exchange);
-		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositExpenseFormFragment_linearLayout_exchangeRate);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositPaybackFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositPaybackFormFragment_linearLayout_exchangeRate);
 		
 		Friend friend;
-		if(moneyLend.get_mId() == null){
+		if(moneyPayback.get_mId() == null){
 			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
 			if(friendUserId != null){
 				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
@@ -183,13 +183,13 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				if(localFriendId != null){
 					friend = HyjModel.getModel(Friend.class, localFriendId);
 				} else {
-					friend = moneyLend.getFriend();
+					friend = moneyPayback.getFriend();
 				}
 			}
 		} else {
-			friend = moneyLend.getFriend();
+			friend = moneyPayback.getFriend();
 		}
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_selectorField_friend);
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_friend);
 		
 		if(friend != null){
 			mSelectorFieldFriend.setModelId(friend.getId());
@@ -198,13 +198,13 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositExpenseFormFragment.this
+				MoneyDepositPaybackFormFragment.this
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_debtor, null, GET_FRIEND_ID);
 			}
 		}); 
 		
 //		mImageViewClearFriend = (ImageView) getView().findViewById(
-//				R.id.moneyDepositExpenseFormFragment_imageView_clear_friend);
+//				R.id.moneyDepositPaybackFormFragment_imageView_clear_friend);
 //		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
@@ -213,10 +213,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 //			}
 //		});
 
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyLend.getRemark());
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_remark);
+		mRemarkFieldRemark.setText(moneyPayback.getRemark());
 		
-		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositExpenseFormFragment_imageView_camera);	
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositPaybackFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -247,7 +247,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositExpenseFormFragment_imageButton_refresh_exchangeRate);	
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositPaybackFormFragment_imageButton_refresh_exchangeRate);	
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -262,10 +262,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 						mImageViewRefreshRate.setEnabled(false);
 						HyjUtil.updateExchangeRate(fromCurrency, toCurrency, mImageViewRefreshRate, mNumericExchangeRate);
 					} else {
-						HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_toast_select_currency);
+						HyjUtil.displayToast(R.string.moneyDepositPaybackFormFragment_toast_select_currency);
 					}
 				}else{
-					HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_toast_select_currency);
+					HyjUtil.displayToast(R.string.moneyDepositPaybackFormFragment_toast_select_currency);
 				}
 			}
 		});
@@ -284,24 +284,24 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    if(mMoneyLendEditor!= null && mMoneyLendEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+	    if(mMoneyPaybackEditor!= null && mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 	    	hideSaveAction();
 	    }
 	}
 	
-	private void setupDeleteButton(HyjModelEditor<MoneyLend> moneyLendEditor) {
+	private void setupDeleteButton(HyjModelEditor<MoneyPayback> moneyPaybackEditor) {
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
 		
-		final MoneyLend moneyLend = moneyLendEditor.getModelCopy();
+		final MoneyPayback moneyPayback = moneyPaybackEditor.getModelCopy();
 		
-		if (moneyLend.get_mId() == null) {
+		if (moneyPayback.get_mId() == null) {
 			buttonDelete.setVisibility(View.GONE);
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(moneyLend.hasDeletePermission()){
+					if(moneyPayback.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -309,20 +309,20 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount moneyAccount = moneyLend.getMoneyAccount();
+										MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyLend.getMoneyAccount().getCurrencyId(), moneyLend.getFriend());
+										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyPayback.getMoneyAccount().getCurrencyId(), moneyPayback.getFriend());
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyLend.getAmount());
-										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getAmount());
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
+										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getAmount());
 										
-										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
+										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPayback.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
-									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(projectAuthorization.getActualTotalLend() - moneyLend.getAmount0()*moneyLend.getExchangeRate());
+									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(projectAuthorization.getActualTotalPayback() - moneyPayback.getAmount0()*moneyPayback.getExchangeRate());
 										
 									    selfProjectAuthorizationEditor.save();
 										
-										moneyLend.delete();
+										moneyPayback.delete();
 										moneyAccountEditor.save();
 										debtAccountEditor.save();
 
@@ -347,10 +347,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void setPermission(){
 
-		if(mMoneyLendEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+		if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyLendEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyPaybackEditor.getModel().getLocalAmount());
 			mNumericAmount.setEnabled(false);
 			
 //			mDateTimeFieldPaybackDate.setEnabled(false);
@@ -418,7 +418,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void fillData(){
-		MoneyLend modelCopy = (MoneyLend) mMoneyLendEditor.getModelCopy();
+		MoneyPayback modelCopy = (MoneyPayback) mMoneyPaybackEditor.getModelCopy();
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 //		modelCopy.setPaybackDate(mDateTimeFieldPaybackDate.getText());
@@ -445,20 +445,20 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	
 	private void showValidatioErrors(){
 		HyjUtil.displayToast(R.string.app_validation_error);
-		mDateTimeFieldDate.setError(mMoneyLendEditor.getValidationError("datetime"));
-		mNumericAmount.setError(mMoneyLendEditor.getValidationError("amount"));
-		if(mMoneyLendEditor.getValidationError("amount") != null){
+		mDateTimeFieldDate.setError(mMoneyPaybackEditor.getValidationError("datetime"));
+		mNumericAmount.setError(mMoneyPaybackEditor.getValidationError("amount"));
+		if(mMoneyPaybackEditor.getValidationError("amount") != null){
 			mNumericAmount.showSoftKeyboard();
 		}
-//		mDateTimeFieldPaybackDate.setError(mMoneyLendEditor.getValidationError("paybackDate"));
-//		if(mMoneyLendEditor.getValidationError("paybackDate") != null){
-//			HyjUtil.displayToast(mMoneyLendEditor.getValidationError("paybackDate"));
+//		mDateTimeFieldPaybackDate.setError(mMoneyPaybackEditor.getValidationError("paybackDate"));
+//		if(mMoneyPaybackEditor.getValidationError("paybackDate") != null){
+//			HyjUtil.displayToast(mMoneyPaybackEditor.getValidationError("paybackDate"));
 //		}
-		mSelectorFieldMoneyAccount.setError(mMoneyLendEditor.getValidationError("moneyAccount"));
-		mSelectorFieldProject.setError(mMoneyLendEditor.getValidationError("project"));
-		mNumericExchangeRate.setError(mMoneyLendEditor.getValidationError("exchangeRate"));
-		mSelectorFieldFriend.setError(mMoneyLendEditor.getValidationError("friend"));
-		mRemarkFieldRemark.setError(mMoneyLendEditor.getValidationError("remark"));
+		mSelectorFieldMoneyAccount.setError(mMoneyPaybackEditor.getValidationError("moneyAccount"));
+		mSelectorFieldProject.setError(mMoneyPaybackEditor.getValidationError("project"));
+		mNumericExchangeRate.setError(mMoneyPaybackEditor.getValidationError("exchangeRate"));
+		mSelectorFieldFriend.setError(mMoneyPaybackEditor.getValidationError("friend"));
+		mRemarkFieldRemark.setError(mMoneyPaybackEditor.getValidationError("remark"));
 	}
 
 	 @Override
@@ -467,20 +467,20 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		if(mMoneyLendEditor.getModelCopy().get_mId() == null && !mMoneyLendEditor.getModelCopy().hasAddNewPermission(mMoneyLendEditor.getModelCopy().getProjectId())){
+		if(mMoneyPaybackEditor.getModelCopy().get_mId() == null && !mMoneyPaybackEditor.getModelCopy().hasAddNewPermission(mMoneyPaybackEditor.getModelCopy().getProjectId())){
 			HyjUtil.displayToast(R.string.app_permission_no_addnew);
-		}else if(mMoneyLendEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+		}else if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
-		mMoneyLendEditor.validate();
-
-		if(mMoneyLendEditor.getModelCopy().getFriend() == null){
-			mMoneyLendEditor.setValidationError("friend",R.string.moneyDepositExpenseFormFragment_editText_hint_friend);
-		}else{
-			mMoneyLendEditor.removeValidationError("friend");
-		}
+			mMoneyPaybackEditor.validate();
 		
-		if(mMoneyLendEditor.hasValidationErrors()){
+			if(mMoneyPaybackEditor.getModelCopy().getFriend() == null){
+				mMoneyPaybackEditor.setValidationError("friend",R.string.moneyDepositPaybackFormFragment_editText_hint_friend);
+			}else{
+				mMoneyPaybackEditor.removeValidationError("friend");
+			}
+			
+		if(mMoneyPaybackEditor.hasValidationErrors()){
 			showValidatioErrors();
 		} else {
 			try {
@@ -492,8 +492,8 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					PictureItem pi = adapter.getItem(i);
 					if(pi.getState() == PictureItem.NEW){
 						Picture newPic = pi.getPicture();
-						newPic.setRecordId(mMoneyLendEditor.getModel().getId());
-						newPic.setRecordType("MoneyLend");
+						newPic.setRecordId(mMoneyPaybackEditor.getModel().getId());
+						newPic.setRecordType("MoneyPayback");
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();
@@ -502,33 +502,33 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					}
 					if(!mainPicSet && pi.getPicture() != null){
 						mainPicSet = true;
-						mMoneyLendEditor.getModelCopy().setPicture(pi.getPicture());
+						mMoneyPaybackEditor.getModelCopy().setPicture(pi.getPicture());
 					}
 				}
 				
-				MoneyLend oldMoneyLendModel = mMoneyLendEditor.getModel();
-				MoneyLend moneyLendModel = mMoneyLendEditor.getModelCopy();
+				MoneyPayback oldMoneyPaybackModel = mMoneyPaybackEditor.getModel();
+				MoneyPayback moneyPaybackModel = mMoneyPaybackEditor.getModelCopy();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(moneyLendModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyLendModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyLendModel.getProjectId())){
+				if(moneyPaybackModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyPaybackModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyPaybackModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyLendModel.getMoneyAccountId());
-					userDataEditor.getModelCopy().setActiveProjectId(moneyLendModel.getProjectId());
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyPaybackModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(moneyPaybackModel.getProjectId());
 					userDataEditor.save();
 				}
 				
-				String localCurrencyId = moneyLendModel.getMoneyAccount().getCurrencyId();
-				String foreignCurrencyId = moneyLendModel.getProject().getCurrencyId();
+				String localCurrencyId = moneyPaybackModel.getMoneyAccount().getCurrencyId();
+				String foreignCurrencyId = moneyPaybackModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					Exchange newExchange = new Exchange();
-					newExchange.setLocalCurrencyId(moneyLendModel.getMoneyAccount().getCurrencyId());
-					newExchange.setForeignCurrencyId(moneyLendModel.getProject().getCurrencyId());
-					newExchange.setRate(moneyLendModel.getExchangeRate());
+					newExchange.setLocalCurrencyId(moneyPaybackModel.getMoneyAccount().getCurrencyId());
+					newExchange.setForeignCurrencyId(moneyPaybackModel.getProject().getCurrencyId());
+					newExchange.setRate(moneyPaybackModel.getExchangeRate());
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}else if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
 					Exchange exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-					Double rate = HyjUtil.toFixed2(moneyLendModel.getExchangeRate());
+					Double rate = HyjUtil.toFixed2(moneyPaybackModel.getExchangeRate());
 					if(exchange != null){
 						if(exchange.getRate() != rate){
 							HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
@@ -547,68 +547,68 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				}
 
 //				if(mSelectorFieldMoneyAccount.getModelId() != null){
-				    Double oldAmount = oldMoneyLendModel.getAmount0();
-					MoneyAccount oldMoneyAccount = oldMoneyLendModel.getMoneyAccount();
-					MoneyAccount newMoneyAccount = moneyLendModel.getMoneyAccount();
+				    Double oldAmount = oldMoneyPaybackModel.getAmount0();
+					MoneyAccount oldMoneyAccount = oldMoneyPaybackModel.getMoneyAccount();
+					MoneyAccount newMoneyAccount = moneyPaybackModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(moneyLendModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - moneyLendModel.getAmount0());
+					if(moneyPaybackModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - oldAmount + moneyPaybackModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
-						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount);
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyLendModel.getAmount0());
+						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() - oldAmount);
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + moneyPaybackModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
 //				}	
-					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getFriend());
-					if(moneyLendModel.get_mId() == null){
+					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyPaybackModel.getMoneyAccount().getCurrencyId(), moneyPaybackModel.getFriend());
+					if(moneyPaybackModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
-				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyLendModel.getAmount0());
+				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyPaybackModel.getAmount0());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		MoneyAccount.createDebtAccount(moneyLendModel.getFriend(), moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getAmount0());
+				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getFriend(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), moneyPaybackModel.getAmount0());
 				    	}
 					}else{
-						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyLendModel.getFriend());
+						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyPaybackModel.getFriend());
 						HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 							if(oldDebtAccount.getId().equals(newDebtAccount.getId())){
-								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - oldAmount + moneyLendModel.getAmount0());
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + oldAmount - moneyPaybackModel.getAmount0());
 							}else{
-								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyLendModel.getAmount0());
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyPaybackModel.getAmount0());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
 								oldDebtAccountEditor.save();
 							}
 							newDebtAccountEditor.save();
 						}else{
-							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldAmount);
+							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
 							oldDebtAccountEditor.save();
 							
-							MoneyAccount.createDebtAccount(moneyLendModel.getFriend(), moneyLendModel.getMoneyAccount().getCurrencyId(), moneyLendModel.getAmount0());
+							MoneyAccount.createDebtAccount(moneyPaybackModel.getFriend(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), moneyPaybackModel.getAmount0());
 						}
 					}
 					
 					//更新支出所有者的实际借出
-						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLendModel.getProjectId());
+						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPaybackModel.getProjectId());
 						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
-					    if(moneyLendModel.get_mId() == null || oldMoneyLendModel.getProjectId().equals(moneyLendModel.getProjectId())){
-					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+					    if(moneyPaybackModel.get_mId() == null || oldMoneyPaybackModel.getProjectId().equals(moneyPaybackModel.getProjectId())){
+					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0()*oldMoneyPaybackModel.getExchangeRate() + moneyPaybackModel.getAmount0()*moneyPaybackModel.getExchangeRate());
 						}else{
-							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyLendModel.getProjectId());
+							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyPaybackModel.getProjectId());
 							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldSelfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
-							selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(oldSelfProjectAuthorization.getActualTotalPayback() - oldMoneyPaybackModel.getAmount0()*oldMoneyPaybackModel.getExchangeRate());
+							selfProjectAuthorizationEditor.getModelCopy().setActualTotalPayback(selfProjectAuthorization.getActualTotalPayback() + moneyPaybackModel.getAmount0()*moneyPaybackModel.getExchangeRate());
 							oldSelfProjectAuthorizationEditor.save();
 						}
 						 selfProjectAuthorizationEditor.save();
 					
 					
 					
-				mMoneyLendEditor.save();
+				mMoneyPaybackEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				HyjUtil.displayToast(R.string.app_save_success);
 				getActivity().finish();
@@ -637,10 +637,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	         		Project project = Project.load(Project.class, _id);
 	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					
-					if(mMoneyLendEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyLendAddNew()){
+					if(mMoneyPaybackEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyPaybackAddNew()){
 						HyjUtil.displayToast(R.string.app_permission_no_addnew);
 						return;
-					}else if(mMoneyLendEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyLendEdit()){
+					}else if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyPaybackEdit()){
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}
@@ -656,7 +656,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
             		Friend friend = Friend.load(Friend.class, _id);
             		
 //            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//    					HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_editText_error_friend);
+//    					HyjUtil.displayToast(R.string.moneyDepositPaybackFormFragment_editText_error_friend);
 //    					return;
 //    				}
             		

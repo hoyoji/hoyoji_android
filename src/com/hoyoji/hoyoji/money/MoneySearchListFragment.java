@@ -215,6 +215,10 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
 					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
 			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+					R.string.moneyDepositPaybackFormFragment_title_addnew, queryParams);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -690,7 +694,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("收款");
+			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("会费退回");
+			} else {
+				((TextView)view).setText("收款");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyPayback)object).getProject().getDisplayName());
@@ -786,7 +794,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			} else if(object instanceof MoneyLend){
 				MoneyLend moneyLend = (MoneyLend) object;
 				if(moneyLend.getLendType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
@@ -801,7 +809,12 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				}
 				return true;
 			} else if(object instanceof MoneyPayback){
-				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				MoneyPayback moneyPayback = (MoneyPayback) object;
+				if(moneyPayback.getPaybackType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof Message){
 				Message msg = (Message)object;

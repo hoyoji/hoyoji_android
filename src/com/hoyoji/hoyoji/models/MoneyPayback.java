@@ -58,11 +58,15 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
 
+	// 由还款导入生成的
 	@Column(name = "moneyReturnId")
 	private String mMoneyReturnId;
 
 	@Column(name = "moneyPaybackApportionId")
 	private String mMoneyPaybackApportionId;
+
+	@Column(name = "paybackType")
+	private String mPaybackType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -105,6 +109,7 @@ public class MoneyPayback extends HyjModel{
 		mProjectId = userData.getActiveProjectId();
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
+		mPaybackType = "Payback";
 	}
 
 	public String getId() {
@@ -538,4 +543,13 @@ public class MoneyPayback extends HyjModel{
 	public void setCurrencyId(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
+
+	public void setPaybackType(String type) {
+		this.mPaybackType = type;
+	}
+	
+	public String getPaybackType() {
+		return this.mPaybackType;
+	}
+	
 }

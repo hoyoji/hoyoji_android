@@ -25,9 +25,12 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
@@ -67,6 +70,15 @@ public class MoneyAccountSearchGroupListLoader extends
 		mChangeObserver = new ChangeObserver();
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyExpenseContainer.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyDepositIncomeContainer.class, null), true,
+				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyDepositReturnContainer.class, null), true,
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyIncome.class, null), true,

@@ -23,6 +23,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
@@ -126,7 +127,15 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			} catch (JSONException e) {
 			}
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddReturn")){
-			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_payback);
+			try {
+				JSONObject messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+				if("Deposit".equalsIgnoreCase(messageData.optString("returnType"))){
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_depositPayback);
+				} else {
+					actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_payback);
+				}
+			} catch (JSONException e) {
+			}
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddPayback")){
 			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_return);
 		}
@@ -180,7 +189,11 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 					openActivityWithFragmentForResult(MoneyBorrowFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_borrow, bundle, IMPORT_MONEY);
 				}
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddReturn")){
-				openActivityWithFragmentForResult(MoneyPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_payback, bundle, IMPORT_MONEY);
+				if("Deposit".equalsIgnoreCase(messageData.optString("returnType"))){
+					openActivityWithFragmentForResult(MoneyDepositPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositPayback, bundle, IMPORT_MONEY);
+				} else {
+					openActivityWithFragmentForResult(MoneyPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_payback, bundle, IMPORT_MONEY);
+				}
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddPayback")){
 				openActivityWithFragmentForResult(MoneyReturnFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_return, bundle, IMPORT_MONEY);
 			}

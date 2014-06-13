@@ -61,6 +61,7 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
@@ -151,12 +152,14 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
-						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeExpense) {
+						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
 							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeIncome) {
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
 							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositeReturn) {
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
 							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
+							openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
@@ -233,18 +236,21 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			openActivityWithFragment(MoneyPaybackFormFragment.class,
 					R.string.moneyPaybackFormFragment_title_addnew, null);
 			return true;
-		}
-		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
 			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 			return true;
-		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
 					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
 			return true;
-		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
 			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
 					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -879,7 +885,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("收款");
+			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("会费退回");
+			}else{
+				((TextView)view).setText("收款");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyPayback)object).getProject().getDisplayName());
@@ -992,7 +1002,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			} else if(object instanceof MoneyLend){
 				MoneyLend moneyLend = (MoneyLend) object;
 				if(moneyLend.getLendType().equalsIgnoreCase("Deposit")){
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				}else{
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
@@ -1007,7 +1017,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				}
 				return true;
 			} else if(object instanceof MoneyPayback){
-				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				MoneyPayback moneyPayback = (MoneyPayback) object;
+				if(moneyPayback.getPaybackType().equalsIgnoreCase("Deposit")){
+					openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof Message){
 				Message msg = (Message)object;
