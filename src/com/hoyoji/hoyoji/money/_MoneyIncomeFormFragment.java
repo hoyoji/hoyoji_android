@@ -544,7 +544,7 @@ public class _MoneyIncomeFormFragment extends HyjUserFormFragment {
 		if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyIncomeEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyIncomeEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyIncomeCategory.setEnabled(false);

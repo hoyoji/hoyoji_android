@@ -594,7 +594,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyIncomeContainerEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyIncomeContainerEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyIncomeCategory.setEnabled(false);

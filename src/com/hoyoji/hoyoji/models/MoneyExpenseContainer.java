@@ -160,29 +160,32 @@ public class MoneyExpenseContainer extends HyjModel{
 		return mAmount;
 	}
 	
-	public Double getLocalAmount(){
-		Double rate = 1.0;
-		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
-//		if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//			if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
-//				rate = 1.0;
-//			}else{
-//				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getMoneyAccount().getCurrencyId());
-//			    if(exchange != null){
-//			    	rate = exchange.getRate();
+//	public Double getLocalAmount(){
+//		Double rate = 1.0;
+//		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+////		if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+////			if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
+////				rate = 1.0;
+////			}else{
+////				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getMoneyAccount().getCurrencyId());
+////			    if(exchange != null){
+////			    	rate = exchange.getRate();
+////			    }
+////			}
+////			return this.getAmount0()/rate;
+////		}else{
+//			if(!userCurrencyId.equals(this.getProject().getCurrencyId())){
+//				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProject().getCurrencyId());
+//				if(exchange != null){
+//				   	rate = exchange;
 //			    }
 //			}
-//			return this.getAmount0()/rate;
-//		}else{
-			if(!userCurrencyId.equals(this.getProject().getCurrencyId())){
-				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProject().getCurrencyId());
-				if(exchange != null){
-				   	rate = exchange;
-			    }
-			}
-			return this.getAmount0()*this.getExchangeRate()/rate;
-		}
+//			return this.getAmount0()*this.getExchangeRate()/rate;
 //	}
+	
+	public Double getProjectAmount(){
+			return this.getAmount0()*this.getExchangeRate();
+	}
 
 	public void setAmount(Double mAmount) {
 		if(mAmount != null){

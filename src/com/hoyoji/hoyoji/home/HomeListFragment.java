@@ -422,7 +422,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
 			numericView.setSuffix(null);
-			numericView.setNumber(((MoneyExpenseContainer)object).getLocalAmount());
+			numericView.setNumber(((MoneyExpenseContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -483,7 +483,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyIncomeContainer)object).getLocalAmount());
+			numericView.setNumber(((MoneyIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -544,7 +544,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyDepositIncomeContainer)object).getLocalAmount());
+			numericView.setNumber(((MoneyDepositIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -605,7 +605,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 			
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyDepositReturnContainer)object).getLocalAmount());
+			numericView.setNumber(((MoneyDepositReturnContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -724,7 +724,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyBorrow)object).getLocalAmount());
+			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -783,7 +783,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyLend)object).getLocalAmount());
+			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -832,7 +832,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyReturn)object).getLocalAmount());
+			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -891,7 +891,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyPayback)object).getLocalAmount());
+			numericView.setNumber(((MoneyPayback)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){

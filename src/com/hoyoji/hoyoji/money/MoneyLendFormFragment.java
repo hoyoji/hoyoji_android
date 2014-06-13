@@ -355,7 +355,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		if(mMoneyLendEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyLendEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyLendEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mDateTimeFieldPaybackDate.setEnabled(false);

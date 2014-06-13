@@ -162,44 +162,49 @@ public class MoneyIncomeContainer extends HyjModel {
 		return mAmount;
 	}
 
-	public Double getLocalAmount() {
-		// Double rate = null;
-		// Currency userCurrency =
-		// HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
-		// if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-		// if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
-		// rate = 1.0;
-		// }else{
-		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
-		// this.getMoneyAccount().getCurrencyId());
-		// if(exchange != null){
-		// rate = exchange.getRate();
-		// }
-		// }
-		// return this.getAmount0()/rate;
-		// }else{
-		// if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
-		// rate = 1.0;
-		// }else{
-		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
-		// this.getProject().getCurrencyId());
-		// if(exchange != null){
-		// rate = exchange.getRate();
-		// }
-		// }
-		// return this.getAmount0()*this.getExchangeRate()/rate;
-		// }
+//	public Double getLocalAmount() {
+//		// Double rate = null;
+//		// Currency userCurrency =
+//		// HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+//		// if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//		// if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
+//		// rate = 1.0;
+//		// }else{
+//		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
+//		// this.getMoneyAccount().getCurrencyId());
+//		// if(exchange != null){
+//		// rate = exchange.getRate();
+//		// }
+//		// }
+//		// return this.getAmount0()/rate;
+//		// }else{
+//		// if(userCurrency.getId().equals(this.getProject().getCurrencyId())){
+//		// rate = 1.0;
+//		// }else{
+//		// Exchange exchange = Exchange.getExchange(userCurrency.getId(),
+//		// this.getProject().getCurrencyId());
+//		// if(exchange != null){
+//		// rate = exchange.getRate();
+//		// }
+//		// }
+//		// return this.getAmount0()*this.getExchangeRate()/rate;
+//		// }
+//
+//		Double rate = 1.0;
+//		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+//		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
+//			Double exchange = Exchange.getExchangeRate(userCurrencyId, this
+//					.getProject().getCurrencyId());
+//			if (exchange != null) {
+//				rate = exchange;
+//			}
+//		}
+//		return this.getAmount0() * this.getExchangeRate() / rate;
+//
+//	}
 
-		Double rate = 1.0;
-		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
-		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
-			Double exchange = Exchange.getExchangeRate(userCurrencyId, this
-					.getProject().getCurrencyId());
-			if (exchange != null) {
-				rate = exchange;
-			}
-		}
-		return this.getAmount0() * this.getExchangeRate() / rate;
+	public Double getProjectAmount() {
+		return this.getAmount0() * this.getExchangeRate();
 
 	}
 

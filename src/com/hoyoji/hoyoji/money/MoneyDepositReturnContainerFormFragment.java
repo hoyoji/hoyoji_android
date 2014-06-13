@@ -454,7 +454,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyDepositReturnContainerEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyDepositReturnContainerEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);

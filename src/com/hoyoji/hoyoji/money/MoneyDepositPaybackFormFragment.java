@@ -350,7 +350,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyPaybackEditor.getModel().getLocalAmount());
+			mNumericAmount.setNumber(mMoneyPaybackEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 //			mDateTimeFieldPaybackDate.setEnabled(false);
