@@ -96,11 +96,11 @@ public class MoneyBorrowListFragment extends HyjUserListFragment {
 				MoneyBorrow moneyBorrow = MoneyBorrow.load(MoneyBorrow.class, id);
 				MoneyAccount moneyAccount = moneyBorrow.getMoneyAccount();
 				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getMoneyAccount().getCurrencyId(), moneyBorrow.getFriend());
+				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getFriend());
 				HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 				moneyBorrow.delete();
 				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyBorrow.getAmount());
-				debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount());
+				debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
 				moneyAccountEditor.save();
 				debtAccountEditor.save();
 				

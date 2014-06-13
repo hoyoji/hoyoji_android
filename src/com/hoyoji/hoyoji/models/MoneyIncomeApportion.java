@@ -194,19 +194,19 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 		MoneyAccount debtAccount = null;
 		if(this.getFriendUserId() != null){
 			if(!this.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), this.getFriendUserId());
+			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getProject().getCurrencyId(), this.getFriendUserId());
 			}
 		}else{
 			// 该好友不是项目成员
 			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getMoneyAccount().getCurrencyId(), friend);
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getProject().getCurrencyId(), friend);
 			}
 		}
 		if(debtAccount != null){
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
+			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0()*this.getExchangeRate());
 			debtAccountEditor.save();
 		}
 		

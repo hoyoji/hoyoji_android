@@ -433,9 +433,9 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 											MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=?", moneyDepositIncomeAportion.getId()).executeSingle();
 											if(moneyBorrow != null){
 
-												MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getCurrencyId(), moneyBorrow.getFriend());
+												MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getFriend());
 												HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-												debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount0());
+												debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
 												debtAccountEditor.save();
 												
 												moneyBorrow.delete();
@@ -726,9 +726,9 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=?", apportion.getId()).executeSingle();
 						if(moneyBorrow != null){
 
-							MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getCurrencyId(), moneyBorrow.getFriend());
+							MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getFriend());
 							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount0());
+							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
 							debtAccountEditor.save();
 							
 							moneyBorrow.delete();
@@ -749,27 +749,27 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						} else {
 							friend = new Select().from(Friend.class).where("friendUserId = ?", apportion.getFriendUserId()).executeSingle();
 						}
-						MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), friend);
+						MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), friend);
 						if(api.getState() == ApportionItem.NEW){
 			                if(debtAccount == null){
-			                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), -apportionEditor.getModelCopy().getAmount0());
+			                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), -apportionEditor.getModelCopy().getAmount()*apportionEditor.getModelCopy().getExchangeRate());
 			                }else{
 			                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportionEditor.getModelCopy().getAmount0());
+			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportionEditor.getModelCopy().getAmount0()*apportionEditor.getModelCopy().getExchangeRate());
 			                	debtAccountEditor.save();
 			                }
 						} else{
-							MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccount().getCurrencyId(), friend);
+							MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModel().getProject().getCurrencyId(), friend);
 							HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
 							if(debtAccount == null){
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0());
-			                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), -apportionEditor.getModelCopy().getAmount0());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+			                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), -apportionEditor.getModelCopy().getAmount0()*apportionEditor.getModelCopy().getExchangeRate());
 			                }else if(debtAccount.getId().equals(oldDebtAccount.getId())){
-			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0() - apportionEditor.getModelCopy().getAmount0());
+			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() - apportionEditor.getModelCopy().getAmount0()*apportionEditor.getModelCopy().getExchangeRate());
 			                }else{
 			                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0());
-			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportionEditor.getModelCopy().getAmount0());
+			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportionEditor.getModelCopy().getAmount0()*apportionEditor.getModelCopy().getExchangeRate());
 			                	debtAccountEditor.save();
 			                }
 							oldDebtAccountEditor.save();
@@ -825,9 +825,9 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=?", apportion.getId()).executeSingle();
 						if(moneyBorrow != null){
 
-							MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getCurrencyId(), moneyBorrow.getFriend());
+							MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getFriend());
 							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount0());
+							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
 							debtAccountEditor.save();
 							
 							moneyBorrow.delete();
@@ -849,12 +849,12 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				moneyBorrow.setBorrowType("Deposit");
 				
 				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", apportion.getFriendUserId()).executeSingle();
-				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), friend);
+				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), friend);
 			    if(debtAccount == null){
-                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccount().getCurrencyId(), -apportion.getAmount0());
+                	MoneyAccount.createDebtAccount(friend, mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), -apportion.getAmount0()*apportion.getExchangeRate());
                 }else{
                 	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportion.getAmount0());
+                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - apportion.getAmount0()*apportion.getExchangeRate());
                 	debtAccountEditor.save();
                 }
 				

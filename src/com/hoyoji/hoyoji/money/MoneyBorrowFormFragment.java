@@ -310,22 +310,22 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 										MoneyAccount moneyAccount = moneyBorrow.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getMoneyAccount().getCurrencyId(), moneyBorrow.getFriend());
+										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getFriend());
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyBorrow.getAmount());
-										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getAmount());
+										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
 										
 										//更新项目余额
 										Project newProject = moneyBorrow.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
+										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyBorrow.getProjectAmount());
 										newProjectEditor.save();
 										
 										//更新支出所有者的实际支出
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrow.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
-									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() - moneyBorrow.getAmount0()*moneyBorrow.getExchangeRate());
+									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectAuthorization.getActualTotalBorrow() - moneyBorrow.getProjectAmount());
 										
 									    selfProjectAuthorizationEditor.save();
 										
@@ -566,23 +566,23 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					
 					//更新项目余额
 					if(moneyBorrowModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount());
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();
 					
-				MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyBorrowModel.getMoneyAccount().getCurrencyId(), moneyBorrowModel.getFriend());
+				MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyBorrowModel.getProject().getCurrencyId(), moneyBorrowModel.getFriend());
 				if(moneyBorrowModel.get_mId() == null){
 			    	if(newDebtAccount != null) {
 			    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
-			    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getAmount0());
+			    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getProjectAmount());
 			    		newDebtAccountEditor.save();
 			    	}else{
-			    		MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getMoneyAccount().getCurrencyId(), -moneyBorrowModel.getAmount0());
+			    		MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getProject().getCurrencyId(), -moneyBorrowModel.getProjectAmount());
 			    	}
 				}else{
 					MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyBorrowModel.getFriend());
@@ -590,18 +590,18 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					if(newDebtAccount != null){
 						HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 						if(oldDebtAccount.getId().equals(newDebtAccount.getId())){
-							newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + oldAmount - moneyBorrowModel.getAmount0());
+							newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + oldMoneyBorrowModel.getProjectAmount() - moneyBorrowModel.getProjectAmount());
 						}else{
-							newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getAmount0());
-							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
+							newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getProjectAmount());
+							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyBorrowModel.getProjectAmount());
 							oldDebtAccountEditor.save();
 						}
 						newDebtAccountEditor.save();
 					}else{
-						oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldAmount);
+						oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyBorrowModel.getProjectAmount());
 						oldDebtAccountEditor.save();
 						
-						MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getMoneyAccount().getCurrencyId(), -moneyBorrowModel.getAmount0());
+						MoneyAccount.createDebtAccount(moneyBorrowModel.getFriend(), moneyBorrowModel.getProject().getCurrencyId(), -moneyBorrowModel.getProjectAmount());
 					}
 				}
 				
@@ -609,12 +609,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyBorrowModel.getProjectId());
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    if(moneyBorrowModel.get_mId() == null || oldMoneyBorrowModel.getProjectId().equals(moneyBorrowModel.getProjectId())){
-				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
+				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
 					}else{
 						ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyBorrowModel.getProjectId());
 						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldSelfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getAmount0()*oldMoneyBorrowModel.getExchangeRate());
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() + moneyBorrowModel.getAmount0()*moneyBorrowModel.getExchangeRate());
+						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldSelfProjectAuthorization.getActualTotalBorrow() - oldMoneyBorrowModel.getProjectAmount());
+						selfProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(selfProjectAuthorization.getActualTotalBorrow() + moneyBorrowModel.getProjectAmount());
 						oldSelfProjectAuthorizationEditor.save();
 					}
 					 selfProjectAuthorizationEditor.save();
