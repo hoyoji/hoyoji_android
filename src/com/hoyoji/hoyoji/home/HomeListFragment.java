@@ -420,7 +420,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyExpenseContainer)object).getProject().getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpenseContainer)object).getProjectAmount());
 			return true;
@@ -447,13 +447,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyExpenseContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyExpenseContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyExpenseContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getDisplayRemark());
@@ -482,7 +476,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -508,13 +502,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyIncomeContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyIncomeContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getDisplayRemark());
@@ -543,7 +531,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyDepositIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -569,13 +557,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyDepositIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyDepositIncomeContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyDepositIncomeContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyDepositIncomeContainer)object).getDisplayRemark());
@@ -604,7 +586,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyDepositReturnContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositReturnContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -630,13 +612,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyDepositReturnContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyDepositReturnContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyDepositReturnContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyDepositReturnContainer)object).getDisplayRemark());
@@ -691,13 +667,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyTransfer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyTransfer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());
@@ -723,7 +693,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyBorrow)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -750,13 +720,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyBorrow)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyBorrow)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyBorrow)object).getDisplayRemark());
@@ -782,7 +746,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -831,7 +795,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyReturn)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -858,13 +822,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyReturn)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyReturn)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyReturn)object).getDisplayRemark());
@@ -890,7 +848,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyPayback)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyPayback)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -917,13 +875,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyPayback)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyPayback)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyPayback)object).getDisplayRemark());

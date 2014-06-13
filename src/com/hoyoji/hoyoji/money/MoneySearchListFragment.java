@@ -334,7 +334,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			}else{
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyExpenseContainer)object).getProject().getCurrencySymbol());
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpenseContainer)object).getProjectAmount());
 			return true;
@@ -371,7 +371,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			}else{
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -409,7 +409,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyDepositIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositIncomeContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -464,7 +464,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyDepositReturnContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositReturnContainer)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -517,7 +517,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyTransfer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyTransfer)object).getTransferOutAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -553,7 +553,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyBorrow)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -589,7 +589,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -621,7 +621,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyReturn)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -657,7 +657,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyPayback)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyPayback)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;

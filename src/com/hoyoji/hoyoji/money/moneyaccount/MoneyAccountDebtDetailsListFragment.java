@@ -342,7 +342,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyBorrow)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -382,7 +382,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -418,7 +418,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyReturn)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -454,7 +454,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
+			numericView.setPrefix(((MoneyPayback)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyPayback)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
