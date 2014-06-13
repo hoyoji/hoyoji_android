@@ -278,13 +278,14 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 	}
 	
 	private long getHasMoreDataDateInMillis(long fromDateInMillis, String searchQuery){
+		String currentUserId = HyjApplication.getInstance().getCurrentUser().getUserData().getId();
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow main WHERE date <= ? AND " + searchQuery,
+						"SELECT MAX(date) FROM MoneyBorrow main WHERE date <= ? AND  ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -300,7 +301,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main WHERE date <= ? AND " + searchQuery,
+						"SELECT MAX(date) FROM MoneyLend main WHERE date <= ? AND  ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -316,7 +317,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND " + searchQuery,
+						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND  ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -332,7 +333,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main WHERE date <= ? AND " + searchQuery,
+						"SELECT MAX(date) FROM MoneyPayback main WHERE date <= ? AND  ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
