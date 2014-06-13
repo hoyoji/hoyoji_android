@@ -4,12 +4,14 @@ import java.util.UUID;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji_android.R;
 
 import android.provider.BaseColumns;
+import android.widget.TextView;
 
 @Table(name = "Friend", id = BaseColumns._ID)
 public class Friend extends HyjModel {
@@ -244,6 +246,24 @@ public class Friend extends HyjModel {
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}
+
+	public static String getFriendUserDisplayName(String ownerUserId) {
+		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+			return "";
+		}else{
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, ownerUserId);
+				if(user != null){
+					return user.getDisplayName();
+				} else {
+					return "";
+				}
+			}
+		}
 	}	
 	
 }

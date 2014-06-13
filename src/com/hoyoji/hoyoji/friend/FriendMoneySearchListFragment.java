@@ -358,13 +358,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyExpenseContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyExpenseContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyExpenseContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getDisplayRemark());
@@ -400,13 +394,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyIncomeContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyIncomeContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getDisplayRemark());
@@ -461,13 +449,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			view.setTag(((MoneyDepositIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyDepositIncomeContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyDepositIncomeContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyDepositIncomeContainer)object).getDisplayRemark());
@@ -522,13 +504,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			view.setTag(((MoneyDepositReturnContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyDepositReturnContainer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyDepositReturnContainer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyDepositReturnContainer)object).getDisplayRemark());
@@ -565,13 +541,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyTransfer)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyTransfer)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());
@@ -607,13 +577,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyBorrow)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyBorrow)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyBorrow)object).getDisplayRemark());
@@ -649,13 +613,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyLend)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyLend)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyLend)object).getDisplayRemark());
@@ -687,13 +645,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyReturn)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyReturn)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyReturn)object).getDisplayRemark());
@@ -729,13 +681,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			imageView.setImage(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyPayback)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyPayback)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyPayback)object).getDisplayRemark());

@@ -809,13 +809,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			String ownerUserId = ((MoneyLend)object).getOwnerUserId();
-			if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			}else{
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-				((TextView)view).setText(friend.getDisplayName());
-			}
+			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyLend)object).getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyLend)object).getDisplayRemark());
