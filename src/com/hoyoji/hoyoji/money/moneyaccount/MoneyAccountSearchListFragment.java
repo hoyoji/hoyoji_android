@@ -217,15 +217,15 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			openActivityWithFragment(MoneyPaybackFormFragment.class,
 					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeExpense) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
 			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
 					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeReturn) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
 			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
 					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
 			return true;

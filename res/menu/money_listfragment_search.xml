@@ -54,12 +54,20 @@
                 hoyoji:showAsAction="never">
                 <menu>
                     <item
-                        android:id="@+id/mainActivity_action_money_addnew_depositeExpense"
+                        android:id="@+id/mainActivity_action_money_addnew_depositExpense"
                         android:title="预缴会费"
                         hoyoji:showAsAction="never"/>
                     <item
-                        android:id="@+id/mainActivity_action_money_addnew_depositeIncome"
+                        android:id="@+id/mainActivity_action_money_addnew_depositIncome"
                         android:title="预收会费"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_depositReturn"
+                        android:title="会费还款"
+                        hoyoji:showAsAction="never"/>
+                    <item
+                        android:id="@+id/mainActivity_action_money_addnew_depositPayback"
+                        android:title="会费退回"
                         hoyoji:showAsAction="never"/>
                 </menu>
             </item>
