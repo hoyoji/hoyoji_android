@@ -43,6 +43,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money._MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
@@ -219,9 +220,13 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
-		}else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeIncome) {
 			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
 					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositeReturn) {
+			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -409,7 +414,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("还款");
+			if(((MoneyReturn)object).getReturnType().equalsIgnoreCase("Deposit")){
+				((TextView)view).setText("会费还款");
+			} else {
+				((TextView)view).setText("还款");
+			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());

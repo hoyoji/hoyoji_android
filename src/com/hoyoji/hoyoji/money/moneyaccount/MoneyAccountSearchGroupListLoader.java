@@ -125,7 +125,7 @@ public class MoneyAccountSearchGroupListLoader extends
 		if(mMoneyAccountId != null){
 			queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
 		}
-		if(type.equalsIgnoreCase("DepositIncome")){
+		if(type.equalsIgnoreCase("DepositIncome") || type.equalsIgnoreCase("DepositReturn")){
 			if(mFriendUserId != null){
 				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 			}
@@ -246,6 +246,19 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN MoneyAccount ma ON ma.id = main.moneyAccountId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = ma.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
+							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositReturn"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer main WHERE date > ? AND date <= ? AND " + buildTransferSearchQuery(),
 							args);
 			if (cursor != null) {
@@ -285,7 +298,7 @@ public class MoneyAccountSearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '" + currentUserId + "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '" + localCurrencyId + "' " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Return"),
+							"WHERE moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Return"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -403,6 +416,22 @@ public class MoneyAccountSearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
+						"SELECT MAX(date) FROM MoneyDepositReturnContainer main WHERE date <= ? AND " + buildSearchQuery("DepositIncome"),
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
 						"SELECT MAX(date) FROM MoneyBorrow main WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Borrow"),
 						args);
 		if (cursor != null) {
@@ -451,7 +480,7 @@ public class MoneyAccountSearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main WHERE date <= ? AND " + buildSearchQuery("Return"),
+						"SELECT MAX(date) FROM MoneyReturn main WHERE moneyDepositReturnApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Return"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
