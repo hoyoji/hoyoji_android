@@ -60,6 +60,9 @@ public class MoneyExpense extends HyjModel{
 	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
 	@Column(name = "currencyId")
 	private String mCurrencyId;
+	
+	@Column(name = "projectCurrencyId")
+	private String mProjectCurrencyId;
 
 	// 如果有，说明该支出是从该收入导入生成的
 	@Column(name = "moneyIncomeId")
@@ -107,7 +110,7 @@ public class MoneyExpense extends HyjModel{
 		mUUID = UUID.randomUUID().toString();
 		mExpenseType = "MoneyExpense";
 		this.setMoneyAccount(userData.getActiveMoneyAccount());
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		if(this.getProject() != null){
 			mMoneyExpenseCategory = this.getProject().getDefaultExpenseCategory();
@@ -286,15 +289,22 @@ public class MoneyExpense extends HyjModel{
 	}
 	
 	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+			this.mProjectCurrencyId = null;
+			return;
+		}
 		this.mProjectId = mProject.getId();
+		this.mProjectCurrencyId = mProject.getCurrencyId();
 	}
 	
 	public String getProjectId() {
 		return mProjectId;
 	}
 
-	public void setProjectId(String mProjectId) {
+	public void setProjectId(String mProjectId, String projectCurrencyId) {
 		this.mProjectId = mProjectId;
+		this.mProjectCurrencyId = projectCurrencyId;
 	}
 
 	public String getMoneyExpenseCategory() {
@@ -537,11 +547,11 @@ public class MoneyExpense extends HyjModel{
 		return HyjModel.getModel(MoneyExpenseApportion.class, mMoneyExpenseApportionId);
 	}
 	
-	public String getCurrencyId() {
+	public String getCurrencyId1() {
 		return mCurrencyId;
 	}
 
-	public void setCurrencyId(String mCurrencyId) {
+	public void setCurrencyId1(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
 }

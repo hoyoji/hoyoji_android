@@ -98,7 +98,7 @@ public class MoneyPaybackContainer extends HyjModel{
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
 	}

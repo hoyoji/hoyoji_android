@@ -54,6 +54,9 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 	
+	@Column(name = "projectCurrencyId")
+	private String mProjectCurrencyId;
+	
 	@Column(name = "paybackedAmount")
 	private Double mPaybackedAmount;
 
@@ -107,7 +110,7 @@ public class MoneyLend extends HyjModel{
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
 		this.setMoneyAccount(userData.getActiveMoneyAccount());
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mPaybackedAmount = 0.00;
 		mLendType = "Lend";
@@ -298,15 +301,22 @@ public class MoneyLend extends HyjModel{
 	}
 	
 	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+			this.mProjectCurrencyId = null;
+			return;
+		}
 		this.mProjectId = mProject.getId();
+		this.mProjectCurrencyId = mProject.getCurrencyId();
 	}
 	
 	public String getProjectId() {
 		return mProjectId;
 	}
 
-	public void setProjectId(String mProjectId) {
+	public void setProjectId(String mProjectId, String projectCurrencyId) {
 		this.mProjectId = mProjectId;
+		this.mProjectCurrencyId = projectCurrencyId;
 	}
 
 	public Double getExchangeRate() {
@@ -576,11 +586,11 @@ public class MoneyLend extends HyjModel{
 		return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
 	}
 	
-	public String getCurrencyId() {
+	public String getCurrencyId1() {
 		return mCurrencyId;
 	}
 
-	public void setCurrencyId(String mCurrencyId) {
+	public void setCurrencyId1(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
 

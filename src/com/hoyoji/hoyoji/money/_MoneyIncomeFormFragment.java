@@ -622,7 +622,7 @@ public class _MoneyIncomeFormFragment extends HyjUserFormFragment {
 		} else {
 			modelCopy.setMoneyAccountId(null, null);
 		}
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());

@@ -98,7 +98,7 @@ public class MoneyExpenseContainer extends HyjModel{
 		mUUID = UUID.randomUUID().toString();
 		mExpenseType = "MoneyExpense";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		if(this.getProject() != null){
 			mMoneyExpenseCategory = this.getProject().getDefaultExpenseCategory();

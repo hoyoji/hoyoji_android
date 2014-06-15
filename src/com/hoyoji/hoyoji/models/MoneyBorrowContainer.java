@@ -98,7 +98,7 @@ public class MoneyBorrowContainer extends HyjModel{
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mReturnedAmount = 0.00; 
 	}

@@ -474,7 +474,7 @@ public class _MoneyExpenseFormFragment extends HyjUserFormFragment {
 		} else {
 			modelCopy.setMoneyAccountId(null, null);
 		}
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());

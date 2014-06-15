@@ -121,13 +121,13 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
 				if(moneyAccount.getFriendId() == null && moneyAccount.getName().equalsIgnoreCase("__ANONYMOUS__")){
 					// 匿名借贷账户
-					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL AND main.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
 					// 网络用户
-					queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL AND main.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+					queryStringBuilder.append(" AND (friendUserId = '" + moneyAccount.getName() + "' AND localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else {
 					// 本地用户
-					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "' AND main.currencyId = '" + moneyAccount.getCurrencyId() + "')");
+					queryStringBuilder.append(" AND (friendUserId IS NULL AND localFriendId ='" + moneyAccount.getFriendId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
 				}
 			}
 		}

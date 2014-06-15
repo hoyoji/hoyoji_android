@@ -667,7 +667,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
@@ -952,7 +952,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						moneyBorrow.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 						moneyBorrow.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 						moneyBorrow.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-						moneyBorrow.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+						moneyBorrow.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 						moneyBorrow.save();
 						
 						if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
@@ -1172,7 +1172,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
 								moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-								moneyIncome.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyIncome.save();
 							} else {
 								MoneyBorrow moneyBorrow = null;
@@ -1202,7 +1202,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyBorrow.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyBorrow.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyBorrow.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-								moneyBorrow.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyBorrow.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyBorrow.save();
 							
 								MoneyLend moneyLend = null;
@@ -1233,7 +1233,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyLend.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyLend.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyLend.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-								moneyLend.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyLend.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyLend.save();
 								
 								MoneyIncome moneyIncome = null;
@@ -1265,7 +1265,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-								moneyIncome.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+								moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyIncome.save();
 							}
 							
@@ -1382,7 +1382,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
 				moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 				moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
-				moneyIncome.setProjectId(mMoneyIncomeContainerEditor.getModelCopy().getProjectId());
+				moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 				moneyIncome.save();
 				apportion.save();
 			}

@@ -77,7 +77,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 				.getUserData();
 		mUUID = UUID.randomUUID().toString();
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 	}
 

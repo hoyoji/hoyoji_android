@@ -540,7 +540,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -802,7 +802,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyBorrow.setLocation(mMoneyDepositIncomeContainerEditor.getModelCopy().getLocation());
 						moneyBorrow.setAddress(mMoneyDepositIncomeContainerEditor.getModelCopy().getAddress());
 						moneyBorrow.setPictureId(mMoneyDepositIncomeContainerEditor.getModelCopy().getPictureId());
-						moneyBorrow.setProjectId(mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId());
+						moneyBorrow.setProject(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject());
 						moneyBorrow.save();
 						
 						if(api.getState() != ApportionItem.UNCHANGED
@@ -878,7 +878,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				moneyBorrow.setLocation(mMoneyDepositIncomeContainerEditor.getModelCopy().getLocation());
 				moneyBorrow.setAddress(mMoneyDepositIncomeContainerEditor.getModelCopy().getAddress());
 				moneyBorrow.setPictureId(mMoneyDepositIncomeContainerEditor.getModelCopy().getPictureId());
-				moneyBorrow.setProjectId(mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId());
+				moneyBorrow.setProject(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject());
 				moneyBorrow.save();
 				apportion.save();
 			}

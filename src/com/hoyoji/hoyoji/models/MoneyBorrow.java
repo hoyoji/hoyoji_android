@@ -51,6 +51,10 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 	
+	// 记录项目对应的币种，应该和 projectId 的币种一致
+	@Column(name = "projectCurrencyId")
+	private String mProjectCurrencyId;
+	
 	@Column(name = "returnDate")
 	private String mReturnDate;
 	
@@ -117,7 +121,7 @@ public class MoneyBorrow extends HyjModel{
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
 		this.setMoneyAccount(userData.getActiveMoneyAccount());
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mReturnedAmount = 0.00; 
 		mBorrowType = "Borrow";
@@ -308,15 +312,22 @@ public class MoneyBorrow extends HyjModel{
 	}
 	
 	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+			this.mProjectCurrencyId = null;
+			return;
+		}
 		this.mProjectId = mProject.getId();
+		this.mProjectCurrencyId = mProject.getCurrencyId();
 	}
 	
 	public String getProjectId() {
 		return mProjectId;
 	}
 
-	public void setProjectId(String mProjectId) {
+	public void setProjectId(String mProjectId, String projectCurrencyId) {
 		this.mProjectId = mProjectId;
+		this.mProjectCurrencyId = projectCurrencyId;
 	}
 
 	public Double getExchangeRate() {
@@ -590,11 +601,11 @@ public class MoneyBorrow extends HyjModel{
 		this.mBorrowType = mBorrowType;
 	}
 	
-	public String getCurrencyId() {
+	public String getCurrencyId1() {
 		return mCurrencyId;
 	}
 
-	public void setCurrencyId(String mCurrencyId) {
+	public void setCurrencyId1(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
 	}
 

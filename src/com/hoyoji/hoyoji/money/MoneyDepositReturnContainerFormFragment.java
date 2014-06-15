@@ -523,7 +523,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -785,7 +785,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 						moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 						moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-						moneyReturn.setProjectId(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId());
+						moneyReturn.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
 						moneyReturn.save();
 						
 						if(api.getState() != ApportionItem.UNCHANGED
@@ -861,7 +861,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 				moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 				moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-				moneyReturn.setProjectId(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId());
+				moneyReturn.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
 				moneyReturn.save();
 				apportion.save();
 			}

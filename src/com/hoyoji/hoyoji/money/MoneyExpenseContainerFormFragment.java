@@ -678,7 +678,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
-		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
@@ -979,7 +979,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 					moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 					moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-					moneyLend.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+					moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 					moneyLend.save();
 
 					if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
@@ -1196,7 +1196,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
 								moneyExpense.setMoneyExpenseCategoryMain(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategoryMain());
 								moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyExpense.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+								moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyExpense.save();
 							} else {
 								MoneyLend moneyLend = null;
@@ -1226,7 +1226,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyLend.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+								moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyLend.save();
 								
 
@@ -1258,7 +1258,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyBorrow.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyBorrow.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyBorrow.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyBorrow.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+								moneyBorrow.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyBorrow.save();
 								
 								MoneyExpense moneyExpense = null;
@@ -1290,7 +1290,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyExpense.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+								moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyExpense.save();
 
 								
@@ -1406,7 +1406,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
 			moneyExpense.setMoneyExpenseCategoryMain(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategoryMain());
 			moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-			moneyExpense.setProjectId(mMoneyExpenseContainerEditor.getModelCopy().getProjectId());
+			moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 			moneyExpense.save();
 			apportion.save();
 		}

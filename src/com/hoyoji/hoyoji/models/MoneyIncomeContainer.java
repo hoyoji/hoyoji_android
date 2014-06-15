@@ -99,7 +99,7 @@ public class MoneyIncomeContainer extends HyjModel {
 		mUUID = UUID.randomUUID().toString();
 		mIncomeType = "MoneyIncome";
 		mMoneyAccountId = userData.getActiveMoneyAccountId();
-		mProjectId = userData.getActiveProjectId();
+		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		if (mProjectId != null) {
 			mMoneyIncomeCategory = this.getProject().getDefaultIncomeCategory();
