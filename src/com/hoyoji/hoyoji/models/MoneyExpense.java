@@ -168,28 +168,17 @@ public class MoneyExpense extends HyjModel{
 		return mAmount;
 	}
 	
-//	public Double getLocalAmount(){
-//		Double rate = 1.0;
-//		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
-////		if(this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-////			if(userCurrency.getId().equals(this.getMoneyAccount().getCurrencyId())){
-////				rate = 1.0;
-////			}else{
-////				Exchange exchange = Exchange.getExchange(userCurrency.getId(), this.getMoneyAccount().getCurrencyId());
-////			    if(exchange != null){
-////			    	rate = exchange.getRate();
-////			    }
-////			}
-////			return this.getAmount0()/rate;
-////		}else{
-//			if(!userCurrencyId.equals(this.getProject().getCurrencyId())){
-//				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProject().getCurrencyId());
-//				if(exchange != null){
-//				   	rate = exchange;
-//			    }
-//			}
-//			return this.getAmount0()*this.getExchangeRate()/rate;
-//		}
+	public Double getLocalAmount(){
+		Double rate = 1.0;
+		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+			if(!userCurrencyId.equals(this.getProject().getCurrencyId())){
+				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProject().getCurrencyId());
+				if(exchange != null){
+				   	rate = exchange;
+			    }
+			}
+			return this.getAmount0()*this.getExchangeRate()/rate;
+		}
 
 	public Double getProjectAmount(){
 		return this.getAmount0() * this.getExchangeRate();
@@ -339,8 +328,15 @@ public class MoneyExpense extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		if(mRemark != null && mRemark.length() > 0){
-			return mRemark;
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		if(ownerUser.length() > 0){
+			ownerUser = "[" + ownerUser + "] ";
+		} else {
+			ownerUser = "";
+		}
+		
+		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
+			return ownerUser + mRemark;
 		} else {
 			return HyjApplication.getInstance().getString(R.string.app_no_remark);
 		}

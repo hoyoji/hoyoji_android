@@ -362,11 +362,17 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public String getDisplayRemark() {
-		if (mRemark != null && mRemark.length() > 0) {
-			return mRemark;
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		if(ownerUser.length() > 0){
+			ownerUser = "[" + ownerUser + "] ";
 		} else {
-			return HyjApplication.getInstance().getString(
-					R.string.app_no_remark);
+			ownerUser = "";
+		}
+		
+		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
+			return ownerUser + mRemark;
+		} else {
+			return HyjApplication.getInstance().getString(R.string.app_no_remark);
 		}
 	}
 

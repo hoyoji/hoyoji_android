@@ -22,6 +22,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -352,7 +353,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyBorrow)object).getOwnerUserId()));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyBorrow)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyBorrow)object).getLocalAmount())));
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyBorrow)object).getDisplayRemark());
@@ -392,7 +397,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			imageView.setImage(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyLend)object).getOwnerUserId()));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyLend)object).getLocalAmount())));
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyLend)object).getDisplayRemark());
@@ -428,7 +437,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			imageView.setImage(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyReturn)object).getOwnerUserId()));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyReturn)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyReturn)object).getLocalAmount())));
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyReturn)object).getDisplayRemark());
@@ -464,7 +477,11 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			imageView.setImage(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyPayback)object).getOwnerUserId()));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyPayback)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyPayback)object).getLocalAmount())));
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyPayback)object).getDisplayRemark());
