@@ -53,6 +53,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/loginActivity_button_register" />
+            
+
+            <Button
+                android:id="@+id/button_sign_in_qq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="用 QQ 帐号登录" />
 
         </LinearLayout>
 

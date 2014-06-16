@@ -14,7 +14,6 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
-import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.hoyoji.models.Currency;
@@ -30,20 +29,26 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
-import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
 import com.hoyoji.hoyoji_android.R;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.auth.QQAuth;
+import com.tencent.sample.AppConstants;
+import com.tencent.sample.Util;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -51,8 +56,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -66,7 +73,13 @@ public class LoginActivity extends HyjActivity {
 	// UI references.
 	private EditText mUserNameView;
 	private EditText mPasswordView;
+	private Button mLoginQQButton;
 
+    private UserInfo mInfo;
+    public static QQAuth mQQAuth;
+	private Tencent mTencent;
+	private String mAppid;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,6 +113,15 @@ public class LoginActivity extends HyjActivity {
 					}
 				});
 
+		mLoginQQButton = (Button)findViewById(R.id.button_sign_in_qq);
+		mLoginQQButton.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptQQLogin();
+					}
+				});
+
 		findViewById(R.id.button_register).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -109,6 +131,13 @@ public class LoginActivity extends HyjActivity {
 						startActivity(intent);
 					}
 				});
+		
+
+		final Context context = LoginActivity.this;
+		final Context ctxContext = context.getApplicationContext();
+		mAppid = AppConstants.APP_ID;
+		mQQAuth = QQAuth.createInstance(mAppid, ctxContext);
+		mTencent = Tencent.createInstance(mAppid, LoginActivity.this);
 	}
 
 	@Override
@@ -203,7 +232,172 @@ public class LoginActivity extends HyjActivity {
 			doLogin();
 		}
 	}
+	
+	public void attemptQQLogin() {
+		if (!mQQAuth.isSessionValid()) {
+			IUiListener listener = new BaseUiListener() {
+				@Override
+				protected void doComplete(JSONObject values) {
+					updateUserInfo();
+					updateLoginButton();
+				}
+			};
+			//mQQAuth.login(this, "all", listener);
+			//mTencent.loginWithOEM(this, "all", listener,"10000144","10000144","xxxx");
+			mTencent.login(this, "all", listener);
+		} else {
+			mQQAuth.logout(this);
+			updateUserInfo();
+			updateLoginButton();
+		}
+	}
 
+	private void updateLoginButton() {
+		if (mQQAuth != null && mQQAuth.isSessionValid()) {
+			mLoginQQButton.setTextColor(Color.RED);
+			mLoginQQButton.setText("您已经登录QQ");
+		} else {
+			mLoginQQButton.setTextColor(Color.BLUE);
+			mLoginQQButton.setText("请登录QQ");
+		}
+	}
+
+	private void updateUserInfo() {
+		if (mQQAuth != null && mQQAuth.isSessionValid()) {
+			IUiListener listener = new IUiListener() {
+				
+				@Override
+				public void onError(UiError e) {
+					// TODO Auto-generated method stub
+				}
+				
+				@Override
+				public void onComplete(final Object response) {
+					Message msg = new Message();
+					msg.obj = response;
+					msg.what = 0;
+					mHandler.sendMessage(msg);
+					new Thread(){
+
+						@Override
+						public void run() {
+							JSONObject json = (JSONObject)response;
+							if(json.has("figureurl")){
+								Bitmap bitmap = null;
+								try {
+									bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+								} catch (JSONException e) {
+									
+								}
+								Message msg = new Message();
+								msg.obj = bitmap;
+								msg.what = 1;
+								mHandler.sendMessage(msg);
+							}
+						}
+						
+					}.start();
+				}
+				
+				@Override
+				public void onCancel() {
+					// TODO Auto-generated method stub
+					
+				}
+			};
+//			  MainActivity.mTencent.requestAsync(Constants.GRAPH_SIMPLE_USER_INFO, null,
+//	                    Constants.HTTP_GET, requestListener, null);
+			mInfo = new UserInfo(this, mQQAuth.getQQToken());
+			mInfo.getUserInfo(listener);
+			
+		} else {
+//			mUserInfo.setText("");
+//			mUserInfo.setVisibility(android.view.View.GONE);
+//			mUserLogo.setVisibility(android.view.View.GONE);
+		}
+	}
+
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0) {
+				JSONObject response = (JSONObject) msg.obj;
+				if (response.has("nickname")) {
+					try {
+//						mUserInfo.setVisibility(android.view.View.VISIBLE);
+//						mUserInfo.setText(response.getString("nickname"));
+						HyjUtil.displayToast(response.getString("nickname"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}else if(msg.what == 1){
+				Bitmap bitmap = (Bitmap)msg.obj;
+//				mUserLogo.setImageBitmap(bitmap);
+//				mUserLogo.setVisibility(android.view.View.VISIBLE);
+			}
+		}
+
+	};
+
+	private void onClickLogin() {
+		if (!mQQAuth.isSessionValid()) {
+			IUiListener listener = new BaseUiListener() {
+				@Override
+				protected void doComplete(JSONObject values) {
+					updateUserInfo();
+					updateLoginButton();
+				}
+			};
+			//mQQAuth.login(this, "all", listener);
+			//mTencent.loginWithOEM(this, "all", listener,"10000144","10000144","xxxx");
+			mTencent.login(this, "all", listener);
+		} else {
+			mQQAuth.logout(this);
+			updateUserInfo();
+			updateLoginButton();
+		}
+	}
+
+	public static boolean ready(Context context) {
+		if (mQQAuth == null) {
+			return false;
+		}
+		boolean ready = mQQAuth.isSessionValid()
+				&& mQQAuth.getQQToken().getOpenId() != null;
+		if (!ready)
+			Toast.makeText(context, "login and get openId first, please!",
+					Toast.LENGTH_SHORT).show();
+		return ready;
+	}
+
+	private class BaseUiListener implements IUiListener {
+
+		@Override
+		public void onComplete(Object response) {
+			Util.showResultDialog(LoginActivity.this, response.toString(), "������������");
+			doComplete((JSONObject)response);
+		}
+
+		protected void doComplete(JSONObject values) {
+
+		}
+
+		@Override
+		public void onError(UiError e) {
+			Util.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
+			Util.dismissDialog();
+		}
+
+		@Override
+		public void onCancel() {
+			Util.toastMessage(LoginActivity.this, "onCancel: ");
+			Util.dismissDialog();
+		}
+	}
+	
 	private void doLogin() {
 		this.displayProgressDialog(R.string.loginActivity_action_sign_in,
 				R.string.loginActivity_progress_signing_in);
