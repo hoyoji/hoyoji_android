@@ -385,12 +385,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			imageView.setImage(((Message)object).getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			//((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyExpenseContainer)object).getOwnerUserId()));
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpenseContainer)object).getProject().getCurrencyId())){
-				((TextView)view).setText("");
-			} else {
-				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyExpenseContainer)object).getLocalAmount())));
-			}
 			Message msg = (Message) object;
 			((TextView)view).setText(msg.getToUserDisplayName());
 			return true;
