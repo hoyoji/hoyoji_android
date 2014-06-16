@@ -119,7 +119,6 @@ public class LoginActivity extends HyjActivity {
 
 	@Override
 	protected Integer getContentView() {
-		// TODO Auto-generated method stub
 		return R.layout.activity_login;
 	}
 
@@ -312,8 +311,8 @@ public class LoginActivity extends HyjActivity {
 		try {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
@@ -336,68 +335,67 @@ public class LoginActivity extends HyjActivity {
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ProjectShareAuthorization");
 			// jsonObj.put("ownerUserId", user.getId());
-			JSONObject notFilter = new JSONObject();
-			notFilter.put("ownerUserId", "");
-			jsonObj.put("__NOT_FILTER__", notFilter);
+//			JSONObject notFilter = new JSONObject();
+//			notFilter.put("ownerUserId", "");
+//			jsonObj.put("__NOT_FILTER__", notFilter);
 			belongsToes.put(jsonObj);
 			
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ProjectRemark");
-			 jsonObj.put("ownerUserId", user.getId());
+//			 jsonObj.put("ownerUserId", user.getId());
+			belongsToes.put(jsonObj);
 
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ParentProject");
 			jsonObj.put("parentProjectId", null);
 			// jsonObj.put("subProjectId", userData.getActiveProjectId());
-			jsonObj.put("ownerUserId", user.getId());
+//			jsonObj.put("ownerUserId", user.getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "FriendCategory");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Friend");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Currency");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Exchange");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyAccount");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			// jsonObj.put("id", userData.getActiveMoneyAccountId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyExpenseCategory");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyIncomeCategory");
-			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			// 从服务器上下载基础数据
@@ -478,9 +476,7 @@ public class LoginActivity extends HyjActivity {
 												true);
 										projectRemark.save();
 									}
-
 								}
-
 							}
 						}
 
