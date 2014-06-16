@@ -400,33 +400,45 @@ public class HyjUtil {
 						imageViewRefreshRate.setEnabled(true);
 						numericExchangeRate.setEnabled(true);
 						numericExchangeRate.setNumber((Double) object);
-						
-//						Exchange exchange = new Select().from(Exchange.class).where("localCurrencyId=? AND foreignCurrencyId=?", fromCurrency, toCurrency).executeSingle();
-//					    if(exchange != null){
-//					    	exchange.setRate((Double) object);
-//					    	exchange.save();
-//					    }
 					}
 				}
 
 				@Override
 				public void errorCallback(Object object) {
-					ImageView imageViewRefreshRate = refreshRateRefrence.get();
-					HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
-					if(imageViewRefreshRate != null){
-						HyjUtil.stopRoateView(imageViewRefreshRate);
-						imageViewRefreshRate.setEnabled(true);
-						numericExchangeRate.setEnabled(true);
-					}
-					if (object != null) {
-						HyjUtil.displayToast(object.toString());
-					} else {
-						HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-					}
+					HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+						@Override
+						public void finishCallback(Object object) {
+							System.gc();
+							ImageView imageViewRefreshRate = refreshRateRefrence.get();
+							HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+							if(imageViewRefreshRate != null){
+								HyjUtil.stopRoateView(imageViewRefreshRate);
+								imageViewRefreshRate.setEnabled(true);
+								numericExchangeRate.setEnabled(true);
+								numericExchangeRate.setNumber((Double) object);
+							}
+						}
+
+						@Override
+						public void errorCallback(Object object) {
+							ImageView imageViewRefreshRate = refreshRateRefrence.get();
+							HyjNumericField numericExchangeRate = exchangeRateRefrence.get();
+							if(imageViewRefreshRate != null){
+								HyjUtil.stopRoateView(imageViewRefreshRate);
+								imageViewRefreshRate.setEnabled(true);
+								numericExchangeRate.setEnabled(true);
+							}
+							if (object != null) {
+								HyjUtil.displayToast(object.toString());
+							} else {
+								HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+							}
+						}
+					};
+					HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
 				}
 			};
-			HyjHttpGetExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
-			
+			HyjWebServiceExchangeRateAsyncTask.newInstance(fromCurrency, toCurrency, serverCallbacks);
 		}
 		
 		public static void detectMemoryLeak(Activity activity) {

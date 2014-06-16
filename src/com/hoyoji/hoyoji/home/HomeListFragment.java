@@ -417,7 +417,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			HyjNumericView numericView = (HyjNumericView)view;
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			}else{
+			} else {
 				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			
