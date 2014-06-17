@@ -12,6 +12,7 @@ import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.LoginActivity;
+import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 
@@ -109,8 +110,97 @@ public class HyjApplication extends Application {
 		}
 	}
 	
+	// 该QQ用户已经存在
+	public boolean loginQQ(String userId, JSONObject jsonObject) {
+		User curUser = HyjApplication.getInstance().getCurrentUser();
+		logout();
+		assert(currentUser == null);
+		Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
+		ActiveAndroid.initialize(config);
+		initContentProvider();
+		
+		currentUser = new Select().from(User.class).where("id=?", userId).executeSingle();
+		if(currentUser != null){
+			QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", userId).executeSingle();
+			qqLogin.loadFromJSON(jsonObject, false);
+			qqLogin.save();
+
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+			return true;
+		} else {
+			ActiveAndroid.dispose();
+			currentUser = curUser;
+			if(curUser != null){
+				config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
+				ActiveAndroid.initialize(config);
+				initContentProvider();
+			}
+			return false;
+		}
+	}
 	
-	public boolean login(String userId, String password, JSONObject jsonObject) throws JSONException {
+	public boolean loginQQFirstTime(String userId, JSONObject jsonObject) {
+		User curUser = HyjApplication.getInstance().getCurrentUser();
+		logout();
+		assert(currentUser == null);
+		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
+									.setDatabaseName(userId)
+									.create(); 
+		ActiveAndroid.initialize(config);
+		initContentProvider();
+		
+		User user = new Select().from(User.class).where("id=?", userId).executeSingle();
+		UserData userData;
+		try {
+			ActiveAndroid.beginTransaction();
+			if(user == null){
+				user = new User();
+				userData = new UserData();
+				
+				user.loadFromJSON(jsonObject.getJSONObject("user"), true);
+				userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
+				
+				userData.setLastSyncTime(null);
+				user.setUserData(userData);
+				userData.setUser(user);
+	
+				user.save();
+			} else {
+				userData = user.getUserData();
+			}
+			
+			userData.setPassword(null);
+			userData.setSyncFromServer(true);
+			userData.save();
+			ActiveAndroid.setTransactionSuccessful();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		    ActiveAndroid.endTransaction();
+		}
+		
+		currentUser = user;
+		if(currentUser != null){
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+			return true;
+		} else {
+			ActiveAndroid.dispose();
+			currentUser = curUser;
+			if(curUser != null){
+				config = new Configuration.Builder(HyjApplication.getInstance())
+				.setDatabaseName(curUser.getId())
+				.create(); 
+				ActiveAndroid.initialize(config);
+				initContentProvider();
+			}
+			return false;
+		}
+	}
+	public boolean login(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
 		assert(currentUser == null);
@@ -144,6 +234,9 @@ public class HyjApplication extends Application {
 			userData.setSyncFromServer(true);
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 		    ActiveAndroid.endTransaction();
 		}

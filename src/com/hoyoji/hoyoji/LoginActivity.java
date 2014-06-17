@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji;
 
+import java.io.File;
 import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONArray;
@@ -7,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
+import com.activeandroid.DatabaseHelper;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -131,13 +134,6 @@ public class LoginActivity extends HyjActivity {
 						startActivity(intent);
 					}
 				});
-		
-
-		final Context context = LoginActivity.this;
-		final Context ctxContext = context.getApplicationContext();
-		mAppid = AppConstants.APP_ID;
-		mQQAuth = QQAuth.createInstance(mAppid, ctxContext);
-		mTencent = Tencent.createInstance(mAppid, LoginActivity.this);
 	}
 
 	@Override
@@ -163,11 +159,10 @@ public class LoginActivity extends HyjActivity {
 		case R.id.loginActivity_action_forgot_password:
 //			Intent intent = new Intent(this, SettingsActivity.class);
 //			startActivity(intent);
-			
-			   Bundle bundle = new Bundle();
-			   bundle.putString("clickType", "findPassword");
-	    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
-			return true;
+		   Bundle bundle = new Bundle();
+		   bundle.putString("clickType", "findPassword");
+    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
+    	   return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -234,35 +229,33 @@ public class LoginActivity extends HyjActivity {
 	}
 	
 	public void attemptQQLogin() {
-		if (!mQQAuth.isSessionValid()) {
-			IUiListener listener = new BaseUiListener() {
-				@Override
-				protected void doComplete(JSONObject values) {
-					updateUserInfo();
-					updateLoginButton();
-				}
-			};
-			//mQQAuth.login(this, "all", listener);
-			//mTencent.loginWithOEM(this, "all", listener,"10000144","10000144","xxxx");
-			mTencent.login(this, "all", listener);
-		} else {
+		if(mTencent == null){
+			final Context ctxContext = LoginActivity.this.getApplicationContext();
+			mAppid = AppConstants.APP_ID;
+			mQQAuth = QQAuth.createInstance(mAppid, ctxContext);
+			mTencent = Tencent.createInstance(mAppid, LoginActivity.this);
+		}
+		
+		if (mQQAuth.isSessionValid()) {
 			mQQAuth.logout(this);
-			updateUserInfo();
-			updateLoginButton();
 		}
+		
+		IUiListener listener = new BaseUiListener() {
+			@Override
+			protected void doComplete(JSONObject values) {
+				// 检查该用户有没有在本地数据库，如果在本地，就直接登录
+				// 如果不在本地，就要到服务器上去看该用户有没有注册过
+				// 如果有注册过，将该用户的资料下载到本地，然后登录
+				// 如果没有注册过，就在服务器上进行注册
+				// 将该此的登录信息(expires_in)保存好
+
+				doQQLogin(values);
+			}
+		};
+		mTencent.login(this, "all", listener);
 	}
 
-	private void updateLoginButton() {
-		if (mQQAuth != null && mQQAuth.isSessionValid()) {
-			mLoginQQButton.setTextColor(Color.RED);
-			mLoginQQButton.setText("您已经登录QQ");
-		} else {
-			mLoginQQButton.setTextColor(Color.BLUE);
-			mLoginQQButton.setText("请登录QQ");
-		}
-	}
-
-	private void updateUserInfo() {
+	private void registerQQUser(JSONObject values) {
 		if (mQQAuth != null && mQQAuth.isSessionValid()) {
 			IUiListener listener = new IUiListener() {
 				
@@ -301,23 +294,16 @@ public class LoginActivity extends HyjActivity {
 				
 				@Override
 				public void onCancel() {
-					// TODO Auto-generated method stub
 					
 				}
 			};
-//			  MainActivity.mTencent.requestAsync(Constants.GRAPH_SIMPLE_USER_INFO, null,
-//	                    Constants.HTTP_GET, requestListener, null);
 			mInfo = new UserInfo(this, mQQAuth.getQQToken());
 			mInfo.getUserInfo(listener);
 			
-		} else {
-//			mUserInfo.setText("");
-//			mUserInfo.setVisibility(android.view.View.GONE);
-//			mUserLogo.setVisibility(android.view.View.GONE);
 		}
 	}
 
-	Handler mHandler = new Handler() {
+	static Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -329,55 +315,22 @@ public class LoginActivity extends HyjActivity {
 //						mUserInfo.setText(response.getString("nickname"));
 						HyjUtil.displayToast(response.getString("nickname"));
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}else if(msg.what == 1){
+				//保存头像
 				Bitmap bitmap = (Bitmap)msg.obj;
-//				mUserLogo.setImageBitmap(bitmap);
-//				mUserLogo.setVisibility(android.view.View.VISIBLE);
 			}
 		}
 
 	};
 
-	private void onClickLogin() {
-		if (!mQQAuth.isSessionValid()) {
-			IUiListener listener = new BaseUiListener() {
-				@Override
-				protected void doComplete(JSONObject values) {
-					updateUserInfo();
-					updateLoginButton();
-				}
-			};
-			//mQQAuth.login(this, "all", listener);
-			//mTencent.loginWithOEM(this, "all", listener,"10000144","10000144","xxxx");
-			mTencent.login(this, "all", listener);
-		} else {
-			mQQAuth.logout(this);
-			updateUserInfo();
-			updateLoginButton();
-		}
-	}
-
-	public static boolean ready(Context context) {
-		if (mQQAuth == null) {
-			return false;
-		}
-		boolean ready = mQQAuth.isSessionValid()
-				&& mQQAuth.getQQToken().getOpenId() != null;
-		if (!ready)
-			Toast.makeText(context, "login and get openId first, please!",
-					Toast.LENGTH_SHORT).show();
-		return ready;
-	}
-
 	private class BaseUiListener implements IUiListener {
 
 		@Override
 		public void onComplete(Object response) {
-			Util.showResultDialog(LoginActivity.this, response.toString(), "������������");
+//			Util.showResultDialog(LoginActivity.this, response.toString(), " ");
 			doComplete((JSONObject)response);
 		}
 
@@ -387,15 +340,99 @@ public class LoginActivity extends HyjActivity {
 
 		@Override
 		public void onError(UiError e) {
-			Util.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
+			Util.toastMessage(LoginActivity.this, "出错啦: " + e.errorDetail);
 			Util.dismissDialog();
 		}
 
 		@Override
 		public void onCancel() {
-			Util.toastMessage(LoginActivity.this, "onCancel: ");
+			//Util.toastMessage(LoginActivity.this, "onCancel: ");
 			Util.dismissDialog();
 		}
+	}
+
+	private void doQQLogin(final JSONObject values) {
+		this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+				R.string.loginActivity_progress_signing_in);
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				if (object != null) {
+					// 在本地找到该QQ用户，我们直接登录，在把本地拿到的登录信息（accessToken)保存到本地
+					String userId = (String) object;
+					((HyjApplication) getApplication()).loginQQ(userId, values);
+					LoginActivity.this.dismissProgressDialog();
+				} else {
+					// 在本地找不到该QQ用户，我们到服务器上去找
+					loginQQFromServer(true, values);
+				}
+			}
+
+			@Override
+			public Object doInBackground(String... string) {
+				File file = new File("/data/data/" + HyjApplication.getInstance().getPackageName() + "/databases/");
+			      if(file.isDirectory()){
+			           File [] fileArray = file.listFiles();
+			           if(null != fileArray && 0 != fileArray.length){
+			                for(int i = 0; i < fileArray.length; i++){
+
+			    				String dbName = fileArray[i].getName();
+			    				if(dbName.endsWith(".db")){
+			    					continue;
+			    				}
+			    				
+			    				Cursor cursor = null;
+			    				SQLiteDatabase rDb = null;
+			    				DatabaseHelper mDbHelper = null;
+			    				try{
+					    				Configuration config = new Configuration.Builder(HyjApplication.getInstance())
+					    											.setDatabaseName(dbName)
+					    											.create(); 
+					    				mDbHelper = new DatabaseHelper(config);
+					    				rDb = mDbHelper.getReadableDatabase();
+		
+					    				// Define a projection that specifies which columns from the
+					    				// database
+					    				// you will actually use after this query.
+					    				String[] projection = { "userId", "openId" };
+					    				String[] args = { values.optString("openid") };
+					    				cursor = rDb.query("QQLogin", 
+					    						projection, // The columns to return
+					    						"openId=?", 
+					    						args, // The values for the WHERE clause
+					    						null, // don't group the rows
+					    						null, // don't filter by row groups
+					    						null // The sort order
+					    				);
+					    				String userId = null;
+					    				if (cursor.getCount() > 0) {
+					    					cursor.moveToFirst();
+					    					userId = cursor.getString(cursor.getColumnIndexOrThrow("userId"));
+					    					cursor.close();
+					    					rDb.close();
+					    					mDbHelper.close();
+					    					return userId;
+					    				}
+			    				} catch (Exception e){
+			    					
+			    				} finally{
+			    					if(cursor != null){
+			    						cursor.close();
+			    					}
+			    					if(rDb != null){
+			    						rDb.close();
+			    					}
+			    					if(mDbHelper != null){
+			    						mDbHelper.close();
+			    					}
+			    				}
+			                }
+			           }
+			      }
+				return null;
+			}
+		});
+
 	}
 	
 	private void doLogin() {
@@ -421,30 +458,20 @@ public class LoginActivity extends HyjActivity {
 				// Define a projection that specifies which columns from the
 				// database
 				// you will actually use after this query.
-				String[] projection = { UserDatabaseEntry.COLUMN_NAME_ID,
-						UserDatabaseEntry.COLUMN_NAME_USERNAME };
+				String[] projection = { "id", "userName" };
 				String[] args = { mUserName };
-				Cursor cursor = rDb.query(UserDatabaseEntry.TABLE_NAME, // The
-																		// table
-																		// to
-																		// query
+				Cursor cursor = rDb.query("UserDatabase", 
 						projection, // The columns to return
-						UserDatabaseEntry.COLUMN_NAME_USERNAME + "=?", // The
-																		// columns
-																		// for
-																		// the
-																		// WHERE
-																		// clause
+						"userName=?", 
 						args, // The values for the WHERE clause
 						null, // don't group the rows
 						null, // don't filter by row groups
 						null // The sort order
-						);
+				);
 				String userId = null;
 				if (cursor.getCount() > 0) {
 					cursor.moveToFirst();
-					userId = cursor.getString(cursor
-							.getColumnIndexOrThrow(UserDatabaseEntry.COLUMN_NAME_ID));
+					userId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 					cursor.close();
 					rDb.close();
 					mDbHelper.close();
@@ -467,7 +494,7 @@ public class LoginActivity extends HyjActivity {
 			loginFromServer(false);
 		}
 	}
-
+	
 	private void loginUser(String userId, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).login(userId, mPassword,
@@ -477,6 +504,16 @@ public class LoginActivity extends HyjActivity {
 			mPasswordView
 					.setError(getString(R.string.loginActivity_error_incorrect_password));
 			mPasswordView.requestFocus();
+			this.dismissProgressDialog();
+		}
+	}
+	
+	// 该QQ好友第一次在本机登录，我们需要下载好友数据到本地
+	private void loginQQUserFirstTime(String userId, JSONObject jsonUser)
+			throws JSONException {
+		if (((HyjApplication) getApplication()).loginQQFirstTime(userId, jsonUser)) {
+			downloadUserData();
+		} else {
 			this.dismissProgressDialog();
 		}
 	}
@@ -731,8 +768,7 @@ public class LoginActivity extends HyjActivity {
 								.getWritableDatabase();
 						ContentValues values = new ContentValues();
 						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
-						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME,
-								mUserName);
+						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
 
 						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 						wDb.close();
@@ -764,8 +800,57 @@ public class LoginActivity extends HyjActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(),
-				"login");
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(), "login");
 	}
+	
+	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject values) {
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				JSONObject jsonObject = (JSONObject) object;
+				String userId;
+				try {
+					userId = jsonObject.getJSONObject("user").getString("id");
 
+					if (createUserDatabaseEntry) {
+						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
+								LoginActivity.this);
+						final SQLiteDatabase wDb = mDbHelper
+								.getWritableDatabase();
+						ContentValues values = new ContentValues();
+						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
+						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
+
+						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
+						wDb.close();
+						mDbHelper.close();
+					}
+					loginQQUserFirstTime(userId, jsonObject);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				//服务器上找不到该QQ用户, 我们要注册新用户
+				
+				try {
+					JSONObject json = (JSONObject) object;
+					if(json.getJSONObject("__summary").optInt("code") == -1){
+						registerQQUser(values);
+					} else {
+						LoginActivity.this.dismissProgressDialog();
+						LoginActivity.this.displayDialog("登录失败",
+							json.getJSONObject("__summary").getString("msg"));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, values.toString(), "loginQQ");
+	}
 }

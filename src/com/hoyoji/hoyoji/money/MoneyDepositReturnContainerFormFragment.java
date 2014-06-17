@@ -635,11 +635,11 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					
 					//更新项目余额
 					if(moneyIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() - moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();
