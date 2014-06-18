@@ -101,7 +101,8 @@
         <LinearLayout
             android:id="@+id/systemSettingFormFragment_linearLayout_phone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:visibility="gone">
 
             <com.hoyoji.android.hyjframework.view.HyjTextField
                 android:id="@+id/systemSettingFormFragment_textField_phone"
@@ -118,6 +119,26 @@
             </com.hoyoji.android.hyjframework.view.HyjTextField>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/systemSettingFormFragment_linearLayout_QQ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/systemSettingFormFragment_textField_QQ"
+                android:layout_width="fill_parent"
+                android:layout_height="43dp"
+                hyj:hintText="@string/systemSettingFormFragment_editText_hint_QQ"
+                hyj:labelText="@string/systemSettingFormFragment_textView_QQ" >
+
+                <Button
+                    android:id="@+id/systemSettingFormFragment_button_QQBinding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/systemSettingFormFragment_button_QQBinding" />
+            </com.hoyoji.android.hyjframework.view.HyjTextField>
+        </LinearLayout>
+        
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"

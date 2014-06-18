@@ -6,8 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,15 +37,19 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
+import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
@@ -59,6 +65,8 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private Button mButtonCheckEmail = null;
 	private HyjTextField mTextFieldPhone = null;
 	private Button mButtonPhone = null;
+	private HyjTextField mTextFieldQQ = null;
+	private Button mButtonQQ = null;
 	private Button mButtonChangePassword = null;
 	private CheckBox mCheckBoxAddFriendValidation = null;
 	private Button mButtonMoneyExpenseColorPicker = null;
@@ -116,6 +124,13 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		mButtonPhone = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_phoneBinding);
 		
 		setPhoneField();
+
+		mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_QQ);
+		mTextFieldQQ.setEnabled(false);
+		
+		mButtonQQ = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_QQBinding);
+		
+		setQQField();
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
@@ -248,6 +263,73 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				}
 			});
 		}
+	}
+	
+	private void setQQField() {
+		QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(qqLogin != null){
+			mTextFieldQQ.setText(qqLogin.getNickName());
+			mButtonQQ.setText("解绑");
+			mButtonQQ.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
+						return;
+					}
+					unBindQQ();
+				}
+			});
+		}else{
+			mButtonQQ.setText("绑定");
+			mTextFieldQQ.setText(null);
+			mButtonQQ.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+					HyjUtil.displayToast("绑");
+					
+				}
+			});
+		}
+	}
+	
+	private void unBindQQ() {
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+					QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(qqLogin != null){
+						qqLogin.deleteFromServer();
+					}
+					setQQField();
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					HyjUtil.displayToast("解绑成功");
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					((HyjActivity)getActivity()).displayDialog("解绑QQ不成功",
+						json.getJSONObject("__summary").getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(qqLogin != null){
+			((HyjActivity)getActivity()).displayProgressDialog(R.string.systemSettingFormFragment_toast_unBindQQ,
+					R.string.systemSettingFormFragment_toast_unBindingQQ);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, qqLogin.toJSON().toString(), "unBindQQ");
+		} else {
+			HyjUtil.displayToast("找不到已绑定的QQ帐户");
+		}
+
 	}
 
 	private void fillData(){

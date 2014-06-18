@@ -67,8 +67,12 @@ public class ChangePasswordFragment extends HyjFragment {
 			
 			@Override
 			public void onClick(View v) {
-				changePassword_submit(v);
-				
+				fillData();
+				if(!validateData()){
+					HyjUtil.displayToast(R.string.app_validation_error);
+				} else {	
+					changePassword_submit(v);
+				}
 			}
 		});
 		
@@ -76,7 +80,7 @@ public class ChangePasswordFragment extends HyjFragment {
 	}
 
 	private void fillData(){
-		if(HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
 			mOldPassword = mEditTextOldPassword.getText().toString();
 		}
 		mNewPassword1 = mEditTextNewPassword1.getText().toString();
@@ -85,7 +89,6 @@ public class ChangePasswordFragment extends HyjFragment {
 	
 	public boolean validateData(){
 		boolean validatePass = true;
-		fillData();
 		
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
 			if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
@@ -133,13 +136,15 @@ public class ChangePasswordFragment extends HyjFragment {
 	}
 
 	private void onSave(){
-		changePassword_submit(null);
-	}
-	
-	private void changePassword_submit(View v){
+		fillData();
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
 		} else {	
+			changePassword_submit(null);
+		}
+	}
+	
+	private void changePassword_submit(View v){
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
@@ -149,7 +154,7 @@ public class ChangePasswordFragment extends HyjFragment {
 					if(!editor.getModel().getHasPassword()){
 						editor.getModelCopy().setHasPassword(true);
 					}
-					editor.getModel().setSyncFromServer(true);
+					editor.getModelCopy().setSyncFromServer(true);
 					editor.save();
 
 					((HyjActivity) ChangePasswordFragment.this.getActivity()).dismissProgressDialog();
@@ -169,7 +174,7 @@ public class ChangePasswordFragment extends HyjFragment {
 			try {
 				JSONObject data = new JSONObject();
 				data.put("userId", HyjApplication.getInstance().getCurrentUser().getId());
-				if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+				if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
 					data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
 				}
 				data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
@@ -179,14 +184,11 @@ public class ChangePasswordFragment extends HyjFragment {
 				
 				((HyjActivity) this.getActivity())
 						.displayProgressDialog(
-								R.string.addFriendListFragment_title_add,
-								R.string.friendListFragment_addFriend_progress_adding);
+								R.string.changePasswordFragment_title,
+								R.string.changePasswordFragment_toast_changing);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
-		}
-		
 	}
 
 	 

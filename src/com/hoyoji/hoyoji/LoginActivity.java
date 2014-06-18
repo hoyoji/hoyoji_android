@@ -352,9 +352,7 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 
-	private void doQQLogin(final JSONObject values) {
-		this.displayProgressDialog(R.string.loginActivity_action_sign_in,
-				R.string.loginActivity_progress_signing_in);
+	private void doQQLogin(final JSONObject values) {    
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
@@ -363,6 +361,7 @@ public class LoginActivity extends HyjActivity {
 					String userId = (String) object;
 					((HyjApplication) getApplication()).loginQQ(userId, values);
 					LoginActivity.this.dismissProgressDialog();
+					relogin();
 				} else {
 					// 在本地找不到该QQ用户，我们到服务器上去找
 					loginQQFromServer(true, values);
@@ -518,6 +517,15 @@ public class LoginActivity extends HyjActivity {
 			this.dismissProgressDialog();
 		}
 	}
+	
+	private void relogin(){
+		Intent i = getPackageManager().getLaunchIntentForPackage(
+				getApplicationContext().getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+		finish();
+	}
 
 	private void downloadUserData() {
 		User user = HyjApplication.getInstance().getCurrentUser();
@@ -526,12 +534,7 @@ public class LoginActivity extends HyjActivity {
 				user.getMessageBoxId1());
 		if (msgBox != null) {
 			this.dismissProgressDialog();
-			Intent i = getPackageManager().getLaunchIntentForPackage(
-					getApplicationContext().getPackageName());
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(i);
-			finish();
+			relogin();
 			return;
 		}
 

@@ -15,6 +15,12 @@
     <string name="systemSettingFormFragment_editText_hint_phone">未绑定</string>
     <string name="systemSettingFormFragment_button_phoneBinding">绑定</string>
     
+    <string name="systemSettingFormFragment_textView_QQ">QQ帐户</string>
+    <string name="systemSettingFormFragment_editText_hint_QQ">未绑定</string>
+    <string name="systemSettingFormFragment_button_QQBinding">绑定</string>
+    <string name="systemSettingFormFragment_toast_unBindQQ">解绑QQ</string>
+    <string name="systemSettingFormFragment_toast_unBindingQQ">正在解绑QQ&#8230;</string>
+    
     <string name="systemSettingFormFragment_textView_password">密码</string>
     <string name="systemSettingFormFragment_button_changePassword">修改密码</string>
     
