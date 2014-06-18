@@ -254,54 +254,54 @@ public class LoginActivity extends HyjActivity {
 		};
 		mTencent.login(this, "all", listener);
 	}
-
-	private void registerQQUser(JSONObject values) {
-		if (mQQAuth != null && mQQAuth.isSessionValid()) {
-			IUiListener listener = new IUiListener() {
-				
-				@Override
-				public void onError(UiError e) {
-					// TODO Auto-generated method stub
-				}
-				
-				@Override
-				public void onComplete(final Object response) {
-					Message msg = new Message();
-					msg.obj = response;
-					msg.what = 0;
-					mHandler.sendMessage(msg);
-					new Thread(){
-
-						@Override
-						public void run() {
-							JSONObject json = (JSONObject)response;
-							if(json.has("figureurl")){
-								Bitmap bitmap = null;
-								try {
-									bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-								} catch (JSONException e) {
-									
-								}
-								Message msg = new Message();
-								msg.obj = bitmap;
-								msg.what = 1;
-								mHandler.sendMessage(msg);
-							}
-						}
-						
-					}.start();
-				}
-				
-				@Override
-				public void onCancel() {
-					
-				}
-			};
-			mInfo = new UserInfo(this, mQQAuth.getQQToken());
-			mInfo.getUserInfo(listener);
-			
-		}
-	}
+//
+//	private void registerQQUser(JSONObject values) {
+//		if (mQQAuth != null && mQQAuth.isSessionValid()) {
+//			IUiListener listener = new IUiListener() {
+//				
+//				@Override
+//				public void onError(UiError e) {
+//					// TODO Auto-generated method stub
+//				}
+//				
+//				@Override
+//				public void onComplete(final Object response) {
+//					Message msg = new Message();
+//					msg.obj = response;
+//					msg.what = 0;
+//					mHandler.sendMessage(msg);
+//					new Thread(){
+//
+//						@Override
+//						public void run() {
+//							JSONObject json = (JSONObject)response;
+//							if(json.has("figureurl")){
+//								Bitmap bitmap = null;
+//								try {
+//									bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+//								} catch (JSONException e) {
+//									
+//								}
+//								Message msg = new Message();
+//								msg.obj = bitmap;
+//								msg.what = 1;
+//								mHandler.sendMessage(msg);
+//							}
+//						}
+//						
+//					}.start();
+//				}
+//				
+//				@Override
+//				public void onCancel() {
+//					
+//				}
+//			};
+//			mInfo = new UserInfo(this, mQQAuth.getQQToken());
+//			mInfo.getUserInfo(listener);
+//			
+//		}
+//	}
 
 	static Handler mHandler = new Handler() {
 
@@ -377,7 +377,7 @@ public class LoginActivity extends HyjActivity {
 			                for(int i = 0; i < fileArray.length; i++){
 
 			    				String dbName = fileArray[i].getName();
-			    				if(dbName.endsWith(".db")){
+			    				if(dbName.endsWith(".db") || dbName.endsWith("-journal")){
 			    					continue;
 			    				}
 			    				
@@ -541,6 +541,10 @@ public class LoginActivity extends HyjActivity {
 		JSONArray belongsToes = new JSONArray();
 		try {
 			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "QQLogin");
+			belongsToes.put(jsonObj);
+			
+			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
 //			jsonObj.put("ownerUserId", HyjApplication.getInstance()
 //					.getCurrentUser().getId());
@@ -834,17 +838,11 @@ public class LoginActivity extends HyjActivity {
 
 			@Override
 			public void errorCallback(Object object) {
-				//服务器上找不到该QQ用户, 我们要注册新用户
-				
 				try {
 					JSONObject json = (JSONObject) object;
-					if(json.getJSONObject("__summary").optInt("code") == -1){
-						registerQQUser(values);
-					} else {
-						LoginActivity.this.dismissProgressDialog();
-						LoginActivity.this.displayDialog("登录失败",
-							json.getJSONObject("__summary").getString("msg"));
-					}
+					LoginActivity.this.dismissProgressDialog();
+					LoginActivity.this.displayDialog("登录失败",
+						json.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

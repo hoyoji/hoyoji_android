@@ -143,7 +143,7 @@ public class User extends HyjModel {
 //	}
 
 	public boolean getNewFriendAuthentication() {
-		if(mNewFriendAuthentication.equalsIgnoreCase("none")){
+		if(mNewFriendAuthentication != null && mNewFriendAuthentication.equalsIgnoreCase("none")){
 			return false;
 		}
 		return true;

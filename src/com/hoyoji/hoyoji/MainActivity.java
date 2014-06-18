@@ -87,6 +87,7 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
@@ -979,6 +980,11 @@ public class MainActivity extends HyjUserActivity {
 			model = HyjModel.getModel(Message.class, id);
 			if(model == null){
 				model = new Message();
+			}
+		}  else if (tableName.equalsIgnoreCase("QQLogin")) {
+			model = HyjModel.getModel(QQLogin.class, id);
+			if(model == null){
+				model = new QQLogin();
 			}
 		} else if (tableName.equalsIgnoreCase("MessageBox")) {
 			model = HyjModel.getModel(MessageBox.class, id);
