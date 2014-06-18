@@ -11,6 +11,7 @@ import android.database.ContentObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.MenuInflater;
@@ -90,6 +91,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
 		mTextFieldUserName.setText(user.getUserName());
 		mTextFieldUserName.setEnabled(false);
+		mTextFieldUserName.setTextColor(Color.BLACK);
 		
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
 		mTextFieldNickName.setText(user.getNickName());
@@ -117,12 +119,15 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				SystemSettingFormFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.changePasswordFragment_title, null);
 			}
 		});
+
+		if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+			mButtonChangePassword.setText("设置密码");
+		} 
 		
 		mCheckBoxAddFriendValidation = (CheckBox) getView().findViewById(R.id.systemSettingFormFragment_checkBox_validation_addFriend);
 		mCheckBoxAddFriendValidation.setChecked(user.getNewFriendAuthentication());

@@ -70,6 +70,7 @@ public class HyjTextField extends LinearLayout {
 		}
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
+			this.setGravity(Gravity.CENTER_HORIZONTAL);
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		} else if(style.equals("top_label")){
 			this.setOrientation(LinearLayout.VERTICAL);
@@ -117,6 +118,13 @@ public class HyjTextField extends LinearLayout {
 	public void setEnabled(boolean enabled){
 		mEditTextEdit.setEnabled(enabled);
 	}
+	
+	public void setEditable(boolean enabled){
+		mEditTextEdit.setEnabled(enabled);
+		if(enabled == false){
+			mEditTextEdit.setTextColor(Color.BLACK);
+		}
+	}
 
 	public void setLabel(int resId){
 		mTextViewLabel.setText(resId);
@@ -142,5 +150,9 @@ public class HyjTextField extends LinearLayout {
 		mEditTextEdit.setText(null);
 		mEditTextEdit.setHint("");
 		super.onDetachedFromWindow();
+	}
+
+	public void setTextColor(int color) {
+		mEditTextEdit.setTextColor(color);
 	}
 }

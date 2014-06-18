@@ -204,12 +204,11 @@ public class BindPhoneFragment extends HyjFragment {
 		 if(!validateData()){
 	    	   HyjUtil.displayToast(R.string.app_validation_error);
 	       }else{
-	    	   Bundle bundle = new Bundle();
-			   bundle.putString("openType", "findPassword");
-			   bundle.putString("phone", mPhoneText);
-	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
-	    	   mTime.cancel();
-	    	   getActivity().finish();
+//	    	   Bundle bundle = new Bundle();
+//			   bundle.putString("phone", mPhoneText);
+//	    	   BindPhoneFragment.this.openActivityWithFragment(ChangePasswordFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
+//	    	   mTime.cancel();
+//	    	   getActivity().finish();
 	       }
 	}
     

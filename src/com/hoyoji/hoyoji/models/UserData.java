@@ -37,7 +37,7 @@ public class UserData extends HyjModel {
 	private String mEmail;
 	
 	@Column(name = "emailVerified")
-	private boolean mEmailVerified;
+	private Boolean mEmailVerified;
 
 	@Column(name = "phone")
 	private String mPhone;
@@ -49,7 +49,10 @@ public class UserData extends HyjModel {
 	private String mExpenseColor;
 	
 	@Column(name = "phoneVerified")
-	private boolean mPhoneVerified;
+	private Boolean mPhoneVerified;
+	
+	@Column(name = "hasPassword")
+	private Boolean mHasPassword;
 	
 	@Column(name = "activeProjectId")
 	private String mActiveProjectId;
@@ -150,12 +153,23 @@ public class UserData extends HyjModel {
 		this.mEmail = mEmail;
 	}
 
-	public boolean ismEmailVerified() {
+	public Boolean ismEmailVerified() {
 		return mEmailVerified;
 	}
 
 	public void setEmailVerified(boolean mEmailVerified) {
 		this.mEmailVerified = mEmailVerified;
+	}
+	
+	public Boolean getHasPassword() {
+		if(mHasPassword == null){
+			return false;
+		}
+		return mHasPassword;
+	}
+
+	public void setHasPassword(boolean mHasPassword) {
+		this.mHasPassword = mHasPassword;
 	}
 
 	public String getPhone() {

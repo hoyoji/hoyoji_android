@@ -1,18 +1,16 @@
 package com.hoyoji.hoyoji.setting;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -23,7 +21,6 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.models.UserData;
 
 
@@ -35,7 +32,6 @@ public class ChangePasswordFragment extends HyjFragment {
 	String mNewPassword1 = "";
 	String mNewPassword2 = "";
 	boolean mHasError = false;
-	private String mOpenType;
 	
 	@Override
 	public Integer useContentView() {
@@ -45,11 +41,12 @@ public class ChangePasswordFragment extends HyjFragment {
 	@Override
 	public void onInitViewData(){
 		Intent intent = getActivity().getIntent();
-		mOpenType = intent.getStringExtra("openType");
 		
-		mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_oldPassword);
-		if(mOpenType != null && mOpenType.equalsIgnoreCase("findPassword")){
+		if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
 			getView().findViewById(R.id.changePasswordFragment_linearLayout_oldPassword).setVisibility(View.GONE);
+			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("设置密码");
+		} else {
+			mEditTextOldPassword = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_oldPassword);
 		}
 		
 		mEditTextNewPassword1 = (EditText) getView().findViewById(R.id.changePasswordFragment_editText_newPassword1);
@@ -79,7 +76,9 @@ public class ChangePasswordFragment extends HyjFragment {
 	}
 
 	private void fillData(){
-		mOldPassword = mEditTextOldPassword.getText().toString().trim();
+		if(HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+			mOldPassword = mEditTextOldPassword.getText().toString();
+		}
 		mNewPassword1 = mEditTextNewPassword1.getText().toString();
 		mNewPassword2 = mEditTextNewPassword2.getText().toString();
 	}
@@ -88,11 +87,13 @@ public class ChangePasswordFragment extends HyjFragment {
 		boolean validatePass = true;
 		fillData();
 		
-		if(mOpenType == null && !HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
-			mEditTextOldPassword.setError(getString(R.string.changePasswordFragment_validation_wrong_oldPassword));
-	   		validatePass = false;
-		}else{
-			mEditTextOldPassword.setError(null);
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+			if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+				mEditTextOldPassword.setError(getString(R.string.changePasswordFragment_validation_wrong_oldPassword));
+		   		validatePass = false;
+			}else{
+				mEditTextOldPassword.setError(null);
+			}
 		}
 		
 		if(mNewPassword1.length() == 0){
@@ -138,15 +139,16 @@ public class ChangePasswordFragment extends HyjFragment {
 	private void changePassword_submit(View v){
 		if(!validateData()){
 			HyjUtil.displayToast(R.string.app_validation_error);
-		}else if(mOpenType != null && mOpenType.equalsIgnoreCase("findPassword")){
-			
-		}else{	
+		} else {	
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
 					
 					HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
 					editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
+					if(!editor.getModel().getHasPassword()){
+						editor.getModelCopy().setHasPassword(true);
+					}
 					editor.getModel().setSyncFromServer(true);
 					editor.save();
 
@@ -167,7 +169,9 @@ public class ChangePasswordFragment extends HyjFragment {
 			try {
 				JSONObject data = new JSONObject();
 				data.put("userId", HyjApplication.getInstance().getCurrentUser().getId());
-				data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
+				if(!HyjUtil.getSHA1(mOldPassword).equals(HyjApplication.getInstance().getCurrentUser().getUserData().getPassword())){
+					data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
+				}
 				data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
 				data.put("newPassword2", HyjUtil.getSHA1(mNewPassword2));
 				
