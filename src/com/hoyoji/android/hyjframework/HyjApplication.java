@@ -80,6 +80,7 @@ public class HyjApplication extends Application {
 		ContentProvider provider = (ContentProvider) client.getLocalContentProvider();
 		provider.initialize();
 	}
+	
 	public boolean login(String userId, String password){
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
@@ -127,6 +128,7 @@ public class HyjApplication extends Application {
 
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
+            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -140,7 +142,7 @@ public class HyjApplication extends Application {
 		}
 	}
 	
-	public boolean loginQQFirstTime(String userId, JSONObject jsonObject) {
+	public boolean loginQQFirstTime(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
 		assert(currentUser == null);
@@ -164,13 +166,13 @@ public class HyjApplication extends Application {
 				userData.setLastSyncTime(null);
 				user.setUserData(userData);
 				userData.setUser(user);
-	
+				userData.setPassword(password);
+				
 				user.save();
 			} else {
 				userData = user.getUserData();
 			}
 			
-			userData.setPassword(null);
 			userData.setSyncFromServer(true);
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();

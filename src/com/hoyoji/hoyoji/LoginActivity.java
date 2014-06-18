@@ -510,9 +510,9 @@ public class LoginActivity extends HyjActivity {
 	}
 	
 	// 该QQ好友第一次在本机登录，我们需要下载好友数据到本地
-	private void loginQQUserFirstTime(String userId, JSONObject jsonUser)
+	private void loginQQUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
-		if (((HyjApplication) getApplication()).loginQQFirstTime(userId, jsonUser)) {
+		if (((HyjApplication) getApplication()).loginQQFirstTime(userId, password, jsonUser)) {
 			downloadUserData();
 		} else {
 			this.dismissProgressDialog();
@@ -813,7 +813,7 @@ public class LoginActivity extends HyjActivity {
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(), "login");
 	}
 	
-	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject values) {
+	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -836,7 +836,7 @@ public class LoginActivity extends HyjActivity {
 						wDb.close();
 						mDbHelper.close();
 					}
-					loginQQUserFirstTime(userId, jsonObject);
+					loginQQUserFirstTime(userId, loginInfo.getString("access_token"), jsonObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -855,6 +855,6 @@ public class LoginActivity extends HyjActivity {
 			}
 		};
 		
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, values.toString(), "loginQQ");
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "loginQQ");
 	}
 }
