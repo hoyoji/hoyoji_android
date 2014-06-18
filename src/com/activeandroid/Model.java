@@ -355,16 +355,15 @@ public abstract class Model {
 		mSyncFromServer = syncFromServer;
 		for (Field field : mTableInfo.getFields()) {
 			final String fieldName = mTableInfo.getColumnName(field);
-			boolean columnIsNull = json.isNull(fieldName);
-
-			if (fieldName.equals(idName)) {
+			
+			if (!json.has(fieldName) || fieldName.equals(idName)) {
 				continue;
 			}
 
 			Class<?> fieldType = field.getType();
 			field.setAccessible(true);
-
-			if (columnIsNull) {
+			
+			if (json.isNull(fieldName)) {
 				try {
 					field.set(this, null);
 				} catch (IllegalAccessException e) {

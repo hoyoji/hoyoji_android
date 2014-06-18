@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji_android.R;
@@ -394,11 +395,11 @@ public class LoginActivity extends HyjActivity {
 					    				// Define a projection that specifies which columns from the
 					    				// database
 					    				// you will actually use after this query.
-					    				String[] projection = { "userId", "openId" };
+					    				String[] projection = { "userId", "openid" };
 					    				String[] args = { values.optString("openid") };
 					    				cursor = rDb.query("QQLogin", 
 					    						projection, // The columns to return
-					    						"openId=?", 
+					    						"openid=?", 
 					    						args, // The values for the WHERE clause
 					    						null, // don't group the rows
 					    						null, // don't filter by row groups
@@ -682,6 +683,11 @@ public class LoginActivity extends HyjActivity {
 										MessageBox messageBox = new MessageBox();
 										messageBox.loadFromJSON(obj, true);
 										messageBox.save();
+									} else if (obj.optString("__dataType")
+											.equals("QQLogin")) {
+										QQLogin qqLogin = new QQLogin();
+										qqLogin.loadFromJSON(obj, true);
+										qqLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
 										Friend friend = new Friend();

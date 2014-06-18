@@ -200,6 +200,7 @@ public class HyjApplication extends Application {
 			return false;
 		}
 	}
+	
 	public boolean login(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
