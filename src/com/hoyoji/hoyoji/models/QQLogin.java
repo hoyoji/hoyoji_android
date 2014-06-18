@@ -21,6 +21,9 @@ public class QQLogin extends HyjModel {
 	@Column(name = "userId")
 	private String mUserId;
 	
+	@Column(name = "nickName")
+	private String mNickName;
+	
 	@Column(name = "access_token")
 	private String mAccessToken;
 	
@@ -85,6 +88,14 @@ public class QQLogin extends HyjModel {
 
 	public void setOpenId(String mOpenId) {
 		this.mOpenId = mOpenId;
+	}
+
+	public String getNickName() {
+		return mNickName;
+	}
+
+	public void setNickName(String mNickName) {
+		this.mNickName = mNickName;
 	}
 
 	public String getAccessToken() {
