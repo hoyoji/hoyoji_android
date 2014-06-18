@@ -354,6 +354,8 @@ public class UserData extends HyjModel {
 	
 	public JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
+		jsonObj.remove("hasPassword");
+		jsonObj.remove("password");
 		jsonObj.remove("lastMessagesDownloadTime");
 		jsonObj.remove("lastSyncTime");
 		return jsonObj;
