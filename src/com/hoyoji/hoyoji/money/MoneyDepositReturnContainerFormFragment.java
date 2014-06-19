@@ -86,34 +86,34 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		final MoneyDepositReturnContainer moneyDepositIncomeContainer;
+		final MoneyDepositReturnContainer moneyDepositReturnContainer;
 		
 		Intent intent = getActivity().getIntent();
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyDepositIncomeContainer =  new Select().from(MoneyDepositReturnContainer.class).where("_id=?", modelId).executeSingle();
-			hasEditPermission = moneyDepositIncomeContainer.hasEditPermission();
+			moneyDepositReturnContainer =  new Select().from(MoneyDepositReturnContainer.class).where("_id=?", modelId).executeSingle();
+			hasEditPermission = moneyDepositReturnContainer.hasEditPermission();
 		} else {
-			moneyDepositIncomeContainer = new MoneyDepositReturnContainer();
+			moneyDepositReturnContainer = new MoneyDepositReturnContainer();
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
-			if(moneyDepositIncomeContainer.get_mId() == null && moneyAccountId != null){
-				moneyDepositIncomeContainer.setMoneyAccountId(moneyAccountId);
+			if(moneyDepositReturnContainer.get_mId() == null && moneyAccountId != null){
+				moneyDepositReturnContainer.setMoneyAccountId(moneyAccountId);
 			}
 		}
 		
-		mMoneyDepositReturnContainerEditor = new MoneyDepositReturnContainerEditor(moneyDepositIncomeContainer);
+		mMoneyDepositReturnContainerEditor = new MoneyDepositReturnContainerEditor(moneyDepositReturnContainer);
 		
 		setupDeleteButton(mMoneyDepositReturnContainerEditor);
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageField_picture);
-		mImageFieldPicture.setImages(moneyDepositIncomeContainer.getPictures());
+		mImageFieldPicture.setImages(moneyDepositReturnContainer.getPictures());
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_date);	
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyDepositIncomeContainer.getDate());
+			mDateTimeFieldDate.setText(moneyDepositReturnContainer.getDate());
 		}
 
-		setupApportionField(moneyDepositIncomeContainer);
+		setupApportionField(moneyDepositReturnContainer);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
@@ -121,7 +121,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			mNumericAmount.setNumber(amount);
 			mApportionFieldApportions.setTotalAmount(amount);
 		}else{
-			mNumericAmount.setNumber(moneyDepositIncomeContainer.getAmount());
+			mNumericAmount.setNumber(moneyDepositReturnContainer.getAmount());
 		}
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
@@ -146,7 +146,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			}
 		});
 		
-		MoneyAccount moneyAccount = moneyDepositIncomeContainer.getMoneyAccount();
+		MoneyAccount moneyAccount = moneyDepositReturnContainer.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_selectorField_moneyAccount);
 
 		if(moneyAccount != null){
@@ -168,7 +168,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		if(projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
-			project = moneyDepositIncomeContainer.getProject();
+			project = moneyDepositReturnContainer.getProject();
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_selectorField_project);
 		
@@ -184,15 +184,15 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		});	
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_exchangeRate);		
-		mNumericExchangeRate.setNumber(moneyDepositIncomeContainer.getExchangeRate());
+		mNumericExchangeRate.setNumber(moneyDepositReturnContainer.getExchangeRate());
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_linearLayout_exchangeRate);
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
+		mRemarkFieldRemark.setText(moneyDepositReturnContainer.getRemark());
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
+		mRemarkFieldRemark.setText(moneyDepositReturnContainer.getRemark());
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
@@ -262,7 +262,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					addAllProjectMemberIntoApportionsField(moneyDepositIncomeContainer);
+					addAllProjectMemberIntoApportionsField(moneyDepositReturnContainer);
 				}
 			});
 			
@@ -796,6 +796,12 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 							moneyReturn.setMoneyAccountId(null, null);
 						}
 
+						Intent intent = getActivity().getIntent();
+						String counterpartId = intent.getStringExtra("counterpartId");
+						if(counterpartId != null){
+							moneyReturn.setMoneyPaybackId(counterpartId);
+						}
+						
 						moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 						moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 						moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
@@ -872,6 +878,12 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					moneyReturn.setMoneyAccountId(null, null);
 				}
 
+				Intent intent = getActivity().getIntent();
+				String counterpartId = intent.getStringExtra("counterpartId");
+				if(counterpartId != null){
+					moneyReturn.setMoneyPaybackId(counterpartId);
+				}
+				
 				moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 				moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 				moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());

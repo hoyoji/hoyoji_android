@@ -813,6 +813,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							moneyBorrow.setMoneyAccountId(null, null);
 						}
 
+						Intent intent = getActivity().getIntent();
+						String counterpartId = intent.getStringExtra("counterpartId");
+						if(counterpartId != null){
+							moneyBorrow.setMoneyLendId(counterpartId);
+						}
 						moneyBorrow.setLocation(mMoneyDepositIncomeContainerEditor.getModelCopy().getLocation());
 						moneyBorrow.setAddress(mMoneyDepositIncomeContainerEditor.getModelCopy().getAddress());
 						moneyBorrow.setPictureId(mMoneyDepositIncomeContainerEditor.getModelCopy().getPictureId());
@@ -889,6 +894,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					moneyBorrow.setMoneyAccountId(null, null);
 				}
 
+				Intent intent = getActivity().getIntent();
+				String counterpartId = intent.getStringExtra("counterpartId");
+				if(counterpartId != null){
+					moneyBorrow.setMoneyLendId(counterpartId);
+				}
 				moneyBorrow.setLocation(mMoneyDepositIncomeContainerEditor.getModelCopy().getLocation());
 				moneyBorrow.setAddress(mMoneyDepositIncomeContainerEditor.getModelCopy().getAddress());
 				moneyBorrow.setPictureId(mMoneyDepositIncomeContainerEditor.getModelCopy().getPictureId());

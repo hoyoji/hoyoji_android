@@ -62,6 +62,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,7 +78,7 @@ public class LoginActivity extends HyjActivity {
 	// UI references.
 	private EditText mUserNameView;
 	private EditText mPasswordView;
-	private Button mLoginQQButton;
+	private ImageButton mLoginQQButton;
 
     private UserInfo mInfo;
     public static QQAuth mQQAuth;
@@ -117,7 +118,7 @@ public class LoginActivity extends HyjActivity {
 					}
 				});
 
-		mLoginQQButton = (Button)findViewById(R.id.button_sign_in_qq);
+		mLoginQQButton = (ImageButton)findViewById(R.id.button_sign_in_qq);
 		mLoginQQButton.setOnClickListener(
 				new View.OnClickListener() {
 					@Override

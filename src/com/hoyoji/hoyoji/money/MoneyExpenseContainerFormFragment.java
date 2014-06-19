@@ -1191,6 +1191,12 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyExpense.setMoneyAccountId(null, null);
 								}
 
+								Intent intent = getActivity().getIntent();
+								String counterpartId = intent.getStringExtra("counterpartId");
+								if(counterpartId != null){
+									moneyExpense.setMoneyIncomeId(counterpartId);
+								}
+								
 								moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
@@ -1287,6 +1293,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyExpense.setMoneyAccountId(null, null);
 								}
 
+								Intent intent = getActivity().getIntent();
+								String counterpartId = intent.getStringExtra("counterpartId");
+								if(counterpartId != null){
+									moneyExpense.setMoneyIncomeId(counterpartId);
+								}
 								moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
@@ -1401,6 +1412,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				moneyExpense.setMoneyAccountId(null, null);
 			}
 
+			Intent intent = getActivity().getIntent();
+			String counterpartId = intent.getStringExtra("counterpartId");
+			if(counterpartId != null){
+				moneyExpense.setMoneyIncomeId(counterpartId);
+			}
 			moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 			moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 			moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
