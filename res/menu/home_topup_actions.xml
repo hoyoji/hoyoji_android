@@ -6,18 +6,18 @@
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositExpense"
-           android:title="预缴会费"
+           android:title="预缴会费 (支)"
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositIncome"
-           android:title="预收会费"
+           android:title="预收会费 (收)"
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositReturn"
-           android:title="会费还款"
+           android:title="会费还款 (支)"
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositPayback"
-           android:title="会费退回"
+           android:title="会费退回 (收)"
            hoyoji:showAsAction="never"/>
 </menu>

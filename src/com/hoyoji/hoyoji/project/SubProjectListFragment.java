@@ -227,14 +227,19 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			
-			numericView.setPrefix(project.getCurrencySymbol());
+//			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
 			Double projectBalance = project.getBalance();
-			if(projectBalance < 0){
+			if(projectBalance == 0){
+				numericView.setTextColor(Color.BLACK);
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else if(projectBalance < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				numericView.setPrefix("支出"+project.getCurrencySymbol());
 			}else{
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+				numericView.setPrefix("收入"+project.getCurrencySymbol());
 			}
 			
 			numericView.setNumber(Math.abs(projectBalance));
@@ -243,14 +248,19 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			
-			numericView.setPrefix(project.getCurrencySymbol());
+//			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
 			Double depositBalance = project.getDepositBalance();
-			if(depositBalance < 0){
+			if(depositBalance == 0){
+				numericView.setTextColor(Color.BLACK);
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else if(depositBalance < 0){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				numericView.setPrefix("支出"+project.getCurrencySymbol());
 			}else{
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+				numericView.setPrefix("收入"+project.getCurrencySymbol());
 			}
 			
 			numericView.setNumber(Math.abs(depositBalance));
