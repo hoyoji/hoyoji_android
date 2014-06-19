@@ -42,6 +42,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
@@ -345,26 +346,37 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyDepositReturnApportion>();
-			if(moneyDepositReturnContainer.getProject() != null && moneyDepositReturnContainer.getProject().getAutoApportion()){
-				List<ProjectShareAuthorization> projectShareAuthorizations = moneyDepositReturnContainer.getProject().getShareAuthorizations();
-				for(int i=0; i < projectShareAuthorizations.size(); i++){
-					MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
-					apportion.setAmount(0.0);
-					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-					apportion.setMoneyDepositReturnContainerId(moneyDepositReturnContainer.getId());
-					apportion.setApportionType("Share");
-					
-					moneyApportions.add(apportion);
-				}
-			} else if(moneyDepositReturnContainer.getProject() != null) {
+//			if(moneyDepositReturnContainer.getProject() != null && moneyDepositReturnContainer.getProject().getAutoApportion()){
+//				List<ProjectShareAuthorization> projectShareAuthorizations = moneyDepositReturnContainer.getProject().getShareAuthorizations();
+//				for(int i=0; i < projectShareAuthorizations.size(); i++){
+//					MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+//					apportion.setAmount(0.0);
+//					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+//					apportion.setMoneyDepositReturnContainerId(moneyDepositReturnContainer.getId());
+//					apportion.setApportionType("Share");
+//					
+//					moneyApportions.add(apportion);
+//				}
+//			} else 
+//			if(moneyDepositReturnContainer.getProject() != null) {
+//				MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+//				apportion.setAmount(moneyDepositReturnContainer.getAmount0());
+//				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//				apportion.setMoneyDepositReturnContainerId(moneyDepositReturnContainer.getId());
+//				apportion.setApportionType("Average");
+//				moneyApportions.add(apportion);
+//			}
+
+			Intent intent = getActivity().getIntent();
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
 				MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
 				apportion.setAmount(moneyDepositReturnContainer.getAmount0());
-				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				apportion.setFriendUserId(friendUserId);
 				apportion.setMoneyDepositReturnContainerId(moneyDepositReturnContainer.getId());
 				apportion.setApportionType("Average");
 				moneyApportions.add(apportion);
 			}
-			
 		} else {
 			moneyApportions = moneyDepositReturnContainer.getApportions();
 		}
@@ -554,6 +566,8 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			HyjUtil.displayToast(R.string.app_permission_no_addnew);
 		}else if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else if(mApportionFieldApportions.getCount() <= 0){
+			HyjUtil.displayToast("请选择至少一个收款成员");
 		}else{
 		
 		mMoneyDepositReturnContainerEditor.validate();

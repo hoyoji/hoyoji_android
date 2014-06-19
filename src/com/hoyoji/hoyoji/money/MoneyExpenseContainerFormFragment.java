@@ -445,7 +445,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyExpenseApportion>();
-			if(moneyExpenseContainer.getProject() != null && moneyExpenseContainer.getProject().getAutoApportion()){
+			if(moneyExpenseContainer.getProject() != null && moneyExpenseContainer.getProject().getAutoApportion() && moneyExpenseContainer.getMoneyIncomeId() == null){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					MoneyExpenseApportion apportion = new MoneyExpenseApportion();

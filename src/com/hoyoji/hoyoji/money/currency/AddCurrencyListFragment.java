@@ -18,17 +18,12 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.activeandroid.ActiveAndroid;
-import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjListFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Currency;
-import com.hoyoji.hoyoji.models.Exchange;
 
 public class AddCurrencyListFragment extends HyjListFragment implements OnQueryTextListener {
 	protected SearchView mSearchView;

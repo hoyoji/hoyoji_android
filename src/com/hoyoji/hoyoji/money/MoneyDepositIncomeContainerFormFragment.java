@@ -362,21 +362,33 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		if(mMoneyDepositIncomeContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyDepositIncomeApportion>();
-			if(moneyDepositIncomeContainer.getProject() != null && moneyDepositIncomeContainer.getProject().getAutoApportion()){
-				List<ProjectShareAuthorization> projectShareAuthorizations = moneyDepositIncomeContainer.getProject().getShareAuthorizations();
-				for(int i=0; i < projectShareAuthorizations.size(); i++){
-					MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();
-					apportion.setAmount(0.0);
-					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-					apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
-					apportion.setApportionType("Share");
-					
-					moneyApportions.add(apportion);
-				}
-			} else if(moneyDepositIncomeContainer.getProject() != null) {
+//			if(moneyDepositIncomeContainer.getProject() != null && moneyDepositIncomeContainer.getProject().getAutoApportion()){
+//				List<ProjectShareAuthorization> projectShareAuthorizations = moneyDepositIncomeContainer.getProject().getShareAuthorizations();
+//				for(int i=0; i < projectShareAuthorizations.size(); i++){
+//					MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();
+//					apportion.setAmount(0.0);
+//					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+//					apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
+//					apportion.setApportionType("Share");
+//					
+//					moneyApportions.add(apportion);
+//				}
+//			} else 
+//			if(moneyDepositIncomeContainer.getProject() != null) {
+//				MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();
+//				apportion.setAmount(moneyDepositIncomeContainer.getAmount0());
+//				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//				apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
+//				apportion.setApportionType("Average");
+//				moneyApportions.add(apportion);
+//			}
+
+			Intent intent = getActivity().getIntent();
+			String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
 				MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();
 				apportion.setAmount(moneyDepositIncomeContainer.getAmount0());
-				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				apportion.setFriendUserId(friendUserId);
 				apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
 				apportion.setApportionType("Average");
 				moneyApportions.add(apportion);
@@ -571,6 +583,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			HyjUtil.displayToast(R.string.app_permission_no_addnew);
 		}else if(mMoneyDepositIncomeContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else if(mApportionFieldApportions.getCount() <= 0){
+			HyjUtil.displayToast("请选择至少一个缴费成员");
 		}else{
 		
 		mMoneyDepositIncomeContainerEditor.validate();

@@ -558,4 +558,8 @@ public class MoneyIncomeContainer extends HyjModel {
 	public void setMoneyExpenseId(String moneyExpenseId) {
 		this.mMoneyExpenseId = moneyExpenseId;
 	}
+
+	public String getMoneyExpenseId() {
+		return this.mMoneyExpenseId;
+	}
 }
