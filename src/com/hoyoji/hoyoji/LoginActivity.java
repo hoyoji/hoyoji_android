@@ -156,15 +156,13 @@ public class LoginActivity extends HyjActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.loginActivity_action_forgot_password:
-//			Intent intent = new Intent(this, SettingsActivity.class);
-//			startActivity(intent);
-		   Bundle bundle = new Bundle();
-		   bundle.putString("clickType", "findPassword");
-    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
-    	   return true;
-		}
+//		switch (item.getItemId()) {
+//		case R.id.loginActivity_action_forgot_password:
+//		   Bundle bundle = new Bundle();
+//		   bundle.putString("clickType", "findPassword");
+//    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
+//    	   return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -353,6 +351,9 @@ public class LoginActivity extends HyjActivity {
 	}
 
 	private void doQQLogin(final JSONObject values) {    
+
+		this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+				R.string.loginActivity_progress_signing_in);
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
@@ -360,8 +361,8 @@ public class LoginActivity extends HyjActivity {
 					// 在本地找到该QQ用户，我们直接登录，在把本地拿到的登录信息（accessToken)保存到本地
 					String userId = (String) object;
 					((HyjApplication) getApplication()).loginQQ(userId, values);
-					LoginActivity.this.dismissProgressDialog();
 					relogin();
+					LoginActivity.this.dismissProgressDialog();
 				} else {
 					// 在本地找不到该QQ用户，我们到服务器上去找
 					loginQQFromServer(true, values);
