@@ -138,34 +138,34 @@ public class RegisterActivity extends HyjActivity {
 		else if(!mUserName.matches("^([a-zA-Z0-9.-]+)$")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_char));
 	   		valiatePass = false;
-		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("QQ")){
+		} else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("QQ")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("WX")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("WX")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_wx));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("WB")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("WB")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_wb));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("FB")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("FB")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_fb));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("TT")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("TT")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_tt));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("RR")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("RR")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_rr));
 	   		valiatePass = false;
-		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("KX")){
+		}  else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("KX")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_kx));
 	   		valiatePass = false;
-		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("MB")){
+		} else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("MB")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_mb));
 	   		valiatePass = false;
-		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("BD")){
+		} else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("BD")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_bd));
 	   		valiatePass = false;
-		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("GG")){
+		} else if(mUserName.toUpperCase(Locale.getDefault()).startsWith("GG")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_gg));
 	   		valiatePass = false;
 		} 
