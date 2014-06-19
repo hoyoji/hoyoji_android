@@ -138,7 +138,34 @@ public class RegisterActivity extends HyjActivity {
 		else if(!mUserName.matches("^([a-zA-Z0-9.-]+)$")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_char));
 	   		valiatePass = false;
-		} else if(!mUserName.toUpperCase().startsWith("QQ")){
+		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("QQ")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("WX")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("WB")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("FB")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("TT")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("RR")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		}  else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("KX")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("MB")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("BD")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		} else if(!mUserName.toUpperCase(Locale.getDefault()).startsWith("GG")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
 	   		valiatePass = false;
 		} 
