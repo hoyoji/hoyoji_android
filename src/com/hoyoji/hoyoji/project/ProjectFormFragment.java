@@ -47,6 +47,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.HyjWebServiceExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjListField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
@@ -306,7 +307,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 										});
 					}
 				};
-				HyjHttpGetExchangeRateAsyncTask.newInstance(HyjApplication
+				HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication
 						.getInstance().getCurrentUser().getUserData()
 						.getActiveCurrencyId(), projectCurrencyId,
 						serverCallbacks);
@@ -573,7 +574,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 												});
 							}
 						};
-						HyjHttpGetExchangeRateAsyncTask.newInstance(
+						HyjWebServiceExchangeRateAsyncTask.newInstance(
 								mSelectorFieldProjectCurrency.getModelId(),
 								project.getCurrencyId(), serverCallbacks);
 					}

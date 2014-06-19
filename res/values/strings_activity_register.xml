@@ -20,7 +20,6 @@
     
     <string name="registerActivity_textView_localCurrency">默认币种</string>
     <string name="registerActivity_editText_hint_localCurrency">请选择默认币种</string>
-
     
     <string name="registerActivity_validation_username_too_short">用户名不能少于3个字符</string>
     <string name="registerActivity_validation_username_too_long">用户名不能超过15个字符</string>

@@ -23,6 +23,7 @@ import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.HyjWebServiceExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
@@ -367,7 +368,8 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 										});
 					}
 				};
-				HyjHttpGetExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser()
+
+				HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser()
 						.getUserData().getActiveCurrencyId(),
 						moneyAccountCurrencyId,
 						serverCallbacks);
