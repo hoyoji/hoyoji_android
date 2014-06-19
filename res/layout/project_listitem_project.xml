@@ -39,12 +39,14 @@
 		    android:layout_gravity="right"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text="收支结余"/>
+		    android:text="收支结余"
+	    	android:visibility="gone"/>
 	     <com.hoyoji.android.hyjframework.view.HyjNumericView 
 	        android:id="@+id/projectListItem_inOutTotal"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
-	    	android:textColor="@android:color/darker_gray"/>
+	    	android:textColor="@android:color/darker_gray"
+	    	android:visibility="gone"/>
 	    
 	    <TextView 
 	        android:id="@+id/projectListItem_depositTotalLabel"  
