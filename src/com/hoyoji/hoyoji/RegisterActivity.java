@@ -138,7 +138,10 @@ public class RegisterActivity extends HyjActivity {
 		else if(!mUserName.matches("^([a-zA-Z0-9.-]+)$")){
 			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_char));
 	   		valiatePass = false;
-		}
+		} else if(!mUserName.toUpperCase().startsWith("QQ")){
+			mEditTextUserName.setError(getString(R.string.registerActivity_validation_username_error_qq));
+	   		valiatePass = false;
+		} 
 		else {
 			mEditTextUserName.setError(null);
 	   	}
