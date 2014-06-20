@@ -80,8 +80,8 @@ public class HyjApplication extends Application {
 		ContentProvider provider = (ContentProvider) client.getLocalContentProvider();
 		provider.initialize();
 
-		//XGPushConfig.enableDebug(this, true);
-		//XGPushManager.registerPush(this);
+//		XGPushConfig.enableDebug(this, true);
+//		XGPushManager.registerPush(this);
 	}
 	
 	public boolean login(String userId, String password){
