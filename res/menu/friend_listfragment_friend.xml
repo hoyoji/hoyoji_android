@@ -17,6 +17,11 @@
 		        android:title="@string/friendListFragment_action_friend_create"
 		        android:icon="@drawable/ic_action_add_person"
 		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/friendListFragment_action_friendCategory_create"
+		        android:title="@string/friendCategoryFormFragment_title_create"
+		        android:icon="@drawable/ic_action_add_group"
+		        hoyoji:showAsAction="always"/>
         </menu>
 	</item>
 </menu>

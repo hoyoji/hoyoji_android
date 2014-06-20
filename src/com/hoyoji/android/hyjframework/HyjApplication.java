@@ -6,15 +6,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Cache;
 import com.activeandroid.Configuration;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 
 import android.app.Application;
 import android.content.ContentProviderClient;
@@ -79,6 +79,9 @@ public class HyjApplication extends Application {
 		ContentProviderClient client = resolver.acquireContentProviderClient("com.hoyoji.hoyoji_android");
 		ContentProvider provider = (ContentProvider) client.getLocalContentProvider();
 		provider.initialize();
+
+		//XGPushConfig.enableDebug(this, true);
+		//XGPushManager.registerPush(this);
 	}
 	
 	public boolean login(String userId, String password){

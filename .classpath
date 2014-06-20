@@ -8,5 +8,9 @@
 	<classpathentry exported="true" kind="lib" path="libs/ksoap2-android-assembly-3.3.0-jar-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mta-sdk-1.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/svn2924_open_sdk.jar"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/mid-sdk-2.10.jar"/>
+	<classpathentry kind="lib" path="libs/Xg_sdk_v2.30.jar"/>
+	<classpathentry kind="lib" path="libs/wup-1.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

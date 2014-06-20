@@ -841,7 +841,7 @@ public class LoginActivity extends HyjActivity {
 						wDb.close();
 						mDbHelper.close();
 					}
-					loginQQUserFirstTime(userId, loginInfo.getString("access_token"), jsonObject);
+					loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.getString("access_token")), jsonObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

@@ -31,7 +31,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
@@ -100,6 +99,9 @@ import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
+import com.tencent.android.tpush.XGPushClickedResult;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 
 public class MainActivity extends HyjUserActivity {
 	private Menu mOptionsMenu;
@@ -142,6 +144,37 @@ public class MainActivity extends HyjUserActivity {
 										ClientSyncRecord.class, null), true,
 								mChangeObserver);
 			}
+			
+//			// 1.��������Token
+//			Handler handler = new HandlerExtension(MainActivity.this);
+//			m = handler.obtainMessage();
+			//��������
+//			XGPushManager.registerPush(HyjApplication.getInstance().getApplicationContext());
+////					,
+////					new XGIOperateCallback() {
+////						@Override
+////						public void onSuccess(Object data, int flag) {
+////							Log.w(Constants.LogTag,
+////									"+++ register push sucess. token:" + data);
+//////							m.obj = "+++ register push sucess. token:" + data;
+//////							m.sendToTarget();
+////							CacheManager.getRegisterInfo();
+////						}
+////
+////						@Override
+////						public void onFail(Object data, int errCode, String msg) {
+////							Log.w(Constants.LogTag,
+////									"+++ register push fail. token:" + data
+////											+ ", errCode:" + errCode + ",msg:"
+////											+ msg);
+////
+//////							m.obj = "+++ register push fail. token:" + data
+//////									+ ", errCode:" + errCode + ",msg:" + msg;
+//////							m.sendToTarget();
+////						}
+////					}
+//			);
+
 		}
 	}
 
@@ -506,7 +539,31 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
+//	@Override
+//	protected void onNewIntent(Intent intent) {
+//		// TODO Auto-generated method stub
+//		super.onNewIntent(intent);
+//		setIntent(intent);
+//	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		XGPushClickedResult click =XGPushManager.onActivityStarted(this);
+//		Log.d("TPush", "onResumeXGPushClickedResult:" + click );
+//		if (click != null) { // ��������������������������
+//			Toast.makeText(this, "����������:" + click.toString(),
+//					Toast.LENGTH_SHORT).show();
+//		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		XGPushManager.onActivityStoped(this);
+	}
+	
 	@Override
 	protected void onDestroy() {
 		if (mChangeObserver != null) {
@@ -1154,4 +1211,27 @@ public class MainActivity extends HyjUserActivity {
 		}
 		return model;
 	}
+	
+
+//	private static class HandlerExtension extends Handler {
+//		WeakReference<MainActivity> mActivity;
+//
+//		HandlerExtension(MainActivity activity) {
+//			mActivity = new WeakReference<MainActivity>(activity);
+//		}
+//
+//		@Override
+//		public void handleMessage(android.os.Message msg) {
+//			super.handleMessage(msg);
+//			MainActivity theActivity = mActivity.get();
+//			if (msg != null) {
+//				Log.w(Constants.LogTag, msg.obj.toString());
+//				TextView textView = (TextView) theActivity
+//						.findViewById(R.id.deviceToken);
+//				textView.setText(XGPushConfig.getToken(theActivity));
+//			}
+//			// XGPushManager.registerCustomNotification(theActivity,
+//			// "BACKSTREET", "BOYS", System.currentTimeMillis() + 5000, 0);
+//		}
+//	}
 }

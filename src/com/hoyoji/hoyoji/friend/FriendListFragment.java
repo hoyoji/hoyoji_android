@@ -87,6 +87,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
 			openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
 			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
+			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
