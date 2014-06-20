@@ -783,8 +783,12 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						moneyReturn.setAmount(apportionEditor.getModelCopy().getAmount0());
 						moneyReturn.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
 						moneyReturn.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
-						moneyReturn.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
-						moneyReturn.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+						moneyReturn.setFriendUserId(friend.getFriendUserId());
+						if(friend.getFriendUserId() != null){
+							moneyReturn.setLocalFriendId(null);
+						} else {
+							moneyReturn.setLocalFriendId(friend.getId());
+						}
 						moneyReturn.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
 						moneyReturn.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
 						moneyReturn.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());

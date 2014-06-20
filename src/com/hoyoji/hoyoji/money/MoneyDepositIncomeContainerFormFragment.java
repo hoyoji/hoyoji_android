@@ -800,8 +800,12 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
 						moneyBorrow.setDate(mMoneyDepositIncomeContainerEditor.getModelCopy().getDate());
 						moneyBorrow.setRemark(mMoneyDepositIncomeContainerEditor.getModelCopy().getRemark());
-						moneyBorrow.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
-						moneyBorrow.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+						moneyBorrow.setFriendUserId(friend.getFriendUserId());
+						if(friend.getFriendUserId() != null){
+							moneyBorrow.setLocalFriendId(null);
+						} else {
+							moneyBorrow.setLocalFriendId(friend.getId());
+						}
 						moneyBorrow.setExchangeRate(mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
 						moneyBorrow.setGeoLat(mMoneyDepositIncomeContainerEditor.getModelCopy().getGeoLat());
 						moneyBorrow.setGeoLon(mMoneyDepositIncomeContainerEditor.getModelCopy().getGeoLon());
