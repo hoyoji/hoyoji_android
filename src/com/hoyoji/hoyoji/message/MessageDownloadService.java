@@ -51,7 +51,6 @@ public class MessageDownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(TAG, "onCreate() executed");
 	}
 
 	@Override
@@ -61,11 +60,10 @@ public class MessageDownloadService extends Service {
 				@Override
 				public void run() {
 					// 开始执行后台任务
-					while (HyjApplication.getInstance().getCurrentUser() != null) {
+					if (HyjApplication.getInstance().getCurrentUser() != null) {
 						try {
 							if (!HyjUtil.hasNetworkConnection()) {
-								Thread.sleep(5000);
-								continue;
+								return;
 							}
 
 							User currentUser = HyjApplication.getInstance()
@@ -210,7 +208,6 @@ public class MessageDownloadService extends Service {
 
 							}
 
-							Thread.sleep(5000);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

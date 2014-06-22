@@ -100,7 +100,6 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.android.tpush.XGPushClickedResult;
-import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
 public class MainActivity extends HyjUserActivity {
@@ -144,12 +143,12 @@ public class MainActivity extends HyjUserActivity {
 										ClientSyncRecord.class, null), true,
 								mChangeObserver);
 			}
-			
+
 //			// 1.��������Token
 //			Handler handler = new HandlerExtension(MainActivity.this);
 //			m = handler.obtainMessage();
 			//��������
-//			XGPushManager.registerPush(HyjApplication.getInstance().getApplicationContext());
+//			XGPushManager.registerPush(HyjApplication.getInstance().getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 ////					,
 ////					new XGIOperateCallback() {
 ////						@Override
@@ -335,7 +334,11 @@ public class MainActivity extends HyjUserActivity {
 						HyjUtil.displayToast(R.string.server_connection_disconnected);
 						return;
 					}
+
 					if (!HyjApplication.getInstance().getIsSyncing()) {
+						Intent startIntent = new Intent(HyjApplication.getInstance().getApplicationContext(), MessageDownloadService.class);
+						startService(startIntent);
+
 						uploadData(true);
 					}
 				}
@@ -550,7 +553,7 @@ public class MainActivity extends HyjUserActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		XGPushClickedResult click =XGPushManager.onActivityStarted(this);
+		XGPushClickedResult click = XGPushManager.onActivityStarted(this);
 //		Log.d("TPush", "onResumeXGPushClickedResult:" + click );
 //		if (click != null) { // ��������������������������
 //			Toast.makeText(this, "����������:" + click.toString(),

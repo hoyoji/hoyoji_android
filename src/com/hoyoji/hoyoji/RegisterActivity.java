@@ -34,6 +34,8 @@ import com.hoyoji.hoyoji.money.currency.AddCurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji_android.R;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 
 
 public class RegisterActivity extends HyjActivity {
@@ -54,6 +56,7 @@ public class RegisterActivity extends HyjActivity {
 	
 	@Override
 	protected void onInitViewData(){
+		
 		mEditTextUserName = (EditText) findViewById(R.id.editText_username);
 		mEditTextPassword1 = (EditText) findViewById(R.id.editText_password1);
 		mEditTextPassword2 = (EditText) findViewById(R.id.editText_password2);
@@ -228,7 +231,6 @@ public class RegisterActivity extends HyjActivity {
 				postData.put("currencyId", currencyId);
 				postData.put("currencySymbol", currencySymbol);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return;
 			}

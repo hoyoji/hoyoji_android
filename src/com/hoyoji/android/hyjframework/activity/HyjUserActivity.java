@@ -1,6 +1,10 @@
 package com.hoyoji.android.hyjframework.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,16 +12,31 @@ import android.view.MenuItem;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji.LoginActivity;
+import com.hoyoji.hoyoji.message.PushMessageReceiver;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.SettingsActivity;
-import com.hoyoji.hoyoji.message.MessageDownloadService;
+import com.tencent.android.tpush.XGPushActivity;
+import com.tencent.android.tpush.XGPushManager;
 
 public abstract class HyjUserActivity extends HyjActivity {
 	private boolean mIsFirstTimeStart = true;
 	
 	@Override
 	protected void onStart() {
+      SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+      final String userId = userInfo.getString("userId", "");  
+      final String password = userInfo.getString("password", "");  
+      if(userId.length() > 0 && password.length() > 0){
+    	  HyjApplication.getInstance().login(userId, password);
+      }
+		
 		if(HyjApplication.getInstance().isLoggedIn()) {
+
+			// 2.30及以上版本
+			enableComponentIfNeeded(getApplicationContext(), XGPushActivity.class.getName());
+			// CustomPushReceiver改为自己继承XGPushBaseReceiver的类，若有的话
+			enableComponentIfNeeded(getApplicationContext(), PushMessageReceiver.class.getName());
+
+			XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 			super.onStart();
 		} else {
 			super.onStartWithoutInitViewData();
@@ -43,5 +62,22 @@ public abstract class HyjUserActivity extends HyjActivity {
 			}
 		}
 		mIsFirstTimeStart = false;
+	}
+	
+	// 启用被禁用组件方法
+	private static void enableComponentIfNeeded(Context context,
+			String componentName) {
+	 PackageManager pmManager = context.getPackageManager();
+	 if (pmManager != null) {
+	  ComponentName cnComponentName = new ComponentName(
+	  		context.getPackageName(), componentName);
+	   int status = pmManager
+	   		.getComponentEnabledSetting(cnComponentName);
+	   if (status != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+	   	pmManager.setComponentEnabledSetting(cnComponentName,
+	   			PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+	   			PackageManager.DONT_KILL_APP);
+	   }
+	  }
 	}
 }

@@ -13,6 +13,7 @@ import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -25,7 +26,7 @@ import android.support.v4.app.Fragment;
 
 public class HyjApplication extends Application {
 	public final static String TAG = "HyjApplication";
-	private final static String SERVER_URL = "http://money.app100697798.twsapp.com/";
+	private final static String SERVER_URL = "http://hoyoji.duapp.com/";
 	private static HyjApplication sInstance;
 	private Boolean mIsSyncing = false;
 	private User currentUser = null;
@@ -36,18 +37,29 @@ public class HyjApplication extends Application {
 		super.onCreate();
 		sInstance = this;
 
-        SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-        String userId = userInfo.getString("userId", "");  
-        String password = userInfo.getString("password", "");  
-        if(userId.length() > 0 && password.length() > 0){
-        	login(userId, password);
-        }
+		XGPushConfig.enableDebug(getApplicationContext(), true);
+//		XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
+//		XGPushManager.unregisterPush(getApplicationContext());
+//		XGPushManager.registerPush(getApplicationContext());
+		
+//        SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+//        final String userId = userInfo.getString("userId", "");  
+//        final String password = userInfo.getString("password", "");  
+//        if(userId.length() > 0 && password.length() > 0){
+////        	Thread thread = new Thread(new Runnable(){
+////				@Override
+////				public void run() {
+////					login(userId, password);
+////				}
+////        	});
+////        	thread.start();
+//        }
 	}
 
 	@Override
 	public void onTerminate() {
-		super.onTerminate();
 		logout();
+		super.onTerminate();
 	}
 	
 	public Boolean getIsSyncing(){
@@ -75,13 +87,12 @@ public class HyjApplication extends Application {
 	}
 	
 	public void initContentProvider(){
+		
 		ContentResolver resolver = getApplicationContext().getContentResolver();
 		ContentProviderClient client = resolver.acquireContentProviderClient("com.hoyoji.hoyoji_android");
 		ContentProvider provider = (ContentProvider) client.getLocalContentProvider();
 		provider.initialize();
-
-//		XGPushConfig.enableDebug(this, true);
-//		XGPushManager.registerPush(this);
+		
 	}
 	
 	public boolean login(String userId, String password){
@@ -99,6 +110,19 @@ public class HyjApplication extends Application {
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
             userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//					public void onFail(Object arg0, int arg1, String arg2) {
+//						XGPushManager.unregisterPush(getApplicationContext());
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}
+//					@Override
+//					public void onSuccess(Object arg0, int arg1) {
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}});
+//            } else {
+//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//            }
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -132,6 +156,19 @@ public class HyjApplication extends Application {
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
             userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//					public void onFail(Object arg0, int arg1, String arg2) {
+//						XGPushManager.unregisterPush(getApplicationContext());
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}
+//					@Override
+//					public void onSuccess(Object arg0, int arg1) {
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}});
+//            } else {
+//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//            }
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -191,6 +228,19 @@ public class HyjApplication extends Application {
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
             userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//					public void onFail(Object arg0, int arg1, String arg2) {
+//						XGPushManager.unregisterPush(getApplicationContext());
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}
+//					@Override
+//					public void onSuccess(Object arg0, int arg1) {
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}});
+//            } else {
+//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//            }
 			return true;
 		} else {
 			ActiveAndroid.dispose();
@@ -241,7 +291,6 @@ public class HyjApplication extends Application {
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 		    ActiveAndroid.endTransaction();
@@ -252,6 +301,19 @@ public class HyjApplication extends Application {
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
             userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//					public void onFail(Object arg0, int arg1, String arg2) {
+//						XGPushManager.unregisterPush(getApplicationContext());
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}
+//					@Override
+//					public void onSuccess(Object arg0, int arg1) {
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}});
+//            } else {
+//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//            }
 			return true;
 		} else {
 			ActiveAndroid.dispose();
