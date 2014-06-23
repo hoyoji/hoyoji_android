@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
@@ -577,22 +578,29 @@ public class MainActivity extends HyjUserActivity {
 	}
 	
 	public void downloadData() {
-		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-			@Override
+//		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//			@Override
+
+		new Thread(new Runnable() {
 			public void finishCallback(Object object) {
+				HyjApplication.getInstance().setIsSyncing(false);
 				if (object instanceof Boolean) {
 					Boolean result = (Boolean) object;
 					if (result == true) {
-						((HyjActivity) MainActivity.this)
-								.dismissProgressDialog();
-						setRefreshActionButtonState(false, null);
-						HyjUtil.displayToast("同步数据成功");
+						MainActivity.this.runOnUiThread(new Runnable() {
+			                public void run() {
+								((HyjActivity) MainActivity.this)
+										.dismissProgressDialog();
+								setRefreshActionButtonState(false, null);
+								HyjUtil.displayToast("同步数据成功");
+			                }
+				           });
 					}
 				}
 			}
 
-			@Override
-			public void errorCallback(Object object) {
+//			@Override
+			public void errorCallback(final Object object) {
 				HyjApplication.getInstance().setIsSyncing(false);
 				if (object instanceof Boolean) {
 					// Boolean result = (Boolean)object;
@@ -601,13 +609,18 @@ public class MainActivity extends HyjUserActivity {
 					// }
 				}
 
-				setRefreshActionButtonState(false, null);
-				HyjUtil.displayToast(object.toString());
-				((HyjActivity) MainActivity.this).dismissProgressDialog();
+				MainActivity.this.runOnUiThread(new Runnable() {
+	                public void run() {
+						setRefreshActionButtonState(false, null);
+						HyjUtil.displayToast(object.toString());
+						((HyjActivity) MainActivity.this).dismissProgressDialog();
+	                }
+	           });
 			}
 
-			@Override
-			public Object doInBackground(String... string) {
+//			@Override
+//			public Object doInBackground(String... string) {
+	        public void run() {
 				String postData =  HyjApplication.getInstance().getCurrentUser().getUserData().getLastSyncTime();
 				if(postData == null){
 					postData = "null";
@@ -615,8 +628,8 @@ public class MainActivity extends HyjUserActivity {
 				Object result = HyjServer.doHttpPost(null,
 						HyjApplication.getServerUrl() + "syncPull.php", postData, true);
 				if (result == null) {
-					return HyjApplication.getInstance().getResources()
-							.getString(R.string.server_dataparse_error);
+					errorCallback( HyjApplication.getInstance().getResources()
+							.getString(R.string.server_dataparse_error));
 				}
 				if (result instanceof JSONObject) {
 					JSONObject jsonResult = (JSONObject) result;
@@ -626,21 +639,21 @@ public class MainActivity extends HyjUserActivity {
 							saveData(jsonResult.getJSONArray("data"), 
 									jsonResult.optString("lastSyncTime"));
 
-							return true;
+							finishCallback( true);
 						} catch (JSONException e) {
-							return "下载数据失败，请重试";
+							errorCallback("下载数据失败，请重试");
 						}
 					} else {
-						return jsonResult.optJSONObject("__summary").optString(
-								"msg");
+						errorCallback(jsonResult.optJSONObject("__summary").optString(
+								"msg"));
 					}
 					// } else if(result instanceof JSONArray) {
 					// saveData((JSONArray)result);
 				} else {
-					return "下载数据失败，请重试";
+					errorCallback("下载数据失败，请重试");
 				}
 			}
-		});
+		}).start();
 	}
 
 	private void saveDataRecursive(JSONArray result) throws JSONException {
@@ -714,8 +727,9 @@ public class MainActivity extends HyjUserActivity {
 			((HyjActivity) MainActivity.this).displayProgressDialog("同步数据",
 					"正在同步数据，请稍后...");
 		}
-		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-			@Override
+		new Thread(new Runnable() {
+//		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//			@Override
 			public void finishCallback(Object object) {
 				if (object instanceof Boolean) {
 					Boolean result = (Boolean) object;
@@ -727,37 +741,46 @@ public class MainActivity extends HyjUserActivity {
 						// HyjUtil.displayToast("上传数据成功");
 
 						HyjApplication.getInstance().setIsSyncing(downloadData);
-						
-						if (downloadData) {
-							updateUploadCount(null, null);
-							downloadData();
-						} else {
-							setRefreshActionButtonState(false,
+
+						MainActivity.this.runOnUiThread(new Runnable() {
+			                public void run() {
+								if (downloadData) {
+						            updateUploadCount(null, null);
+									downloadData();
+								} else {
+				                	setRefreshActionButtonState(false,
 									updateUploadCount(null, null));
-						}
+								}
+			                }
+						});
 					}
 				}
 			}
 
-			@Override
-			public void errorCallback(Object object) {
+//			@Override
+			public void errorCallback(final Object object) {
 				if (object instanceof Boolean) {
 					// Boolean result = (Boolean)object;
 					// if(result == true){
 					return;
 					// }
 				}
-
 				HyjApplication.getInstance().setIsSyncing(false);
-				setRefreshActionButtonState(false, null);
-				HyjUtil.displayToast(object.toString());
-				if (downloadData) {
-					((HyjActivity) MainActivity.this).dismissProgressDialog();
-				}
+				MainActivity.this.runOnUiThread(new Runnable() {
+	                public void run() {
+						setRefreshActionButtonState(false, null);
+						HyjUtil.displayToast(object.toString());
+						if (downloadData) {
+							((HyjActivity) MainActivity.this).dismissProgressDialog();
+						}
+	                }
+				});
+	                
 			}
 
-			@Override
-			public Object doInBackground(String... string) {
+//			@Override
+//			public Object doInBackground(String... string) {
+	        public void run() {
 				if (!downloadData) {
 					try {
 						// 等待其他一起修改的记录都提交了再上传
@@ -786,12 +809,12 @@ public class MainActivity extends HyjUserActivity {
 				} catch (Exception e) {
 					ActiveAndroid.endTransaction();
 					rollbackUpload(syncRecords);
-					return "上传数据失败";
+					errorCallback("上传数据失败");
 				}
 
 				if (syncRecords.size() == 0) {
 					// 没有记录可上传
-					return true;
+					finishCallback(true);
 				}
 
 				try {
@@ -940,8 +963,8 @@ public class MainActivity extends HyjUserActivity {
 							postData.toString(), true);
 					if (result == null) {
 						rollbackUpload(syncRecords);
-						return HyjApplication.getInstance().getString(
-								R.string.server_dataparse_error);
+						errorCallback(HyjApplication.getInstance().getString(
+								R.string.server_dataparse_error));
 					}
 					if (result instanceof JSONObject) {
 						JSONObject jsonResult = (JSONObject) result;
@@ -961,28 +984,28 @@ public class MainActivity extends HyjUserActivity {
 									}
 									ActiveAndroid.setTransactionSuccessful();
 									ActiveAndroid.endTransaction();
-									return true;
+									finishCallback(true);
 								} catch (Exception e) {
 									ActiveAndroid.endTransaction();
 									rollbackUpload(syncRecords);
-									return "上传数据失败";
+									errorCallback("上传数据失败");
 								}
 							} else {
 								rollbackUpload(syncRecords);
-								return "上传数据失败";
+								errorCallback("上传数据失败");
 							}
 						} else {
 							rollbackUpload(syncRecords);
-							return jsonResult.optJSONObject("__summary")
-									.optString("msg");
+							errorCallback(jsonResult.optJSONObject("__summary")
+									.optString("msg"));
 						}
 					} else {
 						rollbackUpload(syncRecords);
-						return "上传数据失败";
+						errorCallback("上传数据失败");
 					}
 				} catch (JSONException e) {
 					rollbackUpload(syncRecords);
-					return "上传数据失败";
+					errorCallback("上传数据失败");
 				}
 			}
 
@@ -1012,7 +1035,7 @@ public class MainActivity extends HyjUserActivity {
 				// "Update ClientSyncRecord SET uploading = 0 WHERE uploading = 1");
 			}
 
-		});
+		}).start();
 	}
 
 	private HyjModel getModel(String tableName, String id) {
