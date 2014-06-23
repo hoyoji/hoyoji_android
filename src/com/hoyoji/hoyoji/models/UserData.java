@@ -280,7 +280,11 @@ public class UserData extends HyjModel {
 	}
 
 	public void setLastSyncTime(String mLastSyncTime) {
-		this.mLastSyncTime = mLastSyncTime;
+		if(mLastSyncTime != null && mLastSyncTime.isEmpty()){
+			this.mLastSyncTime = null;
+		} else {
+			this.mLastSyncTime = mLastSyncTime;
+		}
 	}
 	
 	public String getLastMessagesDownloadTime() {
@@ -288,7 +292,11 @@ public class UserData extends HyjModel {
 	}
 
 	public void setLastMessagesDownloadTime(String mLastMessagesDownloadTime) {
-		this.mLastMessagesDownloadTime = mLastMessagesDownloadTime;
+		if(mLastMessagesDownloadTime != null && mLastMessagesDownloadTime.isEmpty()){
+			this.mLastMessagesDownloadTime = null;
+		} else {
+			this.mLastMessagesDownloadTime = mLastMessagesDownloadTime;
+		}
 	}
 
 	public String getOwnerUserId() {

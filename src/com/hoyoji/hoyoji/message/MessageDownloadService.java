@@ -80,7 +80,7 @@ public class MessageDownloadService extends Service {
 							String lastMessagesDownloadTime = currentUser
 									.getUserData()
 									.getLastMessagesDownloadTime();
-							if (lastMessagesDownloadTime == null) {
+							if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty()) {
 
 								Object serverTime = HyjServer
 										.doHttpPost(null,
@@ -135,7 +135,7 @@ public class MessageDownloadService extends Service {
 												projectShareMessages
 														.add(newMessage);
 											}
-											if (lastMessagesDownloadTime == null
+											if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty()
 													|| lastMessagesDownloadTime
 															.compareTo(jsonMessage
 																	.optString("lastServerUpdateTime")) < 0) {
@@ -145,15 +145,15 @@ public class MessageDownloadService extends Service {
 										}
 									}
 
-									if (lastMessagesDownloadTime == null
+									if ((lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty())
 											&& jsonServerTime != null) {
 										lastMessagesDownloadTime = jsonServerTime
 												.optString("server_time");
 									}
 
-									if (lastMessagesDownloadTime != currentUser
+									if (!lastMessagesDownloadTime.equals(currentUser
 											.getUserData()
-											.getLastMessagesDownloadTime()) {
+											.getLastMessagesDownloadTime())) {
 										// HyjModelEditor<UserData>
 										// userDataEditor =
 										// currentUser.getUserData().newModelEditor();

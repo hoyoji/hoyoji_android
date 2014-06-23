@@ -21,6 +21,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -233,10 +237,10 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 		}
 
 		public static HttpGetExchangeRateAsyncTask newInstance(
-				List<String> fromCurrency, List<String> toCurrency,
+				List<String> fromCurrencies, List<String> toCurrencies,
 				HyjAsyncTaskCallbacks callbacks) {
 			HttpGetExchangeRateAsyncTask newTask = new HttpGetExchangeRateAsyncTask(callbacks);
-			newTask.execute(fromCurrency, toCurrency);
+			newTask.execute(fromCurrencies, toCurrencies);
 			return newTask;
 		}
 
@@ -248,8 +252,7 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 				
 				for(int i=0; i < params[1].size(); i++){
 					String toCurrency = params[1].get(i);
-					String target = "https://www.google.com/finance/converter?a=1&from=" + fromCurrency + "&to=" + toCurrency;
-					Object resultObject = doHttpGet(target);
+					Object resultObject = doHttpGet(fromCurrency, toCurrency);
 					if(resultObject instanceof Double){
 						results.add((Double) resultObject);
 					} else {
@@ -277,83 +280,47 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 			}
 		}
 
-		private Object doHttpGet(String serverUrl) {
-			InputStream is = null;
-			String s = null;
-			try {
-				DefaultHttpClient client = new DefaultHttpClient();
-
-				client.addResponseInterceptor(new HttpResponseInterceptor() {
-					@Override
-					public void process(HttpResponse response, HttpContext context)
-							throws HttpException, IOException {
-						// Inflate any responses compressed with gzip
-					    final HttpEntity entity = response.getEntity();
-					    final Header encoding = entity.getContentEncoding();
-					    if (encoding != null) {
-					      for (HeaderElement element : encoding.getElements()) {
-					        if (element.getName().equalsIgnoreCase("gzip")) {
-					          response.setEntity(new InflatingEntity(response.getEntity()));
-					          break;
-					        }
-					      }
-					    }
-						
-					}
-				});
-				HttpGet get = new HttpGet(serverUrl);
-
-				get.setHeader("Accept", "application/json");
-				get.setHeader("Content-type", "application/json; charset=UTF-8");
-				get.setHeader("Accept-Encoding", "gzip");
-
-				HttpResponse response = client.execute(get);
-				HttpEntity entity = response.getEntity();
-				s = EntityUtils.toString(entity, HTTP.UTF_8); 
-			} catch (Exception e) {
-				e.printStackTrace();
-				return HyjApplication.getInstance().getString(
-						R.string.server_connection_error)
-						+ ":\\n" + e.getLocalizedMessage();
-			} finally {
-				try {
-					if (is != null)
-						is.close();
-				} catch (Exception squish) {
-				}
-			}
-
-			if (s != null) {
-				try {
-					String[] tokens = s.split("<span class=bld>");
-					tokens = tokens[1].split("</span>");
-					s = tokens[0];
-					Pattern p = Pattern.compile("([^\\s]+).+");
-					Matcher m = p.matcher(s);
-					if (m.find()) {
-						return Double.valueOf(m.group(1));
-					}
-				} catch(Exception e) {
-					return null;
-				}
-			}
-			return null;
+		private Object doHttpGet(String fromCurrency, String toCurrency) {
+			// 命名空间  
+	        String nameSpace = "http://www.webserviceX.NET/";  
+	        // 调用的方法名称  
+	        String methodName = "ConversionRate";  
+	        // EndPoint  
+	        String endPoint = "http://www.webserviceX.NET/CurrencyConvertor.asmx";  
+	        // SOAP Action  
+	        String soapAction = "http://www.webserviceX.NET/ConversionRate";  
+	  
+	        // 指定WebService的命名空间和调用的方法名  
+	        SoapObject rpc = new SoapObject(nameSpace, methodName);  
+	  
+	        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId  
+	        rpc.addProperty("FromCurrency", fromCurrency);  
+	        rpc.addProperty("ToCurrency", toCurrency);  
+	  
+	        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本  
+	        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);  
+	  
+	        envelope.bodyOut = rpc;  
+	        // 设置是否调用的是dotNet开发的WebService  
+	        envelope.dotNet = true;  
+	        // 等价于envelope.bodyOut = rpc;  
+	        envelope.setOutputSoapObject(rpc);  
+	  
+	        HttpTransportSE transport = new HttpTransportSE(endPoint);  
+	        try {  
+	            // 调用WebService  
+	            transport.call(soapAction, envelope);  
+	            
+	            // 获取返回的数据  
+	            SoapObject object = (SoapObject) envelope.bodyIn;  
+	            // 获取返回的结果  
+	            String result = object.getProperty(0).toString();  
+	      
+	            return Double.valueOf(result);
+	        } catch (Exception e) {  
+	            e.printStackTrace();  
+	            return null;
+	        } 
 		}
-		
-		private static class InflatingEntity extends HttpEntityWrapper {
-	        public InflatingEntity(HttpEntity wrapped) {
-	            super(wrapped);
-	        }
-
-	        @Override
-	        public InputStream getContent() throws IOException {
-	            return new GZIPInputStream(wrappedEntity.getContent());
-	        }
-
-	        @Override
-	        public long getContentLength() {
-	            return -1;
-	        }
-	    }
 	}
 }

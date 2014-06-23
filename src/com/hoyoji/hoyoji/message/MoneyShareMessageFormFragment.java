@@ -166,7 +166,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			bundle.putString("counterpartId", messageData.optString("counterpartId"));
 			bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
 			String projectId = messageData.optString("projectId");
-			if(projectId != null){
+			if(projectId != null && !projectId.isEmpty()){
 				Project project = HyjModel.getModel(Project.class, projectId);
 				if(project != null){
 					bundle.putString("projectId", projectId);

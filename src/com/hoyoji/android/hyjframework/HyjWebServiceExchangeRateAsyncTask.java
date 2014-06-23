@@ -108,19 +108,4 @@ public class HyjWebServiceExchangeRateAsyncTask extends HyjAsyncTask {
             return null;
         } 
 	}
-	private static class InflatingEntity extends HttpEntityWrapper {
-        public InflatingEntity(HttpEntity wrapped) {
-            super(wrapped);
-        }
-
-        @Override
-        public InputStream getContent() throws IOException {
-            return new GZIPInputStream(wrappedEntity.getContent());
-        }
-
-        @Override
-        public long getContentLength() {
-            return -1;
-        }
-    }
 }

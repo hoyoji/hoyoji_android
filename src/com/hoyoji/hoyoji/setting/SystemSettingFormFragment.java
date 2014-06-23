@@ -1,21 +1,31 @@
 package com.hoyoji.hoyoji.setting;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.util.TypedValue;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +71,6 @@ import com.tencent.tauth.UiError;
 public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<User> mUserEditor = null;
 	private HyjModelEditor<UserData> mUserDataEditor = null;
-	private HyjImageField mImageFieldPicture = null;
 	private HyjTextField mTextFieldUserName = null;
 	private HyjTextField mTextFieldNickName = null;
 	private HyjTextField mTextFieldEmail = null;
@@ -77,7 +86,6 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private LinearLayout mLnearLayoutAbout = null;
 	private ChangeObserver mChangeObserver;
 	
-    private UserInfo mInfo;
     public static QQAuth mQQAuth;
 	private Tencent mTencent;
 	private String mAppid;
@@ -100,9 +108,6 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 		
 		mUserEditor = user.newModelEditor();
 		mUserDataEditor = user.getUserData().newModelEditor();
-		
-		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.systemSettingFormFragment_imageField_picture);		
-		mImageFieldPicture.setImages(user.getPictures());
 		
 		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
 		mTextFieldUserName.setText(user.getUserName());
@@ -226,10 +231,10 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						if (item.getItemId() == R.id.picture_take_picture) {
-							mImageFieldPicture.takePictureFromCamera();
+							//mImageFieldPicture.takePictureFromCamera();
 							return true;
 						} else {
-							mImageFieldPicture.pickPictureFromGallery();
+							//mImageFieldPicture.pickPictureFromGallery();
 							return true;
 						}
 						// return false;
@@ -450,29 +455,179 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	}	
 	 
 	 private void savePictures() {
-			HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
-			int count = adapter.getCount();
-			boolean mainPicSet = false;
-			for (int i = 0; i < count; i++) {
-				PictureItem pi = adapter.getItem(i);
-				if (pi.getState() == PictureItem.NEW) {
-					Picture newPic = pi.getPicture();
-					newPic.setRecordId(mUserEditor.getModel().getId());
-					newPic.setRecordType("Picture");
-					newPic.save();
-				} else if (pi.getState() == PictureItem.DELETED) {
-					pi.getPicture().delete();
-				} else if (pi.getState() == PictureItem.CHANGED) {
-
-				}
-				if (!mainPicSet && pi.getPicture() != null) {
-					mainPicSet = true;
-					mUserEditor.getModelCopy().setPicture(pi.getPicture());
-				}
-			}
+//			HyjImageField.ImageGridAdapter adapter = mImageFieldPicture.getAdapter();
+//			int count = adapter.getCount();
+//			boolean mainPicSet = false;
+//			for (int i = 0; i < count; i++) {
+//				PictureItem pi = adapter.getItem(i);
+//				if (pi.getState() == PictureItem.NEW) {
+//					Picture newPic = pi.getPicture();
+//					newPic.setRecordId(mUserEditor.getModel().getId());
+//					newPic.setRecordType("Picture");
+//					newPic.save();
+//				} else if (pi.getState() == PictureItem.DELETED) {
+//					pi.getPicture().delete();
+//				} else if (pi.getState() == PictureItem.CHANGED) {
+//
+//				}
+//				if (!mainPicSet && pi.getPicture() != null) {
+//					mainPicSet = true;
+//					mUserEditor.getModelCopy().setPicture(pi.getPicture());
+//				}
+//			}
 		}
 	 
-	
+//	 public void takePictureFromCamera() {
+//			Picture newPicture = new Picture();
+//			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//			// Ensure that there's a camera activity to handle the intent
+//			if (takePictureIntent.resolveActivity(getActivity().getContext()
+//					.getPackageManager()) != null) {
+//				// Create the File where the photo should go
+//				File photoFile = null;
+//				try {
+//					photoFile = HyjUtil.createImageFile(newPicture.getId());
+//					// Continue only if the File was successfully created
+//					if (photoFile != null) {
+//						takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//								Uri.fromFile(photoFile));
+//						((HyjActivity) getActivity().getContext()).startActivityForResult(
+//								takePictureIntent, HyjActivity.REQUEST_TAKE_PHOTO);
+//
+//						IntentFilter intentFilter = new IntentFilter(
+//								"REQUEST_TAKE_PHOTO");
+//						BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
+//								photoFile, newPicture);
+//						getContext().registerReceiver(receiver, intentFilter);
+//					}
+//				} catch (IOException ex) {
+//					// Error occurred while creating the File
+//					HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
+//				}
+//			}
+//		}
+//
+//		public void pickPictureFromGallery() {
+//			Picture newPicture = new Picture();
+//			Intent takePictureIntent = new Intent(Intent.ACTION_PICK,
+//					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//			// Ensure that there's a camera activity to handle the intent
+//			if (takePictureIntent.resolveActivity(this.getContext()
+//					.getPackageManager()) != null) {
+//				// Create the File where the photo should go
+//				File photoFile = null;
+//				try {
+//					photoFile = HyjUtil.createImageFile(newPicture.getId());
+//					// Continue only if the File was successfully created
+//					if (photoFile != null) {
+//						((HyjActivity) getContext()).startActivityForResult(
+//								takePictureIntent, HyjActivity.REQUEST_TAKE_PHOTO);
+//
+//						IntentFilter intentFilter = new IntentFilter(
+//								"REQUEST_TAKE_PHOTO");
+//						BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
+//								photoFile, newPicture);
+//						getContext().registerReceiver(receiver, intentFilter);
+//					}
+//				} catch (IOException ex) {
+//					// Error occurred while creating the File
+//					HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
+//				}
+//			}
+//		}
+//		private class TakePhotoBroadcastReceiver extends BroadcastReceiver {
+//			File mPhotoFile;
+//			Picture mPicture;
+//
+//			TakePhotoBroadcastReceiver(File photoFile, Picture picture) {
+//				mPhotoFile = photoFile;
+//				mPicture = picture;
+//			}
+//
+//			@Override
+//			public void onReceive(Context context, Intent intent) {
+//				try {
+//					getContext().unregisterReceiver(this);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				if (intent.getAction().equals("REQUEST_TAKE_PHOTO")) {
+//					int result = intent.getIntExtra("resultCode",
+//							Activity.RESULT_CANCELED);
+//					if (result == Activity.RESULT_OK) {
+//						float pxW = TypedValue.applyDimension(
+//								TypedValue.COMPLEX_UNIT_DIP, 50,
+//								r.getDisplayMetrics());
+//						float pxH = TypedValue.applyDimension(
+//								TypedValue.COMPLEX_UNIT_DIP, 80,
+//								r.getDisplayMetrics());
+//						FileOutputStream out = null;
+//						String picturePath;
+//						
+//						if(intent.getStringExtra("selectedImage") != null){
+//							Uri selectedImage = Uri.parse(intent.getStringExtra("selectedImage"));
+//							String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//							Cursor cursor = getContext().getContentResolver()
+//									.query(selectedImage, filePathColumn, null,
+//											null, null);
+//							cursor.moveToFirst();
+//
+//							int columnIndex = cursor
+//									.getColumnIndex(filePathColumn[0]);
+//							picturePath = cursor.getString(columnIndex);
+//							cursor.close();
+//						} else {
+//							picturePath = mPhotoFile.getAbsolutePath();
+//						}
+//
+//						Bitmap scaled = HyjUtil.decodeSampledBitmapFromFile(
+//								picturePath, (int) pxW, (int) pxH);
+//
+//						int px = (int) TypedValue.applyDimension(
+//								TypedValue.COMPLEX_UNIT_DIP, 56,
+//								r.getDisplayMetrics());
+//						Bitmap thumbnail = ThumbnailUtils.extractThumbnail(
+//								scaled, px, px);
+//						
+//						try {
+//							out = new FileOutputStream(mPhotoFile);
+//							scaled.compress(Bitmap.CompressFormat.JPEG, 60, out);
+//							out.close();
+//							out = null;
+//							
+//							out = new FileOutputStream(
+//									HyjUtil.createImageFile(mPicture.getId()
+//											+ "_icon"));
+//							thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+//							out.close();
+//							out = null;
+//							thumbnail.recycle();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						if (out != null) {
+//							try {
+//								out.close();
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//							out = null;
+//						}
+//
+//						scaled.recycle();
+//
+//						mPicture.setPictureType("JPEG");
+//					} else {
+//						if (!mPhotoFile.exists()) {
+//							//HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
+//						} else {
+//							mPhotoFile.delete();
+//						}
+//					}
+//				}
+//			}
+//		}
+	 
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
