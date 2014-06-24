@@ -300,18 +300,23 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
-										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
 										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-									
+										debtAccountEditor.save();
+
 										//更新项目余额
 										Project newProject = moneyReturn.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturn.getAmount0()*moneyReturn.getExchangeRate());
 										newProjectEditor.save();
+
+										if(!newProject.isProjectMember(moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId())){
+											MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
+											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+											moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
+											moneyAccountEditor.save();
+										}
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyReturn.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
@@ -320,9 +325,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 									    selfProjectAuthorizationEditor.save();
 										
 										moneyReturn.delete();
-										moneyAccountEditor.save();
-										debtAccountEditor.save();
-
+										
 										HyjUtil.displayToast(R.string.app_delete_success);
 										ActiveAndroid.setTransactionSuccessful();
 										ActiveAndroid.endTransaction();
@@ -564,34 +567,47 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					}
 					newProjectEditor.save();
 //				}	
-					
-					MoneyAccount newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
+
+					MoneyAccount newDebtAccount = null;
+					boolean isNewProjectMember = newProject.isProjectMember(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
+					if(!isNewProjectMember){
+						newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
+					}
 					if(moneyReturnModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
-				    	}else{
+				    	}else if(isNewProjectMember){
 				    		MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 				    	}
 					}else{
-						MoneyAccount oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId());
-						HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+						MoneyAccount oldDebtAccount = null;
+						if(!oldProject.isProjectMember(oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId())){
+							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId());
+						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
-							if(oldDebtAccount.getId().equals(newDebtAccount.getId())){
+							if(oldDebtAccount != null && oldDebtAccount.getId().equals(newDebtAccount.getId())){
 								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount() + moneyReturnModel.getProjectAmount());
 							}else{
 								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
-								oldDebtAccountEditor.save();
+								if(oldDebtAccount != null){
+									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
+									oldDebtAccountEditor.save();
+								}
 							}
 							newDebtAccountEditor.save();
 						}else{
-							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
-							oldDebtAccountEditor.save();
-							
-							MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+							if(oldDebtAccount != null){
+								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
+								oldDebtAccountEditor.save();
+							}
+							if(isNewProjectMember){
+								MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+							}
 						}
 					}
 

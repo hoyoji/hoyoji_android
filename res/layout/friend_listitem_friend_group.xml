@@ -10,4 +10,10 @@
     android:layout_height="wrap_content"
     android:paddingLeft="40dp"  />
 
+
+<TextView android:id="@+id/friendListItem_category_count"  
+    android:layout_width="wrap_content"  
+    android:layout_height="wrap_content"
+    android:paddingRight="40dp"  />
+
  </LinearLayout>
