@@ -579,7 +579,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				MoneyAccount newDebtAccount = null;
 				boolean isNewProjectMember = newProject.isProjectMember(moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getFriendUserId());
 				if(!isNewProjectMember){
-					// 如果不是项目成员，不用更新借贷账户
+					// 如果不是项目成员，更新借贷账户
 					newDebtAccount = MoneyAccount.getDebtAccount(moneyBorrowModel.getProject().getCurrencyId(), moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getFriendUserId());
 				}
 				if(moneyBorrowModel.get_mId() == null){
@@ -587,7 +587,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 			    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyBorrowModel.getProjectAmount());
 			    		newDebtAccountEditor.save();
-			    	} else if(isNewProjectMember){
+			    	} else if(!isNewProjectMember){
 			    		MoneyAccount.createDebtAccount(moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getFriendUserId(), moneyBorrowModel.getProject().getCurrencyId(), -moneyBorrowModel.getProjectAmount());
 			    	}
 				} else {
@@ -614,7 +614,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 							oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyBorrowModel.getProjectAmount());
 							oldDebtAccountEditor.save();
 						}
-						if(isNewProjectMember){
+						if(!isNewProjectMember){
 							MoneyAccount.createDebtAccount(moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getFriendUserId(), moneyBorrowModel.getProject().getCurrencyId(), -moneyBorrowModel.getProjectAmount());
 						}
 					}

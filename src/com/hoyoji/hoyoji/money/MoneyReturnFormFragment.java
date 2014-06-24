@@ -578,7 +578,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
-				    	}else if(isNewProjectMember){
+				    	}else if(!isNewProjectMember){
 				    		MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 				    	}
 					}else{
@@ -605,7 +605,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if(isNewProjectMember){
+							if(!isNewProjectMember){
 								MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 							}
 						}

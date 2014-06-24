@@ -566,7 +566,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 //				}	
 					MoneyAccount newDebtAccount = null;
 					boolean isNewProjectMember = mMoneyPaybackEditor.getModel().getProject().isProjectMember(moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId());
-					if(isNewProjectMember){
+					if(!isNewProjectMember){
 						newDebtAccount = MoneyAccount.getDebtAccount(moneyPaybackModel.getProject().getCurrencyId(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId());
 					}
 					if(moneyPaybackModel.get_mId() == null){
@@ -601,7 +601,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyPaybackModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if(isNewProjectMember){
+							if(!isNewProjectMember){
 								MoneyAccount.createDebtAccount(moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getProject().getCurrencyId(), moneyPaybackModel.getProjectAmount());
 							}
 						}
