@@ -264,16 +264,14 @@ public class MemberListFragment extends HyjUserListFragment{
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double settlement = projectShareAuthorization.getSettlement();
 			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			numericView.setPrefix(currencySymbol);
 			if(settlement < 0){
-				settlement = -settlement;
-				numericView.setPrefix("还要支出:" + currencySymbol);
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				}else{
 					numericView.setTextColor(Color.parseColor("#FF0000"));
 				}
 			}else{
-				numericView.setPrefix("还要收入:" + currencySymbol);
 				if(settlement.equals(0.0)){
 					numericView.setTextColor(Color.parseColor("#000000"));
 				}else if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){

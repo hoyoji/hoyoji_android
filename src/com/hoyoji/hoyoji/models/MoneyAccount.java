@@ -83,7 +83,7 @@ public class MoneyAccount extends HyjModel {
 				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
 				return friend.getDisplayName();
 			} else {
-				if(this.getName().equalsIgnoreCase("__ANONYMOUS__")){
+				if(this.getName() != null && this.getName().equalsIgnoreCase("__ANONYMOUS__")){
 					return HyjApplication.getInstance().getString(R.string.app_moneyaccount_anonymous);
 				}
 				

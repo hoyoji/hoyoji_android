@@ -62,11 +62,11 @@ public class HyjApplication extends Application {
 		super.onTerminate();
 	}
 	
-	public Boolean getIsSyncing(){
+	public synchronized Boolean getIsSyncing(){
 		return mIsSyncing;
 	}
 	
-	public void setIsSyncing(Boolean b){
+	public synchronized void setIsSyncing(Boolean b){
 		mIsSyncing = b;
 	}
 	
@@ -82,7 +82,7 @@ public class HyjApplication extends Application {
 		return currentUser;
 	}
 
-	public boolean isLoggedIn() {
+	public synchronized boolean isLoggedIn() {
 		return currentUser != null;
 	}
 	

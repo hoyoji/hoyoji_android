@@ -109,7 +109,7 @@ public class UserData extends HyjModel {
 		return getMany(Currency.class, "ownerUserId");
 	}
 
-	public User getUser(){
+	public synchronized User getUser(){
 		if(mUserId == null){
 			return null;
 		}

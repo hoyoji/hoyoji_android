@@ -67,7 +67,7 @@ public class User extends HyjModel {
 		mUUID = UUID.randomUUID().toString();
 	}
 
-	public UserData getUserData(){
+	public synchronized UserData getUserData(){
 		if(mUserDataId == null){
 			return null;
 		}
