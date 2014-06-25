@@ -76,7 +76,7 @@ public class Picture extends HyjModel {
 	public Picture(){
 		super();
 		mUUID = UUID.randomUUID().toString();
-		this.setToBeUpaded(true);
+		this.setToBeUploaded(true);
 		this.setToBeDownloaded(false);
 	}
 	
@@ -149,7 +149,7 @@ public class Picture extends HyjModel {
 		return mToBeUploaded;
 	}
 
-	public void setToBeUpaded(Boolean toBeUploaded) {
+	public void setToBeUploaded(Boolean toBeUploaded) {
 		this.mToBeUploaded = toBeUploaded;
 	}
 
@@ -238,45 +238,45 @@ public class Picture extends HyjModel {
 		return jsonObj;
 	}	
 	
-	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
-		super.loadFromJSON(json, syncFromServer);
-
-		try {
-
-			File f;
-		    FileOutputStream out;
-		    Bitmap bmp;
-			if(!json.isNull("base64PictureIcon")){
-				f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
-				byte[] decodedByte = Base64.decode(json.getString("base64PictureIcon"), 0);
-			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
-			     
-			    out = new FileOutputStream(f);
-				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-				out.close();
-				out = null;
-				f = null;
-				bmp.recycle();
-				bmp = null;
-			}
-			if(!json.isNull("base64Picture")){
-				f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
-				byte[] decodedByte = Base64.decode(json.getString("base64Picture"), 0);
-			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
-			     
-			    out = new FileOutputStream(f);
-				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-				out.close();
-				out = null;
-				f = null;
-				bmp.recycle();
-				bmp = null;
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
+//		super.loadFromJSON(json, syncFromServer);
+//
+//		try {
+//
+//			File f;
+//		    FileOutputStream out;
+//		    Bitmap bmp;
+//			if(!json.isNull("base64PictureIcon")){
+//				f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+//				byte[] decodedByte = Base64.decode(json.getString("base64PictureIcon"), 0);
+//			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+//			     
+//			    out = new FileOutputStream(f);
+//				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//				out.close();
+//				out = null;
+//				f = null;
+//				bmp.recycle();
+//				bmp = null;
+//			}
+//			if(!json.isNull("base64Picture")){
+//				f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+//				byte[] decodedByte = Base64.decode(json.getString("base64Picture"), 0);
+//			    bmp = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+//			     
+//			    out = new FileOutputStream(f);
+//				bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//				out.close();
+//				out = null;
+//				f = null;
+//				bmp.recycle();
+//				bmp = null;
+//			}
+//			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

@@ -6,7 +6,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/ksoap2-android-assembly-3.3.0-jar-with-dependencies.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/mta-sdk-1.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/svn2924_open_sdk.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/mid-sdk-2.10.jar"/>
