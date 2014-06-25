@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="libs/mid-sdk-2.10.jar"/>
 	<classpathentry kind="lib" path="libs/Xg_sdk_v2.30.jar"/>
 	<classpathentry kind="lib" path="libs/wup-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/mta-sdk-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
