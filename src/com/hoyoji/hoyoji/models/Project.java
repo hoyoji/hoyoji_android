@@ -380,7 +380,7 @@ public class Project extends HyjModel {
 	}
 
 	public boolean isProjectMember(String localFriendId, String friendUserId) {
-		if(friendUserId == null){
+		if(friendUserId == null && localFriendId != null){
 			Friend friend = HyjModel.getModel(Friend.class, localFriendId);
 			if(friend != null){
 				friendUserId = friend.getFriendUserId();

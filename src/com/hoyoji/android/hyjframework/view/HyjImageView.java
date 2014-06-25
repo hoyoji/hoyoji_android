@@ -66,8 +66,40 @@ public class HyjImageView extends ImageView {
 			mPictureId = picture.getId();
 			File f;
 				try {
-					f = HyjUtil.createImageFile(picture.getId()+"_icon", picture.getPictureType());
-					HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
+					f = HyjUtil.createImageFile(mPictureId+"_icon", picture.getPictureType());
+					if(f.exists()){
+						HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
+					} else {
+						// 如果能在cache里找到这张图片，我们直接拿来用，并保存起来
+						File dir = HyjApplication.getInstance().getCacheDir();
+			    		String[] l = dir.list(new FilenameFilter(){
+			    			@Override
+			    			public boolean accept(File dir, String filename) {
+			    				if(filename.startsWith(mPictureId+"_icon")){
+			    					return true;
+			    				}
+			    				return false;
+			    			}
+			    		});
+			    		
+			    		Bitmap bitmap = null;
+			    		if(l.length > 0){
+			        		bitmap = HyjUtil.decodeSampledBitmapFromFile(dir+"/"+l[0], null, null);
+			    		}
+			    		if(bitmap != null){
+			    		    FileOutputStream out;
+		    				out = new FileOutputStream(f);
+		    				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+		    				out.close();
+		    				this.setImageBitmap(bitmap);
+		    				
+		    				out = null;
+		    				f = null;
+		    				bitmap = null;
+			    		} else {
+			    			HyjBitmapWorkerAsyncTask.loadRemoteBitmap(mPictureId, HyjApplication.getServerUrl()+"fetchImageIcon.php", this);
+			    		}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -94,7 +126,7 @@ public class HyjImageView extends ImageView {
 			return;
 		}
 		
-		HyjBitmapWorkerAsyncTask.loadRemoteBitmap(id, HyjApplication.getServerUrl()+"fetchUserImageIcon.php", this);
+		HyjBitmapWorkerAsyncTask.loadRemoteBitmap(id, HyjApplication.getServerUrl()+"fetchImageIcon.php", this);
 		
 	}
 }

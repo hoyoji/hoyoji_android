@@ -78,7 +78,7 @@ public class HyjApplication extends Application {
 		return SERVER_URL;
 	}
 	
-	public User getCurrentUser() {
+	public synchronized User getCurrentUser() {
 		return currentUser;
 	}
 
