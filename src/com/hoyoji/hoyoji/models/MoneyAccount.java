@@ -135,7 +135,7 @@ public class MoneyAccount extends HyjModel {
 			Friend friend = HyjModel.getModel(Friend.class, friendId);
 			if(friend != null && friend.getFriendUserId() != null){
 				//如果是网络好友，我们将MoneyAccount.name设为该好友的用户ID
-				debtAccountName = friendUserId;
+				debtAccountName = friend.getFriendUserId();
 				friendId = null;
 			} else {
 				// 如果是本地好友，我们将MoneyAccount.friendId设为该好友的Id
