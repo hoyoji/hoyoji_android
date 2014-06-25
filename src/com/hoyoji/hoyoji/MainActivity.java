@@ -134,8 +134,12 @@ public class MainActivity extends HyjUserActivity {
 	protected void onStart() {
 		super.onStart();
 		if (HyjApplication.getInstance().isLoggedIn()) {
-			Intent startIntent = new Intent(this, MessageDownloadService.class);
-			startService(startIntent);
+			Intent startMessageDownloadService = new Intent(this, MessageDownloadService.class);
+			startService(startMessageDownloadService);
+			
+			Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
+			startService(startPictureUploadService);
+			
 			if (mChangeObserver == null) {
 				mChangeObserver = new ChangeObserver();
 				this.getContentResolver()

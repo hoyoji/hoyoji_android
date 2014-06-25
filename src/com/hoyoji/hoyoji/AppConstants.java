@@ -1,10 +1,10 @@
-package com.tencent.sample;
+package com.hoyoji.hoyoji;
 
 public class AppConstants {
-    // APP_ID 替换为你的应用从官方网站申请到的合法appId
-    //public static final String APP_ID = "wxd930ea5d5a258f4f";
-
-    public static String APP_ID="101126102";
+    public static String BAIDU_APP_KEY = "vGuQWvEP5Za9lUPm9RXtaqKG";
+	
+    public static String TENTCENT_CONNECT_APP_ID="101126102";
+    
     //申请的开发appid
     public static final String WX_APP_ID = "wx8e8dc60535c9cd93";
     

@@ -37,7 +37,6 @@ import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
-import com.tencent.sample.AppConstants;
 import com.tencent.sample.Util;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -231,7 +230,7 @@ public class LoginActivity extends HyjActivity {
 	public void attemptQQLogin() {
 		if(mTencent == null){
 			final Context ctxContext = LoginActivity.this.getApplicationContext();
-			mAppid = AppConstants.APP_ID;
+			mAppid = AppConstants.TENTCENT_CONNECT_APP_ID;
 			mQQAuth = QQAuth.createInstance(mAppid, ctxContext);
 			mTencent = Tencent.createInstance(mAppid, LoginActivity.this);
 		}

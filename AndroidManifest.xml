@@ -105,6 +105,8 @@
 		<service android:name="com.hoyoji.hoyoji.message.MessageDownloadService" >  
         </service>
         
+		<service android:name="com.hoyoji.hoyoji.PictureUploadService" >  
+        </service>
         
 		<activity
 		       android:name="com.tencent.tauth.AuthActivity"

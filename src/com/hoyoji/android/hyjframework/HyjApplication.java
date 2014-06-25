@@ -9,22 +9,24 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
+import com.baidu.frontia.Frontia;
+import com.baidu.frontia.FrontiaApplication;
+import com.baidu.frontia.FrontiaRole;
+import com.baidu.frontia.FrontiaUser;
+import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
-import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
-import com.tencent.android.tpush.XGPushManager;
-
-import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
-public class HyjApplication extends Application {
+public class HyjApplication extends FrontiaApplication {
 	public final static String TAG = "HyjApplication";
 	private final static String SERVER_URL = "http://hoyoji.duapp.com/";
 	private static HyjApplication sInstance;
@@ -54,6 +56,27 @@ public class HyjApplication extends Application {
 ////        	});
 ////        	thread.start();
 //        }
+
+		Frontia.init(this.getApplicationContext(), AppConstants.BAIDU_APP_KEY);
+//		FrontiaRole mRole = new FrontiaRole("admin");//假定同个id的角色尚未保存到Frontia云
+//        FrontiaUser curUser = (FrontiaUser)Frontia.getCurrentAccount();//当前的授权用户。假定已经调用过Frontia的授权模块认证了一个用户，并通过Frontia.setCurrentAccount(..)设置到了Frontia里。
+//
+//        FrontiaUser nullUser = new FrontiaUser("null");//可以构造用户，但这类用户没有任何信息，需要开发者自己维护。
+//        mRole.addMember(nullUser);
+//        
+//        mRole.create(new FrontiaRole.CommonOperationListener() {//把角色保存到Frontia云
+//
+//            @Override
+//            public void onSuccess() {
+//                    Log.d(TAG, "role saved");
+//            }
+//
+//            @Override
+//            public void onFailure(int errCode, String errMsg) {
+//                    Log.d(TAG, "errCode:" + errCode
+//                            + ", errMsg:" + errMsg);
+//            }
+//        });
 	}
 
 	@Override

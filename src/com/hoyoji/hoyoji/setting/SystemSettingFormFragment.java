@@ -54,6 +54,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.QQLogin;
@@ -61,7 +62,6 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
-import com.tencent.sample.AppConstants;
 import com.tencent.sample.Util;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -308,7 +308,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	public void attemptQQLogin() {
 		if(mTencent == null){
 			final Context ctxContext = getActivity().getApplicationContext();
-			mAppid = AppConstants.APP_ID;
+			mAppid = AppConstants.TENTCENT_CONNECT_APP_ID;
 			mQQAuth = QQAuth.createInstance(mAppid, ctxContext);
 			mTencent = Tencent.createInstance(mAppid, getActivity());
 		}
