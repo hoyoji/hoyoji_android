@@ -133,7 +133,11 @@ public class MessageListFragment extends HyjUserListFragment{
 			imageView.setImage(message.getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(message.getToUserDisplayName());
+			if(message.getToUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText(message.getToUserDisplayName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			try {

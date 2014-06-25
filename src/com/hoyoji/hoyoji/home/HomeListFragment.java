@@ -385,8 +385,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			imageView.setImage(((Message)object).getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			Message msg = (Message) object;
-			((TextView)view).setText(msg.getToUserDisplayName());
+			Message message = (Message) object;
+			if(message.getToUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText(message.getToUserDisplayName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			Message msg = (Message)object;
