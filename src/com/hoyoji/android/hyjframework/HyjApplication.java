@@ -15,6 +15,8 @@ import com.baidu.frontia.FrontiaRole;
 import com.baidu.frontia.FrontiaUser;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
+import com.hoyoji.hoyoji.PictureUploadService;
+import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
@@ -58,6 +60,14 @@ public class HyjApplication extends FrontiaApplication {
 //        }
 
 		Frontia.init(this.getApplicationContext(), AppConstants.BAIDU_APP_KEY);
+
+		Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
+		startPictureUploadService.putExtra("init", true);
+		startService(startPictureUploadService);
+
+		Intent startMessageDownloadService = new Intent(this, MessageDownloadService.class);
+		startService(startMessageDownloadService);
+		
 //		FrontiaRole mRole = new FrontiaRole("admin");//假定同个id的角色尚未保存到Frontia云
 //        FrontiaUser curUser = (FrontiaUser)Frontia.getCurrentAccount();//当前的授权用户。假定已经调用过Frontia的授权模块认证了一个用户，并通过Frontia.setCurrentAccount(..)设置到了Frontia里。
 //

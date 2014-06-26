@@ -15,6 +15,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji_android.R;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -30,7 +31,7 @@ import android.util.Log;
 
 public class PictureUploadService extends Service {
 	public static final String TAG = "PictureUploadService";
-	private static String mPictureUploading = null;
+	private static int mPictureUploading = 0;
 	private static FrontiaStorage mCloudStorage;
 
 	@Override
@@ -53,111 +54,93 @@ public class PictureUploadService extends Service {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-				try {
-					// 由于刚刚切换网络,不能马上发送数据,等几秒后再发,比较可靠
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-				}
-				uploadPictures();
+				Handler handler = new Handler(Looper
+						.getMainLooper());
+				handler.postDelayed(new Runnable() {
+					public void run() {
+						uploadPictures();
+					}
+				}, 2000);
+						
 			}
 		}
 
 	}
 	     
 	static void uploadPictures() {
-			if (mPictureUploading == null) {
-//				mPictureUploadThread = new Thread(new Runnable() {
-//					public void run() {
-						mPictureUploading = "uploading";
+			if (mPictureUploading <= 0) {
+						mPictureUploading = 1;
 						final ConnectivityManager connectivityManager = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 				        NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 						if(wifiNetworkInfo != null && wifiNetworkInfo.isConnected()){
 							if(HyjApplication.getInstance().getCurrentUser() == null){
-								mPictureUploading = null;
+								mPictureUploading = 0;
 								return;
 							}
 							try{
-												final Picture picToUpload = new Select().from(Picture.class).where("toBeUploaded = ? AND ownerUserId = ?", 1, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-												if(picToUpload != null){
-													// uploading big picture ...
-					//									uploadSingleBigPicture(picToUpload);
-														File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
-														if(f.exists()){
-															// send to cloud storage ...
-															final FrontiaFile mFile = new FrontiaFile();
-															mFile.setNativePath(f.getAbsolutePath());
-															mFile.setRemotePath("/" + f.getName());
-													    	mCloudStorage.uploadFile(mFile,
-													                new FileProgressListener() {
-													                    @Override
-													                    public void onProgress(String source, long bytes, long total) {
-													                    }
-													                },
-													                new FileTransferListener() {
-													                    @Override
-													                    public void onSuccess(String source, String newTargetName) {
-					//								                    	mFile.setRemotePath(newTargetName);
-					
-													        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
-													        				picEditor.getModelCopy().setToBeUploaded(false);
-													        				picEditor.save();
-																			mPictureUploading = null;
-													        				uploadPictures();
-													                    }
-					
-													                    @Override
-													                    public void onFailure(String source, int errCode, String errMsg) {
-													                    	if(errCode == -1){
-														        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
-														        				picEditor.getModelCopy().setToBeUploaded(false);
-														        				picEditor.save();
-													                    	}
-													                    	Log.i(TAG, errMsg);
-//													                    	mCloudStorage.downloadFile(mFile, new FileProgressListener(){
-//
-//																				@Override
-//																				public void onProgress(
-//																						String arg0,
-//																						long arg1,
-//																						long arg2) {
-//																					// TODO Auto-generated method stub
-//																					
-//																				}}, new FileTransferListener(){
-//
-//																					@Override
-//																					public void onFailure(
-//																							String arg0,
-//																							int arg1,
-//																							String arg2) {
-//																						Log.i(arg0, arg2);
-//																						
-//																					}
-//
-//																					@Override
-//																					public void onSuccess(
-//																							String arg0,
-//																							String arg1) {
-//																						Log.i(arg0, arg1);
-//																						
-//																					}});
-//													                    	
-
-																			mPictureUploading = null;
-													        				uploadPictures();
-													                    }
-													                }
-													        );
+								List<Picture> pics = new Select().from(Picture.class).where("toBeUploaded = ? AND ownerUserId = ? AND lastServerUpdateTime IS NOT NULL", 1, HyjApplication.getInstance().getCurrentUser().getId()).execute();
+									mPictureUploading = pics.size();
+									if(mPictureUploading > 0){
+										HyjUtil.displayToast("正在上传" + mPictureUploading + "张大图...");
+									}
+									for(int i = 0; i < pics.size(); i++){
+												final Picture picToUpload = pics.get(i);
+												Handler handler = new Handler(Looper.getMainLooper());
+												handler.postDelayed(new Runnable() {
+													public void run() {
+//														uploadPictures();
+														try{
+//															if(picToUpload != null){
+																	File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
+																	if(!f.exists()){
+												        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
+												        				picEditor.getModelCopy().setToBeUploaded(false);
+												        				picEditor.save();
+																		mPictureUploading -- ;
+																	} else {
+																		// send to cloud storage ...
+																		final FrontiaFile mFile = new FrontiaFile();
+																		mFile.setNativePath(f.getAbsolutePath());
+																		mFile.setRemotePath("/" + f.getName());
+																		mCloudStorage.uploadFile(mFile,
+																                new FileProgressListener() {
+																                    @Override
+																                    public void onProgress(String source, long bytes, long total) {
+																                    }
+																                },
+																                new FileTransferListener() {
+																                    @Override
+																                    public void onSuccess(String source, String newTargetName) {
+																        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
+																        				picEditor.getModelCopy().setToBeUploaded(false);
+																        				picEditor.save();
+																						mPictureUploading -- ;
+																						if(mPictureUploading == 0){
+																							HyjUtil.displayToast("大图上传成功");
+																						}
+																                    }
+								
+																                    @Override
+																                    public void onFailure(String source, int errCode, final String errMsg) {
+//																						HyjUtil.displayToast("上传大图时遇到错误：" + errMsg);
+																						mPictureUploading -- ;
+																                    }
+																                }
+																        );
+																	}
+//															}
+														} catch(Exception e){
+															mPictureUploading = 0;
 														}
-												} else {
-													mPictureUploading = null;
-												}
+													}
+												}, 500);
+									}
 							} catch(Exception e){
-								mPictureUploading = null;
+								mPictureUploading = 0;
 							}
+						} else {
+							mPictureUploading = 0;
 						}
-//					}
-//				});
-//				mPictureUploadThread.start();
 			}
 	}
 
@@ -210,7 +193,9 @@ public class PictureUploadService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		uploadPictures();
+		if(intent.getBooleanExtra("init", false) == false){
+			uploadPictures();
+		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 

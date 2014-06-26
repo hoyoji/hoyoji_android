@@ -78,6 +78,7 @@ public class Picture extends HyjModel {
 		mUUID = UUID.randomUUID().toString();
 		this.setToBeUploaded(true);
 		this.setToBeDownloaded(false);
+		this.setLastServerUpdateTime(null);
 	}
 	
 	@Override

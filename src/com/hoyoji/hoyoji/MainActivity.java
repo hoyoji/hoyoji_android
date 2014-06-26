@@ -134,12 +134,6 @@ public class MainActivity extends HyjUserActivity {
 	protected void onStart() {
 		super.onStart();
 		if (HyjApplication.getInstance().isLoggedIn()) {
-			Intent startMessageDownloadService = new Intent(this, MessageDownloadService.class);
-			startService(startMessageDownloadService);
-			
-			Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
-			startService(startPictureUploadService);
-			
 			if (mChangeObserver == null) {
 				mChangeObserver = new ChangeObserver();
 				this.getContentResolver()
@@ -766,13 +760,15 @@ public class MainActivity extends HyjUserActivity {
 		
 								HyjApplication.getInstance().setIsSyncing(downloadData);
 		
-										if (downloadData) {
-								            updateUploadCount(null, null);
-											downloadData();
-										} else {
-						                	setRefreshActionButtonState(false,
-											updateUploadCount(null, null));
-										}
+								if (downloadData) {
+						            updateUploadCount(null, null);
+									downloadData();
+								} else {
+				                	setRefreshActionButtonState(false,
+									updateUploadCount(null, null));
+								}
+								Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
+								startService(startPictureUploadService);
 							}
 						}
 	                }

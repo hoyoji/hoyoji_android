@@ -24,6 +24,9 @@
     <string name="systemSettingFormFragment_textView_password">密码</string>
     <string name="systemSettingFormFragment_button_changePassword">修改密码</string>
     
+    <string name="systemSettingFormFragment_textView_uploadPicture">上传大图</string>
+    <string name="systemSettingFormFragment_button_uploadPicture">无大图需要上传</string>
+    
     <string name="systemSettingFormFragment_checkBox_validation_addFriend">加我为好友时是否需要验证</string>
 
     <string name="systemSettingFormFragment_textView_moneyExpenseColor">支出金额颜色</string>

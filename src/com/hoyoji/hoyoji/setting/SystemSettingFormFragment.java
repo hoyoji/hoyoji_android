@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.setting;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
+import com.hoyoji.hoyoji.PictureUploadService;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
@@ -80,6 +82,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 	private HyjTextField mTextFieldQQ = null;
 	private Button mButtonQQ = null;
 	private Button mButtonChangePassword = null;
+	private Button mButtonUploadPicture = null;
 	private CheckBox mCheckBoxAddFriendValidation = null;
 	private Button mButtonMoneyExpenseColorPicker = null;
 	private Button mButtonMoneyIncomeColorPicker = null;
@@ -243,6 +246,21 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 				popup.show();
 			}
 		});
+
+		mButtonUploadPicture = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_uploadPicture);
+		List<Picture> pics = new Select().from(Picture.class).where("toBeUploaded = ? AND ownerUserId = ? AND lastServerUpdateTime IS NOT NULL", 1, HyjApplication.getInstance().getCurrentUser().getId()).execute();
+		if(pics.size() > 0){
+			mButtonUploadPicture.setText("上传" + pics.size() + "张大图");
+			mButtonUploadPicture.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
+					HyjApplication.getInstance().getApplicationContext().startService(startPictureUploadService);
+				}
+			});
+		} else {
+			mButtonUploadPicture.setEnabled(false);
+		}
 		
 		mChangeObserver = new ChangeObserver();
 		this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
@@ -648,6 +666,9 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onChange(boolean selfChange) {
 				setPhoneField();
+				if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+					mButtonChangePassword.setText("修改密码");
+				} 
 			}
 		}
 }
