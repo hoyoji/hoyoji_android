@@ -177,7 +177,7 @@ public class User extends HyjModel {
 	}
 	
 	public List<Picture> getPictures(){
-		return getMany(Picture.class, "recordId");
+		return getMany(Picture.class, "recordId", "displayOrder");
 	}
 	
 

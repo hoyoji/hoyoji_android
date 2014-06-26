@@ -496,13 +496,14 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyPaybackEditor.getModel().getId());
 						newPic.setRecordType("MoneyPayback");
+						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();
 					} else if(pi.getState() == PictureItem.CHANGED){
 
 					}
-					if(!mainPicSet && pi.getPicture() != null){
+					if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 						mainPicSet = true;
 						mMoneyPaybackEditor.getModelCopy().setPicture(pi.getPicture());
 					}

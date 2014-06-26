@@ -56,10 +56,9 @@ public class HyjImageView extends ImageView {
 				mPictureId = null;
 			}
 			if(this.getBackground() == null) {
-				setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_picture));
-			} else {
-				this.setImageDrawable(null);
+				this.setBackgroundResource(R.drawable.ic_action_picture);
 			}
+			setImageDrawable(null);
 		} else if(picture.getId().equals(mPictureId)){
 			return;
 		} else {

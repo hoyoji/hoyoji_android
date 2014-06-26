@@ -580,13 +580,14 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyTransferEditor.getModel().getId());
 						newPic.setRecordType("MoneyTransfer");
+						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();
 					} else if(pi.getState() == PictureItem.CHANGED){
 
 					}
-					if(!mainPicSet && pi.getPicture() != null){
+					if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 						mainPicSet = true;
 						mMoneyTransferEditor.getModelCopy().setPicture(pi.getPicture());
 					}

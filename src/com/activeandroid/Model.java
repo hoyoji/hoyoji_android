@@ -569,7 +569,14 @@ public abstract class Model {
 				.where(Cache.getTableName(type) + "." + foreignKey + "=?",
 						getId()).execute();
 	}
-
+	
+	protected final <T extends Model> List<T> getMany(Class<T> type,
+			String foreignKey, String orderBy) {
+		return new Select()
+				.from(type)
+				.where(Cache.getTableName(type) + "." + foreignKey + "=?",
+						getId()).orderBy(orderBy).execute();
+	}
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// OVERRIDEN METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////

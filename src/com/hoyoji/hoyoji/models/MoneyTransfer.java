@@ -131,7 +131,7 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public List<Picture> getPictures(){
-		return getMany(Picture.class, "recordId");
+		return getMany(Picture.class, "recordId", "displayOrder");
 	}
 	
 	public String getDate() {

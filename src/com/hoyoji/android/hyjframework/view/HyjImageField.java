@@ -28,9 +28,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -164,15 +168,56 @@ public class HyjImageField extends GridView {
 				iv.setLayoutParams(new LayoutParams((int) px, (int) px));
 				// iv.setPadding(0, 0, 0, 0);
 				iv.setOnClickListener(new OnClickListener() {
-					
 					@Override
 					public void onClick(View v) {
 						PictureItem pic = (PictureItem) v.getTag();
-						Bundle bundle = new Bundle();
-						bundle.putString("pictureName", pic.getPicture().getId());
-						bundle.putString("pictureType", pic.getPicture().getPictureType());
-						((HyjActivity) getContext()).openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+						if(pic.getState() == PictureItem.DELETED){
+							pic.setState(PictureItem.UNCHANGED);
+							ImageView iv = (ImageView)v;
+							iv.setImageDrawable(iv.getBackground());
+							v.setBackground(null);
+						} else {
+							Bundle bundle = new Bundle();
+							bundle.putString("pictureName", pic.getPicture().getId());
+							bundle.putString("pictureType", pic.getPicture().getPictureType());
+							((HyjActivity) getContext()).openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+						}
 					}
+				});
+				iv.setOnLongClickListener(new OnLongClickListener(){
+					@Override
+					public boolean onLongClick(final View v) {
+						PopupMenu popup = new PopupMenu(((HyjActivity) getContext()), v);
+						MenuInflater inflater = popup.getMenuInflater();
+						inflater.inflate(R.menu.imagefield_image, popup.getMenu());
+						popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+							@Override
+							public boolean onMenuItemClick(MenuItem item) {
+//								if (item.getItemId() == R.id.imagefield_image_delete) {
+////									mImageFieldPicture.takePictureFromCamera();
+//									return true;
+//								} else {
+////									mImageFieldPicture.pickPictureFromGallery();
+//									return true;
+//								}
+
+								PictureItem pic = (PictureItem) v.getTag();
+								if(pic.getState() == PictureItem.NEW){
+									ImageGridAdapter.this.remove(pic);
+									ImageGridAdapter.this.notifyDataSetChanged();
+								} else {
+									pic.setState(PictureItem.DELETED);
+									ImageView iv = (ImageView)v;
+									v.setBackground(iv.getDrawable());
+									iv.setImageResource(R.drawable.ic_action_discard_red);
+								}
+								return true;
+							}
+						});
+						popup.show();
+						return true;
+					}
+
 				});
 			}
 
@@ -184,11 +229,27 @@ public class HyjImageField extends GridView {
 			// HyjUtil.createImageFile(pic.getPicture().getId()+"_icon",
 			// pic.getPicture().getPictureType());
 			// iv.setImageURI(Uri.fromFile(imageFile));
-			iv.setImage(pic.getPicture());
 			// } catch (IOException e) {
 			// // TODO Auto-generated catch block
 			// e.printStackTrace();
 			// }
+			if(pic.getState() == PictureItem.DELETED){
+//				iv.setImage(pic.getPicture());
+//				iv.setBackground(iv.getDrawable());
+
+				 File imageFile;
+				 try {
+					 imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
+					 iv.setImageURI(Uri.fromFile(imageFile));
+					 iv.setBackground(iv.getDrawable());
+					 iv.setImageResource(R.drawable.ic_action_discard_red);
+				 } catch (IOException e) {
+					 e.printStackTrace();
+				 }
+			} else {
+				iv.setImage(pic.getPicture());
+				iv.setBackground(null);
+			}
 			return iv;
 		}
 

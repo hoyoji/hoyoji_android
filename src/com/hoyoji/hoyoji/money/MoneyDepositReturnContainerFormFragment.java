@@ -698,13 +698,14 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					Picture newPic = pi.getPicture();
 					newPic.setRecordId(mMoneyDepositReturnContainerEditor.getModel().getId());
 					newPic.setRecordType("MoneyDepositReturnContainer");
+					newPic.setDisplayOrder(i);
 					newPic.save();
 				} else if(pi.getState() == PictureItem.DELETED){
 					pi.getPicture().delete();
 				} else if(pi.getState() == PictureItem.CHANGED){
 
 				}
-				if(!mainPicSet && pi.getPicture() != null){
+				if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 					mainPicSet = true;
 					mMoneyDepositReturnContainerEditor.getModelCopy().setPicture(pi.getPicture());
 				}

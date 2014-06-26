@@ -73,6 +73,9 @@ public class Picture extends HyjModel {
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
 	
+	@Column(name = "displayOrder")
+	private Integer mDisplayOrder;
+	
 	public Picture(){
 		super();
 		mUUID = UUID.randomUUID().toString();
@@ -193,6 +196,14 @@ public class Picture extends HyjModel {
 	public void setLastServerUpdateTime(String mLastServerUpdateTime){
 		this.mLastServerUpdateTime = mLastServerUpdateTime;
 	}
+	
+	public Integer getDisplayOrder(){
+		return mDisplayOrder;
+	}
+
+	public void setDisplayOrder(Integer mDisplayOrder){
+		this.mDisplayOrder = mDisplayOrder;
+	}
 
 	public Long getLastClientUpdateTime(){
 		return mLastClientUpdateTime;
@@ -206,18 +217,20 @@ public class Picture extends HyjModel {
 
 		try {
 
-			File f;
-			f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
-			Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-			bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
-			jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-			
-			f = null;
-			bmp.recycle();
-			bmp = null;
-			baos.close();
-			baos = null;
+			if(this.getLastServerUpdateTime() == null){
+				File f;
+				f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+				bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+				jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+				
+				f = null;
+				bmp.recycle();
+				bmp = null;
+				baos.close();
+				baos = null;
+			}
 //			
 //			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
 //			bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
@@ -238,6 +251,26 @@ public class Picture extends HyjModel {
 		
 		return jsonObj;
 	}	
+	
+	@Override
+	public void delete(){
+		super.delete();
+
+		File f;
+		try {
+			f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
+			if(f.exists()){
+				f.delete();
+			}
+			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
+			if(f.exists()){
+				f.delete();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 //	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
 //		super.loadFromJSON(json, syncFromServer);

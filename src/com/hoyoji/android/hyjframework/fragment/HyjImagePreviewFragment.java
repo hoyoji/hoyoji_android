@@ -16,8 +16,11 @@ import com.hoyoji.android.hyjframework.view.HyjImagePreview;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,16 +29,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class HyjImagePreviewFragment extends HyjUserFragment {
+	
+	
+	private ActionBar mActionBar = null;
+
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		final HyjImagePreview img = new HyjImagePreview(this.getActivity());
+		mActionBar  = ((ActionBarActivity)getActivity()).getSupportActionBar();
 		Intent intent = this.getActivity().getIntent();
 		String pictureName = intent.getStringExtra("pictureName");
 		String pictureType = intent.getStringExtra("pictureType");
 		
-		final File f;
+		
 		try {
-			f = HyjUtil.createImageFile(pictureName, pictureType);
+			File icon = HyjUtil.createImageFile(pictureName+"_icon", pictureType);
+			img.setImageURI(Uri.fromFile(icon));
+			
+
+			final File f = HyjUtil.createImageFile(pictureName, pictureType);
 			if(f.exists()){
 				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
 				img.setImageBitmap(bmp);
@@ -45,6 +57,7 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 				FrontiaFile mFile = new FrontiaFile();
 				mFile.setNativePath(f.getAbsolutePath());
 				mFile.setRemotePath("/" + f.getName());
+				mActionBar.setSubtitle("正在下载图片...");
 				mCloudStorage.downloadFile(mFile, 
 						new FileProgressListener(){
 					@Override
@@ -52,7 +65,7 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 							String arg0,
 							long arg1,
 							long arg2) {
-						// TODO Auto-generated method stub
+						mActionBar.setSubtitle("正在下载图片..." + (arg1 / arg2 * 100) + "%");
 						
 					}}, new FileTransferListener(){
 
@@ -61,8 +74,7 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 								String arg0,
 								int arg1,
 								String arg2) {
-							Log.i(arg0, arg2);
-							
+							mActionBar.setSubtitle("图片下载失败");
 						}
 
 					@Override
@@ -72,6 +84,8 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 						Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
 						img.setImageBitmap(bmp);
 				        img.setMaxZoom(4f);
+				        
+						mActionBar.setSubtitle(null);
 					}});
 													                    	
 

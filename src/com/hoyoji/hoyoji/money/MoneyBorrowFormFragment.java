@@ -495,13 +495,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyBorrowEditor.getModel().getId());
 						newPic.setRecordType("MoneyBorrow");
+						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
 						pi.getPicture().delete();
 					} else if(pi.getState() == PictureItem.CHANGED){
 
 					}
-					if(!mainPicSet && pi.getPicture() != null){
+					if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 						mainPicSet = true;
 						mMoneyBorrowEditor.getModelCopy().setPicture(pi.getPicture());
 					}

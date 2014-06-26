@@ -16,6 +16,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -264,8 +265,12 @@ public class MemberListFragment extends HyjUserListFragment{
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double settlement = projectShareAuthorization.getSettlement();
 			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
+
 			numericView.setPrefix(currencySymbol);
 			if(settlement < 0){
+				settlement = -settlement;
+				labelText.setText("应该收回");
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				}else{
@@ -273,11 +278,14 @@ public class MemberListFragment extends HyjUserListFragment{
 				}
 			}else{
 				if(settlement.equals(0.0)){
+					labelText.setText("结余");
 					numericView.setTextColor(Color.parseColor("#000000"));
 				}else if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-				    numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+					labelText.setText("还要支付");
+					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				 }else{
-				    numericView.setTextColor(Color.parseColor("#339900"));
+					labelText.setText("还要支付");
+					numericView.setTextColor(Color.parseColor("#339900"));
 				}
 			}
 			numericView.setSuffix(null);

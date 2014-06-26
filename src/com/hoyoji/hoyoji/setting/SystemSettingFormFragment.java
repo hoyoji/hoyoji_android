@@ -488,7 +488,7 @@ public class SystemSettingFormFragment extends HyjUserFormFragment {
 //				} else if (pi.getState() == PictureItem.CHANGED) {
 //
 //				}
-//				if (!mainPicSet && pi.getPicture() != null) {
+//			if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 //					mainPicSet = true;
 //					mUserEditor.getModelCopy().setPicture(pi.getPicture());
 //				}

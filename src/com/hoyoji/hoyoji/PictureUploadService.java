@@ -80,60 +80,42 @@ public class PictureUploadService extends Service {
 							try{
 								List<Picture> pics = new Select().from(Picture.class).where("toBeUploaded = ? AND ownerUserId = ? AND lastServerUpdateTime IS NOT NULL", 1, HyjApplication.getInstance().getCurrentUser().getId()).execute();
 									mPictureUploading = pics.size();
-									if(mPictureUploading > 0){
-										HyjUtil.displayToast("正在上传" + mPictureUploading + "张大图...");
-									}
 									for(int i = 0; i < pics.size(); i++){
-												final Picture picToUpload = pics.get(i);
-												Handler handler = new Handler(Looper.getMainLooper());
-												handler.postDelayed(new Runnable() {
-													public void run() {
-//														uploadPictures();
-														try{
-//															if(picToUpload != null){
-																	File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
-																	if(!f.exists()){
-												        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
-												        				picEditor.getModelCopy().setToBeUploaded(false);
-												        				picEditor.save();
-																		mPictureUploading -- ;
-																	} else {
-																		// send to cloud storage ...
-																		final FrontiaFile mFile = new FrontiaFile();
-																		mFile.setNativePath(f.getAbsolutePath());
-																		mFile.setRemotePath("/" + f.getName());
-																		mCloudStorage.uploadFile(mFile,
-																                new FileProgressListener() {
-																                    @Override
-																                    public void onProgress(String source, long bytes, long total) {
-																                    }
-																                },
-																                new FileTransferListener() {
-																                    @Override
-																                    public void onSuccess(String source, String newTargetName) {
-																        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
-																        				picEditor.getModelCopy().setToBeUploaded(false);
-																        				picEditor.save();
-																						mPictureUploading -- ;
-																						if(mPictureUploading == 0){
-																							HyjUtil.displayToast("大图上传成功");
-																						}
-																                    }
-								
-																                    @Override
-																                    public void onFailure(String source, int errCode, final String errMsg) {
-//																						HyjUtil.displayToast("上传大图时遇到错误：" + errMsg);
-																						mPictureUploading -- ;
-																                    }
-																                }
-																        );
-																	}
-//															}
-														} catch(Exception e){
-															mPictureUploading = 0;
-														}
-													}
-												}, 500);
+										final Picture picToUpload = pics.get(i);
+										File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
+										if(!f.exists()){
+					        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
+					        				picEditor.getModelCopy().setToBeUploaded(false);
+					        				picEditor.save();
+											mPictureUploading -- ;
+										} else {
+											// send to cloud storage ...
+											final FrontiaFile mFile = new FrontiaFile();
+											mFile.setNativePath(f.getAbsolutePath());
+											mFile.setRemotePath("/" + f.getName());
+											mCloudStorage.uploadFile(mFile,
+									                new FileProgressListener() {
+									                    @Override
+									                    public void onProgress(String source, long bytes, long total) {
+									                    }
+									                },
+									                new FileTransferListener() {
+									                    @Override
+									                    public void onSuccess(String source, String newTargetName) {
+									        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
+									        				picEditor.getModelCopy().setToBeUploaded(false);
+									        				picEditor.save();
+															mPictureUploading -- ;
+									                    }
+	
+									                    @Override
+									                    public void onFailure(String source, int errCode, final String errMsg) {
+															//HyjUtil.displayToast("上传大图时遇到错误：" + errMsg);
+															mPictureUploading -- ;
+									                    }
+									                }
+									        );
+										}
 									}
 							} catch(Exception e){
 								mPictureUploading = 0;

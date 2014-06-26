@@ -881,13 +881,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				Picture newPic = pi.getPicture();
 				newPic.setRecordId(mMoneyExpenseContainerEditor.getModel().getId());
 				newPic.setRecordType("MoneyExpenseContainer");
+				newPic.setDisplayOrder(i);
 				newPic.save();
 			} else if (pi.getState() == PictureItem.DELETED) {
 				pi.getPicture().delete();
 			} else if (pi.getState() == PictureItem.CHANGED) {
 
 			}
-			if (!mainPicSet && pi.getPicture() != null) {
+			if (!mainPicSet && pi.getPicture() != null && pi.getState() != PictureItem.DELETED) {
 				mainPicSet = true;
 				mMoneyExpenseContainerEditor.getModelCopy().setPicture(pi.getPicture());
 			}
