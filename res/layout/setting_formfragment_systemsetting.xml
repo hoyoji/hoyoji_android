@@ -18,12 +18,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <ImageView
+<!--             <ImageView
                 android:id="@+id/systemSettingFormFragment_imageView_camera"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_action_person" />
+                android:src="@drawable/ic_action_person" /> -->
+            
+                 <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/systemSettingFormFragment_imageView_camera"
+	         android:layout_width="56dp"
+	         android:layout_height="56dp"
+		     android:background="@drawable/ic_action_person"
+	         android:layout_gravity="center_vertical"/>
 <!-- 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -112,12 +118,12 @@
                     android:text="@string/systemSettingFormFragment_button_phoneBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
         </LinearLayout>
-
+<!-- 
         <LinearLayout
             android:id="@+id/systemSettingFormFragment_linearLayout_QQ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
+ -->
             <com.hoyoji.android.hyjframework.view.HyjTextField
                 android:id="@+id/systemSettingFormFragment_textField_QQ"
                 android:layout_width="fill_parent"
@@ -131,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/systemSettingFormFragment_button_QQBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
-        </LinearLayout>
+       <!--  </LinearLayout> -->
         
         <View
             android:id="@id/field_separator"
@@ -149,7 +155,7 @@
                 android:id="@+id/systemSettingFormFragment_textView_password"
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:gravity="center_vertical"
                 android:text="@string/systemSettingFormFragment_textView_password" />
 
@@ -157,7 +163,7 @@
                 android:id="@+id/systemSettingFormFragment_button_changePassword"
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
-                android:layout_weight="4"
+                android:layout_weight="2.3"
                 android:text="@string/systemSettingFormFragment_button_changePassword" />
         </LinearLayout> 
      	
@@ -177,7 +183,7 @@
                 android:id="@+id/systemSettingFormFragment_textView_uploadPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:gravity="center_vertical"
                 android:text="@string/systemSettingFormFragment_textView_uploadPicture" />
 
@@ -185,7 +191,7 @@
                 android:id="@+id/systemSettingFormFragment_button_uploadPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="43dp"
-                android:layout_weight="4"
+                android:layout_weight="2.3"
                 android:text="@string/systemSettingFormFragment_button_uploadPicture" />
         </LinearLayout> 
      	
@@ -288,21 +294,21 @@
                 android:gravity="center_vertical|right"
                 android:text="@string/systemSettingFormFragment_textView_version" />
         </LinearLayout>
-
+<!-- 
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
-
+            android:background="@android:color/darker_gray" /> -->
+<!-- 
         <Button
             android:id="@id/button_save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:text="@string/app_action_save" />
+            android:text="@string/app_action_save" /> -->
     </LinearLayout>
 
 </ScrollView>

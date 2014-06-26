@@ -61,32 +61,26 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 				mCloudStorage.downloadFile(mFile, 
 						new FileProgressListener(){
 					@Override
-					public void onProgress(
-							String arg0,
-							long arg1,
-							long arg2) {
+					public void onProgress( String arg0, long arg1, long arg2) {
 						mActionBar.setSubtitle("正在下载图片..." + (arg1 / arg2 * 100) + "%");
 						
 					}}, new FileTransferListener(){
 
 						@Override
-						public void onFailure(
-								String arg0,
-								int arg1,
-								String arg2) {
+						public void onFailure( String arg0, int arg1, String arg2) {
 							mActionBar.setSubtitle("图片下载失败");
 						}
 
-					@Override
-					public void onSuccess(String arg0, String arg1) {
-						Log.i(arg0, arg1);
-
-						Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-						img.setImageBitmap(bmp);
-				        img.setMaxZoom(4f);
-				        
-						mActionBar.setSubtitle(null);
-					}});
+						@Override
+						public void onSuccess(String arg0, String arg1) {
+							Log.i(arg0, arg1);
+	
+							Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+							img.setImageBitmap(bmp);
+					        img.setMaxZoom(4f);
+					        
+							mActionBar.setSubtitle(null);
+						}});
 													                    	
 
 			}

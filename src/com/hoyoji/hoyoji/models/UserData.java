@@ -267,7 +267,7 @@ public class UserData extends HyjModel {
 		this.mActiveMoneyAccountId = mActiveMoneyAccountId;
 	}
 
-	public String getDefaultFriendCategoryId() {
+	public synchronized String getDefaultFriendCategoryId() {
 		return mDefaultFriendCategoryId;
 	}
 

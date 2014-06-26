@@ -109,8 +109,8 @@ public class HyjImageView extends ImageView {
 		if(id != null && mPictureId != null && mPictureId.equals(id)){
 			return;
 		}
-		
-		mPictureId = id;
+
+//		mPictureId = id;
 		if(id != null){
 			setImage((Picture)Picture.getModel(Picture.class, id));
 		} else {
