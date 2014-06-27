@@ -143,7 +143,21 @@ public class MessageListFragment extends HyjUserListFragment{
 			try {
 				JSONObject messageData = null;
 				messageData = new JSONObject(message.getMessageData());
-				((TextView)view).setText(String.format(message.getMessageDetail(), message.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+				double amount = 0;
+				try{
+					amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+				} catch(Exception e) {
+					amount = messageData.optDouble("amount");
+				}
+				java.util.Currency localeCurrency = java.util.Currency
+						.getInstance(messageData.optString("currencyCode"));
+				String currencySymbol = "";
+				currencySymbol = localeCurrency.getSymbol();
+				if(currencySymbol.isEmpty()){
+					currencySymbol = messageData.optString("currencyCode");
+				}
+						
+				((TextView)view).setText(String.format(message.getMessageDetail(), message.getFromUserDisplayName(), currencySymbol, amount));
 			} catch (Exception e){
 				((TextView)view).setText(message.getMessageDetail());
 			}

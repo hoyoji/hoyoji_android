@@ -397,7 +397,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			try {
 				JSONObject messageData = null;
 				messageData = new JSONObject(msg.getMessageData());
-				((TextView)view).setText(String.format(msg.getMessageDetail(), msg.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+				double amount = 0;
+				try{
+					amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+				} catch(Exception e) {
+					amount = messageData.optDouble("amount");
+				}
+				java.util.Currency localeCurrency = java.util.Currency
+						.getInstance(messageData.optString("currencyCode"));
+				String currencySymbol = "";
+				currencySymbol = localeCurrency.getSymbol();
+				if(currencySymbol.isEmpty()){
+					currencySymbol = messageData.optString("currencyCode");
+				}
+				((TextView)view).setText(String.format(msg.getMessageDetail(), msg.getFromUserDisplayName(), currencySymbol, amount));
 			} catch (Exception e){
 				((TextView)view).setText(msg.getMessageDetail());
 			}

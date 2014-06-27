@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -89,7 +90,21 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		try {
 			JSONObject messageData = null;
 			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
-			mEditTextDetail.setText(String.format(shareAddMessage.getMessageDetail(), shareAddMessage.getFromUserDisplayName(), messageData.optString("currencyCode"), messageData.optDouble("amount")));
+			double amount = 0;
+			try{
+				amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+			} catch(Exception e) {
+				amount = messageData.optDouble("amount");
+			}
+			java.util.Currency localeCurrency = java.util.Currency
+					.getInstance(messageData.optString("currencyCode"));
+			String currencySymbol = "";
+			currencySymbol = localeCurrency.getSymbol();
+			if(currencySymbol.isEmpty()){
+				currencySymbol = messageData.optString("currencyCode");
+			}
+					
+			mEditTextDetail.setText(String.format(shareAddMessage.getMessageDetail(), shareAddMessage.getFromUserDisplayName(), currencySymbol, amount));
 		} catch (Exception e){
 		}
 		
