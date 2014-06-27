@@ -176,7 +176,11 @@ public class HyjImageField extends GridView {
 							pic.setState(PictureItem.UNCHANGED);
 							ImageView iv = (ImageView)v;
 							iv.setImageDrawable(iv.getBackground());
-							v.setBackground(null);
+							if(android.os.Build.VERSION.SDK_INT < 16){
+								iv.setBackgroundDrawable(null);
+							} else {
+								v.setBackground(null);
+							}
 						} else {
 							Bundle bundle = new Bundle();
 							bundle.putString("pictureName", pic.getPicture().getId());
@@ -209,7 +213,11 @@ public class HyjImageField extends GridView {
 								} else {
 									pic.setState(PictureItem.DELETED);
 									ImageView iv = (ImageView)v;
-									v.setBackground(iv.getDrawable());
+									if(android.os.Build.VERSION.SDK_INT < 16){
+										iv.setBackgroundDrawable(iv.getDrawable());
+									} else {
+										v.setBackground(iv.getDrawable());
+									}
 									iv.setImageResource(R.drawable.ic_action_discard_red);
 								}
 								return true;
