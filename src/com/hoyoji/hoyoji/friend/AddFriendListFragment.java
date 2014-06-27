@@ -15,15 +15,19 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,7 +71,25 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		mSearchView = (SearchView) getView().findViewById(
 				R.id.friendListFragment_addFriend_searchView);
 		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setSubmitButtonEnabled(true);
 		
+		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
+		if(searchImage != null){
+			searchImage.setImageResource(R.drawable.ic_action_search);
+		}
+		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+		if(magImage != null){
+			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+		}
+//		getView().findViewById(
+//				R.id.friendListFragment_searchFriend).setOnClickListener(new OnClickListener(){
+//					@Override
+//					public void onClick(View v) {
+//						mSearchView.callOnClick();
+//					}
+//					
+//				});
+				
 //        InputMethodManager inputMethodManager =  (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 //        inputMethodManager.toggleSoftInputFromWindow(mSearchView.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
 
@@ -120,61 +142,10 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		if (id >= 0) {
 			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(
 					position);
-			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-				@Override
-				public void finishCallback(Object object) {
-					JSONArray jsonArray = (JSONArray) object;
-					if (jsonArray.optJSONArray(0).length() > 0) {
-						// 好友已经在服务器上存在，如果该好友不在本地（可能是未同步，或是同步出错？），我们将其加进来
-						JSONObject jsonFriend = jsonArray.optJSONArray(0).optJSONObject(0);
-//						Friend newFriend = new Select().from(Friend.class).where("friendUserId=?",
-//								jsonFriend.optString("id")).executeSingle();
-						Friend newFriend = HyjModel.getModel(Friend.class, jsonFriend.optString("id"));
-						if(newFriend == null){
-							loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
-						} else {
-							((HyjActivity) AddFriendListFragment.this.getActivity())
-									.dismissProgressDialog();
-							HyjUtil.displayToast(R.string.friendListFragment_addFriend_error_exists);
-						}
-					} else if (jsonUser.optString("id").equals(
-							HyjApplication.getInstance().getCurrentUser()
-									.getId())) {
-						// 添加自己为好友
-						addSelfAsFriend(jsonUser);
-						((HyjActivity) AddFriendListFragment.this.getActivity())
-								.dismissProgressDialog();
-						
-					} else if(jsonUser.optString("newFriendAuthentication").equals("none")) {
-						
-						sendAddFriendResponseMessage(jsonUser);
-						
-					} 
-					else {
-						sendAddFriendRequestMessage(jsonUser);
-					}
-				}
-
-				@Override
-				public void errorCallback(Object object) {
-					displayError(object);
-				}
-			};
-
-			try {
-				JSONObject data = new JSONObject();
-				data.put("__dataType", "Friend");
-				data.put("friendUserId", jsonUser.optString("id"));
-				data.put("ownerUserId", HyjApplication.getInstance()
-						.getCurrentUser().getId());
-				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-						"[" + data.toString() + "]", "getData");
-				((HyjActivity) this.getActivity()).displayProgressDialog(
-						R.string.addFriendListFragment_title_add,
-						R.string.friendListFragment_addFriend_progress_adding);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			
+			Bundle bundle = new Bundle();
+			bundle.putString("USER_JSON_OBJECT", jsonUser.toString());
+			openActivityWithFragment(UserFormFragment.class, R.string.friendFormFragment_title, bundle);
 		}
 	}
 
@@ -267,310 +238,4 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		}
 	}
 
-	private void addSelfAsFriend(final JSONObject jsonUser) {
-		((HyjActivity) AddFriendListFragment.this.getActivity()).displayDialog(
-				-1, R.string.friendListFragment_addFriend_addSelf_title,
-				R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
-				new DialogCallbackListener() {
-					@Override
-					public void doPositiveClick(Object object) {
-						sendAddFriendResponseMessage(jsonUser);
-//						final Friend newFriend = new Friend();
-//						newFriend.setFriendUser(HyjApplication.getInstance()
-//								.getCurrentUser());
-//						newFriend.setOwnerUserId(HyjApplication.getInstance()
-//								.getCurrentUser().getId());
-//						newFriend.setFriendCategoryId(HyjApplication
-//								.getInstance().getCurrentUser().getUserData()
-//								.getDefaultFriendCategoryId());
-//						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//							@Override
-//							public void finishCallback(Object object) {
-//								newFriend.save();
-//								((HyjActivity) AddFriendListFragment.this
-//										.getActivity()).dismissProgressDialog();
-//								HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-//							}
-//
-//							@Override
-//							public void errorCallback(Object object) {
-//								displayError(object);
-//							}
-//						};
-//
-//						HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
-//								+ newFriend.toJSON().toString() + "]",
-//								"postData");
-//						((HyjActivity) AddFriendListFragment.this.getActivity())
-//								.displayProgressDialog(
-//										R.string.addFriendListFragment_title_add,
-//										R.string.friendListFragment_addFriend_progress_adding);
-					}
-
-					@Override
-					public void doNegativeClick() {
-					}
-				});
-	}
-
-	private void sendAddFriendResponseMessage(final JSONObject jsonUser) {
-		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
-		msg.setMessageState("new");
-		msg.setType("System.Friend.AddResponse");
-		msg.setOwnerUserId(jsonUser.optString("id"));
-		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
-		msg.setToUserId(jsonUser.optString("id"));
-		msg.setMessageTitle("好友请求");
-		if(jsonUser.optString("newFriendAuthentication").equals("none")){
-			msg.setMessageDetail("用户"
-					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "已成功添加您为好友");
-		}else{
-			msg.setMessageDetail("用户"
-					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "同意您的添加好友请求");
-		}
-		
-//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		JSONObject msgData = new JSONObject();
-		try {
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance()
-					.getCurrentUser().getDisplayName());
-			msgData.put(
-					"toUserDisplayName",
-					HyjUtil.ifJSONNull(jsonUser, "nickName",
-							jsonUser.getString("userName")));
-		} catch (JSONException e) {
-		}
-		msg.setMessageData(msgData.toString());
-
-		// send message to server to request add new friend
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-//				msg.save();
-//				((HyjActivity) AddFriendListFragment.this.getActivity())
-//						.dismissProgressDialog();
-				loadNewlyAddedFriend(jsonUser);
-//				HyjUtil.displayToast(R.string.friendAddRequestMessageFormFragment_toast_accept_success);
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				displayError(object);
-			}
-		};
-
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["
-				+ msg.toJSON().toString() + "]", "postData");
-//		((HyjActivity) this.getActivity()).displayProgressDialog(
-//				R.string.addFriendListFragment_title_add,
-//				R.string.friendListFragment_addFriend_progress_adding);
-
-	}
-	
-	
-//	private void addFriendWithoutAuthorization(final JSONObject jsonUser) {
-//		// send message to server to request add new friend
-//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//			@Override
-//			public void finishCallback(Object object) {
-//				loadNewlyAddedFriend(jsonUser);
-//			}
-//
-//			@Override
-//			public void errorCallback(Object object) {
-//				displayError(object);
-//			}
-//		};
-//
-//		JSONObject data = new JSONObject();
-//		try {
-//			data.put("__dataType", "Message");
-//			data.put("id", UUID.randomUUID().toString());
-//			data.put("toUserId", jsonUser.optString("id"));
-//			data.put("fromUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
-//			data.put("type", "System.Friend.AddResponse");
-//			data.put("messageState", "new");
-//			data.put("messageTitle", "好友请求");
-//			data.put("date", HyjUtil.formatDateToIOS(new Date()));
-//			data.put("detail", "用户"
-//					+ HyjApplication.getInstance().getCurrentUser()
-//							.getDisplayName() + "成功添加您为好友");
-//			data.put("messageBoxId", jsonUser.optString("messageBoxId"));
-//			data.put("ownerUserId", jsonUser.optString("id"));
-//			JSONObject msgData = new JSONObject();
-//			try {
-//				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-//				msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
-//			} catch (JSONException e) {
-//			}
-//			data.put("messageData", msgData);
-//			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-//					"[" + data.toString() + "]", "postData");
-//
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-	private void loadFriendPicturesAndSaveFriend(final JSONObject jsonUser, final JSONObject jsonFriend){
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				Friend newFriend = HyjModel.getModel(Friend.class,
-						jsonFriend.optString("id"));
-				if (newFriend == null) {
-					newFriend = new Friend();
-				}
-				newFriend.loadFromJSON(jsonFriend, true);
-
-				User newUser = HyjModel.getModel(User.class,
-						jsonUser.optString("id"));
-				if (newUser == null) {
-					newUser = new User();
-				}
-				newUser.loadFromJSON(jsonUser, true);
-
-				saveUserPictures(object);
-				newUser.save();
-				newFriend.save();
-				
-				((HyjActivity) AddFriendListFragment.this.getActivity())
-				.dismissProgressDialog();
-				HyjUtil.displayToast(R.string.friendListFragment_addFriend_progress_add_success);
-				AddFriendListFragment.this.getActivity().finish();
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				displayError(object);
-			}
-		};
-		
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonUser.optString("id"), "fetchRecordPictures");
-	}
-	
-	private void loadNewlyAddedFriend(final JSONObject jsonUser) {
-		// load new friend from server
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				try {
-					JSONObject jsonFriend;
-					jsonFriend = ((JSONArray) object).getJSONArray(0)
-							.getJSONObject(0);
-					loadFriendPicturesAndSaveFriend(jsonUser, jsonFriend);
-				} catch (JSONException e) {
-					e.printStackTrace();
-					((HyjActivity) AddFriendListFragment.this.getActivity())
-					.dismissProgressDialog();
-				}
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				displayError(object);
-			}
-		};
-
-		JSONObject data = new JSONObject();
-		try {
-			data.put("__dataType", "Friend");
-			data.put("ownerUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			data.put("friendUserId", jsonUser.optString("id"));
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-					"[" + data.toString() + "]", "getData");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void sendAddFriendRequestMessage(JSONObject jsonUser) {
-		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
-		msg.setMessageState("new");
-		msg.setType("System.Friend.AddRequest");
-		msg.setOwnerUserId(jsonUser.optString("id"));
-		msg.setFromUserId(HyjApplication.getInstance().getCurrentUser().getId());
-		msg.setToUserId(jsonUser.optString("id"));
-		msg.setMessageTitle("好友请求");
-		msg.setMessageDetail("用户"
-				+ HyjApplication.getInstance().getCurrentUser()
-						.getDisplayName() + "请求将您添加为好友");
-//		msg.setMessageBoxId(jsonUser.optString("messageBoxId"));
-		JSONObject msgData = new JSONObject();
-		try {
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("toUserDisplayName", HyjUtil.ifJSONNull(jsonUser, "nickName", jsonUser.getString("userName")));
-		} catch (JSONException e) {
-		}
-		msg.setMessageData(msgData.toString());
-		
-		// send message to server to request add new friend
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-//				msg.save();
-				((HyjActivity) AddFriendListFragment.this.getActivity())
-				.dismissProgressDialog();
-				HyjUtil.displayToast(R.string.friendListFragment_addFriend_toast_send_success);
-		   }
-
-			@Override
-			public void errorCallback(Object object) {
-				displayError(object);
-			}
-		};
-
-
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + msg.toJSON().toString()
-				+ "]", "postData");
-//		((HyjActivity) this.getActivity()).displayProgressDialog(
-//				R.string.addFriendListFragment_title_add,
-//				R.string.friendListFragment_addFriend_progress_adding);
-
-	}
-	
-	private void saveUserPictures(Object object){
-		JSONArray pictureArray = (JSONArray)object;
-		for(int i=0; i < pictureArray.length(); i++){
-			try {
-				JSONObject jsonPic = pictureArray.getJSONObject(i);
-				String base64PictureIcon = jsonPic.optString("base64PictureIcon");
-				if(base64PictureIcon.length() > 0){
-					 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
-				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
-				    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
-				    icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
-				    out.close();
-				    out = null;
-				    jsonPic.remove("base64PictureIcon");
-				}
-				Picture newPicture = new Picture();
-				newPicture.loadFromJSON(jsonPic, true);
-				
-				newPicture.save();
-				
-			} catch (JSONException e) {
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-	}
-	
-	private void displayError(Object object){
-		((HyjActivity) AddFriendListFragment.this.getActivity())
-		.dismissProgressDialog();
-		JSONObject json = (JSONObject) object;
-		HyjUtil.displayToast(json.optJSONObject("__summary").optString(
-				"msg"));
-	}
 }

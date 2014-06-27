@@ -12,9 +12,18 @@
 	    android:id="@+id/friendListFragment_addFriend_searchView"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content" 
-        hoyoji:queryHint="@string/friendListFragment_addFriend_searchView_hint"
+	    hoyoji:queryHint="@string/friendListFragment_addFriend_searchView_hint"
         hoyoji:iconifiedByDefault="false">
 	</android.support.v7.widget.SearchView>
+
+<!-- 	<ImageButton
+	    android:id="@+id/friendListFragment_searchFriend"
+	    android:layout_width="40dp"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="right"
+	    android:background="@android:color/transparent"
+	    android:src="@drawable/ic_action_search" />
+ -->
 
     <ListView android:id="@id/android:list"
               android:layout_width="match_parent"
