@@ -66,8 +66,7 @@ public class MessageDownloadService extends Service {
 								return;
 							}
 
-							User currentUser = HyjApplication.getInstance()
-									.getCurrentUser();
+							User currentUser = HyjApplication.getInstance().getCurrentUser();
 							Log.d(TAG, "checking messages ...");
 							JSONObject postData = new JSONObject();
 							postData.put("__dataType", "Message");

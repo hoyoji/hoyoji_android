@@ -109,7 +109,7 @@ public class UserData extends HyjModel {
 		return getMany(Currency.class, "ownerUserId");
 	}
 
-	public synchronized User getUser(){
+	public User getUser(){
 		if(mUserId == null){
 			return null;
 		}
@@ -267,7 +267,7 @@ public class UserData extends HyjModel {
 		this.mActiveMoneyAccountId = mActiveMoneyAccountId;
 	}
 
-	public synchronized String getDefaultFriendCategoryId() {
+	public String getDefaultFriendCategoryId() {
 		return mDefaultFriendCategoryId;
 	}
 

@@ -379,9 +379,7 @@ public class MainActivity extends HyjUserActivity {
 //					return true;
 //				}
 //		 }
-
 		
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -729,16 +727,19 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	public void uploadData(final boolean downloadData) {
+		if (HyjApplication.getInstance().getIsSyncing()) {
+			return;
+		}
+
+		HyjApplication.getInstance().setIsSyncing(true);
 		if(!HyjUtil.hasNetworkConnection()){
-			updateUploadCount(null, null);
+//			updateUploadCount(null, null);
+			HyjApplication.getInstance().setIsSyncing(false);
 			return;
 		} else {
 			setRefreshActionButtonState(true, updateUploadCount(null, null));
 		}
-		if (HyjApplication.getInstance().getIsSyncing()) {
-			return;
-		}
-		HyjApplication.getInstance().setIsSyncing(true);
+		
 		if (downloadData) {
 			((HyjActivity) MainActivity.this).displayProgressDialog("同步数据",
 					"正在同步数据，请稍后...");
@@ -779,16 +780,16 @@ public class MainActivity extends HyjUserActivity {
 			public void errorCallback(final Object object) {
 				MainActivity.this.runOnUiThread(new Runnable() {
 	                public void run() {
-					if (object instanceof Boolean) {
-						// Boolean result = (Boolean)object;
-						// if(result == true){
-						return;
-						// }
-					}
-					HyjApplication.getInstance().setIsSyncing(false);
-							setRefreshActionButtonState(false, null);
-							HyjUtil.displayToast(object.toString());
-							if (downloadData) {
+						if (object instanceof Boolean) {
+							// Boolean result = (Boolean)object;
+							// if(result == true){
+							return;
+							// }
+						}
+						HyjApplication.getInstance().setIsSyncing(false);
+						setRefreshActionButtonState(false, null);
+						HyjUtil.displayToast(object.toString());
+						if (downloadData) {
 							((HyjActivity) MainActivity.this).dismissProgressDialog();
 						}
 	                }

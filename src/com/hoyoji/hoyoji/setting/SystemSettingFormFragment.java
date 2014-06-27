@@ -199,7 +199,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
                     	mButtonMoneyExpenseColorPicker.setBackgroundColor(color);
 
         				HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(color));
-        				HyjApplication.getInstance().getCurrentUser().save();
+        				HyjApplication.getInstance().getCurrentUser().getUserData().save();
                     }  
                 });  
                 dialog.show(getFragmentManager(), "ColorPickerDialog");  
@@ -227,7 +227,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
                     	mButtonMoneyIncomeColorPicker.setBackgroundColor(color);
 
         				HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(color));
-        				HyjApplication.getInstance().getCurrentUser().save();
+        				HyjApplication.getInstance().getCurrentUser().getUserData().save();
                     }  
                 });  
                 dialog.show(getFragmentManager(), "ColorPickerDialog");  

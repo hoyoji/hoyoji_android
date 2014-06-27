@@ -115,7 +115,7 @@ public class HyjApplication extends FrontiaApplication {
 		return currentUser;
 	}
 
-	public synchronized boolean isLoggedIn() {
+	public boolean isLoggedIn() {
 		return currentUser != null;
 	}
 	

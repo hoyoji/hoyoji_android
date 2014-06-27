@@ -52,19 +52,18 @@
 	     android:layout_gravity="center_vertical|right" 
 	     android:gravity="right" 
 	     android:orientation="vertical" >
-		<!-- 
 	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_actualTotal"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
 	    	android:textColor="@android:color/darker_gray"
-	    	android:text="¥0.00"/>
+	    	android:text=""/>
 	    
 	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_apportionTotal"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
 	    	android:textColor="@android:color/darker_gray"
-	    	android:text="¥0.00"/>
-	     -->		
+	    	android:text=""/>
+	    
 	     <TextView android:id="@+id/memberListItem_settlement_label"  
 		    android:layout_width="wrap_content"   
 		    android:layout_height="wrap_content"

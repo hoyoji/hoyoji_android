@@ -42,6 +42,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -89,8 +90,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
-				new String[] {"_id", "id", "id", "id", "id"},
-				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_inOutTotal, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
+				new String[] {"_id", "id","id", "id", "id", "id"},
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_inOutTotal, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
 
@@ -223,6 +224,11 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			((TextView)view).setText(project.getDisplayName());
 			return true;
+		} else if(view.getId() == R.id.projectListItem_owner){
+				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+				String ownerUserName = Friend.getFriendUserDisplayName(project.getOwnerUserId());
+				((TextView)view).setText(ownerUserName);
+				return true;
 		} else if(view.getId() == R.id.projectListItem_inOutTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
