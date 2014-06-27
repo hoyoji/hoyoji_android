@@ -333,10 +333,10 @@ public class HyjImageField extends GridView {
 						Activity.RESULT_CANCELED);
 				if (result == Activity.RESULT_OK) {
 					float pxW = TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 600,
+							TypedValue.COMPLEX_UNIT_DIP, 400,
 							r.getDisplayMetrics());
 					float pxH = TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 800,
+							TypedValue.COMPLEX_UNIT_DIP, 600,
 							r.getDisplayMetrics());
 					FileOutputStream out = null;
 					String picturePath;
