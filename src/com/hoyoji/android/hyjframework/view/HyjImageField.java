@@ -154,6 +154,7 @@ public class HyjImageField extends GridView {
 			super(context, resource);
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			HyjImageView iv;
@@ -241,14 +242,22 @@ public class HyjImageField extends GridView {
 				 try {
 					 imageFile = HyjUtil.createImageFile(pic.getPicture().getId()+"_icon", pic.getPicture().getPictureType());
 					 iv.setImageURI(Uri.fromFile(imageFile));
-					 iv.setBackground(iv.getDrawable());
+					 if(android.os.Build.VERSION.SDK_INT < 16){
+						iv.setBackgroundDrawable(null);
+					 } else {
+						iv.setBackground(iv.getDrawable());
+					 }
 					 iv.setImageResource(R.drawable.ic_action_discard_red);
 				 } catch (IOException e) {
 					 e.printStackTrace();
 				 }
 			} else {
 				iv.setImage(pic.getPicture());
-				iv.setBackground(null);
+				if(android.os.Build.VERSION.SDK_INT < 16){
+					iv.setBackgroundDrawable(null);
+				} else {
+					iv.setBackground(null);
+				}
 			}
 			return iv;
 		}
