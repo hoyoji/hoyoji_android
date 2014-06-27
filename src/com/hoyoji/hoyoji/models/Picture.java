@@ -212,7 +212,7 @@ public class Picture extends HyjModel {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
-	public JSONObject toJSON() {
+	public synchronized JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
 
 		try {

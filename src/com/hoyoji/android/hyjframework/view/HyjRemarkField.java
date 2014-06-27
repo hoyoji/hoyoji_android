@@ -90,6 +90,16 @@ public class HyjRemarkField extends LinearLayout {
 		mEditTextEdit.setEnabled(enabled);
 	}
 
+	public void setEditable(boolean editable){
+		mEditTextEdit.setFocusable(editable);
+//		mEditTextEdit.setClickable(!editable);
+	}
+	
+	@Override
+	public void setOnClickListener(OnClickListener l){
+		mEditTextEdit.setOnClickListener(l);
+	}
+	
 	@Override
 	protected void onDetachedFromWindow() {
 		mEditTextEdit.setText(null);

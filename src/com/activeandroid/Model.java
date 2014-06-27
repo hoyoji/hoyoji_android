@@ -454,7 +454,7 @@ public abstract class Model {
 		}
 	}
 
-	public JSONObject toJSON() {
+	public synchronized JSONObject toJSON() {
 		final JSONObject jsonObj = new JSONObject();
 
 		for (Field field : mTableInfo.getFields()) {

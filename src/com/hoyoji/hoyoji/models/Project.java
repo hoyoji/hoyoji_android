@@ -369,7 +369,7 @@ public class Project extends HyjModel {
 		return null;
 	}	
 	
-	public JSONObject toJSON() {
+	public synchronized JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
 		
 		jsonObj.remove("expenseTotal");

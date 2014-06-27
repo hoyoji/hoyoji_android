@@ -19,12 +19,13 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.UserData;
 
 
-public class ChangePasswordFragment extends HyjFragment {
+public class ChangePasswordFragment extends HyjUserFragment {
 	private EditText mEditTextOldPassword = null;
 	private EditText mEditTextNewPassword1 = null;
 	private EditText mEditTextNewPassword2 = null;
@@ -40,7 +41,6 @@ public class ChangePasswordFragment extends HyjFragment {
 	 
 	@Override
 	public void onInitViewData(){
-		Intent intent = getActivity().getIntent();
 		
 		if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
 			getView().findViewById(R.id.changePasswordFragment_linearLayout_oldPassword).setVisibility(View.GONE);

@@ -360,7 +360,7 @@ public class UserData extends HyjModel {
 		super.save();
 	}
 	
-	public JSONObject toJSON() {
+	public synchronized JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
 		jsonObj.remove("hasPassword");
 		jsonObj.remove("password");

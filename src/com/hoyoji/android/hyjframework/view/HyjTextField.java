@@ -155,5 +155,9 @@ public class HyjTextField extends LinearLayout {
 	public void setTextColor(int color) {
 		mEditTextEdit.setTextColor(color);
 	}
+
+	public void setHint(String hint) {
+		mEditTextEdit.setHint(hint);
+	}
 	
 }
