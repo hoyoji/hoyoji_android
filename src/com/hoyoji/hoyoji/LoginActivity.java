@@ -1,6 +1,9 @@
 package com.hoyoji.hoyoji;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONArray;
@@ -28,6 +31,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.ParentProject;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -530,7 +534,7 @@ public class LoginActivity extends HyjActivity {
 
 	private void downloadUserData() {
 		User user = HyjApplication.getInstance().getCurrentUser();
-
+		
 		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
 				user.getMessageBoxId1());
 		if (msgBox != null) {
@@ -644,6 +648,7 @@ public class LoginActivity extends HyjActivity {
 				public void finishCallback(Object object) {
 					try {
 						ActiveAndroid.beginTransaction();
+						String figureUrl = null;
 						JSONArray jsonArray = (JSONArray) object;
 						for (int i = 0; i < jsonArray.length(); i++) {
 							JSONArray array = jsonArray.optJSONArray(i);
@@ -691,6 +696,9 @@ public class LoginActivity extends HyjActivity {
 											.equals("QQLogin")) {
 										QQLogin qqLogin = new QQLogin();
 										qqLogin.loadFromJSON(obj, true);
+										if(!obj.isNull("figureUrl")){
+											figureUrl = obj.getString("figureUrl");
+										}
 										qqLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
@@ -727,6 +735,56 @@ public class LoginActivity extends HyjActivity {
 
 						ActiveAndroid.setTransactionSuccessful();
 						ActiveAndroid.endTransaction();
+
+
+						if(figureUrl != null){
+							final String figureUrl1 = figureUrl;
+							HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+								@Override
+								public void finishCallback(Object object) {
+									Bitmap thumbnail = null;
+									if(object != null){
+										thumbnail = (Bitmap) object;
+									}
+									
+									FileOutputStream out;
+									try {
+										Picture figure = new Picture();
+										
+										out = new FileOutputStream(HyjUtil.createImageFile(figure.getId() + "_icon"));
+										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+										out.close();
+										out = null;
+										
+										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+										figure.setRecordType("User");
+										figure.setDisplayOrder(0);
+										figure.setPictureType("JPEG");
+										
+										HyjApplication.getInstance().getCurrentUser().setPicture(figure);
+										HyjApplication.getInstance().getCurrentUser().save();
+										figure.save();								
+										
+									} catch (FileNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+			
+								@Override
+								public Object doInBackground(String... string) {
+									Bitmap thumbnail = null;
+									thumbnail = Util.getbitmap(figureUrl1);
+									return thumbnail;
+								}
+							});
+						}
+						
+						
+						
 						LoginActivity.this.dismissProgressDialog();
 
 						Intent i = getPackageManager()
