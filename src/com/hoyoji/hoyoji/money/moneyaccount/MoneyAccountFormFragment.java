@@ -26,6 +26,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.HyjWebServiceExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
@@ -39,6 +40,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
@@ -47,6 +49,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private final static int GET_CURRENCY_ID = 1;
 	private final static int GET_FRIEND_ID = 2;
 	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 3;
+	private static final int GET_REMARK = 4;
 
 	private HyjModelEditor<MoneyAccount> mMoneyAccountEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -189,7 +192,21 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mRemarkFieldRemark.setText(moneyAccount.getRemark());
 		mRemarkFieldRemark.setEnabled(modelId == -1
 				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
-
+		mRemarkFieldRemark.setEditable(false);
+		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("TEXT", mRemarkFieldRemark.getText());
+				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
+				MoneyAccountFormFragment.this
+						.openActivityWithFragmentForResult(
+								HyjTextInputFormFragment.class,
+								R.string.moneyExpenseFormFragment_textView_remark,
+								bundle, GET_REMARK);
+			}
+		});
+		
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
@@ -424,6 +441,12 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			}
 			break;
 
+		case GET_REMARK:
+			if (resultCode == Activity.RESULT_OK) {
+				String text = data.getStringExtra("TEXT");
+				mRemarkFieldRemark.setText(text);
+			}
+			break;
 		case FETCH_PROJECT_TO_LOCAL_EXCHANGE:
 			if (resultCode == Activity.RESULT_OK) {
 				// 检查该汇率是否添加成功，如果是保存

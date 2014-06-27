@@ -92,7 +92,6 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private CheckBox mCheckBoxAddFriendValidation = null;
 	private Button mButtonMoneyExpenseColorPicker = null;
 	private Button mButtonMoneyIncomeColorPicker = null;
-	private LinearLayout mLnearLayoutAbout = null;
 	private HyjImageView takePictureButton = null;
 	private ChangeObserver mChangeObserver;
 

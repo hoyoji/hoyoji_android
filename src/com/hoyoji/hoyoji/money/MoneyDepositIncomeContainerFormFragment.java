@@ -30,6 +30,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
@@ -58,6 +59,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
+	private static final int GET_REMARK = 3;
 	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
@@ -189,9 +191,20 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_linearLayout_exchangeRate);
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
-		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyDepositIncomeContainer.getRemark());
+		mRemarkFieldRemark.setEditable(false);
+		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("TEXT", mRemarkFieldRemark.getText());
+				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
+				MoneyDepositIncomeContainerFormFragment.this
+						.openActivityWithFragmentForResult(
+								HyjTextInputFormFragment.class,
+								R.string.moneyExpenseFormFragment_textView_remark,
+								bundle, GET_REMARK);
+			}
+		});
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
@@ -970,7 +983,13 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	         	 }
 	        	 break;
-	        	
+
+     		case GET_REMARK:
+     			if (resultCode == Activity.RESULT_OK) {
+     				String text = data.getStringExtra("TEXT");
+     				mRemarkFieldRemark.setText(text);
+     			}
+     			break;
             	 
              case GET_APPORTION_MEMBER_ID:
      			if (resultCode == Activity.RESULT_OK) {

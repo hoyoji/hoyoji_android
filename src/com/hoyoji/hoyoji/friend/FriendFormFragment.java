@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -24,6 +25,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
@@ -41,8 +43,11 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	
 	private HyjModelEditor<Friend> mFriendEditor = null;
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
+	private HyjTextField mTextFieldUserNickName = null;
 	private HyjTextField mTextFieldNickName = null;
-	private HyjTextField mTextFieldUserName = null;
+	private TextView mTextFieldUserName = null;
+
+	private HyjImageView mPicture = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -66,25 +71,30 @@ public class FriendFormFragment extends HyjUserFormFragment {
 //		暂不支持删除
 //		setupDeleteButton(mFriendEditor);
 		
-		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_userName);
-		mTextFieldUserName.setEnabled(false);
+		
+		mTextFieldUserName = (TextView) getView().findViewById(R.id.friendFormFragment_textField_userName1);
+		mTextFieldUserNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_userNickName);
+		if(friend.getFriendUserId() != null){
+			mTextFieldUserNickName.setEnabled(false);
+			if(friend.getFriendUser() != null){
+				mPicture = (HyjImageView) getView().findViewById(R.id.friendFormFragment_imageView_picture);	
+				mPicture.setImage(friend.getFriendUser().getPicture());
+				
+				mTextFieldUserName.setText(friend.getFriendUser().getUserName());
+				mTextFieldUserNickName.setText(friend.getFriendUser().getNickName());
+			} else {
+				mTextFieldUserName.setText("无用户名");
+				mTextFieldUserNickName.setText("无好友昵称");
+			}
+		} else {
+			mTextFieldUserName.setText("[本地好友]");
+			mTextFieldUserNickName.setVisibility(View.GONE);
+			getView().findViewById(R.id.field_separator_userNickName).setVisibility(View.GONE);
+		}
 		
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
 		mTextFieldNickName.setText(friend.getNickName());
 		mTextFieldNickName.requestFocus();
-		if(friend.getFriendUserId() != null){
-			if(friend.getFriendUser() != null){
-				mTextFieldUserName.setText(friend.getFriendUser().getDisplayName());
-			} else {
-				mTextFieldUserName.setText(friend.getFriendUserName());
-			}
-			mTextFieldNickName.setHint(R.string.friendFormFragment_editText_hint_nickName);
-		} else {
-			mTextFieldUserName.setVisibility(View.GONE);
-			getView().findViewById(R.id.field_separator_userName).setVisibility(View.GONE);
-			mTextFieldNickName.setLabel(R.string.friendFormFragment_textView_friendName);
-			mTextFieldNickName.setHint(R.string.friendFormFragment_editText_hint_friendName);
-		}
 		
 		FriendCategory friendCategory = friend.getFriendCategory();
 		mSelectorFieldFriendCategory = (HyjSelectorField) getView().findViewById(R.id.friendFormFragment_selectorField_friend_category);
@@ -106,8 +116,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		}
 	}
 	
-	private void setupDeleteButton(
-			HyjModelEditor<Friend> friendEditor) {
+	private void setupDeleteButton(HyjModelEditor<Friend> friendEditor) {
 
 		Button buttonDelete = (Button) getView().findViewById(
 				R.id.button_delete);

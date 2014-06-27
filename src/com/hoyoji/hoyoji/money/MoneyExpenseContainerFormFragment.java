@@ -289,6 +289,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldRemark.getText());
+				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
 				MoneyExpenseContainerFormFragment.this
 						.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,

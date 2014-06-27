@@ -27,6 +27,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
@@ -52,6 +53,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private final static int GET_TRANSFERIN_FRIEND_ID = 3;
 	private final static int GET_TRANSFERIN_ID = 4;
 	private final static int GET_PROJECT_ID = 5;
+	private static final int GET_REMARK = 0;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
@@ -300,6 +302,20 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyTransferFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyTransfer.getRemark());
+		mRemarkFieldRemark.setEditable(false);
+		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("TEXT", mRemarkFieldRemark.getText());
+				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
+				MoneyTransferFormFragment.this
+						.openActivityWithFragmentForResult(
+								HyjTextInputFormFragment.class,
+								R.string.moneyExpenseFormFragment_textView_remark,
+								bundle, GET_REMARK);
+			}
+		});
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyTransferFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
@@ -723,6 +739,12 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              		mSelectorFieldTransferOut.setVisibility(View.GONE);
              	 }
              	 break;
+     		case GET_REMARK:
+    			if (resultCode == Activity.RESULT_OK) {
+    				String text = data.getStringExtra("TEXT");
+    				mRemarkFieldRemark.setText(text);
+    			}
+    			break;
              case GET_TRANSFEROUT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);

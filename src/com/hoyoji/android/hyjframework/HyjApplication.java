@@ -133,8 +133,7 @@ public class HyjApplication extends FrontiaApplication {
 		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
-									.setDatabaseName(userId)
-									.create();
+									.setDatabaseName(userId).create();
 		ActiveAndroid.initialize(config);
 		initContentProvider();
 		

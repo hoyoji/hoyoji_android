@@ -22,20 +22,21 @@ public abstract class HyjUserActivity extends HyjActivity {
 	
 	@Override
 	protected void onStart() {
-      SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-      final String userId = userInfo.getString("userId", "");  
-      final String password = userInfo.getString("password", "");  
-      if(userId.length() > 0 && password.length() > 0){
-    	  HyjApplication.getInstance().login(userId, password);
-      }
+		if(!HyjApplication.getInstance().isLoggedIn()) {
+			  SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+		      final String userId = userInfo.getString("userId", "");  
+		      final String password = userInfo.getString("password", "");  
+		      if(userId.length() > 0 && password.length() > 0){
+		    	  HyjApplication.getInstance().login(userId, password);
+		      }
+		}
 		
 		if(HyjApplication.getInstance().isLoggedIn()) {
-
 			// 2.30及以上版本
 			enableComponentIfNeeded(getApplicationContext(), XGPushActivity.class.getName());
 			// CustomPushReceiver改为自己继承XGPushBaseReceiver的类，若有的话
 			enableComponentIfNeeded(getApplicationContext(), PushMessageReceiver.class.getName());
-
+	
 			XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 			super.onStart();
 		} else {
@@ -53,7 +54,7 @@ public abstract class HyjUserActivity extends HyjActivity {
 										LoginActivity.class);
 								startActivity(intent);
 							}
-
+	
 							@Override
 							public void doNegativeClick() {
 								finish();

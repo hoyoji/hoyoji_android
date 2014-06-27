@@ -10,10 +10,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".FriendFormFragment" >
     
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp" >
+        <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/friendFormFragment_imageView_picture"
+	         android:layout_width="56dp"
+	         android:layout_height="56dp"
+		     android:background="@drawable/ic_action_person"
+	         android:layout_gravity="center_vertical"/>
+                 
+        <TextView
+            android:id="@+id/friendFormFragment_textField_userName1"
+       		android:layout_gravity="center_vertical"
+       		android:paddingLeft="80dp"
+       		android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+        
 	<com.hoyoji.android.hyjframework.view.HyjSelectorField 
             android:id="@+id/friendFormFragment_selectorField_friend_category"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
+		    android:layout_height="43dp" 
             hyj:labelText="@string/friendFormFragment_textView_friend_category"
             hyj:hintText="@string/friendFormFragment_editText_hint_friend_category"
         />
@@ -26,16 +43,16 @@
     	android:layout_marginBottom="5dip"
         android:background="@android:color/darker_gray" 
         />
-	
+
     <com.hoyoji.android.hyjframework.view.HyjTextField 
-            android:id="@+id/friendFormFragment_textField_userName"
+            android:id="@+id/friendFormFragment_textField_userNickName"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
-            hyj:labelText="@string/friendFormFragment_textView_userName"
+		    android:layout_height="43dp" 
+            hyj:labelText="@string/friendFormFragment_textView_userNickName"
+            hyj:hintText="@string/friendFormFragment_editText_hint_userNickName"
         />	
-	
-	    <View 
-        android:id="@+id/field_separator_userName"
+	 <View 
+        android:id="@+id/field_separator_userNickName"
         android:layout_width="match_parent"
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
@@ -46,7 +63,8 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField 
             android:id="@+id/friendFormFragment_textField_nickName"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
+		    android:layout_height="43dp" 
+		    hyj:hintText="@string/friendFormFragment_editText_hint_nickName"
             hyj:labelText="@string/friendFormFragment_textView_nickName"
         />
     

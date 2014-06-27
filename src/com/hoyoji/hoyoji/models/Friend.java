@@ -121,9 +121,9 @@ public class Friend extends HyjModel {
 		return mFriendUserName;
 	}
 
-	public void setFriendUserName(String mFriendUserName) {
-		this.mFriendUserName = mFriendUserName;
-	}
+//	public void setFriendUserName1(String mFriendUserName) {
+//		this.mFriendUserName = mFriendUserName;
+//	}
 	
 	public FriendCategory getFriendCategory() {
 		if(mFriendCategoryId == null){
