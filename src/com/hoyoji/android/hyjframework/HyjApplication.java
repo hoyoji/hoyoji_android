@@ -95,11 +95,11 @@ public class HyjApplication extends FrontiaApplication {
 		super.onTerminate();
 	}
 	
-	public synchronized Boolean getIsSyncing(){
+	public Boolean getIsSyncing(){
 		return mIsSyncing;
 	}
 	
-	public synchronized void setIsSyncing(Boolean b){
+	public void setIsSyncing(Boolean b){
 		mIsSyncing = b;
 	}
 	
@@ -111,7 +111,7 @@ public class HyjApplication extends FrontiaApplication {
 		return SERVER_URL;
 	}
 	
-	public synchronized User getCurrentUser() {
+	public User getCurrentUser() {
 		return currentUser;
 	}
 

@@ -1000,7 +1000,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	}	
 
 
-	public synchronized JSONObject toJSON() {
+	public JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
 
 //		actualTotalIncome : 0,
