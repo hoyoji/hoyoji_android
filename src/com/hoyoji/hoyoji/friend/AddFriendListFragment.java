@@ -1,28 +1,17 @@
 package com.hoyoji.hoyoji.friend;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -32,24 +21,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.User;
 
 public class AddFriendListFragment extends HyjUserListFragment implements
 		OnQueryTextListener {
@@ -81,17 +59,6 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		if(magImage != null){
 			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
 		}
-//		getView().findViewById(
-//				R.id.friendListFragment_searchFriend).setOnClickListener(new OnClickListener(){
-//					@Override
-//					public void onClick(View v) {
-//						mSearchView.callOnClick();
-//					}
-//					
-//				});
-				
-//        InputMethodManager inputMethodManager =  (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        inputMethodManager.toggleSoftInputFromWindow(mSearchView.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
 
 		this.getActivity()
 				.getWindow()
@@ -174,7 +141,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			data.put("userName", mSearchText);
 			data.put("nickName", mSearchText);
 			data.put("__dataType", "User");
-			data.put("__limit", mListPageSize);
+			data.put("__limit", getListPageSize());
 			data.put("__offset", 0);
 			data.put("__orderBy", "userName ASC");
 		} catch (JSONException e) {

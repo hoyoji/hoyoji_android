@@ -266,7 +266,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((MoneyAccountSearchGroupListLoader)loader).hasMoreData() ? this.mListPageSize : 0);
+			this.setFooterLoadFinished(((MoneyAccountSearchGroupListLoader)loader).hasMoreData() ? this.getListPageSize() : 0);
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);

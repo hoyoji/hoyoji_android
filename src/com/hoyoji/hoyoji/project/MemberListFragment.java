@@ -70,7 +70,12 @@ public class MemberListFragment extends HyjUserListFragment{
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
-		
+
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Project project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
@@ -79,7 +84,7 @@ public class MemberListFragment extends HyjUserListFragment{
 				null,
 				"projectId=? AND state <> ?", 
 				new String[]{project.getId(), "Deleted"}, 
-				null
+				"friendUserId LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
 	}

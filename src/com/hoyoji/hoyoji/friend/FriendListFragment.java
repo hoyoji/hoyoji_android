@@ -101,9 +101,14 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if(groupPos < 0){ // 这个是分类
+			int offset = arg1.getInt("OFFSET");
+			int limit = arg1.getInt("LIMIT");
+			if(limit == 0){
+				limit = getListPageSize();
+			}
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(FriendCategory.class, null),
-					null, null, null, null
+					null, null, null, "name LIMIT " + (limit + offset)
 				);
 		} else {
 			loader = new CursorLoader(getActivity(),
@@ -195,6 +200,12 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 ////		}
 //    } 
 
+	
+	protected int getListPageSize(){
+		return 10000;
+	}
+	
+	
 	@Override  
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {

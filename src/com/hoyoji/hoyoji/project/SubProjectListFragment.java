@@ -103,7 +103,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		String selection = null;
 		String[] selectionArgs = null;
 
-		String parentProjectId = getArguments().getString("parentProjectId");
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
+		String parentProjectId = arg1.getString("parentProjectId");
 		if(parentProjectId != null){
 			selection = "id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)";
 			selectionArgs = new String[]{ parentProjectId };
@@ -113,23 +118,26 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
-				projections, selection, selectionArgs, null
+				projections, selection, selectionArgs, "name LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}
 
-	public void requery(String parentProjectId, String title){
-		
-		getArguments().putString("parentProjectId", parentProjectId);
-		getArguments().putString("title", title);
-		
-		Loader<Object> loader = getLoaderManager().getLoader(0);
-	    if (loader != null && !loader.isReset() ) { 
-	    	getLoaderManager().restartLoader(0, null, this);
-	    } else {
-	    	getLoaderManager().initLoader(0, null, this);
-	    }
-	}
+//	public void requery1(String parentProjectId, String title){
+//		Bundle bundle = new Bundle();
+//		bundle.putString("parentProjectId", parentProjectId);
+//		bundle.putInt("OFFSET", getListView().getAdapter().getCount());
+//		bundle.putInt("LIMIT", getListPageSize());
+//		
+//		getArguments().putString("title", title);
+//		
+//		Loader<Object> loader = getLoaderManager().getLoader(0);
+//	    if (loader != null && !loader.isReset() ) { 
+//	    	getLoaderManager().restartLoader(0, bundle, this);
+//	    } else {
+//	    	getLoaderManager().initLoader(0, bundle, this);
+//	    }
+//	}
 	
 	@Override
 	public void onInitViewData() {

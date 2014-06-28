@@ -121,7 +121,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				doFetchMore(childrenList,childrenListAdapter.getCount()-1, mListPageSize);
+				doFetchMore(childrenList,childrenListAdapter.getCount()-1, getListPageSize());
 			}
 	    });
 	    childrenList.addFooterView(mFooterView, null, false);
@@ -174,23 +174,28 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		String selection = null;
 		String orderBy = null;
 		String[] selectionArgs = null;
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
 		if(id == 0){
 			setFooterLoadStart(getListView());
 			selection = "parentIncomeCategoryId IS NULL";
 			loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(MoneyIncomeCategory.class, null),
-				null, selection, selectionArgs, "name ASC"
+				null, selection, selectionArgs, "name ASC LIMIT " + (limit + offset)
 			);
 		} else {
 			setFooterLoadStart(childrenList);
-			if(arg1 != null){
+			if(arg1 != null && arg1.getString("parentCategoryId") != null){
 				selection = "parentIncomeCategoryId=?";
 				selectionArgs = new String[]{arg1.getString("parentCategoryId")};
-				orderBy = "name DESC";
+				orderBy = "name ASC LIMIT " + (limit + offset);
 			} else {
 				selection = "parentIncomeCategoryId IS NOT NULL";
 //				selectionArgs = new String[]{};
-				orderBy = "lastClientUpdateTime DESC LIMIT 10";
+				orderBy = "lastClientUpdateTime DESC LIMIT " + (limit + offset);
 			}
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(MoneyIncomeCategory.class, null),
@@ -206,25 +211,41 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			super.setFooterLoadStart(l);
 			return;
 		}
-//        if(childrenList.getItemAtPosition(0) == null){
-//        	((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
-//        } else {
+		if(childrenList.getAdapter().getCount() == 1){
+			if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
+			}
+		} else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
-//        }
-        ((TextView)mFooterView).setEnabled(false);
+            ((TextView)mFooterView).setEnabled(false);
+		}
 	}
 
 	@Override
 	public void setFooterLoadFinished(ListView l, int count){
 		if(l == getListView()){
-			super.setFooterLoadFinished(l, count);
+//			super.setFooterLoadFinished(l, count);
+			((TextView)super.mFooterView).setEnabled(true);
+			if(count >= l.getAdapter().getCount() + getListPageSize() - 2){
+		        ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_more);
+			} else if(count == 0 && l.getAdapter().getCount() == 2){
+		        ((TextView)super.mFooterView).setText(R.string.app_listview_no_content);
+		        if(super.mEmptyView != null){
+					super.mEmptyView.setText(R.string.app_listview_no_content);
+		        }
+			} else {
+			    ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+			}
 			return;
 		}
-        ((TextView)mFooterView).setEnabled(true);
-		if(count >= mListPageSize){
+		((TextView)mFooterView).setEnabled(true);
+		if(count >= l.getAdapter().getCount() + getListPageSize() - 1){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-		} else if(count == 0){
+		} else if(count == 0 && l.getAdapter().getCount() == 1){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
+	        if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_no_content);
+	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
@@ -237,11 +258,11 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 	        count = ((Cursor) cursor).getCount();
         }
         if(loader.getId() == 0){
-			super.onLoadFinished(loader, cursor);
 	        setFooterLoadFinished(getListView(), count);
+			super.onLoadFinished(loader, cursor);
 		} else {
-			childrenListAdapter.swapCursor((Cursor)cursor);
 	        setFooterLoadFinished(childrenList, count);
+			childrenListAdapter.swapCursor((Cursor)cursor);
 //	        ((SimpleCursorAdapter)getListAdapter()).notifyDataSetChanged();
 		}
 		
@@ -265,6 +286,14 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 
 	@Override
 	public void doFetchMore(ListView l, int offset, int pageSize){
+		if(l == getListView()){
+			super.doFetchMore(l, offset, pageSize);
+			return;
+		}
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", offset);
+		bundle.putInt("LIMIT", pageSize);
+		getLoaderManager().restartLoader(1, bundle,this);
 	}
 		
 	@Override  

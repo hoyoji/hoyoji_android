@@ -55,9 +55,14 @@ public class ExchangeListFragment extends HyjUserListFragment{
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Exchange.class, null),
-				null, null, null, null
+				null, null, null, "localCurrencyId Limit " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}

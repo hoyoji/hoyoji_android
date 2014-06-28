@@ -47,19 +47,23 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public final static int CANCEL_LIST_ITEM = 1025;
 	protected boolean mIsViewInited = false;
 	protected ExpandableListView mExpandableListView;
-	private View mFooterView;
-	protected int mListPageSize = 10;
+	protected View mFooterView;
+	protected TextView mEmptyView;
+//	protected int mListPageSize = 10;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 			//View v = super.onCreateView(inflater, container, savedInstanceState);
 			ViewGroup rootView = (ViewGroup) inflater.inflate(useContentView(), container, false);
 			//rootView.addView(v, 0);
+			mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
+			
 			mExpandableListView = (ExpandableListView) rootView.findViewById(android.R.id.list);
 			mExpandableListView.setOnChildClickListener(this);
 			mExpandableListView.setOnGroupClickListener(this);
 			mExpandableListView.setOnGroupCollapseListener(this);
 			mExpandableListView.setOnGroupExpandListener(this);
+			
 			if(useToolbarView() != null){
 				// populate bottom toolbar
 			}
@@ -70,6 +74,9 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		return mExpandableListView;
 	}
 	
+	protected int getListPageSize(){
+		return 10;
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
@@ -79,10 +86,10 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), mListPageSize);
+				doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), getListPageSize());
 			}
 		});
-		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
+		getListView().setEmptyView(mEmptyView);
 		this.registerForContextMenu(getListView());
 		ExpandableListAdapter adapter = (ExpandableListAdapter) getListView().getExpandableListAdapter();
 		if(adapter == null){
@@ -96,8 +103,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		}
 	}
 	public void setFooterLoadStart(){
-        if(getListView().getItemAtPosition(0) == null){
-        	((TextView)getListView().getEmptyView()).setText(R.string.app_listview_footer_fetching_more);
+        if(getListView().getExpandableListAdapter().getGroupCount() == 0){
+        	mEmptyView.setText(R.string.app_listview_footer_fetching_more);
         } else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
         }
@@ -105,10 +112,15 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 	
 	public void setFooterLoadFinished(int count){
-        ((TextView)mFooterView).setEnabled(true);
-        ((TextView)getListView().getEmptyView()).setText(R.string.app_listview_no_content);
-		if(count > mListPageSize){
+        mFooterView.setEnabled(true);
+        mEmptyView.setText(R.string.app_listview_no_content);
+		if(count >= getListView().getExpandableListAdapter().getGroupCount() + getListPageSize()){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+		}  else if(count == 0 && getListView().getExpandableListAdapter().getGroupCount() == 0){
+	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
+	        if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_no_content);
+	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
@@ -131,7 +143,12 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		if(loader != null && !loader.isReset()){
 			getLoaderManager().restartLoader(loaderId, null,this);
 		} else {
-			getLoaderManager().initLoader(loaderId, null,this);
+			Bundle bundle = new Bundle();
+			if(loaderId == -1){
+				bundle.putInt("OFFSET", 0);
+				bundle.putInt("LIMIT", getListPageSize());
+			}
+			getLoaderManager().initLoader(loaderId, bundle,this);
 		}
 	}
 	
@@ -174,12 +191,12 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public void onLoadFinished(Loader<Object> loader, Object cursor) {
 		SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter) getListView().getExpandableListAdapter();
 		if(loader.getId() < 0){
+	        setFooterLoadFinished(((Cursor)cursor).getCount());
 			boolean expandFirstGroup = adapter.getGroupCount() == 0;
 			adapter.setGroupCursor((Cursor)cursor);
 			if(expandFirstGroup && adapter.getGroupCount() > 0){
 				getListView().expandGroup(0);
 			}
-	        setFooterLoadFinished(adapter.getGroupCount());
 		} else {
 			// 
 			if(adapter.getGroupCount() > loader.getId()){
@@ -214,7 +231,9 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		setFooterLoadStart();
+		if(arg0 == -1){
+			setFooterLoadStart();
+		}
 		return null;
 	}
 
@@ -317,6 +336,10 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 
 	public void doFetchMore(int offset, int pageSize){
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", offset);
+		bundle.putInt("LIMIT", pageSize);
+		getLoaderManager().restartLoader(-1, bundle,this);
 	}
 	
 	@Override

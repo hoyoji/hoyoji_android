@@ -38,8 +38,9 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	public final static int DELETE_LIST_ITEM = 1024;
 	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
-	private View mFooterView;
-	protected int mListPageSize = 10;
+	protected View mFooterView;
+	protected TextView mEmptyView;
+//	protected int mListPageSize = 10;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -49,10 +50,13 @@ public abstract class HyjUserListFragment extends ListFragment implements
 			if(useToolbarView() != null){
 				// populate bottom toolbar
 			}
+			mEmptyView = (TextView)rootView.findViewById(android.R.id.empty);
 			return rootView;
 	}
 	
-	
+	protected int getListPageSize() {
+		return 10;
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
@@ -63,7 +67,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				doFetchMore(getListView(), getListView().getAdapter().getCount()-1, mListPageSize);
+				doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
 			}
 	    });
 	    
@@ -98,7 +102,10 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 	
 	public void initLoader(int loaderId){
-		getLoaderManager().initLoader(loaderId, null,this);
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", 0);
+		bundle.putInt("LIMIT", getListPageSize());
+		getLoaderManager().initLoader(loaderId, bundle,this);
 	}
 	
 	@Override
@@ -140,17 +147,27 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //        if(l.getItemAtPosition(0) == null){
 //        	((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
 //        } else {
-            ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
 //        }
-        ((TextView)mFooterView).setEnabled(false);
+
+		if(l.getAdapter().getCount() == 1){
+			if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
+			}
+		} else {
+            ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
+            ((TextView)mFooterView).setEnabled(false);
+		}
 	}
 	
 	public void setFooterLoadFinished(ListView l, int count){
         ((TextView)mFooterView).setEnabled(true);
-		if(count >= mListPageSize){
+		if(count >= l.getAdapter().getCount() + getListPageSize() - 1){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-		} else if(count == 0){
+		} else if(count == 0 && l.getAdapter().getCount() == 1){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
+	        if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_no_content);
+	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
@@ -158,15 +175,6 @@ public abstract class HyjUserListFragment extends ListFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Object> arg0, Object cursor) {
-		if(this.getListAdapter() instanceof CursorAdapter){
-			((SimpleCursorAdapter) this.getListAdapter()).swapCursor((Cursor)cursor);
-		}
-		// The list should now be shown. 
-        if (isResumed()) {
-          //  setListShown(true);  
-        } else {  
-          //  setListShownNoAnimation(true);  
-        } 
         int count = 0;
         if(cursor != null){
 	        if(cursor instanceof Cursor){
@@ -176,6 +184,16 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        }
         }
         setFooterLoadFinished(getListView(), count);
+        
+		if(this.getListAdapter() instanceof CursorAdapter){
+			((SimpleCursorAdapter) this.getListAdapter()).swapCursor((Cursor)cursor);
+		}
+		// The list should now be shown. 
+        if (isResumed()) {
+          //  setListShown(true);  
+        } else {  
+          //  setListShownNoAnimation(true);  
+        } 
 	}
 	
 	
@@ -198,6 +216,10 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //    }  
 	
 	public void doFetchMore(ListView l, int offset, int pageSize){
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", offset);
+		bundle.putInt("LIMIT", pageSize);
+		getLoaderManager().restartLoader(0, bundle,this);
 	}
 	
 //	@Override

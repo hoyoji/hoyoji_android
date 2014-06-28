@@ -32,7 +32,12 @@ public class FriendCategoryListFragment extends HyjUserListFragment{
 	public Integer useOptionsMenuView() {
 		return R.menu.friend_listfragment_friend_category;
 	}
+	
+	protected int getListPageSize() {
+		return 10000;
+	}
 
+	
 	@Override
 	public ListAdapter useListViewAdapter() {
  		return new SimpleCursorAdapter(getActivity(),
@@ -47,9 +52,15 @@ public class FriendCategoryListFragment extends HyjUserListFragment{
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
+		
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(FriendCategory.class, null),
-				null, null, null, null
+				null, null, null, "name LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}
