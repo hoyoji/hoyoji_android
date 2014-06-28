@@ -165,10 +165,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		try {
 			data.put("userName", mSearchText);
 			data.put("nickName", mSearchText);
+			data.put("nickName_pinYin", mSearchText);
 			data.put("__dataType", "User");
 			data.put("__limit", pageSize);
 			data.put("__offset", offset);
-			data.put("__orderBy", "userName ASC");
+			data.put("__orderBy", "nickName_pinYin ASC, userName ASC");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -202,5 +203,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			return false;
 		}
 	}
-
+	
+	@Override
+	public void setFooterLoadFinished(ListView l, int count){
+        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - 1);
+	}
 }

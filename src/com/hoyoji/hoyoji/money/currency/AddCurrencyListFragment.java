@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.activeandroid.ActiveAndroid;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjListFragment;
@@ -190,7 +192,8 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 		JSONObject data = new JSONObject();
 		try {
 			data.put("name", mSearchText);
-			data.put("name", mSearchText);
+			data.put("code", mSearchText);
+//			data.put("name_pinYin", mSearchText);
 			data.put("__dataType", "CurrencyAll");
 			data.put("__limit", pageSize);
 			data.put("__offset", offset);
@@ -205,5 +208,10 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
 		Loader loader = getLoaderManager().getLoader(0);
 		((HyjHttpPostJSONLoader)loader).changePostQuery(bundle);		
+	}
+
+	@Override
+	public void setFooterLoadFinished(ListView l, int count){
+        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - 1);
 	}
 }

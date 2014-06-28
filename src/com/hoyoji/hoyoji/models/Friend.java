@@ -8,6 +8,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
 import android.provider.BaseColumns;
@@ -21,6 +22,9 @@ public class Friend extends HyjModel {
 	
 	@Column(name = "nickName")
 	private String mNickName;
+	
+	@Column(name = "nickName_pinYin")
+	private String mNickName_pinYin;
 	
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
@@ -106,6 +110,12 @@ public class Friend extends HyjModel {
 	}
 
 	public void setNickName(String nickName) {
+		if(nickName == null){
+			this.mNickName_pinYin = "";
+		} else if(this.mNickName == null || !this.mNickName.equals(nickName) || this.mNickName_pinYin == null){
+			this.mNickName_pinYin = HyjUtil.convertToPinYin(nickName);
+		}
+
 		this.mNickName = nickName;
 	}
 	

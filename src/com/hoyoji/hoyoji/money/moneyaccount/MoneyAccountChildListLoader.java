@@ -87,9 +87,9 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    	
 			if(!mAccountType.equalsIgnoreCase(mExcludeType)){
 				if(mFriendId == null){
-					return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name").execute();
+					return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name_pinYin ASC").execute();
 				} else {
-					return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name").execute();
+					return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name_pinYin ASC").execute();
 				}
 			}
 	    	return mChildList;

@@ -291,7 +291,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((HomeGroupListLoader)loader).hasMoreData() ? this.getListPageSize() : 0);
+			this.setFooterLoadFinished(((HomeGroupListLoader)loader).hasMoreData());
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);

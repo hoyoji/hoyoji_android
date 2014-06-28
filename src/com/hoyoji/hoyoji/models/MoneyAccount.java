@@ -24,6 +24,9 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "name")
 	private String mName;
 
+	@Column(name = "name_pinYin")
+	private String mName_pinYin;
+	
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 
@@ -197,6 +200,12 @@ public class MoneyAccount extends HyjModel {
 	}
 
 	public void setName(String mName) {
+		if(mName == null){
+			this.mName_pinYin = "";
+		} else if(this.mName == null || this.mName == null || !this.mName.equals(mName) || this.mName_pinYin == null){
+			this.mName_pinYin = HyjUtil.convertToPinYin(mName);
+		}
+
 		this.mName = mName;
 	}
 	

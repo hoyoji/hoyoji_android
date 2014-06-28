@@ -125,6 +125,20 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
 	}
+	public void setFooterLoadFinished(boolean hasMoreData){
+        mFooterView.setEnabled(true);
+        mEmptyView.setText(R.string.app_listview_no_content);
+		if(hasMoreData){
+	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+		}  else if(getListView().getExpandableListAdapter().getGroupCount() == 0){
+	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
+	        if(mEmptyView != null){
+				mEmptyView.setText(R.string.app_listview_no_content);
+	        }
+		} else {
+		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+		}
+	}
 	@Override
 	public void onStart(){
 		super.onStart();

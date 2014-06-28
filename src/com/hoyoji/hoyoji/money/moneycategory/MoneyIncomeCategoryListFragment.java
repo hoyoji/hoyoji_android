@@ -191,7 +191,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			if(arg1 != null && arg1.getString("parentCategoryId") != null){
 				selection = "parentIncomeCategoryId=?";
 				selectionArgs = new String[]{arg1.getString("parentCategoryId")};
-				orderBy = "name ASC LIMIT " + (limit + offset);
+				orderBy = "name_pinYin ASC LIMIT " + (limit + offset);
 			} else {
 				selection = "parentIncomeCategoryId IS NOT NULL";
 //				selectionArgs = new String[]{};

@@ -60,7 +60,7 @@ public class FriendCategoryListFragment extends HyjUserListFragment{
 		
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(FriendCategory.class, null),
-				null, null, null, "name LIMIT " + (limit + offset)
+				null, null, null, "name_pinYin ASC LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}

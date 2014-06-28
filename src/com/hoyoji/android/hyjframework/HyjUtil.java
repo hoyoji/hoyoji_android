@@ -44,6 +44,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.ContactLocaleUtils.FullNameStyle;
+import com.hoyoji.android.hyjframework.HanziToPinyin.Token;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
@@ -468,5 +470,24 @@ public class HyjUtil {
 //					}
 //				}
 //			}, 1000);
+		}
+
+		public static String convertToPinYin(String mName) {
+			if(mName.length() == 0){
+				return "";
+			}
+//			ArrayList<Token> tokens = HanziToPinyin.getInstance().get(mName);
+//	        StringBuilder sb = new StringBuilder();
+//	        if (tokens != null && tokens.size() > 0) {
+//	            for (Token token : tokens) {
+//	                if (Token.PINYIN == token.type) {
+//	                    sb.append(token.target);
+//	                } else {
+//	                    sb.append(token.source);
+//	                }
+//	            }
+//	        }
+//			return sb.toString().toLowerCase();
+			return ContactLocaleUtils.getIntance().getSortKey(mName.toString(), FullNameStyle.CHINESE);
 		}
 }

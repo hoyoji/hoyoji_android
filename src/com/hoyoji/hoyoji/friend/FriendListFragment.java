@@ -108,7 +108,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(FriendCategory.class, null),
-					null, null, null, "name LIMIT " + (limit + offset)
+					null, null, null, "name_pinYin ASC LIMIT " + (limit + offset)
 				);
 		} else {
 			loader = new CursorLoader(getActivity(),

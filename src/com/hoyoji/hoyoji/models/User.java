@@ -8,6 +8,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
 import android.provider.BaseColumns;
@@ -25,6 +26,9 @@ public class User extends HyjModel {
 	
 	@Column(name = "nickName")
 	private String mNickName;
+	
+	@Column(name = "nickName_pinYin")
+	private String mNickName_pinYin;
 
 	@Column(name = "isMerchant")
 	private boolean mIsMerchant;
@@ -112,6 +116,12 @@ public class User extends HyjModel {
 	}
 
 	public void setNickName(String mNickName) {
+		if(mNickName == null){
+			this.mNickName_pinYin = "";
+		} else if(this.mNickName == null || !this.mNickName.equals(mNickName) || this.mNickName_pinYin == null){
+			this.mNickName_pinYin = HyjUtil.convertToPinYin(mNickName);
+		}
+
 		if(mNickName.length() == 0){
 			this.mNickName = null;
 			return;

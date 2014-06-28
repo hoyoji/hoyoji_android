@@ -8,6 +8,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
 import android.provider.BaseColumns;
@@ -20,6 +21,9 @@ public class FriendCategory extends HyjModel {
 	
 	@Column(name = "name")
 	private String mName;
+
+	@Column(name = "name_pinYin")
+	private String mName_pinYin;
 	
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
@@ -59,6 +63,12 @@ public class FriendCategory extends HyjModel {
 	}
 
 	public void setName(String name) {
+		if(name == null){
+			this.mName_pinYin = "";
+		} else if(this.mName == null || !this.mName.equals(name) || this.mName_pinYin == null){
+			this.mName_pinYin = HyjUtil.convertToPinYin(name);
+		}
+
 		this.mName = name;
 	}
 

@@ -191,7 +191,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			if(arg1 != null && arg1.getString("parentCategoryId") != null){
 				selection = "parentExpenseCategoryId=?";
 				selectionArgs = new String[]{arg1.getString("parentCategoryId")};
-				orderBy = "name ASC LIMIT " + (limit + offset);
+				orderBy = "name_pinYin ASC LIMIT " + (limit + offset);
 			} else {
 				selection = "parentExpenseCategoryId IS NOT NULL";
 //				selectionArgs = new String[]{};

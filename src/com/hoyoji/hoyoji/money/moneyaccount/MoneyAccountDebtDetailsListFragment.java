@@ -265,7 +265,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((MoneyAccountDebtDetailsGroupListLoader)loader).hasMoreData() ? this.getListPageSize() : 0);
+			this.setFooterLoadFinished(((MoneyAccountDebtDetailsGroupListLoader)loader).hasMoreData());
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);

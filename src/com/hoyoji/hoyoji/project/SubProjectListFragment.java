@@ -118,7 +118,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
-				projections, selection, selectionArgs, "name LIMIT " + (limit + offset)
+				projections, selection, selectionArgs, "name_pinYin ASC LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}
