@@ -113,7 +113,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else {
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(Friend.class, null),
-					null, "friendCategoryId=?", new String[]{arg1.getString("friendCategoryId")}, null
+					null, "friendCategoryId=?", new String[]{arg1.getString("friendCategoryId")}, "nickName_pinYin"
 				);
 		}
 		return (Loader<Object>)loader;
