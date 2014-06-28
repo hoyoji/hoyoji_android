@@ -130,18 +130,16 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new HyjJSONListAdapter(getActivity(),
-				R.layout.friend_listitem_add_friend, new String[] {
-						"pictureId", "nickName" }, new int[] {
-						R.id.friendListItem_add_picture,
-						R.id.friendListItem_add_nickName });
+				R.layout.friend_listitem_add_friend, 
+						new String[] { "pictureId", "nickName" }, 
+						new int[] { R.id.friendListItem_add_picture, R.id.friendListItem_add_nickName });
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if (id >= 0) {
-			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(
-					position);
+			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(position);
 			
 			Bundle bundle = new Bundle();
 			bundle.putString("USER_JSON_OBJECT", jsonUser.toString());

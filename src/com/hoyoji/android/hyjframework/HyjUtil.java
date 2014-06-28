@@ -130,6 +130,13 @@ public class HyjUtil {
 			return File.createTempFile(imageFileName, ".JPEG", outputDir);
 		}
 		
+		public static File getTempImageFile(String imageFileName) throws IOException {
+		    // Create an image file name
+			File tempDir = HyjApplication.getInstance().getCacheDir(); // context being the Activity pointer
+			File image = new File(tempDir, imageFileName+".JPEG");
+			return image;
+		}
+		
 		public static File createImageFile(String imageFileName, String type) throws IOException {
 		    // Create an image file name
 		    File image = new File(

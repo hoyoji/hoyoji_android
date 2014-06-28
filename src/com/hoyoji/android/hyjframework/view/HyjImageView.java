@@ -115,7 +115,6 @@ public class HyjImageView extends ImageView {
 			setImage((Picture)Picture.getModel(Picture.class, id));
 		} else {
 			setImage((Picture)null);
-			
 		}
 	}
 	
@@ -125,6 +124,11 @@ public class HyjImageView extends ImageView {
 			return;
 		}
 		
+		if(id.equals(mPictureId)){
+			return;
+		}
+		
+		mPictureId = id;
 		HyjBitmapWorkerAsyncTask.loadRemoteBitmap(id, HyjApplication.getServerUrl()+"fetchImageIcon.php", this);
 		
 	}
