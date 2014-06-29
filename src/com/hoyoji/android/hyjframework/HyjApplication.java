@@ -248,11 +248,17 @@ public class HyjApplication extends FrontiaApplication {
 			userData.setSyncFromServer(true);
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
+
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 		    ActiveAndroid.endTransaction();
+
+			// 设置用户的昵称拼音, 并同步回服务器
+			if(user.getNickName() == null || user.getNickName().length() == 0){
+				user.setNickName(user.getNickName());
+				user.save();
+			}
 		}
 		
 		currentUser = user;

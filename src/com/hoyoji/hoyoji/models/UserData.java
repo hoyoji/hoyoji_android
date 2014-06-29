@@ -1,20 +1,12 @@
 package com.hoyoji.hoyoji.models;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.activeandroid.Cache;
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.serializer.TypeSerializer;
-import com.activeandroid.util.Log;
-import com.activeandroid.util.ReflectionUtils;
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji_android.R;
@@ -181,7 +173,7 @@ public class UserData extends HyjModel {
 	}
 
 	public String getIncomeColor() {
-		if(mIncomeColor == null){
+		if(mIncomeColor == null || mIncomeColor.length() == 0){
 			return "#FF0000";
 		}
 		return mIncomeColor;
@@ -192,7 +184,7 @@ public class UserData extends HyjModel {
 	}
 	
 	public String getExpenseColor() {
-		if(mExpenseColor == null){
+		if(mExpenseColor == null || mExpenseColor.length() == 0){
 			return "#339900";
 		}
 		return mExpenseColor;

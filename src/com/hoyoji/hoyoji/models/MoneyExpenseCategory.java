@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 
 @Table(name = "MoneyExpenseCategory", id = BaseColumns._ID)
 public class MoneyExpenseCategory extends HyjModel {
@@ -18,6 +19,9 @@ public class MoneyExpenseCategory extends HyjModel {
 
 	@Column(name = "name")
 	private String mName;
+	
+	@Column(name = "name_pinYin")
+	private String mName_pinYin;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -74,6 +78,12 @@ public class MoneyExpenseCategory extends HyjModel {
 	}
 
 	public void setName(String name) {
+		if(name == null){
+			this.mName_pinYin = "";
+		} else if(this.mName == null || !this.mName.equals(name) || this.mName_pinYin == null){
+			this.mName_pinYin = HyjUtil.convertToPinYin(name);
+		}
+		
 		this.mName = name;
 	}
 

@@ -427,7 +427,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyReturn)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
-			numericView.setTextColor(Color.BLACK);
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;

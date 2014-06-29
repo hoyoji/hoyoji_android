@@ -476,18 +476,18 @@ public class HyjUtil {
 			if(mName.length() == 0){
 				return "";
 			}
-//			ArrayList<Token> tokens = HanziToPinyin.getInstance().get(mName);
-//	        StringBuilder sb = new StringBuilder();
-//	        if (tokens != null && tokens.size() > 0) {
-//	            for (Token token : tokens) {
-//	                if (Token.PINYIN == token.type) {
-//	                    sb.append(token.target);
-//	                } else {
-//	                    sb.append(token.source);
-//	                }
-//	            }
-//	        }
-//			return sb.toString().toLowerCase();
-			return ContactLocaleUtils.getIntance().getSortKey(mName.toString(), FullNameStyle.CHINESE);
+			ArrayList<Token> tokens = HanziToPinyin.getInstance().get(mName);
+	        StringBuilder sb = new StringBuilder();
+	        if (tokens != null && tokens.size() > 0) {
+	            for (Token token : tokens) {
+	                if (Token.PINYIN == token.type) {
+	                    sb.append(token.target);
+	                } else {
+	                    sb.append(token.source);
+	                }
+	            }
+	        }
+			return sb.toString().toUpperCase();
+//			return ContactLocaleUtils.getIntance().getSortKey(mName.toString(), FullNameStyle.CHINESE);
 		}
 }

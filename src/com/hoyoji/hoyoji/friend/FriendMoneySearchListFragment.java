@@ -346,8 +346,6 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			HyjNumericView numericView = (HyjNumericView)view;
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			}else{
-				numericView.setTextColor(Color.parseColor("#FF0000"));
 			}
 			numericView.setPrefix(((MoneyExpenseContainer)object).getProject().getCurrencySymbol());
 			numericView.setSuffix(null);
@@ -387,8 +385,6 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			HyjNumericView numericView = (HyjNumericView)view;
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}else{
-				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			numericView.setPrefix(((MoneyIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyIncomeContainer)object).getProjectAmount());
@@ -428,8 +424,6 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}else{
-				numericView.setTextColor(Color.parseColor("#339900"));
 			}
 			
 			numericView.setPrefix(((MoneyDepositIncomeContainer)object).getProject().getCurrencySymbol());
@@ -485,10 +479,8 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}else{
-				numericView.setTextColor(Color.parseColor("#339900"));
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}
 			
 			numericView.setPrefix(((MoneyDepositReturnContainer)object).getProject().getCurrencySymbol());

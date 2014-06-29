@@ -15,6 +15,8 @@ import android.view.ContextMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,6 +48,17 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 	public void onInitViewData(){
 		mSearchView = (SearchView)getView().findViewById(R.id.currencyListFragment_addCurrency_searchView);
 		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setSubmitButtonEnabled(true);
+		
+		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
+		if(searchImage != null){
+			searchImage.setImageResource(R.drawable.ic_action_search);
+		}
+		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+		if(magImage != null){
+			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+		}
+		onQueryTextSubmit(null);
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 	
@@ -159,17 +172,21 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 
 	@Override
 	public boolean onQueryTextSubmit(String searchText) {
-		mSearchText = searchText.trim();
-		if(searchText.length() == 0){
-			HyjUtil.displayToast("请输入查询条件");
-			return true;
+		if(searchText != null){
+			mSearchText = searchText.trim();
+			if(searchText.length() == 0){
+				HyjUtil.displayToast("请输入查询条件");
+				return true;
+			}
+		} else {
+			mSearchText = "";
 		}
 		JSONObject data = new JSONObject();
 		try {
 			data.put("name", mSearchText);
 			data.put("code", mSearchText);
 			data.put("__dataType", "CurrencyAll");
-			data.put("__limit", mListPageSize);
+			data.put("__limit", getListPageSize());
 			data.put("__offset", 0);
 			data.put("__orderBy", "name ASC");
 		} catch (JSONException e) {

@@ -298,11 +298,11 @@ public class MainActivity extends HyjUserActivity {
 			break;
 		case 5:
 			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-					R.string.moneyCategoryFormDialogFragment_title_manage, null);
+					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
 			break;
 		case 6:
 			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
-					R.string.moneyCategoryFormDialogFragment_title_manage, null);
+					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
 			break;
 		case 7:
 			openActivityWithFragment(SystemSettingFormFragment.class,

@@ -278,9 +278,8 @@ public class MemberListFragment extends HyjUserListFragment{
 				labelText.setText("还要支付");
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-				}else{
-					numericView.setTextColor(Color.parseColor("#FF0000"));
 				}
+
 			}else{
 				if(settlement.equals(0.0)){
 					labelText.setText("结余");
@@ -288,10 +287,8 @@ public class MemberListFragment extends HyjUserListFragment{
 				}else if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 					labelText.setText("应该收回");
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-				 }else{
-					labelText.setText("应该收回");
-					numericView.setTextColor(Color.parseColor("#339900"));
-				}
+				 }
+
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(settlement);

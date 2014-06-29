@@ -184,7 +184,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			selection = "parentIncomeCategoryId IS NULL";
 			loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(MoneyIncomeCategory.class, null),
-				null, selection, selectionArgs, "name ASC LIMIT " + (limit + offset)
+				null, selection, selectionArgs, "name_pinYin ASC LIMIT " + (limit + offset)
 			);
 		} else {
 			setFooterLoadStart(childrenList);
@@ -195,7 +195,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			} else {
 				selection = "parentIncomeCategoryId IS NOT NULL";
 //				selectionArgs = new String[]{};
-				orderBy = "lastClientUpdateTime DESC LIMIT " + (limit + offset);
+				orderBy = "lastClientUpdateTime DESC, name_pinYin ASC LIMIT " + (limit + offset);
 			}
 			loader = new CursorLoader(getActivity(),
 					ContentProvider.createUri(MoneyIncomeCategory.class, null),

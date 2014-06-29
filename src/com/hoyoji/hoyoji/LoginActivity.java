@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -875,7 +876,16 @@ public class LoginActivity extends HyjActivity {
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(), "login");
 	}
 	
-	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
+	private void loginQQFromServer(final boolean createUserDatabaseEntry, JSONObject loginInfo) {
+		final String access_token = loginInfo.optString("access_token");
+		
+		java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+		try {
+			loginInfo.put("currencyId", currency.getCurrencyCode());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -898,7 +908,7 @@ public class LoginActivity extends HyjActivity {
 						wDb.close();
 						mDbHelper.close();
 					}
-					loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.getString("access_token")), jsonObject);
+					loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), access_token), jsonObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

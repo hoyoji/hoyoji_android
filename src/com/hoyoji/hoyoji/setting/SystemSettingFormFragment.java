@@ -179,7 +179,6 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mButtonMoneyExpenseColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyExpenseColorPicker);
 		mButtonMoneyExpenseColorPicker.setText(null);
-		mExpenseColor = Color.parseColor("#FF0000");
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 			mExpenseColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
 		}
@@ -207,7 +206,6 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mButtonMoneyIncomeColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyIncomeColorPicker);
 		mButtonMoneyIncomeColorPicker.setText(null);
-		mIncomeColor = Color.parseColor("#339900");
 		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mIncomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		}
