@@ -245,7 +245,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		if(arg0 == -1){
+		if(arg0 < 0){
 			setFooterLoadStart();
 		}
 		return null;

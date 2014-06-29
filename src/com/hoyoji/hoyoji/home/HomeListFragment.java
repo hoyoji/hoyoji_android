@@ -938,6 +938,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public void doFetchMore(int offset, int pageSize){
+		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
 		((HomeGroupListLoader)loader).fetchMore(null);	
 	}

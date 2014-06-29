@@ -717,6 +717,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 
 	@Override
 	public void doFetchMore(int offset, int pageSize){
+		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
 		((MoneySearchGroupListLoader)loader).fetchMore(null);	
 	}
