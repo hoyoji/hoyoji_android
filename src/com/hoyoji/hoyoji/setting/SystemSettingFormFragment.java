@@ -41,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
 import com.activeandroid.content.ContentProvider;
@@ -179,56 +180,46 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mButtonMoneyExpenseColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyExpenseColorPicker);
 		mButtonMoneyExpenseColorPicker.setText(null);
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
-			mExpenseColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
-		}
+		mExpenseColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
 		mButtonMoneyExpenseColorPicker.setBackgroundColor(mExpenseColor);
 		mButtonMoneyExpenseColorPicker.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mExpenseColor,   
-                        HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyExpenseColorPicker),   
-                        new ColorPickerDialog.OnColorChangedListener() {  
-                      
-                    @Override  
-                    public void colorChanged(int color) {  
-                    	mExpenseColor = color;
-                    	mButtonMoneyExpenseColorPicker.setBackgroundColor(color);
-
-        				HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(color));
+						int tempColor = mExpenseColor;
+                    	mExpenseColor = mIncomeColor;
+                    	mButtonMoneyExpenseColorPicker.setBackgroundColor(mExpenseColor);
+                    	
+                    	mIncomeColor = tempColor;
+                    	mButtonMoneyIncomeColorPicker.setBackgroundColor(mIncomeColor);
+                    	
+                    	
+        				HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(mExpenseColor));
+        				HyjApplication.getInstance().getCurrentUser().getUserData().setIncomeColor(Integer.toHexString(mIncomeColor));
         				HyjApplication.getInstance().getCurrentUser().getUserData().save();
                     }  
-                });  
-                dialog.show(getFragmentManager(), "ColorPickerDialog");  
-			}
+			
 		});
 		
 		mButtonMoneyIncomeColorPicker = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_moneyIncomeColorPicker);
 		mButtonMoneyIncomeColorPicker.setText(null);
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-			mIncomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
-		}
+		mIncomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		mButtonMoneyIncomeColorPicker.setBackgroundColor(mIncomeColor);
 		mButtonMoneyIncomeColorPicker.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), mIncomeColor,   
-                        HyjApplication.getInstance().getString(R.string.systemSettingFormFragment_button_moneyIncomeColorPicker),   
-                        new ColorPickerDialog.OnColorChangedListener() {  
-                      
-                    @Override  
-                    public void colorChanged(int color) { 
-                    	mIncomeColor = color;
-                    	mButtonMoneyIncomeColorPicker.setBackgroundColor(color);
+						int tempColor = mExpenseColor;
+		            	mExpenseColor = mIncomeColor;
+		            	mButtonMoneyExpenseColorPicker.setBackgroundColor(mExpenseColor);
+		            	
+				    	mIncomeColor = tempColor;
+                    	mButtonMoneyIncomeColorPicker.setBackgroundColor(mIncomeColor);
 
-        				HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(color));
+                    	HyjApplication.getInstance().getCurrentUser().getUserData().setExpenseColor(Integer.toHexString(mExpenseColor));
+        				HyjApplication.getInstance().getCurrentUser().getUserData().setIncomeColor(Integer.toHexString(mIncomeColor));
         				HyjApplication.getInstance().getCurrentUser().getUserData().save();
-                    }  
-                });  
-                dialog.show(getFragmentManager(), "ColorPickerDialog");  
-			}
+            }
 		});
 		
 		
@@ -304,7 +295,11 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	public void onStop() {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		String newNickName = mTextFieldNickName.getText().trim();
-		if(!newNickName.equals(curUser.getNickName())){
+		String curNickName = curUser.getNickName();
+		if(curNickName == null){
+			curNickName = "";
+		}
+		if(!newNickName.equals(curNickName)){
 			curUser.setNickName(newNickName);
 			curUser.save();
 		}
@@ -685,14 +680,20 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 						mPicture.setRecordType("User");
 						mPicture.setToBeUploaded(false);
 						mPicture.setRecordId(curUser.getId());
-						mPicture.save();
-						Picture oldPic = curUser.getPicture();
-						if(oldPic != null){
-							oldPic.delete();
+						try{
+							ActiveAndroid.beginTransaction();
+							mPicture.save();
+							Picture oldPic = curUser.getPicture();
+							if(oldPic != null){
+								oldPic.delete();
+							}
+							curUser.setPicture(mPicture);
+							curUser.save();
+							ActiveAndroid.setTransactionSuccessful();
+							takePictureButton.setImage(mPicture);
+						} catch (Exception e){
 						}
-						curUser.setPicture(mPicture);
-						curUser.save();
-						takePictureButton.setImage(mPicture);
+						ActiveAndroid.endTransaction();
 					} else {
 						if (!mPhotoFile.exists()) {
 							//HyjUtil.displayToast(R.string.imageField_cannot_save_picture);

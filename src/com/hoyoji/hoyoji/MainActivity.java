@@ -977,7 +977,10 @@ public class MainActivity extends HyjUserActivity {
 							postData.put(jsonObj);
 						}
 					}
-					Log.i("Push Data : ", postData.toString());
+					//Log.i("Push Data : ", postData.toString());
+					for(int a = 0; a < postData.length(); a++){
+						Log.i("Push Data : ", postData.get(a).toString());
+					}
 					Object result = HyjServer.doHttpPost(null,
 							HyjApplication.getServerUrl() + "syncPush2.php",
 							postData.toString(), true);
