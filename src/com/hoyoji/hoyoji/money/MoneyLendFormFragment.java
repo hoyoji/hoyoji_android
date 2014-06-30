@@ -462,8 +462,6 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		}
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
-		
-		HyjUtil.displayToast(this.mDateTimeFieldDate.getText().toString());
 	}
 	
 	private void showValidatioErrors(){
