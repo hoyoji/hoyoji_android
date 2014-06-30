@@ -7,10 +7,14 @@
     tools:context=".MainActivity" >
     <!-- The main content view -->
     
+    
+    <include layout="@layout/main_pager_tabstrip"/>
+    
     <android.support.v4.view.ViewPager
     android:id="@+id/pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:paddingTop="35dp">
 
     <!--
     This title strip will display the currently visible page title, as well as the page
@@ -20,7 +24,7 @@
     
     -->
 
-    <android.support.v4.view.PagerTabStrip
+    <!-- <android.support.v4.view.PagerTabStrip
         android:id="@+id/pager_title_strip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +32,7 @@
         android:background="#33b5e5"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:textColor="#fff" />
+        android:textColor="#fff" /> -->
 
 	</android.support.v4.view.ViewPager>
     

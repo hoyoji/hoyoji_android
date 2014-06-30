@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +23,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +33,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.ActiveAndroid;
@@ -100,6 +105,7 @@ import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
+import com.jauker.widget.BadgeView;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -109,22 +115,31 @@ public class MainActivity extends HyjUserActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
+
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ChangeObserver mChangeObserver;
-
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	ViewPager mViewPager;
 
+	private LinearLayout mTabAccount;
+	private LinearLayout mTabProject;
+	private LinearLayout mTabHome;
+	private LinearLayout mTabFriend;
+
+	private TextView mAccount;
+	private TextView mProject;
+	private TextView mHome;
+	private TextView mFriend;
+
+	private BadgeView mBadgeViewforAccount;
+	private BadgeView mBadgeViewforProject;
+	private BadgeView mBadgeViewforHome;
+	private BadgeView mBadgeViewforFriend;
+
+	private View mTabLine;
+
+	private int currentIndex;
+	private int screenWidth;
+	
 	@Override
 	protected Integer getContentView() {
 		return R.layout.activity_main;
@@ -142,37 +157,6 @@ public class MainActivity extends HyjUserActivity {
 										ClientSyncRecord.class, null), true,
 								mChangeObserver);
 			}
-
-//			// 1.��������Token
-//			Handler handler = new HandlerExtension(MainActivity.this);
-//			m = handler.obtainMessage();
-			//��������
-//			XGPushManager.registerPush(HyjApplication.getInstance().getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
-////					,
-////					new XGIOperateCallback() {
-////						@Override
-////						public void onSuccess(Object data, int flag) {
-////							Log.w(Constants.LogTag,
-////									"+++ register push sucess. token:" + data);
-//////							m.obj = "+++ register push sucess. token:" + data;
-//////							m.sendToTarget();
-////							CacheManager.getRegisterInfo();
-////						}
-////
-////						@Override
-////						public void onFail(Object data, int errCode, String msg) {
-////							Log.w(Constants.LogTag,
-////									"+++ register push fail. token:" + data
-////											+ ", errCode:" + errCode + ",msg:"
-////											+ msg);
-////
-//////							m.obj = "+++ register push fail. token:" + data
-//////									+ ", errCode:" + errCode + ",msg:" + msg;
-//////							m.sendToTarget();
-////						}
-////					}
-//			);
-
 		}
 	}
 
@@ -216,16 +200,145 @@ public class MainActivity extends HyjUserActivity {
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+		
+
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		initView();
+		initTabLine();
+		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
-
-		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(4);
+
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
+		{
+			@Override
+			public void onPageSelected(int position)
+			{
+				resetTextView();
+				switch (position)
+				{
+					case 0:
+						mAccount.setTextColor(getResources().getColor(R.color.green));
+						
+	//					mTabAccount.removeView(mBadgeViewforAccount);
+	//					mBadgeViewforAccount.setBadgeCount(5);
+	//					mTabAccount.addView(mBadgeViewforAccount);
+						break;
+					case 1:
+						mProject.setTextColor(getResources().getColor(R.color.green));
+						
+	//					mTabProject.removeView(mBadgeViewforProject);
+	//					mBadgeViewforProject.setBadgeCount(15);
+	//					mTabProject.addView(mBadgeViewforProject);
+						break;
+					case 2:
+						mHome.setTextColor(getResources().getColor(R.color.green));
+						
+						break;
+					case 3:
+						mFriend.setTextColor(getResources().getColor(R.color.green));
+				}
+
+				currentIndex = position;
+			}
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+			{
+				LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine
+						.getLayoutParams();
+				if (currentIndex == 0 && position == 0)// 0->1
+				{
+					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+				} else if (currentIndex == 1 && position == 0) // 1->0
+				{
+					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+
+				} 
+				
+				else if (currentIndex == 1 && position == 1) // 1->2
+				{
+					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+				} else if (currentIndex == 2 && position == 1) // 2->1
+				{
+					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+
+				} 
+				
+				else if (currentIndex == 2 && position == 2) // 2->3
+				{
+					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+				} else if (currentIndex == 3 && position == 2) // 3->2
+				{
+					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					mTabLine.setLayoutParams(lp);
+
+				}
+
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state)
+			{
+			}
+		});
+
 		mViewPager.setCurrentItem(2, false);
+
+	}
+
+	private void initTabLine()
+	{
+		mTabLine = findViewById(R.id.id_tab_line);
+		DisplayMetrics outMetrics = new DisplayMetrics();
+		getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+		screenWidth = outMetrics.widthPixels;
+		LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine.getLayoutParams();
+		lp.width = screenWidth / 4;
+		mTabLine.setLayoutParams(lp);
+	}
+
+	protected void resetTextView()
+	{
+		mAccount.setTextColor(getResources().getColor(R.color.black));
+		mProject.setTextColor(getResources().getColor(R.color.black));
+		mHome.setTextColor(getResources().getColor(R.color.black));
+		mFriend.setTextColor(getResources().getColor(R.color.black));
+	}
+
+	private void initView()
+	{
+
+		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
+		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
+		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
+		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
+
+		mAccount = (TextView) findViewById(R.id.id_account);
+		mProject = (TextView) findViewById(R.id.id_project);
+		mHome = (TextView) findViewById(R.id.id_home);
+		mFriend = (TextView) findViewById(R.id.id_friend);
+
+//		MainTab01 tab01 = new MainTab01();
+//		MainTab02 tab02 = new MainTab02();
+//		MainTab03 tab03 = new MainTab03();
+//		mFragments.add(tab01);
+//		mFragments.add(tab02);
+//		mFragments.add(tab03);
+
+		mBadgeViewforAccount = new BadgeView(this);
+		mBadgeViewforProject = new BadgeView(this);
+		mBadgeViewforHome = new BadgeView(this);
+		mBadgeViewforFriend = new BadgeView(this);
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
@@ -270,7 +383,6 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
-	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
@@ -545,7 +657,6 @@ public class MainActivity extends HyjUserActivity {
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
-			// TODO Auto-generated method stub
 			super.onChange(selfChange, uri);
 		}
 
@@ -566,14 +677,8 @@ public class MainActivity extends HyjUserActivity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		XGPushClickedResult click = XGPushManager.onActivityStarted(this);
-//		Log.d("TPush", "onResumeXGPushClickedResult:" + click );
-//		if (click != null) { // ��������������������������
-//			Toast.makeText(this, "����������:" + click.toString(),
-//					Toast.LENGTH_SHORT).show();
-//		}
 	}
 
 	@Override
