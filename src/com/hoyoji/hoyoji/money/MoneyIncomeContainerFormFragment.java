@@ -249,7 +249,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				MoneyIncomeContainerFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payee, null, GET_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payer, null, GET_FRIEND_ID);
 			}
 		}); 
 		
