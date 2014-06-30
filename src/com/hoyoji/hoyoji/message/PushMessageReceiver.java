@@ -1,10 +1,14 @@
 package com.hoyoji.hoyoji.message;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
+import com.hoyoji.hoyoji_android.R;
 import com.tencent.android.tpush.XGPushBaseReceiver;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
@@ -28,6 +32,9 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 
 		Intent startIntent = new Intent(HyjApplication.getInstance().getApplicationContext(), MessageDownloadService.class);
 		HyjApplication.getInstance().getApplicationContext().startService(startIntent);
+		
+//		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+//		notificationManager.cancel((int) notifiShowedRlt.getMsgId());
 		
 //		String text = "֪ͨ��չʾ ��title:" + notifiShowedRlt.getTitle()
 //				+ ",content:" + notifiShowedRlt.getContent()
@@ -94,44 +101,22 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 
 	}
 
-	// ֪ͨ����ص� actionType=1Ϊ����Ϣ�����actionType=0Ϊ����Ϣ�����
 	@Override
 	public void onNotifactionClickedResult(Context context,
 			XGPushClickedResult message) {
 		if (context == null || message == null) {
 			return;
 		}
-//		String text = null;
-//        if (message.getActionType() == XGPushClickedResult.NOTIFACTION_CLICKED_TYPE) {
-//            // ֪ͨ��֪ͨ�������������������
-//            // APP�Լ�����������ض���
-//            // �������������activity��onResumeҲ�ܼ����뿴��3���������
-//            text = "֪ͨ���� :" + message;
-//        } else if (message.getActionType() == XGPushClickedResult.NOTIFACTION_DELETED_TYPE) {
-//            // ֪ͨ���������������
-//            // APP�Լ�����֪ͨ���������ض���
-//            text = "֪ͨ����� :" + message;
-//        }
-//		Toast.makeText(context, "�㲥���յ�֪ͨ�����:" + message.toString(),
-//				Toast.LENGTH_SHORT).show();
-//		// ��ȡ�Զ���key-value
-//		String customContent = message.getCustomContent();
-//		if (customContent != null && customContent.length() != 0) {
-//			try {
-//				JSONObject obj = new JSONObject(customContent);
-//				// key1Ϊǰ̨���õ�key
-//				if (!obj.isNull("key")) {
-//					String value = obj.getString("key");
-//					Log.d(LogTag, "get custom value:" + value);
-//				}
-//				// ...
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		// APP��������Ĺ�̡�����
-//		Log.d(LogTag, text);
-//		show(context, text);
+        if (message.getActionType() == XGPushClickedResult.NOTIFACTION_CLICKED_TYPE) {
+        	Intent intent = new Intent(context, HyjBlankUserActivity.class);
+        	Class<? extends Fragment> fragmentClass = MessageListFragment.class;
+    		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+    		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+    		intent.putExtra("TITLE", context.getString(R.string.friendListFragment_title_manage_message));
+    		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    		context.startActivity(intent);
+        } else if (message.getActionType() == XGPushClickedResult.NOTIFACTION_DELETED_TYPE) {
+        }
 	}
 
 	@Override
@@ -155,7 +140,7 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
-//		String text = "�յ���Ϣ:" + message.toString();
+//		String text = message.toString();
 //		// ��ȡ�Զ���key-value
 //		String customContent = message.getCustomContent();
 //		if (customContent != null && customContent.length() != 0) {
