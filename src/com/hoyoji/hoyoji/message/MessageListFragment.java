@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -25,6 +26,7 @@ import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class MessageListFragment extends HyjUserListFragment{
 	
@@ -74,6 +76,12 @@ public class MessageListFragment extends HyjUserListFragment{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.messageListFragment_action_sync){
+			HyjUtil.displayToast("正在检查新消息...");
+			Intent startIntent = new Intent(getActivity(), MessageDownloadService.class);
+			HyjApplication.getInstance().getApplicationContext().startService(startIntent);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	

@@ -30,7 +30,7 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 			return;
 		}
 
-		Intent startIntent = new Intent(HyjApplication.getInstance().getApplicationContext(), MessageDownloadService.class);
+		Intent startIntent = new Intent(context, MessageDownloadService.class);
 		HyjApplication.getInstance().getApplicationContext().startService(startIntent);
 		
 //		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);

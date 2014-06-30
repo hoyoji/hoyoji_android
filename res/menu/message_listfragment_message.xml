@@ -2,5 +2,12 @@
     xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
 
 
+    <item
+        android:id="@+id/messageListFragment_action_sync"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="获取新消息"
+        hoyoji:actionLayout="@layout/actionbar_sync_button"
+        hoyoji:showAsAction="always"/> 
+    
 
 </menu>
