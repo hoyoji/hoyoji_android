@@ -62,7 +62,6 @@
                     android:layout_height="wrap_content"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
-                    hyj:editTextColor="#FF0000"
                     hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
                     hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
 

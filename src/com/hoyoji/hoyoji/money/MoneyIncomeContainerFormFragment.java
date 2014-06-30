@@ -133,17 +133,15 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 
 		setupApportionField(moneyIncomeContainer);
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);		
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);
+		mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
 			mNumericAmount.setNumber(amount);
 			mApportionFieldApportions.setTotalAmount(amount);
 		}else{
 			mNumericAmount.setNumber(moneyIncomeContainer.getAmount());
-		}
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {

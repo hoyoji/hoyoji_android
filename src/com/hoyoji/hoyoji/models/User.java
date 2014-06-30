@@ -124,9 +124,9 @@ public class User extends HyjModel {
 
 		if(mNickName.length() == 0){
 			this.mNickName = null;
-			return;
+		} else {
+			this.mNickName = mNickName;
 		}
-		this.mNickName = mNickName;
 	}
 
 	public String getDisplayName() {

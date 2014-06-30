@@ -1,31 +1,22 @@
 package com.hoyoji.hoyoji.project;
 
-import java.util.List;
-
 import android.app.Activity;
-import android.content.ClipData.Item;
-import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -38,16 +29,13 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
 //	public final static int ADD_SUB_PROJECT = 0;
@@ -108,7 +96,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if(limit == 0){
 			limit = getListPageSize();
 		}
-		String parentProjectId = arg1.getString("parentProjectId");
+		String parentProjectId = getArguments().getString("parentProjectId");
 		if(parentProjectId != null){
 			selection = "id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)";
 			selectionArgs = new String[]{ parentProjectId };
@@ -238,25 +226,25 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				((TextView)view).setText(ownerUserName);
 				return true;
 		} else if(view.getId() == R.id.projectListItem_inOutTotal) {
-			HyjNumericView numericView = (HyjNumericView)view;
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-			
-//			numericView.setPrefix(project.getCurrencySymbol());
-			numericView.setSuffix(null);
-			
-			Double projectBalance = project.getBalance();
-			if(projectBalance == 0){
-				numericView.setTextColor(Color.BLACK);
-				numericView.setPrefix(project.getCurrencySymbol());
-			} else if(projectBalance < 0){
-				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-				numericView.setPrefix("支出"+project.getCurrencySymbol());
-			}else{
-				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-				numericView.setPrefix("收入"+project.getCurrencySymbol());
-			}
-			
-			numericView.setNumber(Math.abs(projectBalance));
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+//			
+////			numericView.setPrefix(project.getCurrencySymbol());
+//			numericView.setSuffix(null);
+//			
+//			Double projectBalance = project.getBalance();
+//			if(projectBalance == 0){
+//				numericView.setTextColor(Color.BLACK);
+//				numericView.setPrefix(project.getCurrencySymbol());
+//			} else if(projectBalance < 0){
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				numericView.setPrefix("支出"+project.getCurrencySymbol());
+//			}else{
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//				numericView.setPrefix("收入"+project.getCurrencySymbol());
+//			}
+//			
+//			numericView.setNumber(Math.abs(projectBalance));
 			return true;
 		}else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;

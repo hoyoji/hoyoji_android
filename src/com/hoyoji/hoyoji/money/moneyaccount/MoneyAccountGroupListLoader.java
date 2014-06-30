@@ -239,6 +239,7 @@ public class MoneyAccountGroupListLoader extends
 						}
 					}
 				}
+				mHasMoreData = false;
 				return list;
 	}
 	

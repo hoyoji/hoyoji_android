@@ -115,7 +115,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	}
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-//		super.onCreateLoader(groupPos, arg1);
+		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 
 		Intent intent = getActivity().getIntent();

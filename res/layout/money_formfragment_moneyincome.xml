@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="._MoneyIncomeFormFragment" >
+    tools:context=".MoneyIncomeContainerFormFragment" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +62,6 @@
                     hyj:style="no_label"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
-                    hyj:editTextColor="#339900"
                     hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_amount"
                     hyj:labelText="@string/moneyIncomeFormFragment_textView_amount" >
 

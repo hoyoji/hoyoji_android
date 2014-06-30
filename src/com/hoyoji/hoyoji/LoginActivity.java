@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -38,6 +39,7 @@ import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.connect.UserInfo;
@@ -363,11 +365,14 @@ public class LoginActivity extends HyjActivity {
 			@Override
 			public void finishCallback(Object object) {
 				if (object != null) {
-					// 在本地找到该QQ用户，我们直接登录，在把本地拿到的登录信息（accessToken)保存到本地
-					String userId = (String) object;
-					((HyjApplication) getApplication()).loginQQ(userId, values);
-					relogin();
-					LoginActivity.this.dismissProgressDialog();
+					// 在本地找到该QQ用户
+//					String userId = (String) object;
+					
+					loginQQFromServer(false, values);
+					
+//					((HyjApplication) getApplication()).loginQQ(userId, values);
+//					relogin();
+//					LoginActivity.this.dismissProgressDialog();
 				} else {
 					// 在本地找不到该QQ用户，我们到服务器上去找
 					loginQQFromServer(true, values);
@@ -787,15 +792,7 @@ public class LoginActivity extends HyjActivity {
 						
 						
 						LoginActivity.this.dismissProgressDialog();
-
-						Intent i = getPackageManager()
-								.getLaunchIntentForPackage(
-										getApplicationContext()
-												.getPackageName());
-						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-								| Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(i);
-						finish();
+						relogin();
 					} catch (Exception e) {
 						ActiveAndroid.endTransaction();
 						LoginActivity.this.dismissProgressDialog();
@@ -876,14 +873,14 @@ public class LoginActivity extends HyjActivity {
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, postData.toString(), "login");
 	}
 	
-	private void loginQQFromServer(final boolean createUserDatabaseEntry, JSONObject loginInfo) {
-		final String access_token = loginInfo.optString("access_token");
-		
-		java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
-		try {
-			loginInfo.put("currencyId", currency.getCurrencyCode());
-		} catch (JSONException e1) {
-			e1.printStackTrace();
+	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
+		if(createUserDatabaseEntry == true){
+			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+			try {
+				loginInfo.put("currencyId", currency.getCurrencyCode());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		// 从服务器上下载用户数据
@@ -895,7 +892,7 @@ public class LoginActivity extends HyjActivity {
 				try {
 					userId = jsonObject.getJSONObject("user").getString("id");
 
-					if (createUserDatabaseEntry) {
+					if (createUserDatabaseEntry == true) {
 						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
 								LoginActivity.this);
 						final SQLiteDatabase wDb = mDbHelper
@@ -907,8 +904,13 @@ public class LoginActivity extends HyjActivity {
 						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 						wDb.close();
 						mDbHelper.close();
+						loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+					} else {
+						if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+							relogin();
+						}
+						LoginActivity.this.dismissProgressDialog();
 					}
-					loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), access_token), jsonObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

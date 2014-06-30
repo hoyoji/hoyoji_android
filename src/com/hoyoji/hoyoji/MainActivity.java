@@ -993,7 +993,7 @@ public class MainActivity extends HyjUserActivity {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
 							String lastUploadTime = jsonResult.optString("lastUploadTime");
-							if(lastUploadTime != null && !lastUploadTime.isEmpty()){
+							if(!lastUploadTime.isEmpty()){
 								try {
 									ActiveAndroid.beginTransaction();
 									for (ClientSyncRecord syncRec : syncRecords) {

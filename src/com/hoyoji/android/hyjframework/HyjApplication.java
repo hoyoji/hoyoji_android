@@ -179,7 +179,7 @@ public class HyjApplication extends FrontiaApplication {
 		ActiveAndroid.initialize(config);
 		initContentProvider();
 		
-		currentUser = new Select().from(User.class).where("id=?", userId).executeSingle();
+		currentUser = HyjModel.getModel(User.class, userId);
 		if(currentUser != null){
 			QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", userId).executeSingle();
 			qqLogin.loadFromJSON(jsonObject, false);
@@ -224,28 +224,33 @@ public class HyjApplication extends FrontiaApplication {
 		ActiveAndroid.initialize(config);
 		initContentProvider();
 		
-		User user = new Select().from(User.class).where("id=?", userId).executeSingle();
+		User user = HyjModel.getModel(User.class, userId);
 		UserData userData;
+		String oldNickName = "";
+		if(user != null){
+			oldNickName = user.getNickName();
+			if(oldNickName == null){
+				oldNickName = "";
+			}
+		}
 		try {
 			ActiveAndroid.beginTransaction();
 			if(user == null){
 				user = new User();
 				userData = new UserData();
-				
-				user.loadFromJSON(jsonObject.getJSONObject("user"), true);
-				userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
-				
 				userData.setLastSyncTime(null);
-				user.setUserData(userData);
-				userData.setUser(user);
-				userData.setPassword(password);
-				
-				user.save();
 			} else {
 				userData = user.getUserData();
 			}
+		
+			user.loadFromJSON(jsonObject.getJSONObject("user"), true);
+			userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
 			
-			userData.setSyncFromServer(true);
+			user.setUserData(userData);
+			userData.setUser(user);
+			userData.setPassword(password);
+			
+			user.save();
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
 
@@ -253,16 +258,17 @@ public class HyjApplication extends FrontiaApplication {
 			e.printStackTrace();
 		} finally {
 		    ActiveAndroid.endTransaction();
+		}
+
+		currentUser = user;
+		if(currentUser != null){
 
 			// 设置用户的昵称拼音, 并同步回服务器
-			if(user.getNickName() == null || user.getNickName().length() == 0){
+			if(!oldNickName.equals(user.getNickName())){
 				user.setNickName(user.getNickName());
 				user.save();
 			}
-		}
-		
-		currentUser = user;
-		if(currentUser != null){
+			
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
             userInfo.edit().putString("userId", currentUser.getId()).commit();  
             userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
