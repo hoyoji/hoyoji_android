@@ -53,7 +53,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
 
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
                     android:id="@+id/moneyTransferFormFragment_textField_transferOutAmount"
@@ -76,7 +76,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="@android:color/darker_gray" />
+                android:background="#E0E0E0" />
 
             <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyTransferFormFragment_selectorField_transferOut"
@@ -130,7 +130,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="@android:color/darker_gray" />
+                android:background="#E0E0E0" />
 
             <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyTransferFormFragment_selectorField_transferIn"
@@ -184,7 +184,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -212,7 +212,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyTransferFormFragment_selectorField_project"
@@ -229,7 +229,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="@android:color/darker_gray" />
+                android:background="#E0E0E0" />
 
             <LinearLayout
                 android:id="@+id/moneyTransferFormFragment_linearLayout_exchangeRate"
@@ -264,7 +264,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
             android:id="@+id/moneyTransferFormFragment_textField_remark"
@@ -281,7 +281,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <Button
             android:id="@id/button_save"

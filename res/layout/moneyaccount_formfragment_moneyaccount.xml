@@ -27,7 +27,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         />
     
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
@@ -43,7 +43,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         />
     
     <com.hoyoji.android.hyjframework.view.HyjNumericField
@@ -59,7 +59,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         />
     
    <!--  <com.hoyoji.android.hyjframework.view.HyjTextField
@@ -83,7 +83,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         android:visibility="gone"
      />
     
@@ -101,7 +101,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
      />
         
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
@@ -118,7 +118,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         android:visibility="gone"
         />
     
@@ -136,7 +136,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         android:visibility="gone"
         />
     
@@ -153,7 +153,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
-        android:background="@android:color/darker_gray" 
+        android:background="#E0E0E0" 
         />
     
 	<Button

@@ -24,7 +24,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
     
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
                     android:id="@+id/searchDialogFragment_textField_endDate"
@@ -39,7 +39,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
                 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/searchDialogFragment_selectorField_project"
@@ -54,7 +54,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
                 <!-- 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/searchDialogFragment_selectorField_moneyAccount"
@@ -70,7 +70,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@android:color/darker_gray" />
+                    android:background="#E0E0E0" />
                  -->                
 
     <com.hoyoji.android.hyjframework.view.HyjSpinnerField
@@ -88,7 +88,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" /> -->
+            android:background="#E0E0E0" /> -->
 
         <Button
             android:id="@id/button_save"

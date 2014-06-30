@@ -26,7 +26,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/memberFormFragment_selectorField_friend"
@@ -41,7 +41,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dip"
                 android:layout_marginTop="5dip"
-                android:background="@android:color/darker_gray" />
+                android:background="#E0E0E0" />
 
             <com.hoyoji.android.hyjframework.view.HyjBooleanView
                 android:id="@+id/memberFormFragment_textField_sharePercentageType"
@@ -84,7 +84,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <CheckBox
             android:id="@+id/memberFormFragment_checkBox_shareAllSubProjects"
@@ -107,7 +107,7 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:visibility="gone"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -386,7 +386,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0" />
 
         <Button
             android:id="@id/button_save"
