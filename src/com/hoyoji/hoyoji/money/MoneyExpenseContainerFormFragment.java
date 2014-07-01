@@ -126,7 +126,33 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpenseContainer.getDate());
 		}
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(moneyExpenseContainer.get_mId() == null && projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyExpenseContainer.getProject();
+		}
+		
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
+				R.id.moneyExpenseFormFragment_selectorField_project);
 
+		if (project != null) {
+			mSelectorFieldProject.setModelId(project.getId());
+			mSelectorFieldProject.setText(project.getDisplayName() + "("
+					+ project.getCurrencyId() + ")");
+		}
+		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyExpenseContainerFormFragment.this
+						.openActivityWithFragmentForResult(
+								ProjectListFragment.class,
+								R.string.projectListFragment_title_select_project,
+								null, GET_PROJECT_ID);
+			}
+		});
+		
 		setupApportionField(moneyExpenseContainer);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
@@ -181,32 +207,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		Project project;
-		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(moneyExpenseContainer.get_mId() == null && projectId != null){
-			project = HyjModel.getModel(Project.class, projectId);
-		}else{
-			project = moneyExpenseContainer.getProject();
-		}
-		
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_selectorField_project);
-
-		if (project != null) {
-			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getDisplayName() + "("
-					+ project.getCurrencyId() + ")");
-		}
-		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MoneyExpenseContainerFormFragment.this
-						.openActivityWithFragmentForResult(
-								ProjectListFragment.class,
-								R.string.projectListFragment_title_select_project,
-								null, GET_PROJECT_ID);
-			}
-		});
 
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_exchangeRate);

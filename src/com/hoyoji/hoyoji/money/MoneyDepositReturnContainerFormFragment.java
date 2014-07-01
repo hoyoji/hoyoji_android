@@ -114,7 +114,27 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyDepositReturnContainer.getDate());
 		}
-
+		
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyDepositReturnContainer.getProject();
+		}
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_selectorField_project);
+		
+		if(project != null){
+			mSelectorFieldProject.setModelId(project.getId());
+			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+		}
+		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				MoneyDepositReturnContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+			}
+		});	
+		
 		setupApportionField(moneyDepositReturnContainer);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_amount);		
@@ -165,26 +185,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			}
 		});	
 		
-		Project project;
-		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
-			project = HyjModel.getModel(Project.class, projectId);
-		}else{
-			project = moneyDepositReturnContainer.getProject();
-		}
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_selectorField_project);
-		
-		if(project != null){
-			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
-		}
-		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				MoneyDepositReturnContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
-			}
-		});	
-		
+
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyDepositReturnContainer.getExchangeRate());
 		

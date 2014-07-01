@@ -130,7 +130,27 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyIncomeContainer.getDate());
 		}
-
+		
+		Project project;
+		String projectId = intent.getStringExtra("projectId");//从消息导入
+		if(projectId != null){
+			project = HyjModel.getModel(Project.class, projectId);
+		}else{
+			project = moneyIncomeContainer.getProject();
+		}
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_project);
+		
+		if(project != null){
+			mSelectorFieldProject.setModelId(project.getId());
+			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+		}
+		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+			}
+		});	
+		
 		setupApportionField(moneyIncomeContainer);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_amount);
@@ -176,26 +196,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				bundle.putString("excludeType", "Debt");
 				
 				MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
-			}
-		});	
-		
-		Project project;
-		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
-			project = HyjModel.getModel(Project.class, projectId);
-		}else{
-			project = moneyIncomeContainer.getProject();
-		}
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeFormFragment_selectorField_project);
-		
-		if(project != null){
-			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
-		}
-		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
