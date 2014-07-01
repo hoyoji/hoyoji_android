@@ -112,6 +112,8 @@ public class HyjImageField extends GridView {
 					BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
 							photoFile, newPicture);
 					getContext().registerReceiver(receiver, intentFilter);
+				} else {
+					HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 				}
 			} catch (IOException ex) {
 				// Error occurred while creating the File
@@ -141,6 +143,8 @@ public class HyjImageField extends GridView {
 					BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
 							photoFile, newPicture);
 					getContext().registerReceiver(receiver, intentFilter);
+				} else {
+					HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 				}
 			} catch (IOException ex) {
 				// Error occurred while creating the File

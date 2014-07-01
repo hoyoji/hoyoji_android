@@ -118,10 +118,11 @@ public class HyjUtil {
 	    
 		public static File createImageFile(String imageFileName) throws IOException {
 		    // Create an image file name
-		    File image = new File(
-		    	HyjApplication.getInstance().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-		        imageFileName+".JPEG"
-		    );
+			File path = HyjApplication.getInstance().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+			if(path == null){
+				return null;
+			}
+		    File image = new File(path, imageFileName+".JPEG");
 
 		    return image;
 		}

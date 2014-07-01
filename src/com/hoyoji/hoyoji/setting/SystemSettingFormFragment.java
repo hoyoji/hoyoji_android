@@ -565,6 +565,8 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 						BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
 								photoFile, newPicture);
 						getActivity().registerReceiver(receiver, intentFilter);
+					} else {
+						HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 					}
 				} catch (IOException ex) {
 					// Error occurred while creating the File
@@ -593,6 +595,8 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 						BroadcastReceiver receiver = new TakePhotoBroadcastReceiver(
 								photoFile, newPicture);
 						getActivity().registerReceiver(receiver, intentFilter);
+					} else {
+						HyjUtil.displayToast(R.string.imageField_cannot_save_picture);
 					}
 				} catch (IOException ex) {
 					// Error occurred while creating the File
