@@ -8,14 +8,14 @@
         android:id="@+id/lllayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"  >
+        android:orientation="horizontal" 
+        android:baselineAligned="false"  >
 
         <LinearLayout
             android:id="@+id/id_tab_account_ly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dip"
@@ -36,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             android:gravity="center"
              android:orientation="horizontal"
             android:padding="5dip" 
@@ -57,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             android:gravity="center"
              android:orientation="horizontal"
             android:padding="5dip" 
@@ -78,7 +76,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             android:gravity="center"
              android:orientation="horizontal"
             android:padding="5dip" 
@@ -105,7 +102,7 @@
         android:id="@id/field_separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
-    	android:layout_marginTop="0dip"
+    	android:layout_marginTop="-1dip"
     	android:layout_marginBottom="0dip"
         android:background="#E0E0E0" 
         />
