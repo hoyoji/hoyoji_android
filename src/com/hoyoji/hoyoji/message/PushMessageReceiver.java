@@ -106,16 +106,16 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 		if (context == null || message == null) {
 			return;
 		}
-        if (message.getActionType() == XGPushClickedResult.NOTIFACTION_CLICKED_TYPE) {
-        	Intent intent = new Intent(context, HyjBlankUserActivity.class);
-        	Class<? extends Fragment> fragmentClass = MessageListFragment.class;
-    		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
-    		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
-    		intent.putExtra("TITLE", context.getString(R.string.friendListFragment_title_manage_message));
-    		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    		context.startActivity(intent);
-        } else if (message.getActionType() == XGPushClickedResult.NOTIFACTION_DELETED_TYPE) {
-        }
+//        if (message.getActionType() == XGPushClickedResult.NOTIFACTION_CLICKED_TYPE) {
+//        	Intent intent = new Intent(context, HyjBlankUserActivity.class);
+//        	Class<? extends Fragment> fragmentClass = MessageListFragment.class;
+//    		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+//    		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+//    		intent.putExtra("TITLE", context.getString(R.string.friendListFragment_title_manage_message));
+//    		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//    		context.startActivity(intent);
+//        } else if (message.getActionType() == XGPushClickedResult.NOTIFACTION_DELETED_TYPE) {
+//        }
 	}
 
 	@Override

@@ -317,6 +317,7 @@ public class MainActivity extends HyjUserActivity {
 
 		mViewPager.setCurrentItem(2, false);
 
+		updateMessageCount();
 	}
 
 	private void initTabLine()
