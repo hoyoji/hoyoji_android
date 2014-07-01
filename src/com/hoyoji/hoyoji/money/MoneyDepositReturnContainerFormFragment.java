@@ -118,6 +118,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(projectId != null){
+			moneyDepositReturnContainer.setProjectId(projectId);
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyDepositReturnContainer.getProject();

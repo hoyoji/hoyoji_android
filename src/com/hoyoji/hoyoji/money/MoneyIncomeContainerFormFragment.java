@@ -133,7 +133,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(projectId != null){
+		if(moneyIncomeContainer.get_mId() == null && projectId != null){
+			moneyIncomeContainer.setProjectId(projectId);
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyIncomeContainer.getProject();
