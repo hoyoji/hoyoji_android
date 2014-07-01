@@ -172,6 +172,7 @@ public class MainActivity extends HyjUserActivity {
 										Message.class, null), true,
 								mMessageChangeObserver);
 			}
+			updateMessageCount();
 		}
 	}
 
@@ -317,7 +318,6 @@ public class MainActivity extends HyjUserActivity {
 
 		mViewPager.setCurrentItem(2, false);
 
-		updateMessageCount();
 	}
 
 	private void initTabLine()
