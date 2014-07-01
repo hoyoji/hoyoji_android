@@ -139,6 +139,8 @@ public class MainActivity extends HyjUserActivity {
 
 	private int currentIndex;
 	private int screenWidth;
+	private int intTabLineWidth;
+	private double dblTabLineWidth;
 	
 	@Override
 	protected Integer getContentView() {
@@ -200,8 +202,6 @@ public class MainActivity extends HyjUserActivity {
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		
-
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		initView();
 		initTabLine();
@@ -253,33 +253,33 @@ public class MainActivity extends HyjUserActivity {
 						.getLayoutParams();
 				if (currentIndex == 0 && position == 0)// 0->1
 				{
-					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 				} else if (currentIndex == 1 && position == 0) // 1->0
 				{
-					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 
 				} 
 				
 				else if (currentIndex == 1 && position == 1) // 1->2
 				{
-					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 				} else if (currentIndex == 2 && position == 1) // 2->1
 				{
-					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 
 				} 
 				
 				else if (currentIndex == 2 && position == 2) // 2->3
 				{
-					lp.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * (screenWidth / 4));
 					mTabLine.setLayoutParams(lp);
 				} else if (currentIndex == 3 && position == 2) // 3->2
 				{
-					lp.leftMargin = (int) (-(1-positionOffset) * (screenWidth * 1.0 / 4) + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * (screenWidth / 4));
 					mTabLine.setLayoutParams(lp);
 
 				}
@@ -304,7 +304,9 @@ public class MainActivity extends HyjUserActivity {
 		screenWidth = outMetrics.widthPixels;
 		LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine.getLayoutParams();
 		lp.width = screenWidth / 4;
-		mTabLine.setLayoutParams(lp);
+ 		mTabLine.setLayoutParams(lp);
+		intTabLineWidth = lp.width;
+		dblTabLineWidth = screenWidth * 1.0 / 4;
 	}
 
 	protected void resetTextView()
@@ -323,17 +325,60 @@ public class MainActivity extends HyjUserActivity {
 		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
 		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
 
+		mTabAccount.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(0);
+			}
+		});
+		mTabProject.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(1);
+			}
+		});
+		mTabHome.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(2);
+			}
+		});
+		mTabFriend.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(3);
+			}
+		});
+		
 		mAccount = (TextView) findViewById(R.id.id_account);
 		mProject = (TextView) findViewById(R.id.id_project);
 		mHome = (TextView) findViewById(R.id.id_home);
 		mFriend = (TextView) findViewById(R.id.id_friend);
 
-//		MainTab01 tab01 = new MainTab01();
-//		MainTab02 tab02 = new MainTab02();
-//		MainTab03 tab03 = new MainTab03();
-//		mFragments.add(tab01);
-//		mFragments.add(tab02);
-//		mFragments.add(tab03);
+//		mAccount.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(0);
+//			}
+//		});
+//		mProject.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(1);
+//			}
+//		});
+//		mHome.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(2);
+//			}
+//		});
+//		mFriend.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(3);
+//			}
+//		});
 
 		mBadgeViewforAccount = new BadgeView(this);
 		mBadgeViewforProject = new BadgeView(this);
