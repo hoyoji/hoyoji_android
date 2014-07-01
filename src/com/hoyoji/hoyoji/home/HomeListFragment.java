@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -1089,7 +1090,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		    }
 	}
 	private class ChangeObserver extends ContentObserver {
-		AsyncTask<String, Void, String> mTask = null;
+//		AsyncTask<String, Void, String> mTask = null;
 		public ChangeObserver() {
 			super(new Handler());
 		}
@@ -1107,35 +1108,36 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			if(mTask == null){
-				mTask = new AsyncTask<String, Void, String>() {
-			        @Override
-			        protected String doInBackground(String... params) {
-						try {
-							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(0);
-						} catch (InterruptedException e) {}
-						return null;
-			        }
-			        @Override
-			        protected void onPostExecute(String result) {
-						((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
-						mTask = null;
-			        }
-			    };
-			    mTask.execute();
-			}
+//			if(mTask == null){
+//				mTask = new AsyncTask<String, Void, String>() {
+//			        @Override
+//			        protected String doInBackground(String... params) {
+//						try {
+//							//等待其他的更新都到齐后再更新界面
+//							Thread.sleep(0);
+//						} catch (InterruptedException e) {}
+//						return null;
+//			        }
+//			        @Override
+//			        protected void onPostExecute(String result) {
+//						((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+//						mTask = null;
+//			        }
+//			    };
+//			    mTask.execute();
+//			}
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.postDelayed(new Runnable() {
+				public void run() {
+					((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+					
+				}
+			}, 50);
 		}
 	}
 	@Override
 	public void onDestroy() {
 		if (mChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
 		}

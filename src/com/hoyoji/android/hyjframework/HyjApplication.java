@@ -49,7 +49,8 @@ public class HyjApplication extends FrontiaApplication {
 		super.onCreate();
 		sInstance = this;
 
-		XGPushConfig.enableDebug(getApplicationContext(), true);
+		XGPushConfig.enableDebug(getApplicationContext(), false);
+		
 //		XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 //		XGPushManager.unregisterPush(getApplicationContext());
 //		XGPushManager.registerPush(getApplicationContext());

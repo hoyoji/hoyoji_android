@@ -115,25 +115,30 @@ public class MainActivity extends HyjUserActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-
+	MenuItem mSyncButton = null;
+	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ChangeObserver mChangeObserver;
+	MessageChangeObserver mMessageChangeObserver;
 	ViewPager mViewPager;
 
 	private LinearLayout mTabAccount;
 	private LinearLayout mTabProject;
 	private LinearLayout mTabHome;
 	private LinearLayout mTabFriend;
+	private LinearLayout mTabMessage;
 
 	private TextView mAccount;
 	private TextView mProject;
 	private TextView mHome;
 	private TextView mFriend;
+	private TextView mMessage;
 
 	private BadgeView mBadgeViewforAccount;
 	private BadgeView mBadgeViewforProject;
 	private BadgeView mBadgeViewforHome;
 	private BadgeView mBadgeViewforFriend;
+	private BadgeView mBadgeViewforMessage;
 
 	private View mTabLine;
 
@@ -158,6 +163,14 @@ public class MainActivity extends HyjUserActivity {
 								ContentProvider.createUri(
 										ClientSyncRecord.class, null), true,
 								mChangeObserver);
+			}
+			if (mMessageChangeObserver == null) {
+				mMessageChangeObserver = new MessageChangeObserver();
+				this.getContentResolver()
+						.registerContentObserver(
+								ContentProvider.createUri(
+										Message.class, null), true,
+								mMessageChangeObserver);
 			}
 		}
 	}
@@ -211,7 +224,7 @@ public class MainActivity extends HyjUserActivity {
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(4);
+		mViewPager.setOffscreenPageLimit(5);
 
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
 		{
@@ -230,17 +243,16 @@ public class MainActivity extends HyjUserActivity {
 						break;
 					case 1:
 						mProject.setTextColor(getResources().getColor(R.color.green));
-						
-	//					mTabProject.removeView(mBadgeViewforProject);
-	//					mBadgeViewforProject.setBadgeCount(15);
-	//					mTabProject.addView(mBadgeViewforProject);
 						break;
 					case 2:
 						mHome.setTextColor(getResources().getColor(R.color.green));
-						
 						break;
 					case 3:
 						mFriend.setTextColor(getResources().getColor(R.color.green));
+						break;
+					case 4:
+						mMessage.setTextColor(getResources().getColor(R.color.green));
+						break;
 				}
 
 				currentIndex = position;
@@ -275,11 +287,22 @@ public class MainActivity extends HyjUserActivity {
 				
 				else if (currentIndex == 2 && position == 2) // 2->3
 				{
-					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 				} else if (currentIndex == 3 && position == 2) // 3->2
 				{
-					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * (screenWidth / 4));
+					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
+					mTabLine.setLayoutParams(lp);
+
+				}
+				
+				else if (currentIndex == 3 && position == 3) // 3->4
+				{
+					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
+					mTabLine.setLayoutParams(lp);
+				} else if (currentIndex == 4 && position == 3) // 4->3
+				{
+					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
 					mTabLine.setLayoutParams(lp);
 
 				}
@@ -303,10 +326,10 @@ public class MainActivity extends HyjUserActivity {
 		getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
 		screenWidth = outMetrics.widthPixels;
 		LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine.getLayoutParams();
-		lp.width = screenWidth / 4;
+		lp.width = screenWidth / 5;
  		mTabLine.setLayoutParams(lp);
 		intTabLineWidth = lp.width;
-		dblTabLineWidth = screenWidth * 1.0 / 4;
+		dblTabLineWidth = screenWidth * 1.0 / 5;
 	}
 
 	protected void resetTextView()
@@ -315,6 +338,7 @@ public class MainActivity extends HyjUserActivity {
 		mProject.setTextColor(getResources().getColor(R.color.black));
 		mHome.setTextColor(getResources().getColor(R.color.black));
 		mFriend.setTextColor(getResources().getColor(R.color.black));
+		mMessage.setTextColor(getResources().getColor(R.color.black));
 	}
 
 	private void initView()
@@ -324,6 +348,7 @@ public class MainActivity extends HyjUserActivity {
 		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
 		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
 		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
+		mTabMessage = (LinearLayout) findViewById(R.id.id_tab_message_ly);
 
 		mTabAccount.setOnClickListener(new OnClickListener(){
 			@Override
@@ -349,41 +374,29 @@ public class MainActivity extends HyjUserActivity {
 				mViewPager.setCurrentItem(3);
 			}
 		});
+		mTabMessage.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(4);
+			}
+		});
 		
 		mAccount = (TextView) findViewById(R.id.id_account);
 		mProject = (TextView) findViewById(R.id.id_project);
 		mHome = (TextView) findViewById(R.id.id_home);
 		mFriend = (TextView) findViewById(R.id.id_friend);
-
-//		mAccount.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(0);
-//			}
-//		});
-//		mProject.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(1);
-//			}
-//		});
-//		mHome.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(2);
-//			}
-//		});
-//		mFriend.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(3);
-//			}
-//		});
+		mMessage = (TextView) findViewById(R.id.id_message);
 
 		mBadgeViewforAccount = new BadgeView(this);
 		mBadgeViewforProject = new BadgeView(this);
 		mBadgeViewforHome = new BadgeView(this);
 		mBadgeViewforFriend = new BadgeView(this);
+		mBadgeViewforMessage = new BadgeView(this);
+		
+		mBadgeViewforMessage.setHideOnNull(true);
+		mBadgeViewforMessage.setBadgeCount(0);
+		mTabMessage.removeView(mBadgeViewforMessage);
+		mTabMessage.addView(mBadgeViewforMessage);
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
@@ -479,9 +492,9 @@ public class MainActivity extends HyjUserActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		
-		MenuItem refreshItem = menu.findItem(R.id.mainActivity_action_sync);
-		if (refreshItem != null) {
-			final View view = MenuItemCompat.getActionView(refreshItem);
+		mSyncButton = menu.findItem(R.id.mainActivity_action_sync);
+		if (mSyncButton != null) {
+			final View view = MenuItemCompat.getActionView(mSyncButton);
 			updateUploadCount(view, null);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
@@ -501,7 +514,6 @@ public class MainActivity extends HyjUserActivity {
 			});
 		}
 
-		
 		return true;
 	}
 
@@ -567,14 +579,16 @@ public class MainActivity extends HyjUserActivity {
 			case 3:
 				fragment = new FriendListFragment();
 				break;
+			case 4:
+				fragment = new MessageListFragment();
+				break;
 			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -594,6 +608,9 @@ public class MainActivity extends HyjUserActivity {
 			case 3:
 				return getString(R.string.mainActivity_section_title_friend)
 						.toUpperCase(l);
+			case 4:
+				return getString(R.string.mainActivity_section_title_message)
+						.toUpperCase(l);
 			}
 			return null;
 		}
@@ -601,15 +618,11 @@ public class MainActivity extends HyjUserActivity {
 
 	public View setRefreshActionButtonState(final boolean refreshing, View view) {
 		if (view == null) {
-			if (mOptionsMenu != null) {
-				final MenuItem refreshItem = mOptionsMenu
-						.findItem(R.id.mainActivity_action_sync);
-				if (refreshItem != null) {
-					view = MenuItemCompat.getActionView(refreshItem);
-				}
+			if (mSyncButton != null) {
+				view = MenuItemCompat.getActionView(mSyncButton);
 			}
 		}
-		if (view != null) {
+		if(view != null){
 			if (refreshing) {
 				HyjUtil.startRoateView(view
 						.findViewById(R.id.actionbar_sync_Image));
@@ -623,69 +636,62 @@ public class MainActivity extends HyjUserActivity {
 
 	public View updateUploadCount(View view, Integer count) {
 		if (view == null) {
-			if (mOptionsMenu != null) {
-				final MenuItem refreshItem = mOptionsMenu
-						.findItem(R.id.mainActivity_action_sync);
-				if (refreshItem != null) {
-					view = MenuItemCompat.getActionView(refreshItem);
-				}
+			if (mSyncButton != null) {
+				view = MenuItemCompat.getActionView(mSyncButton);
 			}
 		}
 		if (view != null) {
 			final TextView tv = (TextView) view
 					.findViewById(R.id.actionbar_sync_uploadCount);
 			if (count == null) {
-//				HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-//					@Override
-//					public void finishCallback(Object object) {
-//						Integer count = (Integer) object;
-//						if (count > 0) {
-//							tv.setText(count.toString());
-//						} else {
-//							tv.setText("");
-//						}
-//					}
-//
-//					@Override
-//					public Object doInBackground(String... string) {
-//						Integer count = 0;
-//						if (HyjApplication.getInstance().getCurrentUser() != null) {
-//							Cursor cursor = Cache.openDatabase().rawQuery(
-//									"SELECT COUNT(*) FROM ClientSyncRecord",
-//									null);
-//							if (cursor != null) {
-//								cursor.moveToFirst();
-//								count = cursor.getInt(0);
-//								cursor.close();
-//								cursor = null;
-//							}
-//						}
-//						return count;
-//					}
-//				});
-				count = 0;
-				if (HyjApplication.getInstance().getCurrentUser() != null) {
-					Cursor cursor = Cache.openDatabase().rawQuery(
-							"SELECT COUNT(*) FROM ClientSyncRecord",
-							null);
-					if (cursor != null) {
-						cursor.moveToFirst();
-						count = cursor.getInt(0);
-						cursor.close();
-						cursor = null;
+				HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						Integer count = (Integer) object;
+						if (count > 0) {
+							tv.setText(count.toString());
+						} else {
+							tv.setText("");
+						}
 					}
+
+					@Override
+					public Object doInBackground(String... string) {
+						Integer count = 0;
+						if (HyjApplication.getInstance().getCurrentUser() != null) {
+							Cursor cursor = Cache.openDatabase().rawQuery(
+									"SELECT COUNT(*) FROM ClientSyncRecord",
+									null);
+							if (cursor != null) {
+								cursor.moveToFirst();
+								count = cursor.getInt(0);
+								cursor.close();
+								cursor = null;
+							}
+						}
+						return count;
+					}
+				});
+//				count = 0;
+//				if (HyjApplication.getInstance().getCurrentUser() != null) {
+//					Cursor cursor = Cache.openDatabase().rawQuery(
+//							"SELECT COUNT(*) FROM ClientSyncRecord",
+//							null);
+//					if (cursor != null) {
+//						cursor.moveToFirst();
+//						count = cursor.getInt(0);
+//						cursor.close();
+//						cursor = null;
+//					}
+//				}
+			} else {
+				if (count > 0) {
+					tv.setText(count.toString());
+				} else {
+					tv.setText("");
 				}
 			}
-//				if (count > 0) {
-//					tv.setText(count.toString());
-//				} else {
-//					tv.setText("");
-//				}
-			if (count > 0) {
-				tv.setText(count.toString());
-			} else {
-				tv.setText("");
-			}
+//			
 		}
 		return view;
 	}
@@ -708,8 +714,29 @@ public class MainActivity extends HyjUserActivity {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-
 			uploadData(false);
+		}
+	}
+	
+	private class MessageChangeObserver extends ContentObserver {
+		public MessageChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			updateMessageCount();
 		}
 	}
 
@@ -876,6 +903,49 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
+	public void updateMessageCount() {
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			
+			@Override
+			public void finishCallback(final Object object) {
+				int count = (Integer)object;
+				if(count > 99){
+					count = 99;
+				}
+				mBadgeViewforMessage.setBadgeCount(count);
+			}
+	
+			@Override
+			public void errorCallback(final Object object) {
+			}
+	
+			@Override
+			public Object doInBackground(String... string) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				int count = 0;
+				if (HyjApplication.getInstance().getCurrentUser() != null) {
+					Cursor cursor = Cache.openDatabase().rawQuery(
+							"SELECT COUNT(*) FROM Message WHERE messageState = 'new'",
+							null);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count = cursor.getInt(0);
+						cursor.close();
+						cursor = null;
+					}
+				}
+				return count;
+				
+			}
+		});
+		
+	}
+	
 	public void uploadData(final boolean downloadData) {
 		if (HyjApplication.getInstance().getIsSyncing()) {
 			return;

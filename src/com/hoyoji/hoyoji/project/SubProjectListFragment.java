@@ -359,10 +359,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		if (mChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
 		}
 		
 		super.onDestroy();

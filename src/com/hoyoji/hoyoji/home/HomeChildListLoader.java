@@ -6,25 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
@@ -34,9 +24,6 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 
 import android.content.Context;
 import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
@@ -129,8 +116,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
-	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();
-	    	list.addAll(messages);
+//	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();
+//	    	list.addAll(messages);
 	    	
 	    	Collections.sort(list, mDateComparator);
 	    	return list;

@@ -90,6 +90,26 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/id_tab_message_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+             android:orientation="horizontal"
+            android:padding="5dip" 
+            android:layout_margin="0dp">
+
+            <TextView
+                android:id="@+id/id_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="消息"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <View

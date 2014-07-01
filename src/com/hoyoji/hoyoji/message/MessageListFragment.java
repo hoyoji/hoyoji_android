@@ -37,6 +37,9 @@ public class MessageListFragment extends HyjUserListFragment{
 
 	@Override
 	public Integer useOptionsMenuView() {
+		if(getActivity().getClass().getName().equals("com.hoyoji.hoyoji.MainActivity")){
+			return null;
+		}
 		return R.menu.message_listfragment_message;
 	}
 
