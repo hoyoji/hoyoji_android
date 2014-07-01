@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -77,10 +78,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 	private ContentObserver mChangeObserver = null;
+	private Button expenseButton;
+	private Button incomeButton;
 	
 	@Override
 	public Integer useContentView() {
-		
 		return R.layout.home_listfragment_home;
 	}
 
@@ -99,13 +101,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		super.onInitViewData();
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
-		getView().findViewById(R.id.homeListFragment_action_money_expense).setOnClickListener(new OnClickListener(){
+		expenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
+		expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		expenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     		}
 		});
-		getView().findViewById(R.id.homeListFragment_action_money_income).setOnClickListener(new OnClickListener(){
+		incomeButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_income);
+		incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		incomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
@@ -218,43 +224,44 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			openActivityWithFragment(MoneyIncomeContainerFormFragment.class,
 					R.string.moneyIncomeFormFragment_title_addnew, null);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-			openActivityWithFragment(MoneyTransferFormFragment.class,
-					R.string.moneyTransferFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
-			openActivityWithFragment(MoneyBorrowFormFragment.class,
-					R.string.moneyBorrowFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
-			openActivityWithFragment(MoneyLendFormFragment.class,
-					R.string.moneyLendFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
-			openActivityWithFragment(MoneyReturnFormFragment.class,
-					R.string.moneyReturnFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
-			openActivityWithFragment(MoneyPaybackFormFragment.class,
-					R.string.moneyPaybackFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
-			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
-			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
-					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
-			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
-					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
-			return true;
-		}
+		} 
+//		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
+//			openActivityWithFragment(MoneyTransferFormFragment.class,
+//					R.string.moneyTransferFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
+//			openActivityWithFragment(MoneyBorrowFormFragment.class,
+//					R.string.moneyBorrowFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
+//			openActivityWithFragment(MoneyLendFormFragment.class,
+//					R.string.moneyLendFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
+//			openActivityWithFragment(MoneyReturnFormFragment.class,
+//					R.string.moneyReturnFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
+//			openActivityWithFragment(MoneyPaybackFormFragment.class,
+//					R.string.moneyPaybackFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
+//			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+//					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
+//			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+//					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
+//			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+//					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+//			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+//					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -1103,6 +1110,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
+			if(uri.toString().startsWith("content://com.hoyoji.hoyoji_android/userdata")){
+				expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}
 		}
 
 		@Override

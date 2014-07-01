@@ -47,7 +47,7 @@
                 android:id="@+id/mainActivity_action_money_addnew_income"
                 android:title="收入"
                 hoyoji:showAsAction="never"/>
-            <item
+            <!-- <item
                 android:id="@+id/mainActivity_action_money_addnew_transfer"
                 android:title="转账"
                 hoyoji:showAsAction="never"/>
@@ -96,7 +96,7 @@
                         android:title="会费退回"
                         hoyoji:showAsAction="never"/>
                 </menu>
-            </item>
+            </item> -->
         </menu>
     </item>
 
