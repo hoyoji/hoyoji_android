@@ -49,9 +49,9 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 
 			final File f = HyjUtil.createImageFile(pictureName, pictureType);
 			if(f.exists()){
-				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-				img.setImageBitmap(bmp);
+				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), 400, 600);
 		        img.setMaxZoom(4f);
+				img.setImageBitmap(bmp);
 			} else {
 				FrontiaStorage mCloudStorage = Frontia.getStorage();
 				FrontiaFile mFile = new FrontiaFile();
@@ -73,9 +73,9 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 
 						@Override
 						public void onSuccess(String arg0, String arg1) {
-							Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-							img.setImageBitmap(bmp);
+							Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), 400, 600);
 					        img.setMaxZoom(4f);
+							img.setImageBitmap(bmp);
 					        
 							mActionBar.setSubtitle(null);
 						}});
