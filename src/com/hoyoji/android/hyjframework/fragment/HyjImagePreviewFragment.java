@@ -73,8 +73,6 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 
 						@Override
 						public void onSuccess(String arg0, String arg1) {
-							Log.i(arg0, arg1);
-	
 							Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
 							img.setImageBitmap(bmp);
 					        img.setMaxZoom(4f);

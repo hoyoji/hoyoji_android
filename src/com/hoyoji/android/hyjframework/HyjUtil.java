@@ -482,7 +482,7 @@ public class HyjUtil {
 	        if (tokens != null && tokens.size() > 0) {
 	            for (Token token : tokens) {
 	                if (Token.PINYIN == token.type) {
-	                    sb.append(token.target);
+	                    sb.append(token.target + " ");
 	                } else {
 	                    sb.append(token.source);
 	                }

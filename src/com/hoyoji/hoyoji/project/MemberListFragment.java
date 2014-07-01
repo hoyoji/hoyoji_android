@@ -270,22 +270,25 @@ public class MemberListFragment extends HyjUserListFragment{
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double settlement = projectShareAuthorization.getSettlement();
 			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
-			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
+//			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
 
-			numericView.setPrefix(currencySymbol);
+//			numericView.setPrefix(currencySymbol);
 			if(settlement < 0){
 				settlement = -settlement;
-				labelText.setText("还要支付");
+//				labelText.setText("还要支付");
+				numericView.setPrefix("还要支付" + currencySymbol);
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				}
 
 			}else{
 				if(settlement.equals(0.0)){
-					labelText.setText("结余");
+//					labelText.setText("结余");
+					numericView.setPrefix(currencySymbol);
 					numericView.setTextColor(Color.parseColor("#000000"));
 				}else if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-					labelText.setText("应该收回");
+//					labelText.setText("应该收回");
+					numericView.setPrefix("应该收回" + currencySymbol);
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				 }
 

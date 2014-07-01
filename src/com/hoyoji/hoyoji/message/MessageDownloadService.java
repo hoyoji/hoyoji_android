@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.query.Select;
+import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -40,7 +41,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 
 public class MessageDownloadService extends Service {
 	public static final String TAG = "MessageDownloadService";

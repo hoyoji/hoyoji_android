@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.activeandroid.query.Select;
+import com.activeandroid.util.Log;
 import com.baidu.frontia.Frontia;
 import com.baidu.frontia.FrontiaFile;
 import com.baidu.frontia.api.FrontiaStorage;
@@ -27,7 +28,6 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 public class PictureUploadService extends Service {
 	public static final String TAG = "PictureUploadService";

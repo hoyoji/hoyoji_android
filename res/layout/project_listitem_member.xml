@@ -64,11 +64,11 @@
 	    	android:textColor="@android:color/darker_gray"
 	    	android:text=""/>
 	    
-	     <TextView android:id="@+id/memberListItem_settlement_label"  
+	<!--      <TextView android:id="@+id/memberListItem_settlement_label"  
 		    android:layout_width="wrap_content"   
 		    android:layout_height="wrap_content"
 	    	android:textColor="@android:color/darker_gray"
-		    android:text="" />
+		    android:text="" /> -->
 	     <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_settlement"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"

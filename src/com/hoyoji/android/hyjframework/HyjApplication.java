@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 public class HyjApplication extends FrontiaApplication {
 	public final static String TAG = "HyjApplication";
