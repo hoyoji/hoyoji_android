@@ -56,7 +56,7 @@
             </item>
             <item
                 android:id="@+id/mainActivity_action_money_addnew_topup"
-                android:title="充值"
+                android:title="会费"
                 hoyoji:showAsAction="never">
                 <menu>
                     <item

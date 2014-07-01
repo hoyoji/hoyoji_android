@@ -67,6 +67,9 @@ public class Project extends HyjModel {
 //	@Column(name = "depositeExpenseCategory")
 //	private String mDepositExpenseCategory;
 
+	@Column(name = "lastSyncTime")
+	private String mLastSyncTime;
+	
 	@Column(name = "_creatorId")
 	private String m_creatorId;
 

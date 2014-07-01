@@ -25,16 +25,25 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
 public class HyjApplication extends FrontiaApplication {
 	public final static String TAG = "HyjApplication";
-	private final static String SERVER_URL = "http://hoyoji.duapp.com/";
 	private static HyjApplication sInstance;
 	private Boolean mIsSyncing = false;
 	private User currentUser = null;
 	private HashMap<String, Class<? extends Fragment>> fragmentClassMap = new HashMap<String, Class<? extends Fragment>>();
+	
+	public static String getServerUrl(){
+		boolean isDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+		if(isDebuggable){
+			return "http://hoyojitest.duapp.com/";
+		} else {
+			return "http://hoyoji.duapp.com/";
+		}
+	}
 	
 	@Override
 	public void onCreate() {
@@ -106,11 +115,7 @@ public class HyjApplication extends FrontiaApplication {
 	public static HyjApplication getInstance() {
 		return sInstance;
 	}
-	
-	public static String getServerUrl(){
-		return SERVER_URL;
-	}
-	
+
 	public User getCurrentUser() {
 		return currentUser;
 	}
