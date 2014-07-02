@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -8,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
@@ -32,7 +30,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -766,6 +763,10 @@ public class MainActivity extends HyjUserActivity {
 			this.getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
 		}
+		if (mMessageChangeObserver != null) {
+			this.getContentResolver()
+			.unregisterContentObserver(mMessageChangeObserver);
+		}
 		super.onDestroy();
 	}
 	
@@ -931,7 +932,7 @@ public class MainActivity extends HyjUserActivity {
 				int count = 0;
 				if (HyjApplication.getInstance().getCurrentUser() != null) {
 					Cursor cursor = Cache.openDatabase().rawQuery(
-							"SELECT COUNT(*) FROM Message WHERE messageState = 'new'",
+							"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
 							null);
 					if (cursor != null) {
 						cursor.moveToFirst();
@@ -1074,8 +1075,12 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
 								} else if(model instanceof MoneyExpenseContainer){
+									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
+									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());
 									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyIncomeContainer){
+									recordData.put("projectCurrencySymbol", ((MoneyIncomeContainer)model).getProject().getCurrencySymbol());
+									recordData.put("projectCurrencyId", ((MoneyIncomeContainer)model).getProject().getCurrencyId());
 									recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyBorrowContainer){
 									recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());

@@ -4,10 +4,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +30,11 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
 
 public class MessageListFragment extends HyjUserListFragment{
 	
+	private ChangeObserver mChangeObserver;
+
 	@Override
 	public Integer useContentView() {
 		return R.layout.message_listfragment_message;
@@ -75,6 +80,11 @@ public class MessageListFragment extends HyjUserListFragment{
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
+					mChangeObserver);
+		}
 	}
 
 	@Override
@@ -140,7 +150,8 @@ public class MessageListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			if(message.getMessageState().equalsIgnoreCase("new")){
+			if(message.getMessageState().equalsIgnoreCase("new") 
+					|| message.getMessageState().equalsIgnoreCase("unread")){
 				imageView.setBackgroundResource(R.drawable.ic_action_unread);
 			} else {
 				imageView.setBackgroundResource(R.drawable.ic_action_read);
@@ -180,5 +191,44 @@ public class MessageListFragment extends HyjUserListFragment{
 		} else {
 			return false;
 		}
+	}
+	
+	private class ChangeObserver extends ContentObserver {
+//		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.postDelayed(new Runnable() {
+				public void run() {
+//					CursorAdapter adapter = ((CursorAdapter)getListView().getAdapter());
+//					adapter.notifyDataSetChanged();
+					((CursorAdapter)getListAdapter()).notifyDataSetChanged();
+				}
+			}, 50);
+		}
+	}
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		super.onDestroy();
 	}
 }

@@ -1110,10 +1110,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
-			if(uri.toString().startsWith("content://com.hoyoji.hoyoji_android/userdata")){
-				expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-				incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}
+//			if(uri.toString().startsWith("content://com.hoyoji.hoyoji_android/userdata")){
+//				expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//			}
 		}
 
 		@Override
@@ -1136,7 +1136,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //			        }
 //			    };
 //			    mTask.execute();
-//			}
+//			}	
+			expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
 				public void run() {
