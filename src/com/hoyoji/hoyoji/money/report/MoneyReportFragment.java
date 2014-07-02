@@ -29,7 +29,7 @@ public class MoneyReportFragment extends HyjUserFragment {
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(1);
+		mViewPager.setOffscreenPageLimit(2);
 	}
 	
 	

@@ -165,8 +165,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 	public Map<String, Object> loadInBackground() {
 		Map<String, Object> transactionSummaryMap = new HashMap<String, Object>();
 
-		String currentUserId = HyjApplication.getInstance().getCurrentUser()
-				.getUserData().getId();
+		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 		String localCurrencyId = HyjApplication.getInstance().getCurrentUser()
 				.getUserData().getActiveCurrencyId();
 		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
@@ -213,7 +212,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "
@@ -231,7 +230,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "
@@ -279,7 +278,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "
@@ -298,7 +297,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "
@@ -317,7 +316,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "
@@ -336,7 +335,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
 								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '"
+								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
 								+ localCurrencyId + "' "

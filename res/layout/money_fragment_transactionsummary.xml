@@ -1,14 +1,17 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji_android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MoneyTransactionPersonalSummaryFragment" >
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="48dp" >
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -243,6 +246,52 @@
                 android:layout_gravity="center_vertical|right"
                 android:text="..." />
         </FrameLayout>
-    </LinearLayout>
+	</LinearLayout>
+    </ScrollView>
+        	<View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="48dip"
+        android:background="#E0E0E0" />
 
-</ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom" >
+
+        <Button
+            android:id="@+id/moneyTransactionSummaryFragment_day"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/abc_tab_indicator_ab_holo"
+            android:padding="0dp"
+            android:textSize="16sp"
+            android:text="日汇总" />
+
+        <Button
+            android:id="@+id/moneyTransactionSummaryFragment_week"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/abc_tab_indicator_ab_holo"
+            android:padding="0dp"
+            android:textSize="16sp"
+            android:text="周汇总" />
+         
+         <Button
+            android:id="@+id/moneyTransactionSummaryFragment_month"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/abc_tab_indicator_ab_holo"
+            android:padding="0dp"
+            android:textSize="16sp"
+            android:text="月汇总" />
+
+    </LinearLayout>
+</FrameLayout>

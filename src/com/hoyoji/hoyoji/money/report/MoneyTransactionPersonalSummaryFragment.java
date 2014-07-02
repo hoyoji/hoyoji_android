@@ -1,14 +1,19 @@
 package com.hoyoji.hoyoji.money.report;
 
+import java.util.Calendar;
 import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
@@ -45,6 +50,12 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 	private TextView mTextViewReturnTotal;
 	private TextView mTextViewPaybackTotal;
 
+	private Button mButtonDay;
+
+	private Button mButtonWeek;
+
+	private Button mButtonMonth;
+
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_fragment_transactionsummary;
@@ -59,7 +70,7 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 	public Integer useOptionsMenuView() {
 		return R.menu.money_listfragment_transactionsummary;
 	}
-
+	
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
@@ -115,9 +126,90 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 		mTextViewPaybackTotal = (TextView) getView().findViewById(
 				R.id.moneyTransactionSummaryFragment_paybackTotal);
 
+		mButtonDay = (Button) getView().findViewById(
+				R.id.moneyTransactionSummaryFragment_day);
+		mButtonWeek = (Button) getView().findViewById(
+				R.id.moneyTransactionSummaryFragment_week);
+		mButtonMonth = (Button) getView().findViewById(
+				R.id.moneyTransactionSummaryFragment_month);
+		mButtonDay.setTextColor(getResources().getColor(R.color.green));
+		
+		mButtonDay.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				clearButtonState();
+				mButtonDay.setTextColor(getResources().getColor(R.color.green));
+				Calendar calToday = Calendar.getInstance();
+				calToday.set(Calendar.HOUR_OF_DAY, 0);
+				calToday.clear(Calendar.MINUTE);
+				calToday.clear(Calendar.SECOND);
+				calToday.clear(Calendar.MILLISECOND);
+
+				// get start of this week in milliseconds
+				//				cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+				// cal.add(Calendar.WEEK_OF_YEAR, -1);
+				
+				mDateFrom = calToday.getTimeInMillis();
+				mDateTo = calToday.getTimeInMillis() + 1000*60*60*24;
+				initLoader(0);
+			}
+		});
+		
+		mButtonWeek.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				clearButtonState();
+				mButtonWeek.setTextColor(getResources().getColor(R.color.green));
+				Calendar calToday = Calendar.getInstance();
+				calToday.set(Calendar.HOUR_OF_DAY, 0);
+				calToday.clear(Calendar.MINUTE);
+				calToday.clear(Calendar.SECOND);
+				calToday.clear(Calendar.MILLISECOND);
+				
+				// get start of this week in milliseconds
+				calToday.set(Calendar.DAY_OF_WEEK, calToday.getFirstDayOfWeek());
+				calToday.add(Calendar.WEEK_OF_YEAR, -1);
+				mDateFrom = calToday.getTimeInMillis();
+
+				calToday.add(Calendar.DATE, 7);
+				mDateTo = calToday.getTimeInMillis() + 1000*60*60*24;
+				
+				initLoader(0);
+			}
+		});
+		
+		mButtonMonth.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				clearButtonState();
+				mButtonMonth.setTextColor(getResources().getColor(R.color.green));
+				Calendar calToday = Calendar.getInstance();
+				calToday.set(Calendar.HOUR_OF_DAY, 0);
+				calToday.clear(Calendar.MINUTE);
+				calToday.clear(Calendar.SECOND);
+				calToday.clear(Calendar.MILLISECOND);
+
+				calToday.set(Calendar.DATE, 1);
+				mDateFrom = calToday.getTimeInMillis();
+
+				calToday.add(Calendar.MONTH, 1);// 加一个月，变为下月的1号  
+				calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
+				mDateTo = calToday.getTimeInMillis() + 1000*60*60*24;
+				
+				initLoader(0);
+			}
+		});
+		
 		initLoader(0);
+		
 	}
 
+	private void clearButtonState(){
+		mButtonDay.setTextColor(getResources().getColor(R.color.black));
+		mButtonWeek.setTextColor(getResources().getColor(R.color.black));
+		mButtonMonth.setTextColor(getResources().getColor(R.color.black));
+	}
+	
 	public void initLoader(int loaderId) {
 		Bundle queryParams = buildQueryParams();
 		// if(!queryParams.isEmpty()){
