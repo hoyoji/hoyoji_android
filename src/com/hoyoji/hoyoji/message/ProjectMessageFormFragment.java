@@ -252,8 +252,8 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				"[" + msg.toString() + "]", "postData");
 		((HyjActivity) this.getActivity())
 				.displayProgressDialog(
-						R.string.addFriendListFragment_title_add,
-						R.string.friendListFragment_addFriend_progress_adding);
+						R.string.projectListFragment_title_addMember,
+						R.string.projectListFragment_addMember_progress_adding);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

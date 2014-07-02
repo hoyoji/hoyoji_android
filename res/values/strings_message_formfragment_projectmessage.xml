@@ -21,6 +21,9 @@
    <string name="projectMessageFormFragment_button_resend">重新发送</string>
    <string name="projectMessageFormFragment_button_accept">接受共享</string>
    
+   <string name="projectListFragment_title_addMember">添加项目成员</string>
+   <string name="projectListFragment_addMember_progress_adding">正在添加项目成员&#8230;</string>
+   
    
    <string name="projectMessageFormFragment_toast_resend_success">添加项目共享请求已重新发送，请等待该用户回复</string>
    <string name="projectMessageFormFragment_toast_accept_success">已成功接受项目共享</string>
