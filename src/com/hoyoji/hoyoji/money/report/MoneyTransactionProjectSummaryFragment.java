@@ -166,8 +166,12 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 				calToday.clear(Calendar.MILLISECOND);
 				
 				// get start of this week in milliseconds
-				calToday.set(Calendar.DAY_OF_WEEK, calToday.getFirstDayOfWeek());
-//				calToday.add(Calendar.DATE, -1);
+				int firstDayOfWeek = calToday.getFirstDayOfWeek();
+				if(firstDayOfWeek == 0){
+					firstDayOfWeek = 1;
+				}
+				calToday.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
+				calToday.add(Calendar.DATE, 1);
 				mDateFrom = calToday.getTimeInMillis();
 
 				calToday.add(Calendar.DATE, 7);

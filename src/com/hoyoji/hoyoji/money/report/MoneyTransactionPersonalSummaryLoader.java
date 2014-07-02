@@ -182,7 +182,12 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		
 		long dateTo = mDateTo;
 		if (mDateTo == 0) {
-			dateTo = (new Date()).getTime();
+			Calendar calToday = Calendar.getInstance();
+			calToday.set(Calendar.HOUR_OF_DAY, 0);
+			calToday.clear(Calendar.MINUTE);
+			calToday.clear(Calendar.SECOND);
+			calToday.clear(Calendar.MILLISECOND);
+			dateTo = calToday.getTimeInMillis() + 24 * 3600000;
 		}
 
 //		long dateFromInMillis = mDateFrom;
@@ -210,13 +215,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyExpense main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyExpense main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Expense"), args);
 		if (cursor != null) {
@@ -229,12 +232,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyIncome main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Income"), args);
 		if (cursor != null) {
@@ -277,12 +279,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
+								+ "FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
@@ -296,12 +297,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
+								+ "FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Lend"), args);
 		if (cursor != null) {
@@ -315,12 +315,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Return"), args);
 		if (cursor != null) {
@@ -334,12 +333,11 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(CASE WHEN main.ownerUserId = '"
-								+ currentUserId
-								+ "' THEN main.amount / IFNULL(exma.rate, 1) ELSE main.amount * main.exchangeRate / IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
-								+ "' LEFT JOIN Exchange exma ON exma.foreignCurrencyId = main.currencyId AND exma.localCurrencyId = '"
-								+ localCurrencyId + "' "
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildSearchQuery("Payback"), args);
 		if (cursor != null) {

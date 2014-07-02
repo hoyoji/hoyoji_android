@@ -62,7 +62,7 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Currency.class, null),
-				null, null, null, "name LIMIT " + (limit + offset)
+				null, null, null, "name_pinYin ASC LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}

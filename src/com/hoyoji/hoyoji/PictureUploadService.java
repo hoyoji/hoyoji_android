@@ -175,7 +175,7 @@ public class PictureUploadService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(intent.getBooleanExtra("init", false) == false){
+		if(intent != null && intent.getBooleanExtra("init", false) == false){
 			uploadPictures();
 		}
 		return super.onStartCommand(intent, flags, startId);

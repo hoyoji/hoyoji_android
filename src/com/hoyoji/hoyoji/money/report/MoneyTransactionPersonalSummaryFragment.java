@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.money.report;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import android.app.Activity;
@@ -167,10 +168,14 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 				calToday.clear(Calendar.MILLISECOND);
 				
 				// get start of this week in milliseconds
-				calToday.set(Calendar.DAY_OF_WEEK, calToday.getFirstDayOfWeek());
-//				calToday.add(Calendar.DATE, -1);
+				int firstDayOfWeek = calToday.getFirstDayOfWeek();
+				if(firstDayOfWeek == 0){
+					firstDayOfWeek = 1;
+				}
+				calToday.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
+				calToday.add(Calendar.DATE, 1);
 				mDateFrom = calToday.getTimeInMillis();
-
+				Date d = new Date(mDateFrom);
 				calToday.add(Calendar.DATE, 7);
 				mDateTo = calToday.getTimeInMillis() + 1000*60*60*24;
 				

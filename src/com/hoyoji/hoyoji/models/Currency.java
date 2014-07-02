@@ -124,11 +124,11 @@ public class Currency extends HyjModel {
 					obj.put("name",
 						localeCurrency.getDisplayName());
 				}
+				this.setName(obj.optString("name"));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		//}
-			
 		super.loadFromJSON(obj, syncFromServer);
 	}
 	
