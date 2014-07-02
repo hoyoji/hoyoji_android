@@ -857,6 +857,9 @@ public class MainActivity extends HyjUserActivity {
 			} else {
 				JSONObject jsonObj = (JSONObject) o;
 				String dataType = jsonObj.getString("__dataType");
+				if(dataType.equals("MoneyExpense")){
+					Log.i("Downloaded Data : ", jsonObj.toString());
+				}
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
 					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
@@ -875,7 +878,12 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	private void saveData(JSONArray result, String lastSyncTime) {
+
+		
 		try {
+//			for(int a = 0; a < result.length(); a++){
+//				Log.i("Downloaded Data : ", result.get(a).toString());
+//			}
 			ActiveAndroid.beginTransaction();
 			
 			saveDataRecursive(result);

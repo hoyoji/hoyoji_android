@@ -20,7 +20,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneySearchFormFragment;
 
-public class MoneyTransactionSummaryFragment extends HyjUserFragment implements
+public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment implements
 		LoaderManager.LoaderCallbacks<Object> {
 	private static final int GET_SEARCH_QUERY = 10;
 
@@ -210,7 +210,7 @@ public class MoneyTransactionSummaryFragment extends HyjUserFragment implements
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 		// super.onCreateLoader(groupPos, arg1);
-		Object loader = new MoneyTransactionSummaryLoader(getActivity(), arg1);
+		Object loader = new MoneyTransactionPersonalSummaryLoader(getActivity(), arg1);
 		return (Loader<Object>) loader;
 	}
 

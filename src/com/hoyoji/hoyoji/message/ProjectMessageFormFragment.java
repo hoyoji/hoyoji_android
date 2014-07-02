@@ -318,8 +318,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				newObj1.put("state", "Accept");
 				data.put(newObj1);
 			}
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(),
-					"getData");
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

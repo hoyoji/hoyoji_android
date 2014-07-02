@@ -41,7 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
-public class MoneyTransactionSummaryLoader extends
+public class MoneyTransactionPersonalSummaryLoader extends
 		AsyncTaskLoader<Map<String, Object>> {
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
@@ -55,7 +55,7 @@ public class MoneyTransactionSummaryLoader extends
 	private long mDateFrom = 0;
 	private long mDateTo = 0;
 
-	public MoneyTransactionSummaryLoader(Context context, Bundle queryParams) {
+	public MoneyTransactionPersonalSummaryLoader(Context context, Bundle queryParams) {
 		super(context);
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		copyQueryParams(queryParams);

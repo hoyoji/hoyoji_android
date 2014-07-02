@@ -1314,8 +1314,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
-								moneyIncome.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-//								moneyIncome.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFriendUserId());
+//								moneyIncome.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+								moneyIncome.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFriendUserId());
 								moneyIncome.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
 								moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
 								moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());

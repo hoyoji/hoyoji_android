@@ -1,42 +1,17 @@
 package com.hoyoji.hoyoji.money.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.PageTransformer;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
-import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
 public class MoneyReportFragment extends HyjUserFragment {
 	
-	SectionsPagerAdapter mSectionsPagerAdapter;
-
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 	public ViewPager mViewPager;
-
 	
 	@Override
 	public Integer useContentView() {
@@ -82,25 +57,25 @@ public class MoneyReportFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneyTransactionSummaryFragment();
+				return new MoneyTransactionPersonalSummaryFragment();
 			case 1:
-//				return new FriendListFragment();
+				return new MoneyTransactionProjectSummaryFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 1;
+			return 2;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return HyjApplication.getInstance().getString(R.string.moneyTransactionSummaryFragment_title);
+				return HyjApplication.getInstance().getString(R.string.moneyTransactionSummaryFragment_title_personal);
 			case 1:
-				return "";
+				return HyjApplication.getInstance().getString(R.string.moneyTransactionSummaryFragment_title_project);
 			}
 			return null;
 		}

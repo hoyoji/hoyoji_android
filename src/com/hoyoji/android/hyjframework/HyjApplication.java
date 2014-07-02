@@ -34,10 +34,10 @@ public class HyjApplication extends FrontiaApplication {
 	private Boolean mIsSyncing = false;
 	private User currentUser = null;
 	private HashMap<String, Class<? extends Fragment>> fragmentClassMap = new HashMap<String, Class<? extends Fragment>>();
+	private static boolean mIsDebuggable;
 	
 	public static String getServerUrl(){
-		boolean isDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
-		if(isDebuggable){
+		if(mIsDebuggable){
 			return "http://hoyojitest.duapp.com/";
 		} else {
 			return "http://hoyoji.duapp.com/";
@@ -48,8 +48,8 @@ public class HyjApplication extends FrontiaApplication {
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
-
-		XGPushConfig.enableDebug(getApplicationContext(), false);
+		mIsDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+		XGPushConfig.enableDebug(getApplicationContext(), mIsDebuggable);
 		
 //		XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 //		XGPushManager.unregisterPush(getApplicationContext());
@@ -139,7 +139,7 @@ public class HyjApplication extends FrontiaApplication {
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
 									.setDatabaseName(userId).create();
-		ActiveAndroid.initialize(config);
+		ActiveAndroid.initialize(config, mIsDebuggable);
 		initContentProvider();
 		
 		currentUser = authenticateUser(userId, password);
@@ -168,7 +168,7 @@ public class HyjApplication extends FrontiaApplication {
 				config = new Configuration.Builder(HyjApplication.getInstance())
 				.setDatabaseName(curUser.getId())
 				.create(); 
-				ActiveAndroid.initialize(config);
+				ActiveAndroid.initialize(config, mIsDebuggable);
 				initContentProvider();
 			}
 			return false;
@@ -181,7 +181,7 @@ public class HyjApplication extends FrontiaApplication {
 		logout();
 		assert(currentUser == null);
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
-		ActiveAndroid.initialize(config);
+		ActiveAndroid.initialize(config, mIsDebuggable);
 		initContentProvider();
 		
 		currentUser = HyjModel.getModel(User.class, userId);
@@ -212,7 +212,7 @@ public class HyjApplication extends FrontiaApplication {
 			currentUser = curUser;
 			if(curUser != null){
 				config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
-				ActiveAndroid.initialize(config);
+				ActiveAndroid.initialize(config, mIsDebuggable);
 				initContentProvider();
 			}
 			return false;
@@ -226,7 +226,7 @@ public class HyjApplication extends FrontiaApplication {
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
 									.setDatabaseName(userId)
 									.create(); 
-		ActiveAndroid.initialize(config);
+		ActiveAndroid.initialize(config, mIsDebuggable);
 		initContentProvider();
 		
 		User user = HyjModel.getModel(User.class, userId);
@@ -298,7 +298,7 @@ public class HyjApplication extends FrontiaApplication {
 				config = new Configuration.Builder(HyjApplication.getInstance())
 				.setDatabaseName(curUser.getId())
 				.create(); 
-				ActiveAndroid.initialize(config);
+				ActiveAndroid.initialize(config, mIsDebuggable);
 				initContentProvider();
 			}
 			return false;
@@ -312,7 +312,7 @@ public class HyjApplication extends FrontiaApplication {
 		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
 									.setDatabaseName(userId)
 									.create(); 
-		ActiveAndroid.initialize(config);
+		ActiveAndroid.initialize(config, mIsDebuggable);
 		initContentProvider();
 		
 		User user = new Select().from(User.class).where("id=?", userId).executeSingle();
@@ -371,7 +371,7 @@ public class HyjApplication extends FrontiaApplication {
 				config = new Configuration.Builder(HyjApplication.getInstance())
 				.setDatabaseName(curUser.getId())
 				.create(); 
-				ActiveAndroid.initialize(config);
+				ActiveAndroid.initialize(config, mIsDebuggable);
 				initContentProvider();
 			}
 			return false;
