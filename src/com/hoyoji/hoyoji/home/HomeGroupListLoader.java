@@ -243,17 +243,17 @@ public class HomeGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ? AND (messageState='new' OR messageState='unread') ",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				cursor.close();
-				cursor = null;
-			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ? AND (messageState='new' OR messageState='unread') ",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+//				cursor.close();
+//				cursor = null;
+//			}
 			if (count > 0) {
 				String ds = df.format(calToday.getTime());
 //				ds = ds.replaceAll("Z$", "+0000");
@@ -434,22 +434,22 @@ public class HomeGroupListLoader extends
 			cursor.close();
 			cursor = null;
 		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM Message WHERE date <= ? AND (messageState='new' OR messageState='unread') ",
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
-			}
-			cursor.close();
-			cursor = null;
-		}
+//		cursor = Cache
+//				.openDatabase()
+//				.rawQuery(
+//						"SELECT MAX(date) FROM Message WHERE date <= ? AND (messageState='new' OR messageState='unread') ",
+//						args);
+//		if (cursor != null) {
+//			cursor.moveToFirst();
+//			if(cursor.getString(0) != null){
+//				if(dateString == null
+//						|| dateString.compareTo(cursor.getString(0)) < 0){
+//					dateString = cursor.getString(0);
+//				}
+//			}
+//			cursor.close();
+//			cursor = null;
+//		}
 		if(dateString != null){
 			try {
 				dateString = dateString.replaceAll("Z$", "+0000");
