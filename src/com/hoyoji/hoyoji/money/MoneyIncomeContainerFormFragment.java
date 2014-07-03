@@ -159,8 +159,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
-			mNumericAmount.setNumber(amount);
-			mApportionFieldApportions.setTotalAmount(amount);
+			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+			mNumericAmount.setNumber(amount*exchangeRate);
+			mApportionFieldApportions.setTotalAmount(amount*exchangeRate);
 		}else{
 			mNumericAmount.setNumber(moneyIncomeContainer.getAmount());
 		}

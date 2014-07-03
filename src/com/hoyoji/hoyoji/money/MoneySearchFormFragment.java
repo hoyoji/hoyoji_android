@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.money;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
@@ -47,19 +50,27 @@ public class MoneySearchFormFragment extends HyjUserFormFragment {
 		super.onInitViewData();
 
 		Intent intent = getActivity().getIntent();
+
+		Calendar calDateFrom = Calendar.getInstance();
+		calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
+		calDateFrom.clear(Calendar.MINUTE);
+		calDateFrom.clear(Calendar.SECOND);
+		calDateFrom.clear(Calendar.MILLISECOND);
 		
 		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.searchDialogFragment_textField_startDate);
 		final Long dateFrom = intent.getLongExtra("dateFrom", 0);
 		if(dateFrom != 0){
 			mDateTimeFieldStartDate.setDate(new Date(dateFrom));
 		} else {
-			mDateTimeFieldStartDate.setDate(null);
+			mDateTimeFieldStartDate.setDate(calDateFrom.getTime());
 		}
 		
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.searchDialogFragment_textField_endDate);
 		final Long dateTo = intent.getLongExtra("dateTo", -1);
 		if(dateTo != -1){
 			mDateTimeFieldEndDate.setDate(new Date(dateTo));
+		} else {
+			mDateTimeFieldEndDate.setDate(new Date(calDateFrom.getTimeInMillis() + 24 * 3600000 - 1));
 		}
 		
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.searchDialogFragment_selectorField_moneyAccount);

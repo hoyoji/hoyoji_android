@@ -116,7 +116,8 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
-			mNumericAmount.setNumber(amount);
+			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+			mNumericAmount.setNumber(amount*exchangeRate);
 		}else{
 			mNumericAmount.setNumber(moneyLend.getAmount());
 		}

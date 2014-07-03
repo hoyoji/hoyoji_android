@@ -108,11 +108,16 @@ public class HomeGroupListLoader extends
 		
 		DateFormat df = SimpleDateFormat.getDateInstance();
 		Calendar calToday = Calendar.getInstance();
-		calToday.set(Calendar.HOUR_OF_DAY, 0);
-		calToday.clear(Calendar.MINUTE);
-		calToday.clear(Calendar.SECOND);
-		calToday.clear(Calendar.MILLISECOND);
-
+		long maxDateInMillis = getMaxDateInMillis();
+		if(maxDateInMillis == -1){
+			calToday.set(Calendar.HOUR_OF_DAY, 0);
+			calToday.clear(Calendar.MINUTE);
+			calToday.clear(Calendar.SECOND);
+			calToday.clear(Calendar.MILLISECOND);
+		} else {
+			calToday.setTimeInMillis(maxDateInMillis);
+		}
+		
 // get start of this week in milliseconds
 //		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
@@ -442,6 +447,184 @@ public class HomeGroupListLoader extends
 //			if(cursor.getString(0) != null){
 //				if(dateString == null
 //						|| dateString.compareTo(cursor.getString(0)) < 0){
+//					dateString = cursor.getString(0);
+//				}
+//			}
+//			cursor.close();
+//			cursor = null;
+//		}
+		if(dateString != null){
+			try {
+				dateString = dateString.replaceAll("Z$", "+0000");
+				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Calendar calToday = Calendar.getInstance();
+				calToday.setTimeInMillis(dateInMillis);
+				calToday.set(Calendar.HOUR_OF_DAY, 0);
+				calToday.clear(Calendar.MINUTE);
+				calToday.clear(Calendar.SECOND);
+				calToday.clear(Calendar.MILLISECOND);
+				return calToday.getTimeInMillis();
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		} else {
+			return -1;
+		}
+	}
+	
+	private long getMaxDateInMillis(){
+		String[] args = new String[] { };
+		String dateString = null;
+		Cursor cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyExpenseContainer",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			dateString = cursor.getString(0);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyIncomeContainer",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyDepositIncomeContainer",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyDepositReturnContainer",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyBorrow WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyTransfer",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyReturn WHERE moneyDepositReturnApportionId IS NULL",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyPayback",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+//		cursor = Cache
+//				.openDatabase()
+//				.rawQuery(
+//						"SELECT MAX(date) FROM Message WHERE (messageState='new' OR messageState='unread') ",
+//						args);
+//		if (cursor != null) {
+//			cursor.moveToFirst();
+//			if(cursor.getString(0) != null){
+//				if(dateString == null
+//						|| dateString.compareTo(cursor.getString(0)) > 0){
 //					dateString = cursor.getString(0);
 //				}
 //			}

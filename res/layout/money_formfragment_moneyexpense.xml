@@ -38,22 +38,6 @@
                 android:orientation="vertical"
                 android:paddingLeft="66dp" >
 
-                <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-                    android:id="@+id/moneyExpenseFormFragment_textField_date"
-                    hyj:style="no_label"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_date"
-                    hyj:labelText="@string/moneyExpenseFormFragment_textView_date" />
-
-                <View
-                    android:id="@id/field_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_marginBottom="5dip"
-                    android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
 
                 <com.hoyoji.android.hyjframework.view.HyjNumericField
                     android:id="@+id/moneyExpenseFormFragment_textField_amount"
@@ -67,6 +51,22 @@
 
                     <requestFocus />
                 </com.hoyoji.android.hyjframework.view.HyjNumericField>
+                <View
+                    android:id="@id/field_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:background="#E0E0E0" />
+                <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+                    android:id="@+id/moneyExpenseFormFragment_textField_date"
+                    hyj:style="no_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_date"
+                    hyj:labelText="@string/moneyExpenseFormFragment_textView_date" />
+                
             </LinearLayout>
         </FrameLayout>
 

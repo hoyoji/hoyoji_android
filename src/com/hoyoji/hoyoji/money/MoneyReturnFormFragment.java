@@ -114,7 +114,8 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mNumericFieldAmount = (HyjNumericField) getView().findViewById(R.id.moneyReturnFormFragment_textField_amount);		
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
 		if(amount >= 0.0){
-			mNumericFieldAmount.setNumber(amount);
+			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+			mNumericFieldAmount.setNumber(amount*exchangeRate);
 		}else{
 			mNumericFieldAmount.setNumber(moneyReturn.getAmount());
 		}

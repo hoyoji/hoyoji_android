@@ -78,8 +78,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 	private ContentObserver mChangeObserver = null;
-	private Button expenseButton;
-	private Button incomeButton;
+	private Button mExpenseButton;
+	private Button mIncomeButton;
 	
 	@Override
 	public Integer useContentView() {
@@ -101,17 +101,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		super.onInitViewData();
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
-		expenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
-		expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-		expenseButton.setOnClickListener(new OnClickListener(){
+		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
+		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     		}
 		});
-		incomeButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_income);
-		incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-		incomeButton.setOnClickListener(new OnClickListener(){
+		mIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_income);
+		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		mIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
@@ -1137,8 +1137,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //			    };
 //			    mTask.execute();
 //			}	
-			expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
