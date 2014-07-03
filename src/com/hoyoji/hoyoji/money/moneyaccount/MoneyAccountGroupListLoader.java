@@ -77,8 +77,8 @@ public class MoneyAccountGroupListLoader extends
 				String localCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 				double balanceTotal = 0;
 				int count = 0;
-				String query = "SELECT COUNT(*) AS count, SUM(currentBalance / IFNULL(ex.rate, 1)) as balanceTotal " +
-						"FROM MoneyAccount ma LEFT JOIN Exchange ex ON ex.localCurrencyId = ? AND ma.currencyId = ex.foreignCurrencyId " +
+				String query = "SELECT COUNT(*) AS count, SUM(currentBalance * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) as balanceTotal " +
+						"FROM MoneyAccount ma LEFT JOIN Exchange ex ON (ex.localCurrencyId = ? AND ma.currencyId = ex.foreignCurrencyId) OR (ex.foreignCurrencyId = ? AND ma.currencyId = ex.localCurrencyId) " +
 						"WHERE accountType = ?";
 				String[] args = null;
 				Cursor cursor = null;
@@ -88,9 +88,9 @@ public class MoneyAccountGroupListLoader extends
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Cash")){
 					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Cash" };
+						args = new String[] {localCurrencyId, localCurrencyId, "Cash" };
 					} else {
-						args = new String[] {localCurrencyId, "Cash", mFriendId };
+						args = new String[] {localCurrencyId, localCurrencyId, "Cash", mFriendId };
 					}
 					cursor = Cache
 							.openDatabase()
@@ -114,9 +114,9 @@ public class MoneyAccountGroupListLoader extends
 
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Deposit")){
 					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Deposit" };
+						args = new String[] {localCurrencyId, localCurrencyId, "Deposit" };
 					} else {
-						args = new String[] {localCurrencyId, "Deposit", mFriendId };
+						args = new String[] {localCurrencyId, localCurrencyId, "Deposit", mFriendId };
 					}
 					cursor = Cache
 							.openDatabase()
@@ -139,9 +139,9 @@ public class MoneyAccountGroupListLoader extends
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Topup")){
 					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Topup" };
+						args = new String[] {localCurrencyId, localCurrencyId, "Topup" };
 					} else {
-						args = new String[] {localCurrencyId, "Topup", mFriendId };
+						args = new String[] {localCurrencyId, localCurrencyId, "Topup", mFriendId };
 					}
 					cursor = Cache
 							.openDatabase()
@@ -164,9 +164,9 @@ public class MoneyAccountGroupListLoader extends
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Credit")){
 					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Credit" };
+						args = new String[] {localCurrencyId, localCurrencyId, "Credit" };
 					} else {
-						args = new String[] {localCurrencyId, "Credit", mFriendId };
+						args = new String[] {localCurrencyId, localCurrencyId, "Credit", mFriendId };
 					}
 					cursor = Cache
 							.openDatabase()
@@ -189,9 +189,9 @@ public class MoneyAccountGroupListLoader extends
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Online")){
 					if(mFriendId == null){
-						args = new String[] {localCurrencyId, "Online" };
+						args = new String[] {localCurrencyId, localCurrencyId, "Online" };
 					} else {
-						args = new String[] {localCurrencyId, "Online", mFriendId };
+						args = new String[] {localCurrencyId, localCurrencyId, "Online", mFriendId };
 					}
 					cursor = Cache
 							.openDatabase()
@@ -215,9 +215,9 @@ public class MoneyAccountGroupListLoader extends
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Debt")){
 					if(mExcludeType == null || !"Debt".equalsIgnoreCase(mExcludeType)){
 						if(mFriendId == null){
-							args = new String[] {localCurrencyId, "Debt" };
+							args = new String[] {localCurrencyId, localCurrencyId, "Debt" };
 						} else {
-							args = new String[] {localCurrencyId, "Debt", mFriendId };
+							args = new String[] {localCurrencyId, localCurrencyId, "Debt", mFriendId };
 						}
 						cursor = Cache
 								.openDatabase()
