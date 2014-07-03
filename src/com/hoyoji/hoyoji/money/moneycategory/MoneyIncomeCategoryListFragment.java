@@ -330,7 +330,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 				this.getResources().getDisplayMetrics());
 		v.setPadding((int)px, 0, 0, 0);
 		
-		Bundle bundle = null;
+		Bundle bundle = new Bundle();
 		Loader<Object> loader = getLoaderManager().getLoader(1);
 		
 		if(id != -1){
@@ -344,7 +344,9 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			lastSelectedMainCategoryId = AdapterView.INVALID_ROW_ID;
 			((MainCategorySimpleCursorAdapter)getListAdapter()).setSelectedId(AdapterView.INVALID_ROW_ID);
 		}
-	
+
+		bundle.putInt("OFFSET", l.getAdapter().getCount());
+		bundle.putInt("LIMIT", getListPageSize());
 	    if (loader != null && !loader.isReset() ) { 
 	    	getLoaderManager().restartLoader(1, bundle, this);
 	    } else {
