@@ -608,34 +608,34 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				saveApportions();
 				
 				MoneyDepositReturnContainer oldMoneyDepositReturnContainerModel = mMoneyDepositReturnContainerEditor.getModel();
-				MoneyDepositReturnContainer moneyIncomeContainerModel = mMoneyDepositReturnContainerEditor.getModelCopy();
+				MoneyDepositReturnContainer newMoneyDepositReturnContainerModel = mMoneyDepositReturnContainerEditor.getModelCopy();
 				
 				//设置默认项目和账户
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(moneyIncomeContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyIncomeContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeContainerModel.getProjectId())){
+				if(newMoneyDepositReturnContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(newMoneyDepositReturnContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(newMoneyDepositReturnContainerModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyIncomeContainerModel.getMoneyAccountId());
-					userDataEditor.getModelCopy().setActiveProjectId(moneyIncomeContainerModel.getProjectId());
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(newMoneyDepositReturnContainerModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(newMoneyDepositReturnContainerModel.getProjectId());
 					userDataEditor.save();
 				}
 				
 				//当前汇率不存在时，创建汇率
-				String localCurrencyId = moneyIncomeContainerModel.getMoneyAccount().getCurrencyId();
-				String foreignCurrencyId = moneyIncomeContainerModel.getProject().getCurrencyId();
+				String localCurrencyId = newMoneyDepositReturnContainerModel.getMoneyAccount().getCurrencyId();
+				String foreignCurrencyId = newMoneyDepositReturnContainerModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
-					MoneyAccount moneyAccount = moneyIncomeContainerModel.getMoneyAccount();
-					Project project = moneyIncomeContainerModel.getProject();
+					MoneyAccount moneyAccount = newMoneyDepositReturnContainerModel.getMoneyAccount();
+					Project project = newMoneyDepositReturnContainerModel.getProject();
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
 					newExchange.setForeignCurrencyId(project.getCurrencyId());
-					newExchange.setRate(moneyIncomeContainerModel.getExchangeRate());
+					newExchange.setRate(newMoneyDepositReturnContainerModel.getExchangeRate());
 					newExchange.save();
 				}else {
-					Exchange exchange = null;
-					Double exRate = null;
-					Double rate = HyjUtil.toFixed2(moneyIncomeContainerModel.getExchangeRate());
 					if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+						Exchange exchange = null;
+						Double exRate = null;
+						Double rate = HyjUtil.toFixed2(newMoneyDepositReturnContainerModel.getExchangeRate());
 						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
 						if(exchange != null){
 							exRate = exchange.getRate();
@@ -644,46 +644,46 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 								exchangModelEditor.getModelCopy().setRate(rate);
 								exchangModelEditor.save();
 							}
-						}
-					} else {
-						exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
-						if(exchange != null){
-							exRate = HyjUtil.toFixed2(1 / exchange.getRate());
-							if(!rate.equals(exRate)){
-								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-								exchangModelEditor.getModelCopy().setRate(rate);
-								exchangModelEditor.save();
+						} else {
+							exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
+							if(exchange != null){
+								exRate = HyjUtil.toFixed2(1 / exchange.getRate());
+								if(!rate.equals(exRate)){
+									HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+									exchangModelEditor.getModelCopy().setRate(1/rate);
+									exchangModelEditor.save();
+								}
 							}
 						}
 					}
 			}
 				
 				    MoneyAccount oldMoneyAccount = oldMoneyDepositReturnContainerModel.getMoneyAccount();
-					MoneyAccount newMoneyAccount = moneyIncomeContainerModel.getMoneyAccount();
+					MoneyAccount newMoneyAccount = newMoneyDepositReturnContainerModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
 					//更新账户余额
-					if(moneyIncomeContainerModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyDepositReturnContainerModel.getAmount0() - moneyIncomeContainerModel.getAmount0());
+					if(newMoneyDepositReturnContainerModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldMoneyDepositReturnContainerModel.getAmount0() - newMoneyDepositReturnContainerModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
 						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldMoneyDepositReturnContainerModel.getAmount0());
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - moneyIncomeContainerModel.getAmount0());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - newMoneyDepositReturnContainerModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
 
 					Project oldProject = oldMoneyDepositReturnContainerModel.getProject();
-					Project newProject = moneyIncomeContainerModel.getProject();
+					Project newProject = newMoneyDepositReturnContainerModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
 					//更新项目余额
-					if(moneyIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() - moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+					if(newMoneyDepositReturnContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() - newMoneyDepositReturnContainerModel.getAmount0()*newMoneyDepositReturnContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 						oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - newMoneyDepositReturnContainerModel.getAmount0()*newMoneyDepositReturnContainerModel.getExchangeRate());
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();
@@ -693,10 +693,10 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					ProjectShareAuthorization selfProjectAuthorization = mMoneyDepositReturnContainerEditor.getNewSelfProjectShareAuthorization();
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    
-					if(moneyIncomeContainerModel.get_mId() == null || oldMoneyDepositReturnContainerModel.getProjectId().equals(moneyIncomeContainerModel.getProjectId())){
-				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalReturn(selfProjectAuthorization.getActualTotalReturn() - oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+					if(newMoneyDepositReturnContainerModel.get_mId() == null || oldMoneyDepositReturnContainerModel.getProjectId().equals(newMoneyDepositReturnContainerModel.getProjectId())){
+				    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalReturn(selfProjectAuthorization.getActualTotalReturn() - oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() + newMoneyDepositReturnContainerModel.getAmount0()*newMoneyDepositReturnContainerModel.getExchangeRate());
 					}else{
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalReturn(selfProjectAuthorization.getActualTotalReturn() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+						selfProjectAuthorizationEditor.getModelCopy().setActualTotalReturn(selfProjectAuthorization.getActualTotalReturn() + newMoneyDepositReturnContainerModel.getAmount0()*newMoneyDepositReturnContainerModel.getExchangeRate());
 						
 						ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyDepositReturnContainerEditor.getOldSelfProjectShareAuthorization();
 						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();

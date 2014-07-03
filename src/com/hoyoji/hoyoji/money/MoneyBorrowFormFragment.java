@@ -544,18 +544,17 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}else {
+					if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
 						Exchange exchange = null;
 						Double exRate = null;
 						Double rate = HyjUtil.toFixed2(moneyBorrowModel.getExchangeRate());
-						if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
-							exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-							if(exchange != null){
-								exRate = exchange.getRate();
-								if(!rate.equals(exRate)){
-									HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-									exchangModelEditor.getModelCopy().setRate(rate);
-									exchangModelEditor.save();
-								}
+						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
+						if(exchange != null){
+							exRate = exchange.getRate();
+							if(!rate.equals(exRate)){
+								HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+								exchangModelEditor.getModelCopy().setRate(rate);
+								exchangModelEditor.save();
 							}
 						} else {
 							exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
@@ -563,11 +562,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 								exRate = HyjUtil.toFixed2(1 / exchange.getRate());
 								if(!rate.equals(exRate)){
 									HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-									exchangModelEditor.getModelCopy().setRate(rate);
+									exchangModelEditor.getModelCopy().setRate(1/rate);
 									exchangModelEditor.save();
 								}
 							}
 						}
+					}
 				}
 				    Double oldAmount = oldMoneyBorrowModel.getAmount0();
 					MoneyAccount oldMoneyAccount = oldMoneyBorrowModel.getMoneyAccount();
