@@ -998,6 +998,8 @@ public class MainActivity extends HyjUserActivity {
 				                	setRefreshActionButtonState(false,
 									updateUploadCount(null, null));
 								}
+								
+								// 上传大图
 								Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
 								startService(startPictureUploadService);
 							}
@@ -1061,14 +1063,13 @@ public class MainActivity extends HyjUserActivity {
 					errorCallback("上传数据失败");
 				}
 
-				if (syncRecords.size() == 0) {
+				if (syncRecords != null && syncRecords.size() == 0) {
 					// 没有记录可上传
 					finishCallback(true);
 					return;
 				}
 
 				try {
-
 					JSONArray postData = new JSONArray();
 					for (ClientSyncRecord syncRec : syncRecords) {
 						JSONObject jsonObj = new JSONObject();
@@ -1211,10 +1212,13 @@ public class MainActivity extends HyjUserActivity {
 							postData.put(jsonObj);
 						}
 					}
-					//Log.i("Push Data : ", postData.toString());
-					for(int a = 0; a < postData.length(); a++){
-						Log.i("Push Data : ", postData.get(a).toString());
+					
+					if(HyjApplication.getIsDebuggable()){
+						for(int a = 0; a < postData.length(); a++){
+							Log.i("Push Data : ", postData.get(a).toString());
+						}
 					}
+					
 					Object result = HyjServer.doHttpPost(null,
 							HyjApplication.getServerUrl() + "syncPush2.php",
 							postData.toString(), true);
@@ -1222,6 +1226,7 @@ public class MainActivity extends HyjUserActivity {
 						rollbackUpload(syncRecords);
 						errorCallback(HyjApplication.getInstance().getString(
 								R.string.server_dataparse_error));
+						return;
 					}
 					if (result instanceof JSONObject) {
 						JSONObject jsonResult = (JSONObject) result;
@@ -1270,24 +1275,34 @@ public class MainActivity extends HyjUserActivity {
 				if (syncRecords == null) {
 					return;
 				}
-				for (ClientSyncRecord syncRec : syncRecords) {
-					if (syncRec.getOperation().equalsIgnoreCase("Create")) {
-						ClientSyncRecord rec = HyjModel.getModel(
-								ClientSyncRecord.class, syncRec.getId());
-						if (rec.getUploading() == true) {
-							rec.setUploading(false);
-							if (rec.getOperation().equalsIgnoreCase("Delete")) {
-								rec.delete();
-							} else if (rec.getOperation().equalsIgnoreCase(
-									"Update")) {
-								rec.setOperation("Create");
-								rec.save();
-							} else {
-								rec.save();
+				try {
+					ActiveAndroid.beginTransaction();
+					for (ClientSyncRecord syncRec : syncRecords) {
+						if (syncRec.getOperation().equalsIgnoreCase("Create")) {
+							// 获取最新的更新记录，不能直接用 HyjModel.getModel，那样拿到的可能是被缓存的记录
+							ClientSyncRecord rec = new Select().from(ClientSyncRecord.class).where("id=?", syncRec.getId()).executeSingle();
+//									HyjModel.getModel(ClientSyncRecord.class, syncRec.getId());
+							if (rec.getUploading() == true) {
+								rec.setUploading(false);
+								if (rec.getOperation().equalsIgnoreCase("Delete")) {
+									//该记录在上传期间已被删除了，所以我们把这条更新记录也删除掉，不用上传了
+									rec.delete();
+								} else if (rec.getOperation().equalsIgnoreCase("Update")) {
+									// 在上传的期间被改变了，但是该记录实际上没上传成功，所以我们还是放回新创建状态
+									rec.setOperation("Create");
+									rec.save();
+								} else {
+									// 保存 uploading 状态
+									rec.save();
+								}
 							}
 						}
 					}
+					ActiveAndroid.setTransactionSuccessful();
+				} catch (Exception e) {
 				}
+				ActiveAndroid.endTransaction();
+				
 				// Cache.openDatabase().execSQL(
 				// "Update ClientSyncRecord SET uploading = 0 WHERE uploading = 1");
 			}

@@ -1017,8 +1017,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
 					moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
-					moneyLend.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFriendUserId());
+					moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
 					if(apportionEditor.getModelCopy().getFriendUserId() == null){
+						// 非项目好友
 						Friend friend = null;
 						friend = HyjModel.getModel(Friend.class, apportionEditor.getModelCopy().getLocalFriendId());
 						if(friend.getFriendUserId() != null){

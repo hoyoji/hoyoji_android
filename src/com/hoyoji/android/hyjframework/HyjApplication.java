@@ -36,6 +36,10 @@ public class HyjApplication extends FrontiaApplication {
 	private HashMap<String, Class<? extends Fragment>> fragmentClassMap = new HashMap<String, Class<? extends Fragment>>();
 	private static boolean mIsDebuggable;
 	
+	public static boolean getIsDebuggable(){
+		return mIsDebuggable;
+	}
+	
 	public static String getServerUrl(){
 		if(mIsDebuggable){
 			return "http://hoyojitest.duapp.com/";
