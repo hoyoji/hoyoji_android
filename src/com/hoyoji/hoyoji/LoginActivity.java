@@ -756,21 +756,22 @@ public class LoginActivity extends HyjActivity {
 									FileOutputStream out;
 									try {
 										Picture figure = new Picture();
-										
-										out = new FileOutputStream(HyjUtil.createImageFile(figure.getId() + "_icon"));
-										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-										out.close();
-										out = null;
-										
-										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-										figure.setRecordType("User");
-										figure.setDisplayOrder(0);
-										figure.setPictureType("JPEG");
-										
-										HyjApplication.getInstance().getCurrentUser().setPicture(figure);
-										HyjApplication.getInstance().getCurrentUser().save();
-										figure.save();								
-										
+										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+										if(imgFile != null){
+											out = new FileOutputStream(imgFile);
+											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+											out.close();
+											out = null;
+											
+											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+											figure.setRecordType("User");
+											figure.setDisplayOrder(0);
+											figure.setPictureType("JPEG");
+											
+											HyjApplication.getInstance().getCurrentUser().setPicture(figure);
+											HyjApplication.getInstance().getCurrentUser().save();
+											figure.save();								
+										}
 									} catch (FileNotFoundException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();

@@ -422,21 +422,23 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 								FileOutputStream out;
 								try {
 									Picture figure = new Picture();
-									
-									out = new FileOutputStream(HyjUtil.createImageFile(figure.getId() + "_icon"));
-									thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-									out.close();
-									out = null;
-									
-									figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-									figure.setRecordType("User");
-									figure.setDisplayOrder(0);
-									figure.setPictureType("JPEG");
-									
-									user.setPicture(figure);
-									figure.save();								
-									
-									takePictureButton.setImage(figure);
+									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+									if(imgFile != null){
+										out = new FileOutputStream(imgFile);
+										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+										out.close();
+										out = null;
+										
+										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+										figure.setRecordType("User");
+										figure.setDisplayOrder(0);
+										figure.setPictureType("JPEG");
+										
+										user.setPicture(figure);
+										figure.save();								
+										
+										takePictureButton.setImage(figure);
+									}
 								} catch (FileNotFoundException e) {
 									e.printStackTrace();
 								} catch (IOException e) {
