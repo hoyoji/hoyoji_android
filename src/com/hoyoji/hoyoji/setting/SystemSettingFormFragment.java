@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.setting;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -401,15 +402,73 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 				QQLogin qqLogin = new QQLogin();
 				qqLogin.loadFromJSON(jsonObject, true);
 				qqLogin.save();
-				HyjUtil.displayToast("QQ帐号绑定成功");
-				setQQField();
+				
+				final User user = HyjApplication.getInstance().getCurrentUser();
+				if(jsonObject.optString("nickName").length() > 0){
+					// 设置用户的昵称拼音, 并同步回服务器
+					if(!jsonObject.optString("nickName").equals(user.getNickName())){
+						user.setNickName(jsonObject.optString("nickName"));
+						mTextFieldNickName.setText(user.getNickName());
+					}
+				}
+				final String figureUrl1 = jsonObject.optString("figureUrl");
+				if(figureUrl1.length() > 0){
+					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+						@Override
+						public void finishCallback(Object object) {
+							Bitmap thumbnail = null;
+							if(object != null){
+								thumbnail = (Bitmap) object;
+								FileOutputStream out;
+								try {
+									Picture figure = new Picture();
+									
+									out = new FileOutputStream(HyjUtil.createImageFile(figure.getId() + "_icon"));
+									thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+									out.close();
+									out = null;
+									
+									figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+									figure.setRecordType("User");
+									figure.setDisplayOrder(0);
+									figure.setPictureType("JPEG");
+									
+									user.setPicture(figure);
+									figure.save();								
+									
+									takePictureButton.setImage(figure);
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+							
+							user.save();
+							HyjUtil.displayToast("QQ帐号绑定成功");
+							setQQField();
+						}
+	
+						@Override
+						public Object doInBackground(String... string) {
+							Bitmap thumbnail = null;
+							thumbnail = Util.getbitmap(figureUrl1);
+							return thumbnail;
+						}
+					});
+				} else {
+					user.save();
+					HyjUtil.displayToast("QQ帐号绑定成功");
+					setQQField();
+				}
+				
 			}
 
 			@Override
 			public void errorCallback(Object object) {
 				try {
 					JSONObject json = (JSONObject) object;
-					((HyjActivity)getActivity()).dismissProgressDialog();
+//					((HyjActivity)getActivity()).dismissProgressDialog();
 					((HyjActivity)getActivity()).displayDialog("绑定QQ失败", json.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
