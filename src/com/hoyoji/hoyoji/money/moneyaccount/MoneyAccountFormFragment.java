@@ -135,7 +135,6 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mSpinnerFieldAccountType.setEnabled(modelId == -1
 				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		mSpinnerFieldAccountType.setOnItemSelectedListener(new OnItemSelectedListener(){
-
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
@@ -215,7 +214,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			}
 		}
 	}
-
+//	String mPreviousName = "";
 	private void setupFriendField(Friend friend) {
 		if(mSpinnerFieldAccountType.getSelectedValue() != null && mSpinnerFieldAccountType.getSelectedValue().equalsIgnoreCase("Topup")){
 			mSelectorFieldFriend.setVisibility(View.VISIBLE);
@@ -224,9 +223,11 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			if (friend != null) {
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
-				List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
-				int numberOfCards = topupAccounts.size() + 1;
-				mTextFieldName.setText(friend.getDisplayName() + "充值卡" + numberOfCards);
+				if(mTextFieldName.getText().trim().length() == 0){
+					List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
+					int numberOfCards = topupAccounts.size() + 1;
+					mTextFieldName.setText(friend.getDisplayName() + "充值卡" + numberOfCards);
+				}
 			}
 		} else {
 			mSelectorFieldFriend.setVisibility(View.GONE);
@@ -234,7 +235,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 			mSelectorFieldFriend.setModelId(null);
 			mSelectorFieldFriend.setText(null);
-			mTextFieldName.setText(mMoneyAccountEditor.getModel().getDisplayName());
+//			mTextFieldName.setText(mPreviousName);
 		}
 	}
 
