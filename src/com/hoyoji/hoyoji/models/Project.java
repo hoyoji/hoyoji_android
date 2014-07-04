@@ -345,6 +345,9 @@ public class Project extends HyjModel {
 		
 		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
 			Project subProject = it.next().getSubProject();
+			if(subProject == null){
+				continue;
+			}
 			Double rate = 1.0;
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
