@@ -469,6 +469,9 @@ public class MoneyApportionField extends GridView {
 		}
 		
 		public ProjectShareAuthorization getProjectShareAuthorization(){
+			if(mProjectId == null){
+				return null;
+			}
 			if(mProjectShareAuthorization == null && mApportion.getFriendUserId() != null) {
 				mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state=?", 
 					mProjectId, mApportion.getFriendUserId(), "Accept").executeSingle();

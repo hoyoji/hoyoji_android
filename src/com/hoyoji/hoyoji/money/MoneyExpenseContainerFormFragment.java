@@ -793,68 +793,68 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					MoneyExpenseContainer oldMoneyExpenseContainerModel = mMoneyExpenseContainerEditor.getModel();
 					MoneyExpenseContainer moneyExpenseContainerModel = mMoneyExpenseContainerEditor.getModelCopy();
 					
+					Project project = moneyExpenseContainerModel.getProject();
+					
 					//设置默认项目和账户
-					UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-					String newActiveProject = HyjUtil.ifNull(moneyExpenseContainerModel.getProjectId(), "");
-					String oldActiveProject = HyjUtil.ifNull(userData.getActiveProjectId(), "");
-					if(moneyExpenseContainerModel.get_mId() == null 
-						&& 
-						(!userData.getActiveMoneyAccountId().equals(moneyExpenseContainerModel.getMoneyAccountId()) 
-							|| !newActiveProject.equals(oldActiveProject)
-						)
-					){
-						HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-						userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseContainerModel.getMoneyAccountId());
-						userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseContainerModel.getProjectId());
-						userDataEditor.save();
-					}
-					
-					// 更新项目的默认分类
 					if(moneyExpenseContainerModel.get_mId() == null){
-						HyjModelEditor<Project> projectEditor = moneyExpenseContainerModel.getProject().newModelEditor();
-						projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseContainerModel.getMoneyExpenseCategory());
-						projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseContainerModel.getMoneyExpenseCategoryMain());
-						projectEditor.save();
-					}
+						UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+						String newActiveProject = HyjUtil.ifNull(moneyExpenseContainerModel.getProjectId(), "");
+						String oldActiveProject = HyjUtil.ifNull(userData.getActiveProjectId(), "");
+						if(!userData.getActiveMoneyAccountId().equals(moneyExpenseContainerModel.getMoneyAccountId()) 
+							|| !newActiveProject.equals(oldActiveProject)){
+							HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
+							userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyExpenseContainerModel.getMoneyAccountId());
+							userDataEditor.getModelCopy().setActiveProjectId(moneyExpenseContainerModel.getProjectId());
+							userDataEditor.save();
+						}
+						// 更新项目的默认分类
+						if(project != null){
+							HyjModelEditor<Project> projectEditor = project.newModelEditor();
+							projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseContainerModel.getMoneyExpenseCategory());
+							projectEditor.getModelCopy().setDefaultExpenseCategoryMain(moneyExpenseContainerModel.getMoneyExpenseCategoryMain());
+							projectEditor.save();
+						}
+					}					
 					
-					//当前汇率不存在时，创建汇率
-					String localCurrencyId = moneyExpenseContainerModel.getMoneyAccount().getCurrencyId();
-					String foreignCurrencyId = moneyExpenseContainerModel.getProject().getCurrencyId();
-					if(CREATE_EXCHANGE == 1){
-						MoneyAccount moneyAccount = moneyExpenseContainerModel.getMoneyAccount();
-						Project project = moneyExpenseContainerModel.getProject();
-						
-						Exchange newExchange = new Exchange();
-						newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
-						newExchange.setForeignCurrencyId(project.getCurrencyId());
-						newExchange.setRate(moneyExpenseContainerModel.getExchangeRate());
-						newExchange.save();
-					}else {
-						if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
-							Exchange exchange = null;
-							Double exRate = null;
-							Double rate = HyjUtil.toFixed2(moneyExpenseContainerModel.getExchangeRate());
-							exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
-							if(exchange != null){
-								exRate = exchange.getRate();
-								if(!rate.equals(exRate)){
-									HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-									exchangModelEditor.getModelCopy().setRate(rate);
-									exchangModelEditor.save();
-								}
-							} else {
-								exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
+					if(project != null){
+						//当前汇率不存在时，创建汇率
+						String localCurrencyId = moneyExpenseContainerModel.getMoneyAccount().getCurrencyId();
+						String foreignCurrencyId = moneyExpenseContainerModel.getProject().getCurrencyId();
+						if(CREATE_EXCHANGE == 1){
+							MoneyAccount moneyAccount = moneyExpenseContainerModel.getMoneyAccount();
+							
+							Exchange newExchange = new Exchange();
+							newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
+							newExchange.setForeignCurrencyId(project.getCurrencyId());
+							newExchange.setRate(moneyExpenseContainerModel.getExchangeRate());
+							newExchange.save();
+						}else {
+							if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
+								Exchange exchange = null;
+								Double exRate = null;
+								Double rate = HyjUtil.toFixed2(moneyExpenseContainerModel.getExchangeRate());
+								exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
 								if(exchange != null){
-									exRate = HyjUtil.toFixed2(1 / exchange.getRate());
+									exRate = exchange.getRate();
 									if(!rate.equals(exRate)){
 										HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
-										exchangModelEditor.getModelCopy().setRate(1/rate);
+										exchangModelEditor.getModelCopy().setRate(rate);
 										exchangModelEditor.save();
+									}
+								} else {
+									exchange = Exchange.getExchange(foreignCurrencyId, localCurrencyId);
+									if(exchange != null){
+										exRate = HyjUtil.toFixed2(1 / exchange.getRate());
+										if(!rate.equals(exRate)){
+											HyjModelEditor<Exchange> exchangModelEditor = exchange.newModelEditor();
+											exchangModelEditor.getModelCopy().setRate(1/rate);
+											exchangModelEditor.save();
+										}
 									}
 								}
 							}
 						}
-				}
+					}
 					
 				    MoneyAccount oldMoneyAccount = oldMoneyExpenseContainerModel.getMoneyAccount();
 					MoneyAccount newMoneyAccount = moneyExpenseContainerModel.getMoneyAccount();
@@ -872,41 +872,26 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					newMoneyAccountEditor.save();
 				
 				    Project oldProject = oldMoneyExpenseContainerModel.getProject();
-					Project newProject = moneyExpenseContainerModel.getProject();
-					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
-					
-					//更新项目余额
-					if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-					} else {
+				    if(project != null){
+						HyjModelEditor<Project> newProjectEditor = project.newModelEditor();
+						//更新项目余额
+						if(moneyExpenseContainerModel.get_mId() == null || project.getId().equals(oldProject.getId())){
+								newProjectEditor.getModelCopy().setExpenseTotal(project.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+						} else {
+							if(oldProject != null){
+								HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+								oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
+								oldProjectEditor.save();
+							}
+							newProjectEditor.getModelCopy().setExpenseTotal(project.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+						}
+						newProjectEditor.save();
+				    } else if(oldProject != null){
 						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 						oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
-						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 						oldProjectEditor.save();
-					}
-					newProjectEditor.save();
-					
-					/*
-					//更新支出所有者的实际支出
-					ProjectShareAuthorization selfProjectAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
-					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
+				    }
 				    
-					if(moneyExpenseContainerModel.get_mId() == null || oldMoneyExpenseContainerModel.getProjectId().equals(moneyExpenseContainerModel.getProjectId())){
-					    // 无旧项目可更新
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-						
-					} else {
-						selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-							
-						ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
-						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-						oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(oldSelfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
-						oldSelfProjectAuthorizationEditor.save();
-					
-					}
-					selfProjectAuthorizationEditor.save();
-					*/
-					
 					//更新分类，使之成为最近使用过的
 					if(this.mSelectorFieldMoneyExpenseCategory.getModelId() != null){
 						MoneyExpenseCategory category = HyjModel.getModel(MoneyExpenseCategory.class, this.mSelectorFieldMoneyExpenseCategory.getModelId());

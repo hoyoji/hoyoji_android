@@ -415,7 +415,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 						.getInstance(messageData.optString("currencyCode"));
 				String currencySymbol = "";
 				currencySymbol = localeCurrency.getSymbol();
-				if(currencySymbol.isEmpty()){
+				if(currencySymbol.length() == 0){
 					currencySymbol = messageData.optString("currencyCode");
 				}
 				((TextView)view).setText(String.format(msg.getMessageDetail(), msg.getFromUserDisplayName(), currencySymbol, amount));
@@ -443,10 +443,15 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}
-			
-			numericView.setPrefix(((MoneyExpenseContainer)object).getProject().getCurrencySymbol());
+			MoneyExpenseContainer moneyExpenseContainer = (MoneyExpenseContainer)object;
 			numericView.setSuffix(null);
-			numericView.setNumber(((MoneyExpenseContainer)object).getProjectAmount());
+			if(moneyExpenseContainer.getProject() != null){
+				numericView.setPrefix(moneyExpenseContainer.getProject().getCurrencySymbol());
+				numericView.setNumber(moneyExpenseContainer.getProjectAmount());
+			} else {
+				numericView.setPrefix(moneyExpenseContainer.getMoneyAccount().getCurrencySymbol());
+				numericView.setNumber(moneyExpenseContainer.getAmount0());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -471,11 +476,21 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			view.setTag(((MoneyExpenseContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpenseContainer)object).getProject().getCurrencyId())){
-				((TextView)view).setText("");
-			} else {
-				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyExpenseContainer)object).getLocalAmount())));
+			MoneyExpenseContainer moneyExpenseContainer = (MoneyExpenseContainer)object;
+			if(moneyExpenseContainer.getProject() != null){ //如果有项目的账务，先是项目币种
+				if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(moneyExpenseContainer.getProject().getCurrencyId())){
+					((TextView)view).setText("");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(moneyExpenseContainer.getLocalAmount())));
+				}
+			} else { // 如果没有项目的账务，直接显示账户的币种
+				if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(moneyExpenseContainer.getMoneyAccount().getCurrencyId())){
+					((TextView)view).setText("");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(moneyExpenseContainer.getLocalAmount())));
+				}
 			}
+			
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getDisplayRemark());
@@ -1107,14 +1122,14 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-//			if(uri.toString().startsWith("content://com.hoyoji.hoyoji_android/userdata")){
-//				expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-//				incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-//			}
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+////			if(uri.toString().startsWith("content://com.hoyoji.hoyoji_android/userdata")){
+////				expenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+////				incomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+////			}
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
