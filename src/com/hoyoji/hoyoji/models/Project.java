@@ -293,21 +293,25 @@ public class Project extends HyjModel {
 	}
 	
 	public Double getExpenseTotal(){
-//        Double projectExpenseTotal = this.mExpenseTotal;
-//
-//		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
-//			Project subProject = it.next().getSubProject();
-//			Double rate = 1.0;
-//			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
-//				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
-//				if(rate == null){
-//					return null;
-//				}
-//			}
-//			projectExpenseTotal += subProject.getExpenseTotal() * rate;
-//		}
-//		return projectExpenseTotal;
-		return this.mExpenseTotal;
+        Double projectExpenseTotal = this.mExpenseTotal;
+
+		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
+			Project subProject = it.next().getSubProject();
+			Double rate = 1.0;
+			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
+				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
+				if(rate == null){
+					rate = Exchange.getExchangeRate(this.getCurrencyId(), subProject.getCurrencyId());
+					if(rate == null){
+						return null;
+					}
+					rate = 1 / rate;
+				}
+			}
+			projectExpenseTotal += subProject.getExpenseTotal() * rate;
+		}
+		return projectExpenseTotal;
+//		return this.mExpenseTotal;
 	}
 
 	public void setIncomeTotal(double incomeTotal){
@@ -315,21 +319,25 @@ public class Project extends HyjModel {
 	}
 
 	public Double getIncomeTotal(){
-//        Double projectIncomeTotal = this.mIncomeTotal;
-//		
-//		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
-//			Project subProject = it.next().getSubProject();
-//			Double rate = 1.0;
-//			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
-//				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
-//				if(rate == null){
-//					return null;
-//				}
-//			}
-//			projectIncomeTotal += subProject.getIncomeTotal() * rate;
-//		}
-//		return projectIncomeTotal;
-		return this.mIncomeTotal;
+        Double projectIncomeTotal = this.mIncomeTotal;
+		
+		for(Iterator<ParentProject> it = this.getSubProjects().iterator(); it.hasNext();){
+			Project subProject = it.next().getSubProject();
+			Double rate = 1.0;
+			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
+				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
+				if(rate == null){
+					rate = Exchange.getExchangeRate(this.getCurrencyId(), subProject.getCurrencyId());
+					if(rate == null){
+						return null;
+					}
+					rate = 1 / rate;
+				}
+			}
+			projectIncomeTotal += subProject.getIncomeTotal() * rate;
+		}
+		return projectIncomeTotal;
+//		return this.mIncomeTotal;
 	}
 	
 	public Double getDepositTotal(){
@@ -352,7 +360,11 @@ public class Project extends HyjModel {
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
 				if(rate == null){
-					return null;
+					rate = Exchange.getExchangeRate(this.getCurrencyId(), subProject.getCurrencyId());
+					if(rate == null){
+						return null;
+					}
+					rate = 1 / rate;
 				}
 			}
 			projectBalance += subProject.getBalance() * rate;
@@ -372,7 +384,11 @@ public class Project extends HyjModel {
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
 				if(rate == null){
-					return null;
+					rate = Exchange.getExchangeRate(this.getCurrencyId(), subProject.getCurrencyId());
+					if(rate == null){
+						return null;
+					}
+					rate = 1 / rate;
 				}
 			}
 			depositBalance += subProject.getDepositBalance() * rate;

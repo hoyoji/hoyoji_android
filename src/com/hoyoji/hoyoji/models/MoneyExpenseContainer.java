@@ -266,7 +266,11 @@ public class MoneyExpenseContainer extends HyjModel{
 	}
 	
 	public void setProject(Project mProject) {
-		this.mProjectId = mProject.getId();
+		if(mProject == null){
+			this.mProjectId = null;
+		} else {
+			this.mProjectId = mProject.getId();
+		}
 	}
 	
 	public String getProjectId() {
@@ -474,6 +478,9 @@ public class MoneyExpenseContainer extends HyjModel{
 		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return false;
 		}
+		if(this.getProjectId() == null){
+			return true;
+		}
 		
 		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
@@ -483,6 +490,9 @@ public class MoneyExpenseContainer extends HyjModel{
 	}
 	
 	public boolean hasAddNewPermission(String projectId){
+		if(projectId == null){
+			return true;
+		}
 		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
@@ -491,15 +501,29 @@ public class MoneyExpenseContainer extends HyjModel{
 	}
 
 	public boolean hasDeletePermission(){
-		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		Object currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
+		if(!this.getOwnerUserId().equals(currentUserId)){
 			return false;
 		}
 		
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-		if(psa == null){
-			return false;
+		// 检查如果无项目账务有分摊给其他好友的话，不让删除
+		if(this.getProjectId() == null){
+			final List<MoneyExpenseApportion> apportions = this.getApportions();
+			for(int i=0; i < apportions.size(); i++){
+				String friendUserId = apportions.get(i).getFriendUserId(); 
+				if(friendUserId != null && !friendUserId.equals(currentUserId)){
+					HyjUtil.displayToast("该支出包含了其他分摊好友，不能被删除。");
+					return false;
+				}
+			}
+			return true;
+		} else {
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), currentUserId).executeSingle();
+			if(psa == null){
+				return false;
+			}
+			return psa.getProjectShareMoneyExpenseDelete();
 		}
-		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
 	public String getMoneyIncomeId(){

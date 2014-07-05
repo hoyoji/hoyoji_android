@@ -208,15 +208,23 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 //			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 //			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 //			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
+			if(this.getProject() == null){
+				// 在无项目记账时，借贷账户是直接使用记账的币种，不用做任何汇率转换。
+				debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
+				if(debtAccount != null){
+					HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+					debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0());
+					debtAccountEditor.save();
+				}
+			} if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
 				debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
+				if(debtAccount != null){
+					HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+					debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0()*this.getExchangeRate());
+					debtAccountEditor.save();
+				}
 			}
 //		}
-		if(debtAccount != null){
-			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-			debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + this.getAmount0()*this.getExchangeRate());
-			debtAccountEditor.save();
-		}
 		
 		super.delete();
 	}

@@ -237,6 +237,10 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 				Double rate = Exchange.getExchangeRate(projectCurrencyId,
 						HyjApplication.getInstance().getCurrentUser()
 								.getUserData().getActiveCurrencyId());
+				if (rate == null) {
+					rate = Exchange.getExchangeRate(HyjApplication.getInstance().getCurrentUser()
+							.getUserData().getActiveCurrencyId(), projectCurrencyId);
+				}
 				if (rate != null) {
 					// 汇率已经存在，直接保存新项目
 					doSave();

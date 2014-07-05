@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -279,7 +278,11 @@ public class MoneyReturnContainer extends HyjModel{
 	}
 	
 	public void setProject(Project mProject) {
-		this.mProjectId = mProject.getId();
+		if(mProject == null){
+			this.mProjectId = null;
+		} else {
+			this.mProjectId = mProject.getId();
+		}
 	}
 	
 	public String getProjectId() {

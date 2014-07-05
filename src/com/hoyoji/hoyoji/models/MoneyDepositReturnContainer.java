@@ -188,7 +188,11 @@ public class MoneyDepositReturnContainer extends HyjModel {
 	}
 
 	public void setProject(Project mProject) {
-		this.mProjectId = mProject.getId();
+		if(mProject == null){
+			this.mProjectId = null;
+		} else {
+			this.mProjectId = mProject.getId();
+		}
 	}
 
 	public String getProjectId() {
