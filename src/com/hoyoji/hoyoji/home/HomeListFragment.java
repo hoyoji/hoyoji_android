@@ -436,7 +436,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
+			Project project = ((MoneyExpenseContainer)object).getProject();
+			if(project == null) {
+				((TextView)view).setText("无项目");
+			} else {
+				((TextView)view).setText(project.getDisplayName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;

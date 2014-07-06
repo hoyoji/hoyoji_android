@@ -704,10 +704,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -726,10 +726,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -1080,16 +1080,25 @@ public class MainActivity extends HyjUserActivity {
 								jsonObj.put("operation", "create");
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
-									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
-									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
-									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+									MoneyApportion moneyApportion = (MoneyApportion)model;
+									if(moneyApportion.getProject() != null){
+										recordData.put("projectId", moneyApportion.getProject().getId());
+									}
+									recordData.put("currencyId", moneyApportion.getCurrencyId());
+									recordData.put("exchangeRate", moneyApportion.getExchangeRate());
 								} else if(model instanceof MoneyExpenseContainer){
-									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
-									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());
-									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
+									MoneyExpenseContainer moneyExpenseContainer = (MoneyExpenseContainer)model;
+									if(moneyExpenseContainer.getProject() != null) {
+										recordData.put("projectCurrencySymbol", moneyExpenseContainer.getProject().getCurrencySymbol());
+										recordData.put("projectCurrencyId", moneyExpenseContainer.getProject().getCurrencyId());
+									}
+									recordData.put("currencyId", moneyExpenseContainer.getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyIncomeContainer){
-									recordData.put("projectCurrencySymbol", ((MoneyIncomeContainer)model).getProject().getCurrencySymbol());
-									recordData.put("projectCurrencyId", ((MoneyIncomeContainer)model).getProject().getCurrencyId());
+									MoneyIncomeContainer moneyIncomeContainer = (MoneyIncomeContainer)model;
+									if(moneyIncomeContainer.getProject() != null) {
+										recordData.put("projectCurrencySymbol", moneyIncomeContainer.getProject().getCurrencySymbol());
+										recordData.put("projectCurrencyId", moneyIncomeContainer.getProject().getCurrencyId());
+									}
 									recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyBorrowContainer){
 									recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
@@ -1146,10 +1155,13 @@ public class MainActivity extends HyjUserActivity {
 								jsonObj.put("operation", "update");
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
-									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
-									recordData.put("moneyAccountId", ((MoneyApportion)model).getMoneyAccountId());
-									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
-									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+									MoneyApportion moneyApportion = (MoneyApportion)model;
+									if(moneyApportion.getProject() != null){
+										recordData.put("projectId", moneyApportion.getProject().getId());
+									}
+									recordData.put("moneyAccountId", moneyApportion.getMoneyAccountId());
+									recordData.put("currencyId", moneyApportion.getCurrencyId());
+									recordData.put("exchangeRate", moneyApportion.getExchangeRate());
 								} else if(model instanceof MoneyExpenseContainer){
 									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
 								} else if(model instanceof MoneyIncomeContainer){
@@ -1232,7 +1244,7 @@ public class MainActivity extends HyjUserActivity {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
 							String lastUploadTime = jsonResult.optString("lastUploadTime");
-							if(!lastUploadTime.isEmpty()){
+							if(lastUploadTime.length() > 0){
 								try {
 									ActiveAndroid.beginTransaction();
 									for (ClientSyncRecord syncRec : syncRecords) {

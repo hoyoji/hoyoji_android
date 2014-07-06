@@ -437,11 +437,11 @@ public class MoneyExpenseContainer extends HyjModel{
 			modelEditor.removeValidationError("moneyAccount");
 		}
 		
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
-		}else{
-			modelEditor.removeValidationError("project");
-		}
+//		if(this.getProjectId() == null){
+//			modelEditor.setValidationError("project",R.string.moneyExpenseFormFragment_editText_hint_project);
+//		}else{
+//			modelEditor.removeValidationError("project");
+//		}
 	}
 	
 	@Override
