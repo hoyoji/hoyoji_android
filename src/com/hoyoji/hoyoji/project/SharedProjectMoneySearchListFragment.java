@@ -377,7 +377,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			view.setTag(((MoneyIncome)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyIncome)object).getProjectCurrencySymbol())){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyIncome)object).getProjectCurrencyId())){
 				((TextView)view).setText("");
 			} else {
 				Double localAmount = ((MoneyIncome)object).getLocalAmount();

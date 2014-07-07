@@ -397,11 +397,21 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
+			Project project = ((MoneyLend)object).getProject();
+			if(project != null){
+				((TextView)view).setText(project.getDisplayName());
+			} else {
+				((TextView)view).setText("共享来的收支");
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
+			Project project = ((MoneyLend)object).getProject();
+			if(project != null){
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else {
+				numericView.setPrefix(((MoneyLend)object).getProjectCurrencySymbol());
+			}
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -411,10 +421,15 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			imageView.setImage(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProject().getCurrencyId())){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProjectCurrencyId())){
 				((TextView)view).setText("");
 			} else {
-				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyLend)object).getLocalAmount())));
+				Double localAmount = ((MoneyLend)object).getLocalAmount();
+				if(localAmount == null){
+					((TextView)view).setText("折合:［无汇率］");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(localAmount)));
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
