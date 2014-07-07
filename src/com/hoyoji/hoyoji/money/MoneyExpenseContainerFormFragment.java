@@ -1147,6 +1147,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						if(counterpartId != null){
 							moneyExpense.setMoneyIncomeId(counterpartId);
 						}
+						moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
+						moneyExpense.setMoneyExpenseCategoryMain(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategoryMain());
 						moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 						moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 						moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
@@ -1366,7 +1368,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								if(counterpartId != null){
 									moneyExpense.setMoneyIncomeId(counterpartId);
 								}
-								
+
+								moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
+								moneyExpense.setMoneyExpenseCategoryMain(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategoryMain());
 								moneyExpense.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
 								moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 								moneyExpense.setMoneyExpenseCategory(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategory());
