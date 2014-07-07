@@ -236,7 +236,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	private void setSharedProjectHeaderView(ViewGroup view) {
 			((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的收支");
-			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("");
+			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
 			
 			HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
