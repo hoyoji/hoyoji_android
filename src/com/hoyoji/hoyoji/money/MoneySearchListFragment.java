@@ -334,7 +334,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			Project project = ((MoneyExpense)object).getProject();
 			if(project == null){
-				((TextView)view).setText("好友共享");
+				((TextView)view).setText("共享来的收支");
 			} else {
 				((TextView)view).setText(project.getDisplayName());
 			}
@@ -404,9 +404,9 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = ((MoneyExpense)object).getProject();
+			Project project = ((MoneyIncome)object).getProject();
 			if(project == null){
-				((TextView)view).setText("好友共享");
+				((TextView)view).setText("共享来的收支");
 			} else {
 				((TextView)view).setText(project.getDisplayName());
 			}

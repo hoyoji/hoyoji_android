@@ -958,6 +958,16 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 					oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 					oldProjectShareAuthorizationEditor.save();
+					
+					MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
+					if(moneyBorrow != null){
+						moneyBorrow.delete();
+					}
+					
+					MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
+					if(moneyExpense != null){
+						moneyExpense.delete();
+					} 
 					apportion.delete();
 				} else {
 					if(api.getState() != ApportionItem.UNCHANGED 

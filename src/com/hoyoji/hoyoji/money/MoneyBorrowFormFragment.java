@@ -161,7 +161,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			mSelectorFieldProject.setModelId(project.getId());
 			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 		} else {
-			mSelectorFieldProject.setText("好友共享");
+			mSelectorFieldProject.setText("共享来的收支");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override

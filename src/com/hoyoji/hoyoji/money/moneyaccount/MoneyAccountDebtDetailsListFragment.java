@@ -342,7 +342,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			if(project != null){
 				((TextView)view).setText(project.getDisplayName());
 			} else {
-				((TextView)view).setText("好友共享");
+				((TextView)view).setText("共享来的收支");
 			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){

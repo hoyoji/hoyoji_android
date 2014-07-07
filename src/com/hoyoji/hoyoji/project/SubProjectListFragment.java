@@ -17,6 +17,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -44,6 +45,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	private ContentObserver mChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
+	private ViewGroup mHeaderViewSharedProject;
 	
 	public interface OnSelectSubProjectsListener {
 		public void onSelectSubProjectsListener(String parentProject, String title);
@@ -129,7 +131,22 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override
 	public void onInitViewData() {
+		String parentProjectId = getArguments().getString("parentProjectId");
+		if(parentProjectId == null){
+			// 添加“共享来的收支”到headerView
+			mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(null).inflate(R.layout.project_listitem_project, null);
+			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
+				}
+		    });
+			getListView().addHeaderView(mHeaderViewSharedProject);
+			setSharedProjectHeaderView(mHeaderViewSharedProject);
+		}
+		
 		super.onInitViewData();
+		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver()
@@ -148,6 +165,9 @@ public class SubProjectListFragment extends HyjUserListFragment {
 							UserData.class, null), true,
 							mChangeObserver);
 		}
+
+		
+		
 	}
 
 	
@@ -213,6 +233,38 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 	}
+	
+	private void setSharedProjectHeaderView(ViewGroup view) {
+			((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的收支");
+			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("");
+			
+			HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
+			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+			numericView.setSuffix(null);
+//			Double depositBalance = project.getDepositBalance();
+//			if(depositBalance == 0){
+//				numericView.setTextColor(Color.BLACK);
+//				numericView.setPrefix(project.getCurrencySymbol());
+//			} else if(depositBalance < 0){
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				numericView.setPrefix("支出"+project.getCurrencySymbol());
+//			}else{
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//				numericView.setPrefix("收入"+project.getCurrencySymbol());
+//			}
+//			numericView.setNumber(Math.abs(depositBalance));
+			numericView.setNumber(0.0);
+			numericView.setTextColor(Color.BLACK);
+			
+			ImageButton imageButton = (ImageButton)view.findViewById(R.id.projectListItem_action_viewSubProjects);
+			imageButton.setImageResource(R.drawable.ic_action_next_item);
+			imageButton.setEnabled(false);
+
+			ImageView picture = (ImageView)view.findViewById(R.id.projectListItem_picture);
+			picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_share));
+			picture.setEnabled(false);
+			
+	}	
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
