@@ -175,7 +175,7 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public Double getLocalAmount(){
-		Double rate = 1.0;
+		Double rate = null;
 		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
 			Double exchange = Exchange.getExchangeRate(userCurrencyId, this
@@ -183,6 +183,9 @@ public class MoneyLend extends HyjModel{
 			if (exchange != null) {
 				rate = exchange;
 			}
+			if(rate == null){
+				return null;
+			} 
 		}
 		return this.getAmount0() * this.getExchangeRate() / rate;
 	}
@@ -577,5 +580,19 @@ public class MoneyLend extends HyjModel{
 		this.mCurrencyId = mCurrencyId;
 	}
 
+	public String getProjectCurrencySymbol() {
+		if (mProjectCurrencyId == null) {
+			return "";
+		}
+		Currency currency = getModel(Currency.class, mProjectCurrencyId);
+		if (currency != null) {
+			return currency.getSymbol();
+		}
+		return mProjectCurrencyId;
+	}
+
+	public String getProjectCurrencyId() {
+		return this.mProjectCurrencyId;
+	}
 
 }

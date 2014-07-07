@@ -25,8 +25,10 @@ import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -158,11 +160,17 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
-	    	List<HyjModel> moneyExpenses = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select().from(MoneyIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
+	    	
+	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyExpenseContainers);
+	    	
+	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyIncomeContainers);
 	    	
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
@@ -195,6 +203,20 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 			public int compare(HyjModel lhs, HyjModel rhs) {
 				String lhsStr = "";
 				String rhsStr = "";
+				if(lhs instanceof MoneyExpense){
+					lhsStr = ((MoneyExpense) lhs).getDate();
+				}
+				if(rhs instanceof MoneyExpense){
+					rhsStr = ((MoneyExpense) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyIncome){
+					lhsStr = ((MoneyIncome) lhs).getDate();
+				}
+				if(rhs instanceof MoneyIncome){
+					rhsStr = ((MoneyIncome) rhs).getDate();
+				}
+				
 				if(lhs instanceof MoneyExpenseContainer){
 					lhsStr = ((MoneyExpenseContainer) lhs).getDate();
 				}

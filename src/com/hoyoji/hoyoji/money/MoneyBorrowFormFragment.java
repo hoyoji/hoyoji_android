@@ -160,6 +160,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
 			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+		} else {
+			mSelectorFieldProject.setText("好友共享");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -382,6 +384,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
 			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+			getView().findViewById(R.id.moneyBorrowFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
 			

@@ -133,6 +133,32 @@ public class HomeGroupListLoader extends
 			Cursor cursor = Cache
 					.openDatabase()
 					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+							"WHERE mea.id IS NULL AND date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+				expenseTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+							"WHERE mea.id IS NULL AND date > ? AND date <= ?",
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getInt(0);
+				incomeTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
 							"WHERE date > ? AND date <= ?",
 							args);
@@ -299,6 +325,33 @@ public class HomeGroupListLoader extends
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
 		Cursor cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyExpense WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			dateString = cursor.getString(0);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyIncome WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
 				.openDatabase()
 				.rawQuery(
 						"SELECT MAX(date) FROM MoneyExpenseContainer WHERE date <= ?",
@@ -477,6 +530,33 @@ public class HomeGroupListLoader extends
 		String[] args = new String[] { };
 		String dateString = null;
 		Cursor cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyExpense",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			dateString = cursor.getString(0);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT MAX(date) FROM MoneyIncome",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
 				.openDatabase()
 				.rawQuery(
 						"SELECT MAX(date) FROM MoneyExpenseContainer",
