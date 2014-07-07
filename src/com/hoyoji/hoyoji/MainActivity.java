@@ -704,10 +704,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -726,10 +726,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -1198,8 +1198,7 @@ public class MainActivity extends HyjUserActivity {
 //										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 //									}
 //								}
-								jsonObj.put(
-										"recordData", recordData);
+								jsonObj.put("recordData", recordData);
 								postData.put(jsonObj);
 							}
 						} else if (syncRec.getOperation().equalsIgnoreCase(
@@ -1232,7 +1231,7 @@ public class MainActivity extends HyjUserActivity {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
 							String lastUploadTime = jsonResult.optString("lastUploadTime");
-							if(!lastUploadTime.isEmpty()){
+							if(lastUploadTime.length() > 0){
 								try {
 									ActiveAndroid.beginTransaction();
 									for (ClientSyncRecord syncRec : syncRecords) {

@@ -372,9 +372,13 @@ public class Project extends HyjModel {
 			if(!subProject.getCurrencyId().equalsIgnoreCase(this.getCurrencyId())){
 				rate = Exchange.getExchangeRate(subProject.getCurrencyId(), this.getCurrencyId());
 				if(rate == null){
-					return null;
+					return 0.0;
 				}
 			}
+			if(subProject.getDepositBalance() == null){
+				return 0.0;
+			}
+			
 			depositBalance += subProject.getDepositBalance() * rate;
 		}
 		return depositBalance;

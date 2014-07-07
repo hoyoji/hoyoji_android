@@ -84,7 +84,11 @@ public class MoneyAccount extends HyjModel {
 		if(this.getAccountType().equalsIgnoreCase("Debt")){
 			if(this.getFriendId() != null){
 				Friend friend = HyjModel.getModel(Friend.class, this.getFriendId());
-				return friend.getDisplayName();
+				if(friend != null){
+					return friend.getDisplayName();
+				} else {
+					return "";
+				}
 			} else {
 				if(this.getName() != null && this.getName().equalsIgnoreCase("__ANONYMOUS__")){
 					return HyjApplication.getInstance().getString(R.string.app_moneyaccount_anonymous);
