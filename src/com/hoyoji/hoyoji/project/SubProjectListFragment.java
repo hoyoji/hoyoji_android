@@ -89,8 +89,13 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
-		mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_project, null);
-		return mHeaderViewSharedProject;
+		String parentProjectId = getArguments().getString("parentProjectId");
+		if(parentProjectId == null){
+			mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_project, null);
+			return mHeaderViewSharedProject;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -138,8 +143,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override
 	public void onInitViewData() {
-		String parentProjectId = getArguments().getString("parentProjectId");
-		if(parentProjectId == null){
+		if(mHeaderViewSharedProject != null){
 			// 添加“共享来的收支”到headerView
 			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
 				@Override
@@ -243,23 +247,25 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的收支");
 			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
 			
+			view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
 			HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-			numericView.setSuffix(null);
-//			Double depositBalance = project.getDepositBalance();
-//			if(depositBalance == 0){
-//				numericView.setTextColor(Color.BLACK);
-//				numericView.setPrefix(project.getCurrencySymbol());
-//			} else if(depositBalance < 0){
-//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-//				numericView.setPrefix("支出"+project.getCurrencySymbol());
-//			}else{
-//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-//				numericView.setPrefix("收入"+project.getCurrencySymbol());
-//			}
-//			numericView.setNumber(Math.abs(depositBalance));
-			numericView.setNumber(0.0);
-			numericView.setTextColor(Color.BLACK);
+			numericView.setVisibility(View.GONE);
+//			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+//			numericView.setSuffix(null);
+////			Double depositBalance = project.getDepositBalance();
+////			if(depositBalance == 0){
+////				numericView.setTextColor(Color.BLACK);
+////				numericView.setPrefix(project.getCurrencySymbol());
+////			} else if(depositBalance < 0){
+////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+////				numericView.setPrefix("支出"+project.getCurrencySymbol());
+////			}else{
+////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+////				numericView.setPrefix("收入"+project.getCurrencySymbol());
+////			}
+////			numericView.setNumber(Math.abs(depositBalance));
+//			numericView.setNumber(0.0);
+//			numericView.setTextColor(Color.BLACK);
 			
 			ImageButton imageButton = (ImageButton)view.findViewById(R.id.projectListItem_action_viewSubProjects);
 			imageButton.setImageResource(R.drawable.ic_action_next_item);
