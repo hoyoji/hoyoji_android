@@ -15,6 +15,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -47,7 +50,10 @@ public class HyjServer {
 		InputStream is = null;
 		String s = null;
 		try {
-			DefaultHttpClient client = new DefaultHttpClient();
+			HttpParams my_httpParams = new BasicHttpParams();
+			HttpConnectionParams.setConnectionTimeout(my_httpParams, 40000);
+			HttpConnectionParams.setSoTimeout(my_httpParams, 3000);
+			DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
 			client.addResponseInterceptor(new HttpResponseInterceptor() {
 				@Override
 				public void process(HttpResponse response, HttpContext context)
