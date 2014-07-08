@@ -298,7 +298,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
-								+ "FROM MoneyLend LEFT JOIN MoneyExpenseApportion mea ON mea.id = main.moneyExpenseApportionId AND mea.friendUserId IS NOT NULL  main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyLend main LEFT JOIN MoneyExpenseApportion mea ON mea.id = main.moneyExpenseApportionId AND mea.friendUserId IS NOT NULL LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
