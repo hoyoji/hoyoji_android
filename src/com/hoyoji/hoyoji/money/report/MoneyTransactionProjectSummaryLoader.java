@@ -237,7 +237,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE (main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE (main.ownerUserId = '" + currentUserId + "') AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Income"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -284,7 +284,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE (main.moneyIncomeApportionId IS NULL OR main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND  date > ? AND date <= ? AND "
+								+ "WHERE (main.moneyIncomeApportionId IS NULL OR main.ownerUserId = '" + currentUserId + "') AND  date > ? AND date <= ? AND "
 								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();

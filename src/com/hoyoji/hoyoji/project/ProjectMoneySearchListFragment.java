@@ -37,7 +37,9 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -304,7 +306,11 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 	
 	@Override
 	public boolean setViewValue(View view, Object object, String name) {
-		if(object instanceof MoneyExpenseContainer){
+		if(object instanceof MoneyExpense){
+//			return setMoneyExpenseItemValue(view, object, name);
+		} else if(object instanceof MoneyIncome){
+//			return setMoneyIncomeItemValue(view, object, name);
+		} else if(object instanceof MoneyExpenseContainer){
 			return setMoneyExpenseItemValue(view, object, name);
 		} else if(object instanceof MoneyIncomeContainer){
 			return setMoneyIncomeItemValue(view, object, name);
