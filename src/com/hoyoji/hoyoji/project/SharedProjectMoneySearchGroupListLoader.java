@@ -242,7 +242,7 @@ public class SharedProjectMoneySearchGroupListLoader extends
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -253,7 +253,7 @@ public class SharedProjectMoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + buildSearchQuery("Income"),
+						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

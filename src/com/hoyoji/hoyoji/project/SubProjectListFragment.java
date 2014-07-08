@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
@@ -84,7 +86,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_inOutTotal, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
-
+	
+	@Override
+	protected View useHeaderView(Bundle savedInstanceState){
+		mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_project, null);
+		return mHeaderViewSharedProject;
+	}
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
@@ -134,14 +141,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		String parentProjectId = getArguments().getString("parentProjectId");
 		if(parentProjectId == null){
 			// 添加“共享来的收支”到headerView
-			mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(null).inflate(R.layout.project_listitem_project, null);
 			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
 					openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
 				}
 		    });
-			getListView().addHeaderView(mHeaderViewSharedProject);
 			setSharedProjectHeaderView(mHeaderViewSharedProject);
 		}
 		
