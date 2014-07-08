@@ -116,15 +116,13 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 			if(type.equalsIgnoreCase("DepositIncome") || type.equalsIgnoreCase("DepositReturn")){
 				if(mFriendUserId != null){
 					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
-				}
-				if(mLocalFriendId != null){
+				} else if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND (EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 				}
 			} else {
 				if(mFriendUserId != null){
-					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
-				}
-				if(mLocalFriendId != null){
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+				} else if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 				}
 			}

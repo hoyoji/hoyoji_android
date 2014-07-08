@@ -216,11 +216,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyExpense main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON mea.id = main.moneyExpenseApportionId AND mea.friendUserId IS NOT NULL LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ? AND "
+								+ "WHERE (main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Expense"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -233,11 +233,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyIncome main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON mea.id = main.moneyIncomeApportionId AND mea.friendUserId IS NOT NULL LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ? AND "
+								+ "WHERE (main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Income"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -280,11 +280,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
-								+ "FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyBorrow LEFT JOIN MoneyIncomeApportion mea ON mea.id = main.moneyIncomeApportionId AND mea.friendUserId IS NOT NULL main  LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ? AND "
+								+ "WHERE (mea.moneyIncomeApportion IS NULL OR main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND  date > ? AND date <= ? AND "
 								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -298,11 +298,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
-								+ "FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyLend LEFT JOIN MoneyExpenseApportion mea ON mea.id = main.moneyExpenseApportionId AND mea.friendUserId IS NOT NULL  main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ? AND "
+								+ "WHERE (mea.moneyExpenseApportion IS NULL OR main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Lend"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
