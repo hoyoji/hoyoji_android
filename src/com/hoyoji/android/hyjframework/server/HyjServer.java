@@ -69,7 +69,6 @@ public class HyjServer {
 				        }
 				      }
 				    }
-					
 				}
 			});
 				  
@@ -79,7 +78,6 @@ public class HyjServer {
 			post.setHeader("Accept", "application/json");
 			post.setHeader("Content-type", "application/json; charset=UTF-8");
 			post.setHeader("Accept-Encoding", "gzip");
-//	        post.setHeader("charset", HTTP.UTF_8);  
 			post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
 			if (currentUser != null) {
 				String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");

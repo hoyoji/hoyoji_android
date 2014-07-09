@@ -81,8 +81,11 @@ public class MoneySearchGroupListLoader extends
 				ContentProvider.createUri(MoneyDepositReturnContainer.class, null), true,
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyIncome.class, null), true,
+				ContentProvider.createUri(MoneyExpense.class, null), true,
 				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+						ContentProvider.createUri(MoneyIncome.class, null), true,
+						mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyTransfer.class, null), true,
 				mChangeObserver);

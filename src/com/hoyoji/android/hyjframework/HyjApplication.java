@@ -263,6 +263,7 @@ public class HyjApplication extends FrontiaApplication {
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
 
+			user = HyjModel.getModel(User.class, user.getId());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} finally {
