@@ -574,7 +574,12 @@ public class MoneyIncome extends HyjModel {
 				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", this.getProjectId(),
@@ -587,6 +592,9 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public boolean hasAddNewPermission(String projectId) {
+		if(projectId == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", projectId,
@@ -603,7 +611,12 @@ public class MoneyIncome extends HyjModel {
 				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", this.getProjectId(),

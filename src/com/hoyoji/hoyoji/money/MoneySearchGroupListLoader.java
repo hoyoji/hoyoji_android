@@ -147,7 +147,21 @@ public class MoneySearchGroupListLoader extends
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND (EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 			}
-		} else if(!type.equals("SharedProject")){
+		} else if(type.equals("SharedProjectExpense")){
+			if(mFriendUserId != null){
+				queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyBorrow mb WHERE mb.moneyExpenseApportionId = main.moneyExpenseApportionId AND mb.friendUserId = '" + mFriendUserId + "') ");
+			}
+			if(mLocalFriendId != null){
+				queryStringBuilder.append(" AND 1 <> 1 ");
+			}
+		} else if(type.equals("SharedProjectIncome")){
+			if(mFriendUserId != null){
+				queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyLend ml WHERE ml.moneyIncomeApportionId = main.moneyIncomeApportionId AND ml.friendUserId = '" + mFriendUserId + "') ");
+			}
+			if(mLocalFriendId != null){
+				queryStringBuilder.append(" AND 1 <> 1 ");
+			}
+		} else {
 			if(mFriendUserId != null){
 				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 			}
@@ -219,17 +233,28 @@ public class MoneySearchGroupListLoader extends
 		
 		int loadCount = 0;
 		while (loadCount < mLoadLimit) {
+			if(mDateFrom != 0 && calDateFrom.getTimeInMillis() < mDateFrom){
+				break;
+			}	
+			if(mDateTo != 0 && dateTo > mDateTo){
+				break;
+			}	
+			
 			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calDateFrom.getTime()),
 					mDateFormat.format(new Date(dateTo)) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
+			String notProject = "";
+			if(mProjectId != null){
+				notProject = "1 <> 1 AND ";
+			}
 			Cursor cursor = Cache
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"),
+							"WHERE " + notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -242,7 +267,7 @@ public class MoneySearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"),
+							"WHERE " + notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -417,10 +442,14 @@ public class MoneySearchGroupListLoader extends
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
+		String notProject = "";
+		if(mProjectId != null){
+			notProject = "1 <> 1 AND ";
+		}
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + buildSearchQuery("SharedProject"),
+						"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -431,7 +460,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + buildSearchQuery("SharedProject"),
+						"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id  WHERE " + notProject + " mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -605,10 +634,14 @@ public class MoneySearchGroupListLoader extends
 	private long getMaxDateInMillis(){
 		String[] args = new String[] { };
 		String dateString = null;
+		String notProject = "";
+		if(mProjectId != null){
+			notProject = "1 <> 1 AND ";
+		}
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense",
+						"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND " + buildSearchQuery("SharedProjectExpense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -619,7 +652,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome",
+						"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND " + buildSearchQuery("SharedProjectIncome"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -635,7 +668,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpenseContainer",
+						"SELECT MAX(date) FROM MoneyExpenseContainer WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -646,7 +679,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncomeContainer",
+						"SELECT MAX(date) FROM MoneyIncomeContainer WHERE " + buildSearchQuery("Income"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -662,7 +695,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer",
+						"SELECT MAX(date) FROM MoneyDepositIncomeContainer WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -678,7 +711,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer",
+						"SELECT MAX(date) FROM MoneyDepositReturnContainer WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -694,7 +727,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL",
+						"SELECT MAX(date) FROM MoneyBorrow WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -710,7 +743,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL",
+						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -726,7 +759,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer",
+						"SELECT MAX(date) FROM MoneyTransfer WHERE " + buildTransferSearchQuery(),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -742,7 +775,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn WHERE moneyDepositReturnApportionId IS NULL",
+						"SELECT MAX(date) FROM MoneyReturn WHERE moneyDepositReturnApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -758,7 +791,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback",
+						"SELECT MAX(date) FROM MoneyPayback WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

@@ -15,6 +15,7 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
 import com.activeandroid.query.Select;
+import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -661,6 +662,9 @@ public class LoginActivity extends HyjActivity {
 							for (int j = 0; j < jsonArray.length(); j++) {
 								JSONObject obj = array.optJSONObject(j);
 								if (obj != null) {
+									if(HyjApplication.getIsDebuggable()){
+										Log.i("Login Download Data : ",  obj.optString("__dataType"));
+									}
 									if (obj.optString("__dataType").equals(
 											"MoneyAccount")) {
 										MoneyAccount moneyAccount = new MoneyAccount();

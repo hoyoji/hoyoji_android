@@ -857,7 +857,7 @@ public class MainActivity extends HyjUserActivity {
 			} else {
 				JSONObject jsonObj = (JSONObject) o;
 				String dataType = jsonObj.getString("__dataType");
-				if(dataType.equals("MoneyExpense")){
+				if(HyjApplication.getIsDebuggable()){
 					Log.i("Downloaded Data : ", jsonObj.toString());
 				}
 				HyjModel model = null;
