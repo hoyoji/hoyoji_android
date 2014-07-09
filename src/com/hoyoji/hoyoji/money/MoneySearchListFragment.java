@@ -890,10 +890,10 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
-//				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyIncome){
-//				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyExpenseContainer){
 				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);

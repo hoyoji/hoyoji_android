@@ -119,7 +119,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				} else if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND (EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 				}
-			} else {
+			} else if(!type.equals("SharedProject")){
 				if(mFriendUserId != null){
 					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 				} else if(mLocalFriendId != null){
@@ -158,10 +158,10 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
-	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
 	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();

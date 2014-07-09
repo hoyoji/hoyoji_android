@@ -90,7 +90,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_formfragment_moneyexpense;
+		return R.layout.money_formfragment_moneyexpensecontainer;
 	}
 
 	@Override
@@ -119,10 +119,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		setupDeleteButton(mMoneyExpenseContainerEditor);
 
 		mImageFieldPicture = (HyjImageField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageField_picture);
+				R.id.moneyExpenseContainerFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyExpenseContainer.getPictures());
 				
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_date);
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpenseContainer.getDate());
 		}
@@ -136,7 +136,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		}
 		
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_selectorField_project);
+				R.id.moneyExpenseContainerFormFragment_selectorField_project);
 
 		if (project != null) {
 			mSelectorFieldProject.setModelId(project.getId());
@@ -156,7 +156,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		
 		setupApportionField(moneyExpenseContainer);
 		
-		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_amount);
+		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_amount);
 		mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
@@ -188,7 +188,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		
 		MoneyAccount moneyAccount = moneyExpenseContainer.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_selectorField_moneyAccount);
+				R.id.moneyExpenseContainerFormFragment_selectorField_moneyAccount);
 
 		if (moneyAccount != null) {
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
@@ -211,16 +211,16 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_textField_exchangeRate);
+				R.id.moneyExpenseContainerFormFragment_textField_exchangeRate);
 		mNumericExchangeRate.setNumber(moneyExpenseContainer.getExchangeRate());
 
 		mViewSeparatorExchange = (View) getView().findViewById(
-				R.id.moneyExpenseFormFragment_separatorField_exchange);
+				R.id.moneyExpenseContainerFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(
-				R.id.moneyExpenseFormFragment_linearLayout_exchangeRate);
+				R.id.moneyExpenseContainerFormFragment_linearLayout_exchangeRate);
 
 		mSelectorFieldMoneyExpenseCategory = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_textField_moneyExpenseCategory);
+				R.id.moneyExpenseContainerFormFragment_textField_moneyExpenseCategory);
 		mSelectorFieldMoneyExpenseCategory.setText(moneyExpenseContainer
 				.getMoneyExpenseCategory());
 		if(moneyExpenseContainer.getMoneyExpenseCategoryMain() != null && moneyExpenseContainer.getMoneyExpenseCategoryMain().length() > 0){
@@ -253,7 +253,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		}else{
 			friend = moneyExpenseContainer.getFriend();
 		}
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseFormFragment_selectorField_friend);
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_friend);
 
 		if (friend != null) {
 			mSelectorFieldFriend.setModelId(friend.getId());
@@ -271,7 +271,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 		
 		mImageViewClearFriend = (ImageView) getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageView_clear_friend);
+				R.id.moneyExpenseContainerFormFragment_imageView_clear_friend);
 		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -281,7 +281,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
-				R.id.moneyExpenseFormFragment_textField_remark);
+				R.id.moneyExpenseContainerFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpenseContainer.getRemark());
 		mRemarkFieldRemark.setEditable(false);
 		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
@@ -298,7 +298,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);
+		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageView_camera);
 		takePictureButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -330,7 +330,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 
 		mImageViewRefreshRate = (ImageView) getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageButton_refresh_exchangeRate);
+				R.id.moneyExpenseContainerFormFragment_imageButton_refresh_exchangeRate);
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -353,7 +353,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Bundle bundle = new Bundle();
@@ -363,14 +363,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					}
 				});
 
-		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				addAllProjectMemberIntoApportionsField(moneyExpenseContainer);
 			}
 		});
 		
-		getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -454,7 +454,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	
 	private void setupApportionField(MoneyExpenseContainer moneyExpenseContainer) {
 
-		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseFormFragment_apportionField);
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_apportionField);
 		
 		List<MoneyExpenseApportion> moneyApportions = null;
 		
@@ -635,7 +635,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
 			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
-			getView().findViewById(R.id.moneyExpenseFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
+			getView().findViewById(R.id.moneyExpenseContainerFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
 			
@@ -649,8 +649,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		    	hideSaveAction();
 			}
 			
-			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add).setEnabled(false);
-			getView().findViewById(R.id.moneyExpenseFormFragment_imageButton_apportion_add_all).setEnabled(false);
+			getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_apportion_add).setEnabled(false);
+			getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_apportion_add_all).setEnabled(false);
 //			getView().findViewById(R.id.button_save).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setEnabled(false);	
 			getView().findViewById(R.id.button_delete).setVisibility(View.GONE);

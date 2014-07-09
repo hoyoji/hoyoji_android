@@ -147,7 +147,7 @@ public class MoneySearchGroupListLoader extends
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND (EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 			}
-		} else {
+		} else if(!type.equals("SharedProject")){
 			if(mFriendUserId != null){
 				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
 			}
@@ -229,7 +229,7 @@ public class MoneySearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Expense"),
+							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -242,7 +242,7 @@ public class MoneySearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Income"),
+							"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProject"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -420,7 +420,7 @@ public class MoneySearchGroupListLoader extends
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyExpense main WHERE date <= ? AND " + buildSearchQuery("SharedProject"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -431,7 +431,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + buildSearchQuery("Income"),
+						"SELECT MAX(date) FROM MoneyIncome main WHERE date <= ? AND " + buildSearchQuery("SharedProject"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

@@ -69,7 +69,9 @@ import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -1118,10 +1120,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
-				//openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyIncome){
-					//openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyExpenseContainer){
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
