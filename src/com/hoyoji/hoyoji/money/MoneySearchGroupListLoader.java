@@ -668,7 +668,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpenseContainer WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyExpenseContainer main WHERE " + buildSearchQuery("Expense"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -679,7 +679,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncomeContainer WHERE " + buildSearchQuery("Income"),
+						"SELECT MAX(date) FROM MoneyIncomeContainer main WHERE " + buildSearchQuery("Income"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -695,7 +695,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyDepositIncomeContainer  main WHERE " + buildSearchQuery("DepositIncome"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -711,7 +711,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyDepositReturnContainer  main WHERE " + buildSearchQuery("DepositReturn"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -727,7 +727,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyBorrow  main WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Borrow"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -743,7 +743,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyLend  main WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Lend"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -759,7 +759,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer WHERE " + buildTransferSearchQuery(),
+						"SELECT MAX(date) FROM MoneyTransfer  main WHERE " + buildTransferSearchQuery(),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -775,7 +775,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn WHERE moneyDepositReturnApportionId IS NULL WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyReturn  main WHERE moneyDepositReturnApportionId IS NULL AND " + buildSearchQuery("Return"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -791,7 +791,7 @@ public class MoneySearchGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback WHERE " + buildSearchQuery("Expense"),
+						"SELECT MAX(date) FROM MoneyPayback  main WHERE " + buildSearchQuery("Payback"),
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -807,7 +807,7 @@ public class MoneySearchGroupListLoader extends
 //		cursor = Cache
 //				.openDatabase()
 //				.rawQuery(
-//						"SELECT MAX(date) FROM Message WHERE (messageState='new' OR messageState='unread') ",
+//						"SELECT MAX(date) FROM Message  main WHERE (messageState='new' OR messageState='unread') ",
 //						args);
 //		if (cursor != null) {
 //			cursor.moveToFirst();

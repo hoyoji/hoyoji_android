@@ -95,7 +95,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.money_formfragment_moneyincome;
+		return R.layout.money_formfragment_moneyincomecontainer;
 	}
 	 
 	@Override
