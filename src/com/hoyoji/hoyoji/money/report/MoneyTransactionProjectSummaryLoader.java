@@ -300,7 +300,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -316,7 +316,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Borrow"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -350,7 +350,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NOT NULL) AND date > ? AND date <= ? AND "
 								+ buildSearchQuery("Lend"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -366,7 +366,7 @@ public class MoneyTransactionProjectSummaryLoader extends
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL) AND  date > ? AND date <= ? AND "
+								+ "WHERE main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NOT NULL) AND  date > ? AND date <= ? AND "
 								+ buildSearchQuery("Lend"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
