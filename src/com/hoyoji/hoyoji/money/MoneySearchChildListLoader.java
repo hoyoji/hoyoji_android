@@ -121,14 +121,14 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				}
 			} else if(type.equals("SharedProjectExpense")){
 				if(mFriendUserId != null){
-					queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyBorrow mb WHERE mb.moneyExpenseApportionId = main.moneyExpenseApportionId AND mb.friendUserId = '" + mFriendUserId + "') ");
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS (SELECT id FROM MoneyBorrow mb WHERE mb.moneyExpenseApportionId = main.moneyExpenseApportionId AND mb.friendUserId = '" + mFriendUserId + "')) ");
 				}
 				if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND 1 <> 1 ");
 				}
 			} else if(type.equals("SharedProjectIncome")){
 				if(mFriendUserId != null){
-					queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyLend ml WHERE ml.moneyIncomeApportionId = main.moneyIncomeApportionId AND ml.friendUserId = '" + mFriendUserId + "') ");
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS (SELECT id FROM MoneyLend ml WHERE ml.moneyIncomeApportionId = main.moneyIncomeApportionId AND ml.friendUserId = '" + mFriendUserId + "')) ");
 				}
 				if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND 1 <> 1 ");

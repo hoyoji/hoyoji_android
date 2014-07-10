@@ -149,14 +149,14 @@ public class MoneySearchGroupListLoader extends
 			}
 		} else if(type.equals("SharedProjectExpense")){
 			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyBorrow mb WHERE mb.moneyExpenseApportionId = main.moneyExpenseApportionId AND mb.friendUserId = '" + mFriendUserId + "') ");
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS (SELECT id FROM MoneyBorrow mb WHERE mb.moneyExpenseApportionId = main.moneyExpenseApportionId AND mb.friendUserId = '" + mFriendUserId + "')) ");
 			}
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND 1 <> 1 ");
 			}
 		} else if(type.equals("SharedProjectIncome")){
 			if(mFriendUserId != null){
-				queryStringBuilder.append(" AND EXISTS (SELECT id FROM MoneyLend ml WHERE ml.moneyIncomeApportionId = main.moneyIncomeApportionId AND ml.friendUserId = '" + mFriendUserId + "') ");
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS (SELECT id FROM MoneyLend ml WHERE ml.moneyIncomeApportionId = main.moneyIncomeApportionId AND ml.friendUserId = '" + mFriendUserId + "')) ");
 			}
 			if(mLocalFriendId != null){
 				queryStringBuilder.append(" AND 1 <> 1 ");
@@ -246,35 +246,34 @@ public class MoneySearchGroupListLoader extends
 					mDateFormat.format(new Date(dateTo)) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
-			String notProject = "";
-			if(mProjectId != null){
-				notProject = "1 <> 1 AND ";
-			}
-			Cursor cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE " + notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				expenseTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE " + notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
+			Cursor cursor = null;
+			if(mProjectId == null){
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					expenseTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
 			}
 			cursor = Cache
 					.openDatabase()
@@ -442,36 +441,35 @@ public class MoneySearchGroupListLoader extends
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
-		String notProject = "";
-		if(mProjectId != null){
-			notProject = "1 <> 1 AND ";
-		}
-		Cursor cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			dateString = cursor.getString(0);
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id  WHERE " + notProject + " mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
+		Cursor cursor = null;
+		if(mProjectId == null){
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				dateString = cursor.getString(0);
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id  WHERE mea.id IS NULL AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
+				}
+				cursor.close();
+				cursor = null;
+			}
 		}
 		cursor = Cache
 				.openDatabase()
@@ -634,36 +632,35 @@ public class MoneySearchGroupListLoader extends
 	private long getMaxDateInMillis(){
 		String[] args = new String[] { };
 		String dateString = null;
-		String notProject = "";
-		if(mProjectId != null){
-			notProject = "1 <> 1 AND ";
-		}
-		Cursor cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND " + buildSearchQuery("SharedProjectExpense"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			dateString = cursor.getString(0);
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id WHERE " + notProject + " mea.id IS NULL AND " + buildSearchQuery("SharedProjectIncome"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
-				}
+		Cursor cursor = null;
+		if(mProjectId == null){
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id WHERE mea.id IS NULL AND " + buildSearchQuery("SharedProjectExpense"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				dateString = cursor.getString(0);
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id WHERE mea.id IS NULL AND " + buildSearchQuery("SharedProjectIncome"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
+				}
+				cursor.close();
+				cursor = null;
+			}
 		}
 		cursor = Cache
 				.openDatabase()
