@@ -27,6 +27,7 @@ import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -142,11 +143,19 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 
 			String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			
-	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
+	    	List<HyjModel> moneyBorrows1 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId = '" + currentUserId + "')) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyBorrows1);
+	    	List<HyjModel> moneyBorrows2 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL)) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyBorrows2);
 	    	
-	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
+	    	List<HyjModel> moneyLends1 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId IS NULL)) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyLends1);
+	    	List<HyjModel> moneyLends2 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR mea.friendUserId = '" + currentUserId + "')) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyLends2);
 	    	
 	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
