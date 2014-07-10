@@ -135,7 +135,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				}
 			} else {
 				if(mFriendUserId != null){
-					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
+					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND (apr.friendUserId = '" + mFriendUserId + "' OR apr.localFriendId = (SELECT id FROM Friend WHERE friendUserId = '"+mFriendUserId+"'))))");
 				} else if(mLocalFriendId != null){
 					queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 				}

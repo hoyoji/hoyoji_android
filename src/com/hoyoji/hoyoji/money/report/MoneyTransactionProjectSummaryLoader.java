@@ -119,8 +119,8 @@ public class MoneyTransactionProjectSummaryLoader extends
 					+ mFriendUserId + "' OR friendUserId = '" + mFriendUserId
 					+ "' OR EXISTS(SELECT apr.id FROM Money" + type
 					+ "Apportion apr WHERE apr.money" + type
-					+ "Id = main.id AND apr.friendUserId = '" + mFriendUserId
-					+ "'))");
+					+ "Id = main.id AND (apr.friendUserId = '" + mFriendUserId
+					+ "' OR apr.localFriendId = (SELECT id FROM Friend WHERE friendUserId = '"+mFriendUserId+"'))))");
 		}
 		if (mLocalFriendId != null) {
 			queryStringBuilder.append(" AND (localFriendId = '"
