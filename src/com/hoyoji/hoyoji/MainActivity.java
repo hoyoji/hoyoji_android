@@ -857,8 +857,8 @@ public class MainActivity extends HyjUserActivity {
 			} else {
 				JSONObject jsonObj = (JSONObject) o;
 				String dataType = jsonObj.getString("__dataType");
-				if(HyjApplication.getIsDebuggable()){
-					Log.i("Downloaded Data : ", jsonObj.toString());
+				if(HyjApplication.getIsDebuggable() && dataType.equals("MoneyLend")){
+					Log.i("Downloaded Data " + dataType, jsonObj.toString());
 				}
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
