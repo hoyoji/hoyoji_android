@@ -372,7 +372,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-//			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyExpense)object).getPicture());
 			
 			if(view.getTag() == null){

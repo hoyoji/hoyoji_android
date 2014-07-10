@@ -171,16 +171,13 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
-	    	String notProject = "";
-	    	if(mProjectId != null){
-				notProject = "1 <> 1 AND ";
+	    	if(mProjectId == null){
+		    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where(" mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"), dateFrom, dateTo).orderBy("date DESC").execute();
+		    	list.addAll(moneyExpenses);
+		    	
+		    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where(" mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
+		    	list.addAll(moneyIncomes);
 			}
-	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where(notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"), dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyExpenses);
-	    	
-	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where(notProject + " mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyIncomes);
-	    	
 	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenseContainers);
 	    	
