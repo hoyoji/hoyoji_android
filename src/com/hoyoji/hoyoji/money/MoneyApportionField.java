@@ -234,13 +234,17 @@ public class MoneyApportionField extends GridView {
 		int i = 0; 
 		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			
-			if(api.getApportion().getLocalFriendId() == null){
-				// 项目成员, 但不是新项目的成员
+			if(api.getApportion().getFriendUserId() != null){
+				// 项目成员, 但不是新项目的成员, 隐藏起来
+	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", api.getApportion().getFriendUserId()).executeSingle();
 				if(!friendUserSet.contains(api.getApportion().getFriendUserId())) {
 					mHiddenApportionItems.add(api);
 					mImageGridAdapter.remove(api);
+//					gridUserSet.add(friend.getId());
+//					api.changeProjectWithNonProjectMember(project.getId(), friend);
 				} else {
+					gridUserSet.add(friend.getFriendUserId());
+					api.changeProject(project.getId());
 					i++;
 				}
 			} else {
@@ -249,14 +253,19 @@ public class MoneyApportionField extends GridView {
 				if(friend.getFriendUserId() != null){ 
 					// 网络好友
 					if(!friendUserSet.contains(friend.getFriendUserId())) {
-						// 也不是是新项目的成员
-						mHiddenApportionItems.add(api);
-						mImageGridAdapter.remove(api);
-					} else {
-						// 是新项目的成员，我们直接转过去
-						gridUserSet.add(friend.getFriendUserId());
+						// 也不是是新项目的成员。非项目成员不能转为项目成员，我们只好将其隐藏
+//						mHiddenApportionItems.add(api);
+//						mImageGridAdapter.remove(api);
+						gridUserSet.add(friend.getId());
 						api.changeProject(project.getId());
 						i++;
+					} else {
+						mHiddenApportionItems.add(api);
+						mImageGridAdapter.remove(api);
+						// 是新项目的成员，我们直接转过去
+//						gridUserSet.add(friend.getFriendUserId());
+//						api.changeProjectWithProjectMember(project.getId(), friend);
+//						i++;
 					}
 				} else {
 					//本地好友，直接转过去
@@ -281,14 +290,44 @@ public class MoneyApportionField extends GridView {
 	    while (it.hasNext()) {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
-	        if(friendUserSet.contains(item.getApportion().getFriendUserId()) ||
-	        		item.getApportion().getLocalFriendId() != null){
-				gridUserSet.add(HyjUtil.ifNull(item.getApportion().getFriendUserId(), item.getApportion().getLocalFriendId()));
-	        	mImageGridAdapter.add(item);
-	        	item.changeProject(project.getId());
-	        	it.remove();
+	        if(item.getApportion().getLocalFriendId() != null){
+	        	Friend friend = HyjModel.getModel(Friend.class, item.getApportion().getLocalFriendId());
+	        	if(friend.getFriendUserId() != null){ 
+					// 网络好友
+					if(!friendUserSet.contains(friend.getFriendUserId())) {
+						// 也不是是新项目的成员
+			        	mImageGridAdapter.add(item);
+						gridUserSet.add(friend.getId());
+						item.changeProject(project.getId());
+			        	it.remove();
+					} else {
+						// 是新项目的成员，我们直接转过去
+//						mImageGridAdapter.add(item);
+//						gridUserSet.add(friend.getFriendUserId());
+//						item.changeProjectWithProjectMember(project.getId(), friend);
+//			        	it.remove();
+					}
+				} else {
+					//本地好友，直接转过去
+					mImageGridAdapter.add(item);
+					gridUserSet.add(friend.getId());
+					item.changeProject(project.getId());
+		        	it.remove();
+				}
+	        } else {
+	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", item.getApportion().getFriendUserId()).executeSingle();
+	        	if(friendUserSet.contains(friend.getFriendUserId())){
+					mImageGridAdapter.add(item);
+	        		gridUserSet.add(friend.getFriendUserId());
+		        	item.changeProject(project.getId());
+		        	it.remove();
+		        } else {
+//		        	gridUserSet.add(friend.getId());
+//		        	item.changeProjectWithNonProjectMember(project.getId(), friend);
+			    }
 	        }
 	    }
+	    
 	    if(project.getAutoApportion()){
 		    int count = projectShareAuthorizations.size();
 			for(i = 0; i < count; i++){
@@ -414,7 +453,12 @@ public class MoneyApportionField extends GridView {
 				if(vh.apportionItem.getApportion().getFriendUser() != null){
 					vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
 				} else {
-					vh.imageViewPicture.setImage((Picture)null);
+					Friend friend = HyjModel.getModel(Friend.class, vh.apportionItem.getApportion().getLocalFriendId());
+					if(friend.getFriendUserId() != null){
+						vh.imageViewPicture.setImage(friend.getFriendUser().getPictureId());
+					} else {
+						vh.imageViewPicture.setImage((Picture)null);
+					}
 				}
 //				if(vh.apportionItem.getFriend() != null){
 //					vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
