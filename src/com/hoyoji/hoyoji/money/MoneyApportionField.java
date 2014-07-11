@@ -315,16 +315,16 @@ public class MoneyApportionField extends GridView {
 		        	it.remove();
 				}
 	        } else {
-	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", item.getApportion().getFriendUserId()).executeSingle();
-	        	if(friendUserSet.contains(friend.getFriendUserId())){
+//	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", item.getApportion().getFriendUserId()).executeSingle();
+//	        	if(friendUserSet.contains(friend.getFriendUserId())){
 					mImageGridAdapter.add(item);
-	        		gridUserSet.add(friend.getFriendUserId());
+	        		gridUserSet.add(item.getApportion().getFriendUserId());
 		        	item.changeProject(project.getId());
 		        	it.remove();
-		        } else {
+//		        } else {
 //		        	gridUserSet.add(friend.getId());
 //		        	item.changeProjectWithNonProjectMember(project.getId(), friend);
-			    }
+//			    }
 	        }
 	    }
 	    
