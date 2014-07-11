@@ -223,6 +223,7 @@ public class MoneyApportionField extends GridView {
 		Set<String> friendUserSet = new HashSet<String>();
 		Set<String> gridUserSet = new HashSet<String>();
 		
+		// 把新项目的成员都记录下来
 		for(int i=0; i < projectShareAuthorizations.size(); i++){
 			if(projectShareAuthorizations.get(i).getState().equals("Accept")) {
 				friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
@@ -233,14 +234,46 @@ public class MoneyApportionField extends GridView {
 		int i = 0; 
 		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			if(!friendUserSet.contains(api.getApportion().getFriendUserId()) && api.getApportion().getLocalFriendId() == null){
+			
+			if(api.getApportion().getLocalFriendId() == null){
+				// 项目成员, 但不是新项目的成员
+				if(!friendUserSet.contains(api.getApportion().getFriendUserId())) {
 					mHiddenApportionItems.add(api);
 					mImageGridAdapter.remove(api);
+				} else {
+					i++;
+				}
 			} else {
-				gridUserSet.add(HyjUtil.ifNull(api.getApportion().getFriendUserId(), api.getApportion().getLocalFriendId()));
-				api.changeProject(project.getId());
-				i++;
+				// 非项目成员
+				Friend friend = HyjModel.getModel(Friend.class, api.getApportion().getLocalFriendId());
+				if(friend.getFriendUserId() != null){ 
+					// 网络好友
+					if(!friendUserSet.contains(friend.getFriendUserId())) {
+						// 也不是是新项目的成员
+						mHiddenApportionItems.add(api);
+						mImageGridAdapter.remove(api);
+					} else {
+						// 是新项目的成员，我们直接转过去
+						gridUserSet.add(friend.getFriendUserId());
+						api.changeProject(project.getId());
+						i++;
+					}
+				} else {
+					//本地好友，直接转过去
+					gridUserSet.add(friend.getId());
+					api.changeProject(project.getId());
+					i++;
+				}
 			}
+			
+//			if(!friendUserSet.contains(api.getApportion().getFriendUserId()) && api.getApportion().getLocalFriendId() == null){
+//					mHiddenApportionItems.add(api);
+//					mImageGridAdapter.remove(api);
+//			} else {
+//				gridUserSet.add(HyjUtil.ifNull(api.getApportion().getFriendUserId(), api.getApportion().getLocalFriendId()));
+//				api.changeProject(project.getId());
+//				i++;
+//			}
 		}
 
 		// 把隐藏掉的分摊添加回去
