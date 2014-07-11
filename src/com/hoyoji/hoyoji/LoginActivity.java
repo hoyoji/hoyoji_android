@@ -60,6 +60,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -147,6 +149,10 @@ public class LoginActivity extends HyjActivity {
 
 	@Override
 	protected void onInitViewData() {
+		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+		if(HyjApplication.getIsDebuggable()){
+			actionBar.setTitle("好友记(测试版)");
+		}
 		// init view data here
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}

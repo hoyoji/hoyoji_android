@@ -23,6 +23,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -342,6 +344,10 @@ public class MainActivity extends HyjUserActivity {
 	private void initView()
 	{
 
+		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+		if(HyjApplication.getIsDebuggable()){
+			actionBar.setTitle("好友记(测试版)");
+		}
 		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
 		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
 		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
