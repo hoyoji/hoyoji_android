@@ -237,7 +237,7 @@ public class MoneyApportionField extends GridView {
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			mHiddenApportionItems.add(api);
 			mImageGridAdapter.remove(api);
-			i++;
+			
 //			if(api.getApportion().getFriendUserId() != null){
 //				// 项目成员, 但不是新项目的成员, 隐藏起来
 //	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", api.getApportion().getFriendUserId()).executeSingle();
@@ -296,11 +296,12 @@ public class MoneyApportionField extends GridView {
 	        ApportionItem<MoneyApportion> item = it.next();
 	        if(item.getProjectId().equals(project.getId())){
 	        	mImageGridAdapter.add(item);
-	        	if(item.getFriend() != null){
-	        		gridUserSet.add(item.getFriend().getId());
-	        	} else {
-	        		gridUserSet.add(item.getFriend().getFriendUserId());
-	        	}
+	        	if(item.getApportion().getFriendUser() != null){
+	        		gridUserSet.add(item.getApportion().getFriendUserId());
+	        	} 
+//	        	else {
+//	        		gridUserSet.add(item.getFriendUserId());
+//	        	}
 //				item.changeProject(project.getId());
 	        	it.remove();
 	        }
