@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -234,55 +235,58 @@ public class MoneyApportionField extends GridView {
 		int i = 0; 
 		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			if(api.getApportion().getFriendUserId() != null){
-				// 项目成员, 但不是新项目的成员, 隐藏起来
-	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", api.getApportion().getFriendUserId()).executeSingle();
-				if(!friendUserSet.contains(api.getApportion().getFriendUserId())) {
-					mHiddenApportionItems.add(api);
-					mImageGridAdapter.remove(api);
-//					gridUserSet.add(friend.getId());
-//					api.changeProjectWithNonProjectMember(project.getId(), friend);
-				} else {
-					gridUserSet.add(friend.getFriendUserId());
-					api.changeProject(project.getId());
-					i++;
-				}
-			} else {
-				// 非项目成员
-				Friend friend = HyjModel.getModel(Friend.class, api.getApportion().getLocalFriendId());
-				if(friend.getFriendUserId() != null){ 
-					// 网络好友
-					if(!friendUserSet.contains(friend.getFriendUserId())) {
-						// 也不是是新项目的成员。非项目成员不能转为项目成员，我们只好将其隐藏
-//						mHiddenApportionItems.add(api);
-//						mImageGridAdapter.remove(api);
-						gridUserSet.add(friend.getId());
-						api.changeProject(project.getId());
-						i++;
-					} else {
-						mHiddenApportionItems.add(api);
-						mImageGridAdapter.remove(api);
-						// 是新项目的成员，我们直接转过去
-//						gridUserSet.add(friend.getFriendUserId());
-//						api.changeProjectWithProjectMember(project.getId(), friend);
-//						i++;
-					}
-				} else {
-					//本地好友，直接转过去
-					gridUserSet.add(friend.getId());
-					api.changeProject(project.getId());
-					i++;
-				}
-			}
-			
-//			if(!friendUserSet.contains(api.getApportion().getFriendUserId()) && api.getApportion().getLocalFriendId() == null){
+			mHiddenApportionItems.add(api);
+			mImageGridAdapter.remove(api);
+			i++;
+//			if(api.getApportion().getFriendUserId() != null){
+//				// 项目成员, 但不是新项目的成员, 隐藏起来
+//	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", api.getApportion().getFriendUserId()).executeSingle();
+//				if(!friendUserSet.contains(api.getApportion().getFriendUserId())) {
 //					mHiddenApportionItems.add(api);
 //					mImageGridAdapter.remove(api);
+////					gridUserSet.add(friend.getId());
+////					api.changeProjectWithNonProjectMember(project.getId(), friend);
+//				} else {
+//					gridUserSet.add(friend.getFriendUserId());
+//					api.changeProject(project.getId());
+//					i++;
+//				}
 //			} else {
-//				gridUserSet.add(HyjUtil.ifNull(api.getApportion().getFriendUserId(), api.getApportion().getLocalFriendId()));
-//				api.changeProject(project.getId());
-//				i++;
+//				// 非项目成员
+//				Friend friend = HyjModel.getModel(Friend.class, api.getApportion().getLocalFriendId());
+//				if(friend.getFriendUserId() != null){ 
+//					// 网络好友
+//					if(!friendUserSet.contains(friend.getFriendUserId())) {
+//						// 也不是是新项目的成员。非项目成员不能转为项目成员，我们只好将其隐藏
+////						mHiddenApportionItems.add(api);
+////						mImageGridAdapter.remove(api);
+//						gridUserSet.add(friend.getId());
+//						api.changeProject(project.getId());
+//						i++;
+//					} else {
+//						mHiddenApportionItems.add(api);
+//						mImageGridAdapter.remove(api);
+//						// 是新项目的成员，我们直接转过去
+////						gridUserSet.add(friend.getFriendUserId());
+////						api.changeProjectWithProjectMember(project.getId(), friend);
+////						i++;
+//					}
+//				} else {
+//					//本地好友，直接转过去
+//					gridUserSet.add(friend.getId());
+//					api.changeProject(project.getId());
+//					i++;
+//				}
 //			}
+//			
+////			if(!friendUserSet.contains(api.getApportion().getFriendUserId()) && api.getApportion().getLocalFriendId() == null){
+////					mHiddenApportionItems.add(api);
+////					mImageGridAdapter.remove(api);
+////			} else {
+////				gridUserSet.add(HyjUtil.ifNull(api.getApportion().getFriendUserId(), api.getApportion().getLocalFriendId()));
+////				api.changeProject(project.getId());
+////				i++;
+////			}
 		}
 
 		// 把隐藏掉的分摊添加回去
@@ -290,42 +294,53 @@ public class MoneyApportionField extends GridView {
 	    while (it.hasNext()) {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
-	        if(item.getApportion().getLocalFriendId() != null){
-	        	Friend friend = HyjModel.getModel(Friend.class, item.getApportion().getLocalFriendId());
-	        	if(friend.getFriendUserId() != null){ 
-					// 网络好友
-					if(!friendUserSet.contains(friend.getFriendUserId())) {
-						// 也不是是新项目的成员
-			        	mImageGridAdapter.add(item);
-						gridUserSet.add(friend.getId());
-						item.changeProject(project.getId());
-			        	it.remove();
-					} else {
-						// 是新项目的成员，我们直接转过去
-//						mImageGridAdapter.add(item);
-//						gridUserSet.add(friend.getFriendUserId());
-//						item.changeProjectWithProjectMember(project.getId(), friend);
-//			        	it.remove();
-					}
-				} else {
-					//本地好友，直接转过去
-					mImageGridAdapter.add(item);
-					gridUserSet.add(friend.getId());
-					item.changeProject(project.getId());
-		        	it.remove();
-				}
-	        } else {
-//	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", item.getApportion().getFriendUserId()).executeSingle();
-//	        	if(friendUserSet.contains(friend.getFriendUserId())){
-					mImageGridAdapter.add(item);
-	        		gridUserSet.add(item.getApportion().getFriendUserId());
-		        	item.changeProject(project.getId());
-		        	it.remove();
-//		        } else {
-//		        	gridUserSet.add(friend.getId());
-//		        	item.changeProjectWithNonProjectMember(project.getId(), friend);
-//			    }
+	        if(item.getApportion().getProject().getId().equals(project.getId())){
+	        	mImageGridAdapter.add(item);
+	        	if(item.getFriend() != null){
+	        		gridUserSet.add(item.getFriend().getId());
+	        	} else {
+	        		gridUserSet.add(item.getFriend().getFriendUserId());
+	        	}
+//				item.changeProject(project.getId());
+	        	it.remove();
 	        }
+	        
+//	        if(item.getApportion().getLocalFriendId() != null){
+//	        	Friend friend = HyjModel.getModel(Friend.class, item.getApportion().getLocalFriendId());
+//	        	if(friend.getFriendUserId() != null){ 
+//					// 网络好友
+//					if(!friendUserSet.contains(friend.getFriendUserId())) {
+//						// 也不是是新项目的成员
+//			        	mImageGridAdapter.add(item);
+//						gridUserSet.add(friend.getId());
+//						item.changeProject(project.getId());
+//			        	it.remove();
+//					} else {
+//						// 是新项目的成员，我们直接转过去
+////						mImageGridAdapter.add(item);
+////						gridUserSet.add(friend.getFriendUserId());
+////						item.changeProjectWithProjectMember(project.getId(), friend);
+////			        	it.remove();
+//					}
+//				} else {
+//					//本地好友，直接转过去
+//					mImageGridAdapter.add(item);
+//					gridUserSet.add(friend.getId());
+//					item.changeProject(project.getId());
+//		        	it.remove();
+//				}
+//	        } else {
+////	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", item.getApportion().getFriendUserId()).executeSingle();
+////	        	if(friendUserSet.contains(friend.getFriendUserId())){
+//					mImageGridAdapter.add(item);
+//	        		gridUserSet.add(item.getApportion().getFriendUserId());
+//		        	item.changeProject(project.getId());
+//		        	it.remove();
+////		        } else {
+////		        	gridUserSet.add(friend.getId());
+////		        	item.changeProjectWithNonProjectMember(project.getId(), friend);
+////			    }
+//	        }
 	    }
 	    
 	    if(project.getAutoApportion()){
@@ -351,6 +366,22 @@ public class MoneyApportionField extends GridView {
 						e.printStackTrace();
 					}
 				}
+			}
+	    }
+	    if(mImageGridAdapter.getCount() == 0){
+	    	MoneyApportion apportion;
+			try {
+				apportion = type.newInstance();
+				apportion.setAmount(0.0);
+				apportion.setApportionType("Share");
+				apportion.setMoneyId(mMoneyTransactionId);
+				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+				mImageGridAdapter.add(pi);
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
 			}
 	    }
 	}
