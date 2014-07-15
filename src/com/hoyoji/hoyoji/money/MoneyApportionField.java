@@ -294,7 +294,7 @@ public class MoneyApportionField extends GridView {
 	    while (it.hasNext()) {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
-	        if(item.getApportion().getProject().getId().equals(project.getId())){
+	        if(item.getProjectId().equals(project.getId())){
 	        	mImageGridAdapter.add(item);
 	        	if(item.getFriend() != null){
 	        		gridUserSet.add(item.getFriend().getId());
@@ -654,6 +654,10 @@ public class MoneyApportionField extends GridView {
 		public void saveToCopy(MoneyApportion apportion){
 			apportion.setAmount(mAmount);
 			apportion.setApportionType(mApportionType);
+		}
+		
+		public String getProjectId(){
+			return mProjectId;
 		}
 		
 	}
