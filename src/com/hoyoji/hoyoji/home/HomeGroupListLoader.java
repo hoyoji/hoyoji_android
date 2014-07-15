@@ -18,7 +18,9 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -52,11 +54,17 @@ public class HomeGroupListLoader extends
 
 		mChangeObserver = new ChangeObserver();
 		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyExpenseContainer.class, null), true,
+				ContentProvider.createUri(MoneyExpense.class, null), true,
 				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
+				ContentProvider.createUri(MoneyIncome.class, null), true,
 				mChangeObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContentProvider.createUri(MoneyExpenseContainer.class, null), true,
+//				mChangeObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
+//				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyDepositIncomeContainer.class, null), true,
 				mChangeObserver);
@@ -563,7 +571,12 @@ public class HomeGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getString(0);
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
 			cursor.close();
 			cursor = null;
 		}
