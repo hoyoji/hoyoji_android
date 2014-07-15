@@ -153,7 +153,7 @@
                     hyj:labelText="@string/moneyPaybackFormFragment_textView_moneyAccount" />
 
                 <View
-                    android:id="@id/field_separator"
+                    android:id="@+id/moneyPaybackFormFragment_separatorField_moneyAccount"
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"

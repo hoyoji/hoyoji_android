@@ -504,6 +504,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
 			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+			getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
 			

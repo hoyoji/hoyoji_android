@@ -37,7 +37,9 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -52,7 +54,9 @@ import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -304,10 +308,14 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 	
 	@Override
 	public boolean setViewValue(View view, Object object, String name) {
-		if(object instanceof MoneyExpenseContainer){
+		if(object instanceof MoneyExpense){
 			return setMoneyExpenseItemValue(view, object, name);
-		} else if(object instanceof MoneyIncomeContainer){
+		} else if(object instanceof MoneyIncome){
 			return setMoneyIncomeItemValue(view, object, name);
+		} else if(object instanceof MoneyExpenseContainer){
+			return setMoneyExpenseContainerItemValue(view, object, name);
+		} else if(object instanceof MoneyIncomeContainer){
+			return setMoneyIncomeContainerItemValue(view, object, name);
 		} else if(object instanceof MoneyDepositIncomeContainer){
 			return setMoneyDepositIncomeItemValue(view, object, name);
 		} else if(object instanceof MoneyDepositReturnContainer){
@@ -325,8 +333,153 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 		}
 		return false;
 	}
-	
+
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			Project project = ((MoneyExpense)object).getProject();
+			if(project == null){
+				((TextView)view).setText("共享来的收支");
+			} else {
+				((TextView)view).setText(project.getDisplayName());
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			}
+			Project project = ((MoneyExpense)object).getProject();
+			if(project != null){
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else {
+				numericView.setPrefix(((MoneyExpense)object).getProjectCurrencySymbol());
+			}
+			numericView.setSuffix(null);
+			numericView.setNumber(((MoneyExpense)object).getProjectAmount());
+			numericView.setTextColor(Color.BLACK);
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setImage(((MoneyExpense)object).getPicture());
+			
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyExpense)object).getPicture());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_owner){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpense)object).getProjectCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				Double localAmount = ((MoneyExpense)object).getLocalAmount();
+				if(localAmount == null){
+					((TextView)view).setText("折合:［无汇率］");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(localAmount)));
+				}
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyExpense)object).getDisplayRemark());
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			Project project = ((MoneyIncome)object).getProject();
+			if(project == null){
+				((TextView)view).setText("共享来的收支");
+			} else {
+				((TextView)view).setText(project.getDisplayName());
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}
+
+			Project project = ((MoneyIncome)object).getProject();
+			if(project != null){
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else {
+				numericView.setPrefix(((MoneyIncome)object).getProjectCurrencySymbol());
+			}
+			numericView.setSuffix(null);
+			numericView.setNumber(((MoneyIncome)object).getProjectAmount());
+			numericView.setTextColor(Color.BLACK);
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setImage(((MoneyIncome)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyIncome)object).getPicture());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_owner){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyIncome)object).getProjectCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				Double localAmount = ((MoneyIncome)object).getLocalAmount();
+				if(localAmount == null){
+					((TextView)view).setText("折合:［无汇率］");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(localAmount)));
+				}
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyIncome)object).getDisplayRemark());
+			return true;
+		} else {
+			return false;
+		}
+	}
+	private boolean setMoneyExpenseContainerItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyExpenseContainer)object).getDate());
 			return true;
@@ -350,6 +503,23 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyExpenseContainer)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyExpenseContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpenseContainer)object).getProject().getCurrencyId())){
@@ -366,7 +536,7 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 		}
 	}
 	
-	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
+	private boolean setMoneyIncomeContainerItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyIncomeContainer)object).getDate());
 			return true;
@@ -389,6 +559,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyIncomeContainer)object).getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyIncomeContainer)object).getProject().getCurrencyId())){
@@ -546,6 +732,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyTransfer)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyTransfer)object).getOwnerUserId()));
@@ -582,6 +784,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyBorrow)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyBorrow)object).getProject().getCurrencyId())){
@@ -622,6 +840,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyLend)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProject().getCurrencyId())){
@@ -658,6 +892,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyReturn)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyReturn)object).getProject().getCurrencyId())){
@@ -698,6 +948,22 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyPayback)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyPayback)object).getProject().getCurrencyId())){
@@ -746,7 +1012,13 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			HyjModel object = (HyjModel) ((HyjSimpleExpandableListAdapter)parent.getExpandableListAdapter()).getChild(groupPosition, childPosition);
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
-			if(object instanceof MoneyExpenseContainer){
+			if(object instanceof MoneyExpense){
+				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyIncome){
+				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				return true;
+			} else if(object instanceof MoneyExpenseContainer){
 				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyIncomeContainer){

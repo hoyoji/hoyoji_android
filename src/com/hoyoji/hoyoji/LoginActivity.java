@@ -15,6 +15,7 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
 import com.activeandroid.query.Select;
+import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -59,6 +60,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -146,6 +149,10 @@ public class LoginActivity extends HyjActivity {
 
 	@Override
 	protected void onInitViewData() {
+		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+		if(HyjApplication.getIsDebuggable()){
+			actionBar.setTitle("好友记(测试版)");
+		}
 		// init view data here
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
@@ -661,6 +668,9 @@ public class LoginActivity extends HyjActivity {
 							for (int j = 0; j < jsonArray.length(); j++) {
 								JSONObject obj = array.optJSONObject(j);
 								if (obj != null) {
+									if(HyjApplication.getIsDebuggable()){
+										Log.i("Login Download Data : ",  obj.optString("__dataType"));
+									}
 									if (obj.optString("__dataType").equals(
 											"MoneyAccount")) {
 										MoneyAccount moneyAccount = new MoneyAccount();

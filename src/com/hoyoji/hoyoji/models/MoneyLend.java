@@ -175,7 +175,7 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public Double getLocalAmount(){
-		Double rate = 1.0;
+		Double rate = null;
 		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
 		if (!userCurrencyId.equals(this.getProject().getCurrencyId())) {
 			Double exchange = Exchange.getExchangeRate(userCurrencyId, this
@@ -183,6 +183,9 @@ public class MoneyLend extends HyjModel{
 			if (exchange != null) {
 				rate = exchange;
 			}
+			if(rate == null){
+				return null;
+			} 
 		}
 		return this.getAmount0() * this.getExchangeRate() / rate;
 	}
@@ -508,6 +511,12 @@ public class MoneyLend extends HyjModel{
 		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return false;
 		}
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		
 		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
@@ -517,6 +526,9 @@ public class MoneyLend extends HyjModel{
 	}
 	
 	public boolean hasAddNewPermission(String projectId){
+		if(projectId == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
@@ -528,7 +540,12 @@ public class MoneyLend extends HyjModel{
 		if(!this.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return false;
 		}
-		
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", this.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 		if(psa == null){
 			return false;
@@ -577,5 +594,19 @@ public class MoneyLend extends HyjModel{
 		this.mCurrencyId = mCurrencyId;
 	}
 
+	public String getProjectCurrencySymbol() {
+		if (mProjectCurrencyId == null) {
+			return "";
+		}
+		Currency currency = getModel(Currency.class, mProjectCurrencyId);
+		if (currency != null) {
+			return currency.getSymbol();
+		}
+		return mProjectCurrencyId;
+	}
+
+	public String getProjectCurrencyId() {
+		return this.mProjectCurrencyId;
+	}
 
 }

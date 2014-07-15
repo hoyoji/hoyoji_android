@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
@@ -40,6 +42,7 @@ import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
@@ -338,11 +341,21 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
+			Project project = ((MoneyBorrow)object).getProject();
+			if(project != null){
+				((TextView)view).setText(project.getDisplayName());
+			} else {
+				((TextView)view).setText("共享来的收支");
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(((MoneyBorrow)object).getProject().getCurrencySymbol());
+			Project project = ((MoneyBorrow)object).getProject();
+			if(project != null){
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else {
+				numericView.setPrefix(((MoneyBorrow)object).getProjectCurrencySymbol());
+			}
 			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -350,12 +363,33 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyBorrow)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyBorrow)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyBorrow)object).getProject().getCurrencyId())){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyBorrow)object).getProjectCurrencyId())){
 				((TextView)view).setText("");
 			} else {
-				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyBorrow)object).getLocalAmount())));
+				Double localAmount = ((MoneyBorrow)object).getLocalAmount();
+				if(localAmount == null){
+					((TextView)view).setText("折合:［无汇率］");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(localAmount)));
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
@@ -382,11 +416,21 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
+			Project project = ((MoneyLend)object).getProject();
+			if(project != null){
+				((TextView)view).setText(project.getDisplayName());
+			} else {
+				((TextView)view).setText("共享来的收支");
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
+			Project project = ((MoneyLend)object).getProject();
+			if(project != null){
+				numericView.setPrefix(project.getCurrencySymbol());
+			} else {
+				numericView.setPrefix(((MoneyLend)object).getProjectCurrencySymbol());
+			}
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
@@ -394,12 +438,33 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyLend)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyLend)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProject().getCurrencyId())){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyLend)object).getProjectCurrencyId())){
 				((TextView)view).setText("");
 			} else {
-				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyLend)object).getLocalAmount())));
+				Double localAmount = ((MoneyLend)object).getLocalAmount();
+				if(localAmount == null){
+					((TextView)view).setText("折合:［无汇率］");
+				} else {
+					((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(localAmount)));
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
@@ -434,6 +499,22 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyReturn)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyReturn)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyReturn)object).getProject().getCurrencyId())){
@@ -474,6 +555,22 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setBackgroundResource(R.drawable.ic_action_picture);
 			imageView.setImage(((MoneyPayback)object).getPicture());
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyPayback)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyPayback)object).getProject().getCurrencyId())){
@@ -526,8 +623,13 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyIncomeApportion().getMoneyIncomeContainer().get_mId());
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
 				} else if(((MoneyBorrow)object).getMoneyExpenseApportionId() != null){
-					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyExpenseApportion().getMoneyExpenseContainer().get_mId());
-					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+					if(((MoneyBorrow) object).getMoneyExpenseApportion() != null){
+						bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyExpenseApportion().getMoneyExpenseContainer().get_mId());
+						openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+					} else {
+						bundle.putLong("MODEL_ID", ((MoneyBorrow) object).get_mId());
+						openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+					}
 				} else if(((MoneyBorrow)object).getMoneyDepositIncomeApportionId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyBorrow) object).getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
 					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);

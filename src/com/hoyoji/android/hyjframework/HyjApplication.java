@@ -11,8 +11,6 @@ import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.baidu.frontia.Frontia;
 import com.baidu.frontia.FrontiaApplication;
-import com.baidu.frontia.FrontiaRole;
-import com.baidu.frontia.FrontiaUser;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.PictureUploadService;
@@ -263,6 +261,7 @@ public class HyjApplication extends FrontiaApplication {
 			userData.save();
 			ActiveAndroid.setTransactionSuccessful();
 
+			user = HyjModel.getModel(User.class, user.getId());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} finally {

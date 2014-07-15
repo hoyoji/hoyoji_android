@@ -100,7 +100,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 					.getInstance(messageData.optString("currencyCode"));
 			String currencySymbol = "";
 			currencySymbol = localeCurrency.getSymbol();
-			if(currencySymbol.isEmpty()){
+			if(currencySymbol.length() > 0){
 				currencySymbol = messageData.optString("currencyCode");
 			}
 					
@@ -177,11 +177,12 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		try {
 			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
 			bundle.putDouble("amount", messageData.optDouble("amount"));
-			bundle.putString("currencyId", messageData.optString("currencyId"));
+			bundle.putDouble("exchangeRate", messageData.optDouble("exchangeRate"));
+			bundle.putString("currencyId", messageData.optString("currencyCode"));
 			bundle.putString("counterpartId", messageData.optString("counterpartId"));
 			bundle.putString("friendUserId", mMessageEditor.getModel().getFromUserId());
 			String projectId = messageData.optString("projectId");
-			if(projectId != null && !projectId.isEmpty()){
+			if(projectId != null && projectId.length() > 0){
 				Project project = HyjModel.getModel(Project.class, projectId);
 				if(project != null){
 					bundle.putString("projectId", projectId);

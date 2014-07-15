@@ -23,6 +23,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -342,6 +344,10 @@ public class MainActivity extends HyjUserActivity {
 	private void initView()
 	{
 
+		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+		if(HyjApplication.getIsDebuggable()){
+			actionBar.setTitle("好友记(测试版)");
+		}
 		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
 		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
 		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
@@ -704,10 +710,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -726,10 +732,10 @@ public class MainActivity extends HyjUserActivity {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -857,8 +863,8 @@ public class MainActivity extends HyjUserActivity {
 			} else {
 				JSONObject jsonObj = (JSONObject) o;
 				String dataType = jsonObj.getString("__dataType");
-				if(dataType.equals("MoneyExpense")){
-					Log.i("Downloaded Data : ", jsonObj.toString());
+				if(HyjApplication.getIsDebuggable() && dataType.equals("MoneyLend")){
+					Log.i("Downloaded Data " + dataType, jsonObj.toString());
 				}
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
@@ -1110,31 +1116,34 @@ public class MainActivity extends HyjUserActivity {
 //									if(((MoneyIncome)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
 //									}
-//								} else if(model instanceof MoneyBorrow){
+//								} 
+								else if(model instanceof MoneyBorrow){
 //									if(((MoneyBorrow)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-//									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
-//									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyLend){
+//									} else 
+									if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+										recordData.put("moneyExpenseApportionFriendUserId", ((MoneyBorrow)model).getMoneyExpenseApportion().getFriendUserId());
+									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
+									}
+								} else if(model instanceof MoneyLend){
 //									if(((MoneyLend)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-//									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
-//									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyPayback){
+//									} else 
+									if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+										recordData.put("moneyExpenseApportionFriendUserId", ((MoneyLend)model).getMoneyExpenseApportion().getFriendUserId());
+									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
+									}
+								} else if(model instanceof MoneyPayback){
 //									if(((MoneyPayback)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
 //									}
-//								} else if(model instanceof MoneyReturn){
+								} else if(model instanceof MoneyReturn){
 //									if(((MoneyReturn)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 //									}
-//								}
+								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
 							}
@@ -1198,8 +1207,7 @@ public class MainActivity extends HyjUserActivity {
 //										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 //									}
 //								}
-								jsonObj.put(
-										"recordData", recordData);
+								jsonObj.put("recordData", recordData);
 								postData.put(jsonObj);
 							}
 						} else if (syncRec.getOperation().equalsIgnoreCase(
@@ -1232,7 +1240,7 @@ public class MainActivity extends HyjUserActivity {
 						JSONObject jsonResult = (JSONObject) result;
 						if (jsonResult.isNull("__summary")) {
 							String lastUploadTime = jsonResult.optString("lastUploadTime");
-							if(!lastUploadTime.isEmpty()){
+							if(lastUploadTime.length() > 0){
 								try {
 									ActiveAndroid.beginTransaction();
 									for (ClientSyncRecord syncRec : syncRecords) {

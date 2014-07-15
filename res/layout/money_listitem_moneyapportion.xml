@@ -8,15 +8,15 @@
             android:id="@+id/moneyApportionListItem_picture"
             android:layout_width="56dp"
             android:layout_height="56dp"
-        	android:layout_marginBottom="20dip" 
             android:background="@drawable/ic_action_person" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="56dp"
+            android:layout_height="76dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="60dip" >
+            android:paddingLeft="60dip"
+            android:paddingBottom="20dip" >
 
             <TextView
                 android:id="@+id/moneyApportionListItem_percentage"

@@ -15,6 +15,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -47,7 +50,10 @@ public class HyjServer {
 		InputStream is = null;
 		String s = null;
 		try {
-			DefaultHttpClient client = new DefaultHttpClient();
+			HttpParams my_httpParams = new BasicHttpParams();
+			HttpConnectionParams.setConnectionTimeout(my_httpParams, 10000);
+			HttpConnectionParams.setSoTimeout(my_httpParams, 40000);
+			DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
 			client.addResponseInterceptor(new HttpResponseInterceptor() {
 				@Override
 				public void process(HttpResponse response, HttpContext context)
@@ -63,7 +69,6 @@ public class HyjServer {
 				        }
 				      }
 				    }
-					
 				}
 			});
 				  
@@ -73,7 +78,6 @@ public class HyjServer {
 			post.setHeader("Accept", "application/json");
 			post.setHeader("Content-type", "application/json; charset=UTF-8");
 			post.setHeader("Accept-Encoding", "gzip");
-//	        post.setHeader("charset", HTTP.UTF_8);  
 			post.setHeader("HyjApp-Version", appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
 			if (currentUser != null) {
 				String auth = URLEncoder.encode(currentUser.getUserName(), "UTF-8") + ":" + URLEncoder.encode(currentUser.getUserData().getPassword(), "UTF-8");

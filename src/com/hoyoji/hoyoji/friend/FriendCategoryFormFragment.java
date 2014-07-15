@@ -1,24 +1,15 @@
 package com.hoyoji.hoyoji.friend;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
-
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
-import com.hoyoji.hoyoji.project.ProjectListFragment;
  
 
 public class FriendCategoryFormFragment extends HyjUserFormFragment {

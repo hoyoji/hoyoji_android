@@ -1,10 +1,12 @@
 package com.hoyoji.hoyoji.money.moneycategory;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -61,15 +63,18 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
-		super.onActivityCreated(savedInstanceState);
-		getListView().setOnItemLongClickListener(this);
-		
 		mFrecentCategory = (TextView)getLayoutInflater(savedInstanceState).inflate(R.layout.moneycategory_listitem_moneycategory, null);
 		mFrecentCategory.setText("最近使用");
 		float px = TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP, 48,
 				getView().getResources().getDisplayMetrics());
 		mFrecentCategory.setHeight((int)px);
+		
+		getListView().addHeaderView(mFrecentCategory);
+		
+		super.onActivityCreated(savedInstanceState);
+		getListView().setOnItemLongClickListener(this);
+		
 
 
 		mFrecentCategory.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
@@ -77,14 +82,6 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 				TypedValue.COMPLEX_UNIT_DIP, 10,
 				this.getResources().getDisplayMetrics());
 		mFrecentCategory.setPadding((int)px, 0, 0, 0);
-		
-//		getListView().addHeaderView(mFrecentCategory);
-		
-		int sdk = android.os.Build.VERSION.SDK_INT;
-		if(sdk < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-		} else {
-			getListView().addHeaderView(mFrecentCategory);
-		}
 		
 		View mainCategoryPanel = getView().findViewById(R.id.moneyExpenseCategory_list_panel_mainCategory);
 		mainCategoryPanel.setBackgroundColor(Color.LTGRAY);
@@ -296,6 +293,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		getLoaderManager().restartLoader(1, bundle,this);
 	}
 		
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
 		super.onListItemClick(l, v, position, id);
@@ -415,6 +413,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		}
 
 
+		@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 		@Override
 		public View getView(int position, View arg1, ViewGroup arg2) {
 			View v = super.getView(position, arg1, arg2);

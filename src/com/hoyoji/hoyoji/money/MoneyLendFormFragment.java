@@ -156,10 +156,11 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			project = moneyLend.getProject();
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_project);
-		
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
 			mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+		} else {
+			mSelectorFieldProject.setText("共享来的收支");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -383,6 +384,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
 			mSelectorFieldMoneyAccount.setVisibility(View.GONE);
+			getView().findViewById(R.id.moneyLendFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
 			

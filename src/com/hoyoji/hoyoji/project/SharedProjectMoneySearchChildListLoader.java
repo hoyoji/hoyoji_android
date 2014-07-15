@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.money.moneyaccount;
+package com.hoyoji.hoyoji.project;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,8 +21,9 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
@@ -44,7 +45,7 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
+public class SharedProjectMoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -64,13 +65,11 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    private long mDateTo = 0;
 	    private ChangeObserver mChangeObserver;
 	    private DateComparator mDateComparator = new DateComparator();
-		private String mProjectId;
-		private String mMoneyAccountId;
 		private String mFriendUserId;
 		private String mLocalFriendId;
 
 	    
-	    public MoneyAccountDebtDetailsChildListLoader(Context context, Bundle queryParams) {
+	    public SharedProjectMoneySearchChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 			copyQueryParams(queryParams);
@@ -88,10 +87,8 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 				mDateFrom = queryParams.getLong("dateFrom", 0);
 				mDateTo = queryParams.getLong("dateTo", 0);
 				mLoadLimit = queryParams.getInt("limit", 10);
-				mProjectId = queryParams.getString("projectId");
-				mMoneyAccountId = queryParams.getString("moneyAccountId");
-//				mFriendUserId = queryParams.getString("friendUserId");
-//				mLocalFriendId = queryParams.getString("localFriendId");
+				mFriendUserId = queryParams.getString("friendUserId");
+				mLocalFriendId = queryParams.getString("localFriendId");
 				mLoadLimit += queryParams.getInt("pageSize", 10);
 			} else {
 				mLoadLimit += 10;
@@ -104,30 +101,20 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	this.onContentChanged();
 	    }
 
-		private String buildSearchQuery(){
+		private String buildSearchQuery(String type){
 			StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
-			if(mProjectId != null){
-				queryStringBuilder.append(" AND main.projectId = '" + mProjectId + "' ");
+			
+			if(mFriendUserId != null){
+				queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "' OR (apr.localFriendId = (SELECT id FROM Friend WHERE friendUserId = '"+mFriendUserId+"'))))");
 			}
-			if(mMoneyAccountId != null){
-				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyAccountId);
-				
-				if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
-					if(moneyAccount.getFriendId() == null && moneyAccount.getName().equalsIgnoreCase("__ANONYMOUS__")){
-						// 匿名借贷账户
-						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
-					} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
-						// 网络用户
-						queryStringBuilder.append(" AND (main.friendUserId = '" + moneyAccount.getName() + "' AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
-					} else {
-						// 本地用户
-						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId ='" + moneyAccount.getFriendId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
-					}
-				}
+			if(mLocalFriendId != null){
+				queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
 			}
+			
 			return queryStringBuilder.toString();
 		}
-
+		
+	    
 	    /**
 	     * This is where the bulk of our work is done.  This function is
 	     * called in a background thread and should generate a new set of
@@ -139,30 +126,14 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
-	    	String searchQuery = buildSearchQuery();
 
-			String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
-			
-	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyBorrows);
-	    	List<HyjModel> moneyBorrows1 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyBorrows1);
-	    	List<HyjModel> moneyBorrows2 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyBorrows2);
+	    	String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 	    	
-	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyLends);
-	    	List<HyjModel> moneyLends1 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyLends1);
-	    	List<HyjModel> moneyLends2 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
-	    	list.addAll(moneyLends2);
+			List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("(mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = ?)) AND date > ? AND date <= ?", currentUserId, dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
-	    	list.addAll(moneyReturns);
-	    	
-	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
-	    	list.addAll(moneyPaybacks);
-	    	
+	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("(mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = ?)) AND date > ? AND date <= ?", currentUserId,  dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyIncomes);
 	    	
 	    	Collections.sort(list, mDateComparator);
 	    	return list;
@@ -173,32 +144,18 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 			public int compare(HyjModel lhs, HyjModel rhs) {
 				String lhsStr = "";
 				String rhsStr = "";
-				if(lhs instanceof MoneyBorrow){
-					lhsStr = ((MoneyBorrow) lhs).getDate();
+				if(lhs instanceof MoneyExpense){
+					lhsStr = ((MoneyExpense) lhs).getDate();
 				}
-				if(rhs instanceof MoneyBorrow){
-					rhsStr = ((MoneyBorrow) rhs).getDate();
-				}
-				
-				if(lhs instanceof MoneyLend){
-					lhsStr = ((MoneyLend) lhs).getDate();
-				}
-				if(rhs instanceof MoneyLend){
-					rhsStr = ((MoneyLend) rhs).getDate();
+				if(rhs instanceof MoneyExpense){
+					rhsStr = ((MoneyExpense) rhs).getDate();
 				}
 				
-				if(lhs instanceof MoneyReturn){
-					lhsStr = ((MoneyReturn) lhs).getDate();
+				if(lhs instanceof MoneyIncome){
+					lhsStr = ((MoneyIncome) lhs).getDate();
 				}
-				if(rhs instanceof MoneyReturn){
-					rhsStr = ((MoneyReturn) rhs).getDate();
-				}
-				
-				if(lhs instanceof MoneyPayback){
-					lhsStr = ((MoneyPayback) lhs).getDate();
-				}
-				if(rhs instanceof MoneyPayback){
-					rhsStr = ((MoneyPayback) rhs).getDate();
+				if(rhs instanceof MoneyIncome){
+					rhsStr = ((MoneyIncome) rhs).getDate();
 				}
 				
 				return rhsStr.compareTo(lhsStr);

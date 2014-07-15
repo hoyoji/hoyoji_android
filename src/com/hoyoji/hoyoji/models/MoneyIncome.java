@@ -362,6 +362,18 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public String getDisplayRemark() {
+		
+		if(this.mMoneyIncomeApportionId != null){
+			MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId = ?", this.mMoneyIncomeApportionId).executeSingle();
+			if(moneyLend != null){
+				String friendName = Friend.getFriendUserDisplayName(moneyLend.getFriendUserId());
+				if(friendName.length() > 0){
+					return "[" + friendName + "] ";
+				}
+				return "";
+			}
+		}
+		
 		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
@@ -562,7 +574,12 @@ public class MoneyIncome extends HyjModel {
 				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", this.getProjectId(),
@@ -575,6 +592,9 @@ public class MoneyIncome extends HyjModel {
 	}
 
 	public boolean hasAddNewPermission(String projectId) {
+		if(projectId == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", projectId,
@@ -591,7 +611,12 @@ public class MoneyIncome extends HyjModel {
 				HyjApplication.getInstance().getCurrentUser().getId())) {
 			return false;
 		}
-
+		if(this.getProject() == null){
+			return false;
+		}
+		if(this.getMoneyAccount() == null){
+			return false;
+		}
 		ProjectShareAuthorization psa = new Select()
 				.from(ProjectShareAuthorization.class)
 				.where("projectId = ? AND friendUserId=?", this.getProjectId(),
@@ -617,5 +642,35 @@ public class MoneyIncome extends HyjModel {
 
 	public void setCurrencyId1(String mCurrencyId) {
 		this.mCurrencyId = mCurrencyId;
+	}
+
+	public String getProjectCurrencySymbol() {
+		if (mProjectCurrencyId == null) {
+			return "";
+		}
+		Currency currency = getModel(Currency.class, mProjectCurrencyId);
+		if (currency != null) {
+			return currency.getSymbol();
+		}
+		return mProjectCurrencyId;
+	}
+
+	public String getProjectCurrencyId() {
+		return this.mProjectCurrencyId;
+	}
+	
+	public Double getLocalAmount(){
+		Double rate = null;
+		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+			if(!userCurrencyId.equals(this.getProjectCurrencyId())){
+				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProjectCurrencyId());
+				if(exchange != null){
+				   	rate = exchange;
+			    }
+			}
+			if(rate == null){
+				return null;
+			} 
+			return this.getAmount0()*this.getExchangeRate()/rate;
 	}
 }
