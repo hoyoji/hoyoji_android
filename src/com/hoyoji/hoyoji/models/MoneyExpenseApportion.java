@@ -199,8 +199,8 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 //			// 该好友不是项目成员
 //			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 //			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
-//			if(friend.getFriendUserId() == null || !friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
+			if(this.getFriendUserId() == null){
+//			if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
 				debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
 			}
 //		}
