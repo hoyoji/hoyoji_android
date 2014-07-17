@@ -77,6 +77,7 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 	private Long mDateFrom;
 	private Long mDateTo;
 	private String mDisplayType;
+	private ViewGroup mHeaderViewDownloadData;
 	
 	@Override
 	public Integer useContentView() {
@@ -92,15 +93,35 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 	public Integer useOptionsMenuView() {
 		return R.menu.projectmoney_listfragment_search;
 	}
-
+	
 	@Override
-	public void onInitViewData() {
-		super.onInitViewData();
+	protected View useHeaderView(Bundle savedInstanceState){
 		Intent intent = getActivity().getIntent();
-		String subTitle = null;
 		final Long project_id = intent.getLongExtra("project_id", -1);
 		if(project_id != -1){
 			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
+			if(mProject.getLastSyncTime() == null){
+				mHeaderViewDownloadData = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_header_download_data, null);
+				mHeaderViewDownloadData.findViewById(R.id.projectHeader_action_downloadData).setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						getListView().removeHeaderView(mHeaderViewDownloadData);
+//						mHeaderViewDownloadData.setVisibility(View.GONE);
+					}
+					
+				});
+				return mHeaderViewDownloadData;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public void onInitViewData() {
+		super.onInitViewData();
+		String subTitle = null;
+		if(mProject != null){
 			subTitle = mProject.getDisplayName();
 		}
 		
