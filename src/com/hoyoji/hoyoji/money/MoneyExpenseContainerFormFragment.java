@@ -1534,7 +1534,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						if(moneyLend != null){
 							moneyLend.delete();
 						} 
-						if(apportion.getFriendUserId() != null){
+						//if(apportion.getFriendUserId() != null){
 							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
 							if(moneyBorrow != null){
 								moneyBorrow.delete();
@@ -1543,7 +1543,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							if(moneyExpense != null){
 								moneyExpense.delete();
 							} 
-						}
+//						}
 					}
 				apportion.delete();
 			}

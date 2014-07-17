@@ -20,4 +20,5 @@ public interface MoneyApportion {
 	public String getCurrencyId();
 	public String getLocalFriendId();
 	public Double getExchangeRate();
+	public String getOwnerUserId();
 }
