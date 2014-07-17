@@ -486,7 +486,14 @@ public class MoneyApportionField extends GridView {
 					vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
 				} else {
 					Friend friend = HyjModel.getModel(Friend.class, vh.apportionItem.getApportion().getLocalFriendId());
-					if(friend.getFriendUserId() != null){
+					if(friend == null){
+//						User user = HyjModel.getModel(User.class, vh.apportionItem.getApportion().getOwnerUserId());
+//						if(user != null){
+//							vh.imageViewPicture.setImage(user.getPictureId());
+//						} else {
+							vh.imageViewPicture.setImage((Picture)null);
+//						}
+					} else if(friend.getFriendUserId() != null){
 						vh.imageViewPicture.setImage(friend.getFriendUser().getPictureId());
 					} else {
 						vh.imageViewPicture.setImage((Picture)null);
