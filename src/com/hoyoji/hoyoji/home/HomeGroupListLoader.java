@@ -563,7 +563,12 @@ public class HomeGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getString(0);
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
 			cursor.close();
 			cursor = null;
 		}

@@ -872,6 +872,11 @@ public class MainActivity extends HyjUserActivity {
 					if(model != null && model.get_mId() != null){
 						model.deleteFromServer();
 					}
+				} else if (dataType.equals("MoveProject")) {
+					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
+					if(model != null && model.get_mId() != null){
+						model.deleteFromServer();
+					}
 				} else {
 					model = getModel(dataType, jsonObj.getString("id"));
 					if(model != null){
@@ -883,10 +888,8 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
-	private void saveData(JSONArray result, String lastSyncTime) {
-
-		
-		try {
+	private void saveData(JSONArray result, String lastSyncTime) throws JSONException {
+//		try {
 //			for(int a = 0; a < result.length(); a++){
 //				Log.i("Downloaded Data : ", result.get(a).toString());
 //			}
@@ -912,11 +915,11 @@ public class MainActivity extends HyjUserActivity {
 
 			ActiveAndroid.setTransactionSuccessful();
 			ActiveAndroid.endTransaction();
-		} catch (JSONException e) {
-			ActiveAndroid.endTransaction();
-			((HyjActivity) MainActivity.this).dismissProgressDialog();
-			HyjUtil.displayToast("下载数据失败，请重试");
-		}
+//		} catch (JSONException e) {
+//			ActiveAndroid.endTransaction();
+//			((HyjActivity) MainActivity.this).dismissProgressDialog();
+//			HyjUtil.displayToast("下载数据失败，请重试");
+//		}
 	}
 
 	public void updateMessageCount() {
