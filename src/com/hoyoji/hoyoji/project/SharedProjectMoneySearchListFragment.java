@@ -420,12 +420,25 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 		} else {
 			HyjModel object = (HyjModel) ((HyjSimpleExpandableListAdapter)parent.getExpandableListAdapter()).getChild(groupPosition, childPosition);
 			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
-				openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				MoneyExpense moneyExpense = (MoneyExpense)object;
+				if(moneyExpense.getMoneyExpenseApportion() != null){
+					bundle.putLong("MODEL_ID", moneyExpense.getMoneyExpenseApportion().getMoneyExpenseContainer().get_mId());
+					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				} else {
+					bundle.putLong("MODEL_ID", object.get_mId());
+					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				}
 				return true;
 			} else if(object instanceof MoneyIncome){
-				openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				MoneyIncome moneyIncome = (MoneyIncome) object;
+				if(moneyIncome.getMoneyIncomeApportion() != null){
+					bundle.putLong("MODEL_ID", moneyIncome.getMoneyIncomeApportion().getMoneyIncomeContainer().get_mId());
+					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				} else {
+					bundle.putLong("MODEL_ID", object.get_mId());
+					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				}
 				return true;
 			}
 		}

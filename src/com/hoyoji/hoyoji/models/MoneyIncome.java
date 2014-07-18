@@ -673,4 +673,11 @@ public class MoneyIncome extends HyjModel {
 			} 
 			return this.getAmount0()*this.getExchangeRate()/rate;
 	}
+
+	public MoneyIncomeApportion getMoneyIncomeApportion() {
+		if(this.mMoneyIncomeApportionId != null){
+			return HyjModel.getModel(MoneyIncomeApportion.class, this.mMoneyIncomeApportionId);
+		}
+		return null;
+	}
 }
