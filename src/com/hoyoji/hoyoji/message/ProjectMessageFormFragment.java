@@ -399,6 +399,10 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				newObj.put("__dataType", "MoneyTransfer");
 				newObj.put("main.projectId", projectIds.get(i));
 				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Picture");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
 			}
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
