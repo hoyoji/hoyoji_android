@@ -24,6 +24,8 @@
    <string name="projectListFragment_title_addMember">添加项目成员</string>
    <string name="projectListFragment_addMember_progress_adding">正在添加项目成员&#8230;</string>
    
+   <string name="projectListFragment_title_acceptShare">接受共享项目</string>
+   <string name="projectListFragment_acceptShare_progress_adding">正在接受共享来的项目&#8230;</string>
    
    <string name="projectMessageFormFragment_toast_resend_success">添加项目共享请求已重新发送，请等待该用户回复</string>
    <string name="projectMessageFormFragment_toast_accept_success">已成功接受项目共享</string>

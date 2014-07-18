@@ -45,7 +45,6 @@ import android.util.Base64;
 public class MessageDownloadService extends Service {
 	public static final String TAG = "MessageDownloadService";
 	private Thread mMessageDownloadThread = null;
-
 	// private MessageSericeBinder mBinder = new MessageSericeBinder();
 
 	@Override
@@ -261,6 +260,12 @@ public class MessageDownloadService extends Service {
 										jsonObjects.optJSONObject(j), true);
 								newProjectShareAuthorization.save();
 							}
+//							JSONObject jsonObj = jsonObjects.optJSONObject(j);
+//							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
+//							if(model != null){
+//								model.loadFromJSON(jsonObj, true);
+//								model.save();
+//							}
 						}
 					}
 
@@ -285,16 +290,91 @@ public class MessageDownloadService extends Service {
 			for (int i = 0; i < projectIds.length(); i++) {
 				JSONObject newObj = new JSONObject();
 				newObj.put("__dataType", "Project");
-				newObj.put("id", projectIds.get(i));
+				newObj.put("main.id", projectIds.get(i));
 				data.put(newObj);
-				JSONObject newObj1 = new JSONObject();
-				newObj1.put("__dataType", "ProjectShareAuthorization");
-				newObj1.put("projectId", projectIds.get(i));
-				newObj1.put("state", "Accept");
-				data.put(newObj1);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "ProjectShareAuthorization");
+				newObj.put("main.projectId", projectIds.get(i));
+				newObj.put("main.state", "Accept");
+				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyExpenseContainer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyExpense");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyExpenseApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyIncomeContainer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyDepositIncomeContainer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyIncome");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyIncomeApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyDepositIncomeApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyBorrow");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyBorrowApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyLendContainer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyLendApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyReturn");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyReturnApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyDepositReturnApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyDepositReturnContainer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyPayback");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyPaybackApportion");
+//				newObj.put("pst.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "MoneyTransfer");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
 			}
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(),
-					"getData");
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
