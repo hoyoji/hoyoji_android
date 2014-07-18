@@ -78,9 +78,17 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		return 10;
 	}
 	
+	protected View useHeaderView(Bundle savedInstanceState){
+		return null;
+	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+		View headerView = useHeaderView(savedInstanceState); 
+		if(headerView != null){
+			getListView().addHeaderView(headerView);
+		}
 		mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 		getListView().addFooterView(mFooterView);
 		mFooterView.setOnClickListener(new OnClickListener(){
