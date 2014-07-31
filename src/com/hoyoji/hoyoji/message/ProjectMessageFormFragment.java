@@ -252,8 +252,8 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				"[" + msg.toString() + "]", "postData");
 		((HyjActivity) this.getActivity())
 				.displayProgressDialog(
-						R.string.projectListFragment_title_addMember,
-						R.string.projectListFragment_addMember_progress_adding);
+						R.string.projectListFragment_title_acceptShare,
+						R.string.projectListFragment_acceptShare_progress_adding);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -273,14 +273,20 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 					for(int i = 0; i < jsonArray.length(); i++){
 						JSONArray jsonObjects = jsonArray.getJSONArray(i);
 						for(int j = 0; j < jsonObjects.length(); j++){
-							if(jsonObjects.optJSONObject(j).optString("__dataType").equals("Project")){
-								Project newProject = new Project();
-								newProject.loadFromJSON(jsonObjects.optJSONObject(j), true);
-								newProject.save();
-							} else if(jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")){
-								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j), true);
-								newProjectShareAuthorization.save();
+//							if(jsonObjects.optJSONObject(j).optString("__dataType").equals("Project")){
+//								Project newProject = new Project();
+//								newProject.loadFromJSON(jsonObjects.optJSONObject(j), true);
+//								newProject.save();
+//							} else if(jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")){
+//								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+//								newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j), true);
+//								newProjectShareAuthorization.save();
+//							}
+							JSONObject jsonObj = jsonObjects.optJSONObject(j);
+							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
+							if(model != null){
+								model.loadFromJSON(jsonObj, true);
+								model.save();
 							}
 						}	
 					}
@@ -310,13 +316,93 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 			for (int i = 0; i < projectIds.length(); i++) {
 				JSONObject newObj = new JSONObject();
 				newObj.put("__dataType", "Project");
-				newObj.put("id", projectIds.get(i));
+				newObj.put("main.id", projectIds.get(i));
 				data.put(newObj);
-				JSONObject newObj1 = new JSONObject();
-				newObj1.put("__dataType", "ProjectShareAuthorization");
-				newObj1.put("projectId", projectIds.get(i));
-				newObj1.put("state", "Accept");
-				data.put(newObj1);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "ProjectShareAuthorization");
+				newObj.put("main.projectId", projectIds.get(i));
+				newObj.put("main.state", "Accept");
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpenseContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpense");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpenseApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncomeContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositIncomeContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncome");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncomeApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositIncomeApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrow");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrowApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLendContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLendApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyReturn");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyReturnApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositReturnApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositReturnContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyPayback");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyPaybackApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyTransfer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Picture");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
 			}
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {

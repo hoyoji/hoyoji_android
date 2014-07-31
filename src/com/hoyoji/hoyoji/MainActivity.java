@@ -868,17 +868,17 @@ public class MainActivity extends HyjUserActivity {
 				}
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
-					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
+					model = HyjModel.createModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
 					if(model != null && model.get_mId() != null){
 						model.deleteFromServer();
 					}
 				} else if (dataType.equals("MoveProject")) {
-					model = getModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
+					model = HyjModel.createModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
 					if(model != null && model.get_mId() != null){
 						model.deleteFromServer();
 					}
 				} else {
-					model = getModel(dataType, jsonObj.getString("id"));
+					model = HyjModel.createModel(dataType, jsonObj.getString("id"));
 					if(model != null){
 						model.loadFromJSON(jsonObj, true);
 						model.save();
@@ -1083,7 +1083,7 @@ public class MainActivity extends HyjUserActivity {
 					for (ClientSyncRecord syncRec : syncRecords) {
 						JSONObject jsonObj = new JSONObject();
 						if (syncRec.getOperation().equalsIgnoreCase("Create")) {
-							HyjModel model = getModel(syncRec.getTableName(),
+							HyjModel model = HyjModel.createModel(syncRec.getTableName(),
 									syncRec.getId());
 							if(model.get_mId() != null){
 								jsonObj.put("operation", "create");
@@ -1152,7 +1152,7 @@ public class MainActivity extends HyjUserActivity {
 							}
 						} else if (syncRec.getOperation().equalsIgnoreCase(
 								"Update")) {
-							HyjModel model = getModel(syncRec.getTableName(),
+							HyjModel model = HyjModel.createModel(syncRec.getTableName(),
 									syncRec.getId());
 							if(model.get_mId() != null){
 								jsonObj.put("operation", "update");
@@ -1248,7 +1248,7 @@ public class MainActivity extends HyjUserActivity {
 									ActiveAndroid.beginTransaction();
 									for (ClientSyncRecord syncRec : syncRecords) {
 										if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
-											HyjModel model = getModel(syncRec.getTableName(),
+											HyjModel model = HyjModel.createModel(syncRec.getTableName(),
 													syncRec.getId());
 											model.setSyncFromServer(true);
 											model.setLastServerUpdateTime(lastUploadTime);
@@ -1321,207 +1321,6 @@ public class MainActivity extends HyjUserActivity {
 		}).start();
 	}
 
-	private HyjModel getModel(String tableName, String id) {
-		HyjModel model = null;
-		if (tableName.equalsIgnoreCase("Currency")) {
-			model = HyjModel.getModel(Currency.class, id);
-			if(model == null){
-				model = new Currency();
-			}
-		} else if (tableName.equalsIgnoreCase("Exchange")) {
-			model = HyjModel.getModel(Exchange.class, id);
-			if(model == null){
-				model = new Exchange();
-			}
-		} else if (tableName.equalsIgnoreCase("Friend")) {
-			model = HyjModel.getModel(Friend.class, id);
-			if(model == null){
-				model = new Friend();
-			}
-		} else if (tableName.equalsIgnoreCase("FriendCategory")) {
-			model = HyjModel.getModel(FriendCategory.class, id);
-			if(model == null){
-				model = new FriendCategory();
-			}
-		} else if (tableName.equalsIgnoreCase("Message")) {
-			model = HyjModel.getModel(Message.class, id);
-			if(model == null){
-				model = new Message();
-			}
-		}  else if (tableName.equalsIgnoreCase("QQLogin")) {
-			model = HyjModel.getModel(QQLogin.class, id);
-			if(model == null){
-				model = new QQLogin();
-			}
-		} else if (tableName.equalsIgnoreCase("MessageBox")) {
-			model = HyjModel.getModel(MessageBox.class, id);
-			if(model == null){
-				model = new MessageBox();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyAccount")) {
-			model = HyjModel.getModel(MoneyAccount.class, id);
-			if(model == null){
-				model = new MoneyAccount();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyBorrow")) {
-			model = HyjModel.getModel(MoneyBorrow.class, id);
-			if(model == null){
-				model = new MoneyBorrow();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyBorrowApportion")) {
-			model = HyjModel.getModel(MoneyBorrowApportion.class, id);
-			if(model == null){
-				model = new MoneyBorrowApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyExpense")) {
-			model = HyjModel.getModel(MoneyExpense.class, id);
-			if(model == null){
-				model = new MoneyExpense();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyExpenseContainer")) {
-			model = HyjModel.getModel(MoneyExpenseContainer.class, id);
-			if(model == null){
-				model = new MoneyExpenseContainer();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyExpenseApportion")) {
-			model = HyjModel.getModel(MoneyExpenseApportion.class, id);
-			if(model == null){
-				model = new MoneyExpenseApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyIncome")) {
-			model = HyjModel.getModel(MoneyIncome.class, id);
-			if(model == null){
-				model = new MoneyIncome();
-			}
-		}  else if (tableName.equalsIgnoreCase("MoneyIncomeContainer")) {
-			model = HyjModel.getModel(MoneyIncomeContainer.class, id);
-			if(model == null){
-				model = new MoneyIncomeContainer();
-			}
-		}  else if (tableName.equalsIgnoreCase("MoneyDepositIncomeContainer")) {
-			model = HyjModel.getModel(MoneyDepositIncomeContainer.class, id);
-			if(model == null){
-				model = new MoneyDepositIncomeContainer();
-			}
-		}   else if (tableName.equalsIgnoreCase("MoneyDepositReturnContainer")) {
-			model = HyjModel.getModel(MoneyDepositReturnContainer.class, id);
-			if(model == null){
-				model = new MoneyDepositReturnContainer();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyIncomeApportion")) {
-			model = HyjModel.getModel(MoneyIncomeApportion.class, id);
-			if(model == null){
-				model = new MoneyIncomeApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyDepositIncomeApportion")) {
-			model = HyjModel.getModel(MoneyDepositIncomeApportion.class, id);
-			if(model == null){
-				model = new MoneyDepositIncomeApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyDepositReturnApportion")) {
-			model = HyjModel.getModel(MoneyDepositReturnApportion.class, id);
-			if(model == null){
-				model = new MoneyDepositReturnApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyLend")) {
-			model = HyjModel.getModel(MoneyLend.class, id);
-			if(model == null){
-				model = new MoneyLend();
-			}
-		}  else if (tableName.equalsIgnoreCase("MoneyLendContainer")) {
-			model = HyjModel.getModel(MoneyLendContainer.class, id);
-			if(model == null){
-				model = new MoneyLendContainer();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyLendApportion")) {
-			model = HyjModel.getModel(MoneyLendApportion.class, id);
-			if(model == null){
-				model = new MoneyLendApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyPayback")) {
-			model = HyjModel.getModel(MoneyPayback.class, id);
-			if(model == null){
-				model = new MoneyPayback();
-			}
-		}  else if (tableName.equalsIgnoreCase("MoneyPaybackContainer")) {
-			model = HyjModel.getModel(MoneyPaybackContainer.class, id);
-			if(model == null){
-				model = new MoneyPaybackContainer();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyPaybackApportion")) {
-			model = HyjModel.getModel(MoneyPaybackApportion.class, id);
-			if(model == null){
-				model = new MoneyPaybackApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyReturn")) {
-			model = HyjModel.getModel(MoneyReturn.class, id);
-			if(model == null){
-				model = new MoneyReturn();
-			}
-		}  else if (tableName.equalsIgnoreCase("MoneyReturnContainer")) {
-			model = HyjModel.getModel(MoneyReturnContainer.class, id);
-			if(model == null){
-				model = new MoneyReturnContainer();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyReturnApportion")) {
-			model = HyjModel.getModel(MoneyReturnApportion.class, id);
-			if(model == null){
-				model = new MoneyReturnApportion();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyTransfer")) {
-			model = HyjModel.getModel(MoneyTransfer.class, id);
-			if(model == null){
-				model = new MoneyTransfer();
-			}
-		} else if (tableName.equalsIgnoreCase("ParentProject")) {
-			model = HyjModel.getModel(ParentProject.class, id);
-			if(model == null){
-				model = new ParentProject();
-			}
-		} else if (tableName.equalsIgnoreCase("Picture")) {
-			model = HyjModel.getModel(Picture.class, id);
-			if(model == null){
-				model = new Picture();
-			}
-		} else if (tableName.equalsIgnoreCase("Project")) {
-			model = HyjModel.getModel(Project.class, id);
-			if(model == null){
-				model = new Project();
-			}
-		} else if (tableName.equalsIgnoreCase("ProjectShareAuthorization")) {
-			model = HyjModel.getModel(ProjectShareAuthorization.class, id);
-			if(model == null){
-				model = new ProjectShareAuthorization();
-			}
-		} else if (tableName.equalsIgnoreCase("User")) {
-			model = HyjModel.getModel(User.class, id);
-			if(model == null){
-				model = new User();
-			}
-		} else if (tableName.equalsIgnoreCase("UserData")) {
-			model = HyjModel.getModel(UserData.class, id);
-			if(model == null){
-				model = new UserData();
-			}
-		} else if (tableName.equalsIgnoreCase("ProjectRemark")) {
-			model = HyjModel.getModel(ProjectRemark.class, id);
-			if(model == null){
-				model = new ProjectRemark();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyIncomeCategory")) {
-			model = HyjModel.getModel(MoneyIncomeCategory.class, id);
-			if(model == null){
-				model = new MoneyIncomeCategory();
-			}
-		} else if (tableName.equalsIgnoreCase("MoneyExpenseCategory")) {
-			model = HyjModel.getModel(MoneyExpenseCategory.class, id);
-			if(model == null){
-				model = new MoneyExpenseCategory();
-			}
-		}
-		return model;
-	}
-	
 
 //	private static class HandlerExtension extends Handler {
 //		WeakReference<MainActivity> mActivity;
