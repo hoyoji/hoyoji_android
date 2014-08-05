@@ -1156,11 +1156,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						moneyExpense.save();
 					}
 						
-					if(api.getState() != ApportionItem.UNCHANGED
-							|| !mMoneyExpenseContainerEditor.getModelCopy().getProjectId().equals(mMoneyExpenseContainerEditor.getModel().getProjectId())
-							|| !mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseContainerEditor.getModel().getMoneyAccountId())) {
+//					if(api.getState() != ApportionItem.UNCHANGED
+//							|| !mMoneyExpenseContainerEditor.getModelCopy().getProjectId().equals(mMoneyExpenseContainerEditor.getModel().getProjectId())
+//							|| !mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseContainerEditor.getModel().getMoneyAccountId())) {
 						apportionEditor.save();
-					}
+//					}
 					savedCount++;
 				}
 			} else {
@@ -1481,11 +1481,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								
 							}		
 							
-							if(api.getState() != ApportionItem.UNCHANGED
-										|| !mMoneyExpenseContainerEditor.getModelCopy().getProjectId().equals(mMoneyExpenseContainerEditor.getModel().getProjectId())
-										|| !mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseContainerEditor.getModel().getMoneyAccountId())) {
+//							if(api.getState() != ApportionItem.UNCHANGED
+//										|| !mMoneyExpenseContainerEditor.getModelCopy().getProjectId().equals(mMoneyExpenseContainerEditor.getModel().getProjectId())
+//										|| !mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyExpenseContainerEditor.getModel().getMoneyAccountId())) {
 								apportionEditor.save();
-							}
+//							}
 							savedCount++;
 				}
 			}

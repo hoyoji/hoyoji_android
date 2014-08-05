@@ -880,11 +880,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyBorrow.setProject(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject());
 						moneyBorrow.save();
 						
-						if(api.getState() != ApportionItem.UNCHANGED
-								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())
-								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccountId())) {
+//						if(api.getState() != ApportionItem.UNCHANGED
+//								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())
+//								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccountId())) {
 							apportionEditor.save();
-						}
+//						}
 						savedCount++;
 					}
 			}

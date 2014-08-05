@@ -870,11 +870,11 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						moneyReturn.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
 						moneyReturn.save();
 						
-						if(api.getState() != ApportionItem.UNCHANGED
-								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())
-								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositReturnContainerEditor.getModel().getMoneyAccountId())) {
+//						if(api.getState() != ApportionItem.UNCHANGED
+//								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())
+//								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositReturnContainerEditor.getModel().getMoneyAccountId())) {
 							apportionEditor.save();
-						}
+//						}
 						savedCount++;
 					}
 			}
