@@ -1460,7 +1460,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									apportionEditor.save();
 //								 }
 								savedCount++;
-						
 					}
 				}
 			}
