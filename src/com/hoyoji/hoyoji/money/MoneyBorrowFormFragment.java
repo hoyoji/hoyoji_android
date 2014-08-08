@@ -56,7 +56,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private static final int GET_REMARK = 4;
-	private static final int TAG_IS_PROJECT_MEMBER = 0;
+	private static final int TAG_IS_PROJECT_MEMBER = R.id.moneyBorrowFormFragment_selectorField_friend;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
