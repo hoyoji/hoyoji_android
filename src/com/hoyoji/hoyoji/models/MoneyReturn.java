@@ -197,27 +197,41 @@ public class MoneyReturn extends HyjModel{
 		this.mAmount = mAmount;
 	}
 	
-	public Friend getFriend(){
-		if(mFriendUserId != null){
-			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
-		}else if(mLocalFriendId != null){
-			return (Friend) getModel(Friend.class, mLocalFriendId);
+//	public Friend getFriend(){
+//		if(mFriendUserId != null){
+//			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
+//		}else if(mLocalFriendId != null){
+//			return (Friend) getModel(Friend.class, mLocalFriendId);
+//		}
+//		return null;
+//	}
+//	
+//	public void setFriend(Friend mFriend) {
+//		if(mFriend == null){
+//			this.mFriendUserId = null;
+//			this.mLocalFriendId = null;
+//		}else if(mFriend.getFriendUserId() != null){
+//			this.mFriendUserId = mFriend.getFriendUserId();
+//			this.mLocalFriendId = null;
+//		}
+//		else {
+//			this.mFriendUserId = null;
+//			this.mLocalFriendId = mFriend.getId();
+//		}
+//	}
+	
+	public Friend getLocalFriend(){
+		if(mLocalFriendId != null){
+			return  getModel(Friend.class, mLocalFriendId);
 		}
 		return null;
 	}
 	
-	public void setFriend(Friend mFriend) {
-		if(mFriend == null){
-			this.mFriendUserId = null;
-			this.mLocalFriendId = null;
-		}else if(mFriend.getFriendUserId() != null){
-			this.mFriendUserId = mFriend.getFriendUserId();
-			this.mLocalFriendId = null;
+	public User getFriendUser(){
+		if(mFriendUserId != null){
+			return getModel(User.class, mFriendUserId);
 		}
-		else {
-			this.mFriendUserId = null;
-			this.mLocalFriendId = mFriend.getId();
-		}
+		return null;
 	}
 	
 	public String getFriendUserId() {
