@@ -189,11 +189,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				if(friend != null){
 					mSelectorFieldFriend.setModelId(friend.getId());
 					mSelectorFieldFriend.setText(friend.getDisplayName());
+					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 				} else {
 					User user = HyjModel.getModel(User.class, friendUserId);
 					if(user != null){
 						mSelectorFieldFriend.setModelId(user.getId());
 						mSelectorFieldFriend.setText(user.getDisplayName());
+						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 					}
 				}
 			} else {
@@ -203,17 +205,20 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					if(friend != null){
 						mSelectorFieldFriend.setModelId(friend.getId());
 						mSelectorFieldFriend.setText(friend.getDisplayName());
+						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 					}
 				} else {
 					Friend friend = moneyBorrow.getLocalFriend();
 					if(friend != null){
 						mSelectorFieldFriend.setModelId(friend.getId());
 						mSelectorFieldFriend.setText(friend.getDisplayName());
+						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 					} else {
 						User user = moneyBorrow.getFriendUser();
 						if(user != null){
 							mSelectorFieldFriend.setModelId(user.getId());
 							mSelectorFieldFriend.setText(user.getDisplayName());
+							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 						}
 					}
 				}
@@ -223,11 +228,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			if(friend != null){
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
+				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 			} else {
 				User user = moneyBorrow.getFriendUser();
 				if(user != null){
-					mSelectorFieldFriend.setModelId(friend.getId());
-					mSelectorFieldFriend.setText(friend.getDisplayName());
+					mSelectorFieldFriend.setModelId(user.getId());
+					mSelectorFieldFriend.setText(user.getDisplayName());
+					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 				}
 			}
 		}
