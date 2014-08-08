@@ -203,7 +203,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				if(localFriendId != null){
 					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
 					if(friend != null){
-						mSelectorFieldFriend.setModelId(friend.getId());
+						mSelectorFieldFriend.setModelId(friendUserId);
 						mSelectorFieldFriend.setText(friend.getDisplayName());
 						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 					}
@@ -241,10 +241,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View v) {
-//				MoneyBorrowFormFragment.this
-//				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_creditor, null, GET_FRIEND_ID);
-			
+			public void onClick(View v) {			
 				Bundle bundle = new Bundle();
 				Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 				bundle.putLong("MODEL_ID", project.get_mId());
