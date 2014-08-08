@@ -774,8 +774,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
      				String type = data.getStringExtra("MODEL_TYPE");
      				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
      					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-     					if(!psa.getState().equalsIgnoreCase("Accept")){
-                    		mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+     					if(psa.getFriendUserId() != null && psa.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+        					HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+        					return;
+ 	            		}
+                		if(!psa.getState().equalsIgnoreCase("Accept")){
+     	            		mSelectorFieldFriend.setText(psa.getFriendDisplayName());
                     		mSelectorFieldFriend.setModelId(psa.getFriend().getId());
                     		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
      					} else {
@@ -786,6 +790,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
      				} else {
      					Friend friend = Friend.load(Friend.class, _id);
      					if(friend.getFriendUserId() != null){
+     						if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+            					HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+            					return;
+     	            		}
+     						
      						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
      						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
      						if(psa != null){
@@ -799,8 +808,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
      		                		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
      	     					}
      						} else {
- 	                    		mSelectorFieldFriend.setText(psa.getFriendDisplayName());
- 	                    		mSelectorFieldFriend.setModelId(psa.getFriend().getId());
+ 	                    		mSelectorFieldFriend.setText(friend.getDisplayName());
+ 	                    		mSelectorFieldFriend.setModelId(friend.getId());
  	                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
      						}
      					} else {
