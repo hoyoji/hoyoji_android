@@ -212,8 +212,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					} else {
 						User user = moneyBorrow.getFriendUser();
 						if(user != null){
-							mSelectorFieldFriend.setModelId(friend.getId());
-							mSelectorFieldFriend.setText(friend.getDisplayName());
+							mSelectorFieldFriend.setModelId(user.getId());
+							mSelectorFieldFriend.setText(user.getDisplayName());
 						}
 					}
 				}
