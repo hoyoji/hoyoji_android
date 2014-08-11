@@ -154,7 +154,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyLend.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
-		}else{
+		} else {
 			project = moneyLend.getProject();
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_project);

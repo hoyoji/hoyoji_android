@@ -187,7 +187,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			if(friendUserId != null){
 				Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
 				if(friend != null){
-					mSelectorFieldFriend.setModelId(friend.getId());
+					mSelectorFieldFriend.setModelId(friendUserId);
 					mSelectorFieldFriend.setText(friend.getDisplayName());
 					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 				} else {
