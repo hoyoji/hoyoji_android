@@ -524,8 +524,10 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		if(mSelectorFieldFriend.getModelId() != null){
 			if((Boolean) mSelectorFieldFriend.getTag(TAG_IS_PROJECT_MEMBER)){
 				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
+				modelCopy.setLocalFriendId(null);
 			} else {
 				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
+				modelCopy.setFriendUserId(null);
 			}
 		}else{
 			modelCopy.setLocalFriendId(null);
@@ -780,33 +782,40 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
 
-		         	// 看一下好友是不是新项目的成员
-		         		if(mSelectorFieldFriend.getModelId() != null) {
-		        			String friendUserId;
-		        			if((Boolean) mSelectorFieldFriend.getTag(TAG_IS_PROJECT_MEMBER)){
-		        				friendUserId = mSelectorFieldFriend.getModelId();
-		        			} else {
-		        				String localFriendId = mSelectorFieldFriend.getModelId();
-		        				Friend friend = HyjModel.getModel(Friend.class, localFriendId);
-		        				friendUserId = friend.getFriendUserId();
-		        			}
-		        			ProjectShareAuthorization psaMember = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), friendUserId).executeSingle();
-		    				if(psaMember != null){
-	                    		mSelectorFieldFriend.setModelId(friendUserId);
-	                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-		    				} else {
-		    					Friend friend = new Select().from(Friend.class).where("friendUserId = ?", friendUserId).executeSingle();
-		    					if(friend == null){
-		    						mSelectorFieldFriend.setText(null);
-		    						mSelectorFieldFriend.setModelId(null);
-		                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-		    					} else {
-			    					String localFriendId = friend.getId();
-		                    		mSelectorFieldFriend.setModelId(localFriendId);
-		                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-		    					}
-		    				}
-		         		}
+	         	// 看一下好友是不是新项目的成员
+	         		if(mSelectorFieldFriend.getModelId() != null) {
+	        			String friendUserId = null;
+	        			ProjectShareAuthorization psaMember = null;
+	        			Friend friend = null;
+	        			if((Boolean) mSelectorFieldFriend.getTag(TAG_IS_PROJECT_MEMBER)){
+	        				friendUserId = mSelectorFieldFriend.getModelId();
+	        			} else {
+	        				String localFriendId = mSelectorFieldFriend.getModelId();
+	        				friend = HyjModel.getModel(Friend.class, localFriendId);
+	        				friendUserId = friend.getFriendUserId();
+	        			}
+	        			if(friendUserId != null){
+	        				psaMember = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), friendUserId).executeSingle();
+	        			}
+	        			
+	    				if(psaMember != null){
+                    		mSelectorFieldFriend.setModelId(friendUserId);
+                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
+	    				} else {
+	    					if(friendUserId != null){
+	    						friend = new Select().from(Friend.class).where("friendUserId = ?", friendUserId).executeSingle();
+	    					}
+	    					if(friend == null){
+	    						mSelectorFieldFriend.setText(null);
+	    						mSelectorFieldFriend.setModelId(null);
+	                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+	    					} else {
+		    					String localFriendId = friend.getId();
+	                    		mSelectorFieldFriend.setModelId(localFriendId);
+	                    		mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+	    					}
+	    				}
+	        		}
 	        	 }
 	        	 break;
              case GET_FRIEND_ID:
