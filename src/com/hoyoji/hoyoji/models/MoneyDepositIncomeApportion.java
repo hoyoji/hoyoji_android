@@ -314,4 +314,9 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		return this.getMoneyDepositIncomeContainer().getExchangeRate();
 	}
 
+	@Override
+	public String getDate() {
+		return this.getMoneyDepositIncomeContainer().getDate();
+	}
+
 }

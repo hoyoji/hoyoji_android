@@ -677,7 +677,11 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					
 				mMoneyLendEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
-				HyjUtil.displayToast(R.string.app_save_success);
+				if(getActivity().getCallingActivity() != null){
+					getActivity().setResult(Activity.RESULT_OK);
+				} else {
+					HyjUtil.displayToast(R.string.app_save_success);
+				}
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();

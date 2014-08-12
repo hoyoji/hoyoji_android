@@ -1170,9 +1170,12 @@ public class MainActivity extends HyjUserActivity {
 								jsonObj.put("operation", "create");
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
+									recordData.put("date", ((MoneyApportion)model).getDate());
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
 									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+									recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());
+									recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
 								} else if(model instanceof MoneyExpenseContainer){
 									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
 									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());

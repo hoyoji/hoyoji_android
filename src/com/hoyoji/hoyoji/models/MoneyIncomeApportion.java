@@ -314,4 +314,8 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	public Double getExchangeRate() {
 		return this.getMoneyIncomeContainer().getExchangeRate();
 	}
+	@Override
+	public String getDate() {
+		return this.getMoneyIncomeContainer().getDate();
+	}
 }

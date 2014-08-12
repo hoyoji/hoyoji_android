@@ -28,5 +28,6 @@
    <string name="moneyShareMessageFormFragment_button_import_depositExpense">导入成我的预缴会费</string>
    <string name="moneyShareMessageFormFragment_button_import_payback">导入成我的收款</string>
    <string name="moneyShareMessageFormFragment_button_import_return">导入成我的还款</string>
+   <string name="moneyShareMessageFormFragment_button_view_transaction">查看</string>
     
 </resources>

@@ -20,6 +20,14 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyLendApportion;
+import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
+import com.hoyoji.hoyoji.models.MoneyReturnApportion;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
@@ -100,7 +108,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 					.getInstance(messageData.optString("currencyCode"));
 			String currencySymbol = "";
 			currencySymbol = localeCurrency.getSymbol();
-			if(currencySymbol.length() > 0){
+			if(currencySymbol.length() == 0){
 				currencySymbol = messageData.optString("currencyCode");
 			}
 					
@@ -154,6 +162,9 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 			}
 		} else if (shareAddMessage.getType().equalsIgnoreCase("Money.Share.AddPayback")){
 			actionButton.setText(R.string.moneyShareMessageFormFragment_button_import_return);
+		} else {
+//			actionButton.setVisibility(View.GONE);
+			actionButton.setText(R.string.moneyShareMessageFormFragment_button_view_transaction);
 		}
 	}
 //
@@ -217,6 +228,70 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 				} else {
 					openActivityWithFragmentForResult(MoneyReturnFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_return, bundle, IMPORT_MONEY);
 				}
+			} else {
+				String apportionId = messageData.getString("counterpartId");
+				if(apportionId != null){
+					bundle.clear();
+					if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyExpenseApportion")){
+						MoneyExpenseApportion apportion = HyjModel.getModel(MoneyExpenseApportion.class, apportionId);
+						if(apportion != null){
+							MoneyExpenseContainer container = HyjModel.getModel(MoneyExpenseContainer.class, apportion.getMoneyExpenseContainerId());
+							if(container != null){
+								bundle.putLong("MODEL_ID", container.get_mId());
+								openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+							} else {
+								HyjUtil.displayToast("该支出记录尚未下载，请先进行同步。");
+							}
+						} else {
+							HyjUtil.displayToast("该支出记录尚未下载，请先进行同步。");
+						}
+					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyIncomeApportion")){
+						MoneyIncomeApportion apportion = HyjModel.getModel(MoneyIncomeApportion.class, apportionId);
+						if(apportion != null){
+							MoneyIncomeContainer container = HyjModel.getModel(MoneyIncomeContainer.class, apportion.getMoneyIncomeContainerId());
+							if(container != null){
+								bundle.putLong("MODEL_ID", container.get_mId());
+								openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+							} else {
+								HyjUtil.displayToast("该收入记录尚未下载，请先进行同步。");
+							}
+						} else {
+							HyjUtil.displayToast("该收入记录尚未下载，请先进行同步。");
+						}
+					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyBorrowApportion")){
+						MoneyBorrowApportion apportion = HyjModel.getModel(MoneyBorrowApportion.class, apportionId);
+						if(apportion != null){
+							bundle.putString("MODEL_ID", apportion.getMoneyBorrowContainerId());
+							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+						} else {
+							HyjUtil.displayToast("该借入记录尚未下载，请先进行同步。");
+						}
+					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyLendApportion")){
+						MoneyLendApportion apportion = HyjModel.getModel(MoneyLendApportion.class, apportionId);
+						if(apportion != null){
+							bundle.putString("MODEL_ID", apportion.getMoneyLendContainerId());
+							openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+						} else {
+							HyjUtil.displayToast("该借出记录尚未下载，请先进行同步。");
+						}
+					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyReturnApportion")){
+						MoneyReturnApportion apportion = HyjModel.getModel(MoneyReturnApportion.class, apportionId);
+						if(apportion != null){
+							bundle.putString("MODEL_ID", apportion.getMoneyReturnContainerId());
+							openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
+						} else {
+							HyjUtil.displayToast("该还款记录尚未下载，请先进行同步。");
+						}
+					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyPaybackApportion")){
+						MoneyPaybackApportion apportion = HyjModel.getModel(MoneyPaybackApportion.class, apportionId);
+						if(apportion != null){
+							bundle.putString("MODEL_ID", apportion.getMoneyPaybackContainerId());
+							openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+						} else {
+							HyjUtil.displayToast("该收款记录尚未下载，请先进行同步。");
+						}
+					} 
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -231,6 +306,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 	 				mMessageEditor.getModelCopy().setMessageState("closed");
 	 				mMessageEditor.save();
 	 				HyjUtil.displayToast("导入成功");
+	 				getActivity().finish();
 	        	 }
 	        	 break;
          }
