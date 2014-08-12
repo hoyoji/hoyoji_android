@@ -1210,6 +1210,7 @@ public class MainActivity extends HyjUserActivity {
 									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
 										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
 									}
+									recordData.put("projectCurrencySymbol", ((MoneyBorrow)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyLend){
 //									if(((MoneyLend)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
@@ -1219,14 +1220,17 @@ public class MainActivity extends HyjUserActivity {
 									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
 										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
 									}
+									recordData.put("projectCurrencySymbol", ((MoneyLend)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyPayback){
 //									if(((MoneyPayback)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
 //									}
+									recordData.put("projectCurrencySymbol", ((MoneyPayback)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyReturn){
 //									if(((MoneyReturn)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 //									}
+									recordData.put("projectCurrencySymbol", ((MoneyReturn)model).getProject().getCurrencySymbol());
 								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);
