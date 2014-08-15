@@ -385,11 +385,10 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 								public void doPositiveClick(Object object) {
 									try {
 										ActiveAndroid.beginTransaction();
-
-										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyPayback.getProject().getCurrencyId(), moneyPayback.getLocalFriendId(), moneyPayback.getFriendUserId());
-										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getProjectAmount());
-										debtAccountEditor.save();
+										MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
+										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
+										moneyAccountEditor.save();
 
 										//更新项目余额
 										Project newProject = moneyPayback.getProject();
@@ -398,10 +397,10 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										newProjectEditor.save();
 
 										if(!newProject.isProjectMember(moneyPayback.getLocalFriendId(), moneyPayback.getFriendUserId())){
-											MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
-											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-											moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
-											moneyAccountEditor.save();
+											MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyPayback.getProject().getCurrencyId(), moneyPayback.getLocalFriendId(), moneyPayback.getFriendUserId());
+											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getProjectAmount());
+											debtAccountEditor.save();
 										}
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPayback.getProjectId());

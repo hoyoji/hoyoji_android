@@ -389,11 +389,11 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-										debtAccountEditor.save();
-
+										MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
+										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
+										moneyAccountEditor.save();
+										
 										//更新项目余额
 										Project newProject = moneyReturn.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
@@ -401,10 +401,10 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 										newProjectEditor.save();
 
 										if(!newProject.isProjectMember(moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId())){
-											MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
-											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-											moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
-											moneyAccountEditor.save();
+											MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
+											debtAccountEditor.save();
 										}
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyReturn.getProjectId());
