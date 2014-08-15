@@ -21,9 +21,11 @@ import org.json.JSONObject;
 
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -124,7 +126,14 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
 				} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
 					// 网络用户
-					queryStringBuilder.append(" AND (main.friendUserId = '" + moneyAccount.getName() + "' AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
+					queryStringBuilder.append(" AND ((main.friendUserId = '" + moneyAccount.getName() + "' AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
+					// 
+					Friend friend = new Select().from(Friend.class).where("friendUserId = ?", moneyAccount.getName()).executeSingle();
+					if(friend != null){
+						queryStringBuilder.append(" OR (main.friendUserId IS NULL AND main.localFriendId ='" + friend.getId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "'))");
+					} else {
+						queryStringBuilder.append(")");
+					}
 				} else {
 					// 本地用户
 					queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId ='" + moneyAccount.getFriendId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
