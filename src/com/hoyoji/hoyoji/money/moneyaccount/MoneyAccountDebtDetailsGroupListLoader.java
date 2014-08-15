@@ -190,7 +190,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total "
 							+ "FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
-							+ "WHERE main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + searchQuery,
+							+ "WHERE main.friendUserId IS NULL AND main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -232,7 +232,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN IFNULL(ex.rate,1) ELSE 1/IFNULL(ex.rate, 1) END) AS total "
 							+ "FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
-							+ "WHERE main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + searchQuery,
+							+ "WHERE main.friendUserId IS NULL AND main.moneyExpenseApportionId IS NULL AND main.moneyIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -274,7 +274,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN IFNULL(ex.rate,1) ELSE 1/IFNULL(ex.rate, 1) END) AS total "
 							+ "FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
-							+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "' AND " + searchQuery,
+							+ "WHERE  main.friendUserId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -288,7 +288,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN IFNULL(ex.rate,1) ELSE 1/IFNULL(ex.rate, 1) END) AS total "
 							+ "FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
-							+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "' AND " + searchQuery,
+							+ "WHERE  main.friendUserId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "' AND " + searchQuery,
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
