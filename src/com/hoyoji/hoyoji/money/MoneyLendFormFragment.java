@@ -700,7 +700,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
-						if(oldProject.isProjectMember(oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId())){
+						if(!oldProject.isProjectMember(oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId())){
 							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId());
 						}
 						if(newDebtAccount != null){

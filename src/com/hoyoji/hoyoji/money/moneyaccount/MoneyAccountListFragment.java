@@ -201,13 +201,13 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			Double balance = moneyAccount.getCurrentBalance();
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
 				if(balance > 0){
-					numericView.setPrefix("借出" + moneyAccount.getCurrencySymbol());
+					numericView.setPrefix("向他借出" + moneyAccount.getCurrencySymbol());
 					numericView.setNumber(balance);	
 				}else if(balance == 0){
 					numericView.setPrefix(moneyAccount.getCurrencySymbol());
 					numericView.setNumber(balance);	
 				}else{
-					numericView.setPrefix("借入" + moneyAccount.getCurrencySymbol());
+					numericView.setPrefix("向他借入" + moneyAccount.getCurrencySymbol());
 					numericView.setNumber(-balance);	
 				}
 			}else{
@@ -312,10 +312,10 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
