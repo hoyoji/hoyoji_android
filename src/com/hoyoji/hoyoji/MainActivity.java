@@ -911,7 +911,7 @@ public class MainActivity extends HyjUserActivity {
 						} else if(jsonObj.getString("tableName").equals("MoneyIncomeApportion")){
 							MoneyIncomeApportion apportion = (MoneyIncomeApportion)model;
 							// 如果被删除的分摊是别人分摊给我的
-							if(!apportion.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && apportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							if(!apportion.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 								MoneyIncomeContainer moneyIncomeContainer = apportion.getMoneyIncomeContainer();
 								// 看该分摊对应的支出是不是没有权限了，如果是，就移除它以及其他相关的分摊
 								if(moneyIncomeContainer != null 
