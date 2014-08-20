@@ -105,6 +105,7 @@ public abstract class HyjFragment extends Fragment {
 			this.startActivity(intent);
 		}
 	}
+	
 	public void openBlankActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
 		Intent intent = new Intent(this.getActivity(), HyjBlankActivity.class);
 		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
@@ -119,6 +120,7 @@ public abstract class HyjFragment extends Fragment {
 			this.startActivity(intent);
 		}
 	}
+	
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;
 		if(getChildFragmentManager().getFragments() != null){
@@ -140,7 +142,9 @@ public abstract class HyjFragment extends Fragment {
         List<Fragment> fragments = getChildFragmentManager().getFragments();
         if (fragments != null) {
             for (Fragment fragment : fragments) {
-                fragment.onActivityResult(requestCode, resultCode, data);
+            	if(fragment.getUserVisibleHint()){
+            		fragment.onActivityResult(requestCode, resultCode, data);
+            	}
             }
         }
     }

@@ -32,6 +32,14 @@ public class MoneyReportFragment extends HyjUserFragment {
 		mViewPager.setOffscreenPageLimit(2);
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	    super.setUserVisibleHint(isVisibleToUser);
+	    
+	    if(mViewPager != null && mViewPager.getCurrentItem() >= 0 && mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()) != null){
+	    	mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()).setUserVisibleHint(isVisibleToUser);
+	    }
+	}
 	
 	@Override
 	public boolean handleBackPressed() {
