@@ -91,14 +91,16 @@
                 hyj:editTextBold="true"
                 hyj:editTextBorder="none"
                 hyj:hintText="@string/moneyPaybackFormFragment_editText_hint_interest"
-                hyj:labelText="@string/moneyPaybackFormFragment_textView_interest" />
+                hyj:labelText="@string/moneyPaybackFormFragment_textView_interest" 
+                    android:visibility="gone" />
 
             <View
                 android:id="@id/field_separator"
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="#E0E0E0" 
+                    android:visibility="gone" />
 
             <FrameLayout
                 android:layout_width="0dp"
