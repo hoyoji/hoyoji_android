@@ -20,8 +20,7 @@ public class MoneyReportFragment extends HyjUserFragment {
 	
 	@Override
 	public void onInitViewData() {
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
+		// Create the adapter that will return a fragment for each of the sections in the viewpager.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
