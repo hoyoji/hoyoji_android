@@ -703,7 +703,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					}else{
 						MoneyAccount oldDebtAccount = null;
 						if(!oldProject.isProjectMember(oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId())){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
+							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyPaybackModel.getProject().getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
 						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();

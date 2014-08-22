@@ -495,7 +495,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			mViewSeparatorExchange.setVisibility(View.GONE);
 			mLinearLayoutExchangeRate.setVisibility(View.GONE);
 		}
-			SET_EXCHANGE_RATE_FLAG = 0;
+		SET_EXCHANGE_RATE_FLAG = 0;
 	}
 	
 	private void fillData(){
@@ -684,7 +684,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				} else {
 					MoneyAccount oldDebtAccount = null;
 					if(!oldProject.isProjectMember(oldMoneyBorrowModel.getLocalFriendId(), oldMoneyBorrowModel.getFriendUserId())){
-						oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyBorrowModel.getLocalFriendId(), oldMoneyBorrowModel.getFriendUserId());
+						oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyBorrowModel.getProject().getCurrencyId(), oldMoneyBorrowModel.getLocalFriendId(), oldMoneyBorrowModel.getFriendUserId());
 					}
 					if(newDebtAccount != null){
 						HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
