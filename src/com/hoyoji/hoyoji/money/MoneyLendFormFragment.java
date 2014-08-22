@@ -592,6 +592,11 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
 		mMoneyLendEditor.validate();
+		if(mMoneyLendEditor.getModelCopy().getFriendUserId() == null){
+			mMoneyLendEditor.setValidationError("friend",R.string.moneyLendFormFragment_editText_hint_friend);
+		}else{
+			mMoneyLendEditor.removeValidationError("friend");
+		}
 		
 		if(mMoneyLendEditor.hasValidationErrors()){
 			showValidatioErrors();
