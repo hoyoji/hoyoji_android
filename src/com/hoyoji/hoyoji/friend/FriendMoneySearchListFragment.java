@@ -775,7 +775,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预收会费");
 			} else {
-				((TextView)view).setText("借入");
+				((TextView)view).setText("借入: " + ((MoneyBorrow)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -831,7 +831,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预缴会费");
 			}else{
-				((TextView)view).setText("借出");
+				((TextView)view).setText("借出: " + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
