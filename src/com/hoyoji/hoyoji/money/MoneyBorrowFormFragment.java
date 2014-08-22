@@ -185,18 +185,32 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if(moneyBorrow.get_mId() == null){
 			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
 			if(friendUserId != null){
-				Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-				if(friend != null){
-					mSelectorFieldFriend.setModelId(friendUserId);
-					mSelectorFieldFriend.setText(friend.getDisplayName());
-					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
+				//看一下该好友是不是项目成员, 如果是，作为项目成员添加
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friendUserId, mSelectorFieldProject.getModelId()).executeSingle();
+				if(psa != null){
+					if(!psa.getState().equalsIgnoreCase("Accept")){
+						mSelectorFieldFriend.setModelId(psa.getFriend().getId());
+						mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+   					} else {
+						mSelectorFieldFriend.setModelId(friendUserId);
+						mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+	                	mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
+   					}
 				} else {
-					User user = HyjModel.getModel(User.class, friendUserId);
-					if(user != null){
-						mSelectorFieldFriend.setModelId(user.getId());
-						mSelectorFieldFriend.setText(user.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-					}
+					Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+					if(friend != null){
+						mSelectorFieldFriend.setModelId(friend.getId());
+						mSelectorFieldFriend.setText(friend.getDisplayName());
+						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+					} 
+//					else {
+//						User user = HyjModel.getModel(User.class, friendUserId);
+//						if(user != null){
+//							mSelectorFieldFriend.setModelId(friendUserId);
+//							mSelectorFieldFriend.setText(user.getDisplayName());
+//						}
+//					}
 				}
 			} else {
 				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
