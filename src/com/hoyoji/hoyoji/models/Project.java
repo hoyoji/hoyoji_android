@@ -357,7 +357,7 @@ public class Project extends HyjModel {
 			}
 			projectBalance += subProject.getBalance() * rate;
 		}
-		return projectBalance;
+		return HyjUtil.toFixed2(projectBalance);
 	}
 	
 	public Double getDepositBalance(){
@@ -381,7 +381,7 @@ public class Project extends HyjModel {
 			
 			depositBalance += subProject.getDepositBalance() * rate;
 		}
-		return depositBalance;
+		return HyjUtil.toFixed2(depositBalance);
 	}
 	
 	public String getRemarkName() {
