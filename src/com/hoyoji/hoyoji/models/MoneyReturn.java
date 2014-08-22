@@ -595,4 +595,12 @@ public class MoneyReturn extends HyjModel{
 		return null;
 	}
 
+	public String getFriendDisplayName() {
+		String displayName = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		if(displayName.length() == 0){
+			displayName = "自己";
+		}
+		return displayName;
+	}
+
 }
