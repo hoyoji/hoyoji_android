@@ -692,7 +692,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		} else {
 			
-			if(mMoneyBorrowEditor.getModelCopy().getFriendUserId() == null){
+			if(mMoneyBorrowEditor.getModelCopy().getFriendUserId() == null && mMoneyBorrowEditor.getModelCopy().getLocalFriendId() == null){
 				mMoneyBorrowEditor.setValidationError("friend",R.string.moneyBorrowFormFragment_editText_hint_friend);
 			}else{
 				mMoneyBorrowEditor.removeValidationError("friend");

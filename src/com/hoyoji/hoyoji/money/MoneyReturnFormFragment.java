@@ -582,7 +582,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
 			
-			if(mMoneyReturnEditor.getModelCopy().getFriendUserId() == null){
+			if(mMoneyReturnEditor.getModelCopy().getFriendUserId() == null && mMoneyReturnEditor.getModelCopy().getLocalFriendId() == null){
 				mMoneyReturnEditor.setValidationError("friend",R.string.moneyReturnFormFragment_editText_hint_friend);
 			}else{
 				mMoneyReturnEditor.removeValidationError("friend");

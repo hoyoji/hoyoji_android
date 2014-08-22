@@ -576,7 +576,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		}else if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
-			if(mMoneyPaybackEditor.getModelCopy().getFriendUserId() == null){
+			if(mMoneyPaybackEditor.getModelCopy().getFriendUserId() == null && mMoneyPaybackEditor.getModelCopy().getLocalFriendId() == null){
 				mMoneyPaybackEditor.setValidationError("friend",R.string.moneyPaybackFormFragment_editText_hint_friend);
 			}else{
 				mMoneyPaybackEditor.removeValidationError("friend");
