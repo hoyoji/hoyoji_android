@@ -620,7 +620,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预收会费");
 			} else {
-				((TextView)view).setText("借入: " + ((MoneyBorrow)object).getFriendDisplayName());
+				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -676,7 +676,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
 					((TextView)view).setText("预缴会费");
 			} else {
-					((TextView)view).setText("借出: " + ((MoneyLend)object).getFriendDisplayName());
+					((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){

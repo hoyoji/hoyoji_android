@@ -249,48 +249,46 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					// }
 					// }
 				}
-			} else {
-				String localFriendId = intent.getStringExtra("localFriendId");// 从消息导入
-				if (localFriendId != null) {
-					Friend friend = HyjModel.getModel(Friend.class,
-							localFriendId);
-					if (friend != null) {
-						mSelectorFieldFriend.setModelId(friendUserId);
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
-								false);
-					}
-				} else {
-					Friend friend = moneyBorrow.getLocalFriend();
-					if (friend != null) {
-						mSelectorFieldFriend.setModelId(friend.getId());
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
-								false);
-					} else {
-						User user = moneyBorrow.getFriendUser();
-						if (user != null) {
-							mSelectorFieldFriend.setModelId(user.getId());
-							mSelectorFieldFriend.setText(user.getDisplayName());
-							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
-									false);
-						}
-					}
-				}
-			}
+			} 
+//			else {
+//				String localFriendId = intent.getStringExtra("localFriendId");// 从消息导入
+//				if (localFriendId != null) {
+//					Friend friend = HyjModel.getModel(Friend.class,
+//							localFriendId);
+//					if (friend != null) {
+//						mSelectorFieldFriend.setModelId(friendUserId);
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
+//								false);
+//					}
+//				} else {
+//					Friend friend = moneyBorrow.getLocalFriend();
+//					if (friend != null) {
+//						mSelectorFieldFriend.setModelId(friend.getId());
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
+//								false);
+//					} else {
+//						User user = moneyBorrow.getFriendUser();
+//						if (user != null) {
+//							mSelectorFieldFriend.setModelId(user.getId());
+//							mSelectorFieldFriend.setText(user.getDisplayName());
+//							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER,
+//									false);
+//						}
+//					}
+//				}
+//			}
 		} else {
 			Friend friend = moneyBorrow.getLocalFriend();
 			if (friend != null) {
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-			} else {
-				User user = moneyBorrow.getFriendUser();
-				if (user != null) {
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
-					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-				}
+			} else  if(moneyBorrow.getFriendUserId() != null){
+				mSelectorFieldFriend.setModelId(moneyBorrow.getFriendUserId());
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyBorrow.getFriendUserId()));
+				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}
 
