@@ -36,6 +36,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
@@ -45,6 +46,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListen
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.HyjWebServiceExchangeRateAsyncTask;
@@ -55,11 +57,13 @@ import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyFormFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
@@ -68,6 +72,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	private final static int GET_CURRENCY_ID = 2;
 	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 3;
+	protected static final int GET_FINANCIALOWNER_ID = 0;
 
 	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
@@ -76,6 +81,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldProjectCurrency = null;
 	private CheckBox mCheckBoxAutoApportion = null;
 	private PrentProjectListAdapter mParentProjectListAdapter = null;
+	private HyjSelectorField mSelectorFieldFinancialOwner = null;
+	private ImageView mImageViewClearFinancialOwner = null;
 
 	@Override
 	public Integer useContentView() {
@@ -171,6 +178,39 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			}
 		});
 
+		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+		if(project.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(project.getFinancialOwnerUserId()));
+		}
+		
+		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mProjectEditor.getModel().get_mId() == null){
+					
+				} else {
+					Bundle bundle = new Bundle();
+					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());
+					bundle.putLong("MODEL_ID", project.get_mId());
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+				}
+			}
+		}); 
+		
+		
+		mImageViewClearFinancialOwner = (ImageView) getView().findViewById(
+				R.id.projectFormFragment_imageView_clear_financialOwner);
+		mImageViewClearFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSelectorFieldFinancialOwner.setModelId(null);
+				mSelectorFieldFinancialOwner.setText("");
+			}
+		});
+		
+		
+		
 		mCheckBoxAutoApportion = (CheckBox) getView().findViewById(
 				R.id.projectFormFragment_checkBox_autoApportion);
 		mCheckBoxAutoApportion.setChecked(project.getAutoApportion());
@@ -608,6 +648,20 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 				}
 			}
 			break;
+        case GET_FINANCIALOWNER_ID:
+	       	 if(resultCode == Activity.RESULT_OK){
+	       		long _id = data.getLongExtra("MODEL_ID", -1);
+	       		Friend friend = Friend.load(Friend.class, _id);
+	       		
+	       		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						HyjUtil.displayToast(R.string.moneyReturnFormFragment_editText_error_friend);
+						return;
+					}
+	       		
+	       		mSelectorFieldFinancialOwner.setText(friend.getDisplayName());
+	       		mSelectorFieldFinancialOwner.setModelId(friend.getId());
+	       	 }
+	       	 break;
 		}
 	}
 
