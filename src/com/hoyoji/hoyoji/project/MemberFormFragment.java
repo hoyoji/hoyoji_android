@@ -38,6 +38,8 @@ import com.hoyoji.hoyoji.models.User;
 
 public class MemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_Friend_ID = 2;
+
+	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.memberFormFragment_selectorField_friend;
 	
 	private HyjModelEditor<ProjectShareAuthorization> mProjectShareAuthorizationEditor = null;
 	private List<ProjectShareAuthorization> mProjectShareAuthorizations;
@@ -245,10 +247,20 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
-		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-		if(modelCopy.getFriendUserId() != null){
-			modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+		if((Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == true){
+			modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
+			modelCopy.setLocalFriendId(null);
+			if(modelCopy.getFriendUserId() != null){
+				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+			}
+		} else {
+			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
+			modelCopy.setFriendUserId(null);
+			if(modelCopy.getLocalFriendId() != null){
+				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+			}
 		}
+		
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
 		modelCopy.setProjectShareMoneyExpenseEdit(mCheckBoxShareAuthExpenseEdit.isChecked());
@@ -384,48 +396,64 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		};
 
 		try {
-			JSONObject msg = new JSONObject();
-			msg.put("__dataType", "Message");
-			msg.put("id", UUID.randomUUID().toString());
-			msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-			msg.put("fromUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			msg.put("type", "Project.Share.AddRequest");
-			msg.put("messageState", "new");
-			msg.put("messageTitle", "项目共享请求");
-			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
-			msg.put("detail", "用户"
-					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
-//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
-			msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-			
-			JSONObject msgData = new JSONObject();
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
-			msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
-			msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
-//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
-			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
-			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
-			msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
-			msg.put("messageData", msgData.toString());
-			
-
 			String data = "[";
-			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
-			jsonPSA.put("state", "Wait");
-			data += jsonPSA.toString();
-			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
-				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
-			}
-			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
-						psa.isClientNew()){
-					data += "," + psa.toJSON().toString();
+			if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
+				JSONObject msg = new JSONObject();
+				msg.put("__dataType", "Message");
+				msg.put("id", UUID.randomUUID().toString());
+				msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				msg.put("fromUserId", HyjApplication.getInstance()
+						.getCurrentUser().getId());
+				msg.put("type", "Project.Share.AddRequest");
+				msg.put("messageState", "new");
+				msg.put("messageTitle", "项目共享请求");
+				msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+				msg.put("detail", "用户"
+						+ HyjApplication.getInstance().getCurrentUser()
+								.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+	//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
+				msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				
+				JSONObject msgData = new JSONObject();
+				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
+				msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
+				msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
+	//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+				msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+				msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
+				msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
+				msg.put("messageData", msgData.toString());
+				
+				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+				jsonPSA.put("state", "Wait");
+				data += jsonPSA.toString();
+				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 				}
+				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+							psa.isClientNew()){
+						data += "," + psa.toJSON().toString();
+					}
+				}
+				data += "," + msg.toString() + "]";
+			} else {
+				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+				jsonPSA.put("state", "NotInvite");
+				data += jsonPSA.toString();
+				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+				}
+				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+							psa.isClientNew()){
+						data += "," + psa.toJSON().toString();
+					}
+				}
+				data += "]";
 			}
-			data += "," + msg.toString() + "]";
+			
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
 					data, "postData");
 			
@@ -500,29 +528,39 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			return fixedPercentageTotal;
 		}
 	 
-	 @Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-         switch(requestCode){
-              case GET_Friend_ID:
-            	 if(resultCode == Activity.RESULT_OK){
-            		 long _id = data.getLongExtra("MODEL_ID", -1);
- 	         		 Friend friend = Friend.load(Friend.class, _id);
- 	         		 if(friend.getFriendUserId() != null){
- 	         			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-	 	       				if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
-	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-	 	       					return;
+		 @Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	         switch(requestCode){
+	              case GET_Friend_ID:
+	            	 if(resultCode == Activity.RESULT_OK){
+	            		 long _id = data.getLongExtra("MODEL_ID", -1);
+	 	         		 Friend friend = Friend.load(Friend.class, _id);
+ 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+	 	       				if(friend.getFriendUserId() != null){
+	 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+		 	       					return;
+	 	       					}
+	 	       				} else {
+		 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
+		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+		 	       					return;
+	 	       					}
 	 	       				}
- 	         			}
- 	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
- 	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
- 	         		 } else {
- 	         			 HyjUtil.displayToast(R.string.memberFormFragment_toast_cannot_select_local_friend);
- 	         		 }
-            	 }
-            	 break;
-          }
-    }
+ 	         			 }
+	 	         		 if(friend.getFriendUserId() != null){
+	 	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+	 	 	         		 mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+	 	         		 } else {
+	 	         			 mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	 	         		 mSelectorFieldFriend.setModelId(friend.getId());
+	 	 	         		 mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+	 	         		 }
+	            	 }
+	            	 break;
+	          }
+	    }
 	 
 
 		private void displayError(Object object){

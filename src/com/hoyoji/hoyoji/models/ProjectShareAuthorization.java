@@ -33,6 +33,10 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	// 该共享的好友是项目拥有者的本地好友
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+
 	@Column(name = "friendUserName")
 	private String mFriendUserName;
 	
@@ -401,18 +405,27 @@ public class ProjectShareAuthorization extends HyjModel {
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		} else if(mLocalFriendId != null){
+			return Friend.getModel(Friend.class, mLocalFriendId);
 		}
 		return null;
 	}
 	
 	public String getFriendDisplayName(){
-		Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
-		if(friend != null){
-			return friend.getDisplayName();
-		} else {
-			User user = HyjModel.getModel(User.class, mFriendUserId);
-			if(user != null){
-				return user.getDisplayName();
+		if(mFriendUserId != null){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, mFriendUserId);
+				if(user != null){
+					return user.getDisplayName();
+				}
+			}
+		} else if(mLocalFriendId != null){
+			Friend friend = Friend.getModel(Friend.class, mLocalFriendId);
+			if(friend != null){
+				return friend.getDisplayName();
 			}
 		}
 		return this.getFriendUserName();
@@ -1042,6 +1055,15 @@ public class ProjectShareAuthorization extends HyjModel {
 		jsonObj.remove("sharedTotalPayback");
 		
 		return jsonObj;
+	}
+
+	public String getLocalFriendId() {
+		return mLocalFriendId;
+	}
+
+	public void setLocalFriendId(String id) {
+		mLocalFriendId = id;
+		
 	}	
 
 }

@@ -25,5 +25,9 @@
    
    <string name="projectFormFragment_parentProject_topProject">顶级项目</string>
   
+   <string name="projectFormFragment_editText_error_financialOwner_cannot_local">财务负责人不能为本地好友</string>
+   <string name="projectFormFragment_editText_error_financialOwner_must_be_member">财务负责人必须为项目成员</string>
+   <string name="projectFormFragment_editText_error_financialOwner_must_be_accepted_member">财务负责人必须接受项目共享</string>
+   <string name="projectFormFragment_editText_error_financialOwner_must_has_all_auth">财务负责人必须有查看全部财务权限</string>
    
 </resources>

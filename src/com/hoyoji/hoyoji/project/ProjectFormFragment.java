@@ -179,6 +179,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		});
 
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+		mSelectorFieldFinancialOwner.setEnabled(editPermission);
 		if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(project.getFinancialOwnerUserId()));
@@ -188,7 +189,8 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				if(mProjectEditor.getModel().get_mId() == null){
-					
+					mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(HyjApplication.getInstance().getCurrentUser().getId()));
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());
@@ -201,6 +203,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		
 		mImageViewClearFinancialOwner = (ImageView) getView().findViewById(
 				R.id.projectFormFragment_imageView_clear_financialOwner);
+		mImageViewClearFinancialOwner.setEnabled(editPermission);
 		mImageViewClearFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -238,6 +241,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		Project modelCopy = (Project) mProjectEditor.getModelCopy();
 		modelCopy.setName(mTextFieldProjectName.getText().toString().trim());
 		modelCopy.setCurrencyId(mSelectorFieldProjectCurrency.getModelId());
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		modelCopy.setAutoApportion(mCheckBoxAutoApportion.isChecked());
 	}
 
@@ -651,15 +655,24 @@ public class ProjectFormFragment extends HyjUserFormFragment {
         case GET_FINANCIALOWNER_ID:
 	       	 if(resultCode == Activity.RESULT_OK){
 	       		long _id = data.getLongExtra("MODEL_ID", -1);
-	       		Friend friend = Friend.load(Friend.class, _id);
+	       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
+
+	       		if(psa == null){
+					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
+					return;
+	       		} else if(psa.getFriendUserId() == null){
+					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
+					return;
+	       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+					return;
+	       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
+					return;
+	       		}
 	       		
-	       		if(friend.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){
-						HyjUtil.displayToast(R.string.moneyReturnFormFragment_editText_error_friend);
-						return;
-					}
-	       		
-	       		mSelectorFieldFinancialOwner.setText(friend.getDisplayName());
-	       		mSelectorFieldFinancialOwner.setModelId(friend.getId());
+	       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+	       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
 	       	 }
 	       	 break;
 		}
