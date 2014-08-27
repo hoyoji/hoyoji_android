@@ -562,5 +562,18 @@ public class MoneyPayback extends HyjModel{
 	public String getPaybackType() {
 		return this.mPaybackType;
 	}
-	
+
+	public String getFriendDisplayName() {
+		String displayName = "";
+		if(this.getLocalFriendId() != null){
+			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
+			displayName = f.getDisplayName();
+		} else if(this.getFriendUserId() != null){
+			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
+			if(displayName.length() == 0){
+				displayName = "自己";
+			}
+		}
+		return displayName;
+	}
 }

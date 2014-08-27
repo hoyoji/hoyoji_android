@@ -238,44 +238,42 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 //						}
 //					}
 				}
-			} else {
-				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-				if(localFriendId != null){
-					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
-					if(friend != null){
-						mSelectorFieldFriend.setModelId(friend.getId());
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-					}
-				} else {
-					Friend friend = moneyLend.getLocalFriend();
-					if(friend != null){
-						mSelectorFieldFriend.setModelId(friend.getId());
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-					} else {
-						User user = moneyLend.getFriendUser();
-						if(user != null){
-							mSelectorFieldFriend.setModelId(user.getId());
-							mSelectorFieldFriend.setText(user.getDisplayName());
-							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-						}
-					}
-				}
-			}
+			} 
+//			else {
+//				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+//				if(localFriendId != null){
+//					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
+//					if(friend != null){
+//						mSelectorFieldFriend.setModelId(friend.getId());
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+//					}
+//				} else {
+//					Friend friend = moneyLend.getLocalFriend();
+//					if(friend != null){
+//						mSelectorFieldFriend.setModelId(friend.getId());
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+//					} else {
+//						User user = moneyLend.getFriendUser();
+//						if(user != null){
+//							mSelectorFieldFriend.setModelId(user.getId());
+//							mSelectorFieldFriend.setText(user.getDisplayName());
+//							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
+//						}
+//					}
+//				}
+//			}
 		} else {
 			Friend friend = moneyLend.getLocalFriend();
 			if(friend != null){
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-			} else {
-				User user = moneyLend.getFriendUser();
-				if(user != null){
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
-					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-				}
+			} else if(moneyLend.getFriendUserId() != null){
+				mSelectorFieldFriend.setModelId(moneyLend.getFriendUserId());
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyLend.getFriendUserId()));
+				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}
 		
@@ -592,6 +590,11 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
 		mMoneyLendEditor.validate();
+		if(mMoneyLendEditor.getModelCopy().getFriendUserId() == null && mMoneyLendEditor.getModelCopy().getLocalFriendId() == null){
+			mMoneyLendEditor.setValidationError("friend",R.string.moneyLendFormFragment_editText_hint_friend);
+		}else{
+			mMoneyLendEditor.removeValidationError("friend");
+		}
 		
 		if(mMoneyLendEditor.hasValidationErrors()){
 			showValidatioErrors();
@@ -715,7 +718,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					}else{
 						MoneyAccount oldDebtAccount = null;
 						if(!oldProject.isProjectMember(oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId())){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId());
+							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyLendModel.getProject().getCurrencyId(), oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId());
 						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();

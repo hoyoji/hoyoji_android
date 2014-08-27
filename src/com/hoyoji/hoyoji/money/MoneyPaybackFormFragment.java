@@ -229,44 +229,42 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 //						}
 //					}
 				}
-			} else {
-				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-				if(localFriendId != null){
-					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
-					if(friend != null){
-						mSelectorFieldFriend.setModelId(friend.getId());
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-					}
-				} else {
-					Friend friend = moneyPayback.getLocalFriend();
-					if(friend != null){
-						mSelectorFieldFriend.setModelId(friend.getId());
-						mSelectorFieldFriend.setText(friend.getDisplayName());
-						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-					} else {
-						User user = moneyPayback.getFriendUser();
-						if(user != null){
-							mSelectorFieldFriend.setModelId(user.getId());
-							mSelectorFieldFriend.setText(user.getDisplayName());
-							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-						}
-					}
-				}
-			}
+			} 
+//			else {
+//				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+//				if(localFriendId != null){
+//					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
+//					if(friend != null){
+//						mSelectorFieldFriend.setModelId(friend.getId());
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+//					}
+//				} else {
+//					Friend friend = moneyPayback.getLocalFriend();
+//					if(friend != null){
+//						mSelectorFieldFriend.setModelId(friend.getId());
+//						mSelectorFieldFriend.setText(friend.getDisplayName());
+//						mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
+//					} else {
+//						User user = moneyPayback.getFriendUser();
+//						if(user != null){
+//							mSelectorFieldFriend.setModelId(user.getId());
+//							mSelectorFieldFriend.setText(user.getDisplayName());
+//							mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
+//						}
+//					}
+//				}
+//			}
 		} else {
 			Friend friend = moneyPayback.getLocalFriend();
 			if(friend != null){
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
-			} else {
-				User user = moneyPayback.getFriendUser();
-				if(user != null){
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
-					mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
-				}
+			} else  if(moneyPayback.getFriendUserId() != null){
+				mSelectorFieldFriend.setModelId(moneyPayback.getFriendUserId());
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyPayback.getFriendUserId()));
+				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}
 		
@@ -576,7 +574,12 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		}else if(mMoneyPaybackEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			HyjUtil.displayToast(R.string.app_permission_no_edit);
 		}else{
-		
+			if(mMoneyPaybackEditor.getModelCopy().getFriendUserId() == null && mMoneyPaybackEditor.getModelCopy().getLocalFriendId() == null){
+				mMoneyPaybackEditor.setValidationError("friend",R.string.moneyPaybackFormFragment_editText_hint_friend);
+			}else{
+				mMoneyPaybackEditor.removeValidationError("friend");
+			}
+			
 		mMoneyPaybackEditor.validate();
 		
 		if(mMoneyPaybackEditor.hasValidationErrors()){
@@ -703,7 +706,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					}else{
 						MoneyAccount oldDebtAccount = null;
 						if(!oldProject.isProjectMember(oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId())){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
+							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyPaybackModel.getProject().getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
 						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();

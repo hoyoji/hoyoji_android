@@ -877,7 +877,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预收会费");
 			} else {
-				((TextView)view).setText("借入");
+				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -934,7 +934,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预缴会费");
 			}else{
-				((TextView)view).setText("借出");
+				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -988,7 +988,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("还款");
+			((TextView)view).setText("还款: " + ((MoneyReturn)object).getFriendDisplayName());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());
@@ -1044,7 +1044,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费退回");
 			}else{
-				((TextView)view).setText("收款");
+				((TextView)view).setText("收款: " + ((MoneyPayback)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
