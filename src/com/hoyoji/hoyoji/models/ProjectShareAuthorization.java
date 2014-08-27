@@ -321,7 +321,7 @@ public class ProjectShareAuthorization extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("sharePercentage");
 		}
-		if(this.getFriendUserId() == null){
+		if(this.getFriendUserId() == null && this.getLocalFriendId() == null){
 			modelEditor.setValidationError("friendUser", R.string.memberFormFragment_editText_hint_friend);
 		} else {
 			modelEditor.removeValidationError("friendUser");

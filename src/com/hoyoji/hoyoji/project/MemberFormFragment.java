@@ -137,17 +137,28 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		});
 		
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.memberFormFragment_selectorField_friend);
-		if(modelId != -1 && projectShareAuthorization.getFriendUserId() != null){
+		if(modelId != -1){
 			mSelectorFieldFriend.setEnabled(false);
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
-			if(friend != null){
-				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
-				mSelectorFieldFriend.setText(friend.getDisplayName());
-			} else {
-				User user = new Select().from(User.class).where("id=?", projectShareAuthorization.getFriendUserId()).executeSingle();
-				if(user != null){
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
+			if(projectShareAuthorization.getFriendUserId() != null){
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					User user = new Select().from(User.class).where("id=?", projectShareAuthorization.getFriendUserId()).executeSingle();
+					if(user != null){
+						mSelectorFieldFriend.setModelId(user.getId());
+						mSelectorFieldFriend.setText(user.getDisplayName());
+					}
+				}
+			} else if(projectShareAuthorization.getLocalFriendId() != null){
+				Friend friend = HyjModel.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					mSelectorFieldFriend.setModelId(null);
+					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
 				}
 			}
 		}
@@ -247,7 +258,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
-		if((Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == true){
+		if((Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == false){
 			modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			modelCopy.setLocalFriendId(null);
 			if(modelCopy.getFriendUserId() != null){
@@ -343,7 +354,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				JSONObject data = new JSONObject();
 				data.put("__dataType", "ProjectShareAuthorization");
 				data.put("projectId", mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
-				data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
+					data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				} else {
+					data.put("localFriendId", mProjectShareAuthorizationEditor.getModelCopy().getLocalFriendId());
+				}
 				//data.put("state", "Accept");
 				
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
