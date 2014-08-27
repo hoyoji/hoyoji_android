@@ -653,7 +653,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	       		long _id = data.getLongExtra("MODEL_ID", -1);
 	       		Friend friend = Friend.load(Friend.class, _id);
 	       		
-	       		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	       		if(friend.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){
 						HyjUtil.displayToast(R.string.moneyReturnFormFragment_editText_error_friend);
 						return;
 					}
