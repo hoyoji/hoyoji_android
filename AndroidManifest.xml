@@ -54,8 +54,11 @@
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="2" />
-        // 数据库添加了表 WBLogin, ProjectShareAuthorization ...
-        
+        <!-- 1=>2 
+        	1、数据库添加了表 WBLogin
+			2、Project 添加字段 financialOwnerUserId 财务负责人
+         -->
+         
         <activity
             android:name="com.hoyoji.hoyoji.MainActivity"
             android:label="@string/app_name" 

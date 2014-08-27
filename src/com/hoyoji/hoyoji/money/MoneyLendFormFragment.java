@@ -272,7 +272,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 			} else if(moneyLend.getFriendUserId() != null){
 				mSelectorFieldFriend.setModelId(moneyLend.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyLend.getFriendUserId()));
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName1(moneyLend.getFriendUserId()));
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}

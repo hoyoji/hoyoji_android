@@ -34,6 +34,9 @@ public class Project extends HyjModel {
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
+	
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 
@@ -156,7 +159,15 @@ public class Project extends HyjModel {
 	public void setOwnerUserId(String mOwnerUserId) {
 		this.mOwnerUserId = mOwnerUserId;
 	}
+	
+	public String getFinancialOwnerUserId() {
+		return mFinancialOwnerUserId;
+	}
 
+	public void setFinancialOwnerUserId(String mFinancialOwnerUserId) {
+		this.mFinancialOwnerUserId = mFinancialOwnerUserId;
+	}
+	
 	public String getCurrencyId() {
 		return mCurrencyId;
 	}

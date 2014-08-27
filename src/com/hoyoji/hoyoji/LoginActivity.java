@@ -41,6 +41,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.connect.UserInfo;
@@ -716,6 +717,14 @@ public class LoginActivity extends HyjActivity {
 											figureUrl = obj.getString("figureUrl");
 										}
 										qqLogin.save();
+									}  else if (obj.optString("__dataType")
+											.equals("WBLogin")) {
+										WBLogin wbLogin = new WBLogin();
+										wbLogin.loadFromJSON(obj, true);
+										if(!obj.isNull("figureUrl")){
+											figureUrl = obj.getString("figureUrl");
+										}
+										wbLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
 										Friend friend = new Friend();

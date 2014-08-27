@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -45,7 +44,6 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
@@ -55,47 +53,23 @@ import com.hoyoji.hoyoji.home.HomeListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
-import com.hoyoji.hoyoji.models.Currency;
-import com.hoyoji.hoyoji.models.Exchange;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.models.MessageBox;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrowContainer;
-import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
-import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
-import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
-import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
-import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
-import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
-import com.hoyoji.hoyoji.models.MoneyLendApportion;
 import com.hoyoji.hoyoji.models.MoneyLendContainer;
 import com.hoyoji.hoyoji.models.MoneyPayback;
-import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
 import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
-import com.hoyoji.hoyoji.models.MoneyReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyReturnContainer;
-import com.hoyoji.hoyoji.models.MoneyTransfer;
-import com.hoyoji.hoyoji.models.ParentProject;
-import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.QQLogin;
-import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
@@ -111,7 +85,6 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
 public class MainActivity extends HyjUserActivity {
-	private Menu mOptionsMenu;
 	private String[] mDrawerListerTitles = null;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -494,7 +467,6 @@ public class MainActivity extends HyjUserActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		this.mOptionsMenu = menu;
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		

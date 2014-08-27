@@ -44,6 +44,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.models.WBLogin;
 
 public abstract class HyjModel extends Model  implements Cloneable {
 
@@ -181,6 +182,11 @@ public abstract class HyjModel extends Model  implements Cloneable {
 			}
 		}  else if (tableName.equalsIgnoreCase("QQLogin")) {
 			model = HyjModel.getModel(QQLogin.class, id);
+			if(model == null){
+				model = new QQLogin();
+			}
+		}   else if (tableName.equalsIgnoreCase("WBLogin")) {
+			model = HyjModel.getModel(WBLogin.class, id);
 			if(model == null){
 				model = new QQLogin();
 			}

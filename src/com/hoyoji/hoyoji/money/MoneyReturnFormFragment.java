@@ -266,7 +266,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 			} else  if(moneyReturn.getFriendUserId() != null){
 				mSelectorFieldFriend.setModelId(moneyReturn.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyReturn.getFriendUserId()));
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName1(moneyReturn.getFriendUserId()));
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}
