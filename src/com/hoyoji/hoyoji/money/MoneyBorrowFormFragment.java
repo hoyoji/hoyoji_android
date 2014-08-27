@@ -1034,11 +1034,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										.getId()).executeSingle();
 
 				if (mMoneyBorrowEditor.getModelCopy().get_mId() == null
-						&& !psa.getProjectShareMoneyBorrowAddNew()) {
+						&& !psa.getProjectShareMoneyExpenseAddNew()) {
 					HyjUtil.displayToast(R.string.app_permission_no_addnew);
 					return;
 				} else if (mMoneyBorrowEditor.getModelCopy().get_mId() != null
-						&& !psa.getProjectShareMoneyBorrowEdit()) {
+						&& !psa.getProjectShareMoneyExpenseEdit()) {
 					HyjUtil.displayToast(R.string.app_permission_no_edit);
 					return;
 				}

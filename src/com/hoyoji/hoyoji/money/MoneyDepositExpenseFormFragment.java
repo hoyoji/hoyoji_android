@@ -708,10 +708,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	         		Project project = Project.load(Project.class, _id);
 	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					
-					if(mMoneyLendEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyLendAddNew()){
+					if(mMoneyLendEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
 						HyjUtil.displayToast(R.string.app_permission_no_addnew);
 						return;
-					}else if(mMoneyLendEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyLendEdit()){
+					}else if(mMoneyLendEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}
