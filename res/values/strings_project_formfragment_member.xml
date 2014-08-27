@@ -28,7 +28,6 @@
    <string name="memberFormFragment_checkBox_shareAllSubProjects">共享所有子项目</string>
    <string name="memberFormFragment_checkBox_hint_shareAllSubProjects">新增账务时，账务金额在成员间自动分摊</string>
    
-   
    <string name="memberFormFragment_textView_shareAuthorization_title">账务权限</string>
    <string name="memberFormFragment_textView_shareAuthorization_title_self">只允许查看与自己相关的权限</string>
    <string name="memberFormFragment_textView_shareAuthorization_title_add">允许新增账务</string>
