@@ -265,4 +265,8 @@ public class MoneyLendApportion extends HyjModel implements MoneyApportion {
 	public Double getExchangeRate() {
 		return this.getMoneyLendContainer().getExchangeRate();
 	}
+	@Override
+	public String getDate() {
+		return this.getMoneyLendContainer().getDate();
+	}
 }

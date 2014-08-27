@@ -116,17 +116,17 @@ public class MoneyTransactionProjectSummaryLoader extends
 		}
 		if (mFriendUserId != null) {
 			queryStringBuilder.append(" AND (main.ownerUserId = '"
-					+ mFriendUserId + "' OR friendUserId = '" + mFriendUserId
+					+ mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId
 					+ "' OR EXISTS(SELECT apr.id FROM Money" + type
 					+ "Apportion apr WHERE apr.money" + type
-					+ "Id = main.id AND (apr.friendUserId = '" + mFriendUserId
+					+ "ContainerId = main.id AND (apr.friendUserId = '" + mFriendUserId
 					+ "' OR apr.localFriendId = (SELECT id FROM Friend WHERE friendUserId = '"+mFriendUserId+"'))))");
 		}
 		if (mLocalFriendId != null) {
-			queryStringBuilder.append(" AND (localFriendId = '"
+			queryStringBuilder.append(" AND (main.localFriendId = '"
 					+ mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"
 					+ type + "Apportion apr WHERE apr.money" + type
-					+ "Id = main.id AND apr.localFriendId = '" + mLocalFriendId
+					+ "ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId
 					+ "'))");
 		}
 		return queryStringBuilder.toString();

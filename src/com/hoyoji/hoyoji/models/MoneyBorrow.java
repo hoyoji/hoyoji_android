@@ -212,29 +212,43 @@ public class MoneyBorrow extends HyjModel{
 		this.mAmount = mAmount;
 	}
 	
-	public Friend getFriend(){
+//	public Friend getFriend(){
+//		if(mFriendUserId != null){
+//			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
+//		}else if(mLocalFriendId != null){
+//			return (Friend) getModel(Friend.class, mLocalFriendId);
+//		}
+//		return null;
+//	}
+//	
+//	public void setFriend(Friend mFriend) {
+//		if(mFriend == null){
+//			this.mFriendUserId = null;
+//			this.mLocalFriendId = null;
+//		}else if(mFriend.getFriendUserId() != null){
+//			this.mFriendUserId = mFriend.getFriendUserId();
+//			this.mLocalFriendId = null;
+//		}
+//		else {
+//			this.mFriendUserId= null;
+//			this.mLocalFriendId = mFriend.getId();
+//		}
+//	}
+	
+	public User getFriendUser() {
 		if(mFriendUserId != null){
-			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
-		}else if(mLocalFriendId != null){
-			return (Friend) getModel(Friend.class, mLocalFriendId);
+			return HyjModel.getModel(User.class, mFriendUserId);
 		}
 		return null;
 	}
 	
-	public void setFriend(Friend mFriend) {
-		if(mFriend == null){
-			this.mFriendUserId = null;
-			this.mLocalFriendId = null;
-		}else if(mFriend.getFriendUserId() != null){
-			this.mFriendUserId = mFriend.getFriendUserId();
-			this.mLocalFriendId = null;
+	public Friend getLocalFriend() {
+		if(mLocalFriendId != null){
+			return getModel(Friend.class, mLocalFriendId);
 		}
-		else {
-			this.mFriendUserId= null;
-			this.mLocalFriendId = mFriend.getId();
-		}
+		return null;
 	}
-	
+			
 	public String getFriendUserId() {
 		return mFriendUserId;
 	}
@@ -629,5 +643,19 @@ public class MoneyBorrow extends HyjModel{
 
 	public String getProjectCurrencyId() {
 		return this.mProjectCurrencyId;
+	}
+
+	public String getFriendDisplayName() {
+		String displayName = "";
+		if(this.getLocalFriendId() != null){
+			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
+			displayName = f.getDisplayName();
+		} else if(this.getFriendUserId() != null){
+			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
+			if(displayName.length() == 0){
+				displayName = "自己";
+			}
+		}
+		return displayName;
 	}
 }

@@ -260,10 +260,13 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = ((MoneyExpense)object).getProject();
-			if(project == null){
+			MoneyExpense moneyExpense = (MoneyExpense)object;
+			if(moneyExpense.getMoneyExpenseApportion() == null || 
+					(moneyExpense.getMoneyExpenseApportion().getFriendUserId() == null 
+					&& moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()))){
 				((TextView)view).setText("共享来的收支");
 			} else {
+				Project project = moneyExpense.getProject();
 				((TextView)view).setText(project.getDisplayName());
 			}
 			return true;
@@ -332,10 +335,13 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = ((MoneyIncome)object).getProject();
-			if(project == null){
+			MoneyIncome moneyIncome = (MoneyIncome)object;
+			if(moneyIncome.getMoneyIncomeApportion() == null || 
+					(moneyIncome.getMoneyIncomeApportion().getFriendUserId() == null 
+					&& moneyIncome.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()))){
 				((TextView)view).setText("共享来的收支");
 			} else {
+				Project project = moneyIncome.getProject();
 				((TextView)view).setText(project.getDisplayName());
 			}
 			return true;

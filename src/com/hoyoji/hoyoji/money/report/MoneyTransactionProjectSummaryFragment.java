@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
@@ -16,7 +17,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
@@ -265,7 +268,23 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	@Override
+	public void openActivityWithFragment(Class<? extends Fragment> fragmentClass, String title, Bundle bundle, boolean forResult, Integer requestCode){
+		Intent intent = new Intent(this.getActivity(), HyjBlankUserActivity.class);
+		HyjApplication.getInstance().addFragmentClassMap(fragmentClass.toString(), fragmentClass);
+		intent.putExtra("FRAGMENT_NAME", fragmentClass.toString());
+		intent.putExtra("TITLE", title);
+		if(bundle != null){
+			intent.putExtras(bundle);
+		}
+		if(forResult){
+			this.getParentFragment().startActivityForResult(intent, requestCode);
+		} else {
+			this.startActivity(intent);
+		}
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {

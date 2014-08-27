@@ -700,9 +700,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					}
 					
 				mMoneyIncomeEditor.save();
-				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
-				this.getActivity().setResult(Activity.RESULT_OK);
+				if(getActivity().getCallingActivity() != null){
+					getActivity().setResult(Activity.RESULT_OK);
+				} else {
+					HyjUtil.displayToast(R.string.app_save_success);
+				}
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();

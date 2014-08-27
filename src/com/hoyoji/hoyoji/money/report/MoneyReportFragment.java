@@ -20,8 +20,7 @@ public class MoneyReportFragment extends HyjUserFragment {
 	
 	@Override
 	public void onInitViewData() {
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
+		// Create the adapter that will return a fragment for each of the sections in the viewpager.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
@@ -32,6 +31,14 @@ public class MoneyReportFragment extends HyjUserFragment {
 		mViewPager.setOffscreenPageLimit(2);
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	    super.setUserVisibleHint(isVisibleToUser);
+	    
+	    if(mViewPager != null && mViewPager.getCurrentItem() >= 0 && mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()) != null){
+	    	mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()).setUserVisibleHint(isVisibleToUser);
+	    }
+	}
 	
 	@Override
 	public boolean handleBackPressed() {

@@ -52,6 +52,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 
@@ -270,7 +271,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 				}
 			});
 			
@@ -726,9 +727,12 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 
 					
 				mMoneyDepositIncomeContainerEditor.save();
-				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
-				this.getActivity().setResult(Activity.RESULT_OK);
+				if(getActivity().getCallingActivity() != null){
+					getActivity().setResult(Activity.RESULT_OK);
+				} else {
+					HyjUtil.displayToast(R.string.app_save_success);
+				}
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();
@@ -880,11 +884,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyBorrow.setProject(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject());
 						moneyBorrow.save();
 						
-						if(api.getState() != ApportionItem.UNCHANGED
-								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())
-								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccountId())) {
+//						if(api.getState() != ApportionItem.UNCHANGED
+//								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())
+//								|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccountId())) {
 							apportionEditor.save();
-						}
+//						}
 						savedCount++;
 					}
 			}

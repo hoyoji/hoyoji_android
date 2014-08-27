@@ -229,43 +229,43 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					R.string.moneyIncomeFormFragment_title_addnew, null);
 			return true;
 		} 
-//		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-//			openActivityWithFragment(MoneyTransferFormFragment.class,
-//					R.string.moneyTransferFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
-//			openActivityWithFragment(MoneyBorrowFormFragment.class,
-//					R.string.moneyBorrowFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
-//			openActivityWithFragment(MoneyLendFormFragment.class,
-//					R.string.moneyLendFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
-//			openActivityWithFragment(MoneyReturnFormFragment.class,
-//					R.string.moneyReturnFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
-//			openActivityWithFragment(MoneyPaybackFormFragment.class,
-//					R.string.moneyPaybackFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-//			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-//					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
-//			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-//					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
-//			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
-//					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
-//			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
-//					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
-//			return true;
-//		}
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
+			openActivityWithFragment(MoneyTransferFormFragment.class,
+					R.string.moneyTransferFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
+			openActivityWithFragment(MoneyBorrowFormFragment.class,
+					R.string.moneyBorrowFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
+			openActivityWithFragment(MoneyLendFormFragment.class,
+					R.string.moneyLendFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
+			openActivityWithFragment(MoneyReturnFormFragment.class,
+					R.string.moneyReturnFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
+			openActivityWithFragment(MoneyPaybackFormFragment.class,
+					R.string.moneyPaybackFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
+			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
+			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
+			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -444,10 +444,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = ((MoneyExpense)object).getProject();
-			if(project == null){
+			MoneyExpense moneyExpense = (MoneyExpense)object;
+			if(moneyExpense.getMoneyExpenseApportion() == null || 
+					(moneyExpense.getMoneyExpenseApportion().getFriendUserId() == null 
+					&& moneyExpense.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()))){
 				((TextView)view).setText("共享来的收支");
 			} else {
+				Project project = moneyExpense.getProject();
 				((TextView)view).setText(project.getDisplayName());
 			}
 			return true;
@@ -516,10 +519,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = ((MoneyIncome)object).getProject();
-			if(project == null){
+			MoneyIncome moneyIncome = (MoneyIncome)object;
+			if(moneyIncome.getMoneyIncomeApportion() == null || 
+					(moneyIncome.getMoneyIncomeApportion().getFriendUserId() == null 
+					&& moneyIncome.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()))){
 				((TextView)view).setText("共享来的收支");
 			} else {
+				Project project = moneyIncome.getProject();
 				((TextView)view).setText(project.getDisplayName());
 			}
 			return true;
@@ -871,7 +877,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预收会费");
 			} else {
-				((TextView)view).setText("借入");
+				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -928,7 +934,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预缴会费");
 			}else{
-				((TextView)view).setText("借出");
+				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -982,7 +988,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("还款");
+			((TextView)view).setText("还款: " + ((MoneyReturn)object).getFriendDisplayName());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());
@@ -1038,7 +1044,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费退回");
 			}else{
-				((TextView)view).setText("收款");
+				((TextView)view).setText("收款: " + ((MoneyPayback)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){

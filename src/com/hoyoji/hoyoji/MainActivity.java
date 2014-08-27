@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +45,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
@@ -863,13 +865,87 @@ public class MainActivity extends HyjUserActivity {
 			} else {
 				JSONObject jsonObj = (JSONObject) o;
 				String dataType = jsonObj.getString("__dataType");
-				if(HyjApplication.getIsDebuggable() && dataType.equals("MoneyLend")){
+				if(HyjApplication.getIsDebuggable()){
 					Log.i("Downloaded Data " + dataType, jsonObj.toString());
 				}
 				HyjModel model = null;
 				if (dataType.equals("ServerSyncDeletedRecords")) {
 					model = HyjModel.createModel(jsonObj.getString("tableName"), jsonObj.getString("recordId"));
 					if(model != null && model.get_mId() != null){
+						if(jsonObj.getString("tableName").equals("MoneyExpenseApportion")){
+							MoneyExpenseApportion apportion = (MoneyExpenseApportion)model;
+							// 如果被删除的分摊是别人分摊给我的
+							if(!apportion.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
+								MoneyExpenseContainer moneyExpenseContainer = apportion.getMoneyExpenseContainer();
+								// 看该分摊对应的支出是不是没有权限了，如果是，就移除它以及其他相关的分摊
+								if(moneyExpenseContainer != null 
+										&& !moneyExpenseContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())
+										&& !HyjApplication.getInstance().getCurrentUser().getId().equals(moneyExpenseContainer.getFriendUserId())){
+									ProjectShareAuthorization pst = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyExpenseContainer.getProjectId());
+									if(pst != null && pst.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+										//删除支出的同时删除分摊
+										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpenseContainer.getApportions().iterator();
+										while (moneyExpenseApportions.hasNext()) {
+											MoneyExpenseApportion moneyExpenseApportion = moneyExpenseApportions.next();
+											if(!moneyExpenseApportion.getId().equals(model.getId())){
+												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+												if(moneyLend != null){
+													moneyLend.deleteFromServer();
+												}
+												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+												if(moneyExpense != null){
+													moneyExpense.deleteFromServer();
+												}
+												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+												if(moneyBorrow != null){
+													moneyBorrow.deleteFromServer();
+												} 
+												moneyExpenseApportion.deleteFromServer();
+											}
+										}
+										
+										moneyExpenseContainer.deleteFromServer();
+									}
+								}
+							}
+						} else if(jsonObj.getString("tableName").equals("MoneyIncomeApportion")){
+							MoneyIncomeApportion apportion = (MoneyIncomeApportion)model;
+							// 如果被删除的分摊是别人分摊给我的
+							if(!apportion.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
+								MoneyIncomeContainer moneyIncomeContainer = apportion.getMoneyIncomeContainer();
+								// 看该分摊对应的支出是不是没有权限了，如果是，就移除它以及其他相关的分摊
+								if(moneyIncomeContainer != null 
+										&& !moneyIncomeContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())
+										&& !HyjApplication.getInstance().getCurrentUser().getId().equals(moneyIncomeContainer.getFriendUserId())){
+									ProjectShareAuthorization pst = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyIncomeContainer.getProjectId());
+									if(pst != null && pst.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+										//删除支出的同时删除分摊
+										Iterator<MoneyIncomeApportion> moneyIncomeApportions = moneyIncomeContainer.getApportions().iterator();
+										while (moneyIncomeApportions.hasNext()) {
+											MoneyIncomeApportion moneyIncomeApportion = moneyIncomeApportions.next();
+											if(!moneyIncomeApportion.getId().equals(model.getId())){
+												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+												if(moneyBorrow != null){
+													moneyBorrow.deleteFromServer();
+												} 
+												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+												if(moneyIncome != null){
+													moneyIncome.deleteFromServer();
+												}
+												
+												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+												if(moneyLend != null){
+													moneyLend.deleteFromServer();
+												} 
+												moneyIncomeApportion.deleteFromServer();
+											}
+										}
+										
+										moneyIncomeContainer.deleteFromServer();
+									}
+								}
+							}
+						}
 						model.deleteFromServer();
 					}
 				} else if (dataType.equals("MoveProject")) {
@@ -880,6 +956,11 @@ public class MainActivity extends HyjUserActivity {
 				} else {
 					model = HyjModel.createModel(dataType, jsonObj.getString("id"));
 					if(model != null){
+//						if(model.get_mId() != null){
+//							if(jsonObj.getString("tableName").equals("MoneyExpenseApportion")){
+//								
+//							}
+//						}
 						model.loadFromJSON(jsonObj, true);
 						model.save();
 					}
@@ -1089,9 +1170,12 @@ public class MainActivity extends HyjUserActivity {
 								jsonObj.put("operation", "create");
 								JSONObject recordData = model.toJSON();
 								if(model instanceof MoneyApportion){
+									recordData.put("date", ((MoneyApportion)model).getDate());
 									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
 									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+									recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());
+									recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
 								} else if(model instanceof MoneyExpenseContainer){
 									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
 									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());
@@ -1129,6 +1213,7 @@ public class MainActivity extends HyjUserActivity {
 									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
 										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
 									}
+									recordData.put("projectCurrencySymbol", ((MoneyBorrow)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyLend){
 //									if(((MoneyLend)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
@@ -1138,14 +1223,17 @@ public class MainActivity extends HyjUserActivity {
 									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
 										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
 									}
+									recordData.put("projectCurrencySymbol", ((MoneyLend)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyPayback){
 //									if(((MoneyPayback)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
 //									}
+									recordData.put("projectCurrencySymbol", ((MoneyPayback)model).getProject().getCurrencySymbol());
 								} else if(model instanceof MoneyReturn){
 //									if(((MoneyReturn)model).getMoneyAccount() != null){
 //										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
 //									}
+									recordData.put("projectCurrencySymbol", ((MoneyReturn)model).getProject().getCurrencySymbol());
 								}
 								jsonObj.put( "recordData", recordData);
 								postData.put(jsonObj);

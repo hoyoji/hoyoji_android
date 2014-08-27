@@ -874,9 +874,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 					
 				mMoneyIncomeContainerEditor.save();
-				HyjUtil.displayToast(R.string.app_save_success);
 				ActiveAndroid.setTransactionSuccessful();
-				this.getActivity().setResult(Activity.RESULT_OK);
+				if(getActivity().getCallingActivity() != null){
+					getActivity().setResult(Activity.RESULT_OK);
+				} else {
+					HyjUtil.displayToast(R.string.app_save_success);
+				}
 				getActivity().finish();
 			} finally {
 			    ActiveAndroid.endTransaction();
@@ -1129,11 +1132,11 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 							
 						}
 						
-						if(api.getState() != ApportionItem.UNCHANGED
-								|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
-								|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
+//						if(api.getState() != ApportionItem.UNCHANGED
+//								|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+//								|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
 							apportionEditor.save();
-						}
+//						}
 						savedCount++;
 					}
 				}else {
@@ -1454,13 +1457,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 							}
 							
 							
-							 if(api.getState() != ApportionItem.UNCHANGED
-										|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
-										|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
+//							 if(api.getState() != ApportionItem.UNCHANGED
+//										|| !mMoneyIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyIncomeContainerEditor.getModel().getProjectId())
+//										|| !mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyIncomeContainerEditor.getModel().getMoneyAccountId())) {
 									apportionEditor.save();
-								 }
+//								 }
 								savedCount++;
-						
 					}
 				}
 			}

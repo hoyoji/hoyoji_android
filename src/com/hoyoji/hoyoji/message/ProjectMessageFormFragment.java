@@ -360,8 +360,16 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				newObj.put("main.projectId", projectIds.get(i));
 				data.put(newObj);
 				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrowContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyBorrowApportion");
 				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLend");
+				newObj.put("main.projectId", projectIds.get(i));
 				data.put(newObj);
 				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyLendContainer");

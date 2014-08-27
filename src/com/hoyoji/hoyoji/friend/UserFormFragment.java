@@ -72,8 +72,11 @@ public class UserFormFragment extends HyjUserFormFragment {
 			mTextFieldUserNickName.setEnabled(false);
 			
 			mTextFieldUserName.setText(mJsonUser.optString("userName"));
-			mTextFieldUserNickName.setText(mJsonUser.optString("nickName"));
-			
+			if(!mJsonUser.has("nickName") || mJsonUser.optString("nickName").equals("null")) {
+				mTextFieldUserNickName.setText("(无昵称)");
+			} else {
+				mTextFieldUserNickName.setText(mJsonUser.optString("nickName"));
+			}
 
 			mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.userFormFragment_textField_remark);
 			mRemarkFieldRemark.setText("用户"
