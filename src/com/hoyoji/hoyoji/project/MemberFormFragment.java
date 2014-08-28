@@ -412,6 +412,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 
 		try {
 			String data = "[";
+			// 添加网络好友共享，发送共享邀请
 			if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
 				JSONObject msg = new JSONObject();
 				msg.put("__dataType", "Message");
@@ -454,6 +455,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				}
 				data += "," + msg.toString() + "]";
 			} else {
+				// 添加本地好友共享，不用发送共享邀请
 				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
 				jsonPSA.put("state", "NotInvite");
 				data += jsonPSA.toString();
