@@ -133,6 +133,13 @@
             </intent-filter>
         </activity>
 
+        
+        <!-- 授权认证 -->
+        <activity android:name=".WBAuthActivity" />
+        <activity android:name=".WBAuthCodeActivity" />
+        <activity android:name=".WBShareMainActivity" />
+        
+        
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"

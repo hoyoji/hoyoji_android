@@ -45,8 +45,8 @@ public class WBLogin extends HyjModel {
 	@Column(name = "expires_in")
 	private Long mExpiresIn;
 	
-	@Column(name = "remind_in")
-	private String mRemindIn;
+//	@Column(name = "remind_in")
+//	private String mRemindIn;
 	
 	@Column(name = "weiboClass")
 	private String mWeiboClass;
