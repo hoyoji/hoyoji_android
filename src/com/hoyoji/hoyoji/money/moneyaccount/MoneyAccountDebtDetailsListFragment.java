@@ -199,44 +199,44 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					R.string.moneyIncomeFormFragment_title_addnew, queryParams);
 			return true;
 		} 
-//		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-//			openActivityWithFragment(MoneyTransferFormFragment.class,
-//					R.string.moneyTransferFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
-//			openActivityWithFragment(MoneyBorrowFormFragment.class,
-//					R.string.moneyBorrowFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
-//			openActivityWithFragment(MoneyLendFormFragment.class,
-//					R.string.moneyLendFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
-//			openActivityWithFragment(MoneyReturnFormFragment.class,
-//					R.string.moneyReturnFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
-//			openActivityWithFragment(MoneyPaybackFormFragment.class,
-//					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
-//			return true;
-//		}
-//		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-//			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
-//					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
-//			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-//					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
-//			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
-//					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
-//			return true;
-//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
-//			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
-//					R.string.moneyDepositPaybackFormFragment_title_addnew, queryParams);
-//			return true;
-//		}
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
+			openActivityWithFragment(MoneyTransferFormFragment.class,
+					R.string.moneyTransferFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
+			openActivityWithFragment(MoneyBorrowFormFragment.class,
+					R.string.moneyBorrowFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
+			openActivityWithFragment(MoneyLendFormFragment.class,
+					R.string.moneyLendFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
+			openActivityWithFragment(MoneyReturnFormFragment.class,
+					R.string.moneyReturnFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
+			openActivityWithFragment(MoneyPaybackFormFragment.class,
+					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
+			return true;
+		}
+		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
+			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
+			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
+			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
+			return true;
+		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+					R.string.moneyDepositPaybackFormFragment_title_addnew, queryParams);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -337,7 +337,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			} else if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预收会费");
 			} else {
-				((TextView)view).setText("借入");
+				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -412,7 +412,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			} else if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("预缴会费");
 			}else {
-				((TextView)view).setText("借出");
+				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -483,7 +483,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			if(((MoneyReturn)object).getReturnType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费还款");
 			} else {
-				((TextView)view).setText("还款");
+				((TextView)view).setText("还款: " + ((MoneyReturn)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -539,7 +539,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费退回");
 			}else {
-				((TextView)view).setText("收款");
+				((TextView)view).setText("收款: " + ((MoneyPayback)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){

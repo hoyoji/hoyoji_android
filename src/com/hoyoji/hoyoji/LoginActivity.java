@@ -42,6 +42,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.setting.BindPhoneFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -467,11 +468,11 @@ public class LoginActivity extends HyjActivity {
 							wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 							wDb.close();
 							mDbHelper.close();
-							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+//							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 						} else {
-							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-								relogin();
-							}
+//							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+//								relogin();
+//							}
 							LoginActivity.this.dismissProgressDialog();
 						}
 					} catch (JSONException e) {
@@ -516,6 +517,8 @@ public class LoginActivity extends HyjActivity {
             	
             	try {
 					wbJsonObject.put("openid", values.get("uid"));
+					wbJsonObject.put("access_token", values.get("access_token"));
+					wbJsonObject.put("expires_in", values.get("expires_in"));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1024,6 +1027,14 @@ public class LoginActivity extends HyjActivity {
 											figureUrl = obj.getString("figureUrl");
 										}
 										qqLogin.save();
+									}  else if (obj.optString("__dataType")
+											.equals("WBLogin")) {
+										WBLogin wbLogin = new WBLogin();
+										wbLogin.loadFromJSON(obj, true);
+										if(!obj.isNull("figureUrl")){
+											figureUrl = obj.getString("figureUrl");
+										}
+										wbLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
 										Friend friend = new Friend();

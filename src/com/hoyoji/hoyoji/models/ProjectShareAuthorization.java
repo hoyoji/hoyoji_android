@@ -33,6 +33,10 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
+	// 该共享的好友是项目拥有者的本地好友
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+
 	@Column(name = "friendUserName")
 	private String mFriendUserName;
 	
@@ -142,155 +146,155 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "projectShareMoneyExpenseDelete")
 	private Boolean projectShareMoneyExpenseDelete = true;
 	
-//
-//	projectShareMoneyExpenseDetailOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseDetailOwnerDataOnly")
-	private Boolean projectShareMoneyExpenseDetailOwnerDataOnly = false;
-	
-//	projectShareMoneyExpenseDetailAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseDetailAddNew")
-	private Boolean mProjectShareMoneyExpenseDetailAddNew = true;
-	
-//	projectShareMoneyExpenseDetailEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseDetailEdit")
-	private Boolean mProjectShareMoneyExpenseDetailEdit = true;
-	
-//	projectShareMoneyExpenseDetailDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseDetailDelete")
-	private Boolean mProjectShareMoneyExpenseDetailDelete = true;
-	
-//
-//	projectShareMoneyIncomeOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeOwnerDataOnly")
-	private Boolean mProjectShareMoneyIncomeOwnerDataOnly = false;
-	
-//	projectShareMoneyIncomeAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeAddNew")
-	private Boolean mProjectShareMoneyIncomeAddNew = true;
-	
-//	projectShareMoneyIncomeEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeEdit")
-	private Boolean mProjectShareMoneyIncomeEdit = true;
-	
-//	projectShareMoneyIncomeDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeDelete")
-	private Boolean mProjectShareMoneyIncomeDelete = true;
-	
-//
-//	projectShareMoneyIncomeDetailOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeDetailOwnerDataOnly")
-	private Boolean mProjectShareMoneyIncomeDetailOwnerDataOnly = false;
-	
-//	projectShareMoneyIncomeDetailAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeDetailAddNew")
-	private Boolean mProjectShareMoneyIncomeDetailAddNew = true;
-	
-//	projectShareMoneyIncomeDetailEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeDetailEdit")
-	private Boolean mProjectShareMoneyIncomeDetailEdit = true;
-	
-//	projectShareMoneyIncomeDetailDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeDetailDelete")
-	private Boolean mProjectShareMoneyIncomeDetailDelete = true;
-	
-//
-//	projectShareMoneyExpenseCategoryAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseCategoryAddNew")
-	private Boolean mProjectShareMoneyExpenseCategoryAddNew = true;
-	
-//	projectShareMoneyExpenseCategoryEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseCategoryEdit")
-	private Boolean mProjectShareMoneyExpenseCategoryEdit = true;
-	
-//	projectShareMoneyExpenseCategoryDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyExpenseCategoryDelete")
-	private Boolean mProjectShareMoneyExpenseCategoryDelete = true;
-	
-//
-//	projectShareMoneyIncomeCategoryAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeCategoryAddNew")
-	private Boolean mProjectShareMoneyIncomeCategoryAddNew = true;
-	
-//	projectShareMoneyIncomeCategoryEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeCategoryEdit")
-	private Boolean mProjectShareMoneyIncomeCategoryEdit = true;
-	
-//	projectShareMoneyIncomeCategoryDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyIncomeCategoryDelete")
-	private Boolean mProjectShareMoneyIncomeCategoryDelete = true;
-	
-//
-//	// projectShareMoneyTransferOwnerDataOnly : "INTEGER NOT NULL",
-//	// projectShareMoneyTransferAddNew : "INTEGER NOT NULL",
-//	// projectShareMoneyTransferEdit : "INTEGER NOT NULL",
-//	// projectShareMoneyTransferDelete : "INTEGER NOT NULL",
-//
-//	projectShareMoneyLendOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyLendOwnerDataOnly")
-	private Boolean mProjectShareMoneyLendOwnerDataOnly = false;
-	
-//	projectShareMoneyLendAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyLendAddNew")
-	private Boolean mProjectShareMoneyLendAddNew = true;
-	
-//	projectShareMoneyLendEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyLendEdit")
-	private Boolean mProjectShareMoneyLendEdit = true;
-	
-//	projectShareMoneyLendDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyLendDelete")
-	private Boolean mProjectShareMoneyLendDelete = true;
-	
-//
-//	projectShareMoneyBorrowOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyBorrowOwnerDataOnly")
-	private Boolean mProjectShareMoneyBorrowOwnerDataOnly = false;
-	
-//	projectShareMoneyBorrowAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyBorrowAddNew")
-	private Boolean mProjectShareMoneyBorrowAddNew = true;
-	
-//	projectShareMoneyBorrowEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyBorrowEdit")
-	private Boolean mProjectShareMoneyBorrowEdit = true;
-	
-//	projectShareMoneyBorrowDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyBorrowDelete")
-	private Boolean mProjectShareMoneyBorrowDelete = true;
-	
-//
-//	projectShareMoneyPaybackOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyPaybackOwnerDataOnly")
-	private Boolean mProjectShareMoneyPaybackOwnerDataOnly = false;
-	
-//	projectShareMoneyPaybackAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyPaybackAddNew")
-	private Boolean mProjectShareMoneyPaybackAddNew = true;
-	
-//	projectShareMoneyPaybackEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyPaybackEdit")
-	private Boolean mProjectShareMoneyPaybackEdit = true;
-	
-//	projectShareMoneyPaybackDelete : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyPaybackDelete")
-	private Boolean mProjectShareMoneyPaybackDelete = true;
-	
-//
-//	projectShareMoneyReturnOwnerDataOnly : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyReturnOwnerDataOnly")
-	private Boolean mProjectShareMoneyReturnOwnerDataOnly = false;
-	
-//	projectShareMoneyReturnAddNew : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyReturnAddNew")
-	private Boolean mProjectShareMoneyReturnAddNew = true;
-	
-//	projectShareMoneyReturnEdit : "INTEGER NOT NULL",
-	@Column(name = "projectShareMoneyReturnEdit")
-	private Boolean mProjectShareMoneyReturnEdit = true;
-	
-//	projectShareMoneyReturnDelete : "INTEGER NOT NULL"
-	@Column(name = "projectShareMoneyReturnDelete")
-	private Boolean mProjectShareMoneyReturnDelete = true;
+////
+////	projectShareMoneyExpenseDetailOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseDetailOwnerDataOnly")
+//	private Boolean projectShareMoneyExpenseDetailOwnerDataOnly = false;
+//	
+////	projectShareMoneyExpenseDetailAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseDetailAddNew")
+//	private Boolean mProjectShareMoneyExpenseDetailAddNew = true;
+//	
+////	projectShareMoneyExpenseDetailEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseDetailEdit")
+//	private Boolean mProjectShareMoneyExpenseDetailEdit = true;
+//	
+////	projectShareMoneyExpenseDetailDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseDetailDelete")
+//	private Boolean mProjectShareMoneyExpenseDetailDelete = true;
+//	
+////
+////	projectShareMoneyIncomeOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeOwnerDataOnly")
+//	private Boolean mProjectShareMoneyIncomeOwnerDataOnly = false;
+//	
+////	projectShareMoneyIncomeAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeAddNew")
+//	private Boolean mProjectShareMoneyIncomeAddNew = true;
+//	
+////	projectShareMoneyIncomeEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeEdit")
+//	private Boolean mProjectShareMoneyIncomeEdit = true;
+//	
+////	projectShareMoneyIncomeDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeDelete")
+//	private Boolean mProjectShareMoneyIncomeDelete = true;
+//	
+////
+////	projectShareMoneyIncomeDetailOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeDetailOwnerDataOnly")
+//	private Boolean mProjectShareMoneyIncomeDetailOwnerDataOnly = false;
+//	
+////	projectShareMoneyIncomeDetailAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeDetailAddNew")
+//	private Boolean mProjectShareMoneyIncomeDetailAddNew = true;
+//	
+////	projectShareMoneyIncomeDetailEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeDetailEdit")
+//	private Boolean mProjectShareMoneyIncomeDetailEdit = true;
+//	
+////	projectShareMoneyIncomeDetailDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeDetailDelete")
+//	private Boolean mProjectShareMoneyIncomeDetailDelete = true;
+//	
+////
+////	projectShareMoneyExpenseCategoryAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseCategoryAddNew")
+//	private Boolean mProjectShareMoneyExpenseCategoryAddNew = true;
+//	
+////	projectShareMoneyExpenseCategoryEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseCategoryEdit")
+//	private Boolean mProjectShareMoneyExpenseCategoryEdit = true;
+//	
+////	projectShareMoneyExpenseCategoryDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyExpenseCategoryDelete")
+//	private Boolean mProjectShareMoneyExpenseCategoryDelete = true;
+//	
+////
+////	projectShareMoneyIncomeCategoryAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeCategoryAddNew")
+//	private Boolean mProjectShareMoneyIncomeCategoryAddNew = true;
+//	
+////	projectShareMoneyIncomeCategoryEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeCategoryEdit")
+//	private Boolean mProjectShareMoneyIncomeCategoryEdit = true;
+//	
+////	projectShareMoneyIncomeCategoryDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyIncomeCategoryDelete")
+//	private Boolean mProjectShareMoneyIncomeCategoryDelete = true;
+//	
+////
+////	// projectShareMoneyTransferOwnerDataOnly : "INTEGER NOT NULL",
+////	// projectShareMoneyTransferAddNew : "INTEGER NOT NULL",
+////	// projectShareMoneyTransferEdit : "INTEGER NOT NULL",
+////	// projectShareMoneyTransferDelete : "INTEGER NOT NULL",
+////
+////	projectShareMoneyLendOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyLendOwnerDataOnly")
+//	private Boolean mProjectShareMoneyLendOwnerDataOnly = false;
+//	
+////	projectShareMoneyLendAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyLendAddNew")
+//	private Boolean mProjectShareMoneyLendAddNew = true;
+//	
+////	projectShareMoneyLendEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyLendEdit")
+//	private Boolean mProjectShareMoneyLendEdit = true;
+//	
+////	projectShareMoneyLendDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyLendDelete")
+//	private Boolean mProjectShareMoneyLendDelete = true;
+//	
+////
+////	projectShareMoneyBorrowOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyBorrowOwnerDataOnly")
+//	private Boolean mProjectShareMoneyBorrowOwnerDataOnly = false;
+//	
+////	projectShareMoneyBorrowAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyBorrowAddNew")
+//	private Boolean mProjectShareMoneyBorrowAddNew = true;
+//	
+////	projectShareMoneyBorrowEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyBorrowEdit")
+//	private Boolean mProjectShareMoneyBorrowEdit = true;
+//	
+////	projectShareMoneyBorrowDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyBorrowDelete")
+//	private Boolean mProjectShareMoneyBorrowDelete = true;
+//	
+////
+////	projectShareMoneyPaybackOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyPaybackOwnerDataOnly")
+//	private Boolean mProjectShareMoneyPaybackOwnerDataOnly = false;
+//	
+////	projectShareMoneyPaybackAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyPaybackAddNew")
+//	private Boolean mProjectShareMoneyPaybackAddNew = true;
+//	
+////	projectShareMoneyPaybackEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyPaybackEdit")
+//	private Boolean mProjectShareMoneyPaybackEdit = true;
+//	
+////	projectShareMoneyPaybackDelete : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyPaybackDelete")
+//	private Boolean mProjectShareMoneyPaybackDelete = true;
+//	
+////
+////	projectShareMoneyReturnOwnerDataOnly : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyReturnOwnerDataOnly")
+//	private Boolean mProjectShareMoneyReturnOwnerDataOnly = false;
+//	
+////	projectShareMoneyReturnAddNew : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyReturnAddNew")
+//	private Boolean mProjectShareMoneyReturnAddNew = true;
+//	
+////	projectShareMoneyReturnEdit : "INTEGER NOT NULL",
+//	@Column(name = "projectShareMoneyReturnEdit")
+//	private Boolean mProjectShareMoneyReturnEdit = true;
+//	
+////	projectShareMoneyReturnDelete : "INTEGER NOT NULL"
+//	@Column(name = "projectShareMoneyReturnDelete")
+//	private Boolean mProjectShareMoneyReturnDelete = true;
 	
 
 	@Column(name = "_creatorId")
@@ -317,7 +321,7 @@ public class ProjectShareAuthorization extends HyjModel {
 		} else {
 			modelEditor.removeValidationError("sharePercentage");
 		}
-		if(this.getFriendUserId() == null){
+		if(this.getFriendUserId() == null && this.getLocalFriendId() == null){
 			modelEditor.setValidationError("friendUser", R.string.memberFormFragment_editText_hint_friend);
 		} else {
 			modelEditor.removeValidationError("friendUser");
@@ -401,18 +405,27 @@ public class ProjectShareAuthorization extends HyjModel {
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		} else if(mLocalFriendId != null){
+			return Friend.getModel(Friend.class, mLocalFriendId);
 		}
 		return null;
 	}
 	
 	public String getFriendDisplayName(){
-		Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
-		if(friend != null){
-			return friend.getDisplayName();
-		} else {
-			User user = HyjModel.getModel(User.class, mFriendUserId);
-			if(user != null){
-				return user.getDisplayName();
+		if(mFriendUserId != null){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, mFriendUserId);
+				if(user != null){
+					return user.getDisplayName();
+				}
+			}
+		} else if(mLocalFriendId != null){
+			Friend friend = Friend.getModel(Friend.class, mLocalFriendId);
+			if(friend != null){
+				return friend.getDisplayName();
 			}
 		}
 		return this.getFriendUserName();
@@ -631,305 +644,305 @@ public class ProjectShareAuthorization extends HyjModel {
 		this.projectShareMoneyExpenseDelete = projectShareMoneyExpenseDelete;
 	}
 
-	public Boolean getProjectShareMoneyExpenseDetailOwnerDataOnly() {
-		return projectShareMoneyExpenseDetailOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyExpenseDetailOwnerDataOnly(
-			Boolean projectShareMoneyExpenseDetailOwnerDataOnly) {
-		this.projectShareMoneyExpenseDetailOwnerDataOnly = projectShareMoneyExpenseDetailOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyExpenseDetailAddNew() {
-		return mProjectShareMoneyExpenseDetailAddNew;
-	}
-
-	public void setProjectShareMoneyExpenseDetailAddNew(
-			Boolean mProjectShareMoneyExpenseDetailAddNew) {
-		this.mProjectShareMoneyExpenseDetailAddNew = mProjectShareMoneyExpenseDetailAddNew;
-	}
-
-	public Boolean getProjectShareMoneyExpenseDetailEdit() {
-		return mProjectShareMoneyExpenseDetailEdit;
-	}
-
-	public void setProjectShareMoneyExpenseDetailEdit(
-			Boolean mProjectShareMoneyExpenseDetailEdit) {
-		this.mProjectShareMoneyExpenseDetailEdit = mProjectShareMoneyExpenseDetailEdit;
-	}
-
-	public Boolean getProjectShareMoneyExpenseDetailDelete() {
-		return mProjectShareMoneyExpenseDetailDelete;
-	}
-
-	public void setProjectShareMoneyExpenseDetailDelete(
-			Boolean mProjectShareMoneyExpenseDetailDelete) {
-		this.mProjectShareMoneyExpenseDetailDelete = mProjectShareMoneyExpenseDetailDelete;
-	}
-
-	public Boolean getProjectShareMoneyIncomeOwnerDataOnly() {
-		return mProjectShareMoneyIncomeOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyIncomeOwnerDataOnly(
-			Boolean mProjectShareMoneyIncomeOwnerDataOnly) {
-		this.mProjectShareMoneyIncomeOwnerDataOnly = mProjectShareMoneyIncomeOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyIncomeAddNew() {
-		return mProjectShareMoneyIncomeAddNew;
-	}
-
-	public void setProjectShareMoneyIncomeAddNew(
-			Boolean mProjectShareMoneyIncomeAddNew) {
-		this.mProjectShareMoneyIncomeAddNew = mProjectShareMoneyIncomeAddNew;
-	}
-
-	public Boolean getProjectShareMoneyIncomeEdit() {
-		return mProjectShareMoneyIncomeEdit;
-	}
-
-	public void setProjectShareMoneyIncomeEdit(Boolean mProjectShareMoneyIncomeEdit) {
-		this.mProjectShareMoneyIncomeEdit = mProjectShareMoneyIncomeEdit;
-	}
-
-	public Boolean getProjectShareMoneyIncomeDelete() {
-		return mProjectShareMoneyIncomeDelete;
-	}
-
-	public void setProjectShareMoneyIncomeDelete(
-			Boolean mProjectShareMoneyIncomeDelete) {
-		this.mProjectShareMoneyIncomeDelete = mProjectShareMoneyIncomeDelete;
-	}
-
-	public Boolean getProjectShareMoneyIncomeDetailOwnerDataOnly() {
-		return mProjectShareMoneyIncomeDetailOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyIncomeDetailOwnerDataOnly(
-			Boolean mProjectShareMoneyIncomeDetailOwnerDataOnly) {
-		this.mProjectShareMoneyIncomeDetailOwnerDataOnly = mProjectShareMoneyIncomeDetailOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyIncomeDetailAddNew() {
-		return mProjectShareMoneyIncomeDetailAddNew;
-	}
-
-	public void setProjectShareMoneyIncomeDetailAddNew(
-			Boolean mProjectShareMoneyIncomeDetailAddNew) {
-		this.mProjectShareMoneyIncomeDetailAddNew = mProjectShareMoneyIncomeDetailAddNew;
-	}
-
-	public Boolean getProjectShareMoneyIncomeDetailEdit() {
-		return mProjectShareMoneyIncomeDetailEdit;
-	}
-
-	public void setProjectShareMoneyIncomeDetailEdit(
-			Boolean mProjectShareMoneyIncomeDetailEdit) {
-		this.mProjectShareMoneyIncomeDetailEdit = mProjectShareMoneyIncomeDetailEdit;
-	}
-
-	public Boolean getProjectShareMoneyIncomeDetailDelete() {
-		return mProjectShareMoneyIncomeDetailDelete;
-	}
-
-	public void setProjectShareMoneyIncomeDetailDelete(
-			Boolean mProjectShareMoneyIncomeDetailDelete) {
-		this.mProjectShareMoneyIncomeDetailDelete = mProjectShareMoneyIncomeDetailDelete;
-	}
-
-	public Boolean getProjectShareMoneyExpenseCategoryAddNew() {
-		return mProjectShareMoneyExpenseCategoryAddNew;
-	}
-
-	public void setProjectShareMoneyExpenseCategoryAddNew(
-			Boolean mProjectShareMoneyExpenseCategoryAddNew) {
-		this.mProjectShareMoneyExpenseCategoryAddNew = mProjectShareMoneyExpenseCategoryAddNew;
-	}
-
-	public Boolean getProjectShareMoneyExpenseCategoryEdit() {
-		return mProjectShareMoneyExpenseCategoryEdit;
-	}
-
-	public void setProjectShareMoneyExpenseCategoryEdit(
-			Boolean mProjectShareMoneyExpenseCategoryEdit) {
-		this.mProjectShareMoneyExpenseCategoryEdit = mProjectShareMoneyExpenseCategoryEdit;
-	}
-
-	public Boolean getProjectShareMoneyExpenseCategoryDelete() {
-		return mProjectShareMoneyExpenseCategoryDelete;
-	}
-
-	public void setProjectShareMoneyExpenseCategoryDelete(
-			Boolean mProjectShareMoneyExpenseCategoryDelete) {
-		this.mProjectShareMoneyExpenseCategoryDelete = mProjectShareMoneyExpenseCategoryDelete;
-	}
-
-	public Boolean getProjectShareMoneyIncomeCategoryAddNew() {
-		return mProjectShareMoneyIncomeCategoryAddNew;
-	}
-
-	public void setProjectShareMoneyIncomeCategoryAddNew(
-			Boolean mProjectShareMoneyIncomeCategoryAddNew) {
-		this.mProjectShareMoneyIncomeCategoryAddNew = mProjectShareMoneyIncomeCategoryAddNew;
-	}
-
-	public Boolean getProjectShareMoneyIncomeCategoryEdit() {
-		return mProjectShareMoneyIncomeCategoryEdit;
-	}
-
-	public void setProjectShareMoneyIncomeCategoryEdit(
-			Boolean mProjectShareMoneyIncomeCategoryEdit) {
-		this.mProjectShareMoneyIncomeCategoryEdit = mProjectShareMoneyIncomeCategoryEdit;
-	}
-
-	public Boolean getProjectShareMoneyIncomeCategoryDelete() {
-		return mProjectShareMoneyIncomeCategoryDelete;
-	}
-
-	public void setProjectShareMoneyIncomeCategoryDelete(
-			Boolean mProjectShareMoneyIncomeCategoryDelete) {
-		this.mProjectShareMoneyIncomeCategoryDelete = mProjectShareMoneyIncomeCategoryDelete;
-	}
-
-	public Boolean getProjectShareMoneyLendOwnerDataOnly() {
-		return mProjectShareMoneyLendOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyLendOwnerDataOnly(
-			Boolean mProjectShareMoneyLendOwnerDataOnly) {
-		this.mProjectShareMoneyLendOwnerDataOnly = mProjectShareMoneyLendOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyLendAddNew() {
-		return mProjectShareMoneyLendAddNew;
-	}
-
-	public void setProjectShareMoneyLendAddNew(Boolean mProjectShareMoneyLendAddNew) {
-		this.mProjectShareMoneyLendAddNew = mProjectShareMoneyLendAddNew;
-	}
-
-	public Boolean getProjectShareMoneyLendEdit() {
-		return mProjectShareMoneyLendEdit;
-	}
-
-	public void setProjectShareMoneyLendEdit(Boolean mProjectShareMoneyLendEdit) {
-		this.mProjectShareMoneyLendEdit = mProjectShareMoneyLendEdit;
-	}
-
-	public Boolean getProjectShareMoneyLendDelete() {
-		return mProjectShareMoneyLendDelete;
-	}
-
-	public void setProjectShareMoneyLendDelete(Boolean mProjectShareMoneyLendDelete) {
-		this.mProjectShareMoneyLendDelete = mProjectShareMoneyLendDelete;
-	}
-
-	public Boolean getProjectShareMoneyBorrowOwnerDataOnly() {
-		return mProjectShareMoneyBorrowOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyBorrowOwnerDataOnly(
-			Boolean mProjectShareMoneyBorrowOwnerDataOnly) {
-		this.mProjectShareMoneyBorrowOwnerDataOnly = mProjectShareMoneyBorrowOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyBorrowAddNew() {
-		return mProjectShareMoneyBorrowAddNew;
-	}
-
-	public void setProjectShareMoneyBorrowAddNew(
-			Boolean mProjectShareMoneyBorrowAddNew) {
-		this.mProjectShareMoneyBorrowAddNew = mProjectShareMoneyBorrowAddNew;
-	}
-
-	public Boolean getProjectShareMoneyBorrowEdit() {
-		return mProjectShareMoneyBorrowEdit;
-	}
-
-	public void setProjectShareMoneyBorrowEdit(Boolean mProjectShareMoneyBorrowEdit) {
-		this.mProjectShareMoneyBorrowEdit = mProjectShareMoneyBorrowEdit;
-	}
-
-	public Boolean getProjectShareMoneyBorrowDelete() {
-		return mProjectShareMoneyBorrowDelete;
-	}
-
-	public void setProjectShareMoneyBorrowDelete(
-			Boolean mProjectShareMoneyBorrowDelete) {
-		this.mProjectShareMoneyBorrowDelete = mProjectShareMoneyBorrowDelete;
-	}
-
-	public Boolean getProjectShareMoneyPaybackOwnerDataOnly() {
-		return mProjectShareMoneyPaybackOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyPaybackOwnerDataOnly(
-			Boolean mProjectShareMoneyPaybackOwnerDataOnly) {
-		this.mProjectShareMoneyPaybackOwnerDataOnly = mProjectShareMoneyPaybackOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyPaybackAddNew() {
-		return mProjectShareMoneyPaybackAddNew;
-	}
-
-	public void setProjectShareMoneyPaybackAddNew(
-			Boolean mProjectShareMoneyPaybackAddNew) {
-		this.mProjectShareMoneyPaybackAddNew = mProjectShareMoneyPaybackAddNew;
-	}
-
-	public Boolean getProjectShareMoneyPaybackEdit() {
-		return mProjectShareMoneyPaybackEdit;
-	}
-
-	public void setProjectShareMoneyPaybackEdit(
-			Boolean mProjectShareMoneyPaybackEdit) {
-		this.mProjectShareMoneyPaybackEdit = mProjectShareMoneyPaybackEdit;
-	}
-
-	public Boolean getProjectShareMoneyPaybackDelete() {
-		return mProjectShareMoneyPaybackDelete;
-	}
-
-	public void setProjectShareMoneyPaybackDelete(
-			Boolean mProjectShareMoneyPaybackDelete) {
-		this.mProjectShareMoneyPaybackDelete = mProjectShareMoneyPaybackDelete;
-	}
-
-	public Boolean getProjectShareMoneyReturnOwnerDataOnly() {
-		return mProjectShareMoneyReturnOwnerDataOnly;
-	}
-
-	public void setProjectShareMoneyReturnOwnerDataOnly(
-			Boolean mProjectShareMoneyReturnOwnerDataOnly) {
-		this.mProjectShareMoneyReturnOwnerDataOnly = mProjectShareMoneyReturnOwnerDataOnly;
-	}
-
-	public Boolean getProjectShareMoneyReturnAddNew() {
-		return mProjectShareMoneyReturnAddNew;
-	}
-
-	public void setProjectShareMoneyReturnAddNew(
-			Boolean mProjectShareMoneyReturnAddNew) {
-		this.mProjectShareMoneyReturnAddNew = mProjectShareMoneyReturnAddNew;
-	}
-
-	public Boolean getProjectShareMoneyReturnEdit() {
-		return mProjectShareMoneyReturnEdit;
-	}
-
-	public void setProjectShareMoneyReturnEdit(Boolean mProjectShareMoneyReturnEdit) {
-		this.mProjectShareMoneyReturnEdit = mProjectShareMoneyReturnEdit;
-	}
-
-	public Boolean getProjectShareMoneyReturnDelete() {
-		return mProjectShareMoneyReturnDelete;
-	}
-
-	public void setProjectShareMoneyReturnDelete(
-			Boolean mProjectShareMoneyReturnDelete) {
-		this.mProjectShareMoneyReturnDelete = mProjectShareMoneyReturnDelete;
-	}
+//	public Boolean getProjectShareMoneyExpenseDetailOwnerDataOnly() {
+//		return projectShareMoneyExpenseDetailOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyExpenseDetailOwnerDataOnly(
+//			Boolean projectShareMoneyExpenseDetailOwnerDataOnly) {
+//		this.projectShareMoneyExpenseDetailOwnerDataOnly = projectShareMoneyExpenseDetailOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseDetailAddNew() {
+//		return mProjectShareMoneyExpenseDetailAddNew;
+//	}
+//
+//	public void setProjectShareMoneyExpenseDetailAddNew(
+//			Boolean mProjectShareMoneyExpenseDetailAddNew) {
+//		this.mProjectShareMoneyExpenseDetailAddNew = mProjectShareMoneyExpenseDetailAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseDetailEdit() {
+//		return mProjectShareMoneyExpenseDetailEdit;
+//	}
+//
+//	public void setProjectShareMoneyExpenseDetailEdit(
+//			Boolean mProjectShareMoneyExpenseDetailEdit) {
+//		this.mProjectShareMoneyExpenseDetailEdit = mProjectShareMoneyExpenseDetailEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseDetailDelete() {
+//		return mProjectShareMoneyExpenseDetailDelete;
+//	}
+//
+//	public void setProjectShareMoneyExpenseDetailDelete(
+//			Boolean mProjectShareMoneyExpenseDetailDelete) {
+//		this.mProjectShareMoneyExpenseDetailDelete = mProjectShareMoneyExpenseDetailDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeOwnerDataOnly() {
+//		return mProjectShareMoneyIncomeOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyIncomeOwnerDataOnly(
+//			Boolean mProjectShareMoneyIncomeOwnerDataOnly) {
+//		this.mProjectShareMoneyIncomeOwnerDataOnly = mProjectShareMoneyIncomeOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeAddNew() {
+//		return mProjectShareMoneyIncomeAddNew;
+//	}
+//
+//	public void setProjectShareMoneyIncomeAddNew(
+//			Boolean mProjectShareMoneyIncomeAddNew) {
+//		this.mProjectShareMoneyIncomeAddNew = mProjectShareMoneyIncomeAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeEdit() {
+//		return mProjectShareMoneyIncomeEdit;
+//	}
+//
+//	public void setProjectShareMoneyIncomeEdit(Boolean mProjectShareMoneyIncomeEdit) {
+//		this.mProjectShareMoneyIncomeEdit = mProjectShareMoneyIncomeEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeDelete() {
+//		return mProjectShareMoneyIncomeDelete;
+//	}
+//
+//	public void setProjectShareMoneyIncomeDelete(
+//			Boolean mProjectShareMoneyIncomeDelete) {
+//		this.mProjectShareMoneyIncomeDelete = mProjectShareMoneyIncomeDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeDetailOwnerDataOnly() {
+//		return mProjectShareMoneyIncomeDetailOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyIncomeDetailOwnerDataOnly(
+//			Boolean mProjectShareMoneyIncomeDetailOwnerDataOnly) {
+//		this.mProjectShareMoneyIncomeDetailOwnerDataOnly = mProjectShareMoneyIncomeDetailOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeDetailAddNew() {
+//		return mProjectShareMoneyIncomeDetailAddNew;
+//	}
+//
+//	public void setProjectShareMoneyIncomeDetailAddNew(
+//			Boolean mProjectShareMoneyIncomeDetailAddNew) {
+//		this.mProjectShareMoneyIncomeDetailAddNew = mProjectShareMoneyIncomeDetailAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeDetailEdit() {
+//		return mProjectShareMoneyIncomeDetailEdit;
+//	}
+//
+//	public void setProjectShareMoneyIncomeDetailEdit(
+//			Boolean mProjectShareMoneyIncomeDetailEdit) {
+//		this.mProjectShareMoneyIncomeDetailEdit = mProjectShareMoneyIncomeDetailEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeDetailDelete() {
+//		return mProjectShareMoneyIncomeDetailDelete;
+//	}
+//
+//	public void setProjectShareMoneyIncomeDetailDelete(
+//			Boolean mProjectShareMoneyIncomeDetailDelete) {
+//		this.mProjectShareMoneyIncomeDetailDelete = mProjectShareMoneyIncomeDetailDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseCategoryAddNew() {
+//		return mProjectShareMoneyExpenseCategoryAddNew;
+//	}
+//
+//	public void setProjectShareMoneyExpenseCategoryAddNew(
+//			Boolean mProjectShareMoneyExpenseCategoryAddNew) {
+//		this.mProjectShareMoneyExpenseCategoryAddNew = mProjectShareMoneyExpenseCategoryAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseCategoryEdit() {
+//		return mProjectShareMoneyExpenseCategoryEdit;
+//	}
+//
+//	public void setProjectShareMoneyExpenseCategoryEdit(
+//			Boolean mProjectShareMoneyExpenseCategoryEdit) {
+//		this.mProjectShareMoneyExpenseCategoryEdit = mProjectShareMoneyExpenseCategoryEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyExpenseCategoryDelete() {
+//		return mProjectShareMoneyExpenseCategoryDelete;
+//	}
+//
+//	public void setProjectShareMoneyExpenseCategoryDelete(
+//			Boolean mProjectShareMoneyExpenseCategoryDelete) {
+//		this.mProjectShareMoneyExpenseCategoryDelete = mProjectShareMoneyExpenseCategoryDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeCategoryAddNew() {
+//		return mProjectShareMoneyIncomeCategoryAddNew;
+//	}
+//
+//	public void setProjectShareMoneyIncomeCategoryAddNew(
+//			Boolean mProjectShareMoneyIncomeCategoryAddNew) {
+//		this.mProjectShareMoneyIncomeCategoryAddNew = mProjectShareMoneyIncomeCategoryAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeCategoryEdit() {
+//		return mProjectShareMoneyIncomeCategoryEdit;
+//	}
+//
+//	public void setProjectShareMoneyIncomeCategoryEdit(
+//			Boolean mProjectShareMoneyIncomeCategoryEdit) {
+//		this.mProjectShareMoneyIncomeCategoryEdit = mProjectShareMoneyIncomeCategoryEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyIncomeCategoryDelete() {
+//		return mProjectShareMoneyIncomeCategoryDelete;
+//	}
+//
+//	public void setProjectShareMoneyIncomeCategoryDelete(
+//			Boolean mProjectShareMoneyIncomeCategoryDelete) {
+//		this.mProjectShareMoneyIncomeCategoryDelete = mProjectShareMoneyIncomeCategoryDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyLendOwnerDataOnly() {
+//		return mProjectShareMoneyLendOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyLendOwnerDataOnly(
+//			Boolean mProjectShareMoneyLendOwnerDataOnly) {
+//		this.mProjectShareMoneyLendOwnerDataOnly = mProjectShareMoneyLendOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyLendAddNew() {
+//		return mProjectShareMoneyLendAddNew;
+//	}
+//
+//	public void setProjectShareMoneyLendAddNew(Boolean mProjectShareMoneyLendAddNew) {
+//		this.mProjectShareMoneyLendAddNew = mProjectShareMoneyLendAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyLendEdit() {
+//		return mProjectShareMoneyLendEdit;
+//	}
+//
+//	public void setProjectShareMoneyLendEdit(Boolean mProjectShareMoneyLendEdit) {
+//		this.mProjectShareMoneyLendEdit = mProjectShareMoneyLendEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyLendDelete() {
+//		return mProjectShareMoneyLendDelete;
+//	}
+//
+//	public void setProjectShareMoneyLendDelete(Boolean mProjectShareMoneyLendDelete) {
+//		this.mProjectShareMoneyLendDelete = mProjectShareMoneyLendDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyBorrowOwnerDataOnly() {
+//		return mProjectShareMoneyBorrowOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyBorrowOwnerDataOnly(
+//			Boolean mProjectShareMoneyBorrowOwnerDataOnly) {
+//		this.mProjectShareMoneyBorrowOwnerDataOnly = mProjectShareMoneyBorrowOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyBorrowAddNew() {
+//		return mProjectShareMoneyBorrowAddNew;
+//	}
+//
+//	public void setProjectShareMoneyBorrowAddNew(
+//			Boolean mProjectShareMoneyBorrowAddNew) {
+//		this.mProjectShareMoneyBorrowAddNew = mProjectShareMoneyBorrowAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyBorrowEdit() {
+//		return mProjectShareMoneyBorrowEdit;
+//	}
+//
+//	public void setProjectShareMoneyBorrowEdit(Boolean mProjectShareMoneyBorrowEdit) {
+//		this.mProjectShareMoneyBorrowEdit = mProjectShareMoneyBorrowEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyBorrowDelete() {
+//		return mProjectShareMoneyBorrowDelete;
+//	}
+//
+//	public void setProjectShareMoneyBorrowDelete(
+//			Boolean mProjectShareMoneyBorrowDelete) {
+//		this.mProjectShareMoneyBorrowDelete = mProjectShareMoneyBorrowDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyPaybackOwnerDataOnly() {
+//		return mProjectShareMoneyPaybackOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyPaybackOwnerDataOnly(
+//			Boolean mProjectShareMoneyPaybackOwnerDataOnly) {
+//		this.mProjectShareMoneyPaybackOwnerDataOnly = mProjectShareMoneyPaybackOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyPaybackAddNew() {
+//		return mProjectShareMoneyPaybackAddNew;
+//	}
+//
+//	public void setProjectShareMoneyPaybackAddNew(
+//			Boolean mProjectShareMoneyPaybackAddNew) {
+//		this.mProjectShareMoneyPaybackAddNew = mProjectShareMoneyPaybackAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyPaybackEdit() {
+//		return mProjectShareMoneyPaybackEdit;
+//	}
+//
+//	public void setProjectShareMoneyPaybackEdit(
+//			Boolean mProjectShareMoneyPaybackEdit) {
+//		this.mProjectShareMoneyPaybackEdit = mProjectShareMoneyPaybackEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyPaybackDelete() {
+//		return mProjectShareMoneyPaybackDelete;
+//	}
+//
+//	public void setProjectShareMoneyPaybackDelete(
+//			Boolean mProjectShareMoneyPaybackDelete) {
+//		this.mProjectShareMoneyPaybackDelete = mProjectShareMoneyPaybackDelete;
+//	}
+//
+//	public Boolean getProjectShareMoneyReturnOwnerDataOnly() {
+//		return mProjectShareMoneyReturnOwnerDataOnly;
+//	}
+//
+//	public void setProjectShareMoneyReturnOwnerDataOnly(
+//			Boolean mProjectShareMoneyReturnOwnerDataOnly) {
+//		this.mProjectShareMoneyReturnOwnerDataOnly = mProjectShareMoneyReturnOwnerDataOnly;
+//	}
+//
+//	public Boolean getProjectShareMoneyReturnAddNew() {
+//		return mProjectShareMoneyReturnAddNew;
+//	}
+//
+//	public void setProjectShareMoneyReturnAddNew(
+//			Boolean mProjectShareMoneyReturnAddNew) {
+//		this.mProjectShareMoneyReturnAddNew = mProjectShareMoneyReturnAddNew;
+//	}
+//
+//	public Boolean getProjectShareMoneyReturnEdit() {
+//		return mProjectShareMoneyReturnEdit;
+//	}
+//
+//	public void setProjectShareMoneyReturnEdit(Boolean mProjectShareMoneyReturnEdit) {
+//		this.mProjectShareMoneyReturnEdit = mProjectShareMoneyReturnEdit;
+//	}
+//
+//	public Boolean getProjectShareMoneyReturnDelete() {
+//		return mProjectShareMoneyReturnDelete;
+//	}
+//
+//	public void setProjectShareMoneyReturnDelete(
+//			Boolean mProjectShareMoneyReturnDelete) {
+//		this.mProjectShareMoneyReturnDelete = mProjectShareMoneyReturnDelete;
+//	}
 	
 	public String getSharePercentageType() {
 		return mSharePercentageType;
@@ -1042,6 +1055,15 @@ public class ProjectShareAuthorization extends HyjModel {
 		jsonObj.remove("sharedTotalPayback");
 		
 		return jsonObj;
+	}
+
+	public String getLocalFriendId() {
+		return mLocalFriendId;
+	}
+
+	public void setLocalFriendId(String id) {
+		mLocalFriendId = id;
+		
 	}	
 
 }

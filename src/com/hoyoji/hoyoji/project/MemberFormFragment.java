@@ -38,6 +38,8 @@ import com.hoyoji.hoyoji.models.User;
 
 public class MemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_Friend_ID = 2;
+
+	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.memberFormFragment_selectorField_friend;
 	
 	private HyjModelEditor<ProjectShareAuthorization> mProjectShareAuthorizationEditor = null;
 	private List<ProjectShareAuthorization> mProjectShareAuthorizations;
@@ -52,30 +54,30 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	private CheckBox mCheckBoxShareAuthExpenseEdit = null;
 	private CheckBox mCheckBoxShareAuthExpenseDelete = null;
 
-	private CheckBox mCheckBoxShareAuthIncomeSelf = null;
-	private CheckBox mCheckBoxShareAuthIncomeAdd = null;
-	private CheckBox mCheckBoxShareAuthIncomeEdit = null;
-	private CheckBox mCheckBoxShareAuthIncomeDelete = null;
-
-	private CheckBox mCheckBoxShareAuthBorrowSelf = null;
-	private CheckBox mCheckBoxShareAuthBorrowAdd = null;
-	private CheckBox mCheckBoxShareAuthBorrowEdit = null;
-	private CheckBox mCheckBoxShareAuthBorrowDelete = null;
-
-	private CheckBox mCheckBoxShareAuthLendSelf = null;
-	private CheckBox mCheckBoxShareAuthLendAdd = null;
-	private CheckBox mCheckBoxShareAuthLendEdit = null;
-	private CheckBox mCheckBoxShareAuthLendDelete = null;
-	
-	private CheckBox mCheckBoxShareAuthReturnSelf = null;
-	private CheckBox mCheckBoxShareAuthReturnAdd = null;
-	private CheckBox mCheckBoxShareAuthReturnEdit = null;
-	private CheckBox mCheckBoxShareAuthReturnDelete = null;
-
-	private CheckBox mCheckBoxShareAuthPaybackSelf = null;
-	private CheckBox mCheckBoxShareAuthPaybackAdd = null;
-	private CheckBox mCheckBoxShareAuthPaybackEdit = null;
-	private CheckBox mCheckBoxShareAuthPaybackDelete = null;
+//	private CheckBox mCheckBoxShareAuthIncomeSelf = null;
+//	private CheckBox mCheckBoxShareAuthIncomeAdd = null;
+//	private CheckBox mCheckBoxShareAuthIncomeEdit = null;
+//	private CheckBox mCheckBoxShareAuthIncomeDelete = null;
+//
+//	private CheckBox mCheckBoxShareAuthBorrowSelf = null;
+//	private CheckBox mCheckBoxShareAuthBorrowAdd = null;
+//	private CheckBox mCheckBoxShareAuthBorrowEdit = null;
+//	private CheckBox mCheckBoxShareAuthBorrowDelete = null;
+//
+//	private CheckBox mCheckBoxShareAuthLendSelf = null;
+//	private CheckBox mCheckBoxShareAuthLendAdd = null;
+//	private CheckBox mCheckBoxShareAuthLendEdit = null;
+//	private CheckBox mCheckBoxShareAuthLendDelete = null;
+//	
+//	private CheckBox mCheckBoxShareAuthReturnSelf = null;
+//	private CheckBox mCheckBoxShareAuthReturnAdd = null;
+//	private CheckBox mCheckBoxShareAuthReturnEdit = null;
+//	private CheckBox mCheckBoxShareAuthReturnDelete = null;
+//
+//	private CheckBox mCheckBoxShareAuthPaybackSelf = null;
+//	private CheckBox mCheckBoxShareAuthPaybackAdd = null;
+//	private CheckBox mCheckBoxShareAuthPaybackEdit = null;
+//	private CheckBox mCheckBoxShareAuthPaybackDelete = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -135,17 +137,28 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		});
 		
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.memberFormFragment_selectorField_friend);
-		if(modelId != -1 && projectShareAuthorization.getFriendUserId() != null){
+		if(modelId != -1){
 			mSelectorFieldFriend.setEnabled(false);
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
-			if(friend != null){
-				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
-				mSelectorFieldFriend.setText(friend.getDisplayName());
-			} else {
-				User user = new Select().from(User.class).where("id=?", projectShareAuthorization.getFriendUserId()).executeSingle();
-				if(user != null){
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
+			if(projectShareAuthorization.getFriendUserId() != null){
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", projectShareAuthorization.getFriendUserId()).executeSingle();
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					User user = new Select().from(User.class).where("id=?", projectShareAuthorization.getFriendUserId()).executeSingle();
+					if(user != null){
+						mSelectorFieldFriend.setModelId(user.getId());
+						mSelectorFieldFriend.setText(user.getDisplayName());
+					}
+				}
+			} else if(projectShareAuthorization.getLocalFriendId() != null){
+				Friend friend = HyjModel.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					mSelectorFieldFriend.setModelId(null);
+					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
 				}
 			}
 		}
@@ -168,50 +181,50 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mCheckBoxShareAuthExpenseDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_expense_delete);
 		mCheckBoxShareAuthExpenseDelete.setChecked(projectShareAuthorization.getProjectShareMoneyExpenseDelete());
 				
-		mCheckBoxShareAuthIncomeSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_self);
-		mCheckBoxShareAuthIncomeSelf.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeOwnerDataOnly());
-		mCheckBoxShareAuthIncomeAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_add);
-		mCheckBoxShareAuthIncomeAdd.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeAddNew());
-		mCheckBoxShareAuthIncomeEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_edit);
-		mCheckBoxShareAuthIncomeEdit.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeEdit());
-		mCheckBoxShareAuthIncomeDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_delete);
-		mCheckBoxShareAuthIncomeDelete.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeDelete());
-		
-		mCheckBoxShareAuthBorrowSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_self);
-		mCheckBoxShareAuthBorrowSelf.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowOwnerDataOnly());
-		mCheckBoxShareAuthBorrowAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_add);
-		mCheckBoxShareAuthBorrowAdd.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowAddNew());
-		mCheckBoxShareAuthBorrowEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_edit);
-		mCheckBoxShareAuthBorrowEdit.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowEdit());
-		mCheckBoxShareAuthBorrowDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_delete);
-		mCheckBoxShareAuthBorrowDelete.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowDelete());
-		
-		mCheckBoxShareAuthLendSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_self);
-		mCheckBoxShareAuthLendSelf.setChecked(projectShareAuthorization.getProjectShareMoneyLendOwnerDataOnly());
-		mCheckBoxShareAuthLendAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_add);
-		mCheckBoxShareAuthLendAdd.setChecked(projectShareAuthorization.getProjectShareMoneyLendAddNew());
-		mCheckBoxShareAuthLendEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_edit);
-		mCheckBoxShareAuthLendEdit.setChecked(projectShareAuthorization.getProjectShareMoneyLendEdit());
-		mCheckBoxShareAuthLendDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_delete);
-		mCheckBoxShareAuthLendDelete.setChecked(projectShareAuthorization.getProjectShareMoneyLendDelete());
-		
-		mCheckBoxShareAuthReturnSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_self);
-		mCheckBoxShareAuthReturnSelf.setChecked(projectShareAuthorization.getProjectShareMoneyReturnOwnerDataOnly());
-		mCheckBoxShareAuthReturnAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_add);
-		mCheckBoxShareAuthReturnAdd.setChecked(projectShareAuthorization.getProjectShareMoneyReturnAddNew());
-		mCheckBoxShareAuthReturnEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_edit);
-		mCheckBoxShareAuthReturnEdit.setChecked(projectShareAuthorization.getProjectShareMoneyReturnEdit());
-		mCheckBoxShareAuthReturnDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_delete);
-		mCheckBoxShareAuthReturnDelete.setChecked(projectShareAuthorization.getProjectShareMoneyReturnDelete());
-
-		mCheckBoxShareAuthPaybackSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_self);
-		mCheckBoxShareAuthPaybackSelf.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackOwnerDataOnly());
-		mCheckBoxShareAuthPaybackAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_add);
-		mCheckBoxShareAuthPaybackAdd.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackAddNew());
-		mCheckBoxShareAuthPaybackEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_edit);
-		mCheckBoxShareAuthPaybackEdit.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackEdit());
-		mCheckBoxShareAuthPaybackDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_delete);
-		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
+//		mCheckBoxShareAuthIncomeSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_self);
+//		mCheckBoxShareAuthIncomeSelf.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeOwnerDataOnly());
+//		mCheckBoxShareAuthIncomeAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_add);
+//		mCheckBoxShareAuthIncomeAdd.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeAddNew());
+//		mCheckBoxShareAuthIncomeEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_edit);
+//		mCheckBoxShareAuthIncomeEdit.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeEdit());
+//		mCheckBoxShareAuthIncomeDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_delete);
+//		mCheckBoxShareAuthIncomeDelete.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeDelete());
+//		
+//		mCheckBoxShareAuthBorrowSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_self);
+//		mCheckBoxShareAuthBorrowSelf.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowOwnerDataOnly());
+//		mCheckBoxShareAuthBorrowAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_add);
+//		mCheckBoxShareAuthBorrowAdd.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowAddNew());
+//		mCheckBoxShareAuthBorrowEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_edit);
+//		mCheckBoxShareAuthBorrowEdit.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowEdit());
+//		mCheckBoxShareAuthBorrowDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_borrow_delete);
+//		mCheckBoxShareAuthBorrowDelete.setChecked(projectShareAuthorization.getProjectShareMoneyBorrowDelete());
+//		
+//		mCheckBoxShareAuthLendSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_self);
+//		mCheckBoxShareAuthLendSelf.setChecked(projectShareAuthorization.getProjectShareMoneyLendOwnerDataOnly());
+//		mCheckBoxShareAuthLendAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_add);
+//		mCheckBoxShareAuthLendAdd.setChecked(projectShareAuthorization.getProjectShareMoneyLendAddNew());
+//		mCheckBoxShareAuthLendEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_edit);
+//		mCheckBoxShareAuthLendEdit.setChecked(projectShareAuthorization.getProjectShareMoneyLendEdit());
+//		mCheckBoxShareAuthLendDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_lend_delete);
+//		mCheckBoxShareAuthLendDelete.setChecked(projectShareAuthorization.getProjectShareMoneyLendDelete());
+//		
+//		mCheckBoxShareAuthReturnSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_self);
+//		mCheckBoxShareAuthReturnSelf.setChecked(projectShareAuthorization.getProjectShareMoneyReturnOwnerDataOnly());
+//		mCheckBoxShareAuthReturnAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_add);
+//		mCheckBoxShareAuthReturnAdd.setChecked(projectShareAuthorization.getProjectShareMoneyReturnAddNew());
+//		mCheckBoxShareAuthReturnEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_edit);
+//		mCheckBoxShareAuthReturnEdit.setChecked(projectShareAuthorization.getProjectShareMoneyReturnEdit());
+//		mCheckBoxShareAuthReturnDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_return_delete);
+//		mCheckBoxShareAuthReturnDelete.setChecked(projectShareAuthorization.getProjectShareMoneyReturnDelete());
+//
+//		mCheckBoxShareAuthPaybackSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_self);
+//		mCheckBoxShareAuthPaybackSelf.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackOwnerDataOnly());
+//		mCheckBoxShareAuthPaybackAdd = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_add);
+//		mCheckBoxShareAuthPaybackAdd.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackAddNew());
+//		mCheckBoxShareAuthPaybackEdit = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_edit);
+//		mCheckBoxShareAuthPaybackEdit.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackEdit());
+//		mCheckBoxShareAuthPaybackDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_delete);
+//		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
 	}
 	
 	private void setAveragePercentage(ProjectShareAuthorization projectShareAuthorization) {
@@ -245,39 +258,49 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
-		modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-		if(modelCopy.getFriendUserId() != null){
-			modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+		if((Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == false){
+			modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
+			modelCopy.setLocalFriendId(null);
+			if(modelCopy.getFriendUserId() != null){
+				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+			}
+		} else {
+			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
+			modelCopy.setFriendUserId(null);
+			if(modelCopy.getLocalFriendId() != null){
+				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+			}
 		}
+		
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
 		modelCopy.setProjectShareMoneyExpenseEdit(mCheckBoxShareAuthExpenseEdit.isChecked());
 		modelCopy.setProjectShareMoneyExpenseDelete(mCheckBoxShareAuthExpenseDelete.isChecked());	
 		
-		modelCopy.setProjectShareMoneyIncomeOwnerDataOnly(mCheckBoxShareAuthIncomeSelf.isChecked());
-		modelCopy.setProjectShareMoneyIncomeAddNew(mCheckBoxShareAuthIncomeAdd.isChecked());
-		modelCopy.setProjectShareMoneyIncomeEdit(mCheckBoxShareAuthIncomeEdit.isChecked());
-		modelCopy.setProjectShareMoneyIncomeDelete(mCheckBoxShareAuthIncomeDelete.isChecked());
-		
-		modelCopy.setProjectShareMoneyBorrowOwnerDataOnly(mCheckBoxShareAuthBorrowSelf.isChecked());
-		modelCopy.setProjectShareMoneyBorrowAddNew(mCheckBoxShareAuthBorrowAdd.isChecked());
-		modelCopy.setProjectShareMoneyBorrowEdit(mCheckBoxShareAuthBorrowEdit.isChecked());
-		modelCopy.setProjectShareMoneyBorrowDelete(mCheckBoxShareAuthBorrowDelete.isChecked());
-		
-		modelCopy.setProjectShareMoneyLendOwnerDataOnly(mCheckBoxShareAuthLendSelf.isChecked());
-		modelCopy.setProjectShareMoneyLendAddNew(mCheckBoxShareAuthLendAdd.isChecked());
-		modelCopy.setProjectShareMoneyLendEdit(mCheckBoxShareAuthLendEdit.isChecked());
-		modelCopy.setProjectShareMoneyLendDelete(mCheckBoxShareAuthLendDelete.isChecked());
-		
-		modelCopy.setProjectShareMoneyReturnOwnerDataOnly(mCheckBoxShareAuthReturnSelf.isChecked());
-		modelCopy.setProjectShareMoneyReturnAddNew(mCheckBoxShareAuthReturnAdd.isChecked());
-		modelCopy.setProjectShareMoneyReturnEdit(mCheckBoxShareAuthReturnEdit.isChecked());
-		modelCopy.setProjectShareMoneyReturnDelete(mCheckBoxShareAuthReturnDelete.isChecked());
-		
-		modelCopy.setProjectShareMoneyPaybackOwnerDataOnly(mCheckBoxShareAuthPaybackSelf.isChecked());
-		modelCopy.setProjectShareMoneyPaybackAddNew(mCheckBoxShareAuthPaybackAdd.isChecked());
-		modelCopy.setProjectShareMoneyPaybackEdit(mCheckBoxShareAuthPaybackEdit.isChecked());
-		modelCopy.setProjectShareMoneyPaybackDelete(mCheckBoxShareAuthPaybackDelete.isChecked());
+//		modelCopy.setProjectShareMoneyIncomeOwnerDataOnly(mCheckBoxShareAuthIncomeSelf.isChecked());
+//		modelCopy.setProjectShareMoneyIncomeAddNew(mCheckBoxShareAuthIncomeAdd.isChecked());
+//		modelCopy.setProjectShareMoneyIncomeEdit(mCheckBoxShareAuthIncomeEdit.isChecked());
+//		modelCopy.setProjectShareMoneyIncomeDelete(mCheckBoxShareAuthIncomeDelete.isChecked());
+//		
+//		modelCopy.setProjectShareMoneyBorrowOwnerDataOnly(mCheckBoxShareAuthBorrowSelf.isChecked());
+//		modelCopy.setProjectShareMoneyBorrowAddNew(mCheckBoxShareAuthBorrowAdd.isChecked());
+//		modelCopy.setProjectShareMoneyBorrowEdit(mCheckBoxShareAuthBorrowEdit.isChecked());
+//		modelCopy.setProjectShareMoneyBorrowDelete(mCheckBoxShareAuthBorrowDelete.isChecked());
+//		
+//		modelCopy.setProjectShareMoneyLendOwnerDataOnly(mCheckBoxShareAuthLendSelf.isChecked());
+//		modelCopy.setProjectShareMoneyLendAddNew(mCheckBoxShareAuthLendAdd.isChecked());
+//		modelCopy.setProjectShareMoneyLendEdit(mCheckBoxShareAuthLendEdit.isChecked());
+//		modelCopy.setProjectShareMoneyLendDelete(mCheckBoxShareAuthLendDelete.isChecked());
+//		
+//		modelCopy.setProjectShareMoneyReturnOwnerDataOnly(mCheckBoxShareAuthReturnSelf.isChecked());
+//		modelCopy.setProjectShareMoneyReturnAddNew(mCheckBoxShareAuthReturnAdd.isChecked());
+//		modelCopy.setProjectShareMoneyReturnEdit(mCheckBoxShareAuthReturnEdit.isChecked());
+//		modelCopy.setProjectShareMoneyReturnDelete(mCheckBoxShareAuthReturnDelete.isChecked());
+//		
+//		modelCopy.setProjectShareMoneyPaybackOwnerDataOnly(mCheckBoxShareAuthPaybackSelf.isChecked());
+//		modelCopy.setProjectShareMoneyPaybackAddNew(mCheckBoxShareAuthPaybackAdd.isChecked());
+//		modelCopy.setProjectShareMoneyPaybackEdit(mCheckBoxShareAuthPaybackEdit.isChecked());
+//		modelCopy.setProjectShareMoneyPaybackDelete(mCheckBoxShareAuthPaybackDelete.isChecked());
 	}
 	
 	private void showValidatioErrors(){
@@ -331,7 +354,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				JSONObject data = new JSONObject();
 				data.put("__dataType", "ProjectShareAuthorization");
 				data.put("projectId", mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
-				data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
+					data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				} else {
+					data.put("localFriendId", mProjectShareAuthorizationEditor.getModelCopy().getLocalFriendId());
+				}
 				//data.put("state", "Accept");
 				
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
@@ -384,48 +411,66 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		};
 
 		try {
-			JSONObject msg = new JSONObject();
-			msg.put("__dataType", "Message");
-			msg.put("id", UUID.randomUUID().toString());
-			msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-			msg.put("fromUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			msg.put("type", "Project.Share.AddRequest");
-			msg.put("messageState", "new");
-			msg.put("messageTitle", "项目共享请求");
-			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
-			msg.put("detail", "用户"
-					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
-//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
-			msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-			
-			JSONObject msgData = new JSONObject();
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
-			msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
-			msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
-//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
-			msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
-			msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
-			msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
-			msg.put("messageData", msgData.toString());
-			
-
 			String data = "[";
-			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
-			jsonPSA.put("state", "Wait");
-			data += jsonPSA.toString();
-			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
-				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
-			}
-			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
-						psa.isClientNew()){
-					data += "," + psa.toJSON().toString();
+			// 添加网络好友共享，发送共享邀请
+			if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
+				JSONObject msg = new JSONObject();
+				msg.put("__dataType", "Message");
+				msg.put("id", UUID.randomUUID().toString());
+				msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				msg.put("fromUserId", HyjApplication.getInstance()
+						.getCurrentUser().getId());
+				msg.put("type", "Project.Share.AddRequest");
+				msg.put("messageState", "new");
+				msg.put("messageTitle", "项目共享请求");
+				msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+				msg.put("detail", "用户"
+						+ HyjApplication.getInstance().getCurrentUser()
+								.getDisplayName() + "给您共享项目: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+	//			msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
+				msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				
+				JSONObject msgData = new JSONObject();
+				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
+				msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
+				msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
+	//			msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+				msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+				msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
+				msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
+				msg.put("messageData", msgData.toString());
+				
+				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+				jsonPSA.put("state", "Wait");
+				data += jsonPSA.toString();
+				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 				}
+				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+							psa.isClientNew()){
+						data += "," + psa.toJSON().toString();
+					}
+				}
+				data += "," + msg.toString() + "]";
+			} else {
+				// 添加本地好友共享，不用发送共享邀请
+				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+				jsonPSA.put("state", "NotInvite");
+				data += jsonPSA.toString();
+				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+				}
+				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+							psa.isClientNew()){
+						data += "," + psa.toJSON().toString();
+					}
+				}
+				data += "]";
 			}
-			data += "," + msg.toString() + "]";
+			
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
 					data, "postData");
 			
@@ -500,29 +545,39 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			return fixedPercentageTotal;
 		}
 	 
-	 @Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-         switch(requestCode){
-              case GET_Friend_ID:
-            	 if(resultCode == Activity.RESULT_OK){
-            		 long _id = data.getLongExtra("MODEL_ID", -1);
- 	         		 Friend friend = Friend.load(Friend.class, _id);
- 	         		 if(friend.getFriendUserId() != null){
- 	         			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-	 	       				if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
-	 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-	 	       					return;
+		 @Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	         switch(requestCode){
+	              case GET_Friend_ID:
+	            	 if(resultCode == Activity.RESULT_OK){
+	            		 long _id = data.getLongExtra("MODEL_ID", -1);
+	 	         		 Friend friend = Friend.load(Friend.class, _id);
+ 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+	 	       				if(friend.getFriendUserId() != null){
+	 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+		 	       					return;
+	 	       					}
+	 	       				} else {
+		 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
+		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+		 	       					return;
+	 	       					}
 	 	       				}
- 	         			}
- 	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
- 	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
- 	         		 } else {
- 	         			 HyjUtil.displayToast(R.string.memberFormFragment_toast_cannot_select_local_friend);
- 	         		 }
-            	 }
-            	 break;
-          }
-    }
+ 	         			 }
+	 	         		 if(friend.getFriendUserId() != null){
+	 	 	         		 mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	 	         		 mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+	 	 	         		 mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+	 	         		 } else {
+	 	         			 mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	 	         		 mSelectorFieldFriend.setModelId(friend.getId());
+	 	 	         		 mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+	 	         		 }
+	            	 }
+	            	 break;
+	          }
+	    }
 	 
 
 		private void displayError(Object object){

@@ -275,5 +275,22 @@ public class Friend extends HyjModel {
 			}
 		}
 	}	
+	public static String getFriendUserDisplayName1(String ownerUserId) {
+		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+			return "自己";
+		}else{
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, ownerUserId);
+				if(user != null){
+					return user.getDisplayName();
+				} else {
+					return "";
+				}
+			}
+		}
+	}	
 	
 }

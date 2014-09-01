@@ -537,7 +537,7 @@ public class MoneyBorrow extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyBorrowEdit();
+		return psa.getProjectShareMoneyExpenseEdit();
 	}
 	
 	public boolean hasAddNewPermission(String projectId){
@@ -545,7 +545,7 @@ public class MoneyBorrow extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyBorrowAddNew();
+		return psa.getProjectShareMoneyExpenseAddNew();
 	}
 
 	public boolean hasDeletePermission(){
@@ -562,7 +562,7 @@ public class MoneyBorrow extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyBorrowDelete();
+		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
 	public void setMoneyLendId(String moneyLendId) {
@@ -643,5 +643,19 @@ public class MoneyBorrow extends HyjModel{
 
 	public String getProjectCurrencyId() {
 		return this.mProjectCurrencyId;
+	}
+
+	public String getFriendDisplayName() {
+		String displayName = "";
+		if(this.getLocalFriendId() != null){
+			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
+			displayName = f.getDisplayName();
+		} else if(this.getFriendUserId() != null){
+			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
+			if(displayName.length() == 0){
+				displayName = "自己";
+			}
+		}
+		return displayName;
 	}
 }
