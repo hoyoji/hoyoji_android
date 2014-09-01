@@ -295,7 +295,7 @@ public class MessageDownloadService extends Service {
 				newObj = new JSONObject();
 				newObj.put("__dataType", "ProjectShareAuthorization");
 				newObj.put("main.projectId", projectIds.get(i));
-				newObj.put("main.state", "Accept");
+//				newObj.put("main.state", "Accept");
 				data.put(newObj);
 //				newObj = new JSONObject();
 //				newObj.put("__dataType", "MoneyExpenseContainer");

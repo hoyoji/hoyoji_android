@@ -31,6 +31,7 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
@@ -323,7 +324,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			showValidatioErrors();
 		} else if(mProjectShareAuthorizationEditor.getModelCopy().get_mId() == null) {
 
-			saveAverageTotal();				
+//			saveAverageTotal();				
 			
 			//去服务器上查找是否已经添加过共享给该好友
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
@@ -380,28 +381,31 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				try {
-					ActiveAndroid.beginTransaction();
-					mProjectShareAuthorizationEditor.getModelCopy().setSyncFromServer(true);
-					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
-					mProjectShareAuthorizationEditor.save();
-					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
-						mProjectShareAuthorizationEditor.getModelCopy().getProject().getClientSyncRecord().delete();
-					}
-					for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-						if(psa.isClientNew()){
-							psa.getClientSyncRecord().delete();
-						}
-					}
-					ActiveAndroid.setTransactionSuccessful();
-					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
-					getActivity().finish();
-				}  finally {
-				    ActiveAndroid.endTransaction();
-				}
+				HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
+				loadProjectProjectShareAuthorizations(mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
 				
-				((HyjActivity) MemberFormFragment.this.getActivity())
-				.dismissProgressDialog();
+//				try {
+//					ActiveAndroid.beginTransaction();
+//					mProjectShareAuthorizationEditor.getModelCopy().setSyncFromServer(true);
+//					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
+//					mProjectShareAuthorizationEditor.save();
+//					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+//						mProjectShareAuthorizationEditor.getModelCopy().getProject().getClientSyncRecord().delete();
+//					}
+//					for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+//						if(psa.isClientNew()){
+//							psa.getClientSyncRecord().delete();
+//						}
+//					}
+//					ActiveAndroid.setTransactionSuccessful();
+//					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
+//					getActivity().finish();
+//				}  finally {
+//				    ActiveAndroid.endTransaction();
+//				}
+//				
+//				((HyjActivity) MemberFormFragment.this.getActivity())
+//				.dismissProgressDialog();
 			}
 
 			@Override
@@ -447,12 +451,12 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
 					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 				}
-				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
-							psa.isClientNew()){
-						data += "," + psa.toJSON().toString();
-					}
-				}
+//				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+//					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+//							psa.isClientNew()){
+//						data += "," + psa.toJSON().toString();
+//					}
+//				}
 				data += "," + msg.toString() + "]";
 			} else {
 				// 添加本地好友共享，不用发送共享邀请
@@ -462,63 +466,120 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
 					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 				}
-				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
-							psa.isClientNew()){
-						data += "," + psa.toJSON().toString();
-					}
-				}
+//				for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+//					if(psa != mProjectShareAuthorizationEditor.getModelCopy() && 
+//							psa.isClientNew()){
+//						data += "," + psa.toJSON().toString();
+//					}
+//				}
 				data += "]";
 			}
 			
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-					data, "postData");
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "postData");
 			
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
 	}
 
-	 private void saveAverageTotal(){
-		 //重新计算所有均摊成员的占股比例并保存
-			double fixedPercentageTotal = 0.0;
-			int numOfAverage = 0;
-			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
-					fixedPercentageTotal += psa.getSharePercentage();
-				} else {
-					numOfAverage++;
-				}
-			}
-			
-			double averageTotal = 0.0;
-			double averageAmount = 0.0;
-			double averageTotalAmount = 100.0 - Math.min(fixedPercentageTotal, 100.0);
-			if(numOfAverage > 0) {
-				averageAmount = HyjUtil.toFixed2(averageTotalAmount / numOfAverage);
-			}
-			double diff = HyjUtil.toFixed2(100.0 - fixedPercentageTotal - averageAmount * numOfAverage);
-			double adjustedAverageTotal = HyjUtil.toFixed2(averageAmount + diff);
-			
-			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa.getSharePercentageType().equalsIgnoreCase("Average")){
-					if(!psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId()) &&
-							(psa.getSharePercentage().doubleValue() != averageAmount && 
-							psa.getSharePercentage().doubleValue() != adjustedAverageTotal)){
-//						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
-//						editor.getModelCopy().setSharePercentage(averageAmount);
-						averageTotal += averageAmount;
-//						editor.save();
-					} else {
-						averageTotal += psa.getSharePercentage();
+	protected void loadProjectProjectShareAuthorizations(String projectId) {
+		// load new ProjectData from server
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				try {
+
+					JSONArray jsonArray = (JSONArray) object;
+					ActiveAndroid.beginTransaction();
+
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONArray jsonObjects = jsonArray.getJSONArray(i);
+						for (int j = 0; j < jsonObjects.length(); j++) {
+							if (jsonObjects.optJSONObject(j)
+									.optString("__dataType")
+									.equals("ProjectShareAuthorization")) {
+								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+								newProjectShareAuthorization.loadFromJSON(
+										jsonObjects.optJSONObject(j), true);
+								newProjectShareAuthorization.save();
+							}
+						}
 					}
+
+					ActiveAndroid.setTransactionSuccessful();
+
+					getActivity().finish();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} finally {
+					ActiveAndroid.endTransaction();
 				}
+
+				((HyjActivity) MemberFormFragment.this.getActivity())
+				.dismissProgressDialog();
 			}
-			if(HyjUtil.toFixed2(averageTotal) != HyjUtil.toFixed2(100.0 - fixedPercentageTotal)){
-				mProjectShareAuthorizationEditor.getModelCopy().setSharePercentage(
-						mProjectShareAuthorizationEditor.getModelCopy().getSharePercentage() + diff);
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
 			}
-	 }
+		};
+
+		JSONArray data = new JSONArray();
+		try {
+				JSONObject newObj = new JSONObject();
+				newObj = new JSONObject();
+				newObj.put("__dataType", "ProjectShareAuthorization");
+				newObj.put("main.projectId", projectId);
+//				newObj.put("main.state", "Accept");
+				data.put(newObj);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+//	 private void saveAverageTotal(){
+//		 //重新计算所有均摊成员的占股比例并保存
+//			double fixedPercentageTotal = 0.0;
+//			int numOfAverage = 0;
+//			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+//				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
+//					fixedPercentageTotal += psa.getSharePercentage();
+//				} else {
+//					numOfAverage++;
+//				}
+//			}
+//			
+//			double averageTotal = 0.0;
+//			double averageAmount = 0.0;
+//			double averageTotalAmount = 100.0 - Math.min(fixedPercentageTotal, 100.0);
+//			if(numOfAverage > 0) {
+//				averageAmount = HyjUtil.toFixed2(averageTotalAmount / numOfAverage);
+//			}
+//			double diff = HyjUtil.toFixed2(100.0 - fixedPercentageTotal - averageAmount * numOfAverage);
+//			double adjustedAverageTotal = HyjUtil.toFixed2(averageAmount + diff);
+//			
+//			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+//				if(psa.getSharePercentageType().equalsIgnoreCase("Average")){
+//					if(!psa.getId().equals(mProjectShareAuthorizationEditor.getModelCopy().getId()) &&
+//							(psa.getSharePercentage().doubleValue() != averageAmount && 
+//							psa.getSharePercentage().doubleValue() != adjustedAverageTotal)){
+////						HyjModelEditor<ProjectShareAuthorization> editor = psa.newModelEditor();
+////						editor.getModelCopy().setSharePercentage(averageAmount);
+//						averageTotal += averageAmount;
+////						editor.save();
+//					} else {
+//						averageTotal += psa.getSharePercentage();
+//					}
+//				}
+//			}
+//			if(HyjUtil.toFixed2(averageTotal) != HyjUtil.toFixed2(100.0 - fixedPercentageTotal)){
+//				mProjectShareAuthorizationEditor.getModelCopy().setSharePercentage(
+//						mProjectShareAuthorizationEditor.getModelCopy().getSharePercentage() + diff);
+//			}
+//	 }
 	 
 	 private double validateFixedPercentageTotal(HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor) {
 			if(projectShareAuthorizationEditor.getModelCopy().getSharePercentageType().equalsIgnoreCase("Average")){
