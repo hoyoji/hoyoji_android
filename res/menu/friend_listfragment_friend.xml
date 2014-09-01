@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
+
+     <item
+        android:id="@+id/searchListFragment_action_addfriend"
+        android:title="@string/friendListFragment_action_friend_add"
+        android:icon="@drawable/ic_action_new"
+        hoyoji:showAsAction="always">
+        <menu>
+            <item
+		        android:id="@+id/friendListFragment_action_friend_add"
+		        android:title="@string/friendListFragment_action_friend_add"
+		        android:icon="@drawable/ic_action_search_person"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/friendListFragment_action_friend_create"
+		        android:title="@string/friendListFragment_action_friend_create"
+		        android:icon="@drawable/ic_action_add_person"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/friendListFragment_action_friendCategory_create"
+		        android:title="@string/friendCategoryFormFragment_title_create"
+		        android:icon="@drawable/ic_action_add_group"
+		        hoyoji:showAsAction="always"/>
+        </menu>
+	</item>
+</menu>
