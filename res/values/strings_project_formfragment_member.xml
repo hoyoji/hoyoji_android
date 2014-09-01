@@ -2,18 +2,18 @@
 <resources>
     
     
-   <string name="memberFormFragment_title_addnew">添加共享</string>
-   <string name="memberFormFragment_title_edit">修改共享</string>
+   <string name="memberFormFragment_title_addnew">添加项目成员</string>
+   <string name="memberFormFragment_title_edit">修改项目成员</string>
    
-   <string name="memberFormFragment_progress_adding">正在添加共享</string>
+   <string name="memberFormFragment_progress_adding">正在添加项目成员</string>
    <string name="memberFormFragment_toast_share_request_sent_success">项目共享请求发送成功，请等待回复</string>
+   <string name="memberFormFragment_toast_share_add_success">成功添加项目成员</string>
    
    <string name="memberFormFragment_textView_projectName">项目名称</string>
    
    <string name="memberFormFragment_textView_friend">好友名称</string>
-   <string name="memberFormFragment_editText_hint_friend">请选择共享好友</string>
-   <string name="memberFormFragment_toast_cannot_select_local_friend">不能添加共享给本地好友</string>
-   <string name="memberFormFragment_toast_friend_already_exists">该好友已经是共享成员</string>
+   <string name="memberFormFragment_editText_hint_friend">请选择项目好友</string>
+   <string name="memberFormFragment_toast_friend_already_exists">该好友已经是项目成员</string>
     
    <string name="memberFormFragment_textView_sharePercentageType">占股类型</string>
    <string name="memberFormFragment_editText_hint_sharePercentageType">请选择占股类型</string>

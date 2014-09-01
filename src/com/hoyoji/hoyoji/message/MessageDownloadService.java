@@ -223,7 +223,7 @@ public class MessageDownloadService extends Service {
 		for (Message newMessage : newMessages) {
 			if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 
-				loadSharedProjectData(newMessage);
+//				loadSharedProjectData(newMessage);
 
 			} else if (newMessage.getType().equalsIgnoreCase(
 					"Project.Share.Delete")) {
