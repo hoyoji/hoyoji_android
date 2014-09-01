@@ -505,7 +505,7 @@ public class MoneyPaybackContainer extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyPaybackEdit();
+		return psa.getProjectShareMoneyExpenseEdit();
 	}
 	
 	public boolean hasAddNewPermission(String projectId){
@@ -513,7 +513,7 @@ public class MoneyPaybackContainer extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyPaybackAddNew();
+		return psa.getProjectShareMoneyExpenseAddNew();
 	}
 
 	public boolean hasDeletePermission(){
@@ -525,7 +525,7 @@ public class MoneyPaybackContainer extends HyjModel{
 		if(psa == null){
 			return false;
 		}
-		return psa.getProjectShareMoneyPaybackDelete();
+		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
 	public void setMoneyReturnId(String moneyReturnId) {

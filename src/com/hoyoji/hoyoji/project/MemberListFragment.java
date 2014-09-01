@@ -193,7 +193,17 @@ public class MemberListFragment extends HyjUserListFragment{
 					}
 				}
 			} else {
-				((TextView)view).setText(null);
+				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
+				if(localFriendId != null){
+					friend = HyjModel.getModel(Friend.class, localFriendId);
+					if(friend != null){
+						((TextView)view).setText(friend.getDisplayName());
+					} else {
+						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+					}
+				} else {
+					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_picture) {
@@ -310,11 +320,11 @@ public class MemberListFragment extends HyjUserListFragment{
 		public boolean deliverSelfNotifications() {
 			return true;
 		}
-
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {

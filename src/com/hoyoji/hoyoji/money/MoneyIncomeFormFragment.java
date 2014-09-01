@@ -757,10 +757,10 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	         		
 	         		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					
-					if(mMoneyIncomeEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyIncomeAddNew()){
+					if(mMoneyIncomeEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
 						HyjUtil.displayToast(R.string.app_permission_no_addnew);
 						return;
-					}else if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyIncomeEdit()){
+					}else if(mMoneyIncomeEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}

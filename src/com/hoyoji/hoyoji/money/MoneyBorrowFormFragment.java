@@ -287,7 +287,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, false);
 			} else  if(moneyBorrow.getFriendUserId() != null){
 				mSelectorFieldFriend.setModelId(moneyBorrow.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(moneyBorrow.getFriendUserId()));
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName1(moneyBorrow.getFriendUserId()));
 				mSelectorFieldFriend.setTag(TAG_IS_PROJECT_MEMBER, true);
 			}
 		}
@@ -1034,11 +1034,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										.getId()).executeSingle();
 
 				if (mMoneyBorrowEditor.getModelCopy().get_mId() == null
-						&& !psa.getProjectShareMoneyBorrowAddNew()) {
+						&& !psa.getProjectShareMoneyExpenseAddNew()) {
 					HyjUtil.displayToast(R.string.app_permission_no_addnew);
 					return;
 				} else if (mMoneyBorrowEditor.getModelCopy().get_mId() != null
-						&& !psa.getProjectShareMoneyBorrowEdit()) {
+						&& !psa.getProjectShareMoneyExpenseEdit()) {
 					HyjUtil.displayToast(R.string.app_permission_no_edit);
 					return;
 				}

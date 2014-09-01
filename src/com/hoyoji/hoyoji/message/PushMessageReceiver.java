@@ -18,9 +18,9 @@ public class PushMessageReceiver extends XGPushBaseReceiver {
 //	private Intent intent = new Intent("com.qq.xgdemo.activity.UPDATE_LISTVIEW");
 	public static final String LogTag = "PushMessageReceiver";
 
-	private void show(Context context, String text) {
-		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-	}
+//	private void show(Context context, String text) {
+//		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+//	}
 
 	@Override
 	public void onNotifactionShowedResult(Context context,

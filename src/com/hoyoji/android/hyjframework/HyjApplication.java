@@ -308,6 +308,93 @@ public class HyjApplication extends FrontiaApplication {
 		}
 	}
 	
+	public boolean loginWBFirstTime(String userId, String password, JSONObject jsonObject) {
+		User curUser = HyjApplication.getInstance().getCurrentUser();
+		logout();
+		assert(currentUser == null);
+		Configuration config = new Configuration.Builder(HyjApplication.getInstance())
+									.setDatabaseName(userId)
+									.create(); 
+		ActiveAndroid.initialize(config, mIsDebuggable);
+		initContentProvider();
+		
+		User user = HyjModel.getModel(User.class, userId);
+		UserData userData;
+		String oldNickName = "";
+		if(user != null){
+			oldNickName = user.getNickName();
+			if(oldNickName == null){
+				oldNickName = "";
+			}
+		}
+		try {
+			ActiveAndroid.beginTransaction();
+			if(user == null){
+				user = new User();
+				userData = new UserData();
+				userData.setLastSyncTime(null);
+			} else {
+				userData = user.getUserData();
+			}
+		
+			user.loadFromJSON(jsonObject.getJSONObject("user"), true);
+			userData.loadFromJSON(jsonObject.getJSONObject("userData"), true);
+			
+			user.setUserData(userData);
+			userData.setUser(user);
+			userData.setPassword(password);
+			
+			user.save();
+			userData.save();
+			ActiveAndroid.setTransactionSuccessful();
+
+			user = HyjModel.getModel(User.class, user.getId());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} finally {
+		    ActiveAndroid.endTransaction();
+		}
+
+		currentUser = user;
+		if(currentUser != null){
+
+			// 设置用户的昵称拼音, 并同步回服务器
+			if(!oldNickName.equals(user.getNickName())){
+				user.setNickName(user.getNickName());
+				user.save();
+			}
+			
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//					public void onFail(Object arg0, int arg1, String arg2) {
+//						XGPushManager.unregisterPush(getApplicationContext());
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}
+//					@Override
+//					public void onSuccess(Object arg0, int arg1) {
+//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//					}});
+//            } else {
+//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//            }
+			return true;
+		} else {
+			ActiveAndroid.dispose();
+			currentUser = curUser;
+			if(curUser != null){
+				config = new Configuration.Builder(HyjApplication.getInstance())
+				.setDatabaseName(curUser.getId())
+				.create(); 
+				ActiveAndroid.initialize(config, mIsDebuggable);
+				initContentProvider();
+			}
+			return false;
+		}
+	}
+	
 	public boolean login(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
 		logout();
