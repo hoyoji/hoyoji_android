@@ -224,7 +224,18 @@ public class MessageDownloadService extends Service {
 			if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 
 //				loadSharedProjectData(newMessage);
-
+				
+				try {
+					String projectShareAuthorizationId;
+					projectShareAuthorizationId = (new JSONObject(newMessage.getMessageData())).optString("projectShareAuthorizationId");
+					ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
+					psa.setState("Accept");
+					psa.setSyncFromServer(true);
+					psa.save();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
 			} else if (newMessage.getType().equalsIgnoreCase(
 					"Project.Share.Delete")) {
 
@@ -233,152 +244,152 @@ public class MessageDownloadService extends Service {
 
 	}
 
-	protected void loadSharedProjectData(Message message) {
-		// load new ProjectData from server
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				try {
-
-					JSONArray jsonArray = (JSONArray) object;
-					ActiveAndroid.beginTransaction();
-
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONArray jsonObjects = jsonArray.getJSONArray(i);
-						for (int j = 0; j < jsonObjects.length(); j++) {
-							if (jsonObjects.optJSONObject(j)
-									.optString("__dataType").equals("Project")) {
-								Project newProject = new Project();
-								newProject.loadFromJSON(
-										jsonObjects.optJSONObject(j), true);
-								newProject.save();
-							} else if (jsonObjects.optJSONObject(j)
-									.optString("__dataType")
-									.equals("ProjectShareAuthorization")) {
-								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-								newProjectShareAuthorization.loadFromJSON(
-										jsonObjects.optJSONObject(j), true);
-								newProjectShareAuthorization.save();
-							}
-//							JSONObject jsonObj = jsonObjects.optJSONObject(j);
-//							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
-//							if(model != null){
-//								model.loadFromJSON(jsonObj, true);
-//								model.save();
+//	protected void loadSharedProjectData(Message message) {
+//		// load new ProjectData from server
+//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//			@Override
+//			public void finishCallback(Object object) {
+//				try {
+//
+//					JSONArray jsonArray = (JSONArray) object;
+//					ActiveAndroid.beginTransaction();
+//
+//					for (int i = 0; i < jsonArray.length(); i++) {
+//						JSONArray jsonObjects = jsonArray.getJSONArray(i);
+//						for (int j = 0; j < jsonObjects.length(); j++) {
+//							if (jsonObjects.optJSONObject(j)
+//									.optString("__dataType").equals("Project")) {
+//								Project newProject = new Project();
+//								newProject.loadFromJSON(
+//										jsonObjects.optJSONObject(j), true);
+//								newProject.save();
+//							} else if (jsonObjects.optJSONObject(j)
+//									.optString("__dataType")
+//									.equals("ProjectShareAuthorization")) {
+//								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+//								newProjectShareAuthorization.loadFromJSON(
+//										jsonObjects.optJSONObject(j), true);
+//								newProjectShareAuthorization.save();
 //							}
-						}
-					}
-
-					ActiveAndroid.setTransactionSuccessful();
-
-				} catch (JSONException e) {
-					e.printStackTrace();
-				} finally {
-					ActiveAndroid.endTransaction();
-				}
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-			}
-		};
-
-		JSONArray data = new JSONArray();
-		try {
-			JSONArray projectIds = new JSONObject(message.getMessageData())
-					.optJSONArray("projectIds");
-			for (int i = 0; i < projectIds.length(); i++) {
-				JSONObject newObj = new JSONObject();
-				newObj.put("__dataType", "Project");
-				newObj.put("main.id", projectIds.get(i));
-				data.put(newObj);
-				newObj = new JSONObject();
-				newObj.put("__dataType", "ProjectShareAuthorization");
-				newObj.put("main.projectId", projectIds.get(i));
-//				newObj.put("main.state", "Accept");
-				data.put(newObj);
+////							JSONObject jsonObj = jsonObjects.optJSONObject(j);
+////							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
+////							if(model != null){
+////								model.loadFromJSON(jsonObj, true);
+////								model.save();
+////							}
+//						}
+//					}
+//
+//					ActiveAndroid.setTransactionSuccessful();
+//
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				} finally {
+//					ActiveAndroid.endTransaction();
+//				}
+//			}
+//
+//			@Override
+//			public void errorCallback(Object object) {
+//			}
+//		};
+//
+//		JSONArray data = new JSONArray();
+//		try {
+//			JSONArray projectIds = new JSONObject(message.getMessageData())
+//					.optJSONArray("projectIds");
+//			for (int i = 0; i < projectIds.length(); i++) {
+//				JSONObject newObj = new JSONObject();
+//				newObj.put("__dataType", "Project");
+//				newObj.put("main.id", projectIds.get(i));
+//				data.put(newObj);
 //				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpenseContainer");
+//				newObj.put("__dataType", "ProjectShareAuthorization");
 //				newObj.put("main.projectId", projectIds.get(i));
+////				newObj.put("main.state", "Accept");
 //				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpense");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpenseApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncomeContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositIncomeContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncome");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncomeApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositIncomeApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyBorrow");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyBorrowApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyLendContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyLendApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyReturn");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyReturnApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositReturnApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositReturnContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyPayback");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyPaybackApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyTransfer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-			}
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyExpenseContainer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyExpense");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyExpenseApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyIncomeContainer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyDepositIncomeContainer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyIncome");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyIncomeApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyDepositIncomeApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyBorrow");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyBorrowApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyLendContainer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyLendApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyReturn");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyReturnApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyDepositReturnApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyDepositReturnContainer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyPayback");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyPaybackApportion");
+////				newObj.put("pst.projectId", projectIds.get(i));
+////				data.put(newObj);
+////				newObj = new JSONObject();
+////				newObj.put("__dataType", "MoneyTransfer");
+////				newObj.put("main.projectId", projectIds.get(i));
+////				data.put(newObj);
+//			}
+//			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	protected void processFriendMessages(List<Message> newMessages,
 			User currentUser) {

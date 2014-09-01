@@ -243,6 +243,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				.getFromUserId());
 
 		JSONObject msgData = new JSONObject();
+		msgData.put("projectShareAuthorizationId", jsonMsgData.optString("projectShareAuthorizationId"));
 		msgData.put("fromUserDisplayName", HyjApplication
 				.getInstance().getCurrentUser().getDisplayName());
 		msgData.put("projectIds", jsonMsgData.opt("projectIds"));
