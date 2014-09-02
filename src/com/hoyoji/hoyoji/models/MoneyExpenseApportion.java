@@ -199,10 +199,10 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 //			// 该好友不是项目成员
 //			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 //			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
-			if(this.getFriendUserId() == null){
+//			if(this.getFriendUserId() == null){
 //			if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
 				debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
-			}
+//			}
 //		}
 		if(debtAccount != null){
 			HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
@@ -229,8 +229,13 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		if(this.getMoneyExpenseContainer() == null){
 			return null;
 		} else {
-			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+			if(this.getFriendUserId() != null){
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
 					this.getMoneyExpenseContainer().getProjectId(), this.getFriendUserId()).executeSingle();
+			} else {
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", 
+						this.getMoneyExpenseContainer().getProjectId(), this.getLocalFriendId()).executeSingle();
+			}
 		}
 	}
 	

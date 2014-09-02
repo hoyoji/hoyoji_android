@@ -23,6 +23,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,7 +36,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,6 +52,8 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.WBLogin;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 public class HyjUtil {
 	public static void displayToast(int msg){
@@ -491,4 +494,42 @@ public class HyjUtil {
 			return sb.toString().toUpperCase();
 //			return ContactLocaleUtils.getIntance().getSortKey(mName.toString(), FullNameStyle.CHINESE);
 		}
+		
+		/**
+	     * 保存 Token 对象到 User Sqlite Database。
+	     * 
+	     * @param context 应用程序上下文环境
+	     * @param token   Token 对象
+	     */
+	    public static void writeAccessToken(Oauth2AccessToken token) {
+//	        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+//	        Editor editor = pref.edit();
+//	        editor.putString(KEY_UID, token.getUid());
+//	        editor.putString(KEY_ACCESS_TOKEN, token.getToken());
+//	        editor.putLong(KEY_EXPIRES_IN, token.getExpiresTime());
+//	        editor.commit();
+	        
+	        WBLogin wbLogin = new Select().from(WBLogin.class).where("userId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	        wbLogin.setAccessToken(token.getToken());
+	        wbLogin.setOpenId(token.getUid());
+	        wbLogin.setExpiresIn(token.getExpiresTime());
+	        wbLogin.save();
+	    }
+		
+	    /**
+	     * 从 SharedPreferences 读取 Token 信息。
+	     * 
+	     * @param context 应用程序上下文环境
+	     * 
+	     * @return 返回 Token 对象
+	     */
+	    public static Oauth2AccessToken readAccessToken() {
+	        Oauth2AccessToken token = new Oauth2AccessToken();
+//	        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+	        WBLogin wbLogin = new Select().from(WBLogin.class).where("userId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	        token.setUid(wbLogin.getOpenId());
+	        token.setToken(wbLogin.getAccessToken());
+	        token.setExpiresTime(wbLogin.getExpiresIn());
+	        return token;
+	    }
 }

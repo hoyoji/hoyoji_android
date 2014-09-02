@@ -60,11 +60,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_gravity="center"
-                android:background="@drawable/qq_login_bt_blue"
+                android:background="@drawable/qq_login"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
                 android:text="用QQ帐号登录" />
-
+            
+			<ImageButton
+                android:id="@+id/button_sign_in_wb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:background="@drawable/weibo_login"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="用Wb帐号登录" />
         </LinearLayout>
 
     </ScrollView>

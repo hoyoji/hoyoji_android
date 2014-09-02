@@ -162,15 +162,15 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.save();
 	}
 	
-	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
-		MoneyAccount createDebtAccount = new MoneyAccount();
-		createDebtAccount.setName(friendUserId);
-		createDebtAccount.setCurrencyId(currencyId);
-		createDebtAccount.setCurrentBalance(amount);
-		createDebtAccount.setSharingType("Private");
-		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.save();
-	}
+//	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
+//		MoneyAccount createDebtAccount = new MoneyAccount();
+//		createDebtAccount.setName(friendUserId);
+//		createDebtAccount.setCurrencyId(currencyId);
+//		createDebtAccount.setCurrentBalance(amount);
+//		createDebtAccount.setSharingType("Private");
+//		createDebtAccount.setAccountType("Debt");
+//		createDebtAccount.save();
+//	}
 	
 	@Override
 	public void validate(HyjModelEditor modelEditor) {

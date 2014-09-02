@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
-import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
@@ -40,9 +39,13 @@ import com.hoyoji.hoyoji.models.ProjectRemark;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.setting.BindPhoneFragment;
+import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji_android.R;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.exception.WeiboException;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.sample.Util;
@@ -56,7 +59,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -69,7 +71,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -88,11 +89,21 @@ public class LoginActivity extends HyjActivity {
 	private EditText mUserNameView;
 	private EditText mPasswordView;
 	private ImageButton mLoginQQButton;
+	private ImageButton mLoginWBButton;
 
     private UserInfo mInfo;
     public static QQAuth mQQAuth;
 	private Tencent mTencent;
 	private String mAppid;
+//	
+//	/** 显示认证后的信息，如 AccessToken */
+//    private TextView mTokenText;
+    /** 微博 Web 授权类，提供登陆等功能  */
+    private WeiboAuth mWeiboAuth;
+    /** 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能  */
+    private Oauth2AccessToken mAccessToken;
+    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有效 */
+    private SsoHandler mSsoHandler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +146,20 @@ public class LoginActivity extends HyjActivity {
 						attemptQQLogin();
 					}
 				});
+		
+		if(mWeiboAuth == null){
+	        mWeiboAuth = new WeiboAuth(this, AppConstants.WEIBO_CONNECT_APP_KEY, AppConstants.WEIBO_CONNECT_REDIRECT_URL, AppConstants.WEIBO_CONNECT_SCOPE);
 
+			mLoginWBButton = (ImageButton)findViewById(R.id.button_sign_in_wb);
+			mLoginWBButton.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptWBLogin();
+					}
+				});
+		}
+		
 		findViewById(R.id.button_register).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -267,6 +291,285 @@ public class LoginActivity extends HyjActivity {
 		};
 		mTencent.login(this, "all", listener);
 	}
+	
+	
+	public void attemptWBLogin() {
+//		if(mWeiboAuth == null){
+//			// 获取 Token View，并让提示 View 的内容可滚动（小屏幕可能显示不全）
+////	        mTokenText = (TextView) findViewById(R.id.token_text_view);
+////	        TextView hintView = (TextView) findViewById(R.id.obtain_token_hint);
+////	        hintView.setMovementMethod(new ScrollingMovementMethod());
+//
+//	        // 创建微博实例
+//	        mWeiboAuth = new WeiboAuth(this, AppConstants.WEIBO_CONNECT_APP_KEY, AppConstants.WEIBO_CONNECT_REDIRECT_URL, AppConstants.WEIBO_CONNECT_SCOPE);
+	        
+	        // SSO 授权
+//	        findViewById(R.id.obtain_token_via_sso).setOnClickListener(new OnClickListener() {
+//	            @Override
+//	            public void onClick(View v) {
+	                mSsoHandler = new SsoHandler(LoginActivity.this, mWeiboAuth);
+	                mSsoHandler.authorize(new AuthListener());
+	                
+//	            }
+//	        });
+	        
+//	        // Web 授权
+//	        findViewById(R.id.obtain_token_via_signature).setOnClickListener(new OnClickListener() {
+//	            @Override
+//	            public void onClick(View v) {
+//	                mWeiboAuth.anthorize(new AuthListener());
+//	                // 或者使用：mWeiboAuth.authorize(new AuthListener(), Weibo.OBTAIN_AUTH_TOKEN);
+//	            }
+//	        });
+//	        
+//	        // 通过 Code 获取 Token
+//	        findViewById(R.id.obtain_token_via_code).setOnClickListener(new OnClickListener() {
+//	            @Override
+//	            public void onClick(View v) {
+//	                startActivity(new Intent(LoginActivity.this, WBAuthCodeActivity.class));
+//	            }
+//	        });
+
+	        // 从 SharedPreferences 中读取上次已保存好 AccessToken 等信息，
+	        // 第一次启动本应用，AccessToken 不可用
+//	        mAccessToken = HyjUtil.readAccessToken();
+//	        if (mAccessToken.isSessionValid()) {
+////	            updateTokenView(true);
+//	        	
+//	        }
+//		}
+	}
+	
+	 private void doWBLogin(final JSONObject values) {    
+
+ 		this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+ 				R.string.loginActivity_progress_signing_in);
+ 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+ 			@Override
+ 			public void finishCallback(Object object) {
+ 				if (object != null) {
+ 					// 在本地找到该QQ用户
+// 					String userId = (String) object;
+ 					
+ 					loginWBFromServer(false, values);
+ 					
+// 					((HyjApplication) getApplication()).loginQQ(userId, values);
+// 					relogin();
+// 					LoginActivity.this.dismissProgressDialog();
+ 				} else {
+ 					// 在本地找不到该QQ用户，我们到服务器上去找
+ 					loginWBFromServer(true, values);
+ 				}
+ 			}
+
+ 			@Override
+ 			public Object doInBackground(String... string) {
+ 				File file = new File("/data/data/" + HyjApplication.getInstance().getPackageName() + "/databases/");
+ 			      if(file.isDirectory()){
+ 			           File [] fileArray = file.listFiles();
+ 			           if(null != fileArray && 0 != fileArray.length){
+ 			                for(int i = 0; i < fileArray.length; i++){
+
+ 			    				String dbName = fileArray[i].getName();
+ 			    				if(dbName.endsWith(".db") || dbName.endsWith("-journal")){
+ 			    					continue;
+ 			    				}
+ 			    				
+ 			    				Cursor cursor = null;
+ 			    				SQLiteDatabase rDb = null;
+ 			    				DatabaseHelper mDbHelper = null;
+ 			    				try{
+ 					    				Configuration config = new Configuration.Builder(HyjApplication.getInstance())
+ 					    											.setDatabaseName(dbName)
+ 					    											.create(); 
+ 					    				mDbHelper = new DatabaseHelper(config);
+ 					    				rDb = mDbHelper.getReadableDatabase();
+ 		
+ 					    				// Define a projection that specifies which columns from the
+ 					    				// database
+ 					    				// you will actually use after this query.
+ 					    				String[] projection = { "userId", "openid" };
+ 					    				String[] args = { values.optString("openid") };
+ 					    				cursor = rDb.query("QQLogin", 
+ 					    						projection, // The columns to return
+ 					    						"openid=?", 
+ 					    						args, // The values for the WHERE clause
+ 					    						null, // don't group the rows
+ 					    						null, // don't filter by row groups
+ 					    						null // The sort order
+ 					    				);
+ 					    				String userId = null;
+ 					    				if (cursor.getCount() > 0) {
+ 					    					cursor.moveToFirst();
+ 					    					userId = cursor.getString(cursor.getColumnIndexOrThrow("userId"));
+ 					    					cursor.close();
+ 					    					rDb.close();
+ 					    					mDbHelper.close();
+ 					    					return userId;
+ 					    				}
+ 			    				} catch (Exception e){
+ 			    					
+ 			    				} finally{
+ 			    					if(cursor != null){
+ 			    						cursor.close();
+ 			    					}
+ 			    					if(rDb != null){
+ 			    						rDb.close();
+ 			    					}
+ 			    					if(mDbHelper != null){
+ 			    						mDbHelper.close();
+ 			    					}
+ 			    				}
+ 			                }
+ 			           }
+ 			      }
+ 				return null;
+ 			}
+ 		});
+
+ 	}
+	
+	 private void loginWBFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
+			if(createUserDatabaseEntry == true){
+				java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+				try {
+					loginInfo.put("currencyId", currency.getCurrencyCode());
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			// 从服务器上下载用户数据
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					JSONObject jsonObject = (JSONObject) object;
+					String userId;
+					try {
+						userId = jsonObject.getJSONObject("user").getString("id");
+
+						if (createUserDatabaseEntry == true) {
+							final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
+									LoginActivity.this);
+							final SQLiteDatabase wDb = mDbHelper
+									.getWritableDatabase();
+							ContentValues values = new ContentValues();
+							values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
+							values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
+
+							wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
+							wDb.close();
+							mDbHelper.close();
+							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+						} else {
+							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+								relogin();
+							}
+							LoginActivity.this.dismissProgressDialog();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					try {
+						JSONObject json = (JSONObject) object;
+						LoginActivity.this.dismissProgressDialog();
+						LoginActivity.this.displayDialog("登录失败",
+							json.getJSONObject("__summary").getString("msg"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "loginWB");
+		}
+	 
+	/**
+     * 微博认证授权回调类。
+     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
+     *    该回调才会被执行。
+     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
+     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
+     */
+    class AuthListener implements WeiboAuthListener {
+        
+        @Override
+        public void onComplete(Bundle values) {
+            // 从 Bundle 中解析 Token
+            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (mAccessToken.isSessionValid()) {
+                // 显示 Token
+//                updateTokenView(false);
+                
+            	JSONObject wbJsonObject = new JSONObject();
+            	
+            	try {
+					wbJsonObject.put("openid", values.get("uid"));
+					wbJsonObject.put("access_token", values.get("access_token"));
+					wbJsonObject.put("expires_in", values.get("expires_in"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	doWBLogin(wbJsonObject);
+            	
+                // 保存 Token 到 SharedPreferences
+                //HyjUtil.writeAccessToken(mAccessToken);
+                Toast.makeText(LoginActivity.this, 
+                        R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
+            } else {
+                // 以下几种情况，您会收到 Code：
+                // 1. 当您未在平台上注册的应用程序的包名与签名时；
+                // 2. 当您注册的应用程序包名与签名不正确时；
+                // 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
+                String code = values.getString("code");
+                String message = getString(R.string.weibosdk_demo_toast_auth_failed);
+                if (!TextUtils.isEmpty(code)) {
+                    message = message + "\nObtained the code: " + code;
+                }
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        }
+        
+        
+       
+        /**
+         * 显示当前 Token 信息。
+         * 
+         * @param hasExisted 配置文件中是否已存在 token 信息并且合法
+         */
+//        private void updateTokenView(boolean hasExisted) {
+//            String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
+//                    new java.util.Date(mAccessToken.getExpiresTime()));
+//            String format = getString(R.string.weibosdk_demo_token_to_string_format_1);
+////            mTokenText.setText(String.format(format, mAccessToken.getToken(), date));
+//            
+//            String message = String.format(format, mAccessToken.getToken(), date);
+//            if (hasExisted) {
+//                message = getString(R.string.weibosdk_demo_token_has_existed) + "\n" + message;
+//            }
+////            mTokenText.setText(message);
+//        }
+
+        @Override
+        public void onCancel() {
+            Toast.makeText(LoginActivity.this, 
+                    R.string.weibosdk_demo_toast_auth_canceled, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onWeiboException(WeiboException e) {
+            Toast.makeText(LoginActivity.this, 
+                    "Auth exception : " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    
 //
 //	private void registerQQUser(JSONObject values) {
 //		if (mQQAuth != null && mQQAuth.isSessionValid()) {
@@ -716,6 +1019,14 @@ public class LoginActivity extends HyjActivity {
 											figureUrl = obj.getString("figureUrl");
 										}
 										qqLogin.save();
+									}  else if (obj.optString("__dataType")
+											.equals("WBLogin")) {
+										WBLogin wbLogin = new WBLogin();
+										wbLogin.loadFromJSON(obj, true);
+										if(!obj.isNull("figureUrl")){
+											figureUrl = obj.getString("figureUrl");
+										}
+										wbLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
 										Friend friend = new Friend();
@@ -941,5 +1252,13 @@ public class LoginActivity extends HyjActivity {
 		};
 		
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "loginQQ");
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (mSsoHandler != null) {
+			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 }
