@@ -444,6 +444,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 			apportion.setAmount(0.0);
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
 
 			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
@@ -467,6 +468,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 					apportion.setAmount(0.0);
 					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 					apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
 					apportion.setApportionType("Share");
 					
@@ -1407,6 +1409,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
 								moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 								moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 								moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
 								moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
