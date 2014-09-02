@@ -83,7 +83,7 @@ public class MemberListFragment extends HyjUserListFragment{
 				ContentProvider.createUri(ProjectShareAuthorization.class, null),
 				null,
 				"projectId=? AND state <> ?", 
-				new String[]{project.getId(), "Deleted"}, 
+				new String[]{project.getId(), "Delete"}, 
 				"friendUserId LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
