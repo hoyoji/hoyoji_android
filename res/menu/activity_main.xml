@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
+    	
+    <item
+        android:id="@+id/mainActivity_action_sync"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/homeListFragment_action_sync"
+        hoyoji:actionLayout="@layout/actionbar_sync_button"
+        hoyoji:showAsAction="always"/> 
+
+</menu>
