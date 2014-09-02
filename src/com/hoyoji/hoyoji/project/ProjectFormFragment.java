@@ -663,9 +663,9 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	       		} else if(psa.getFriendUserId() == null){
 					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
 					return;
-	       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
-					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
-					return;
+//	       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+//					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+//					return;
 	       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
 					return;

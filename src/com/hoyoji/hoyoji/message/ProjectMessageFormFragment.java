@@ -145,7 +145,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				ProjectShareAuthorization newPSA = HyjModel.getModel(
 						ProjectShareAuthorization.class,
 						jsonMsgData.optString("projectShareAuthorizationId"));
-				if (newPSA != null && newPSA.getState().equalsIgnoreCase("Accept")) {
+				if (newPSA != null && !newPSA.getState().equalsIgnoreCase("Delete")) {
 					// 该项目共享已经存在
 					HyjUtil.displayToast(R.string.projectMessageFormFragment_addShare_already_exists);
 				} else {
@@ -322,7 +322,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				newObj = new JSONObject();
 				newObj.put("__dataType", "ProjectShareAuthorization");
 				newObj.put("main.projectId", projectIds.get(i));
-				newObj.put("main.state", "Accept");
+//				newObj.put("main.state", "Accept");
 				data.put(newObj);
 				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyExpenseContainer");

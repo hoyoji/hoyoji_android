@@ -101,7 +101,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			projectShareAuthorization = new ProjectShareAuthorization();
 			project = Project.load(Project.class, projectId);
 			projectShareAuthorization.setProjectId(project.getId());
-			projectShareAuthorization.setState("Accept");
+//			projectShareAuthorization.setState("Accept");
 		}
 
 		mProjectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
