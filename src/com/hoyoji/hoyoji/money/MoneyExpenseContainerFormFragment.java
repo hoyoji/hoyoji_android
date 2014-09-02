@@ -438,7 +438,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(!projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Accept") && !projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Wait")){
+			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete")){
 				continue;
 			}
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
