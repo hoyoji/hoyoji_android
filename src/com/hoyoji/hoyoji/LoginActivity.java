@@ -468,11 +468,11 @@ public class LoginActivity extends HyjActivity {
 							wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 							wDb.close();
 							mDbHelper.close();
-//							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 						} else {
-//							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-//								relogin();
-//							}
+							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+								relogin();
+							}
 							LoginActivity.this.dismissProgressDialog();
 						}
 					} catch (JSONException e) {
