@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="friendListFragment_action_friend_add">添加网络好友</string>
+    <string name="friendListFragment_action_friend_create">创建本地好友</string>
+    
+    <string name="friendListFragment_title_select_friend_payee">收款方</string>
+    <string name="friendListFragment_title_select_friend_payer">付款方</string>
+    <string name="friendListFragment_title_select_friend_creditor">债权人</string>
+    <string name="friendListFragment_title_select_friend_debtor">债务人</string>
+    <string name="friendListFragment_title_select_friend_transferOut">转出人</string>
+    <string name="friendListFragment_title_select_friend_transferIn">转入人</string>
+    
+    <string name="friendListFragment_title_friend_transactions">好友流水</string>
+    
+</resources>

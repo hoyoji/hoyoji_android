@@ -1,0 +1,149 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+ 	xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji_android" 
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProjectFormFragment" >
+    
+<LinearLayout android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <com.hoyoji.android.hyjframework.view.HyjTextField 
+            android:id="@+id/projectFormFragment_textField_projectName"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="@string/projectFormFragment_textView_projectName"
+            hyj:hintText="@string/projectFormFragment_editText_hint_projectName"
+        >
+   </com.hoyoji.android.hyjframework.view.HyjTextField>
+    
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+        />
+    
+    <com.hoyoji.android.hyjframework.view.HyjTextField 
+            android:id="@+id/projectFormFragment_textField_projectRemarkName"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="@string/projectFormFragment_textView_projectRemarkName"
+            hyj:hintText="@string/projectFormFragment_editText_hint_projectRemarkName"
+        >
+   </com.hoyoji.android.hyjframework.view.HyjTextField>
+    
+    <View 
+        android:id="@+id/projectFormFragment_textField_projectRemarkName_field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+        />
+    
+    <com.hoyoji.android.hyjframework.view.HyjListField 
+            android:id="@+id/projectFormFragment_listField_parentProject"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+            hyj:labelText="@string/projectFormFragment_textView_parentProject"
+        />
+    
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+        />
+
+	<FrameLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <com.hoyoji.android.hyjframework.view.HyjSelectorField
+               android:id="@+id/projectFormFragment_selectorField_financialOwner"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               hyj:hintText="@string/projectFormFragment_editText_hint_financialOwner"
+               hyj:labelText="@string/projectFormFragment_textView_financialOwner" >
+           </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+           
+           <ImageView
+               android:id="@+id/projectFormFragment_imageView_clear_financialOwner"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right"
+               android:layout_margin="0dp"
+               android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+      </FrameLayout>
+           
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+       />
+	
+    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/projectFormFragment_selectorField_projectCurrency"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/projectFormFragment_editText_hint_projectCurrency"
+        hyj:labelText="@string/projectFormFragment_textView_projectCurrency" />
+    
+        <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+        />
+    
+	<CheckBox
+	    android:id="@+id/projectFormFragment_checkBox_autoApportion"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/projectFormFragment_checkBox_autoApportion" />
+
+    <TextView
+        android:id="@+id/projectFormFragment_checkBox_hint_autoApportion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/projectFormFragment_checkBox_hint_autoApportion" />
+    
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="#E0E0E0" 
+        />
+    
+	<Button
+	    android:id="@id/button_save"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/app_action_save" />
+	
+       <!--  <Button
+            android:id="@+id/projectFormFragment_button_member"
+            android:layout_width="match_parent"
+    		android:layout_marginTop="5dip"
+            android:layout_height="wrap_content"
+    		android:layout_marginBottom="5dip"
+            android:text="@string/memberListFragment_title" /> -->
+        
+</LinearLayout>
+</ScrollView>
