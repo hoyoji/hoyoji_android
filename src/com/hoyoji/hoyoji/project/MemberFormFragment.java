@@ -152,6 +152,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 						mSelectorFieldFriend.setText(user.getDisplayName());
 					}
 				}
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
 			} else if(projectShareAuthorization.getLocalFriendId() != null){
 				Friend friend = HyjModel.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
 				if(friend != null){
@@ -161,6 +162,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					mSelectorFieldFriend.setModelId(null);
 					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
 				}
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 			}
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
@@ -259,13 +261,13 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
-		if((Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == false){
+		if(mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) != null && (Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == false){
 			modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			modelCopy.setLocalFriendId(null);
 			if(modelCopy.getFriendUserId() != null){
 				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
 			}
-		} else {
+		} else if(mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) != null && (Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == true){
 			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
 			modelCopy.setFriendUserId(null);
 			if(modelCopy.getLocalFriendId() != null){
@@ -308,7 +310,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		
 		mNumericFieldSharePercentage.setError(mProjectShareAuthorizationEditor.getValidationError("sharePercentage"));
-		mSelectorFieldFriend.setError(mProjectShareAuthorizationEditor.getValidationError("currency"));
+		mSelectorFieldFriend.setError(mProjectShareAuthorizationEditor.getValidationError("friendUser"));
 	}
 
 	 @Override
