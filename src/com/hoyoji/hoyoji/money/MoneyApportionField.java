@@ -585,9 +585,14 @@ public class MoneyApportionField extends GridView {
 		}
 		
 		public ProjectShareAuthorization getProjectShareAuthorization(){
-			if(mProjectShareAuthorization == null && mApportion.getFriendUserId() != null) {
-				mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> ?)", 
-					mProjectId, mApportion.getFriendUserId(), "Delete").executeSingle();
+			if(mProjectShareAuthorization == null){
+				if(mApportion.getFriendUserId() != null) {
+					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> ?", 
+						mProjectId, mApportion.getFriendUserId(), "Delete").executeSingle();
+				} else {
+					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> ?", 
+							mProjectId, mApportion.getLocalFriendId(), "Delete").executeSingle();
+				}
 			} 
 			return mProjectShareAuthorization;
 		}
