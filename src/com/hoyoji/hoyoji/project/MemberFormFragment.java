@@ -612,19 +612,22 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
 		 	       					return;
 		 	       				}
-		 	 	         		mSelectorFieldFriend.setText(friend.getDisplayName());
-		 	 	         		mSelectorFieldFriend.setModelId(friend.getFriendUserId());
-		 	 	         		mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
-	 	       				} else {
+		 	 	         	} else {
 		 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
 		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
 		 	       					return;
 	 	       					}
-		 	       				mSelectorFieldFriend.setText(friend.getDisplayName());
-		 	 	         		mSelectorFieldFriend.setModelId(friend.getId());
-		 	 	         		mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
-	 	       				}
+		 	       			}
  	         			 }
+ 	         			if(friend.getFriendUserId() != null){
+ 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+ 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+ 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+ 	         			} else {
+ 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+ 	         				mSelectorFieldFriend.setModelId(friend.getId());
+ 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+ 	         			}
 	            	 }
 	            	 break;
 	          }
