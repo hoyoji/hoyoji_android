@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.hoyoji.hoyoji_android"
-    android:versionCode="5"
-    android:versionName="1.5" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:versionCode="20"
+    android:versionName="2.0" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- SDK2.1新增获取用户位置信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -22,7 +21,6 @@
 	<uses-feature android:name="android.hardware.camera"
                   android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
     
     <!-- 【必须】 信鸽SDK所需权限 -->
@@ -53,9 +51,13 @@
             android:value="hoyoji.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="1" />
-        
-        
+            android:value="2" />
+        <!-- 1=>2 
+        	1、数据库添加了表 WBLogin
+			2、Project 添加字段 financialOwnerUserId 财务负责人
+			3、ProjectShareAuthorization 添加字段 localFriendId 本地好友ID
+         -->
+         
         <activity
             android:name="com.hoyoji.hoyoji.MainActivity"
             android:label="@string/app_name" 
@@ -93,7 +95,7 @@
             android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait">
         </activity>
-        
+
         
         <provider
             android:name="com.activeandroid.content.ContentProvider"
@@ -133,6 +135,9 @@
             </intent-filter>
         </activity>
 
+        
+       
+        
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"
