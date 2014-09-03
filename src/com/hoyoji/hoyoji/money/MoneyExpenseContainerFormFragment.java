@@ -1036,9 +1036,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									projectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectShareAuthorization.getActualTotalBorrow() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 									projectShareAuthorizationEditor.save();
 									
-									projectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
-									projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(projectShareAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+									ProjectShareAuthorization selfProjectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
+									projectShareAuthorizationEditor = selfProjectShareAuthorization.newModelEditor();
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectShareAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 									projectShareAuthorizationEditor.save();
 								} else {
 									projectShareAuthorizationEditor.save();
@@ -1051,9 +1051,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									projectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(projectShareAuthorization.getActualTotalBorrow() + (apportionEditor.getModelCopy().getAmount0() * rate));
 									projectShareAuthorizationEditor.save();
 										
-									projectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
-									projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
-									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(projectShareAuthorization.getActualTotalLend() + (apportionEditor.getModelCopy().getAmount0() * rate));
+									ProjectShareAuthorization selfProjectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
+									projectShareAuthorizationEditor = selfProjectShareAuthorization.newModelEditor();
+									projectShareAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectShareAuthorization.getActualTotalLend() + (apportionEditor.getModelCopy().getAmount0() * rate));
 									projectShareAuthorizationEditor.save();
 								} else {
 									projectShareAuthorizationEditor.save();
@@ -1078,9 +1078,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										oldProjectAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectAuthorization.getActualTotalBorrow() - (oldApportionAmount * oldRate));
 										oldProjectAuthorizationEditor.save();
 
-										oldProjectAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
-										oldProjectAuthorizationEditor = oldProjectAuthorization.newModelEditor();
-										oldProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate));
+										ProjectShareAuthorization oldSelfProjectAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
+										oldProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+										oldProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldSelfProjectAuthorization.getActualTotalLend() - (oldApportionAmount * oldRate));
 										oldProjectAuthorizationEditor.save();
 									} else {
 										oldProjectAuthorizationEditor.save();
