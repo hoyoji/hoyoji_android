@@ -620,7 +620,7 @@ public class MoneyApportionField extends GridView {
 			if(this.getFriend() != null){
 				return this.getFriend().getDisplayName();
 			} else if(mApportion.getFriendUserId() == null){
-				return "\"非好友\"";
+				return getProjectShareAuthorization().getFriendUserName();
 			} else {
 				User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
 				if(user != null){
