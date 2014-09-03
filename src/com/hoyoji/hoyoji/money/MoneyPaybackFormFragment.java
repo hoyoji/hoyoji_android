@@ -408,12 +408,10 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyPayback.getAmount0()*moneyPayback.getExchangeRate());
 										newProjectEditor.save();
 
-										if(!newProject.isProjectMember(moneyPayback.getLocalFriendId(), moneyPayback.getFriendUserId())){
 											MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyPayback.getProject().getCurrencyId(), moneyPayback.getLocalFriendId(), moneyPayback.getFriendUserId());
 											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyPayback.getProjectAmount());
 											debtAccountEditor.save();
-										}
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyPayback.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
@@ -691,23 +689,18 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					
 //				}	
 					MoneyAccount newDebtAccount = null;
-					boolean isNewProjectMember = newProject.isProjectMember(moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId());
-					if(!isNewProjectMember){
-						newDebtAccount = MoneyAccount.getDebtAccount(moneyPaybackModel.getProject().getCurrencyId(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId());
-					}
+					newDebtAccount = MoneyAccount.getDebtAccount(moneyPaybackModel.getProject().getCurrencyId(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId());
 					if(moneyPaybackModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyPaybackModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
-				    	}else if(!isNewProjectMember){
-				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getProject().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
+				    	}else{
+				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getRemoteLocalFriendName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getProject().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
-						if(!oldProject.isProjectMember(oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId())){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyPaybackModel.getProject().getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
-						}
+						oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyPaybackModel.getProject().getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 							if(oldDebtAccount != null && oldDebtAccount.getId().equals(newDebtAccount.getId())){
@@ -727,9 +720,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyPaybackModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if(!isNewProjectMember){
-								MoneyAccount.createDebtAccount(moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
-							}
+							MoneyAccount.createDebtAccount(moneyPaybackModel.getRemoteLocalFriendName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
 						}
 					}
 				

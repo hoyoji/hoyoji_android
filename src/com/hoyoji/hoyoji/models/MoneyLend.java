@@ -636,4 +636,8 @@ public class MoneyLend extends HyjModel{
 		return displayName;
 	}
 
+	public String getRemoteLocalFriendName() {
+		return "本地好友";
+	}
+
 }

@@ -318,4 +318,9 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 		return this.getMoneyDepositReturnContainer().getDate();
 	}
 
+	public String getRemoteLocalFriendName() {
+		// TODO Auto-generated method stub
+		return "本地好友";
+	}
+
 }

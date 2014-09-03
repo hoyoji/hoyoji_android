@@ -469,11 +469,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 																			.getProjectAmount());
 											newProjectEditor.save();
 
-											if (!newProject.isProjectMember(
-													moneyBorrow
-															.getLocalFriendId(),
-													moneyBorrow
-															.getFriendUserId())) {
+
 												MoneyAccount debtAccount = MoneyAccount
 														.getDebtAccount(
 																moneyBorrow
@@ -493,7 +489,6 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 																		+ moneyBorrow
 																				.getProjectAmount());
 												debtAccountEditor.save();
-											}
 
 											// 更新支出所有者的实际支出
 											ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization
@@ -854,16 +849,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					newProjectEditor.save();
 
 					MoneyAccount newDebtAccount = null;
-					boolean isNewProjectMember = newProject.isProjectMember(
-							moneyBorrowModel.getLocalFriendId(),
-							moneyBorrowModel.getFriendUserId());
-					if (!isNewProjectMember) {
 						// 如果不是项目成员，更新借贷账户
 						newDebtAccount = MoneyAccount.getDebtAccount(
 								moneyBorrowModel.getProject().getCurrencyId(),
 								moneyBorrowModel.getLocalFriendId(),
 								moneyBorrowModel.getFriendUserId());
-					}
 					if (moneyBorrowModel.get_mId() == null) {
 						if (newDebtAccount != null) {
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount
@@ -875,8 +865,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 													- moneyBorrowModel
 															.getProjectAmount());
 							newDebtAccountEditor.save();
-						} else if (!isNewProjectMember) {
-							MoneyAccount.createDebtAccount(moneyBorrowModel
+						} else {
+							MoneyAccount.createDebtAccount(moneyBorrowModel.getRemoteLocalFriendName(), moneyBorrowModel
 									.getLocalFriendId(), moneyBorrowModel
 									.getFriendUserId(), moneyBorrowModel
 									.getProject().getCurrencyId(),
@@ -884,15 +874,11 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						}
 					} else {
 						MoneyAccount oldDebtAccount = null;
-						if (!oldProject.isProjectMember(
-								oldMoneyBorrowModel.getLocalFriendId(),
-								oldMoneyBorrowModel.getFriendUserId())) {
 							oldDebtAccount = MoneyAccount.getDebtAccount(
 									oldMoneyBorrowModel.getProject()
 											.getCurrencyId(),
 									oldMoneyBorrowModel.getLocalFriendId(),
 									oldMoneyBorrowModel.getFriendUserId());
-						}
 						if (newDebtAccount != null) {
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount
 									.newModelEditor();
@@ -943,13 +929,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 																.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if (!isNewProjectMember) {
-								MoneyAccount.createDebtAccount(moneyBorrowModel
-										.getLocalFriendId(), moneyBorrowModel
-										.getFriendUserId(), moneyBorrowModel
-										.getProject().getCurrencyId(),
-										-moneyBorrowModel.getProjectAmount());
-							}
+
+							MoneyAccount.createDebtAccount(moneyBorrowModel.getRemoteLocalFriendName(), moneyBorrowModel
+									.getLocalFriendId(), moneyBorrowModel
+									.getFriendUserId(), moneyBorrowModel
+									.getProject().getCurrencyId(),
+									-moneyBorrowModel.getProjectAmount());
 						}
 					}
 

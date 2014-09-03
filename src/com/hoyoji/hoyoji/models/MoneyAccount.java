@@ -87,7 +87,7 @@ public class MoneyAccount extends HyjModel {
 				if(friend != null){
 					return friend.getDisplayName();
 				} else {
-					return "";
+					return this.getName();
 				}
 			} else {
 				if(this.getName() != null && this.getName().equalsIgnoreCase("__ANONYMOUS__")){
@@ -118,12 +118,12 @@ public class MoneyAccount extends HyjModel {
 		}
 		
 		if(friendUserId == null){
-			Friend friend = HyjModel.getModel(Friend.class, friendId);
-			if(friend != null && friend.getFriendUserId() != null){
-				return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
-			} else {
-				return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=? AND name IS NULL", "Debt", currencyId, friendId).executeSingle();
-			}
+//			Friend friend = HyjModel.getModel(Friend.class, friendId);
+//			if(friend != null && friend.getFriendUserId() != null){
+//				return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friend.getFriendUserId()).executeSingle();
+//			} else {
+				return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND friendId=?", "Debt", currencyId, friendId).executeSingle();
+//			}
 		} else {	
 			return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friendUserId).executeSingle();
 //			return getDebtAccount(currencyId, friendUserId);
@@ -135,19 +135,20 @@ public class MoneyAccount extends HyjModel {
 //		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friendUserId).executeSingle();
 //	}
 	
-	public static void createDebtAccount(String friendId, String friendUserId, String currencyId, Double amount){
+	public static void createDebtAccount(String friendName, String friendId, String friendUserId, String currencyId, Double amount){
 		MoneyAccount createDebtAccount = new MoneyAccount();
 		String debtAccountName = "__ANONYMOUS__";
 		if(friendId != null && friendUserId == null){
-			Friend friend = HyjModel.getModel(Friend.class, friendId);
-			if(friend != null && friend.getFriendUserId() != null){
-				//如果是网络好友，我们将MoneyAccount.name设为该好友的用户ID
-				debtAccountName = friend.getFriendUserId();
-				friendId = null;
-			} else {
+			// 是本地好友
+//			Friend friend = HyjModel.getModel(Friend.class, friendId);
+//			if(friend != null && friend.getFriendUserId() != null){
+//				//如果是网络好友，我们将MoneyAccount.name设为该好友的用户ID
+//				debtAccountName = friend.getFriendUserId();
+//				friendId = null;
+//			} else {
 				// 如果是本地好友，我们将MoneyAccount.friendId设为该好友的Id
-				debtAccountName = null;
-			}
+				debtAccountName = friendName;
+//			}
 		} else if(friendUserId != null){
 			//如果是网络好友，我们将MoneyAccount.name设为该好友的用户ID
 			debtAccountName = friendUserId;

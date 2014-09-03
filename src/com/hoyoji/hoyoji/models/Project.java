@@ -413,20 +413,20 @@ public class Project extends HyjModel {
 		return jsonObj;
 	}
 
-	public boolean isProjectMember(String localFriendId, String friendUserId) {
-		if(friendUserId == null && localFriendId != null){
-			Friend friend = HyjModel.getModel(Friend.class, localFriendId);
-			if(friend != null){
-				friendUserId = friend.getFriendUserId();
-			}
- 		}
-		if(friendUserId == null){
-			// 非网络好友，一定不是项目成员
-			return false;
-		}
-		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friendUserId, this.getId()).executeSingle();
-		return psa != null;
-	}
+//	public boolean isProjectMember(String localFriendId, String friendUserId) {
+//		if(friendUserId == null && localFriendId != null){
+//			Friend friend = HyjModel.getModel(Friend.class, localFriendId);
+//			if(friend != null){
+//				friendUserId = friend.getFriendUserId();
+//			}
+// 		}
+//		if(friendUserId == null){
+//			// 非网络好友，一定不是项目成员
+//			return false;
+//		}
+//		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friendUserId, this.getId()).executeSingle();
+//		return psa != null;
+//	}
 
 	public String getLastSyncTime() {
 		// TODO Auto-generated method stub

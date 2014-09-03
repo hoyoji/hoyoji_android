@@ -319,4 +319,8 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		return this.getMoneyDepositIncomeContainer().getDate();
 	}
 
+	public String getRemoteLocalFriendName() {
+		return "本地好友";
+	}
+
 }

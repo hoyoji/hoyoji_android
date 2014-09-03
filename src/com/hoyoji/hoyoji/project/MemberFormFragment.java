@@ -265,13 +265,13 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
 			modelCopy.setLocalFriendId(null);
 			if(modelCopy.getFriendUserId() != null){
-				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+				modelCopy.setFriendUserName(modelCopy.getFriend().getDisplayName());
 			}
 		} else if(mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) != null && (Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == true){
 			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
 			modelCopy.setFriendUserId(null);
 			if(modelCopy.getLocalFriendId() != null){
-				modelCopy.setFriendUserName(modelCopy.getFriend().getFriendUserName());
+				modelCopy.setFriendUserName(modelCopy.getFriend().getDisplayName());
 			}
 		}
 		

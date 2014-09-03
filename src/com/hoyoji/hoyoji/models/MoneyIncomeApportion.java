@@ -318,4 +318,9 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 	public String getDate() {
 		return this.getMoneyIncomeContainer().getDate();
 	}
+
+	public String getRemoteLocalFriendName() {
+		// TODO Auto-generated method stub
+		return "本地好友";
+	}
 }

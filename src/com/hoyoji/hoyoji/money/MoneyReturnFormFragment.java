@@ -407,12 +407,10 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturn.getAmount0()*moneyReturn.getExchangeRate());
 										newProjectEditor.save();
 
-										if(!newProject.isProjectMember(moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId())){
 											MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
 											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
 											debtAccountEditor.save();
-										}
 										
 										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyReturn.getProjectId());
 										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
@@ -691,23 +689,18 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 //				}	
 
 					MoneyAccount newDebtAccount = null;
-					boolean isNewProjectMember = newProject.isProjectMember(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
-					if(!isNewProjectMember){
-						newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
-					}
+					newDebtAccount = MoneyAccount.getDebtAccount(moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId());
 					if(moneyReturnModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
-				    	}else if(!isNewProjectMember){
-				    		MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+				    	}else{
+				    		MoneyAccount.createDebtAccount(moneyReturnModel.getRemoteLocalFriendName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
-						if(!oldProject.isProjectMember(oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId())){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyReturnModel.getProject().getCurrencyId(), oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId());
-						}
+						oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyReturnModel.getProject().getCurrencyId(), oldMoneyReturnModel.getLocalFriendId(), oldMoneyReturnModel.getFriendUserId());
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 							if(oldDebtAccount != null && oldDebtAccount.getId().equals(newDebtAccount.getId())){
@@ -727,9 +720,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if(!isNewProjectMember){
-								MoneyAccount.createDebtAccount(moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
-							}
+							MoneyAccount.createDebtAccount(moneyReturnModel.getRemoteLocalFriendName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 						}
 					}
 

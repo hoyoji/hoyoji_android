@@ -609,4 +609,9 @@ public class MoneyReturn extends HyjModel{
 		return displayName;
 	}
 
+	public String getRemoteLocalFriendName() {
+		// TODO Auto-generated method stub
+		return "本地好友";
+	}
+
 }
