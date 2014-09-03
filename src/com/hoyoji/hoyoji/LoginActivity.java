@@ -460,9 +460,9 @@ public class LoginActivity extends HyjActivity {
 							wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 							wDb.close();
 							mDbHelper.close();
-							loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+							loginWBUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 						} else {
-							if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+							if(((HyjApplication) getApplication()).loginWBFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
 								relogin();
 							}
 							LoginActivity.this.dismissProgressDialog();
@@ -569,55 +569,6 @@ public class LoginActivity extends HyjActivity {
         }
     }
     
-    
-//
-//	private void registerQQUser(JSONObject values) {
-//		if (mQQAuth != null && mQQAuth.isSessionValid()) {
-//			IUiListener listener = new IUiListener() {
-//				
-//				@Override
-//				public void onError(UiError e) {
-//					// TODO Auto-generated method stub
-//				}
-//				
-//				@Override
-//				public void onComplete(final Object response) {
-//					Message msg = new Message();
-//					msg.obj = response;
-//					msg.what = 0;
-//					mHandler.sendMessage(msg);
-//					new Thread(){
-//
-//						@Override
-//						public void run() {
-//							JSONObject json = (JSONObject)response;
-//							if(json.has("figureurl")){
-//								Bitmap bitmap = null;
-//								try {
-//									bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-//								} catch (JSONException e) {
-//									
-//								}
-//								Message msg = new Message();
-//								msg.obj = bitmap;
-//								msg.what = 1;
-//								mHandler.sendMessage(msg);
-//							}
-//						}
-//						
-//					}.start();
-//				}
-//				
-//				@Override
-//				public void onCancel() {
-//					
-//				}
-//			};
-//			mInfo = new UserInfo(this, mQQAuth.getQQToken());
-//			mInfo.getUserInfo(listener);
-//			
-//		}
-//	}
 
 	static Handler mHandler = new Handler() {
 
@@ -839,6 +790,16 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 	
+	// 该QQ好友第一次在本机登录，我们需要下载好友数据到本地
+	private void loginWBUserFirstTime(String userId, String password, JSONObject jsonUser)
+			throws JSONException {
+		if (((HyjApplication) getApplication()).loginWBFirstTime(userId, password, jsonUser)) {
+			downloadUserData();
+		} else {
+			this.dismissProgressDialog();
+		}
+	}
+	
 	private void relogin(){
 		Intent i = getPackageManager().getLaunchIntentForPackage(
 				getApplicationContext().getPackageName());
@@ -867,6 +828,9 @@ public class LoginActivity extends HyjActivity {
 		try {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "QQLogin");
+			belongsToes.put(jsonObj);
+			
+			jsonObj.put("__dataType", "WBLogin");
 			belongsToes.put(jsonObj);
 			
 			jsonObj = new JSONObject();
@@ -1023,8 +987,8 @@ public class LoginActivity extends HyjActivity {
 											.equals("WBLogin")) {
 										WBLogin wbLogin = new WBLogin();
 										wbLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("figureUrl")){
-											figureUrl = obj.getString("figureUrl");
+										if(!obj.isNull("profile_image_url")){
+											figureUrl = obj.getString("profile_image_url");
 										}
 										wbLogin.save();
 									} else if (obj.optString("__dataType")

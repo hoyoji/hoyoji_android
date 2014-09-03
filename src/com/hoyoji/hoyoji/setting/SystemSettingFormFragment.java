@@ -29,6 +29,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,8 +72,14 @@ import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.PictureUploadService;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.QQLogin;
+import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.exception.WeiboException;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.sample.Util;
@@ -88,7 +96,9 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private HyjTextField mTextFieldPhone = null;
 	private Button mButtonPhone = null;
 	private HyjTextField mTextFieldQQ = null;
+	private HyjTextField mTextFieldWB = null;
 	private Button mButtonQQ = null;
+	private Button mButtonWB = null;
 	private Button mButtonChangePassword = null;
 	private Button mButtonUploadPicture = null;
 	private CheckBox mCheckBoxAddFriendValidation = null;
@@ -100,6 +110,13 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private Resources r = null;
 	
     public static QQAuth mQQAuth;
+    /** 微博 Web 授权类，提供登陆等功能  */
+    private WeiboAuth mWBAuth;
+    /** 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能  */
+    private Oauth2AccessToken mAccessToken;
+    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有效 */
+    private SsoHandler mSsoHandler;
+    
 	private Tencent mTencent;
 	private String mAppid;
 	
@@ -151,9 +168,18 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_QQ);
 		mTextFieldQQ.setEnabled(false);
 		
+		mTextFieldWB = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_WB);
+		mTextFieldWB.setEnabled(false);
+		
 		mButtonQQ = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_QQBinding);
 		
 		setQQField();
+		
+		mButtonWB = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_WBBinding);
+		
+		setWBField();
+		
+		mWBAuth = new WeiboAuth(this.getActivity(), AppConstants.WEIBO_CONNECT_APP_KEY, AppConstants.WEIBO_CONNECT_REDIRECT_URL, AppConstants.WEIBO_CONNECT_SCOPE);
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
 		mButtonChangePassword.setOnClickListener(new OnClickListener() {
@@ -603,6 +629,225 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 //				}
 //			}
 //		}
+	
+	private void setWBField() {
+		WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(wbLogin != null){
+			mTextFieldWB.setText(wbLogin.getNickName());
+			mButtonWB.setText("解绑");
+			mButtonWB.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
+						return;
+					}
+					unBindWB();
+				}
+			});
+		}else{
+			mButtonWB.setText("绑定");
+			mTextFieldWB.setText(null);
+			mButtonWB.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					attemptWBLogin();
+				}
+			});
+		}
+	}
+	
+	public void attemptWBLogin() {
+		mSsoHandler = new SsoHandler(this.getActivity(), mWBAuth);
+        mSsoHandler.authorize(new AuthListener());
+	}
+	
+	/**
+     * 微博认证授权回调类。
+     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
+     *    该回调才会被执行。
+     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
+     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
+     */
+    class AuthListener implements WeiboAuthListener {
+        
+        @Override
+        public void onComplete(Bundle values) {
+            // 从 Bundle 中解析 Token
+            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (mAccessToken.isSessionValid()) {
+                // 显示 Token
+//                updateTokenView(false);
+                
+            	JSONObject wbJsonObject = new JSONObject();
+            	
+            	try {
+					wbJsonObject.put("openid", values.get("uid"));
+					wbJsonObject.put("access_token", values.get("access_token"));
+					wbJsonObject.put("expires_in", values.get("expires_in"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	doBindWB(wbJsonObject);
+            	
+                // 保存 Token 到 SharedPreferences
+                //HyjUtil.writeAccessToken(mAccessToken);
+                Toast.makeText(SystemSettingFormFragment.this.getActivity(), 
+                        R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
+            } else {
+                // 以下几种情况，您会收到 Code：
+                // 1. 当您未在平台上注册的应用程序的包名与签名时；
+                // 2. 当您注册的应用程序包名与签名不正确时；
+                // 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
+                String code = values.getString("code");
+                String message = getString(R.string.weibosdk_demo_toast_auth_failed);
+                if (!TextUtils.isEmpty(code)) {
+                    message = message + "\nObtained the code: " + code;
+                }
+                Toast.makeText(SystemSettingFormFragment.this.getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onCancel() {
+            Toast.makeText(SystemSettingFormFragment.this.getActivity(), 
+                    R.string.weibosdk_demo_toast_auth_canceled, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onWeiboException(WeiboException e) {
+            Toast.makeText(SystemSettingFormFragment.this.getActivity(), 
+                    "Auth exception : " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+	
+	private void doBindWB(final JSONObject loginInfo) {    
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				JSONObject jsonObject = (JSONObject) object;
+				WBLogin wbLogin = new WBLogin();
+				wbLogin.loadFromJSON(jsonObject, true);
+				wbLogin.save();
+				
+				final User user = HyjApplication.getInstance().getCurrentUser();
+				if(jsonObject.optString("nickName").length() > 0){
+					// 设置用户的昵称拼音, 并同步回服务器
+					if(!jsonObject.optString("nickName").equals(user.getNickName())){
+						user.setNickName(jsonObject.optString("nickName"));
+						mTextFieldNickName.setText(user.getNickName());
+					}
+				}
+				final String profile_image_url1 = jsonObject.optString("profile_image_url");
+				if(profile_image_url1.length() > 0){
+					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+						@Override
+						public void finishCallback(Object object) {
+							Bitmap thumbnail = null;
+							if(object != null){
+								thumbnail = (Bitmap) object;
+								FileOutputStream out;
+								try {
+									Picture figure = new Picture();
+									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+									if(imgFile != null){
+										out = new FileOutputStream(imgFile);
+										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+										out.close();
+										out = null;
+										
+										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+										figure.setRecordType("User");
+										figure.setDisplayOrder(0);
+										figure.setPictureType("JPEG");
+										
+										user.setPicture(figure);
+										figure.save();								
+										
+										takePictureButton.setImage(figure);
+									}
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+							
+							user.save();
+							HyjUtil.displayToast("WB帐号绑定成功");
+							setWBField();
+						}
+	
+						@Override
+						public Object doInBackground(String... string) {
+							Bitmap thumbnail = null;
+							thumbnail = Util.getbitmap(profile_image_url1);
+							return thumbnail;
+						}
+					});
+				} else {
+					user.save();
+					HyjUtil.displayToast("WB帐号绑定成功");
+					setWBField();
+				}
+				
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+//					((HyjActivity)getActivity()).dismissProgressDialog();
+					((HyjActivity)getActivity()).displayDialog("绑定WB失败", json.getJSONObject("__summary").getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "bindWB");
+	}
+	
+	private void unBindWB() {
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+					WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(wbLogin != null){
+						wbLogin.deleteFromServer();
+					}
+					setWBField();
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					HyjUtil.displayToast("解绑成功");
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					((HyjActivity)getActivity()).displayDialog("解绑WB不成功",
+						json.getJSONObject("__summary").getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(wbLogin != null){
+			((HyjActivity)getActivity()).displayProgressDialog(R.string.systemSettingFormFragment_toast_unBindWB,
+					R.string.systemSettingFormFragment_toast_unBindingWB);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, wbLogin.toJSON().toString(), "unBindWB");
+		} else {
+			HyjUtil.displayToast("找不到已绑定的WB帐户");
+		}
+
+	}
 	 
 	 public void takePictureFromCamera() {
 			Picture newPicture = new Picture();

@@ -18,6 +18,7 @@ import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.models.WBLogin;
 import com.tencent.android.tpush.XGPushConfig;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -307,6 +308,50 @@ public class HyjApplication extends FrontiaApplication {
 			return false;
 		}
 	}
+	
+	// 该WB用户已经存在
+		public boolean loginWB(String userId, JSONObject jsonObject) {
+			User curUser = HyjApplication.getInstance().getCurrentUser();
+			logout();
+			assert(currentUser == null);
+			Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
+			ActiveAndroid.initialize(config, mIsDebuggable);
+			initContentProvider();
+			
+			currentUser = HyjModel.getModel(User.class, userId);
+			if(currentUser != null){
+				WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", userId).executeSingle();
+				wbLogin.loadFromJSON(jsonObject, false);
+				wbLogin.save();
+
+	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+	            userInfo.edit().putString("userId", currentUser.getId()).commit();  
+	            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+//	            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//	    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//						public void onFail(Object arg0, int arg1, String arg2) {
+//							XGPushManager.unregisterPush(getApplicationContext());
+//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//						}
+//						@Override
+//						public void onSuccess(Object arg0, int arg1) {
+//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//						}});
+//	            } else {
+//					XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//	            }
+				return true;
+			} else {
+				ActiveAndroid.dispose();
+				currentUser = curUser;
+				if(curUser != null){
+					config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
+					ActiveAndroid.initialize(config, mIsDebuggable);
+					initContentProvider();
+				}
+				return false;
+			}
+		}
 	
 	public boolean loginWBFirstTime(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
