@@ -216,11 +216,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON mea.id = main.moneyExpenseApportionId JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyExpense main Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE (main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE date > ? AND date <= ? AND "
 								+ buildSearchQuery("Expense"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -233,11 +233,11 @@ public class MoneyTransactionProjectSummaryLoader extends
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON mea.id = main.moneyIncomeApportionId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyIncome main Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE (main.ownerUserId = '" + currentUserId + "' OR mea.id IS NOT NULL) AND date > ? AND date <= ? AND "
+								+ "WHERE date > ? AND date <= ? AND "
 								+ buildSearchQuery("Income"), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
