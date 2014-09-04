@@ -1216,15 +1216,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyBorrow.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
 								moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
 								moneyBorrow.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+								moneyBorrow.setLocalFriendId(null);
 								moneyBorrow.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 								moneyBorrow.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
 								moneyBorrow.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
-								moneyBorrow.setLocalFriendId(null);
 
 								if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
 									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
@@ -1247,7 +1247,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyExpense.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyExpense.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyExpense.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyExpense.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
 								moneyExpense.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyExpense.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyExpense.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
