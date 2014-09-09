@@ -1021,7 +1021,13 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 //             case 1:
 //          }
 //    }
-	 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (mSsoHandler != null) {
+			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
+	}
 	 
 	 
 	 private class ChangeObserver extends ContentObserver {

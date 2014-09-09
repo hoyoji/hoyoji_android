@@ -81,6 +81,8 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.jauker.widget.BadgeView;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -129,7 +131,9 @@ public class MainActivity extends HyjUserActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		
 		if (HyjApplication.getInstance().isLoggedIn()) {
+	        
 			Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
 			startPictureUploadService.putExtra("init", true);
 			startService(startPictureUploadService);
