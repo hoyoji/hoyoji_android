@@ -130,6 +130,10 @@ public class MainActivity extends HyjUserActivity {
 	protected void onStart() {
 		super.onStart();
 		if (HyjApplication.getInstance().isLoggedIn()) {
+			Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
+			startPictureUploadService.putExtra("init", true);
+			startService(startPictureUploadService);
+			
 			if (mChangeObserver == null) {
 				mChangeObserver = new ChangeObserver();
 				this.getContentResolver()

@@ -19,6 +19,8 @@ import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.models.WBLogin;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushConfig;
 
 import android.app.Application;
@@ -73,11 +75,6 @@ public class HyjApplication extends Application {
 ////        	thread.start();
 //        }
 
-		
-
-		Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
-		startPictureUploadService.putExtra("init", true);
-		startService(startPictureUploadService);
 
 		Intent startMessageDownloadService = new Intent(this, MessageDownloadService.class);
 		startService(startMessageDownloadService);
