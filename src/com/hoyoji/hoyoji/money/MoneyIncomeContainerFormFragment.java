@@ -1130,7 +1130,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyLend.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyLend.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
 								moneyLend.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyLend.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyLend.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
@@ -1161,7 +1161,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyIncome.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyIncome.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyIncome.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+								moneyIncome.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
 								moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
