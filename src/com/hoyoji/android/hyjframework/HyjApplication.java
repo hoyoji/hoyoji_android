@@ -20,6 +20,8 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.models.WBLogin;
 import com.tencent.android.tpush.XGPushConfig;
+
+import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -27,12 +29,13 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
 
-public class HyjApplication extends FrontiaApplication {
+public class HyjApplication extends Application {
 	public final static String TAG = "HyjApplication";
 	private static HyjApplication sInstance;
 	private Boolean mIsSyncing = false;
 	private User currentUser = null;
 	private HashMap<String, Class<? extends Fragment>> fragmentClassMap = new HashMap<String, Class<? extends Fragment>>();
+	private boolean mIsFrontiaInited = false;
 	private static boolean mIsDebuggable;
 	
 	public static boolean getIsDebuggable(){
@@ -53,7 +56,6 @@ public class HyjApplication extends FrontiaApplication {
 		sInstance = this;
 		mIsDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 		XGPushConfig.enableDebug(getApplicationContext(), mIsDebuggable);
-		
 //		XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 //		XGPushManager.unregisterPush(getApplicationContext());
 //		XGPushManager.registerPush(getApplicationContext());
@@ -71,7 +73,7 @@ public class HyjApplication extends FrontiaApplication {
 ////        	thread.start();
 //        }
 
-		Frontia.init(this.getApplicationContext(), AppConstants.BAIDU_APP_KEY);
+		
 
 		Intent startPictureUploadService = new Intent(this, PictureUploadService.class);
 		startPictureUploadService.putExtra("init", true);
@@ -101,6 +103,14 @@ public class HyjApplication extends FrontiaApplication {
 //        });
 	}
 
+	public void initFrontia(){
+		if(!mIsFrontiaInited){
+			mIsFrontiaInited = true;
+			FrontiaApplication.initFrontiaApplication(getApplicationContext());
+			Frontia.init(this.getApplicationContext(), AppConstants.BAIDU_APP_KEY);
+		}
+	}
+	
 	@Override
 	public void onTerminate() {
 		logout();
