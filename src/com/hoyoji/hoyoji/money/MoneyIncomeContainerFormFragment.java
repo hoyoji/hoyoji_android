@@ -436,6 +436,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 			apportion.setAmount(0.0);
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
 
 			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
@@ -1127,8 +1128,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
-								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
-								moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
 								moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyIncome.save();
@@ -1226,6 +1225,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
+								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
+								moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 								moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
 								moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
 								moneyIncome.save();
