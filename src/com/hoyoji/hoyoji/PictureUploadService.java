@@ -7,6 +7,7 @@ import java.util.List;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.baidu.frontia.Frontia;
+import com.baidu.frontia.FrontiaApplication;
 import com.baidu.frontia.FrontiaFile;
 import com.baidu.frontia.api.FrontiaStorage;
 import com.baidu.frontia.api.FrontiaStorageListener.FileListListener;
@@ -37,7 +38,7 @@ public class PictureUploadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		((HyjApplication)this.getApplicationContext()).initFrontia();
 		mCloudStorage = Frontia.getStorage();
 		
 		UpdateReceiver  receiver = new UpdateReceiver();
