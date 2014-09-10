@@ -61,7 +61,7 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "returnedAmount")
 	private Double mReturnedAmount;
 
-	// 如果有，说明该借入是从该借出导入生成的
+	// 如果有，说明该借入是从该借出导入生成的，或是替本地好友生成的
 	@Column(name = "moneyLendId")
 	private String mMoneyLendId;
 
@@ -662,5 +662,9 @@ public class MoneyBorrow extends HyjModel{
 	public String getRemoteLocalFriendName() {
 		// TODO Auto-generated method stub
 		return "本地好友";
+	}
+
+	public String getMoneyLendId() {
+		return mMoneyLendId;
 	}
 }
