@@ -829,7 +829,8 @@ public class LoginActivity extends HyjActivity {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "QQLogin");
 			belongsToes.put(jsonObj);
-			
+
+			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "WBLogin");
 			belongsToes.put(jsonObj);
 			
