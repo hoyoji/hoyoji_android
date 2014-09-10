@@ -2,6 +2,7 @@ package com.hoyoji.android.hyjframework.activity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -248,6 +249,16 @@ public abstract class HyjActivity extends ActionBarActivity
 	    	this.sendBroadcast(intent);
 	    } else {
 	    	super.onActivityResult(requestCode, resultCode, data);
+	    	if(requestCode == 32973){ // 微博验证返回时不会调用子fragment的onActivityResult, 所以我们在这里手动调用。
+		        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+		        if (fragments != null) {
+		            for (Fragment fragment : fragments) {
+		            	if(fragment.getUserVisibleHint()){
+		            		fragment.onActivityResult(requestCode, resultCode, data);
+		            	}
+		            }
+		        }
+	    	}
 	    }
 	}
 	
