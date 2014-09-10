@@ -40,6 +40,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -210,22 +211,10 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if (moneyBorrow.get_mId() == null) {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
-				// 看一下该好友是不是项目成员, 如果是，作为项目成员添加
-				ProjectShareAuthorization psa = new Select()
-						.from(ProjectShareAuthorization.class)
-						.where("friendUserId=? AND projectId=? AND state <> 'Delete'",
-								friendUserId,
-								mSelectorFieldProject.getModelId())
-						.executeSingle();
-				if (psa != null) {
-					mSelectorFieldFriend.setModelId(friendUserId);
-					mSelectorFieldFriend.setText(psa.getFriendDisplayName());
-					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
-				} else {
-					mSelectorFieldFriend.setModelId(null);
-					mSelectorFieldFriend.setText(null);
-					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
-				}
+				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", friendUserId).executeSingle();	
+				mSelectorFieldFriend.setModelId(friendUserId);
+				mSelectorFieldFriend.setText(friend.getDisplayName());
+				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		} else {
 			if (moneyBorrow.getLocalFriendId() != null) {
@@ -443,8 +432,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization
 													.getSelfProjectShareAuthorization(moneyBorrow
 															.getProjectId());
-											HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization
-													.newModelEditor();
+											HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
 											selfProjectAuthorizationEditor
 													.getModelCopy()
 													.setActualTotalBorrow(
@@ -455,6 +443,26 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											selfProjectAuthorizationEditor
 													.save();
 
+											
+											if(moneyBorrow.getLocalFriendId() != null){
+												MoneyLend moneyLend;
+												moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+												if(moneyLend != null){
+													moneyLend.delete();
+												}
+												
+												// 更新旧的ProjectShareAuthorization
+												ProjectShareAuthorization oldSelfProjectAuthorization = null;
+												oldSelfProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", moneyBorrow.getLocalFriendId(), moneyBorrow.getProjectId()).executeSingle();
+												
+												HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+												oldSelfProjectAuthorizationEditor.getModelCopy()
+														.setActualTotalLend(
+																oldSelfProjectAuthorization
+																		.getActualTotalLend()
+																		- moneyBorrow.getProjectAmount());
+												oldSelfProjectAuthorizationEditor.save();
+											}
 											moneyBorrow.delete();
 
 											HyjUtil.displayToast(R.string.app_delete_success);
@@ -898,7 +906,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						}
 					}
 
-					// 更新支出所有者的实际借入
+					// 更新自己（借入人）的实际借入
 					ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization
 							.getSelfProjectShareAuthorization(moneyBorrowModel
 									.getProjectId());
@@ -937,6 +945,90 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					selfProjectAuthorizationEditor.save();
 
+					MoneyLend moneyLend = null;
+					if(oldMoneyBorrowModel.getLocalFriendId() != null){
+						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", oldMoneyBorrowModel.getId(), oldMoneyBorrowModel.getLocalFriendId()).executeSingle();
+					}
+					if (moneyLend == null){
+						moneyLend = new MoneyLend();
+					}
+					
+					// 更新对方（借出人）的实际借出
+					if (moneyBorrowModel.getLocalFriendId() != null) {
+						ProjectShareAuthorization lendProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getProjectId()).executeSingle();
+						HyjModelEditor<ProjectShareAuthorization> lendProjectAuthorizationEditor = lendProjectAuthorization.newModelEditor();
+
+						if (moneyBorrowModel.get_mId() == null 
+								|| oldMoneyBorrowModel.getLocalFriendId() == null 
+								|| (oldMoneyBorrowModel.getProjectId().equals(
+										moneyBorrowModel.getProjectId()) && oldMoneyBorrowModel.getLocalFriendId().equals(
+												moneyBorrowModel.getLocalFriendId()))) {
+							// 新旧ProjectShareAuthorization是一样的
+							lendProjectAuthorizationEditor.getModelCopy()
+							.setActualTotalLend(
+									lendProjectAuthorization
+											.getActualTotalLend()
+											- oldMoneyBorrowModel
+													.getProjectAmount()
+											+ moneyBorrowModel
+													.getProjectAmount());
+							
+						} else {
+							// 更新旧的ProjectShareAuthorization
+							ProjectShareAuthorization oldSelfProjectAuthorization = null;
+							oldSelfProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", oldMoneyBorrowModel.getLocalFriendId(), oldMoneyBorrowModel.getProjectId()).executeSingle();
+							
+							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+							oldSelfProjectAuthorizationEditor.getModelCopy()
+									.setActualTotalLend(
+											oldSelfProjectAuthorization
+													.getActualTotalLend()
+													- oldMoneyBorrowModel
+															.getProjectAmount());
+							lendProjectAuthorizationEditor.getModelCopy()
+									.setActualTotalLend(
+											lendProjectAuthorization
+													.getActualTotalLend()
+													+ moneyBorrowModel
+															.getProjectAmount());
+							oldSelfProjectAuthorizationEditor.save();
+						}
+
+						moneyLend.setMoneyBorrowId(moneyBorrowModel.getId());
+						moneyLend.setAmount(moneyBorrowModel.getAmount0());
+						moneyLend.setDate(moneyBorrowModel.getDate());
+						moneyLend.setRemark(moneyBorrowModel.getRemark());
+						moneyLend.setProject(moneyBorrowModel.getProject());
+						moneyLend.setFriendAccountId(moneyBorrowModel.getFriendAccountId());
+						moneyLend.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+						moneyLend.setLocalFriendId(null);
+						moneyLend.setExchangeRate(moneyBorrowModel.getExchangeRate());
+						moneyLend.setMoneyAccountId(moneyBorrowModel.getMoneyAccountId(), moneyBorrowModel.getCurrencyId1());
+						moneyLend.setLocation(moneyBorrowModel.getLocation());
+						moneyLend.setGeoLat(moneyBorrowModel.getGeoLat());
+						moneyLend.setGeoLon(moneyBorrowModel.getGeoLon());
+						moneyLend.setAddress(moneyBorrowModel.getAddress());
+						moneyLend.setPictureId(moneyBorrowModel.getPictureId());
+						moneyLend.setOwnerUserId(moneyBorrowModel.getLocalFriendId());
+						moneyLend.save();
+						lendProjectAuthorizationEditor.save();
+					} else if(oldMoneyBorrowModel.getLocalFriendId() != null){
+						moneyLend.delete();
+							
+						// 更新旧的ProjectShareAuthorization
+						ProjectShareAuthorization oldSelfProjectAuthorization = null;
+						oldSelfProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", oldMoneyBorrowModel.getLocalFriendId(), oldMoneyBorrowModel.getProjectId()).executeSingle();
+						
+						HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+						oldSelfProjectAuthorizationEditor.getModelCopy()
+								.setActualTotalLend(
+										oldSelfProjectAuthorization
+												.getActualTotalLend()
+												- oldMoneyBorrowModel
+														.getProjectAmount());
+						oldSelfProjectAuthorizationEditor.save();
+					}
+					
 					mMoneyBorrowEditor.save();
 					ActiveAndroid.setTransactionSuccessful();
 					if (getActivity().getCallingActivity() != null) {
@@ -993,13 +1085,6 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					ProjectShareAuthorization psaMember = null;
 					if ((Boolean) mSelectorFieldFriend
 							.getTag(TAG_IS_LOCAL_FRIEND)) {
-						String friendUserId = mSelectorFieldFriend.getModelId();
-						psaMember = new Select()
-								.from(ProjectShareAuthorization.class)
-								.where("projectId = ? AND friendUserId=? AND state <> 'Delete'",
-										project.getId(), friendUserId)
-								.executeSingle();
-					} else {
 						String localFriendId = mSelectorFieldFriend
 								.getModelId();
 						psaMember = new Select()
@@ -1007,24 +1092,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 								.where("projectId = ? AND localFriendId=? AND state <> 'Delete'",
 										project.getId(), localFriendId)
 								.executeSingle();
-					}
-
-					if (psaMember != null) {
-						if (psaMember.getFriendUserId() != null) {
-							mSelectorFieldFriend.setModelId(psaMember
-									.getFriendUserId());
-							mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND,
-									false);
-						} else {
-							mSelectorFieldFriend.setModelId(psaMember
-									.getLocalFriendId());
-							mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND,
-									true);
+					
+						if (psaMember != null) {
+							mSelectorFieldFriend.setText(null);
+							mSelectorFieldFriend.setModelId(null);
+							mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend_not_member);
 						}
-					} else {
-						mSelectorFieldFriend.setText(null);
-						mSelectorFieldFriend.setModelId(null);
-						mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 					}
 				}
 			}
@@ -1045,16 +1119,33 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				if ("ProjectShareAuthorization".equalsIgnoreCase(type)) {
 					psa = ProjectShareAuthorization.load(
 							ProjectShareAuthorization.class, _id);
+					if (psa.getFriendUserId() != null) {
+						// 如果是网络好友，不须成为项目成员
+						if (psa.getFriendUserId().equals(
+								HyjApplication.getInstance().getCurrentUser()
+										.getId())) {
+							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+							break;
+						}
+						mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+						mSelectorFieldFriend.setModelId(psa.getFriendUserId());
+						mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+						break;
+					}
 				} else {
 					Friend friend = Friend.load(Friend.class, _id);
 					if (friend.getFriendUserId() != null) {
-						// 看一下该好友是不是项目成员, 如果是，作为项目成员添加
-						psa = new Select()
-								.from(ProjectShareAuthorization.class)
-								.where("friendUserId=? AND projectId=? AND state <> 'Delete'",
-										friend.getFriendUserId(),
-										mSelectorFieldProject.getModelId())
-								.executeSingle();
+						// 如果是网络好友，不须成为项目成员
+						if (friend.getFriendUserId().equals(
+								HyjApplication.getInstance().getCurrentUser()
+										.getId())) {
+							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+							break;
+						}
+						mSelectorFieldFriend.setText(friend.getDisplayName());
+						mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+						mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+						break;
 					} else {
 						psa = new Select()
 								.from(ProjectShareAuthorization.class)
@@ -1065,25 +1156,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 				}
 
+				// 如果是本地好友，一定要是项目成员
 				if (psa == null) {
 					HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend_not_member);
 					break;
 				}
-				if (psa.getFriendUserId() != null) {
-					if (psa.getFriendUserId().equals(
-							HyjApplication.getInstance().getCurrentUser()
-									.getId())) {
-						HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
-						break;
-					}
-					mSelectorFieldFriend.setText(psa.getFriendDisplayName());
-					mSelectorFieldFriend.setModelId(psa.getFriendUserId());
-					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
-				} else {
-					mSelectorFieldFriend.setText(psa.getFriendDisplayName());
-					mSelectorFieldFriend.setModelId(psa.getLocalFriendId());
-					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
-				}
+				mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+				mSelectorFieldFriend.setModelId(psa.getLocalFriendId());
+				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			}
 			break;
 		}

@@ -60,6 +60,7 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "paybackedAmount")
 	private Double mPaybackedAmount;
 
+	// 导入的或新增借入时，替本地好友生成的
 	@Column(name = "moneyBorrowId")
 	private String mMoneyBorrowId;
 
