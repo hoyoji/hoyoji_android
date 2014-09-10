@@ -379,7 +379,8 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			mButtonQQ.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+					WBLogin hasWBLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword() && hasWBLogin == null){
 						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
 						return;
 					}
@@ -638,7 +639,8 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			mButtonWB.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+					QQLogin hasQQLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword() && hasQQLogin == null){
 						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
 						return;
 					}
