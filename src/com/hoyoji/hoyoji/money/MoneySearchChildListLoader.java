@@ -69,6 +69,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 		private String mMoneyAccountId;
 		private String mFriendUserId;
 		private String mLocalFriendId;
+		private Object mOwnerUserId;
 
 	    
 	    public MoneySearchChildListLoader(Context context, Bundle queryParams) {
@@ -93,6 +94,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				mMoneyAccountId = queryParams.getString("moneyAccountId");
 				mFriendUserId = queryParams.getString("friendUserId");
 				mLocalFriendId = queryParams.getString("localFriendId");
+				mOwnerUserId = queryParams.getString("ownerUserId");
 				mLoadLimit += queryParams.getInt("pageSize", 10);
 			} else {
 				mLoadLimit += 10;
@@ -111,8 +113,9 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
 			}
 			if(mMoneyAccountId != null){
-				queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
+				queryStringBuilder.append(" AND main.moneyAccountId = '" + mMoneyAccountId + "' ");
 			}
+
 			if(type.equalsIgnoreCase("DepositIncome") || type.equalsIgnoreCase("DepositReturn")){
 				if(mFriendUserId != null){
 					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.friendUserId = '" + mFriendUserId + "'))");
@@ -137,7 +140,9 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 				if(mFriendUserId != null){
 					queryStringBuilder.append(" AND (main.ownerUserId = '" + mFriendUserId + "' OR main.friendUserId = '" + mFriendUserId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND (apr.friendUserId = '" + mFriendUserId + "' OR apr.localFriendId = (SELECT id FROM Friend WHERE friendUserId = '"+mFriendUserId+"'))))");
 				} else if(mLocalFriendId != null){
-					queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "'))");
+					queryStringBuilder.append(" AND (localFriendId = '" + mLocalFriendId + "' OR EXISTS(SELECT apr.id FROM Money"+type+"Apportion apr WHERE apr.money"+type+"ContainerId = main.id AND apr.localFriendId = '" + mLocalFriendId + "')");
+					queryStringBuilder.append(" OR main.ownerUserId = '" + mLocalFriendId + "' ");
+					queryStringBuilder.append(")");
 				}
 			}
 			return queryStringBuilder.toString();

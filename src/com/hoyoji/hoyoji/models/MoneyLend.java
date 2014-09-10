@@ -629,10 +629,10 @@ public class MoneyLend extends HyjModel{
 			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
 			displayName = f.getDisplayName();
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
-			if(displayName.length() == 0){
-				displayName = "自己";
-			}
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
+//			if(displayName.length() == 0){
+//				displayName = "自己";
+//			}
 		}
 		return displayName;
 	}

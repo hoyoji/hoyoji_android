@@ -270,15 +270,20 @@ public class Friend extends HyjModel {
 				if(user != null){
 					return user.getDisplayName();
 				} else {
-					return "";
+					Friend localFriend = HyjModel.getModel(Friend.class, ownerUserId);
+					if(localFriend != null){
+						return localFriend.getDisplayName();
+					} else {
+						return "";
+					}
 				}
 			}
 		}
 	}	
 	public static String getFriendUserDisplayName1(String ownerUserId) {
-		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-			return "自己";
-		}else{
+//		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+//			return "自己";
+//		}else{
 			Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
 			if(friend != null){
 				return friend.getDisplayName();
@@ -287,10 +292,15 @@ public class Friend extends HyjModel {
 				if(user != null){
 					return user.getDisplayName();
 				} else {
-					return "";
+					Friend localFriend = HyjModel.getModel(Friend.class, ownerUserId);
+					if(localFriend != null){
+						return localFriend.getDisplayName();
+					} else {
+						return "";
+					}
 				}
 			}
-		}
+//		}
 	}	
 	
 }
