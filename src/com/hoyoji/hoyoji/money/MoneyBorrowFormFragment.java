@@ -782,20 +782,19 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 					Project oldProject = oldMoneyBorrowModel.getProject();
 					Project newProject = moneyBorrowModel.getProject();
-					HyjModelEditor<Project> newProjectEditor = newProject
-							.newModelEditor();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 
 					// 更新项目余额
 					if (moneyBorrowModel.get_mId() == null
 							|| oldProject.getId().equals(newProject.getId())) {
+						
 						newProjectEditor.getModelCopy().setIncomeTotal(
 								newProject.getIncomeTotal()
 										- oldMoneyBorrowModel
 												.getProjectAmount()
 										+ moneyBorrowModel.getProjectAmount());
 					} else {
-						HyjModelEditor<Project> oldProjectEditor = oldProject
-								.newModelEditor();
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 						oldProjectEditor.getModelCopy().setIncomeTotal(
 								oldProject.getIncomeTotal()
 										- oldMoneyBorrowModel
@@ -1003,7 +1002,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						moneyLend.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 						moneyLend.setLocalFriendId(null);
 						moneyLend.setExchangeRate(moneyBorrowModel.getExchangeRate());
-						moneyLend.setMoneyAccountId(moneyBorrowModel.getMoneyAccountId(), moneyBorrowModel.getCurrencyId1());
+						moneyLend.setMoneyAccountId(null, moneyBorrowModel.getCurrencyId1());
 						moneyLend.setLocation(moneyBorrowModel.getLocation());
 						moneyLend.setGeoLat(moneyBorrowModel.getGeoLat());
 						moneyLend.setGeoLon(moneyBorrowModel.getGeoLon());
