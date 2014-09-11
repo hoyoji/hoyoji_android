@@ -506,11 +506,11 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 //		}
 		if(mSelectorFieldFriend.getModelId() != null){
 			if((Boolean) mSelectorFieldFriend.getTag(TAG_IS_LOCAL_FRIEND)){
-				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
-				modelCopy.setLocalFriendId(null);
-			} else {
 				modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
 				modelCopy.setFriendUserId(null);
+			} else {
+				modelCopy.setFriendUserId(mSelectorFieldFriend.getModelId());
+				modelCopy.setLocalFriendId(null);
 			}
 		}else{
 			modelCopy.setLocalFriendId(null);
