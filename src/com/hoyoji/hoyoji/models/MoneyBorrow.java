@@ -649,7 +649,16 @@ public class MoneyBorrow extends HyjModel{
 		String displayName = "";
 		if(this.getLocalFriendId() != null){
 			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
-			displayName = f.getDisplayName();
+			if(f != null){
+				displayName = f.getDisplayName();
+			} else {
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), this.getProjectId()).executeSingle();
+				if(psa != null){
+					return psa.getFriendUserName();
+				} else {
+					return "";
+				}
+			}
 		} else if(this.getFriendUserId() != null){
 			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
 //			if(displayName.length() == 0){
