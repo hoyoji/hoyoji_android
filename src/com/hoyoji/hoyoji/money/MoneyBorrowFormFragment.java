@@ -383,8 +383,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 											MoneyAccount moneyAccount = moneyBorrow
 													.getMoneyAccount();
-											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount
-													.newModelEditor();
+											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 											moneyAccountEditor
 													.getModelCopy()
 													.setCurrentBalance(
