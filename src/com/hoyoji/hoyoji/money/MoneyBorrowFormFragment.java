@@ -786,31 +786,33 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					Project newProject = moneyBorrowModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 
-					// 更新项目余额
-					if (moneyBorrowModel.get_mId() == null
-							|| oldProject.getId().equals(newProject.getId())) {
+					//更新项目余额
+					if(moneyBorrowModel.get_mId() == null){
 						if(moneyBorrowModel.getLocalFriendId() == null){
-							newProjectEditor.getModelCopy().setIncomeTotal(
-									newProject.getIncomeTotal()
-											- oldMoneyBorrowModel
-													.getProjectAmount()
-											+ moneyBorrowModel.getProjectAmount());
+							newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
 						}
-						
+					} else if(oldProject.getId().equals(newProject.getId())){
+						if(moneyBorrowModel.getLocalFriendId() == null) { // 现在是网络好友
+							if(oldMoneyBorrowModel.getLocalFriendId() != null){ // 之前是本地好友
+								newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
+							} else { // 之前是网络好友
+								newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
+							}
+						} else { // 现在是本地好友
+							if(oldMoneyBorrowModel.getLocalFriendId() != null){ // 之前也是本地好友
+								newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
+							} else { // 之前是网络好友
+								newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount());
+							}
+						}
 					} else {
-
-						if(oldMoneyBorrowModel.getLocalFriendId() == null){
+						if(oldMoneyBorrowModel.getLocalFriendId() == null){ // 之前是网络好友
 							HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-							oldProjectEditor.getModelCopy().setIncomeTotal(
-									oldProject.getIncomeTotal()
-											- oldMoneyBorrowModel
-													.getProjectAmount());
+							oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount());
 							oldProjectEditor.save();
 						}
-						if(moneyBorrowModel.getLocalFriendId() == null){
-							newProjectEditor.getModelCopy().setIncomeTotal(
-								newProject.getIncomeTotal()
-										+ moneyBorrowModel.getProjectAmount());
+						if(moneyBorrowModel.getLocalFriendId() == null){ // 现在是是网络好友
+							newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
 						}
 					}
 					newProjectEditor.save();
@@ -962,19 +964,18 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					
 					// 更新对方（借出人）的实际借出
-					if (moneyBorrowModel.getLocalFriendId() != null) {
+					if (moneyBorrowModel.getLocalFriendId() != null) { // 现在是本地好友
 						ProjectShareAuthorization lendProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getProjectId()).executeSingle();
 						HyjModelEditor<ProjectShareAuthorization> lendProjectAuthorizationEditor = lendProjectAuthorization.newModelEditor();
 
 						if (moneyBorrowModel.get_mId() == null 
-								|| oldMoneyBorrowModel.getLocalFriendId() == null) {
+								|| oldMoneyBorrowModel.getLocalFriendId() == null) { // 之前是网络好友，不用维护
 							lendProjectAuthorizationEditor.getModelCopy()
 							.setActualTotalLend(
 									lendProjectAuthorization
 											.getActualTotalLend()
 											+ moneyBorrowModel
 													.getProjectAmount());
-							
 						} else if(oldMoneyBorrowModel.getProjectId().equals(
 										moneyBorrowModel.getProjectId()) && oldMoneyBorrowModel.getLocalFriendId().equals(
 												moneyBorrowModel.getLocalFriendId())) {
@@ -1027,7 +1028,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						moneyLend.setOwnerUserId(moneyBorrowModel.getLocalFriendId());
 						moneyLend.save();
 						lendProjectAuthorizationEditor.save();
-					} else if(oldMoneyBorrowModel.getLocalFriendId() != null){
+					} else if(oldMoneyBorrowModel.getLocalFriendId() != null){ 
 						moneyLend.delete();
 							
 						// 更新旧的ProjectShareAuthorization

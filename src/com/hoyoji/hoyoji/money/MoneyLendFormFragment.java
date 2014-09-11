@@ -389,7 +389,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 											if(moneyBorrow != null){
 												moneyBorrow.delete();
 											}
-											
+
 											// 更新旧的ProjectShareAuthorization
 											ProjectShareAuthorization oldSelfProjectAuthorization = null;
 											oldSelfProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", moneyLend.getLocalFriendId(), moneyLend.getProjectId()).executeSingle();
@@ -663,18 +663,32 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
 					//更新项目余额
-					if(moneyLendModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+					if(moneyLendModel.get_mId() == null){
 						if(moneyLendModel.getLocalFriendId() == null){
-							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*moneyLendModel.getExchangeRate() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getProjectAmount());
+						}
+					} else if(oldProject.getId().equals(newProject.getId())){
+						if(moneyLendModel.getLocalFriendId() == null) { // 现在是网络好友
+							if(oldMoneyLendModel.getLocalFriendId() != null){ // 之前是本地好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getProjectAmount());
+							} else { // 之前也是网络好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getProjectAmount() + moneyLendModel.getProjectAmount());
+							}
+						} else { // 现在是本地好友
+							if(oldMoneyLendModel.getLocalFriendId() != null){ // 之前也是本地好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getProjectAmount() + moneyLendModel.getProjectAmount());
+							} else { // 之前是网络好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyLendModel.getProjectAmount());
+							}
 						}
 					} else {
-						if(oldMoneyLendModel.getLocalFriendId() == null){
+						if(oldMoneyLendModel.getLocalFriendId() == null){ // 之前是网络好友
 							HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-							oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyLendModel.getAmount0()*oldMoneyLendModel.getExchangeRate());
+							oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyLendModel.getProjectAmount());
 							oldProjectEditor.save();
 						}
-						if(moneyLendModel.getLocalFriendId() == null){
-							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getAmount0()*moneyLendModel.getExchangeRate());
+						if(moneyLendModel.getLocalFriendId() == null){ // 现在是是网络好友
+							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyLendModel.getProjectAmount());
 						}
 					}
 					newProjectEditor.save();
