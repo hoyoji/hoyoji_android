@@ -394,20 +394,22 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 																			.getAmount());
 											moneyAccountEditor.save();
 
-											// 更新项目余额
-											Project newProject = moneyBorrow
-													.getProject();
-											HyjModelEditor<Project> newProjectEditor = newProject
-													.newModelEditor();
-											newProjectEditor
-													.getModelCopy()
-													.setIncomeTotal(
-															newProject
-																	.getIncomeTotal()
-																	- moneyBorrow
-																			.getProjectAmount());
-											newProjectEditor.save();
-
+											if(moneyBorrow.getLocalFriendId() == null){
+												// 更新项目余额
+												Project newProject = moneyBorrow
+														.getProject();
+												HyjModelEditor<Project> newProjectEditor = newProject
+														.newModelEditor();
+												newProjectEditor
+														.getModelCopy()
+														.setIncomeTotal(
+																newProject
+																		.getIncomeTotal()
+																		- moneyBorrow
+																				.getProjectAmount());
+												newProjectEditor.save();
+											}
+											
 											MoneyAccount debtAccount = MoneyAccount
 													.getDebtAccount(
 															moneyBorrow
@@ -780,6 +782,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 
+					
 					Project oldProject = oldMoneyBorrowModel.getProject();
 					Project newProject = moneyBorrowModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
@@ -787,22 +790,29 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					// 更新项目余额
 					if (moneyBorrowModel.get_mId() == null
 							|| oldProject.getId().equals(newProject.getId())) {
+						if(moneyBorrowModel.getLocalFriendId() == null){
+							newProjectEditor.getModelCopy().setIncomeTotal(
+									newProject.getIncomeTotal()
+											- oldMoneyBorrowModel
+													.getProjectAmount()
+											+ moneyBorrowModel.getProjectAmount());
+						}
 						
-						newProjectEditor.getModelCopy().setIncomeTotal(
-								newProject.getIncomeTotal()
-										- oldMoneyBorrowModel
-												.getProjectAmount()
-										+ moneyBorrowModel.getProjectAmount());
 					} else {
-						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
-						oldProjectEditor.getModelCopy().setIncomeTotal(
-								oldProject.getIncomeTotal()
-										- oldMoneyBorrowModel
-												.getProjectAmount());
-						newProjectEditor.getModelCopy().setIncomeTotal(
+
+						if(oldMoneyBorrowModel.getLocalFriendId() == null){
+							HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+							oldProjectEditor.getModelCopy().setIncomeTotal(
+									oldProject.getIncomeTotal()
+											- oldMoneyBorrowModel
+													.getProjectAmount());
+							oldProjectEditor.save();
+						}
+						if(moneyBorrowModel.getLocalFriendId() == null){
+							newProjectEditor.getModelCopy().setIncomeTotal(
 								newProject.getIncomeTotal()
 										+ moneyBorrowModel.getProjectAmount());
-						oldProjectEditor.save();
+						}
 					}
 					newProjectEditor.save();
 
