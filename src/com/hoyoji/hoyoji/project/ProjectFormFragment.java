@@ -958,8 +958,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 				return HyjApplication.getInstance().getString(
-						R.string.server_connection_error)
-						+ ":\\n" + e.getLocalizedMessage();
+						R.string.server_connection_error);
 			} finally {
 				try {
 					if (is != null)

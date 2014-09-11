@@ -968,10 +968,17 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						HyjModelEditor<ProjectShareAuthorization> lendProjectAuthorizationEditor = lendProjectAuthorization.newModelEditor();
 
 						if (moneyBorrowModel.get_mId() == null 
-								|| oldMoneyBorrowModel.getLocalFriendId() == null 
-								|| (oldMoneyBorrowModel.getProjectId().equals(
+								|| oldMoneyBorrowModel.getLocalFriendId() == null) {
+							lendProjectAuthorizationEditor.getModelCopy()
+							.setActualTotalLend(
+									lendProjectAuthorization
+											.getActualTotalLend()
+											+ moneyBorrowModel
+													.getProjectAmount());
+							
+						} else if(oldMoneyBorrowModel.getProjectId().equals(
 										moneyBorrowModel.getProjectId()) && oldMoneyBorrowModel.getLocalFriendId().equals(
-												moneyBorrowModel.getLocalFriendId()))) {
+												moneyBorrowModel.getLocalFriendId())) {
 							// 新旧ProjectShareAuthorization是一样的
 							lendProjectAuthorizationEditor.getModelCopy()
 							.setActualTotalLend(
