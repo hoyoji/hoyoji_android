@@ -707,7 +707,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					newProjectEditor.save();
 					
 					
-					//更新支出所有者的实际借入
+					//更新收款人（自己）的实际借入
 					ProjectShareAuthorization selfProjectAuthorization = mMoneyDepositIncomeContainerEditor.getNewSelfProjectShareAuthorization();
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    
