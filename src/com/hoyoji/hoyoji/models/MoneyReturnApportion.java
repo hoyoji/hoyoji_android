@@ -124,7 +124,7 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 	}
 	
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getFriendUserId());
+		String ownerUser = Friend.getFriendUserDisplayName(this.getFriendUserId(), this.getProject().getId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {

@@ -282,7 +282,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.projectListItem_owner){
 				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-				String ownerUserName = Friend.getFriendUserDisplayName(project.getOwnerUserId());
+				String ownerUserName = Friend.getFriendUserDisplayName(project.getOwnerUserId(), project.getId());
 				((TextView)view).setText(ownerUserName);
 				return true;
 		} else if(view.getId() == R.id.projectListItem_inOutTotal) {

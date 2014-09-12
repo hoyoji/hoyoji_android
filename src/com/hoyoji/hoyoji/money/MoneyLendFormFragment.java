@@ -227,7 +227,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setModelId(moneyLend.getFriendUserId());
 				mSelectorFieldFriend.setText(Friend
 						.getFriendUserDisplayName1(moneyLend
-								.getFriendUserId()));
+								.getFriendUserId(), moneyLend.getProjectId()));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}

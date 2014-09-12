@@ -358,7 +358,7 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -578,7 +578,7 @@ public class MoneyPayback extends HyjModel{
 				}
 			}
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId(), this.getProjectId());
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}

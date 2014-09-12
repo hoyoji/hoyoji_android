@@ -745,7 +745,8 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			view.setTag(((MoneyTransfer)object).getPicture());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(((MoneyTransfer)object).getOwnerUserId()));
+			MoneyTransfer moneyTransfer = ((MoneyTransfer)object);
+			((TextView)view).setText(Friend.getFriendUserDisplayName(moneyTransfer.getOwnerUserId(), moneyTransfer.getProjectId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());

@@ -258,7 +258,7 @@ public class Friend extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
-	public static String getFriendUserDisplayName(String ownerUserId) {
+	public static String getFriendUserDisplayName(String ownerUserId, String projectId) {
 		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 			return "";
 		}else{
@@ -274,13 +274,19 @@ public class Friend extends HyjModel {
 					if(localFriend != null){
 						return localFriend.getDisplayName();
 					} else {
+						if(projectId != null){
+							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, ownerUserId).executeSingle();
+							if(psa != null){
+								return psa.getFriendUserName();
+							}
+						}
 						return "";
 					}
 				}
 			}
 		}
 	}	
-	public static String getFriendUserDisplayName1(String ownerUserId) {
+	public static String getFriendUserDisplayName1(String ownerUserId, String projectId) {
 //		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 //			return "自己";
 //		}else{
@@ -296,6 +302,12 @@ public class Friend extends HyjModel {
 					if(localFriend != null){
 						return localFriend.getDisplayName();
 					} else {
+						if(projectId != null){
+							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, ownerUserId).executeSingle();
+							if(psa != null){
+								return psa.getFriendUserName();
+							}
+						}
 						return "";
 					}
 				}

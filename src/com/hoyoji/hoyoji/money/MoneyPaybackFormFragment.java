@@ -219,7 +219,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setModelId(moneyPayback.getFriendUserId());
 				mSelectorFieldFriend.setText(Friend
 						.getFriendUserDisplayName1(moneyPayback
-								.getFriendUserId()));
+								.getFriendUserId(), moneyPayback.getProjectId()));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}
