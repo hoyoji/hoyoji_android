@@ -358,6 +358,7 @@ public class MoneyApportionField extends GridView {
 						apportion.setApportionType("Share");
 						apportion.setMoneyId(mMoneyTransactionId);
 						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 						//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
 						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
 						mImageGridAdapter.add(pi);

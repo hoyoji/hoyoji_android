@@ -245,8 +245,14 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		if(this.getMoneyDepositIncomeContainer() == null){
 			return null;
 		} else {	
-			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+			if(this.getFriendUserId() != null){
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> 'Delete'", 
 				   this.getMoneyDepositIncomeContainer().getProjectId(), this.getFriendUserId()).executeSingle();
+			} else {
+
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", 
+				   this.getMoneyDepositIncomeContainer().getProjectId(), this.getLocalFriendId()).executeSingle();
+			}
 		}
 	}
 	
