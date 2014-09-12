@@ -6,6 +6,8 @@
     <string name="loginActivity_editText_hint_username">用户名</string>
     <string name="loginActivity_editText_hint_password">密码</string>
     
+    <string name="loginActivity_action_find_password">找回密码</string>
+    
     <string name="loginActivity_action_sign_in">登录</string>
     <string name="loginActivity_button_register">注册</string>
     <string name="loginActivity_ime_sign_in_short">登录</string>

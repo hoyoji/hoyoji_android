@@ -75,6 +75,9 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name="com.hoyoji.hoyoji.FindPasswordActivity">
+        </activity>
+        <activity
             android:name="com.hoyoji.hoyoji.RegisterActivity"
             android:label="@string/registerActivity_title"
             android:windowSoftInputMode="adjustPan" 
