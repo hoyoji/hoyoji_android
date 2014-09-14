@@ -368,11 +368,11 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getProjectAmount());
 											debtAccountEditor.save();
 										
-										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
-										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
-									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(projectAuthorization.getActualTotalLend() - moneyLend.getProjectAmount());
-										
-									    selfProjectAuthorizationEditor.save();
+//										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
+//										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
+//									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(projectAuthorization.getActualTotalLend() - moneyLend.getProjectAmount());
+//										
+//									    selfProjectAuthorizationEditor.save();
 										
 										moneyLend.delete();
 										
@@ -650,19 +650,19 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 						}
 					}
 					
-					//更新支出所有者的实际借出
-						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLendModel.getProjectId());
-						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
-					    if(moneyLendModel.get_mId() == null || oldMoneyLendModel.getProjectId().equals(moneyLendModel.getProjectId())){
-					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getProjectAmount() + moneyLendModel.getProjectAmount());
-						}else{
-							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyLendModel.getProjectId());
-							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
-							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldSelfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getProjectAmount());
-							selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() + moneyLendModel.getProjectAmount());
-							oldSelfProjectAuthorizationEditor.save();
-						}
-						 selfProjectAuthorizationEditor.save();
+//					//更新支出所有者的实际借出
+//						ProjectShareAuthorization selfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLendModel.getProjectId());
+//						HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
+//					    if(moneyLendModel.get_mId() == null || oldMoneyLendModel.getProjectId().equals(moneyLendModel.getProjectId())){
+//					    	selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getProjectAmount() + moneyLendModel.getProjectAmount());
+//						}else{
+//							ProjectShareAuthorization oldSelfProjectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldMoneyLendModel.getProjectId());
+//							HyjModelEditor<ProjectShareAuthorization> oldSelfProjectAuthorizationEditor = oldSelfProjectAuthorization.newModelEditor();
+//							oldSelfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(oldSelfProjectAuthorization.getActualTotalLend() - oldMoneyLendModel.getProjectAmount());
+//							selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(selfProjectAuthorization.getActualTotalLend() + moneyLendModel.getProjectAmount());
+//							oldSelfProjectAuthorizationEditor.save();
+//						}
+//						 selfProjectAuthorizationEditor.save();
 					
 					
 					
@@ -711,11 +711,11 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
 	         		
-	         	// 看一下好友是不是新项目的成员
+	         		// 看一下好友是不是新项目的成员
 	         		if(mSelectorFieldFriend.getModelId() != null) {
 	        			String friendUserId;
 	        			friendUserId = mSelectorFieldFriend.getModelId();
-	        			ProjectShareAuthorization psaMember = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", project.getId(), friendUserId).executeSingle();
+	        			ProjectShareAuthorization psaMember = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=? AND state <> 'Delete'", project.getId(), friendUserId).executeSingle();
 	    				if(psaMember != null){
                     		mSelectorFieldFriend.setModelId(friendUserId);
 	    				} else {
@@ -733,24 +733,11 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
      			}
      			break;
              case GET_FRIEND_ID:
-//            	 if(resultCode == Activity.RESULT_OK){
-//            		long _id = data.getLongExtra("MODEL_ID", -1);
-//            		Friend friend = Friend.load(Friend.class, _id);
-//            		
-////            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-////    					HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_editText_error_friend);
-////    					return;
-////    				}
-//            		
-//            		mSelectorFieldFriend.setText(friend.getDisplayName());
-//            		mSelectorFieldFriend.setModelId(friend.getId());
-//            	 }
-//            	 break;
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
  		       		if(!psa.getState().equalsIgnoreCase("Accept")){
- 						HyjUtil.displayToast(R.string.moneyDepositPaybackFormFragment_editText_error_not_member);
+ 						HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_editText_error_not_member);
  						return;
  					} else {
  			       		mSelectorFieldFriend.setText(psa.getFriendDisplayName());

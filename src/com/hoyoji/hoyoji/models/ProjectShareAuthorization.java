@@ -536,7 +536,7 @@ public class ProjectShareAuthorization extends HyjModel {
 		this.mApportionedTotalBorrow = HyjUtil.toFixed2(mApportionedTotalBorrow);
 	}
 
-	public Double getApportionedTotalLend() {
+	public Double getApportionedTotalLend1() {
 		return mApportionedTotalLend;
 	}
 

@@ -124,7 +124,7 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 	}
 	
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProject().getId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -245,8 +245,13 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 		if(this.getMoneyDepositReturnContainer() == null){
 			return null;
 		} else {	
-			return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
+			if(this.getFriendUserId() != null){
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> 'Delete'", 
 				   this.getMoneyDepositReturnContainer().getProjectId(), this.getFriendUserId()).executeSingle();
+			} else {
+				return new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", 
+				   this.getMoneyDepositReturnContainer().getProjectId(), this.getLocalFriendId()).executeSingle();
+			}
 		}
 	}
 	

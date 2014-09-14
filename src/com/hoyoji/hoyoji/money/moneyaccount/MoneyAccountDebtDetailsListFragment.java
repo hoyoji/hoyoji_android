@@ -483,7 +483,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			if(((MoneyReturn)object).getReturnType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费还款");
 			} else {
-				((TextView)view).setText("还款: " + ((MoneyReturn)object).getFriendDisplayName());
+				((TextView)view).setText("还款给" + ((MoneyReturn)object).getFriendDisplayName());
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -539,7 +539,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
 				((TextView)view).setText("会费退回");
 			}else {
-				((TextView)view).setText("收款: " + ((MoneyPayback)object).getFriendDisplayName());
+				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){

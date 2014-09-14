@@ -358,7 +358,7 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -567,12 +567,21 @@ public class MoneyPayback extends HyjModel{
 		String displayName = "";
 		if(this.getLocalFriendId() != null){
 			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
-			displayName = f.getDisplayName();
-		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
-			if(displayName.length() == 0){
-				displayName = "自己";
+			if(f != null){
+				displayName = f.getDisplayName();
+			} else {
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), this.getProjectId()).executeSingle();
+				if(psa != null){
+					return psa.getFriendUserName();
+				} else {
+					return "";
+				}
 			}
+		} else if(this.getFriendUserId() != null){
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId(), this.getProjectId());
+//			if(displayName.length() == 0){
+//				displayName = "自己";
+//			}
 		}
 		return displayName;
 	}

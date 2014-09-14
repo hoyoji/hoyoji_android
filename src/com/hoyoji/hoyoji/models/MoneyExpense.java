@@ -336,7 +336,7 @@ public class MoneyExpense extends HyjModel{
 		if(this.mMoneyExpenseApportionId != null){
 			MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId = ?", this.mMoneyExpenseApportionId).executeSingle();
 			if(moneyBorrow != null){
-				String friendName = Friend.getFriendUserDisplayName(moneyBorrow.getFriendUserId());
+				String friendName = Friend.getFriendUserDisplayName(moneyBorrow.getFriendUserId(), this.getProjectId());
 				if(friendName.length() > 0){
 					return "[" + friendName + "] ";
 				}
@@ -344,7 +344,7 @@ public class MoneyExpense extends HyjModel{
 			}
 		}
 		
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {

@@ -226,7 +226,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setModelId(moneyBorrow.getFriendUserId());
 				mSelectorFieldFriend.setText(Friend
 						.getFriendUserDisplayName1(moneyBorrow
-								.getFriendUserId()));
+								.getFriendUserId(), moneyBorrow.getProjectId()));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}
@@ -383,8 +383,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 											MoneyAccount moneyAccount = moneyBorrow
 													.getMoneyAccount();
-											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount
-													.newModelEditor();
+											HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 											moneyAccountEditor
 													.getModelCopy()
 													.setCurrentBalance(
@@ -394,20 +393,30 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 																			.getAmount());
 											moneyAccountEditor.save();
 
-											// 更新项目余额
-											Project newProject = moneyBorrow
-													.getProject();
-											HyjModelEditor<Project> newProjectEditor = newProject
-													.newModelEditor();
-											newProjectEditor
+												// 更新项目余额
+												Project newProject = moneyBorrow
+														.getProject();
+												HyjModelEditor<Project> newProjectEditor = newProject
+														.newModelEditor();
+												newProjectEditor
+														.getModelCopy()
+														.setIncomeTotal(
+																newProject
+																		.getIncomeTotal()
+																		- moneyBorrow
+																				.getProjectAmount());
+
+												if(moneyBorrow.getLocalFriendId() != null){
+													newProjectEditor
 													.getModelCopy()
-													.setIncomeTotal(
+													.setExpenseTotal(
 															newProject
-																	.getIncomeTotal()
+																	.getExpenseTotal()
 																	- moneyBorrow
 																			.getProjectAmount());
-											newProjectEditor.save();
-
+												}
+												newProjectEditor.save();
+											
 											MoneyAccount debtAccount = MoneyAccount
 													.getDebtAccount(
 															moneyBorrow
@@ -447,9 +456,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											if(moneyBorrow.getLocalFriendId() != null){
 												MoneyLend moneyLend;
 												moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
-												if(moneyLend != null){
-													moneyLend.delete();
-												}
+												moneyLend.delete();
 												
 												// 更新旧的ProjectShareAuthorization
 												ProjectShareAuthorization oldSelfProjectAuthorization = null;
@@ -780,30 +787,41 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					newMoneyAccountEditor.save();
 
+					
 					Project oldProject = oldMoneyBorrowModel.getProject();
 					Project newProject = moneyBorrowModel.getProject();
-					HyjModelEditor<Project> newProjectEditor = newProject
-							.newModelEditor();
+					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 
-					// 更新项目余额
-					if (moneyBorrowModel.get_mId() == null
-							|| oldProject.getId().equals(newProject.getId())) {
-						newProjectEditor.getModelCopy().setIncomeTotal(
-								newProject.getIncomeTotal()
-										- oldMoneyBorrowModel
-												.getProjectAmount()
-										+ moneyBorrowModel.getProjectAmount());
+					//更新项目余额
+					if(moneyBorrowModel.get_mId() == null){
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
+						if(moneyBorrowModel.getLocalFriendId() != null){ // 现在是本地好友
+							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyBorrowModel.getProjectAmount());
+						}
+					} else if(oldProject.getId().equals(newProject.getId())){
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
+						if(moneyBorrowModel.getLocalFriendId() == null) { // 现在是网络好友
+							if(oldMoneyBorrowModel.getLocalFriendId() != null){ // 之前是本地好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyBorrowModel.getProjectAmount());
+							} 
+						} else { // 现在是本地好友
+							if(oldMoneyBorrowModel.getLocalFriendId() != null){ // 之前也是本地好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyBorrowModel.getProjectAmount() + moneyBorrowModel.getProjectAmount());
+							} else { // 之前是网络好友
+								newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + oldMoneyBorrowModel.getProjectAmount());
+							}
+						}
 					} else {
-						HyjModelEditor<Project> oldProjectEditor = oldProject
-								.newModelEditor();
-						oldProjectEditor.getModelCopy().setIncomeTotal(
-								oldProject.getIncomeTotal()
-										- oldMoneyBorrowModel
-												.getProjectAmount());
-						newProjectEditor.getModelCopy().setIncomeTotal(
-								newProject.getIncomeTotal()
-										+ moneyBorrowModel.getProjectAmount());
+						HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
+						oldProjectEditor.getModelCopy().setIncomeTotal(oldProject.getIncomeTotal() - oldMoneyBorrowModel.getProjectAmount());
+						if(oldMoneyBorrowModel.getLocalFriendId() != null){ // 之前是本地好友
+							oldProjectEditor.getModelCopy().setExpenseTotal(oldProject.getExpenseTotal() - oldMoneyBorrowModel.getProjectAmount());
+						}
 						oldProjectEditor.save();
+						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyBorrowModel.getProjectAmount());
+						if(moneyBorrowModel.getLocalFriendId() != null){ // 现在是本地好友
+							newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyBorrowModel.getProjectAmount());
+						}
 					}
 					newProjectEditor.save();
 
@@ -954,15 +972,21 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					}
 					
 					// 更新对方（借出人）的实际借出
-					if (moneyBorrowModel.getLocalFriendId() != null) {
+					if (moneyBorrowModel.getLocalFriendId() != null) { // 现在是本地好友
 						ProjectShareAuthorization lendProjectAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", moneyBorrowModel.getLocalFriendId(), moneyBorrowModel.getProjectId()).executeSingle();
 						HyjModelEditor<ProjectShareAuthorization> lendProjectAuthorizationEditor = lendProjectAuthorization.newModelEditor();
 
 						if (moneyBorrowModel.get_mId() == null 
-								|| oldMoneyBorrowModel.getLocalFriendId() == null 
-								|| (oldMoneyBorrowModel.getProjectId().equals(
+								|| oldMoneyBorrowModel.getLocalFriendId() == null) { // 之前是网络好友，不用维护
+							lendProjectAuthorizationEditor.getModelCopy()
+							.setActualTotalLend(
+									lendProjectAuthorization
+											.getActualTotalLend()
+											+ moneyBorrowModel
+													.getProjectAmount());
+						} else if(oldMoneyBorrowModel.getProjectId().equals(
 										moneyBorrowModel.getProjectId()) && oldMoneyBorrowModel.getLocalFriendId().equals(
-												moneyBorrowModel.getLocalFriendId()))) {
+												moneyBorrowModel.getLocalFriendId())) {
 							// 新旧ProjectShareAuthorization是一样的
 							lendProjectAuthorizationEditor.getModelCopy()
 							.setActualTotalLend(
@@ -1003,7 +1027,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						moneyLend.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 						moneyLend.setLocalFriendId(null);
 						moneyLend.setExchangeRate(moneyBorrowModel.getExchangeRate());
-						moneyLend.setMoneyAccountId(moneyBorrowModel.getMoneyAccountId(), moneyBorrowModel.getCurrencyId1());
+						moneyLend.setMoneyAccountId(null, moneyBorrowModel.getCurrencyId1());
 						moneyLend.setLocation(moneyBorrowModel.getLocation());
 						moneyLend.setGeoLat(moneyBorrowModel.getGeoLat());
 						moneyLend.setGeoLon(moneyBorrowModel.getGeoLon());
@@ -1012,7 +1036,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						moneyLend.setOwnerUserId(moneyBorrowModel.getLocalFriendId());
 						moneyLend.save();
 						lendProjectAuthorizationEditor.save();
-					} else if(oldMoneyBorrowModel.getLocalFriendId() != null){
+					} else if(oldMoneyBorrowModel.getLocalFriendId() != null){ 
 						moneyLend.delete();
 							
 						// 更新旧的ProjectShareAuthorization

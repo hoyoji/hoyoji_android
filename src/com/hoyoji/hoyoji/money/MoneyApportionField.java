@@ -100,7 +100,7 @@ public class MoneyApportionField extends GridView {
 	public void setAllApportionShare(){
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
-			if(api.getState() != ApportionItem.DELETED && api.getApportion().getLocalFriendId() != null) {
+			if(api.getState() != ApportionItem.DELETED) {
 				api.setApportionType("Share");
 			}
 		}
@@ -221,15 +221,15 @@ public class MoneyApportionField extends GridView {
 	
 	public void changeProject(Project project, Class<? extends MoneyApportion> type){
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-		Set<String> friendUserSet = new HashSet<String>();
+//		Set<String> friendUserSet = new HashSet<String>();
 		Set<String> gridUserSet = new HashSet<String>();
 		
-		// 把新项目的成员都记录下来
-		for(int i=0; i < projectShareAuthorizations.size(); i++){
-			if(!projectShareAuthorizations.get(i).getState().equals("Delete")) {
-				friendUserSet.add(projectShareAuthorizations.get(i).getFriendUserId());
-			}
-		}	
+//		// 把新项目的成员都记录下来
+//		for(int i=0; i < projectShareAuthorizations.size(); i++){
+//			if(!projectShareAuthorizations.get(i).getState().equals("Delete")) {
+//				friendUserSet.add(HyjUtil.ifNull(projectShareAuthorizations.get(i).getFriendUserId(), projectShareAuthorizations.get(i).getLocalFriendId()));
+//			}
+//		}	
 
 		// 把不属于当前项目用户分摊隐藏掉
 		int i = 0; 
@@ -298,10 +298,9 @@ public class MoneyApportionField extends GridView {
 	        	mImageGridAdapter.add(item);
 	        	if(item.getApportion().getFriendUser() != null){
 	        		gridUserSet.add(item.getApportion().getFriendUserId());
-	        	} 
-//	        	else {
-//	        		gridUserSet.add(item.getFriendUserId());
-//	        	}
+	        	} else {
+	        		gridUserSet.add(item.getApportion().getLocalFriendId());
+	        	}
 //				item.changeProject(project.getId());
 	        	it.remove();
 	        }
@@ -350,7 +349,7 @@ public class MoneyApportionField extends GridView {
 				if(projectShareAuthorizations.get(i).getState().equals("Delete")) {
 					continue;
 				}
-				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId())){
+				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId()) || !gridUserSet.contains(projectShareAuthorizations.get(i).getLocalFriendId())){
 					try {
 						MoneyApportion apportion;
 						apportion = type.newInstance();
@@ -358,6 +357,7 @@ public class MoneyApportionField extends GridView {
 						apportion.setApportionType("Share");
 						apportion.setMoneyId(mMoneyTransactionId);
 						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 						//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
 						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
 						mImageGridAdapter.add(pi);

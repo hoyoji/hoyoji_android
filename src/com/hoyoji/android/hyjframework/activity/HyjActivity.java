@@ -50,6 +50,34 @@ public abstract class HyjActivity extends ActionBarActivity
 	
 	protected void onInitViewData() {
 	}
+
+	public DialogCallbackListener mDialogCallback;
+	public DialogFragment mDialogFragment;
+	private boolean mIsViewInited = false;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+//        gestureScanner = new GestureDetector(HyjActivity.this,this);
+		if(getContentView() != null){
+			setContentView(getContentView());
+	    }
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(!mIsViewInited){
+			onInitViewData();	
+			mIsViewInited = true;
+		}
+	}
+
+	protected void onStartWithoutInitViewData() {
+		super.onStart();
+	}
 	
 	public ProgressDialog displayProgressDialog(String title, String msg){
 		dismissProgressDialog();
@@ -109,34 +137,6 @@ public abstract class HyjActivity extends ActionBarActivity
 			// TODO Auto-generated method stub
 			
 		}
-	}
-	
-	public DialogCallbackListener mDialogCallback;
-	public DialogFragment mDialogFragment;
-	private boolean mIsViewInited = false;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//        gestureScanner = new GestureDetector(HyjActivity.this,this);
-		if(getContentView() != null){
-			setContentView(getContentView());
-	    }
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-		if(!mIsViewInited){
-			onInitViewData();	
-			mIsViewInited = true;
-		}
-	}
-
-	protected void onStartWithoutInitViewData() {
-		super.onStart();
 	}
 	
 	@Override
