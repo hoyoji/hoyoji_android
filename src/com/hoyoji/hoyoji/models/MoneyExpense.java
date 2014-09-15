@@ -79,6 +79,9 @@ public class MoneyExpense extends HyjModel{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+	
+	@Column(name = "ownerFriendId")
+	private String mOwnerFriendId;
 
 	@Column(name = "location")
 	private String mLocation;
@@ -219,6 +222,14 @@ public class MoneyExpense extends HyjModel{
 		this.mLocalFriendId = mLocalFriendId;
 	}
 	
+	public String getOwnerFriendId() {
+		return mOwnerFriendId;
+	}
+
+	public void setOwnerFriendId(String ownerFriendId) {
+		this.mOwnerFriendId = ownerFriendId;
+	}
+	
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?",mFriendUserId).executeSingle();
@@ -336,7 +347,7 @@ public class MoneyExpense extends HyjModel{
 		if(this.mMoneyExpenseApportionId != null){
 			MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId = ?", this.mMoneyExpenseApportionId).executeSingle();
 			if(moneyBorrow != null){
-				String friendName = Friend.getFriendUserDisplayName(moneyBorrow.getFriendUserId(), this.getProjectId());
+				String friendName = moneyBorrow.getOwnerDisplayName();
 				if(friendName.length() > 0){
 					return "[" + friendName + "] ";
 				}
@@ -344,7 +355,7 @@ public class MoneyExpense extends HyjModel{
 			}
 		}
 		
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = this.getOwnerDisplayName();
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -356,6 +367,21 @@ public class MoneyExpense extends HyjModel{
 		} else {
 			return HyjApplication.getInstance().getString(R.string.app_no_remark);
 		}
+	}
+
+	public String getOwnerDisplayName() {
+		String displayName = "";
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
+			return "";
+		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
+			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+		} else if(this.getOwnerFriendId() != null){
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
+			if(psa != null){
+				return psa.getFriendUserName();
+			}
+		}
+		return displayName;
 	}
 	
 	public void setRemark(String mRemark) {

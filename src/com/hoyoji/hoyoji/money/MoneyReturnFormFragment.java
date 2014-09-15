@@ -214,9 +214,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyReturn.getFriendUserId() != null) {
 				mSelectorFieldFriend.setModelId(moneyReturn.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend
-						.getFriendUserDisplayName1(moneyReturn
-								.getFriendUserId(), moneyReturn.getProjectId()));
+				mSelectorFieldFriend.setText(moneyReturn.getFriendDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}
@@ -694,7 +692,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		MoneyAccount.createDebtAccount(moneyReturnModel.getRemoteLocalFriendName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+				    		MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
@@ -718,7 +716,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(moneyReturnModel.getRemoteLocalFriendName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+							MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
 						}
 					}
 
@@ -807,7 +805,8 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 								moneyPayback.setGeoLon(moneyReturnModel.getGeoLon());
 								moneyPayback.setAddress(moneyReturnModel.getAddress());
 								moneyPayback.setPictureId(moneyReturnModel.getPictureId());
-								moneyPayback.setOwnerUserId(moneyReturnModel.getLocalFriendId());
+								moneyPayback.setOwnerUserId("");
+								moneyPayback.setOwnerFriendId(moneyReturnModel.getLocalFriendId());
 								moneyPayback.save();
 								paybackProjectAuthorizationEditor.save();
 							} else if(oldMoneyReturnModel.getLocalFriendId() != null){

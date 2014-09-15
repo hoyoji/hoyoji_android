@@ -1179,7 +1179,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyBorrow.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
+								if(apportionEditor.getModelCopy().getFriendUserId() != null){
+									moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+									moneyBorrow.setOwnerFriendId(null);
+								} else {
+									moneyBorrow.setOwnerUserId("");
+									moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+								}
 								moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
@@ -1210,7 +1216,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyExpense.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyExpense.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyExpense.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
+								if(apportionEditor.getModelCopy().getFriendUserId() != null){
+									moneyExpense.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+									moneyExpense.setOwnerFriendId(null);
+								} else {
+									moneyExpense.setOwnerUserId("");
+									moneyExpense.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+								}
 								moneyExpense.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyExpense.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyExpense.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());

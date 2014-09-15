@@ -77,6 +77,9 @@ public class MoneyIncome extends HyjModel {
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+	
+	@Column(name = "ownerFriendId")
+	private String mOwnerFriendId;
 
 	@Column(name = "location")
 	private String mLocation;
@@ -271,6 +274,14 @@ public class MoneyIncome extends HyjModel {
 	public void setLocalFriendId(String mLocalFriendId) {
 		this.mLocalFriendId = mLocalFriendId;
 	}
+	
+	public String getOwnerFriendId() {
+		return mOwnerFriendId;
+	}
+
+	public void setOwnerFriendId(String ownerFriendId) {
+		this.mOwnerFriendId = ownerFriendId;
+	}
 
 	public String getFriendAccountId() {
 		return mFriendAccountId;
@@ -366,7 +377,7 @@ public class MoneyIncome extends HyjModel {
 		if(this.mMoneyIncomeApportionId != null){
 			MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId = ?", this.mMoneyIncomeApportionId).executeSingle();
 			if(moneyLend != null){
-				String friendName = Friend.getFriendUserDisplayName(moneyLend.getFriendUserId(), this.getProjectId());
+				String friendName = moneyLend.getOwnerDisplayName();
 				if(friendName.length() > 0){
 					return "[" + friendName + "] ";
 				}
@@ -374,7 +385,7 @@ public class MoneyIncome extends HyjModel {
 			}
 		}
 		
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = this.getOwnerDisplayName();
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -388,6 +399,21 @@ public class MoneyIncome extends HyjModel {
 		}
 	}
 
+	public String getOwnerDisplayName() {
+		String displayName = "";
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
+			return "";
+		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
+			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+		} else if(this.getOwnerFriendId() != null){
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
+			if(psa != null){
+				return psa.getFriendUserName();
+			}
+		}
+		return displayName;
+	}
+	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}

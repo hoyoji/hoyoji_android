@@ -56,6 +56,7 @@
         	1、数据库添加了表 WBLogin
 			2、Project 添加字段 financialOwnerUserId 财务负责人
 			3、ProjectShareAuthorization 添加字段 localFriendId 本地好友ID
+			4、添加了 ownerFriendId
          -->
          
         <activity

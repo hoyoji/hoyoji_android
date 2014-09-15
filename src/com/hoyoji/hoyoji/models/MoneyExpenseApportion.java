@@ -123,21 +123,21 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return mRemark;
 	}
 	
-	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProject().getId());
-		if(ownerUser.length() > 0){
-			ownerUser = "[" + ownerUser + "] ";
-		} else {
-			ownerUser = "";
-		}
-		
-		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
-			return ownerUser + mRemark;
-		} else {
-			return HyjApplication.getInstance().getString(R.string.app_no_remark);
-		}
-	}
-	
+//	public String getDisplayRemark() {
+//		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProject().getId());
+//		if(ownerUser.length() > 0){
+//			ownerUser = "[" + ownerUser + "] ";
+//		} else {
+//			ownerUser = "";
+//		}
+//		
+//		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
+//			return ownerUser + mRemark;
+//		} else {
+//			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+//		}
+//	}
+//	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
@@ -305,7 +305,7 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return this.getMoneyExpenseContainer().getDate();
 	}
 
-	public String getRemoteLocalFriendName() {
-		return "本地好友";
-	}
+//	public String getRemoteLocalFriendName() {
+//		return "本地好友";
+//	}
 }

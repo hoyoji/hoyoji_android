@@ -214,7 +214,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 	}
 
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {

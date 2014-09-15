@@ -123,20 +123,20 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		return mRemark;
 	}
 	
-	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProject().getId());
-		if(ownerUser.length() > 0){
-			ownerUser = "[" + ownerUser + "] ";
-		} else {
-			ownerUser = "";
-		}
-		
-		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
-			return ownerUser + mRemark;
-		} else {
-			return HyjApplication.getInstance().getString(R.string.app_no_remark);
-		}
-	}
+//	public String getDisplayRemark() {
+//		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProject().getId());
+//		if(ownerUser.length() > 0){
+//			ownerUser = "[" + ownerUser + "] ";
+//		} else {
+//			ownerUser = "";
+//		}
+//		
+//		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
+//			return ownerUser + mRemark;
+//		} else {
+//			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+//		}
+//	}
 	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
@@ -324,9 +324,27 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 	public String getDate() {
 		return this.getMoneyDepositIncomeContainer().getDate();
 	}
-
-	public String getRemoteLocalFriendName() {
-		return "本地好友";
+	public String getFriendDisplayName() {
+		String displayName = "";
+		if(this.getLocalFriendId() != null){
+			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
+			if(f != null){
+				displayName = f.getDisplayName();
+			} else {
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), this.getProject().getId()).executeSingle();
+				if(psa != null){
+					return psa.getFriendUserName();
+				} else {
+					return "";
+				}
+			}
+		} else if(this.getFriendUserId() != null){
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
+//			if(displayName.length() == 0){
+//				displayName = "自己";
+//			}
+		}
+		return displayName;
 	}
 
 }
