@@ -453,7 +453,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											
 											if(moneyBorrow.getLocalFriendId() != null){
 												MoneyLend moneyLend;
-												moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+												moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 												moneyLend.delete();
 												
 												// 更新旧的ProjectShareAuthorization
@@ -961,7 +961,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 					MoneyLend moneyLend = null;
 					if(oldMoneyBorrowModel.getLocalFriendId() != null){
-						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", oldMoneyBorrowModel.getId(), oldMoneyBorrowModel.getLocalFriendId()).executeSingle();
+						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", oldMoneyBorrowModel.getId(), oldMoneyBorrowModel.getLocalFriendId()).executeSingle();
 					}
 					if (moneyLend == null){
 						moneyLend = new MoneyLend();

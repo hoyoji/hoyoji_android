@@ -785,7 +785,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							moneyBorrow.delete();
 							
 							if(moneyBorrow.getLocalFriendId() != null){
-								MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+								MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 								if(moneyLend != null){
 									moneyLend.delete();
 								}
@@ -899,7 +899,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 								moneyLend = new MoneyLend();
 								moneyLend.setLendType("Deposit");
 							} else {
-								moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+								moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 							}
 							moneyLend.setMoneyBorrowId(moneyBorrow.getId());
 							moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
@@ -952,7 +952,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							moneyBorrow.delete();
 							
 							if(moneyBorrow.getLocalFriendId() != null){
-								MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+								MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 								if(moneyLend != null){
 									moneyLend.delete();
 								}
@@ -1026,7 +1026,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyLend = new MoneyLend();
 						moneyLend.setLendType("Deposit");
 					} else {
-						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerUserId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
+						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 					}
 					moneyLend.setMoneyBorrowId(moneyBorrow.getId());
 					moneyLend.setAmount(moneyBorrow.getAmount0());

@@ -376,7 +376,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										selfProjectAuthorizationEditor.save();
 										if(moneyPayback.getLocalFriendId() != null){
 											MoneyReturn moneyReturn;
-											moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerUserId=?", moneyPayback.getId(), moneyPayback.getLocalFriendId()).executeSingle();
+											moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerFriendId=?", moneyPayback.getId(), moneyPayback.getLocalFriendId()).executeSingle();
 											moneyReturn.delete();
 											
 											// 更新旧的ProjectShareAuthorization
@@ -735,7 +735,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					
 						 MoneyReturn moneyReturn = null;
 							if(oldMoneyPaybackModel.getLocalFriendId() != null){
-								moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerUserId=?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getLocalFriendId()).executeSingle();
+								moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerFriendId=?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getLocalFriendId()).executeSingle();
 							}
 							if (moneyReturn == null){
 								moneyReturn = new MoneyReturn();

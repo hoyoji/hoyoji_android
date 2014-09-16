@@ -460,7 +460,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 												moneyReturn.delete();
 
 												if(moneyReturn.getLocalFriendId() != null){
-													MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerUserId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+													MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 													if(moneyPayback != null){
 														moneyPayback.delete();
 													}
@@ -787,7 +787,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 							moneyReturn.delete();
 
 							if(moneyReturn.getLocalFriendId() != null){
-								MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerUserId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+								MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 								if(moneyPayback != null){
 									moneyPayback.delete();
 								}
@@ -919,7 +919,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 								moneyPayback = new MoneyPayback();
 								moneyPayback.setPaybackType("Deposit");
 							} else {
-								moneyPayback = new Select().from(MoneyLend.class).where("moneyReturnId=? AND ownerUserId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+								moneyPayback = new Select().from(MoneyLend.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 							}
 							moneyPayback.setMoneyReturnId(moneyReturn.getId());
 							moneyPayback.setAmount(apportionEditor.getModelCopy().getAmount0());
@@ -973,7 +973,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 							moneyReturn.delete();
 
 							if(moneyReturn.getLocalFriendId() != null){
-								MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerUserId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+								MoneyPayback moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 								if(moneyPayback != null){
 									moneyPayback.delete();
 								}
@@ -1047,7 +1047,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						moneyPayback = new MoneyPayback();
 						moneyPayback.setPaybackType("Deposit");
 					} else {
-						moneyPayback = new Select().from(MoneyLend.class).where("moneyReturnId=? AND ownerUserId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+						moneyPayback = new Select().from(MoneyLend.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 					}
 					moneyPayback.setMoneyReturnId(moneyReturn.getId());
 					moneyPayback.setAmount(apportion.getAmount0());
