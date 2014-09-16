@@ -1129,7 +1129,6 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     				} else {
     					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
     				}
-    			
     			}
      			break;
           }
