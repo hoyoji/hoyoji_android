@@ -71,6 +71,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -90,6 +91,7 @@ public class LoginActivity extends HyjActivity {
 	private EditText mPasswordView;
 	private ImageButton mLoginQQButton;
 	private ImageButton mLoginWBButton;
+	private Button mFindPasswordButton;
 
     private UserInfo mInfo;
     public static QQAuth mQQAuth;
@@ -137,13 +139,22 @@ public class LoginActivity extends HyjActivity {
 						attemptLogin();
 					}
 				});
-
+		
 		mLoginQQButton = (ImageButton)findViewById(R.id.button_sign_in_qq);
 		mLoginQQButton.setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						attemptQQLogin();
+					}
+				});
+
+		mFindPasswordButton = (Button)findViewById(R.id.button_find_password);
+		mFindPasswordButton.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						startActivity(new Intent(LoginActivity.this, FindPasswordActivity.class));
 					}
 				});
 		
