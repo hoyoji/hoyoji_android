@@ -323,14 +323,14 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 		return this.getMoneyDepositReturnContainer().getDate();
 	}
 
-	public String getFriendDisplayName() {
+	public String getFriendDisplayName(String projectId) {
 		String displayName = "";
 		if(this.getLocalFriendId() != null){
 			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
 			if(f != null){
 				displayName = f.getDisplayName();
 			} else {
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), this.getProject().getId()).executeSingle();
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), projectId).executeSingle();
 				if(psa != null){
 					return psa.getFriendUserName();
 				} else {
