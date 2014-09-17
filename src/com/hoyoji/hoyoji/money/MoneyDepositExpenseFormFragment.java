@@ -622,7 +622,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyLendModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		MoneyAccount.createDebtAccount(moneyLendModel.getRemoteLocalFriendName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
+				    		MoneyAccount.createDebtAccount(moneyLendModel.getFriendDisplayName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
@@ -646,7 +646,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyLendModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(moneyLendModel.getRemoteLocalFriendName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
+							MoneyAccount.createDebtAccount(moneyLendModel.getFriendDisplayName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
 						}
 					}
 					

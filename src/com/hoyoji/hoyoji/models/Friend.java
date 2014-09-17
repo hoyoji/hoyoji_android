@@ -258,58 +258,59 @@ public class Friend extends HyjModel {
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}
 
-	public static String getFriendUserDisplayName(String ownerUserId, String projectId) {
-		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
-			return "";
-		}else{
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
-			if(friend != null){
-				return friend.getDisplayName();
-			} else {
-				User user = HyjModel.getModel(User.class, ownerUserId);
-				if(user != null){
-					return user.getDisplayName();
-				} else {
-					Friend localFriend = HyjModel.getModel(Friend.class, ownerUserId);
-					if(localFriend != null){
-						return localFriend.getDisplayName();
-					} else {
-						if(projectId != null){
-							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, ownerUserId).executeSingle();
-							if(psa != null){
-								return psa.getFriendUserName();
-							}
-						}
-						return "";
-					}
-				}
-			}
-		}
-	}	
-	public static String getFriendUserDisplayName1(String ownerUserId, String projectId) {
+//	public static String getFriendUserDisplayName(String friendUserId, String projectId) {
+//		if(friendUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+//			return "";
+//		} else {
+//			Friend friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
+//			if(friend != null){
+//				return friend.getDisplayName();
+//			} else {
+//				User user = HyjModel.getModel(User.class, friendUserId);
+//				if(user != null){
+//					return user.getDisplayName();
+//				} else {
+//					Friend localFriend = HyjModel.getModel(Friend.class, friendUserId);
+//					if(localFriend != null){
+//						return localFriend.getDisplayName();
+//					} else {
+//						if(projectId != null){
+//							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, friendUserId).executeSingle();
+//							if(psa != null){
+//								return psa.getFriendUserName();
+//							}
+//						}
+//						return "";
+//					}
+//				}
+//			}
+//		}
+//	}	
+	
+	public static String getFriendUserDisplayName1(String friendUserId) {
 //		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 //			return "自己";
 //		}else{
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?",ownerUserId).executeSingle();
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
 			if(friend != null){
 				return friend.getDisplayName();
 			} else {
-				User user = HyjModel.getModel(User.class, ownerUserId);
+				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user != null){
 					return user.getDisplayName();
 				} else {
-					Friend localFriend = HyjModel.getModel(Friend.class, ownerUserId);
-					if(localFriend != null){
-						return localFriend.getDisplayName();
-					} else {
-						if(projectId != null){
-							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, ownerUserId).executeSingle();
-							if(psa != null){
-								return psa.getFriendUserName();
-							}
-						}
+//					Friend localFriend = HyjModel.getModel(Friend.class, friendUserId);
+//					if(localFriend != null){
+//						return localFriend.getDisplayName();
+//					} else {
+//						if(projectId != null){
+//							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> 'Delete'", projectId, friendUserId).executeSingle();
+//							if(psa != null){
+//								return psa.getFriendUserName();
+//							}
+//						}
 						return "";
-					}
+//					}
 				}
 			}
 //		}

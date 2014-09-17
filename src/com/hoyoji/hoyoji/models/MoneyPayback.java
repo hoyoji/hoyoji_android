@@ -79,6 +79,9 @@ public class MoneyPayback extends HyjModel{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+	
+	@Column(name = "ownerFriendId")
+	private String mOwnerFriendId;
 
 	@Column(name = "location")
 	private String mLocation;
@@ -245,6 +248,13 @@ public class MoneyPayback extends HyjModel{
 	public void setLocalFriendId(String mLocalFriendId) {
 		this.mLocalFriendId = mLocalFriendId;
 	}
+	public String getOwnerFriendId() {
+		return mOwnerFriendId;
+	}
+
+	public void setOwnerFriendId(String mOwnerFriendId) {
+		this.mOwnerFriendId = mOwnerFriendId;
+	}
 
 	public String getFriendAccountId() {
 		return mFriendAccountId;
@@ -358,7 +368,7 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = this.getOwnerDisplayName();
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -371,7 +381,22 @@ public class MoneyPayback extends HyjModel{
 			return HyjApplication.getInstance().getString(R.string.app_no_remark);
 		}
 	}
-	
+
+
+	public String getOwnerDisplayName() {
+		String displayName = "";
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
+			return "";
+		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
+			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+		} else if(this.getOwnerFriendId() != null){
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
+			if(psa != null){
+				return psa.getFriendUserName();
+			}
+		}
+		return displayName;
+	}
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;
 	}
@@ -578,7 +603,7 @@ public class MoneyPayback extends HyjModel{
 				}
 			}
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId(), this.getProjectId());
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}
@@ -586,8 +611,8 @@ public class MoneyPayback extends HyjModel{
 		return displayName;
 	}
 
-	public String getRemoteLocalFriendName() {
-		// TODO Auto-generated method stub
-		return "本地好友";
-	}
+//	public String getRemoteLocalFriendName() {
+//		// TODO Auto-generated method stub
+//		return "本地好友";
+//	}
 }

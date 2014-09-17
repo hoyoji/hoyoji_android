@@ -328,12 +328,14 @@ public class MoneyLendContainer extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
-		if(ownerUser.length() > 0){
-			ownerUser = "[" + ownerUser + "] ";
-		} else {
-			ownerUser = "";
+		String ownerUser = "";
+		if(!this.getOwnerUserId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
+			ownerUser = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+			if(ownerUser.length() > 0){
+				ownerUser = "[" + ownerUser + "] ";
+			}
 		}
+		
 		
 		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
 			return ownerUser + mRemark;

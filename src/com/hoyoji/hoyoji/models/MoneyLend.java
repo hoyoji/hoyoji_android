@@ -82,6 +82,9 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+	@Column(name = "ownerFriendId")
+	private String mOwnerFriendId;
+
 	@Column(name = "location")
 	private String mLocation;
 	
@@ -254,6 +257,15 @@ public class MoneyLend extends HyjModel{
 		this.mLocalFriendId = mLocalFriendId;
 	}
 
+	public void setOwnerFriendId(String ownerFriendId) {
+		this.mOwnerFriendId = ownerFriendId;
+	}
+
+	public String getOwnerFriendId() {
+		return mOwnerFriendId;
+	}
+
+
 	public String getFriendAccountId() {
 		return mFriendAccountId;
 	}
@@ -358,7 +370,7 @@ public class MoneyLend extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = this.getOwnerDisplayName();
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -638,7 +650,7 @@ public class MoneyLend extends HyjModel{
 				}
 			}
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId(), this.getProjectId());
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}
@@ -646,8 +658,19 @@ public class MoneyLend extends HyjModel{
 		return displayName;
 	}
 
-	public String getRemoteLocalFriendName() {
-		return "本地好友";
+	public String getOwnerDisplayName() {
+		String displayName = "";
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
+			return "";
+		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
+			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+		} else if(this.getOwnerFriendId() != null){
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
+			if(psa != null){
+				return psa.getFriendUserName();
+			}
+		}
+		return displayName;
 	}
 
 }

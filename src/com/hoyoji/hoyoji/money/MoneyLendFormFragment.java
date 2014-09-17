@@ -225,9 +225,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyLend.getFriendUserId() != null) {
 				mSelectorFieldFriend.setModelId(moneyLend.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend
-						.getFriendUserDisplayName1(moneyLend
-								.getFriendUserId(), moneyLend.getProjectId()));
+				mSelectorFieldFriend.setText(moneyLend.getFriendDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}
@@ -386,7 +384,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 										selfProjectAuthorizationEditor.save();
 										if(moneyLend.getLocalFriendId() != null){
 											MoneyBorrow moneyBorrow;
-											moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyLendId=? AND ownerUserId=?", moneyLend.getId(), moneyLend.getLocalFriendId()).executeSingle();
+											moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyLendId=? AND ownerFriendId=?", moneyLend.getId(), moneyLend.getLocalFriendId()).executeSingle();
 											moneyBorrow.delete();
 											
 											// 更新旧的ProjectShareAuthorization
@@ -727,7 +725,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyLendModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(moneyLendModel.getRemoteLocalFriendName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
+							MoneyAccount.createDebtAccount(moneyLendModel.getFriendDisplayName(), moneyLendModel.getLocalFriendId(), moneyLendModel.getFriendUserId(), moneyLendModel.getProject().getCurrencyId(), moneyLendModel.getProjectAmount());
 						}
 					}
 					
@@ -747,7 +745,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 					
 						 MoneyBorrow moneyBorrow = null;
 							if(oldMoneyLendModel.getLocalFriendId() != null){
-								moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyLendId=? AND ownerUserId=?", oldMoneyLendModel.getId(), oldMoneyLendModel.getLocalFriendId()).executeSingle();
+								moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyLendId=? AND ownerFriendId=?", oldMoneyLendModel.getId(), oldMoneyLendModel.getLocalFriendId()).executeSingle();
 							}
 							if (moneyBorrow == null){
 								moneyBorrow = new MoneyBorrow();
@@ -816,7 +814,8 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 								moneyBorrow.setGeoLon(moneyLendModel.getGeoLon());
 								moneyBorrow.setAddress(moneyLendModel.getAddress());
 								moneyBorrow.setPictureId(moneyLendModel.getPictureId());
-								moneyBorrow.setOwnerUserId(moneyLendModel.getLocalFriendId());
+								moneyBorrow.setOwnerUserId("");
+								moneyBorrow.setOwnerFriendId(moneyLendModel.getLocalFriendId());
 								moneyBorrow.save();
 								borrowProjectAuthorizationEditor.save();
 							} else if(oldMoneyLendModel.getLocalFriendId() != null){

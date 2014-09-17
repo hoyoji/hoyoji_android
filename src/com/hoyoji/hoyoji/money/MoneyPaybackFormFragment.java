@@ -217,9 +217,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyPayback.getFriendUserId() != null) {
 				mSelectorFieldFriend.setModelId(moneyPayback.getFriendUserId());
-				mSelectorFieldFriend.setText(Friend
-						.getFriendUserDisplayName1(moneyPayback
-								.getFriendUserId(), moneyPayback.getProjectId()));
+				mSelectorFieldFriend.setText(moneyPayback.getFriendDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		}
@@ -378,7 +376,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										selfProjectAuthorizationEditor.save();
 										if(moneyPayback.getLocalFriendId() != null){
 											MoneyReturn moneyReturn;
-											moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerUserId=?", moneyPayback.getId(), moneyPayback.getLocalFriendId()).executeSingle();
+											moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerFriendId=?", moneyPayback.getId(), moneyPayback.getLocalFriendId()).executeSingle();
 											moneyReturn.delete();
 											
 											// 更新旧的ProjectShareAuthorization
@@ -693,7 +691,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - moneyPaybackModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getRemoteLocalFriendName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getProject().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
+				    		MoneyAccount.createDebtAccount(moneyPaybackModel.getFriendDisplayName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getProject().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
@@ -717,7 +715,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyPaybackModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(moneyPaybackModel.getRemoteLocalFriendName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
+							MoneyAccount.createDebtAccount(moneyPaybackModel.getFriendDisplayName(), moneyPaybackModel.getLocalFriendId(), moneyPaybackModel.getFriendUserId(), moneyPaybackModel.getMoneyAccount().getCurrencyId(), -moneyPaybackModel.getProjectAmount());
 						}
 					}
 				
@@ -737,7 +735,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					
 						 MoneyReturn moneyReturn = null;
 							if(oldMoneyPaybackModel.getLocalFriendId() != null){
-								moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerUserId=?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getLocalFriendId()).executeSingle();
+								moneyReturn = new Select().from(MoneyReturn.class).where("moneyPaybackId=? AND ownerFriendId=?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getLocalFriendId()).executeSingle();
 							}
 							if (moneyReturn == null){
 								moneyReturn = new MoneyReturn();
@@ -806,7 +804,8 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 								moneyReturn.setGeoLon(moneyPaybackModel.getGeoLon());
 								moneyReturn.setAddress(moneyPaybackModel.getAddress());
 								moneyReturn.setPictureId(moneyPaybackModel.getPictureId());
-								moneyReturn.setOwnerUserId(moneyPaybackModel.getLocalFriendId());
+								moneyReturn.setOwnerUserId("");
+								moneyReturn.setOwnerFriendId(moneyPaybackModel.getLocalFriendId());
 								moneyReturn.save();
 								returnProjectAuthorizationEditor.save();
 							} else if(oldMoneyPaybackModel.getLocalFriendId() != null){

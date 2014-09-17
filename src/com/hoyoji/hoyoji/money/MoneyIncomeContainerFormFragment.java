@@ -1130,7 +1130,13 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyLend.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
+								if(apportionEditor.getModelCopy().getFriendUserId() != null){
+									moneyLend.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+									moneyLend.setOwnerFriendId(null);
+								} else {
+									moneyLend.setOwnerUserId("");
+									moneyLend.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+								}
 								moneyLend.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyLend.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyLend.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
@@ -1161,7 +1167,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								moneyIncome.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 								moneyIncome.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyIncome.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
+//								moneyIncome.setOwnerUserId(HyjUtil.ifNull(apportionEditor.getModelCopy().getFriendUserId(), apportionEditor.getModelCopy().getLocalFriendId()));
+								if(apportionEditor.getModelCopy().getFriendUserId() != null){
+									moneyIncome.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+									moneyIncome.setOwnerFriendId(null);
+								} else {
+									moneyIncome.setOwnerUserId("");
+									moneyIncome.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+								}
 								moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
 								moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
 								moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());

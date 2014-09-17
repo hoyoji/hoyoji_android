@@ -7,9 +7,10 @@
     <string name="systemSettingFormFragment_textView_nickName">昵称</string>
     <string name="systemSettingFormFragment_editText_hint_nickName">请输入昵称</string>
 
- 	<string name="systemSettingFormFragment_textView_email">邮箱</string>
-    <string name="systemSettingFormFragment_editText_hint_email">请输入邮箱</string>
-    <string name="systemSettingFormFragment_button_checkEmail">验证</string>
+ 	<string name="systemSettingFormFragment_textView_email">电子邮箱</string>
+    <string name="systemSettingFormFragment_editText_hint_email">未绑定</string>
+    <string name="systemSettingFormFragment_button_emailBinding">绑定</string>
+    <string name="systemSettingFormFragment_toast_unBindEmail">解绑QQ</string>
     
     <string name="systemSettingFormFragment_textView_phone">手机</string>
     <string name="systemSettingFormFragment_editText_hint_phone">未绑定</string>

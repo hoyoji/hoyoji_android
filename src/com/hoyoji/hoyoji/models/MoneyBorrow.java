@@ -92,6 +92,9 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+	@Column(name = "ownerFriendId")
+	private String mOwnerFriendId;
+
 	@Column(name = "location")
 	private String mLocation;
 	
@@ -358,7 +361,7 @@ public class MoneyBorrow extends HyjModel{
 	}
 	
 	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getOwnerUserId(), this.getProjectId());
+		String ownerUser = this.getOwnerDisplayName();
 		if(ownerUser.length() > 0){
 			ownerUser = "[" + ownerUser + "] ";
 		} else {
@@ -480,9 +483,10 @@ public class MoneyBorrow extends HyjModel{
 	public void save(){
 		if(this.getOwnerUserId() == null){
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-		} else if(this.getOwnerUserId().equals("")){
-			this.setOwnerUserId(null);
-		}
+		} 
+//		else if(this.getOwnerUserId().equals("")){
+//			this.setOwnerUserId(null);
+//		}
 		super.save();
 	}
 
@@ -496,6 +500,14 @@ public class MoneyBorrow extends HyjModel{
 	
 	public String getCreatorId(){
 		return m_creatorId;
+	}
+
+	public void setOwnerFriendId(String id){
+		mOwnerFriendId = id;
+	}
+	
+	public String getOwnerFriendId(){
+		return mOwnerFriendId;
 	}
 	
 	public String getServerRecordHash(){
@@ -660,7 +672,7 @@ public class MoneyBorrow extends HyjModel{
 				}
 			}
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId(), this.getProjectId());
+			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}
@@ -668,10 +680,26 @@ public class MoneyBorrow extends HyjModel{
 		return displayName;
 	}
 
-	public String getRemoteLocalFriendName() {
-		// TODO Auto-generated method stub
-		return "本地好友";
+	public String getOwnerDisplayName() {
+		String displayName = "";
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
+			return "";
+		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
+			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+		} else if(this.getOwnerFriendId() != null){
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
+			if(psa != null){
+				return psa.getFriendUserName();
+			}
+		}
+		return displayName;
 	}
+	
+	
+//	public String getRemoteLocalFriendName() {
+//		// TODO Auto-generated method stub
+//		return "本地好友";
+//	}
 
 	public String getMoneyLendId() {
 		return mMoneyLendId;

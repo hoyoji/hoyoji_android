@@ -123,20 +123,20 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 		return mRemark;
 	}
 	
-	public String getDisplayRemark() {
-		String ownerUser = Friend.getFriendUserDisplayName(this.getFriendUserId(), this.getProject().getId());
-		if(ownerUser.length() > 0){
-			ownerUser = "[" + ownerUser + "] ";
-		} else {
-			ownerUser = "";
-		}
-		
-		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
-			return ownerUser + mRemark;
-		} else {
-			return HyjApplication.getInstance().getString(R.string.app_no_remark);
-		}
-	}
+//	public String getDisplayRemark() {
+//		String ownerUser = Friend.getFriendUserDisplayName(this.getFriendUserId(), this.getProject().getId());
+//		if(ownerUser.length() > 0){
+//			ownerUser = "[" + ownerUser + "] ";
+//		} else {
+//			ownerUser = "";
+//		}
+//		
+//		if(mRemark != null && (mRemark.length() > 0 || ownerUser.length() > 0)){
+//			return ownerUser + mRemark;
+//		} else {
+//			return HyjApplication.getInstance().getString(R.string.app_no_remark);
+//		}
+//	}
 	
 	public void setRemark(String mRemark) {
 		this.mRemark = mRemark;

@@ -199,7 +199,7 @@ public class LoginActivity extends HyjActivity {
 			actionBar.setTitle("好友记(测试版)");
 		}
 		// init view data here
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 
 	@Override
