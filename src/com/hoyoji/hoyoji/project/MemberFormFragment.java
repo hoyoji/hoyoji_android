@@ -187,15 +187,17 @@ public class MemberFormFragment extends HyjUserFormFragment {
   				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
 			} else {
 				String localFriendId = intent.getStringExtra("LOCAL_FRIENDID");
-				Friend friend = HyjModel.getModel(Friend.class, localFriendId);
-				if(friend != null){
-					mSelectorFieldFriend.setModelId(friend.getId());
-					mSelectorFieldFriend.setText(friend.getDisplayName());
-				} else {
-					mSelectorFieldFriend.setModelId(null);
-					mSelectorFieldFriend.setText(null);
+				if(localFriendId != null){
+					Friend friend = HyjModel.getModel(Friend.class, localFriendId);
+					if(friend != null){
+						mSelectorFieldFriend.setModelId(friend.getId());
+						mSelectorFieldFriend.setText(friend.getDisplayName());
+					} else {
+						mSelectorFieldFriend.setModelId(null);
+						mSelectorFieldFriend.setText(null);
+					}
+	  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 				}
-  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 			}
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
