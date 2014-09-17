@@ -23,8 +23,9 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true" >
-            <requestFocus />
-        </EditText>
+
+                <requestFocus />
+            </EditText>
 
             <EditText
                 android:id="@+id/editText_password"
@@ -44,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="@string/loginActivity_action_find_password" />
+
             <Button
                 android:id="@+id/button_sign_in"
                 android:layout_width="match_parent"
@@ -57,24 +59,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/loginActivity_button_register" />
-            
+
             <ImageButton
                 android:id="@+id/button_sign_in_qq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/qq_login"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
                 android:text="用QQ帐号登录" />
-            
-			<ImageButton
+
+            <ImageButton
+                android:id="@+id/button_sign_in_wx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/wx_login"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="用微信账号登录" />
+
+            <ImageButton
                 android:id="@+id/button_sign_in_wb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/weibo_login"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"

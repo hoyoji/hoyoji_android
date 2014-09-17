@@ -91,6 +91,7 @@ public class LoginActivity extends HyjActivity {
 	private EditText mPasswordView;
 	private ImageButton mLoginQQButton;
 	private ImageButton mLoginWBButton;
+	private ImageButton mLoginWXButton;
 	private Button mFindPasswordButton;
 
     private UserInfo mInfo;
@@ -148,6 +149,15 @@ public class LoginActivity extends HyjActivity {
 						attemptQQLogin();
 					}
 				});
+		
+		mLoginWXButton = (ImageButton)findViewById(R.id.button_sign_in_wx);
+		mLoginWXButton.setOnClickListener(
+			new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					attemptWXLogin();
+				}
+			});
 
 		mFindPasswordButton = (Button)findViewById(R.id.button_find_password);
 		mFindPasswordButton.setOnClickListener(
@@ -303,6 +313,8 @@ public class LoginActivity extends HyjActivity {
 		mTencent.login(this, "all", listener);
 	}
 	
+	public void attemptWXLogin() {
+	}
 	
 	public void attemptWBLogin() {
 //		if(mWeiboAuth == null){
