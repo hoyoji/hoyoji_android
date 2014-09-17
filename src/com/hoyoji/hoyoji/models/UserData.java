@@ -34,14 +34,14 @@ public class UserData extends HyjModel {
 	@Column(name = "phone")
 	private String mPhone;
 	
+	@Column(name = "phoneVerified")
+	private Boolean mPhoneVerified;
+	
 	@Column(name = "incomeColor")
 	private String mIncomeColor;
 	
 	@Column(name = "expenseColor")
 	private String mExpenseColor;
-	
-	@Column(name = "phoneVerified")
-	private Boolean mPhoneVerified;
 	
 	@Column(name = "hasPassword")
 	private Boolean mHasPassword;

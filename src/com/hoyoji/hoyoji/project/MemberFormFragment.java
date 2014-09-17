@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -93,13 +94,18 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Long projectId = intent.getLongExtra("PROJECT_ID", -1);
 		if(modelId != -1){
 			projectShareAuthorization =  new Select().from(ProjectShareAuthorization.class).where("_id=?", modelId).executeSingle();
 			project = projectShareAuthorization.getProject();
 		} else {
 			projectShareAuthorization = new ProjectShareAuthorization();
-			project = Project.load(Project.class, projectId);
+			Long project_id = intent.getLongExtra("PROJECT_ID", -1);
+			if(project_id != -1){
+				project = Project.load(Project.class, project_id);
+			} else {
+				String projectId = intent.getStringExtra("PROJECTID");
+				project = Project.getModel(Project.class, projectId);
+			}
 			projectShareAuthorization.setProjectId(project.getId());
 			projectShareAuthorization.setState("NotInvite");
 		}
@@ -161,6 +167,33 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				} else {
 					mSelectorFieldFriend.setModelId(null);
 					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
+				}
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+			}
+		} else {
+			String friendUserId = intent.getStringExtra("FRIEND_USERID");
+			if(friendUserId != null){
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					User user = new Select().from(User.class).where("id=?", friendUserId).executeSingle();
+					if(user != null){
+						mSelectorFieldFriend.setModelId(user.getId());
+						mSelectorFieldFriend.setText(user.getDisplayName());
+					}
+				}
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+			} else {
+				String localFriendId = intent.getStringExtra("LOCAL_FRIENDID");
+				Friend friend = HyjModel.getModel(Friend.class, localFriendId);
+				if(friend != null){
+					mSelectorFieldFriend.setModelId(friend.getId());
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+				} else {
+					mSelectorFieldFriend.setModelId(null);
+					mSelectorFieldFriend.setText(null);
 				}
   				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 			}
@@ -502,7 +535,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 //					}
 
 					ActiveAndroid.setTransactionSuccessful();
-
+					if(getActivity().getCallingActivity() != null){
+						Intent data = new Intent();
+						data.putExtra("MODELID", mProjectShareAuthorizationEditor.getModelCopy().getId());
+						getActivity().setResult(Activity.RESULT_OK, data);
+					}
 					getActivity().finish();
 //				} catch (JSONException e) {
 //					e.printStackTrace();

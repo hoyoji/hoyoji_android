@@ -46,6 +46,7 @@ import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -1133,6 +1134,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
      			break;
           }
     }
+	 
+		
 		// inner class
 		private static class MoneyDepositIncomeContainerEditor extends HyjModelEditor<MoneyDepositIncomeContainer> {
 			private  ProjectShareAuthorization mOldProjectShareAuthorization;
