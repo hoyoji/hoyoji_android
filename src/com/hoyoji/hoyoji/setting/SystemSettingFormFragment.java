@@ -92,7 +92,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private HyjTextField mTextFieldUserName = null;
 	private HyjTextField mTextFieldNickName = null;
 	private HyjTextField mTextFieldEmail = null;
-	private Button mButtonCheckEmail = null;
+	private Button mButtonEmail = null;
 	private HyjTextField mTextFieldPhone = null;
 	private Button mButtonPhone = null;
 	private HyjTextField mTextFieldQQ = null;
@@ -146,30 +146,30 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mTextFieldNickName.setText(user.getNickName());
 
 		mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_email);
+		mTextFieldEmail.setEditable(false);
+
 		mTextFieldEmail.setText(user.getUserData().getEmail());
-		
-		mButtonCheckEmail = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_checkEmail);
-		mButtonCheckEmail.setOnClickListener(new OnClickListener() {
+		mButtonEmail = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_emailBinding);
+		mButtonEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
 				
 			}
 		});
-		getView().findViewById(R.id.systemSettingFormFragment_linearLayout_email).setVisibility(View.GONE);
 		
 		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
-		mTextFieldPhone.setEnabled(false);
+		mTextFieldPhone.setEditable(false);
 		
 		mButtonPhone = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_phoneBinding);
 		
 		setPhoneField();
 
 		mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_QQ);
-		mTextFieldQQ.setEnabled(false);
+		mTextFieldQQ.setEditable(false);
 		
 		mTextFieldWB = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_WB);
-		mTextFieldWB.setEnabled(false);
+		mTextFieldWB.setEditable(false);
 		
 		mButtonQQ = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_QQBinding);
 		
