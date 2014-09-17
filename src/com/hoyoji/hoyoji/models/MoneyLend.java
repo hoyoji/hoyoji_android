@@ -651,6 +651,14 @@ public class MoneyLend extends HyjModel{
 			}
 		} else if(this.getFriendUserId() != null){
 			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
+			if(displayName.isEmpty()){
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", this.getFriendUserId(), this.getProjectId()).executeSingle();
+				if(psa != null){
+					return psa.getFriendUserName();
+				} else {
+					return "";
+				}
+			}
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}

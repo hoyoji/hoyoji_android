@@ -211,9 +211,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if (moneyBorrow.get_mId() == null) {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
-				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", friendUserId).executeSingle();	
 				mSelectorFieldFriend.setModelId(friendUserId);
-				mSelectorFieldFriend.setText(friend.getDisplayName());
+				mSelectorFieldFriend.setText(moneyBorrow.getFriendDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		} else {
