@@ -374,7 +374,7 @@ public class MoneyExpense extends HyjModel{
 		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
 			return "";
 		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
-			displayName = Friend.getFriendUserDisplayName1(this.getOwnerUserId());
+			displayName = Friend.getFriendUserDisplayName(this.getOwnerUserId());
 		} else if(this.getOwnerFriendId() != null){
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
 			if(psa != null){

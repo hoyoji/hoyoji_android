@@ -182,7 +182,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFinancialOwner.setEnabled(editPermission);
 		if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(project.getFinancialOwnerUserId()));
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 		}
 		
 		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
@@ -190,7 +190,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				if(mProjectEditor.getModel().get_mId() == null){
 					mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
-					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(HyjApplication.getInstance().getCurrentUser().getId()));
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(HyjApplication.getInstance().getCurrentUser().getId()));
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());

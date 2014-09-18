@@ -287,7 +287,7 @@ public class Friend extends HyjModel {
 //		}
 //	}	
 	
-	public static String getFriendUserDisplayName1(String friendUserId) {
+	public static String getFriendUserDisplayName(String friendUserId) {
 //		if(ownerUserId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())){
 //			return "自己";
 //		}else{

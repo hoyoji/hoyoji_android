@@ -603,7 +603,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			MoneyTransfer moneyTransfer = ((MoneyTransfer)object);
-			((TextView)view).setText(Friend.getFriendUserDisplayName1(moneyTransfer.getOwnerUserId()));
+			((TextView)view).setText(Friend.getFriendUserDisplayName(moneyTransfer.getOwnerUserId()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());

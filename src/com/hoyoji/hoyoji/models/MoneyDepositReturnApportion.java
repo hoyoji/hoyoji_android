@@ -338,7 +338,7 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 				}
 			}
 		} else if(this.getFriendUserId() != null){
-			displayName = Friend.getFriendUserDisplayName1(this.getFriendUserId());
+			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
 //			if(displayName.length() == 0){
 //				displayName = "自己";
 //			}
