@@ -349,7 +349,7 @@ public class MoneyApportionField extends GridView {
 				if(projectShareAuthorizations.get(i).getState().equals("Delete")) {
 					continue;
 				}
-				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId()) && !gridUserSet.contains(projectShareAuthorizations.get(i).getLocalFriendId())){
+				if(!gridUserSet.contains(HyjUtil.ifNull(projectShareAuthorizations.get(i).getFriendUserId(), projectShareAuthorizations.get(i).getLocalFriendId()))){
 					try {
 						MoneyApportion apportion;
 						apportion = type.newInstance();
@@ -460,6 +460,7 @@ public class MoneyApportionField extends GridView {
 //										f.setApportionAmount(apportionItem.getAmount());
 //									}
 								}
+								
 								@Override
 								public void doNegativeClick() {
 									if(apportionItem.getState() == ApportionItem.NEW){
