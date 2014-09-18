@@ -676,7 +676,7 @@ public class MoneyBorrow extends HyjModel{
 			}
 		} else if(this.getFriendUserId() != null){
 			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
-			 if(displayName.isEmpty()){
+			 if(displayName.length() == 0){
 					ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", this.getFriendUserId(), this.getProjectId()).executeSingle();
 					if(psa != null){
 						return psa.getFriendUserName();
@@ -697,13 +697,10 @@ public class MoneyBorrow extends HyjModel{
 		String displayName = "";
 		if(HyjApplication.getInstance().getCurrentUser().getId().equals(this.getOwnerUserId())){
 			return "";
-		} else if(this.getOwnerUserId() != null && !this.getOwnerUserId().isEmpty()){
-			displayName = Friend.getFriendUserDisplayName(this.getOwnerUserId());
+		} else if(this.getOwnerUserId() != null && this.getOwnerUserId().length() != 0){
+			displayName = Friend.getFriendUserDisplayName(null, this.getOwnerUserId(), this.getProjectId());
 		} else if(this.getOwnerFriendId() != null){
-			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getOwnerFriendId(), this.getProjectId()).executeSingle();
-			if(psa != null){
-				return psa.getFriendUserName();
-			}
+			displayName = Friend.getFriendUserDisplayName(this.getOwnerFriendId(), null, this.getProjectId());
 		}
 		return displayName;
 	}

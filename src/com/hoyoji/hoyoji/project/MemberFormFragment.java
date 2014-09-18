@@ -536,7 +536,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			
 			if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
 				if(!mCheckBoxSendInvite.isShown() || mCheckBoxSendInvite.isChecked()){
-					// 该消息不会发给用户，只在服务器上做处理，所以没有id
+					// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
 					msg.put("id", UUID.randomUUID().toString());
 				}
 			}
