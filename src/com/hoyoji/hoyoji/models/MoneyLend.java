@@ -639,7 +639,7 @@ public class MoneyLend extends HyjModel{
 		String displayName = "";
 		if(this.getLocalFriendId() != null){
 			Friend f = Friend.getModel(Friend.class, this.getLocalFriendId());
-			if(f != null){
+			if(f != null) {
 				displayName = f.getDisplayName();
 			} else {
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", this.getLocalFriendId(), this.getProjectId()).executeSingle();
