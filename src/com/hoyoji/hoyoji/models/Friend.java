@@ -279,6 +279,13 @@ public class Friend extends HyjModel {
 				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user != null){
 					return user.getDisplayName();
+				} else {
+					if(projectId != null){
+						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> 'Delete'", projectId, friendUserId).executeSingle();
+						if(psa != null){
+							return psa.getFriendUserName();
+						}
+					}
 				}
 			}
 		}
