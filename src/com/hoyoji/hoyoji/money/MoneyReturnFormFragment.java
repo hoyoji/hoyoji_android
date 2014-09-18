@@ -142,11 +142,11 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		});	
 		
 		Project project;
-		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(moneyReturn.get_mId() == null && projectId != null){
+		String projectId = intent.getStringExtra("projectId"); // 从消息导入
+		if(moneyReturn.get_mId() == null && projectId != null) {
 			project = HyjModel.getModel(Project.class, projectId);
-		}else{
-			project = moneyReturn.getProject();
+		} else {
+			project = moneyReturn.getProject(); // 获取当前项目
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_project);
 		
@@ -167,50 +167,18 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyReturnFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyReturnFormFragment_linearLayout_exchangeRate);
-		
-//		Friend friend;
-//		if(moneyReturn.get_mId() == null){
-//			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-//			if(friendUserId != null){
-//				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-//			} else {
-//				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-//				if(localFriendId != null){
-//					friend = HyjModel.getModel(Friend.class, localFriendId);
-//				} else {
-//					friend = moneyReturn.getFriend();
-//				}
-//			}
-//		} else {
-//			friend = moneyReturn.getFriend();
-//		}
-//		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_friend);
-//		
-//		if(friend != null){
-//			mSelectorFieldFriend.setModelId(friend.getId());
-//			mSelectorFieldFriend.setText(friend.getDisplayName());
-//		}
-//		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				MoneyReturnFormFragment.this
-//				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_creditor, null, GET_FRIEND_ID);
-//			}
-//		}); 
-		
 
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_friend);
 		if(moneyReturn.get_mId() == null){
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
 				mSelectorFieldFriend.setModelId(friendUserId);
-				mSelectorFieldFriend.setText(moneyReturn.getFriendDisplayName());
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		} else {
 			if (moneyReturn.getLocalFriendId() != null) {
-				mSelectorFieldFriend
-						.setText(moneyReturn.getFriendDisplayName());
+				mSelectorFieldFriend.setText(moneyReturn.getFriendDisplayName());
 				mSelectorFieldFriend.setModelId(moneyReturn.getLocalFriendId());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyReturn.getFriendUserId() != null) {
@@ -966,13 +934,12 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
     										}
     										openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
     									}
-    			
+
     									@Override
     									public void doNegativeClick() {
     										HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend_not_member);
     									}
     								});
-    						
     	//					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
     						break;
     					}

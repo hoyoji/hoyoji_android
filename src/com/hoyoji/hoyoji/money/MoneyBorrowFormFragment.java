@@ -213,14 +213,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		if (moneyBorrow.get_mId() == null) {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
-				mSelectorFieldFriend.setModelId(friendUserId);
+				mSelectorFieldFriend.setModelId(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 				mSelectorFieldFriend.setText(moneyBorrow.getFriendDisplayName());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		} else {
 			if (moneyBorrow.getLocalFriendId() != null) {
-				mSelectorFieldFriend
-						.setText(moneyBorrow.getFriendDisplayName());
+				mSelectorFieldFriend.setText(moneyBorrow.getFriendDisplayName());
 				mSelectorFieldFriend.setModelId(moneyBorrow.getLocalFriendId());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyBorrow.getFriendUserId() != null) {

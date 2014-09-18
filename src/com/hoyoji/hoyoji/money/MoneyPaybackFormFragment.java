@@ -207,13 +207,12 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
 				mSelectorFieldFriend.setModelId(friendUserId);
-				mSelectorFieldFriend.setText(moneyPayback.getFriendDisplayName());
+				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 			}
 		} else {
 			if (moneyPayback.getLocalFriendId() != null) {
-				mSelectorFieldFriend
-						.setText(moneyPayback.getFriendDisplayName());
+				mSelectorFieldFriend.setText(moneyPayback.getFriendDisplayName());
 				mSelectorFieldFriend.setModelId(moneyPayback.getLocalFriendId());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyPayback.getFriendUserId() != null) {
