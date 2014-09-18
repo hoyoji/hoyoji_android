@@ -22,11 +22,13 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -872,12 +874,17 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			mCallbacks = callbacks;
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		public static HttpGetExchangeRateAsyncTask newInstance(
 				List<String> fromCurrency, List<String> toCurrency,
 				HyjAsyncTaskCallbacks callbacks) {
 			HttpGetExchangeRateAsyncTask newTask = new HttpGetExchangeRateAsyncTask(
 					callbacks);
-			newTask.execute(fromCurrency, toCurrency);
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				newTask.execute(fromCurrency, toCurrency);
+			} else {
+				newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fromCurrency, toCurrency);
+			}
 			return newTask;
 		}
 

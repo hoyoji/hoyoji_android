@@ -65,7 +65,7 @@ public class HyjSpinnerField extends LinearLayout {
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (Spinner)findViewById(R.id.text_field_edit);
 		if(border.equals("none")){
-			if(android.os.Build.VERSION.SDK_INT >= 16){
+			if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				mEditTextEdit.setBackground(null);
 			} else {
 				mEditTextEdit.setBackgroundDrawable(null);

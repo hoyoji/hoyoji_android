@@ -15,12 +15,14 @@ import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Picture;
 
+import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Base64;
 import android.widget.ImageView;
 
@@ -33,13 +35,19 @@ public class HyjBitmapWorkerAsyncTask extends AsyncTask<String, Void, Bitmap> {
         imageViewReference = new WeakReference<ImageView>(imageView);
     }
     
-    public static void loadBitmap(String path, ImageView imageView) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void loadBitmap(String path, ImageView imageView) {
 	    if (cancelPotentialWork(path, imageView)) {
 	        final HyjBitmapWorkerAsyncTask task = new HyjBitmapWorkerAsyncTask(imageView);
 	        final AsyncDrawable asyncDrawable =
 	                new AsyncDrawable(HyjApplication.getInstance().getResources(), HyjUtil.getCommonBitmap(R.drawable.ic_action_refresh), task);
 	        imageView.setImageDrawable(asyncDrawable);
-	        task.execute(path);
+
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				task.execute(path);
+			} else {
+				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+			}
 	    }
 	}
     

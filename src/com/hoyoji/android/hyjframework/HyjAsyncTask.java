@@ -1,6 +1,8 @@
 package com.hoyoji.android.hyjframework;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 
 
@@ -12,9 +14,14 @@ public class HyjAsyncTask extends AsyncTask<String, Integer, Object> {
 		mServerCallback = callbacks;
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static HyjAsyncTask newInstance(HyjAsyncTaskCallbacks callbacks, String... params){
 		HyjAsyncTask newTask = new HyjAsyncTask(callbacks);
-		newTask.execute(params);
+		if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			newTask.execute(params);
+		} else {
+			newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+		}
 		return newTask;
 	}
 	
