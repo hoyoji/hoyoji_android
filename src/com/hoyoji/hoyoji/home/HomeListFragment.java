@@ -121,12 +121,12 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
     		}
 		});
-		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
-    		}
-		});		
+//		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
+//    		}
+//		});		
 		getView().findViewById(R.id.homeListFragment_action_money_debt).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -172,6 +172,25 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
 							openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+						}
+						return false;
+					}
+				});
+				popup.show();
+			}
+		});
+		
+		getView().findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				PopupMenu popup = new PopupMenu(getActivity(), v);
+				MenuInflater inflater = popup.getMenuInflater();
+				inflater.inflate(R.menu.home_more_actions, popup.getMenu());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
+							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
 						} 
