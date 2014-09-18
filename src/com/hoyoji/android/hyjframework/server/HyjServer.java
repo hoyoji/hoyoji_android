@@ -104,16 +104,16 @@ public class HyjServer {
 		}
 
 		try {
-			if(s == null){
+			if(s == null) {
 				return null;
-			} else if(s.startsWith("{")){
+			} else if(s.startsWith("{")) {
 				return new JSONObject(s);
-			} else if(s.startsWith("[")){
+			} else if(s.startsWith("[")) {
 				return new JSONArray(s);
-			} else if(s.equals("")){
+			} else if(s.equals("")) {
 				return new JSONArray();
 			} else {
-				if(returnJSONError){
+				if(returnJSONError) {
 					return new JSONObject("{'__summary' : {'msg' : '"+HyjApplication.getInstance().getString(R.string.server_dataparse_error)+"'}}");
 				} 
 				return null;

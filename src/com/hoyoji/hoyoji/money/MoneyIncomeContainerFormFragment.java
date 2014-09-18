@@ -229,27 +229,21 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		Friend friend;
+		String friendUserId, localFriendId;
 		if(moneyIncomeContainer.get_mId() == null){
-			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-			if(friendUserId != null){
-				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-			} else {
-				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-				if(localFriendId != null){
-					friend = HyjModel.getModel(Friend.class, localFriendId);
-				} else {
-					friend = moneyIncomeContainer.getFriend();
-				}
-			}
+			 friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+			 localFriendId = intent.getStringExtra("localFriendId");//从消息导入
 		} else {
-			friend = moneyIncomeContainer.getFriend();
+			friendUserId = moneyIncomeContainer.getFriendUserId();
+			localFriendId = moneyIncomeContainer.getLocalFriendId();
 		}
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_selectorField_friend);
-		
-		if(friend != null){
-			mSelectorFieldFriend.setModelId(friend.getId());
-			mSelectorFieldFriend.setText(friend.getDisplayName());
+
+		mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(localFriendId, friendUserId, projectId));
+		if(friendUserId != null){
+			mSelectorFieldFriend.setModelId(friendUserId);
+		} else {
+			mSelectorFieldFriend.setModelId(localFriendId);
 		}
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override

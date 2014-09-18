@@ -186,17 +186,8 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 			friendUserId = moneyPayback.getFriendUserId();
 		}
 		if(friendUserId != null){
-			Friend friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-			if(friend != null){
-				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
-				mSelectorFieldFriend.setText(friend.getDisplayName());
-			} else {
-				User user = HyjModel.getModel(User.class, friendUserId);
-				if(user != null){
-					mSelectorFieldFriend.setModelId(user.getId());
-					mSelectorFieldFriend.setText(user.getDisplayName());
-				}
-			}
+			mSelectorFieldFriend.setModelId(friendUserId);
+			mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 		} 
 		
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
@@ -716,7 +707,6 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
             		ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 		       		if(!psa.getState().equalsIgnoreCase("Accept")){
 						HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_editText_error_not_member);
-						return;
 					} else {
 			       		mSelectorFieldFriend.setText(psa.getFriendDisplayName());
 			       		mSelectorFieldFriend.setModelId(psa.getFriendUserId());

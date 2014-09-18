@@ -169,12 +169,20 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyReturnFormFragment_linearLayout_exchangeRate);
 
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_friend);
+		mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 		if(moneyReturn.get_mId() == null){
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
 				mSelectorFieldFriend.setModelId(friendUserId);
 				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");// 从消息导入
+				if (localFriendId != null) {
+					mSelectorFieldFriend.setModelId(localFriendId);
+					mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(localFriendId, null, projectId));
+					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
+				}
 			}
 		} else {
 			if (moneyReturn.getLocalFriendId() != null) {

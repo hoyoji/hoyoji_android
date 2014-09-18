@@ -181,47 +181,25 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyLendFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyLendFormFragment_linearLayout_exchangeRate);
 		
-//		Friend friend;
-//		if(moneyLend.get_mId() == null){
-//			String friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-//			if(friendUserId != null){
-//				friend = new Select().from(Friend.class).where("friendUserId=?",friendUserId).executeSingle();
-//			} else {
-//				String localFriendId = intent.getStringExtra("localFriendId");//从消息导入
-//				if(localFriendId != null){
-//					friend = HyjModel.getModel(Friend.class, localFriendId);
-//				} else {
-//					friend = moneyLend.getFriend();
-//				}
-//			}
-//		} else {
-//			friend = moneyLend.getFriend();
-//		}
-//		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_friend);
-//		
-//		if(friend != null){
-//			mSelectorFieldFriend.setModelId(friend.getId());
-//			mSelectorFieldFriend.setText(friend.getDisplayName());
-//		}
-//		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				MoneyLendFormFragment.this
-//				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_debtor, null, GET_FRIEND_ID);
-//			}
-//		}); 
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyLendFormFragment_selectorField_friend);
+		mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
 		if (moneyLend.get_mId() == null) {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
 				mSelectorFieldFriend.setModelId(friendUserId);
 				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+			} else {
+				String localFriendId = intent.getStringExtra("localFriendId");// 从消息导入
+				if (localFriendId != null) {
+					mSelectorFieldFriend.setModelId(localFriendId);
+					mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(localFriendId, null, projectId));
+					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
+				}
 			}
 		} else {
 			if (moneyLend.getLocalFriendId() != null) {
-				mSelectorFieldFriend
-						.setText(moneyLend.getFriendDisplayName());
+				mSelectorFieldFriend.setText(moneyLend.getFriendDisplayName());
 				mSelectorFieldFriend.setModelId(moneyLend.getLocalFriendId());
 				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
 			} else if (moneyLend.getFriendUserId() != null) {
