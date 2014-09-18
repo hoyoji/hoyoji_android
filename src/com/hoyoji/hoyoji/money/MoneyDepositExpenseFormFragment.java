@@ -706,7 +706,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}
-	         		
+					if(!psa.getState().equalsIgnoreCase("Accept")){
+ 						HyjUtil.displayToast(R.string.moneyDepositExpenseFormFragment_editText_error_not_member);
+ 						return;
+ 					} 
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);

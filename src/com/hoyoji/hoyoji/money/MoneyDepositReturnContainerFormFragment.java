@@ -1111,10 +1111,6 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     				MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
     				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
     					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-    					if(!psa.getState().equalsIgnoreCase("Accept")){
-    						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
-    						break;
-    					}
     					apportion.setFriendUserId(psa.getFriendUserId());
     				} else {
     					Friend friend = Friend.load(Friend.class, _id);
@@ -1122,12 +1118,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
     						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
     						if(psa != null){
-    							if(psa.getState().equalsIgnoreCase("Delete")){
-    								HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
-    								break;
-    							} else {
-    								apportion.setFriendUserId(psa.getFriendUserId());
-    							}
+								apportion.setFriendUserId(psa.getFriendUserId());
     						} else {
     							apportion.setLocalFriendId(friend.getId());
     							apportion.setApportionType("Average");
@@ -1144,7 +1135,6 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     				} else {
     					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
     				}
-    			
     			}
      			break;
           }
