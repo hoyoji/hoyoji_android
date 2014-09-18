@@ -230,7 +230,7 @@ public class MessageDownloadService extends Service {
 					String projectShareAuthorizationId;
 					projectShareAuthorizationId = (new JSONObject(newMessage.getMessageData())).optString("projectShareAuthorizationId");
 					ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-					psa = Model.load(ProjectShareAuthorization.class, psa.get_mId()); // 从数据库获取最新的以及强制刷新缓存
+//					psa = Model.load(ProjectShareAuthorization.class, psa.get_mId()); // 从数据库获取最新的以及强制刷新缓存
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();

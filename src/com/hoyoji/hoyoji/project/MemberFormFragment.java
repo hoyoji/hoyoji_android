@@ -562,7 +562,11 @@ public class MemberFormFragment extends HyjUserFormFragment {
 							if (jsonObjects.optJSONObject(j)
 									.optString("__dataType")
 									.equals("ProjectShareAuthorization")) {
-								ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+								String id = jsonObjects.optJSONObject(j).optString("id");
+								ProjectShareAuthorization newProjectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, id);
+								if(newProjectShareAuthorization == null){
+									newProjectShareAuthorization = new ProjectShareAuthorization();
+								}
 								newProjectShareAuthorization.loadFromJSON(
 										jsonObjects.optJSONObject(j), true);
 								newProjectShareAuthorization.save();
