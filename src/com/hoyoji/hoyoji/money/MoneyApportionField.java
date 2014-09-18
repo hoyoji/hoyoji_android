@@ -380,9 +380,7 @@ public class MoneyApportionField extends GridView {
 				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
 				mImageGridAdapter.add(pi);
 			} catch (InstantiationException e) {
-				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 			}
 	    }
 	}
