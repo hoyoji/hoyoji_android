@@ -229,12 +229,13 @@ public class MemberListFragment extends HyjUserListFragment{
 			String state = cursor.getString(columnIndex);
 			if(state.equalsIgnoreCase("Wait")){
 				((TextView)view).setText(R.string.memberListFragment_state_wait);
+			} else if(state.equalsIgnoreCase("NotInvite")){
+				((TextView)view).setText(R.string.memberListFragment_state_notinvite);
 			} else {
 				((TextView)view).setText("");
 			}
 			return true;
-		} 
-		else if(view.getId() == R.id.memberListItem_actualTotal) {
+		} else if(view.getId() == R.id.memberListItem_actualTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double actualTotal = projectShareAuthorization.getActualTotal();
