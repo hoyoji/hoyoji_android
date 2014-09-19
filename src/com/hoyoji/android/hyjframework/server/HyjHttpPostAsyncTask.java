@@ -3,6 +3,10 @@ package com.hoyoji.android.hyjframework.server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
+import android.os.AsyncTask;
+import android.os.Build;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -16,9 +20,14 @@ public class HyjHttpPostAsyncTask extends HyjAsyncTask {
 		super(callbacks);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static HyjHttpPostAsyncTask newInstance(HyjAsyncTaskCallbacks callbacks, String... params){
 		HyjHttpPostAsyncTask newTask = new HyjHttpPostAsyncTask(callbacks);
-		newTask.execute(params);
+		if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			newTask.execute(params);
+		} else {
+			newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+		}
 		return newTask;
 	}	
 	

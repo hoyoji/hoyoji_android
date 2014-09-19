@@ -22,11 +22,13 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -182,7 +184,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFinancialOwner.setEnabled(editPermission);
 		if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(project.getFinancialOwnerUserId()));
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 		}
 		
 		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
@@ -190,7 +192,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				if(mProjectEditor.getModel().get_mId() == null){
 					mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
-					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName1(HyjApplication.getInstance().getCurrentUser().getId()));
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(HyjApplication.getInstance().getCurrentUser().getId()));
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());
@@ -872,12 +874,17 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			mCallbacks = callbacks;
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		public static HttpGetExchangeRateAsyncTask newInstance(
 				List<String> fromCurrency, List<String> toCurrency,
 				HyjAsyncTaskCallbacks callbacks) {
 			HttpGetExchangeRateAsyncTask newTask = new HttpGetExchangeRateAsyncTask(
 					callbacks);
-			newTask.execute(fromCurrency, toCurrency);
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				newTask.execute(fromCurrency, toCurrency);
+			} else {
+				newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fromCurrency, toCurrency);
+			}
 			return newTask;
 		}
 

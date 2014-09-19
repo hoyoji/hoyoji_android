@@ -282,8 +282,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.projectListItem_owner){
 				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
-				String ownerUserName = Friend.getFriendUserDisplayName1(project.getOwnerUserId());
-				((TextView)view).setText(ownerUserName);
+				if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					((TextView)view).setText("");
+				} else {
+					String ownerUserName = Friend.getFriendUserDisplayName(project.getOwnerUserId());
+					((TextView)view).setText(ownerUserName);
+				}
 				return true;
 		} else if(view.getId() == R.id.projectListItem_inOutTotal) {
 //			HyjNumericView numericView = (HyjNumericView)view;

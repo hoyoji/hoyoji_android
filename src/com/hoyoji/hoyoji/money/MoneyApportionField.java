@@ -296,7 +296,7 @@ public class MoneyApportionField extends GridView {
 	        ApportionItem<MoneyApportion> item = it.next();
 	        if(item.getProjectId().equals(project.getId())){
 	        	mImageGridAdapter.add(item);
-	        	if(item.getApportion().getFriendUser() != null){
+	        	if(item.getApportion().getFriendUserId() != null){
 	        		gridUserSet.add(item.getApportion().getFriendUserId());
 	        	} else {
 	        		gridUserSet.add(item.getApportion().getLocalFriendId());
@@ -349,7 +349,7 @@ public class MoneyApportionField extends GridView {
 				if(projectShareAuthorizations.get(i).getState().equals("Delete")) {
 					continue;
 				}
-				if(!gridUserSet.contains(projectShareAuthorizations.get(i).getFriendUserId()) || !gridUserSet.contains(projectShareAuthorizations.get(i).getLocalFriendId())){
+				if(!gridUserSet.contains(HyjUtil.ifNull(projectShareAuthorizations.get(i).getFriendUserId(), projectShareAuthorizations.get(i).getLocalFriendId()))){
 					try {
 						MoneyApportion apportion;
 						apportion = type.newInstance();
@@ -380,9 +380,7 @@ public class MoneyApportionField extends GridView {
 				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
 				mImageGridAdapter.add(pi);
 			} catch (InstantiationException e) {
-				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 			}
 	    }
 	}
@@ -462,6 +460,7 @@ public class MoneyApportionField extends GridView {
 //										f.setApportionAmount(apportionItem.getAmount());
 //									}
 								}
+								
 								@Override
 								public void doNegativeClick() {
 									if(apportionItem.getState() == ApportionItem.NEW){

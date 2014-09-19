@@ -18,6 +18,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+
+import android.annotation.TargetApi;
+import android.os.AsyncTask;
+import android.os.Build;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -29,12 +34,17 @@ public class HyjHttpGetExchangeRateAsyncTask extends HyjAsyncTask {
 		super(callbacks);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static HyjHttpGetExchangeRateAsyncTask newInstance(
 			String fromCurrency, String toCurrency,
 			HyjAsyncTaskCallbacks callbacks) {
 		HyjHttpGetExchangeRateAsyncTask newTask = new HyjHttpGetExchangeRateAsyncTask(
 				callbacks);
-		newTask.execute(fromCurrency, toCurrency);
+		if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			newTask.execute(fromCurrency, toCurrency);
+		} else {
+			newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fromCurrency, toCurrency);
+		}
 		return newTask;
 	}
 

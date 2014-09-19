@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -78,7 +79,7 @@ public class MessageDownloadService extends Service {
 							String lastMessagesDownloadTime = currentUser
 									.getUserData()
 									.getLastMessagesDownloadTime();
-							if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty()) {
+							if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0) {
 
 								Object serverTime = HyjServer
 										.doHttpPost(null,
@@ -133,7 +134,7 @@ public class MessageDownloadService extends Service {
 												projectShareMessages
 														.add(newMessage);
 											}
-											if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty()
+											if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0
 													|| lastMessagesDownloadTime
 															.compareTo(jsonMessage
 																	.optString("lastServerUpdateTime")) < 0) {
@@ -143,7 +144,7 @@ public class MessageDownloadService extends Service {
 										}
 									}
 
-									if ((lastMessagesDownloadTime == null || lastMessagesDownloadTime.isEmpty())
+									if ((lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0)
 											&& jsonServerTime != null) {
 										lastMessagesDownloadTime = jsonServerTime
 												.optString("server_time");
@@ -229,6 +230,7 @@ public class MessageDownloadService extends Service {
 					String projectShareAuthorizationId;
 					projectShareAuthorizationId = (new JSONObject(newMessage.getMessageData())).optString("projectShareAuthorizationId");
 					ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
+//					psa = Model.load(ProjectShareAuthorization.class, psa.get_mId()); // 从数据库获取最新的以及强制刷新缓存
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();

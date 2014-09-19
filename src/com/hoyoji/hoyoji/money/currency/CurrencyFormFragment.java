@@ -26,10 +26,12 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -236,11 +238,16 @@ public class CurrencyFormFragment extends HyjUserFormFragment {
 			mCallbacks = callbacks;
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		public static HttpGetExchangeRateAsyncTask newInstance(
 				List<String> fromCurrencies, List<String> toCurrencies,
 				HyjAsyncTaskCallbacks callbacks) {
 			HttpGetExchangeRateAsyncTask newTask = new HttpGetExchangeRateAsyncTask(callbacks);
-			newTask.execute(fromCurrencies, toCurrencies);
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				newTask.execute(fromCurrencies, toCurrencies);
+			} else {
+				newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fromCurrencies, toCurrencies);
+			}
 			return newTask;
 		}
 

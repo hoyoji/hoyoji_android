@@ -386,10 +386,27 @@
             android:layout_marginTop="5dip"
             android:background="#E0E0E0" />
 
+        <CheckBox
+            android:id="@+id/memberFormFragment_checkBox_send_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:text="@string/memberFormFragment_textView_send_invite" />
+            
+        <Button
+            android:id="@+id/memberFormFragment_button_send_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:text="@string/memberFormFragment_button_send_invite" />
+            
         <Button
             android:id="@id/button_save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/app_action_save" />
     </LinearLayout>
 
