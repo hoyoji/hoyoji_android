@@ -43,8 +43,7 @@ public class HyjWebServiceExchangeRateAsyncTask extends HyjAsyncTask {
 	public static HyjWebServiceExchangeRateAsyncTask newInstance(
 			String fromCurrency, String toCurrency,
 			HyjAsyncTaskCallbacks callbacks) {
-		HyjWebServiceExchangeRateAsyncTask newTask = new HyjWebServiceExchangeRateAsyncTask(
-				callbacks);
+		HyjWebServiceExchangeRateAsyncTask newTask = new HyjWebServiceExchangeRateAsyncTask(callbacks);
 		if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 			newTask.execute(fromCurrency, toCurrency);
 		} else {
