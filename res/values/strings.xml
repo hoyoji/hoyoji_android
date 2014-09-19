@@ -79,4 +79,10 @@
     <string name="weibosdk_demo_toast_obtain_code_failed">获取 Code 失败</string>
     <string name="weibosdk_demo_toast_obtain_token_success">获取 Token 成功</string>
     <string name="weibosdk_demo_toast_obtain_token_failed">获取 Token 失败</string> 
+    
+    <string name="errcode_success">登录成功，请稍后</string>
+	<string name="errcode_cancel">登录取消</string>
+	<string name="errcode_deny">发送被拒绝</string>
+	<string name="errcode_unknown">发送返回</string>
+	
 </resources>

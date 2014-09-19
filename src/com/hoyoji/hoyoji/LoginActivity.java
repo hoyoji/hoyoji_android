@@ -48,6 +48,9 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.SendAuth;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.sample.Util;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -98,6 +101,8 @@ public class LoginActivity extends HyjActivity {
     public static QQAuth mQQAuth;
 	private Tencent mTencent;
 	private String mAppid;
+	
+	private IWXAPI api;
 //	
 //	/** 显示认证后的信息，如 AccessToken */
 //    private TextView mTokenText;
@@ -314,6 +319,11 @@ public class LoginActivity extends HyjActivity {
 	}
 	
 	public void attemptWXLogin() {
+		api = WXAPIFactory.createWXAPI(this, AppConstants.WX_APP_ID);
+		final SendAuth.Req req = new SendAuth.Req();
+		req.scope = "snsapi_userinfo";
+		req.state = "none";
+		api.sendReq(req);
 	}
 	
 	public void attemptWBLogin() {
@@ -813,7 +823,7 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 	
-	// 该QQ好友第一次在本机登录，我们需要下载好友数据到本地
+	// 该WB好友第一次在本机登录，我们需要下载好友数据到本地
 	private void loginWBUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).loginWBFirstTime(userId, password, jsonUser)) {

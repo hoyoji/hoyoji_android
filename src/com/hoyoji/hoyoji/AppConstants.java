@@ -6,17 +6,9 @@ public class AppConstants {
     public static String TENTCENT_CONNECT_APP_ID="1101515571";
     
     //申请的开发appid
-    public static final String WX_APP_ID = "wx8e8dc60535c9cd93";
+    public static final String WX_APP_ID = "wx97c0bcb2e912118a";
     
-    public static final String WX_ACTION = "action";
-    
-    public static final String WX_ACTION_INVITE = "invite";
-    
-    public static final String WX_RESULT_CODE = "ret";
-    
-    public static final String WX_RESULT_MSG = "msg";
-    
-    public static final String WX_RESULT = "result";
+    public static final String WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
     
     public static class ShowMsgActivity {
         public static final String STitle = "showmsg_title";
