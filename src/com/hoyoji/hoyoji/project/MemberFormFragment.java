@@ -40,7 +40,7 @@ import com.hoyoji.hoyoji.models.User;
 
 
 public class MemberFormFragment extends HyjUserFormFragment {
-	private final static int GET_Friend_ID = 2;
+	private final static int GET_FRIEND_ID = 2;
 
 	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.memberFormFragment_selectorField_friend;
 	
@@ -207,7 +207,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_Friend_ID);
+				MemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_FRIEND_ID);
 			}
 		});	
 		
@@ -707,7 +707,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 		 @Override
 		public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	         switch(requestCode){
-	              case GET_Friend_ID:
+	              case GET_FRIEND_ID:
 	            	 if(resultCode == Activity.RESULT_OK){
 	            		 long _id = data.getLongExtra("MODEL_ID", -1);
 	 	         		 Friend friend = Friend.load(Friend.class, _id);
