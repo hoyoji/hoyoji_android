@@ -125,11 +125,12 @@ public class FindPasswordActivity extends HyjActivity {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				JSONObject jsonObject = (JSONObject) object;
-				String userId;
 				try {
-					userId = jsonObject.getJSONObject("user").getString("id");
-				} catch (JSONException e) {
+					JSONObject json = (JSONObject) object;
+					FindPasswordActivity.this.displayDialog(null,
+							json.getJSONObject("__summary")
+									.getString("msg"));
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -137,6 +138,10 @@ public class FindPasswordActivity extends HyjActivity {
 			@Override
 			public void errorCallback(Object object) {
 				try {
+					JSONObject json = (JSONObject) object;
+					FindPasswordActivity.this.displayDialog(null,
+							json.getJSONObject("__summary")
+									.getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

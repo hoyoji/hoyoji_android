@@ -27,6 +27,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.UserData;
 
 
@@ -70,6 +71,7 @@ public class BindEmailFragment extends HyjUserFragment {
 				if(!validateEmailData()){
 					
 				} else {
+					doBindEmail();
 					getView().findViewById(R.id.bindEmailFragment_linearLayout_verificationCode).setVisibility(View.VISIBLE);
 				}
 			}
@@ -86,6 +88,7 @@ public class BindEmailFragment extends HyjUserFragment {
 				}
 			}
 		});
+	}
 //		mEditTextNewPassword2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //					@Override
 //					public boolean onEditorAction(TextView textView, int id,
@@ -112,7 +115,7 @@ public class BindEmailFragment extends HyjUserFragment {
 //		});
 //		
 //		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-	}
+
 
 //	private void fillData(){
 //		if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
@@ -221,6 +224,44 @@ public class BindEmailFragment extends HyjUserFragment {
 //				e.printStackTrace();
 //			}
 //	}
+	public void doBindEmail() {
+		 JSONObject findPasswordJsonObject = new JSONObject();
+    		try {
+				findPasswordJsonObject.put("email", mEmail);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	 
+    	// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				//JSONObject jsonObject = (JSONObject) object;
+//				try {
+//					((HyjActivity) getActivity()).displayDialog(null,
+//							jsonObject.getJSONObject("__summary")
+//									.getString("msg"));
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+			}
 
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity) getActivity()).displayDialog(null,
+							json.getJSONObject("__summary")
+									.getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+    	 
+    	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "bindEmail");
+	 }
 	 
 }
