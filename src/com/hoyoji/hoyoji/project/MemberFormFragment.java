@@ -234,13 +234,24 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				mButtonSendInvite.setVisibility(View.VISIBLE);
 			}
 		}
-		
 		mButtonSendInvite.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				sendInviteMessage();
 			}
 		});
+		if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			mButtonSendInvite.setVisibility(View.GONE);
+			mCheckBoxSendInvite.setVisibility(View.GONE);
+			mCheckBoxShareAllSubProjects.setEnabled(false);
+			mCheckBoxShareAuthExpenseSelf.setEnabled(false);
+			mCheckBoxShareAuthExpenseAdd.setEnabled(false);
+			mCheckBoxShareAuthExpenseEdit.setEnabled(false);
+			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
+			mBooleanFieldSharePercentageType.setEnabled(false);
+			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+		}
+		
 		
 //		mCheckBoxShareAuthIncomeSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_self);
 //		mCheckBoxShareAuthIncomeSelf.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeOwnerDataOnly());
@@ -383,6 +394,10 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	 @Override
 	public void onSave(View v){
 		super.onSave(v);
+		
+		if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			return;
+		}
 		
 		fillData();
 
