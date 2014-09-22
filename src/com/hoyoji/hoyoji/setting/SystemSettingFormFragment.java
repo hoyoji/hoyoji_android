@@ -153,10 +153,25 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mButtonEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
-				
+//				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
+				SystemSettingFormFragment.this.openActivityWithFragment(BindEmailFragment.class, R.string.bindEmailFragment_title, null);
 			}
 		});
+		
+		if((HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null 
+		|| HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false)
+		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
+		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
+			mButtonEmail.setText("绑定");
+		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			mButtonEmail.setText("解绑");
+		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			mButtonEmail.setText("验证");
+		}
 		
 		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
 		mTextFieldPhone.setEditable(false);

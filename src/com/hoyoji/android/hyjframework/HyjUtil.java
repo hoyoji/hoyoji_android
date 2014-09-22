@@ -1,9 +1,15 @@
 package com.hoyoji.android.hyjframework;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -532,4 +538,44 @@ public class HyjUtil {
 	        token.setExpiresTime(wbLogin.getExpiresIn());
 	        return token;
 	    }
+	    
+
+		public static byte[] getHtmlByteArray(final String url) {
+			 URL htmlUrl = null;     
+			 InputStream inStream = null;     
+			 try {         
+				 htmlUrl = new URL(url);         
+				 URLConnection connection = htmlUrl.openConnection();         
+				 HttpURLConnection httpConnection = (HttpURLConnection)connection;         
+				 int responseCode = httpConnection.getResponseCode();         
+				 if(responseCode == HttpURLConnection.HTTP_OK){             
+					 inStream = httpConnection.getInputStream();         
+				  }     
+				 } catch (MalformedURLException e) {               
+					 e.printStackTrace();     
+				 } catch (IOException e) {              
+					e.printStackTrace();    
+			  } 
+			byte[] data = inputStreamToByte(inStream);
+			
+			return data;
+		}
+		
+
+		public static byte[] inputStreamToByte(InputStream is) {
+			try{
+				ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
+				int ch;
+				while ((ch = is.read()) != -1) {
+					bytestream.write(ch);
+				}
+				byte imgdata[] = bytestream.toByteArray();
+				bytestream.close();
+				return imgdata;
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
 }
