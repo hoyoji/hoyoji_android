@@ -240,7 +240,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				sendInviteMessage();
 			}
 		});
-		if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			mButtonSendInvite.setVisibility(View.GONE);
 			mCheckBoxSendInvite.setVisibility(View.GONE);
 			mCheckBoxShareAllSubProjects.setEnabled(false);
@@ -395,7 +395,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	public void onSave(View v){
 		super.onSave(v);
 		
-		if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(mProjectShareAuthorizationEditor.getModel().get_mId() != null && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return;
 		}
 		
