@@ -254,12 +254,12 @@ public class MoneySearchGroupListLoader extends
 			double expenseTotal = 0;
 			double incomeTotal = 0;
 			Cursor cursor = null;
-			if(mProjectId == null){
+//			if(mProjectId == null){
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN Project prj ON main.projectId = prj.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE prj.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
 								args);
 				if (cursor != null) {
 					cursor.moveToFirst();
@@ -271,8 +271,8 @@ public class MoneySearchGroupListLoader extends
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN Project prj ON main.projectId = prj.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE prj.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
 								args);
 				if (cursor != null) {
 					cursor.moveToFirst();
@@ -281,7 +281,7 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-			}
+//			}
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -449,7 +449,7 @@ public class MoneySearchGroupListLoader extends
 				mDateFormat.format(fromDateInMillis) };
 		String dateString = null;
 		Cursor cursor = null;
-		if(mProjectId == null){
+//		if(mProjectId == null){
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -477,7 +477,7 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-		}
+//		}
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(

@@ -40,7 +40,7 @@ import com.hoyoji.hoyoji.models.User;
 
 
 public class MemberFormFragment extends HyjUserFormFragment {
-	private final static int GET_Friend_ID = 2;
+	private final static int GET_FRIEND_ID = 2;
 
 	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.memberFormFragment_selectorField_friend;
 	
@@ -207,7 +207,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_Friend_ID);
+				MemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_FRIEND_ID);
 			}
 		});	
 		
@@ -234,13 +234,24 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				mButtonSendInvite.setVisibility(View.VISIBLE);
 			}
 		}
-		
 		mButtonSendInvite.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				sendNewProjectShareAuthorizationToServer();
+				sendInviteMessage();
 			}
 		});
+		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			mButtonSendInvite.setVisibility(View.GONE);
+			mCheckBoxSendInvite.setVisibility(View.GONE);
+			mCheckBoxShareAllSubProjects.setEnabled(false);
+			mCheckBoxShareAuthExpenseSelf.setEnabled(false);
+			mCheckBoxShareAuthExpenseAdd.setEnabled(false);
+			mCheckBoxShareAuthExpenseEdit.setEnabled(false);
+			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
+			mBooleanFieldSharePercentageType.setEnabled(false);
+			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+		}
+		
 		
 //		mCheckBoxShareAuthIncomeSelf = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_income_self);
 //		mCheckBoxShareAuthIncomeSelf.setChecked(projectShareAuthorization.getProjectShareMoneyIncomeOwnerDataOnly());
@@ -325,12 +336,21 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			if(modelCopy.getFriendUserId() != null){
 				modelCopy.setFriendUserName(modelCopy.getFriend().getDisplayName());
 			}
+
+			if(modelCopy.get_mId() == null  || modelCopy.isClientNew()){
+				if(mCheckBoxSendInvite.isChecked()){
+					modelCopy.setState("Wait");
+				} else {
+					modelCopy.setState("NotInvite");
+				}
+			}
 		} else if(mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) != null && (Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == true){
 			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
 			modelCopy.setFriendUserId(null);
 			if(modelCopy.getLocalFriendId() != null){
 				modelCopy.setFriendUserName(modelCopy.getFriend().getDisplayName());
 			}
+			modelCopy.setState("NotInvite");
 		}
 		
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
@@ -375,6 +395,10 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	public void onSave(View v){
 		super.onSave(v);
 		
+		if(mProjectShareAuthorizationEditor.getModel().get_mId() != null && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			return;
+		}
+		
 		fillData();
 
 		mProjectShareAuthorizationEditor.validate();
@@ -382,90 +406,48 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		if(mProjectShareAuthorizationEditor.hasValidationErrors()){
 			showValidatioErrors();
-		} else if(mProjectShareAuthorizationEditor.getModelCopy().get_mId() == null) {
-
-//			saveAverageTotal();				
-			
-//			//去服务器上查找是否已经添加过共享给该好友
-//			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//				@Override
-//				public void finishCallback(Object object) {
-//					JSONArray jsonArray = (JSONArray) object;
-//					if (jsonArray.optJSONArray(0).length() > 0 && 
-//							!jsonArray.optJSONArray(0).optJSONObject(0).optString("state").equalsIgnoreCase("Delete")) {
-//						
-//						ProjectShareAuthorization psa = new ProjectShareAuthorization();
-//						psa.loadFromJSON(jsonArray.optJSONArray(0).optJSONObject(0), true);
-//						psa.save();
-//						((HyjActivity) MemberFormFragment.this.getActivity())
-//								.dismissProgressDialog();
-//						HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-//					} else {
-						sendNewProjectShareAuthorizationToServer();
-//					}
-//				}
-//
-//				@Override
-//				public void errorCallback(Object object) {
-//					displayError(object);
-//				}
-//			};
-//
-//			try {
-//				JSONObject data = new JSONObject();
-//				data.put("__dataType", "ProjectShareAuthorization");
-//				data.put("projectId", mProjectShareAuthorizationEditor.getModelCopy().getProjectId());
-//				if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
-//					data.put("friendUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
-//				} else {
-//					data.put("localFriendId", mProjectShareAuthorizationEditor.getModelCopy().getLocalFriendId());
-//				}
-//				//data.put("state", "Accept");
-//				
-//				HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-//						"[" + data.toString() + "]", "getData");
-//				((HyjActivity) this.getActivity()).displayProgressDialog(
-//						R.string.memberFormFragment_title_addnew,
-//						R.string.memberFormFragment_progress_adding);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-
+		} else if(mProjectShareAuthorizationEditor.getModelCopy().get_mId() == null){ 
+			sendNewProjectShareAuthorizationToServer();
 		} else {
-			HyjUtil.displayToast("cannot edit");
+			sendEditProjectShareAuthorizationToServer();
+			
 		}
 	}	
 
+		private void sendInviteMessage() {
+			
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					loadProjectProjectShareAuthorizations(object);
+					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					displayError(object);
+				}
+			};
+
+			mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
+			JSONObject msg = getInviteMessage();
+			String data = "[" + msg.toString() + "]";
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareInvite");
+			((HyjActivity) MemberFormFragment.this.getActivity())
+			.displayProgressDialog(
+					R.string.memberFormFragment_title_edit,
+					R.string.memberFormFragment_progress_inviting);
+		}
+
+	 
 	private void sendNewProjectShareAuthorizationToServer() {
 		
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				HyjUtil.displayToast(R.string.memberFormFragment_toast_share_add_success);
 				loadProjectProjectShareAuthorizations(object);
-				
-//				try {
-//					ActiveAndroid.beginTransaction();
-//					mProjectShareAuthorizationEditor.getModelCopy().setSyncFromServer(true);
-//					mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
-//					mProjectShareAuthorizationEditor.save();
-//					if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
-//						mProjectShareAuthorizationEditor.getModelCopy().getProject().getClientSyncRecord().delete();
-//					}
-//					for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-//						if(psa.isClientNew()){
-//							psa.getClientSyncRecord().delete();
-//						}
-//					}
-//					ActiveAndroid.setTransactionSuccessful();
-//					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
-//					getActivity().finish();
-//				}  finally {
-//				    ActiveAndroid.endTransaction();
-//				}
-//				
-//				((HyjActivity) MemberFormFragment.this.getActivity())
-//				.dismissProgressDialog();
+				HyjUtil.displayToast(R.string.memberFormFragment_toast_share_add_success);
 			}
 
 			@Override
@@ -474,42 +456,103 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			}
 		};
 
-		try {
+//		try {
 			String data = "[";
 			
-			if(mProjectShareAuthorizationEditor.getModel().get_mId() == null || mProjectShareAuthorizationEditor.getModel().isClientNew()){
-				// 重新发送邀请共享消息时，只有当共享是新的时候，才需要把该共享一并发送到服务器。否则，只是发送消息即可。
-				JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
-				if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
-					jsonPSA.put("state", "Wait");
-				} else {
-					jsonPSA.put("state", "NotInvite");
-				}
-				data += jsonPSA.toString();
-				
-				//如果项目也是新建的，一同保存到服务器
-				if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
-					data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
-				}
-				data += ",";
+			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+			data += jsonPSA.toString();
+			
+			//如果项目也是新建的，一同保存到服务器
+			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 			}
 			
 			JSONObject msg = getInviteMessage();
-			data += msg.toString() + "]";
+			data += "," + msg.toString() + "]";
 			
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectAddShare");
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareAdd");
 			((HyjActivity) MemberFormFragment.this.getActivity())
 			.displayProgressDialog(
 					R.string.memberFormFragment_title_addnew,
 					R.string.memberFormFragment_progress_adding);
-		} catch (JSONException e1) {
-		}
+//		} catch (JSONException e1) {
+//		}
+	}
+	
+private void sendEditProjectShareAuthorizationToServer() {
+		
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				loadProjectProjectShareAuthorizations(object);
+				HyjUtil.displayToast(R.string.memberFormFragment_toast_share_edit_success);
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+
+//		try {
+			String data = "[";
+			
+			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
+			data += jsonPSA.toString();
+			
+			//如果项目也是新建的，一同保存到服务器
+			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
+				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
+			}
+			
+			JSONObject msg = new JSONObject();
+			try {
+				msg.put("__dataType", "Message");
+				msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				msg.put("fromUserId", HyjApplication.getInstance()
+						.getCurrentUser().getId());
+				msg.put("type", "Project.Share.Edit");
+				msg.put("messageState", "new");
+				msg.put("messageTitle", "修改项目共享");
+				msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+				msg.put("detail", "用户"
+						+ HyjApplication.getInstance().getCurrentUser()
+								.getDisplayName() + "修改了项目共享权限: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+		//		msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
+				msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
+				
+				JSONObject msgData = new JSONObject();
+				msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				msgData.put("toUserDisplayName", mProjectShareAuthorizationEditor.getModelCopy().getFriend().getFriendUserName());
+				msgData.put("shareAllSubProjects", mProjectShareAuthorizationEditor.getModelCopy().getShareAllSubProjects());
+				msgData.put("projectShareAuthorizationId", mProjectShareAuthorizationEditor.getModelCopy().getId());
+		//		msgData.put("fromMessageBoxId", HyjApplication.getInstance().getCurrentUser().getMessageBoxId());
+				msgData.put("projectName", mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+				msgData.put("projectIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProjectId()  + "]"));
+				msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
+				msg.put("messageData", msgData.toString());
+				
+				if(mProjectShareAuthorizationEditor.getModelCopy().getState().equals("Accept")){
+					//只有接受了的项目，我们才发送修改消息
+					msg.put("id", UUID.randomUUID().toString());
+				}
+			} catch (JSONException e1) {
+			}
+				
+				
+			data += "," + msg.toString() + "]";
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareEdit");
+			((HyjActivity) MemberFormFragment.this.getActivity())
+			.displayProgressDialog(
+					R.string.memberFormFragment_title_edit,
+					R.string.memberFormFragment_progress_saving);
 	}
 
 	private JSONObject getInviteMessage() {
 		JSONObject msg = new JSONObject();
-			try {
-				msg.put("__dataType", "Message");
+		try {
+			msg.put("__dataType", "Message");
 			msg.put("toUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
 			msg.put("fromUserId", HyjApplication.getInstance()
 					.getCurrentUser().getId());
@@ -534,11 +577,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			msgData.put("projectCurrencyIds", new JSONArray("[" + mProjectShareAuthorizationEditor.getModelCopy().getProject().getCurrencyId()  + "]"));
 			msg.put("messageData", msgData.toString());
 			
-			if(mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId() != null){
-				if(!mCheckBoxSendInvite.isShown() || mCheckBoxSendInvite.isChecked()){
+			if(!mProjectShareAuthorizationEditor.getModelCopy().getState().equals("NotInvite")){
 					// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
 					msg.put("id", UUID.randomUUID().toString());
-				}
 			}
 		} catch (JSONException e) {
 		}
@@ -681,7 +722,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		 @Override
 		public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	         switch(requestCode){
-	              case GET_Friend_ID:
+	              case GET_FRIEND_ID:
 	            	 if(resultCode == Activity.RESULT_OK){
 	            		 long _id = data.getLongExtra("MODEL_ID", -1);
 	 	         		 Friend friend = Friend.load(Friend.class, _id);

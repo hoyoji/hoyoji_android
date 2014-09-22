@@ -226,15 +226,21 @@ public class MemberListFragment extends HyjUserListFragment{
 			((HyjNumericView)view).setNumber(percentage);
 			return true;
 		} else if(view.getId() == R.id.memberListItem_remark) {
-			String state = cursor.getString(columnIndex);
-			if(state.equalsIgnoreCase("Wait")){
-				((TextView)view).setText(R.string.memberListFragment_state_wait);
-			} else {
+			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
+			if(friendUserId == null){
 				((TextView)view).setText("");
+			} else {
+				String state = cursor.getString(columnIndex);
+				if(state.equalsIgnoreCase("Wait")){
+					((TextView)view).setText(R.string.memberListFragment_state_wait);
+				} else if(state.equalsIgnoreCase("NotInvite")){
+					((TextView)view).setText(R.string.memberListFragment_state_notinvite);
+				} else {
+					((TextView)view).setText("");
+				}
 			}
 			return true;
-		} 
-		else if(view.getId() == R.id.memberListItem_actualTotal) {
+		} else if(view.getId() == R.id.memberListItem_actualTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
 			Double actualTotal = projectShareAuthorization.getActualTotal();
