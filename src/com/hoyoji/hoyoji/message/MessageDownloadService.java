@@ -247,17 +247,19 @@ public class MessageDownloadService extends Service {
 					@Override
 					public void finishCallback(Object object) {
 							JSONArray jsonArray = (JSONArray) object;
-							JSONObject jsonObj = jsonArray.optJSONObject(0);
+							JSONObject jsonObj = jsonArray.optJSONArray(0).optJSONObject(0);
 
 							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
 							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 							if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
-								if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+								if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
 									loadSharedProjectData(jsonMsgData);
-								} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 0){
+								} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
 									removeNonOwnerData(psa.getProjectId());
 								}
 							}
+							psa.loadFromJSON(jsonObj, true);
+							psa.save();
 					}
 
 					@Override
