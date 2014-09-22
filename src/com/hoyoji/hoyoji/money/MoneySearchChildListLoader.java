@@ -34,7 +34,6 @@ import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
-import com.hoyoji.hoyoji.models.Project;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -178,10 +177,10 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 //	    	if(mProjectId == null){
-		    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"), dateFrom, dateTo).orderBy("date DESC").execute();
+		    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where(" mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyExpenses);
 		    	
-		    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
+		    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where(" mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyIncomes);
 //			}
 	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Expense"), dateFrom, dateTo).orderBy("date DESC").execute();

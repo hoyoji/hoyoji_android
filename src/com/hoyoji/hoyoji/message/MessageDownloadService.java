@@ -246,19 +246,18 @@ public class MessageDownloadService extends Service {
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
-//						try {
-//							JSONArray jsonArray = (JSONArray) object;
-//							JSONObject jsonObj = jsonArray.optJSONObject(0);
-//
-//							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
-//							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-////							if(psa.getState().equals("Accept"))
-//							
-////							if(jsonObj.optString(""))
-//							
-//						} catch (JSONException e) {
-//							e.printStackTrace();
-//						}
+							JSONArray jsonArray = (JSONArray) object;
+							JSONObject jsonObj = jsonArray.optJSONObject(0);
+
+							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
+							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
+							if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
+								if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+									loadSharedProjectData(jsonMsgData);
+								} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 0){
+									removeNonOwnerData(psa.getProjectId());
+								}
+							}
 					}
 
 					@Override
@@ -276,6 +275,107 @@ public class MessageDownloadService extends Service {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+	}
+
+	protected void removeNonOwnerData(String projectId) {
+//		JSONObject newObj = new JSONObject();
+//		newObj.put("__dataType", "Project");
+//		newObj.put("main.id", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "ProjectShareAuthorization");
+//		newObj.put("main.projectId", projectIds.get(i));
+////		newObj.put("main.state", "Accept");
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyExpenseContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyExpense");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyExpenseApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyIncomeContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyDepositIncomeContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyIncome");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyIncomeApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyDepositIncomeApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyBorrow");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyBorrowContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyBorrowApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyLend");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyLendContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyLendApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyReturn");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyReturnApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyDepositReturnApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyDepositReturnContainer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyPayback");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyPaybackApportion");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "MoneyTransfer");
+//		newObj.put("main.projectId", projectIds.get(i));
+//		data.put(newObj);
+//		newObj = new JSONObject();
+//		newObj.put("__dataType", "Picture");
+//		newObj.put("pst.projectId", projectIds.get(i));
+//		data.put(newObj);
+		
 	}
 
 	protected void loadSharedProjectData(JSONObject jsonMsgData) {
