@@ -124,6 +124,8 @@ public class MessageListFragment extends HyjUserListFragment{
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
 			} else if(msg.getType().equals("Project.Share.Delete") ){
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
+			} else if(msg.getType().equals("Project.Share.Edit") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_edit, bundle);
 			} else if(msg.getType().startsWith("Money.Share.Add") ){
 				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 			}
@@ -179,7 +181,7 @@ public class MessageListFragment extends HyjUserListFragment{
 						.getInstance(messageData.optString("currencyCode"));
 				String currencySymbol = "";
 				currencySymbol = localeCurrency.getSymbol();
-				if(currencySymbol.isEmpty()){
+				if(currencySymbol.length() == 0){
 					currencySymbol = messageData.optString("currencyCode");
 				}
 						
@@ -204,10 +206,10 @@ public class MessageListFragment extends HyjUserListFragment{
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
