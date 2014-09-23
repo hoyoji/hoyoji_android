@@ -86,8 +86,10 @@ import android.widget.Toast;
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
-	
+
 	private String mUserName;
+	
+	private String onReqState;
 
 	// IWXAPI �ǵ���app��΢��ͨ�ŵ�openapi�ӿ�
 	private IWXAPI api;
@@ -95,8 +97,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		mUserName="";
+
+		mUserName = "";
 		// setContentView(R.layout.entry);
 
 		// ͨ��WXAPIFactory��������ȡIWXAPI��ʵ��
@@ -200,13 +202,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			return;
 		}
 		SendAuth.Resp sendAuthResp = (SendAuth.Resp) resp;
-//		byte[] accessToken = HyjUtil
-//				.getHtmlByteArray("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-//						+ AppConstants.WX_APP_ID
-//						+ "&secret="
-//						+ AppConstants.WX_APP_SECRET
-//						+ "&code="
-//						+ sendAuthResp.token + "&grant_type=authorization_code");
+		// byte[] accessToken = HyjUtil
+		// .getHtmlByteArray("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
+		// + AppConstants.WX_APP_ID
+		// + "&secret="
+		// + AppConstants.WX_APP_SECRET
+		// + "&code="
+		// + sendAuthResp.token + "&grant_type=authorization_code");
 		// try {
 		// String str = new String(accessToken, "UTF-8").toString();
 		// Toast.makeText(this, str, Toast.LENGTH_LONG).show();
@@ -215,12 +217,15 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		// e.printStackTrace();
 		// }
 		
-		HyjAsyncTaskCallbacks callbacks = new HyjAsyncTaskCallbacks(){
+		onReqState = sendAuthResp.state;
+
+		HyjAsyncTaskCallbacks callbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void errorCallback(Object object) {
 				JSONObject jsonObj = (JSONObject) object;
 				try {
-					HyjUtil.displayToast(jsonObj.getJSONObject("__summary").getString("msg"));
+					HyjUtil.displayToast(jsonObj.getJSONObject("__summary")
+							.getString("msg"));
 				} catch (JSONException e) {
 				}
 				finish();
@@ -229,112 +234,225 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			@Override
 			public void finishCallback(Object object) {
 				JSONObject jsonAccessToken = (JSONObject) object;
-				
-				doWBLogin(jsonAccessToken);
+
+				doLoginOrBind(jsonAccessToken);
 			}
 		};
-		HyjHttpWXLoginAsyncTask.newInstance(sendAuthResp.token, callbacks );
+		HyjHttpWXLoginAsyncTask.newInstance(sendAuthResp.token, callbacks);
 	}
-	
-	
-	private void doWBLogin(final JSONObject values) {    
 
- 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
- 			@Override
- 			public void finishCallback(Object object) {
- 				if (object != null) {
- 					// 在本地找到该QQ用户
-// 					String userId = (String) object;
- 					
- 					loginWXFromServer(false, values);
- 					
-// 					((HyjApplication) getApplication()).loginQQ(userId, values);
-// 					relogin();
-// 					LoginActivity.this.dismissProgressDialog();
- 				} else {
- 					// 在本地找不到该QQ用户，我们到服务器上去找
- 					loginWXFromServer(true, values);
- 				}
- 			}
+	private void doLoginOrBind(JSONObject jsonAccessToken) {
+		if (onReqState.equals("loginWX")) {
+			doWXLogin(jsonAccessToken);
+		} else if (onReqState.equals("bindWX")) {
+			doBindWX(jsonAccessToken);
+		}
+	}
 
- 			@Override
- 			public Object doInBackground(String... string) {
- 				File file = new File("/data/data/" + HyjApplication.getInstance().getPackageName() + "/databases/");
- 			      if(file.isDirectory()){
- 			           File [] fileArray = file.listFiles();
- 			           if(null != fileArray && 0 != fileArray.length){
- 			                for(int i = 0; i < fileArray.length; i++){
+	private void doBindWX(final JSONObject loginInfo) {
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				JSONObject jsonObject = (JSONObject) object;
+				WXLogin wxLogin = new WXLogin();
+				wxLogin.loadFromJSON(jsonObject, true);
+				wxLogin.save();
 
- 			    				String dbName = fileArray[i].getName();
- 			    				if(dbName.endsWith(".db") || dbName.endsWith("-journal")){
- 			    					continue;
- 			    				}
- 			    				
- 			    				Cursor cursor = null;
- 			    				SQLiteDatabase rDb = null;
- 			    				DatabaseHelper mDbHelper = null;
- 			    				try{
- 					    				Configuration config = new Configuration.Builder(HyjApplication.getInstance())
- 					    											.setDatabaseName(dbName)
- 					    											.create(); 
- 					    				mDbHelper = new DatabaseHelper(config);
- 					    				rDb = mDbHelper.getReadableDatabase();
- 		
- 					    				// Define a projection that specifies which columns from the
- 					    				// database
- 					    				// you will actually use after this query.
- 					    				String[] projection = { "userId", "openid" };
- 					    				String[] args = { values.optString("openid") };
- 					    				cursor = rDb.query("WXLogin", 
- 					    						projection, // The columns to return
- 					    						"openid=?", 
- 					    						args, // The values for the WHERE clause
- 					    						null, // don't group the rows
- 					    						null, // don't filter by row groups
- 					    						null // The sort order
- 					    				);
- 					    				String userId = null;
- 					    				if (cursor.getCount() > 0) {
- 					    					cursor.moveToFirst();
- 					    					userId = cursor.getString(cursor.getColumnIndexOrThrow("userId"));
- 					    					cursor.close();
- 					    					rDb.close();
- 					    					mDbHelper.close();
- 					    					return userId;
- 					    				}
- 			    				} catch (Exception e){
- 			    					
- 			    				} finally{
- 			    					if(cursor != null){
- 			    						cursor.close();
- 			    					}
- 			    					if(rDb != null){
- 			    						rDb.close();
- 			    					}
- 			    					if(mDbHelper != null){
- 			    						mDbHelper.close();
- 			    					}
- 			    				}
- 			                }
- 			           }
- 			      }
- 				return null;
- 			}
- 		});
+				final User user = HyjApplication.getInstance().getCurrentUser();
+				if (jsonObject.optString("nickName").length() > 0) {
+					// 设置用户的昵称拼音, 并同步回服务器
+					if (!jsonObject.optString("nickName").equals(
+							user.getNickName())) {
+						user.setNickName(jsonObject.optString("nickName"));
+					}
+				}
+				final String headimgurl = jsonObject.optString("headimgurl");
+				if (headimgurl.length() > 0) {
+					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+						@Override
+						public void finishCallback(Object object) {
+							Bitmap thumbnail = null;
+							if (object != null) {
+								thumbnail = (Bitmap) object;
+								FileOutputStream out;
+								try {
+									Picture figure = new Picture();
+									File imgFile = HyjUtil.createImageFile
 
- 	}
-	
-	
-	private void loginWXFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
-		if(createUserDatabaseEntry == true){
-			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+									(figure.getId() + "_icon");
+									if (imgFile != null) {
+										out = new FileOutputStream(imgFile);
+										thumbnail.compress
+
+										(Bitmap.CompressFormat.JPEG, 90, out);
+										out.close();
+										out = null;
+
+										figure.setRecordId
+
+										(HyjApplication.getInstance()
+												.getCurrentUser().getId());
+										figure.setRecordType("User");
+										figure.setDisplayOrder(0);
+										figure.setPictureType("JPEG");
+
+										user.setPicture(figure);
+										figure.save();
+
+									}
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+
+							user.save();
+							HyjUtil.displayToast("WX帐号绑定成功");
+							finish();
+						}
+
+						@Override
+						public Object doInBackground(String... string) {
+							Bitmap thumbnail = null;
+							thumbnail = Util.getbitmap(headimgurl);
+							return thumbnail;
+						}
+					});
+					finish();
+				} else {
+					user.save();
+					HyjUtil.displayToast("WX帐号绑定成功");
+					finish();
+				}
+
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					// ((HyjActivity)getActivity()).dismissProgressDialog();
+					// getActivity().displayDialog("绑定WX失败",
+					// json.getJSONObject("__summary").getString("msg"));
+					finish();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(),"bindWX");
+	}
+
+	private void doWXLogin(final JSONObject values) {
+
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				if (object != null) {
+					// 在本地找到该QQ用户
+					// String userId = (String) object;
+
+					loginWXFromServer(false, values);
+
+					// ((HyjApplication) getApplication()).loginQQ(userId,
+					// values);
+					// relogin();
+					// LoginActivity.this.dismissProgressDialog();
+				} else {
+					// 在本地找不到该QQ用户，我们到服务器上去找
+					loginWXFromServer(true, values);
+				}
+			}
+
+			@Override
+			public Object doInBackground(String... string) {
+				File file = new File("/data/data/"
+						+ HyjApplication.getInstance().getPackageName()
+						+ "/databases/");
+				if (file.isDirectory()) {
+					File[] fileArray = file.listFiles();
+					if (null != fileArray && 0 != fileArray.length) {
+						for (int i = 0; i < fileArray.length; i++) {
+
+							String dbName = fileArray[i].getName();
+							if (dbName.endsWith(".db")
+									|| dbName.endsWith("-journal")) {
+								continue;
+							}
+
+							Cursor cursor = null;
+							SQLiteDatabase rDb = null;
+							DatabaseHelper mDbHelper = null;
+							try {
+								Configuration config = new Configuration.Builder(
+										HyjApplication.getInstance())
+										.setDatabaseName(dbName).create();
+								mDbHelper = new DatabaseHelper(config);
+								rDb = mDbHelper.getReadableDatabase();
+
+								// Define a projection that specifies which
+								// columns from the
+								// database
+								// you will actually use after this query.
+								String[] projection = { "userId", "openid" };
+								String[] args = { values.optString("openid") };
+								cursor = rDb.query("WXLogin", projection, // The
+																			// columns
+																			// to
+																			// return
+										"openid=?", args, // The values for the
+															// WHERE clause
+										null, // don't group the rows
+										null, // don't filter by row groups
+										null // The sort order
+										);
+								String userId = null;
+								if (cursor.getCount() > 0) {
+									cursor.moveToFirst();
+									userId = cursor.getString(cursor
+											.getColumnIndexOrThrow("userId"));
+									cursor.close();
+									rDb.close();
+									mDbHelper.close();
+									return userId;
+								}
+							} catch (Exception e) {
+
+							} finally {
+								if (cursor != null) {
+									cursor.close();
+								}
+								if (rDb != null) {
+									rDb.close();
+								}
+								if (mDbHelper != null) {
+									mDbHelper.close();
+								}
+							}
+						}
+					}
+				}
+				return null;
+			}
+		});
+
+	}
+
+	private void loginWXFromServer(final boolean createUserDatabaseEntry,
+			final JSONObject loginInfo) {
+		if (createUserDatabaseEntry == true) {
+			java.util.Currency currency = java.util.Currency.getInstance(Locale
+					.getDefault());
 			try {
 				loginInfo.put("currencyId", currency.getCurrencyCode());
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -351,14 +469,23 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 								.getWritableDatabase();
 						ContentValues values = new ContentValues();
 						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
-						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
+						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME,
+								mUserName);
 
 						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 						wDb.close();
 						mDbHelper.close();
-						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
+						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject
+								.getJSONObject("userData")
+								.optString("password"), loginInfo
+								.optString("access_token")), jsonObject);
 					} else {
-						if(((HyjApplication) getApplication()).loginWXFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
+						if (((HyjApplication) getApplication())
+								.loginWXFirstTime(userId, HyjUtil.ifNull(
+										jsonObject.getJSONObject("userData")
+												.optString("password"),
+										loginInfo.optString("access_token")),
+										jsonObject)) {
 							relogin();
 						}
 						WXEntryActivity.this.dismissProgressDialog();
@@ -374,30 +501,31 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				try {
 					JSONObject json = (JSONObject) object;
 					WXEntryActivity.this.dismissProgressDialog();
-					WXEntryActivity.this.displayDialog("登录失败",
-						json.getJSONObject("__summary").getString("msg"));
+					WXEntryActivity.this.displayDialog("登录失败", json
+							.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				finish();
 			}
 		};
-		
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "loginWX");
+
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(),
+				"loginWX");
 	}
-	
+
 	// 该WX好友第一次在本机登录，我们需要下载好友数据到本地
-	private void loginWXUserFirstTime(String userId, String password, JSONObject jsonUser)
-			throws JSONException {
-		if (((HyjApplication) getApplication()).loginWXFirstTime(userId, password, jsonUser)) {
+	private void loginWXUserFirstTime(String userId, String password,
+			JSONObject jsonUser) throws JSONException {
+		if (((HyjApplication) getApplication()).loginWXFirstTime(userId,
+				password, jsonUser)) {
 			downloadUserData();
 		} else {
 			this.dismissProgressDialog();
 		}
 	}
-	
-	
-	private void relogin(){
+
+	private void relogin() {
 		Intent i = getPackageManager().getLaunchIntentForPackage(
 				getApplicationContext().getPackageName());
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -405,11 +533,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		startActivity(i);
 		finish();
 	}
-	
-	
+
 	private void downloadUserData() {
 		User user = HyjApplication.getInstance().getCurrentUser();
-		
+
 		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
 				user.getMessageBoxId1());
 		if (msgBox != null) {
@@ -431,15 +558,15 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "WBLogin");
 			belongsToes.put(jsonObj);
-			
+
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "WXLogin");
 			belongsToes.put(jsonObj);
-			
+
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
@@ -462,67 +589,66 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ProjectShareAuthorization");
 			// jsonObj.put("ownerUserId", user.getId());
-//			JSONObject notFilter = new JSONObject();
-//			notFilter.put("ownerUserId", "");
-//			jsonObj.put("__NOT_FILTER__", notFilter);
-			belongsToes.put(jsonObj);
-			
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "ProjectRemark");
-//			 jsonObj.put("ownerUserId", user.getId());
+			// JSONObject notFilter = new JSONObject();
+			// notFilter.put("ownerUserId", "");
+			// jsonObj.put("__NOT_FILTER__", notFilter);
 			belongsToes.put(jsonObj);
 
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "ProjectRemark");
+			// jsonObj.put("ownerUserId", user.getId());
+			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "ParentProject");
 			jsonObj.put("parentProjectId", null);
 			// jsonObj.put("subProjectId", userData.getActiveProjectId());
-//			jsonObj.put("ownerUserId", user.getId());
+			// jsonObj.put("ownerUserId", user.getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "FriendCategory");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Friend");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Currency");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "Exchange");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyAccount");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			// jsonObj.put("id", userData.getActiveMoneyAccountId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyExpenseCategory");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MoneyIncomeCategory");
-//			jsonObj.put("ownerUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+			// .getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 
 			// 从服务器上下载基础数据
@@ -538,8 +664,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							for (int j = 0; j < jsonArray.length(); j++) {
 								JSONObject obj = array.optJSONObject(j);
 								if (obj != null) {
-									if(HyjApplication.getIsDebuggable()){
-										Log.i("Login Download Data : ",  obj.optString("__dataType"));
+									if (HyjApplication.getIsDebuggable()) {
+										Log.i("Login Download Data : ",
+												obj.optString("__dataType"));
 									}
 									if (obj.optString("__dataType").equals(
 											"MoneyAccount")) {
@@ -582,24 +709,27 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 											.equals("QQLogin")) {
 										QQLogin qqLogin = new QQLogin();
 										qqLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("figureUrl")){
-											figureUrl = obj.getString("figureUrl");
+										if (!obj.isNull("figureUrl")) {
+											figureUrl = obj
+													.getString("figureUrl");
 										}
 										qqLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("WXLogin")) {
 										WXLogin wxLogin = new WXLogin();
 										wxLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("headimgurl")){
-											figureUrl = obj.getString("headimgurl");
+										if (!obj.isNull("headimgurl")) {
+											figureUrl = obj
+													.getString("headimgurl");
 										}
 										wxLogin.save();
-									}  else if (obj.optString("__dataType")
+									} else if (obj.optString("__dataType")
 											.equals("WBLogin")) {
 										WBLogin wbLogin = new WBLogin();
 										wbLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("profile_image_url")){
-											figureUrl = obj.getString("profile_image_url");
+										if (!obj.isNull("profile_image_url")) {
+											figureUrl = obj
+													.getString("profile_image_url");
 										}
 										wbLogin.save();
 									} else if (obj.optString("__dataType")
@@ -627,8 +757,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 									} else if (obj.optString("__dataType")
 											.equals("ProjectRemark")) {
 										ProjectRemark projectRemark = new ProjectRemark();
-										projectRemark.loadFromJSON(obj,
-												true);
+										projectRemark.loadFromJSON(obj, true);
 										projectRemark.save();
 									}
 								}
@@ -638,56 +767,74 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 						ActiveAndroid.setTransactionSuccessful();
 						ActiveAndroid.endTransaction();
 
-
-						if(figureUrl != null){
+						if (figureUrl != null) {
 							final String figureUrl1 = figureUrl;
-							HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-								@Override
-								public void finishCallback(Object object) {
-									Bitmap thumbnail = null;
-									if(object != null){
-										thumbnail = (Bitmap) object;
-									}
-									
-									FileOutputStream out;
-									try {
-										Picture figure = new Picture();
-										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-										if(imgFile != null){
-											out = new FileOutputStream(imgFile);
-											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-											out.close();
-											out = null;
-											
-											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-											figure.setRecordType("User");
-											figure.setDisplayOrder(0);
-											figure.setPictureType("JPEG");
-											
-											HyjApplication.getInstance().getCurrentUser().setPicture(figure);
-											HyjApplication.getInstance().getCurrentUser().save();
-											figure.save();								
+							HyjAsyncTask
+									.newInstance(new HyjAsyncTaskCallbacks() {
+										@Override
+										public void finishCallback(Object object) {
+											Bitmap thumbnail = null;
+											if (object != null) {
+												thumbnail = (Bitmap) object;
+											}
+
+											FileOutputStream out;
+											try {
+												Picture figure = new Picture();
+												File imgFile = HyjUtil
+														.createImageFile(figure
+																.getId()
+																+ "_icon");
+												if (imgFile != null) {
+													out = new FileOutputStream(
+															imgFile);
+													thumbnail
+															.compress(
+																	Bitmap.CompressFormat.JPEG,
+																	90, out);
+													out.close();
+													out = null;
+
+													figure.setRecordId(HyjApplication
+															.getInstance()
+															.getCurrentUser()
+															.getId());
+													figure.setRecordType("User");
+													figure.setDisplayOrder(0);
+													figure.setPictureType("JPEG");
+
+													HyjApplication
+															.getInstance()
+															.getCurrentUser()
+															.setPicture(figure);
+													HyjApplication
+															.getInstance()
+															.getCurrentUser()
+															.save();
+													figure.save();
+												}
+											} catch (FileNotFoundException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											} catch (IOException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
 										}
-									} catch (FileNotFoundException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-			
-								@Override
-								public Object doInBackground(String... string) {
-									Bitmap thumbnail = null;
-									thumbnail = Util.getbitmap(figureUrl1);
-									return thumbnail;
-								}
-							});
+
+										@Override
+										public Object doInBackground(
+												String... string) {
+											Bitmap thumbnail = null;
+											thumbnail = Util
+													.getbitmap(figureUrl1);
+											return thumbnail;
+										}
+									});
 						}
-						
-						
-						
+
 						WXEntryActivity.this.dismissProgressDialog();
 						relogin();
 					} catch (Exception e) {
@@ -701,9 +848,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 					WXEntryActivity.this.dismissProgressDialog();
 					try {
 						JSONObject json = (JSONObject) object;
-						WXEntryActivity.this.displayDialog(null,
-								json.getJSONObject("__summary")
-										.getString("msg"));
+						WXEntryActivity.this.displayDialog(null, json
+								.getJSONObject("__summary").getString("msg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -750,12 +896,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	protected void displayDialog(Object object, String string) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	protected void dismissProgressDialog() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static class HyjHttpWXLoginAsyncTask extends HyjAsyncTask {
@@ -764,7 +910,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			super(callbacks);
 		}
 
-		public static HyjHttpWXLoginAsyncTask newInstance(String code, HyjAsyncTaskCallbacks callbacks) {
+		public static HyjHttpWXLoginAsyncTask newInstance(String code,
+				HyjAsyncTaskCallbacks callbacks) {
 			HyjHttpWXLoginAsyncTask newTask = new HyjHttpWXLoginAsyncTask(
 					callbacks);
 			newTask.execute(code);
@@ -794,7 +941,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			}
 			return null;
 		}
-
 
 		// onPostExecute displays the results of the AsyncTask.
 		@Override

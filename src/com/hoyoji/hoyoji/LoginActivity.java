@@ -322,8 +322,9 @@ public class LoginActivity extends HyjActivity {
 		api = WXAPIFactory.createWXAPI(this, AppConstants.WX_APP_ID);
 		final SendAuth.Req req = new SendAuth.Req();
 		req.scope = "snsapi_userinfo";
-		req.state = "none";
+		req.state = "loginWX";
 		api.sendReq(req);
+		
 	}
 	
 	public void attemptWBLogin() {

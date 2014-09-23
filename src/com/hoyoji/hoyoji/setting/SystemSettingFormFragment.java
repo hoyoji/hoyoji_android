@@ -75,6 +75,7 @@ import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.models.WXLogin;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
@@ -82,6 +83,9 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.SendAuth;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.sample.Util;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -96,8 +100,10 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private HyjTextField mTextFieldPhone = null;
 	private Button mButtonPhone = null;
 	private HyjTextField mTextFieldQQ = null;
+	private HyjTextField mTextFieldWX = null;
 	private HyjTextField mTextFieldWB = null;
 	private Button mButtonQQ = null;
+	private Button mButtonWX = null;
 	private Button mButtonWB = null;
 	private Button mButtonChangePassword = null;
 	private Button mButtonUploadPicture = null;
@@ -122,6 +128,8 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	
 	private int mExpenseColor = 0;
 	private int mIncomeColor = 0;
+	
+	private IWXAPI api;
 	
 	@Override
 	public Integer useContentView() {
@@ -183,12 +191,19 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_QQ);
 		mTextFieldQQ.setEditable(false);
 		
+		mTextFieldWX = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_WX);
+		mTextFieldWX.setEditable(false);
+		
 		mTextFieldWB = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_WB);
 		mTextFieldWB.setEditable(false);
 		
 		mButtonQQ = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_QQBinding);
 		
 		setQQField();
+		
+		mButtonWX = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_WXBinding);
+		
+		setWXField();
 		
 		mButtonWB = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_WBBinding);
 		
@@ -394,8 +409,9 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			mButtonQQ.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					WXLogin hasWXLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					WBLogin hasWBLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword() && hasWBLogin == null){
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword() && hasWBLogin == null && hasWXLogin == null){
 						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
 						return;
 					}
@@ -582,6 +598,89 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, qqLogin.toJSON().toString(), "unBindQQ");
 		} else {
 			HyjUtil.displayToast("找不到已绑定的QQ帐户");
+		}
+
+	}
+	
+	
+	private void setWXField() {
+		WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(wxLogin != null){
+			mTextFieldWX.setText(wxLogin.getNickName());
+			mButtonWX.setText("解绑");
+			mButtonWX.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					QQLogin hasQQLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					WBLogin hasWBLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword() && hasWBLogin == null && hasQQLogin == null){
+						HyjUtil.displayToast("您尚未设置登录密码，请先设置登录密码再解绑");
+						return;
+					}
+					unBindWX();
+				}
+			});
+		}else{
+			mButtonWX.setText("绑定");
+			mTextFieldWX.setText(null);
+			mButtonWX.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					attemptWXLogin();
+				}
+			});
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		setWXField();
+    }
+	
+	public void attemptWXLogin() {
+		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
+		final SendAuth.Req req = new SendAuth.Req();
+		req.scope = "snsapi_userinfo";
+		req.state = "bindWX";
+		api.sendReq(req);
+		
+	}
+	
+	private void unBindWX() {
+		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(wxLogin != null){
+						wxLogin.deleteFromServer();
+					}
+					setWXField();
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					HyjUtil.displayToast("解绑成功");
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity)getActivity()).dismissProgressDialog();
+					((HyjActivity)getActivity()).displayDialog("解绑微信不成功",
+						json.getJSONObject("__summary").getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+		if(wxLogin != null){
+			((HyjActivity)getActivity()).displayProgressDialog(R.string.systemSettingFormFragment_toast_unBindWX,
+					R.string.systemSettingFormFragment_toast_unBindingWX);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, wxLogin.toJSON().toString(), "unBindWX");
+		} else {
+			HyjUtil.displayToast("找不到已绑定的微信帐户");
 		}
 
 	}
