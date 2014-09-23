@@ -619,7 +619,6 @@ public class HyjApplication extends Application {
 		Intent intent = new Intent(
 				this.getApplicationContext(),
 				LoginActivity.class);
-
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
 		startActivity(intent);
 	}

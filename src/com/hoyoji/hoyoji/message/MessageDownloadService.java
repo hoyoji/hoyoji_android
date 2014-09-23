@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -27,6 +28,27 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.AddFriendListFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
+import com.hoyoji.hoyoji.models.MoneyBorrowContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncome;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyLendApportion;
+import com.hoyoji.hoyoji.models.MoneyLendContainer;
+import com.hoyoji.hoyoji.models.MoneyPayback;
+import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
+import com.hoyoji.hoyoji.models.MoneyReturn;
+import com.hoyoji.hoyoji.models.MoneyReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -217,20 +239,19 @@ public class MessageDownloadService extends Service {
 				String projectShareAuthorizationId;
 				ProjectShareAuthorization psa;
 				JSONObject msgData = new JSONObject(newMessage.getMessageData());
-				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
+			projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
+				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
+				if(psa == null){
+					continue;
+				}
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
-					psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-					if(psa == null){
-						continue;
-					}
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();
 					
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Edit")) {
-					
-					doEditProjectShareAuthorization(msgData);
+					doEditProjectShareAuthorization(msgData, psa.getProjectShareMoneyExpenseOwnerDataOnly());
 					
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Delete")) {
@@ -241,7 +262,7 @@ public class MessageDownloadService extends Service {
 		}
 
 	}
-	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData) {
+	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData, final Boolean oldOwnerDataOnly) {
 		// load new ProjectData from server
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
@@ -251,12 +272,16 @@ public class MessageDownloadService extends Service {
 
 							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
 							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-							if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
-								if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
-									loadSharedProjectData(jsonMsgData);
-								} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
-									removeNonOwnerData(psa.getProjectId());
+							if(psa != null){
+								if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
+									if(oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
+										loadSharedProjectData(jsonMsgData);
+									} else if(!oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+										removeNonOwnerData(psa.getProjectId());
+									}
 								}
+							} else {
+								psa = new ProjectShareAuthorization();
 							}
 							psa.loadFromJSON(jsonObj, true);
 							psa.save();
@@ -280,104 +305,36 @@ public class MessageDownloadService extends Service {
 	}
 
 	protected void removeNonOwnerData(String projectId) {
-//		JSONObject newObj = new JSONObject();
-//		newObj.put("__dataType", "Project");
-//		newObj.put("main.id", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "ProjectShareAuthorization");
-//		newObj.put("main.projectId", projectIds.get(i));
-////		newObj.put("main.state", "Accept");
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyExpenseContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyExpense");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyExpenseApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyIncomeContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyDepositIncomeContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyIncome");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyIncomeApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyDepositIncomeApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyBorrow");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyBorrowContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyBorrowApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyLend");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyLendContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyLendApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyReturn");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyReturnApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyDepositReturnApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyDepositReturnContainer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyPayback");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyPaybackApportion");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "MoneyTransfer");
-//		newObj.put("main.projectId", projectIds.get(i));
-//		data.put(newObj);
-//		newObj = new JSONObject();
-//		newObj.put("__dataType", "Picture");
-//		newObj.put("pst.projectId", projectIds.get(i));
-//		data.put(newObj);
-		
+			ActiveAndroid.beginTransaction();
+			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
+			Project project = HyjModel.getModel(Project.class, projectId);
+			if(!project.getOwnerUserId().equals(curUserId)){
+				new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> friendUserId", projectId, curUserId).execute();
+			}
+			new Delete().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyDepositIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyDepositIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyBorrowApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyLend.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute();
+			new Delete().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(Picture.class).where("ownerUserId <> ?", curUserId).execute();
+			ActiveAndroid.setTransactionSuccessful();
+			ActiveAndroid.endTransaction();
 	}
 
 	protected void loadSharedProjectData(JSONObject jsonMsgData) {
