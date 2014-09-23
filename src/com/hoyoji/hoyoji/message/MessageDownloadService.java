@@ -307,7 +307,7 @@ public class MessageDownloadService extends Service {
 	protected void removeNonOwnerData(String projectId) {
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
-			new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> friendUserId", projectId, curUserId).execute();
+			new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> friendUserId AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
 			new Delete().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute();
