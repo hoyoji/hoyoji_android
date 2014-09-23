@@ -410,7 +410,8 @@ public class MoneySearchGroupListLoader extends
 						HyjUtil.toFixed2(incomeTotal));
 				list.add(groupObject);
 				loadCount += count + 1;
-			} else if(count == 0){
+			} 
+			if(count == 0){
 				// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
 				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis());
 				if(moreDataInMillis == -1){
