@@ -239,20 +239,19 @@ public class MessageDownloadService extends Service {
 				String projectShareAuthorizationId;
 				ProjectShareAuthorization psa;
 				JSONObject msgData = new JSONObject(newMessage.getMessageData());
-				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
+			projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
+				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
+				if(psa == null){
+					continue;
+				}
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
-					psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-					if(psa == null){
-						continue;
-					}
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();
 					
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Edit")) {
-					
-					doEditProjectShareAuthorization(msgData);
+					doEditProjectShareAuthorization(msgData, psa.getProjectShareMoneyExpenseOwnerDataOnly());
 					
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Delete")) {
@@ -263,7 +262,7 @@ public class MessageDownloadService extends Service {
 		}
 
 	}
-	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData) {
+	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData, final Boolean oldOwnerDataOnly) {
 		// load new ProjectData from server
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
@@ -275,9 +274,9 @@ public class MessageDownloadService extends Service {
 							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 							if(psa != null){
 								if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
-									if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
+									if(oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
 										loadSharedProjectData(jsonMsgData);
-									} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+									} else if(!oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
 										removeNonOwnerData(psa.getProjectId());
 									}
 								}
@@ -309,28 +308,28 @@ public class MessageDownloadService extends Service {
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> friendUserId", projectId, curUserId).execute();
-			new Delete().from(MoneyExpenseContainer.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
-			new Delete().from(MoneyExpense.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute();
-			new Delete().from(MoneyIncomeContainer.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
-			new Delete().from(MoneyIncome.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute();
 			new Delete().from(MoneyDepositIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyDepositIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute();
-			new Delete().from(MoneyBorrowContainer.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
-			new Delete().from(MoneyBorrow.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyBorrowApportion.class).where("ownerUserId <> ?", curUserId).execute();
-			new Delete().from(MoneyLendContainer.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
-			new Delete().from(MoneyLend.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(MoneyLend.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute();
-			new Delete().from(MoneyReturn.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute();
 			new Delete().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute();
 			new Delete().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
-			new Delete().from(MoneyPayback.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> ?", projectId, curUserId, curUserId).execute();
+			new Delete().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute();
 			new Delete().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
-			new Delete().from(Picture.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
+			new Delete().from(Picture.class).where("ownerUserId <> ?", curUserId).execute();
 			ActiveAndroid.setTransactionSuccessful();
 			ActiveAndroid.endTransaction();
 	}
