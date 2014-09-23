@@ -273,12 +273,16 @@ public class MessageDownloadService extends Service {
 
 							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
 							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-							if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
-								if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
-									loadSharedProjectData(jsonMsgData);
-								} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
-									removeNonOwnerData(psa.getProjectId());
+							if(psa != null){
+								if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
+									if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
+										loadSharedProjectData(jsonMsgData);
+									} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == false && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+										removeNonOwnerData(psa.getProjectId());
+									}
 								}
+							} else {
+								psa = new ProjectShareAuthorization();
 							}
 							psa.loadFromJSON(jsonObj, true);
 							psa.save();
