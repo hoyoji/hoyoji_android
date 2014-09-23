@@ -239,7 +239,7 @@ public class MessageDownloadService extends Service {
 				String projectShareAuthorizationId;
 				ProjectShareAuthorization psa;
 				JSONObject msgData = new JSONObject(newMessage.getMessageData());
-			projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
+				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				if(psa == null){
 					continue;
@@ -278,13 +278,11 @@ public class MessageDownloadService extends Service {
 										loadSharedProjectData(jsonMsgData);
 									} else if(!oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
 										removeNonOwnerData(psa.getProjectId());
+										psa.loadFromJSON(jsonObj, true);
+										psa.save();
 									}
 								}
-							} else {
-								psa = new ProjectShareAuthorization();
 							}
-							psa.loadFromJSON(jsonObj, true);
-							psa.save();
 					}
 
 					@Override
@@ -309,7 +307,7 @@ public class MessageDownloadService extends Service {
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			Project project = HyjModel.getModel(Project.class, projectId);
 			if(!project.getOwnerUserId().equals(curUserId)){
-				new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId<>? AND ownerUserId <> friendUserId", projectId, curUserId).execute();
+				new Delete().from(ProjectShareAuthorization.class).where("projectId=? AND (friendUserId IS NULL OR (friendUserId<>? AND ownerUserId <> friendUserId))", projectId, curUserId).execute();
 			}
 			new Delete().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();
 			new Delete().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute();

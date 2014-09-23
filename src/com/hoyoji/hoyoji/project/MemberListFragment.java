@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -78,7 +79,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		}
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Project project =  new Select().from(Project.class).where("_id=?", modelId).executeSingle();
+		Project project =  Model.load(Project.class, modelId);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(ProjectShareAuthorization.class, null),
 				null,
