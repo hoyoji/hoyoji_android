@@ -138,6 +138,20 @@
                     android:text="@string/systemSettingFormFragment_button_QQBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
             
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/systemSettingFormFragment_textField_WX"
+                android:layout_width="fill_parent"
+                android:layout_height="43dp"
+                hyj:hintText="@string/systemSettingFormFragment_editText_hint_WX"
+                hyj:labelText="@string/systemSettingFormFragment_textView_WX" >
+
+                <Button
+                    android:id="@+id/systemSettingFormFragment_button_WXBinding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/systemSettingFormFragment_button_WXBinding" />
+            </com.hoyoji.android.hyjframework.view.HyjTextField>
+            
              <com.hoyoji.android.hyjframework.view.HyjTextField
                 android:id="@+id/systemSettingFormFragment_textField_WB"
                 android:layout_width="fill_parent"
