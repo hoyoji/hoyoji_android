@@ -63,7 +63,8 @@
             android:name="com.hoyoji.hoyoji.MainActivity"
             android:label="@string/app_name" 
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+		    android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,7 +74,8 @@
             android:name="com.hoyoji.hoyoji.LoginActivity"
             android:label="@string/loginActivity_title"
             android:windowSoftInputMode="adjustPan" 
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+		    android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.hoyoji.hoyoji.FindPasswordActivity">
@@ -82,13 +84,14 @@
             android:name="com.hoyoji.hoyoji.RegisterActivity"
             android:label="@string/registerActivity_title"
             android:windowSoftInputMode="adjustPan" 
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+		    android:launchMode="singleTop">
         </activity>
-        <activity
+<!--         <activity
             android:name="com.hoyoji.hoyoji.SettingsActivity"
             android:label="@string/settingsActivity_title" 
             android:screenOrientation="portrait">
-        </activity>
+        </activity> -->
         <activity
             android:name="com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity"
             android:windowSoftInputMode="adjustPan" 
