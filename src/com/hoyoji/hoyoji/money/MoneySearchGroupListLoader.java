@@ -258,8 +258,8 @@ public class MoneySearchGroupListLoader extends
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN Project prj ON main.projectId = prj.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE prj.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"),
 								args);
 				if (cursor != null) {
 					cursor.moveToFirst();
@@ -271,8 +271,8 @@ public class MoneySearchGroupListLoader extends
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN Project prj ON main.projectId = prj.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE prj.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectIncome"),
 								args);
 				if (cursor != null) {
 					cursor.moveToFirst();
@@ -410,10 +410,8 @@ public class MoneySearchGroupListLoader extends
 						HyjUtil.toFixed2(incomeTotal));
 				list.add(groupObject);
 				loadCount += count + 1;
-			}
-
-			// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
-			if(count == 0){
+			} else if(count == 0){
+				// 我们要检查还有没有数据可以加载的，如果没有了，我们就break出。否则会进入无限循环。
 				long moreDataInMillis = getHasMoreDataDateInMillis(calDateFrom.getTimeInMillis());
 				if(moreDataInMillis == -1){
 					break;
