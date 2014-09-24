@@ -220,12 +220,13 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 
 	@Override
 	public void setFooterLoadFinished(ListView l, int count){
+		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
 		if(l == getListView()){
 //			super.setFooterLoadFinished(l, count);
 			((TextView)super.mFooterView).setEnabled(true);
-			if(count >= l.getAdapter().getCount() + getListPageSize() - 2){
+			if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_more);
-			} else if(count == 0 && l.getAdapter().getCount() == 2){
+			} else if(count == 0 && l.getAdapter().getCount() == offset){
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_no_content);
 		        if(super.mEmptyView != null){
 					super.mEmptyView.setText(R.string.app_listview_no_content);
@@ -236,9 +237,9 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			return;
 		}
 		((TextView)mFooterView).setEnabled(true);
-		if(count >= l.getAdapter().getCount() + getListPageSize() - 1){
+		if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-		} else if(count == 0 && l.getAdapter().getCount() == 1){
+		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
 	        if(mEmptyView != null){
 				mEmptyView.setText(R.string.app_listview_no_content);

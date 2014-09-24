@@ -169,9 +169,10 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	
 	public void setFooterLoadFinished(ListView l, int count){
         ((TextView)mFooterView).setEnabled(true);
-		if(count >= l.getAdapter().getCount() + getListPageSize() - 1){
+        int offset = l.getHeaderViewsCount() + l.getFooterViewsCount();
+		if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-		} else if(count == 0 && l.getAdapter().getCount() == 1){
+		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
 	        if(mEmptyView != null){
 				mEmptyView.setText(R.string.app_listview_no_content);

@@ -229,6 +229,8 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 
 	@Override
 	public void setFooterLoadFinished(ListView l, int count){
-        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - 1);
+
+		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
+        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
 	}
 }
