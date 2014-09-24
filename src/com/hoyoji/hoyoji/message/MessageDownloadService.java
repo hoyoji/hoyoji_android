@@ -310,6 +310,7 @@ public class MessageDownloadService extends Service {
 	}
 
 	protected void removeNonOwnerData(String projectId) {
+		try{
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			Project project = HyjModel.getModel(Project.class, projectId);
@@ -339,7 +340,10 @@ public class MessageDownloadService extends Service {
 			removeListModelFromDB(new Select().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(Picture.class).where("ownerUserId <> ?", curUserId).execute());
 			ActiveAndroid.setTransactionSuccessful();
+		} catch (Exception e){
 			ActiveAndroid.endTransaction();
+		}
+		ActiveAndroid.endTransaction();
 	}
 
 	protected void loadSharedProjectData(JSONObject jsonMsgData) {
