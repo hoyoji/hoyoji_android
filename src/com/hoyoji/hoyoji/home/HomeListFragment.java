@@ -128,6 +128,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
+		
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mExpenseButton.setOnClickListener(new OnClickListener(){
@@ -136,6 +137,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     		}
 		});
+		
 		mIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_income);
 		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		mIncomeButton.setOnClickListener(new OnClickListener(){
@@ -144,14 +146,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
     		}
 		});
+		
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		
 //		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
 //			@Override
 //			public void onClick(View v) {
 //				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
 //    		}
-//		});		
+//		});
+		
 		getView().findViewById(R.id.homeListFragment_action_money_debt).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -243,6 +248,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	}
 
 	private void updateHeaderStat() {
+		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 		String localCurrencyId = HyjApplication.getInstance().getCurrentUser()
 				.getUserData().getActiveCurrencyId();
 		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
@@ -267,11 +273,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				.openDatabase()
 				.rawQuery(
 						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-								+ "FROM MoneyExpense main  LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ "FROM MoneyExpense main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ?", args);
+								+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			expenseTotal = cursor.getDouble(1);
@@ -287,7 +293,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE date > ? AND date <= ?", args);
+								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			incomeTotal = cursor.getDouble(1);
