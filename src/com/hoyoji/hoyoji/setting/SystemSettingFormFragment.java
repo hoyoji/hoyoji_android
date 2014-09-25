@@ -166,20 +166,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			}
 		});
 		
-		if((HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null 
-		|| HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false)
-		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
-		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
-			mButtonEmail.setText("绑定");
-		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() != null 
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
-			mButtonEmail.setText("解绑");
-		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
-			mButtonEmail.setText("验证");
-		}
+		setEmailField();
 		
 		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
 		mTextFieldPhone.setEditable(false);
@@ -374,6 +361,22 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 //		super.onDestroy();
 //	}
 
+	private void setEmailField() {
+		if((HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null 
+		|| HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false)
+		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
+		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
+			mButtonEmail.setText("绑定");
+		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() != false 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			mButtonEmail.setText("解绑");
+		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			mButtonEmail.setText("验证");
+		}
+	}
 	private void setPhoneField() {
 		mTextFieldPhone.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getPhone());
 		if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
@@ -636,6 +639,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	public void onResume() {
 		super.onResume();
 		setWXField();
+		setEmailField();
     }
 	
 	public void attemptWXLogin() {
