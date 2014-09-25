@@ -314,31 +314,35 @@ public class MessageDownloadService extends Service {
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			Project project = HyjModel.getModel(Project.class, projectId);
+			removeListModelFromDB(new Select().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyLend.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			
+			removeListModelFromDB(new Select().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyDepositIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyBorrowApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select().from(Picture.class).where("ownerUserId <> ?", curUserId).execute());
+			
+			removeListModelFromDB(new Select().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyDepositIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			
 			if(!project.getOwnerUserId().equals(curUserId)){
 				removeListModelFromDB(new Select().from(ProjectShareAuthorization.class).where("projectId=? AND (friendUserId IS NULL OR (friendUserId<>? AND ownerUserId <> friendUserId))", projectId, curUserId).execute());
 			}
-			removeListModelFromDB(new Select().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrowApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLend.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(Picture.class).where("ownerUserId <> ?", curUserId).execute());
+			
 			ActiveAndroid.setTransactionSuccessful();
 //		} catch (Exception e){
 //		}
