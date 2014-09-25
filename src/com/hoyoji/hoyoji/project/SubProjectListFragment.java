@@ -25,6 +25,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -312,8 +313,17 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			return true;
 		}else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+			String projectId = cursor.getString(columnIndex);
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+				numericView.setSuffix(null);
+				numericView.setTextColor(Color.BLACK);
+				numericView.setPrefix("-");
+				numericView.setText(null);
+				return true;
+			}
 			
+			Project project = HyjModel.getModel(Project.class, projectId);
 //			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
