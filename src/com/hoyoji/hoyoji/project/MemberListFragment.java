@@ -244,7 +244,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_actualTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
@@ -275,7 +275,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_apportionTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
@@ -306,7 +306,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		else if(view.getId() == R.id.memberListItem_settlement) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!projectShareAuthorization.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
