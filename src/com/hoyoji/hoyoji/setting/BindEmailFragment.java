@@ -13,11 +13,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji_android.R;
 
 
@@ -29,6 +32,8 @@ public class BindEmailFragment extends HyjUserFragment {
 	boolean mHasError = false;
 	private Button mButtonSubmie = null;
 	private Button mButtonVerificationCode = null;
+	private LinearLayout verificationCodeLayput;
+//	private int authCode = 0;
 	
 	@Override
 	public Integer useContentView() {
@@ -37,22 +42,32 @@ public class BindEmailFragment extends HyjUserFragment {
 	 
 	@Override
 	public void onInitViewData(){
-		
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null
-		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
-		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
-			getView().findViewById(R.id.bindEmailFragment_linearLayout_verificationCode).setVisibility(View.GONE);
-			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("绑定邮箱");
-		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
-			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("验证邮箱");
-		}
-		
 		mEditTextEmail = (EditText) getView().findViewById(R.id.bindEmailFragment_editText_email);
 		mEditTextVerificationCode = (EditText) getView().findViewById(R.id.bindEmailFragment_editText_verificationCode);
 		mButtonSubmie = (Button) getView().findViewById(R.id.bindEmailFragment_button_submit);
 		mButtonVerificationCode = (Button) getView().findViewById(R.id.bindEmailFragment_button_verify);
+		verificationCodeLayput =(LinearLayout) getView().findViewById(R.id.bindEmailFragment_linearLayout_verificationCode);
+		
+		if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false
+		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
+		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
+			verificationCodeLayput.setVisibility(View.GONE);
+			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("绑定邮箱");
+		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("验证邮箱");
+			mEditTextEmail.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getEmail());
+		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() != false 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("更改邮箱");
+			mEditTextEmail.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getEmail());
+			verificationCodeLayput.setVisibility(View.GONE);
+		}
+		
+		
+		
 		
 		mButtonSubmie.setOnClickListener(new OnClickListener() {
 			@Override
@@ -62,7 +77,6 @@ public class BindEmailFragment extends HyjUserFragment {
 					
 				} else {
 					doBindEmail();
-					getView().findViewById(R.id.bindEmailFragment_linearLayout_verificationCode).setVisibility(View.VISIBLE);
 				}
 			}
 		});
@@ -74,47 +88,12 @@ public class BindEmailFragment extends HyjUserFragment {
 				if(!validateVerificationCodeData()){
 					
 				} else {
-					
+					doCheckAuthCode();
 				}
 			}
 		});
 	}
-//		mEditTextNewPassword2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//					@Override
-//					public boolean onEditorAction(TextView textView, int id,
-//							KeyEvent keyEvent) {
-//						if (id == R.id.imeAction_changepassword || id == EditorInfo.IME_ACTION_DONE) {
-//							onSave();
-//							return true;
-//						}
-//						return false;
-//					}
-//				});
-//		
-//		getView().findViewById(R.id.changePasswordFragment_button_onSave).setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				fillData();
-//				if(!validateData()){
-//					HyjUtil.displayToast(R.string.app_validation_error);
-//				} else {	
-//					changePassword_submit(v);
-//				}
-//			}
-//		});
-//		
-//		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-
-//	private void fillData(){
-//		if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
-//			mOldPassword = mEditTextOldPassword.getText().toString();
-//		}
-//		mNewPassword1 = mEditTextNewPassword1.getText().toString();
-//		mNewPassword2 = mEditTextNewPassword2.getText().toString();
-//	}
-//	
+	
 	public boolean validateEmailData(){
 		boolean validatePass = true;
 		
@@ -144,80 +123,12 @@ public class BindEmailFragment extends HyjUserFragment {
 		}
 		return validatePass;
 	}
-//	
-//	private boolean checkPassWordComplexity(String psw) {
-//		boolean repeat = true;
-//		boolean series = true;
-//		char first = psw.charAt(0);
-//		for (int i = 1; i < psw.length(); i++) {
-//			repeat = repeat && psw.charAt(i) == first;
-//			series = series && (int)psw.charAt(i) == (int)psw.charAt(i - 1) + 1;
-//		}
-//		if (repeat || series) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	private void onSave(){
-//		fillData();
-//		if(!validateData()){
-//			HyjUtil.displayToast(R.string.app_validation_error);
-//		} else {	
-//			changePassword_submit(null);
-//		}
-//	}
-//	
-//	private void changePassword_submit(View v){
-//			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//				@Override
-//				public void finishCallback(Object object) {
-//					
-//					HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
-//					editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
-//					if(!editor.getModel().getHasPassword()){
-//						editor.getModelCopy().setHasPassword(true);
-//					}
-//					editor.getModelCopy().setSyncFromServer(true);
-//					editor.save();
-//
-//					((HyjActivity) BindEmailFragment.this.getActivity()).dismissProgressDialog();
-//					HyjUtil.displayToast(R.string.app_save_success);
-//					getActivity().finish();
-//				}
-//
-//				@Override
-//				public void errorCallback(Object object) {
-//					((HyjActivity) BindEmailFragment.this.getActivity()).dismissProgressDialog();
-//					
-//					JSONObject json = (JSONObject) object;
-//					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
-//				}
-//			};
-//
-//			try {
-//				JSONObject data = new JSONObject();
-//				data.put("userId", HyjApplication.getInstance().getCurrentUser().getId());
-//				if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
-//					data.put("oldPassword", HyjUtil.getSHA1(mOldPassword));
-//				}
-//				data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
-//				data.put("newPassword2", HyjUtil.getSHA1(mNewPassword2));
-//				
-//				HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString() , "changePassword");
-//				
-//				((HyjActivity) this.getActivity())
-//						.displayProgressDialog(
-//								R.string.changePasswordFragment_title,
-//								R.string.changePasswordFragment_toast_changing);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//	}
+
 	public void doBindEmail() {
 		 JSONObject findPasswordJsonObject = new JSONObject();
     		try {
 				findPasswordJsonObject.put("email", mEmail);
+				findPasswordJsonObject.put("type", "BindEmail");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -227,15 +138,13 @@ public class BindEmailFragment extends HyjUserFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				//JSONObject jsonObject = (JSONObject) object;
-//				try {
-//					((HyjActivity) getActivity()).displayDialog(null,
-//							jsonObject.getJSONObject("__summary")
-//									.getString("msg"));
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+				JSONObject jsonObject = (JSONObject) object;
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				userData.setEmail(mEmail);
+				userData.setSyncFromServer(true);
+				userData.save();
+				verificationCodeLayput.setVisibility(View.VISIBLE);
+				((HyjActivity) getActivity()).displayDialog(null,jsonObject.opt("result").toString());
 			}
 
 			@Override
@@ -252,6 +161,46 @@ public class BindEmailFragment extends HyjUserFragment {
 		};
     	 
     	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "bindEmail");
+	 }
+	
+	public void doCheckAuthCode() {
+		 JSONObject findPasswordJsonObject = new JSONObject();
+		 try {
+			findPasswordJsonObject.put("email", mEmail);
+			findPasswordJsonObject.put("verificationCode", mVerificationCode);
+			
+		 } catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		 }
+   	 
+   	// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				JSONObject jsonObject = (JSONObject) object;
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				userData.setEmailVerified(true);
+				userData.setSyncFromServer(true);
+				userData.save();
+				((HyjActivity) getActivity()).displayDialog(null,jsonObject.opt("result").toString());
+				getActivity().finish();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity) getActivity()).displayDialog(null,
+							json.getJSONObject("__summary")
+									.getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+   	 
+   	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "checkAuthCode");
 	 }
 	 
 }

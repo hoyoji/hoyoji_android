@@ -23,13 +23,14 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.hoyoji_android.R;
 
 
-public class FindPasswordActivity extends HyjActivity {
+public class FindPasswordFragment extends HyjUserFragment {
 	private String mUserName;
 	private String mFindPasswordEmail;
 	private EditText mUserNameView;
@@ -37,11 +38,16 @@ public class FindPasswordActivity extends HyjActivity {
 //	private Spinner mFindPasswordSpinner;
 	private Button mFindPasswordButton;
 	
+	@Override
+	public Integer useContentView() {
+		return R.layout.login_fragment_findpassword;
+	}
+	
 	 public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserNameView = (EditText)findViewById(R.id.editText_username);
-        mFindPasswordEmailView = (EditText)findViewById(R.id.editText_phoneoremail);
-        mFindPasswordButton = (Button)findViewById(R.id.button_findpassword);
+        mUserNameView = (EditText) getView().findViewById(R.id.editText_username);
+        mFindPasswordEmailView = (EditText) getView().findViewById(R.id.editText_phoneoremail);
+        mFindPasswordButton = (Button) getView().findViewById(R.id.button_findpassword);
         
 //        mFindPasswordSpinner=  (Spinner)findViewById(R.id.spinner_findpasswordway);
 //        List<String> findPasswordList = new ArrayList<String>();
@@ -79,7 +85,7 @@ public class FindPasswordActivity extends HyjActivity {
 		
 		if (TextUtils.isEmpty(mFindPasswordEmail) || !matcher.matches()) {
 			mFindPasswordEmailView
-					.setError(getString(R.string.findpasswordActivity_validation_email_error));
+					.setError(getString(R.string.findpasswordFragment_validation_email_error));
 			focusView = mFindPasswordEmailView;
 			cancel = true;
 		}
@@ -87,7 +93,7 @@ public class FindPasswordActivity extends HyjActivity {
 		// Check for a valid userName.
 		if (TextUtils.isEmpty(mUserName) || mUserName.length() < 3) {
 			mUserNameView
-					.setError(getString(R.string.findpasswordActivity_validation_username_error_shortandempty));
+					.setError(getString(R.string.findpasswordFragment_validation_username_error_shortandempty));
 			focusView = mUserNameView;
 			cancel = true;
 		}
@@ -127,7 +133,7 @@ public class FindPasswordActivity extends HyjActivity {
 			public void finishCallback(Object object) {
 				try {
 					JSONObject json = (JSONObject) object;
-					FindPasswordActivity.this.displayDialog(null,
+					((HyjActivity) getActivity()).displayDialog(null,
 							json.getJSONObject("__summary")
 									.getString("msg"));
 				} catch (Exception e) {
@@ -139,7 +145,7 @@ public class FindPasswordActivity extends HyjActivity {
 			public void errorCallback(Object object) {
 				try {
 					JSONObject json = (JSONObject) object;
-					FindPasswordActivity.this.displayDialog(null,
+					((HyjActivity) getActivity()).displayDialog(null,
 							json.getJSONObject("__summary")
 									.getString("msg"));
 				} catch (Exception e) {
@@ -152,9 +158,4 @@ public class FindPasswordActivity extends HyjActivity {
 	 }
 	 
 	 
-	@Override
-	protected Integer getContentView() {
-		// TODO Auto-generated method stub
-		return R.layout.activity_findpassword;
-	}
 }

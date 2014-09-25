@@ -29,13 +29,13 @@ public class UserData extends HyjModel {
 	private String mEmail;
 	
 	@Column(name = "emailVerified")
-	private Boolean mEmailVerified;
+	private Boolean mEmailVerified = false;
 
 	@Column(name = "phone")
 	private String mPhone;
 	
 	@Column(name = "phoneVerified")
-	private Boolean mPhoneVerified;
+	private Boolean mPhoneVerified = false;
 	
 	@Column(name = "incomeColor")
 	private String mIncomeColor;
@@ -272,7 +272,7 @@ public class UserData extends HyjModel {
 	}
 
 	public void setLastSyncTime(String mLastSyncTime) {
-		if(mLastSyncTime != null && mLastSyncTime.isEmpty()){
+		if(mLastSyncTime != null && mLastSyncTime.length() == 0){
 			this.mLastSyncTime = null;
 		} else {
 			this.mLastSyncTime = mLastSyncTime;
@@ -284,7 +284,7 @@ public class UserData extends HyjModel {
 	}
 
 	public void setLastMessagesDownloadTime(String mLastMessagesDownloadTime) {
-		if(mLastMessagesDownloadTime != null && mLastMessagesDownloadTime.isEmpty()){
+		if(mLastMessagesDownloadTime != null && mLastMessagesDownloadTime.length() == 0){
 			this.mLastMessagesDownloadTime = null;
 		} else {
 			this.mLastMessagesDownloadTime = mLastMessagesDownloadTime;

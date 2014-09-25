@@ -40,6 +40,8 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.WBLogin;
+import com.hoyoji.hoyoji.setting.BindEmailFragment;
+import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
@@ -169,7 +171,7 @@ public class LoginActivity extends HyjActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						startActivity(new Intent(LoginActivity.this, FindPasswordActivity.class));
+						LoginActivity.this.openActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
 					}
 				});
 		
