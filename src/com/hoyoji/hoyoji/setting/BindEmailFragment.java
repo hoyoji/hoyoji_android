@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
@@ -74,7 +75,7 @@ public class BindEmailFragment extends HyjUserFragment {
 			public void onClick(View v) {
 				mEmail = mEditTextEmail.getText().toString();
 				if(!validateEmailData()){
-					
+					HyjUtil.displayToast(R.string.app_validation_error);
 				} else {
 					doBindEmail();
 				}
@@ -86,7 +87,7 @@ public class BindEmailFragment extends HyjUserFragment {
 			public void onClick(View v) {
 				mVerificationCode = mEditTextVerificationCode.getText().toString();
 				if(!validateVerificationCodeData()){
-					
+					HyjUtil.displayToast(R.string.app_validation_error);
 				} else {
 					doCheckAuthCode();
 				}
