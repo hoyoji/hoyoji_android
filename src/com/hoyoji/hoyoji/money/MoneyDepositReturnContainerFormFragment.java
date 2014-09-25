@@ -910,7 +910,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 								moneyPayback = new MoneyPayback();
 								moneyPayback.setPaybackType("Deposit");
 							} else {
-								moneyPayback = new Select().from(MoneyLend.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
+								moneyPayback = new Select().from(MoneyPayback.class).where("moneyReturnId=? AND ownerFriendId=?", moneyReturn.getId(), moneyReturn.getLocalFriendId()).executeSingle();
 							}
 							moneyPayback.setMoneyReturnId(moneyReturn.getId());
 							moneyPayback.setAmount(apportionEditor.getModelCopy().getAmount0());

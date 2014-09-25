@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -250,6 +252,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
 			mBooleanFieldSharePercentageType.setEnabled(false);
 			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+			
 		}
 		
 		
@@ -298,7 +301,15 @@ public class MemberFormFragment extends HyjUserFormFragment {
 //		mCheckBoxShareAuthPaybackDelete = (CheckBox)getView().findViewById(R.id.memberFormFragment_checkBox_shareAuthorization_payback_delete);
 //		mCheckBoxShareAuthPaybackDelete.setChecked(projectShareAuthorization.getProjectShareMoneyPaybackDelete());
 	}
-	
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		if(mProjectShareAuthorizationEditor.getModel().get_mId() != null && 
+				!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			hideSaveAction();
+		}
+	}
 	private void setAveragePercentage(ProjectShareAuthorization projectShareAuthorization) {
 		//将成员设成平均分摊
 		double fixedPercentageTotal = 0.0;
@@ -323,7 +334,8 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		
 		mNumericFieldSharePercentage.setNumber(adjsutedAverageAmount);
 	}
-
+	
+	
 	private void fillData() {
 		ProjectShareAuthorization modelCopy = mProjectShareAuthorizationEditor.getModelCopy();
 		modelCopy.setSharePercentage(mNumericFieldSharePercentage.getNumber());

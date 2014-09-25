@@ -596,7 +596,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyExpenseCategory.setEnabled(false);
-
 			mSelectorFieldFriend.setEnabled(false);
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
@@ -611,7 +610,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 			mRemarkFieldRemark.setEnabled(false);
 
-			if(this.mOptionsMenu != null){
+			if(this.mOptionsMenu != null) {
 		    	hideSaveAction();
 			}
 			
