@@ -310,7 +310,7 @@ public class MessageDownloadService extends Service {
 	}
 
 	protected void removeNonOwnerData(String projectId) {
-		try{
+//		try{
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			Project project = HyjModel.getModel(Project.class, projectId);
@@ -333,16 +333,15 @@ public class MessageDownloadService extends Service {
 			removeListModelFromDB(new Select().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(Picture.class).where("ownerUserId <> ?", curUserId).execute());
 			ActiveAndroid.setTransactionSuccessful();
-		} catch (Exception e){
-			ActiveAndroid.endTransaction();
-		}
+//		} catch (Exception e){
+//		}
 		ActiveAndroid.endTransaction();
 	}
 
