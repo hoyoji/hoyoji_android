@@ -118,8 +118,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_stat_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
-		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		return view;
 	}
 	
@@ -127,7 +125,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	public void onInitViewData() {
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
+
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
@@ -146,6 +144,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
     		}
 		});
+		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 //		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
 //			@Override
 //			public void onClick(View v) {
