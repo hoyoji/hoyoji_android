@@ -1,8 +1,13 @@
 package com.hoyoji.hoyoji.home;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -10,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,7 +35,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -84,7 +93,11 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private ContentObserver mChangeObserver = null;
 	private Button mExpenseButton;
 	private Button mIncomeButton;
-	
+	private TextView mIncomeStat;
+	private TextView mExpenseStat;
+
+	private DateFormat mDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	@Override
 	public Integer useContentView() {
 		return R.layout.home_listfragment_home;
@@ -101,8 +114,20 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	}
 
 	@Override
+	protected View useHeaderView(Bundle savedInstanceState){
+		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_stat_header, null);
+		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
+		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
+		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		return view;
+	}
+	
+	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
 		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
@@ -201,6 +226,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			}
 		});
 		
+		updateHeaderStat();
+		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
@@ -212,6 +239,62 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
 					mChangeObserver);
 		}
+		
+	}
+
+	private void updateHeaderStat() {
+		String localCurrencyId = HyjApplication.getInstance().getCurrentUser()
+				.getUserData().getActiveCurrencyId();
+		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
+
+		Calendar calToday = Calendar.getInstance();
+		calToday.set(Calendar.HOUR_OF_DAY, 0);
+		calToday.clear(Calendar.MINUTE);
+		calToday.clear(Calendar.SECOND);
+		calToday.clear(Calendar.MILLISECOND);
+		
+		calToday.set(Calendar.DATE, 1);
+		long dateFrom = calToday.getTimeInMillis();
+		
+		calToday.add(Calendar.MONTH, 1);// 加一个月，变为下月的1号  
+		calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
+		long dateTo = calToday.getTimeInMillis() + 1000*60*60*24;
+
+		String[] args = new String[] {mDateFormat.format(new Date(dateFrom)), mDateFormat.format(new Date(dateTo))};
+		double expenseTotal = 0.0;
+		double incomeTotal = 0.0;
+		Cursor cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyExpense main  LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ?", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			expenseTotal = cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		this.mExpenseStat.setText(localCurrencySymbol + HyjUtil.toFixed2(expenseTotal));
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyIncome main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ?", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			incomeTotal = cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		this.mIncomeStat.setText(localCurrencySymbol + HyjUtil.toFixed2(incomeTotal));
 		
 	}
 
@@ -1319,14 +1402,17 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //			}	
 			mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+
+			mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
 				public void run() {
 					((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
-					
 				}
 			}, 50);
+			updateHeaderStat();
 		}
 	}
 	@Override
