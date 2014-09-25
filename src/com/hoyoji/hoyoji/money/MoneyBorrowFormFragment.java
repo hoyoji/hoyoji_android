@@ -1122,7 +1122,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 										project.getId(), localFriendId)
 								.executeSingle();
 					
-						if (psaMember != null) {
+						if (psaMember == null) {
 							mSelectorFieldFriend.setText(null);
 							mSelectorFieldFriend.setModelId(null);
 							mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
