@@ -252,6 +252,9 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
 			mBooleanFieldSharePercentageType.setEnabled(false);
 			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+			if(this.mOptionsMenu != null){
+				hideSaveAction();
+			}
 			
 		}
 		
@@ -305,7 +308,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		if(mProjectShareAuthorizationEditor.getModel().get_mId() != null && 
+		if(mProjectShareAuthorizationEditor != null && mProjectShareAuthorizationEditor.getModel().get_mId() != null && 
 				!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			hideSaveAction();
 		}

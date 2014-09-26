@@ -354,7 +354,11 @@ public class MoneyApportionField extends GridView {
 						MoneyApportion apportion;
 						apportion = type.newInstance();
 						apportion.setAmount(0.0);
-						apportion.setApportionType("Share");
+						if(projectShareAuthorizations.get(i).getShareType().equals("Average")){
+							apportion.setApportionType("Average");
+						} else {
+							apportion.setApportionType("Share");
+						}
 						apportion.setMoneyId(mMoneyTransactionId);
 						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());

@@ -346,10 +346,14 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			}
 			MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();
 			apportion.setAmount(0.0);
-				apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-				apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyDepositIncomeContainerId(moneyIncomeContainer.getId());
-
+			if(projectShareAuthorizations.get(i).getShareType() == null || projectShareAuthorizations.get(i).getShareType().equals("Average")){
+				apportion.setApportionType("Average");
+			} else {
+				apportion.setApportionType("Share");
+			}
 			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 		}
 		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
