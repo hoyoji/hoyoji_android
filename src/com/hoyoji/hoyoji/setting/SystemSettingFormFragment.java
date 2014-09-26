@@ -152,20 +152,13 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
 		mTextFieldNickName.setText(user.getNickName());
-
+		
 		mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_email);
 		mTextFieldEmail.setEditable(false);
 
-		mTextFieldEmail.setText(user.getUserData().getEmail());
-		mButtonEmail = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_emailBinding);
-		mButtonEmail.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//				HyjUtil.displayToast("该功能尚未完善，请关注后续版本");
-				SystemSettingFormFragment.this.openActivityWithFragment(BindEmailFragment.class, R.string.bindEmailFragment_title, null);
-			}
-		});
 		
+		mButtonEmail = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_emailBinding);
+
 		setEmailField();
 		
 		mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_phone);
@@ -362,21 +355,84 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 //	}
 
 	private void setEmailField() {
+		
 		if((HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == null 
 		|| HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false)
 		&& (HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() == null 
 		|| HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() == 0)){
 			mButtonEmail.setText("绑定");
+			mTextFieldEmail.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getEmail());
+			mButtonEmail.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SystemSettingFormFragment.this.openActivityWithFragment(BindEmailFragment.class, R.string.bindEmailFragment_title, null);
+				}
+			});
+		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
+		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
+			mButtonEmail.setText("验证");
+			mTextFieldEmail.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getEmail());
+			mButtonEmail.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SystemSettingFormFragment.this.openActivityWithFragment(BindEmailFragment.class, R.string.bindEmailFragment_title, null);
+				}
+			});
 		}else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() != false 
 		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
 		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
 			mButtonEmail.setText("解绑");
-		} else if(HyjApplication.getInstance().getCurrentUser().getUserData().ismEmailVerified() == false
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail() != null 
-		&& HyjApplication.getInstance().getCurrentUser().getUserData().getEmail().length() != 0){
-			mButtonEmail.setText("验证");
-		}
+			mTextFieldEmail.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getEmail());
+			mButtonEmail.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					unBindEmail();
+				}
+			});
+		} 
 	}
+	
+	public void unBindEmail() {
+		 JSONObject findPasswordJsonObject = new JSONObject();
+   		try {
+				findPasswordJsonObject.put("email", mTextFieldEmail.getText().toString());
+				findPasswordJsonObject.put("type", "unBindEmail");
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+   	 
+   		// 从服务器上下载用户数据
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				JSONObject jsonObject = (JSONObject) object;
+				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+				userData.setEmail(null);
+				userData.setEmailVerified(false);
+				userData.setSyncFromServer(true);
+				userData.save();
+				setEmailField();
+				((HyjActivity) getActivity()).displayDialog(null,jsonObject.opt("result").toString());
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				try {
+					JSONObject json = (JSONObject) object;
+					((HyjActivity) getActivity()).displayDialog(null,
+							json.getJSONObject("__summary")
+									.getString("msg"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+   	 
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "unBindEmail");
+	 }
+	
 	private void setPhoneField() {
 		mTextFieldPhone.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getPhone());
 		if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){

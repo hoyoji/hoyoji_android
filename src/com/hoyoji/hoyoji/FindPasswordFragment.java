@@ -228,15 +228,18 @@ public class FindPasswordFragment extends HyjUserFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				
-//				HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
-//				editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
-//				if(!editor.getModel().getHasPassword()){
-//					editor.getModelCopy().setHasPassword(true);
-//				}
-//				editor.getModelCopy().setSyncFromServer(true);
-//				editor.save();
-//
+				JSONObject jsonObject = (JSONObject) object;
+				if(HyjApplication.getInstance().getCurrentUser()!=null){
+					if(HyjApplication.getInstance().getCurrentUser().getId().equals(jsonObject.optString("userId"))){
+						HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
+						editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
+						if(!editor.getModel().getHasPassword()){
+							editor.getModelCopy().setHasPassword(true);
+						}
+						editor.getModelCopy().setSyncFromServer(true);
+						editor.save();
+					}
+				}
 //				((HyjActivity) FindPasswordFragment.this.getActivity()).dismissProgressDialog();
 				((HyjActivity) getActivity()).displayDialog(null,"密码找回成功");
 //				HyjUtil.displayToast(R.string.app_save_success);
