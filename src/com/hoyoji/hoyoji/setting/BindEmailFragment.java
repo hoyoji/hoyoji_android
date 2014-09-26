@@ -128,7 +128,7 @@ public class BindEmailFragment extends HyjUserFragment {
 	public void doBindEmail() {
 		 JSONObject findPasswordJsonObject = new JSONObject();
     		try {
-				findPasswordJsonObject.put("email", mEmail);
+				findPasswordJsonObject.put("email", mEditTextEmail.getText().toString());
 				findPasswordJsonObject.put("type", "BindEmail");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -167,7 +167,7 @@ public class BindEmailFragment extends HyjUserFragment {
 	public void doCheckAuthCode() {
 		 JSONObject findPasswordJsonObject = new JSONObject();
 		 try {
-			findPasswordJsonObject.put("email", mEmail);
+			findPasswordJsonObject.put("email", mEditTextEmail.getText().toString());
 			findPasswordJsonObject.put("verificationCode", mVerificationCode);
 			
 		 } catch (JSONException e1) {
