@@ -397,7 +397,12 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				apportion.setAmount(moneyDepositIncomeContainer.getAmount0());
 				apportion.setFriendUserId(friendUserId);
 				apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
-				apportion.setApportionType("Average");
+				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", moneyDepositIncomeContainer.getProjectId(), friendUserId).executeSingle();
+				if(projectShareAuthorization.getShareType() == null || projectShareAuthorization.getShareType().equals("Average")){
+					apportion.setApportionType("Average");
+				} else {
+					apportion.setApportionType("Share");
+				}
 				moneyApportions.add(apportion);
 			}
 			
