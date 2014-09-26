@@ -11,11 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
 import com.hoyoji.hoyoji_android.R;
 
 
@@ -73,7 +77,7 @@ public class FindPasswordFragment extends HyjUserFragment {
 					if(!validatePasswordData()){
 						HyjUtil.displayToast(R.string.app_validation_error);
 					} else {	
-						
+						resetPassword_submit();
 					}
 				}
 			});
@@ -165,7 +169,7 @@ public class FindPasswordFragment extends HyjUserFragment {
 			}
 		};
      	 
-     	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "findPasswordSendEmail");
+     	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "resetPasswordSendEmail");
 	 }
 	 
 	 private void fillData(){
@@ -220,6 +224,51 @@ public class FindPasswordFragment extends HyjUserFragment {
 		return false;
 	}
 	 
-	 
+	 private void resetPassword_submit(){
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				
+//				HyjModelEditor<UserData> editor = HyjApplication.getInstance().getCurrentUser().getUserData().newModelEditor();
+//				editor.getModelCopy().setPassword(HyjUtil.getSHA1(mNewPassword1));
+//				if(!editor.getModel().getHasPassword()){
+//					editor.getModelCopy().setHasPassword(true);
+//				}
+//				editor.getModelCopy().setSyncFromServer(true);
+//				editor.save();
+//
+//				((HyjActivity) FindPasswordFragment.this.getActivity()).dismissProgressDialog();
+				((HyjActivity) getActivity()).displayDialog(null,"密码找回成功");
+//				HyjUtil.displayToast(R.string.app_save_success);
+				getActivity().finish();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				((HyjActivity) FindPasswordFragment.this.getActivity()).dismissProgressDialog();
+				
+				JSONObject json = (JSONObject) object;
+				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+			}
+		};
+
+		try {
+			JSONObject data = new JSONObject();
+			data.put("userName", mUserNameView.getText().toString());
+			data.put("email", mFindPasswordEmailView.getText().toString());
+			data.put("verificationCode", mVerificationCodeView.getText().toString());
+			data.put("newPassword", HyjUtil.getSHA1(mNewPassword1));
+			data.put("newPassword2", HyjUtil.getSHA1(mNewPassword2));
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString() , "resetPassword");
+			
+			((HyjActivity) this.getActivity())
+					.displayProgressDialog(
+							R.string.findPasswordFragment_title,
+							R.string.findPasswordFragment_toast_changing);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	 
 }
