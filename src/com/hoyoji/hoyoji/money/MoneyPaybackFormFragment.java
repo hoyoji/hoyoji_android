@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -37,19 +35,15 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
 public class MoneyPaybackFormFragment extends HyjUserFormFragment {
@@ -59,8 +53,8 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 4;
 	private static final int TAG_IS_LOCAL_FRIEND = R.id.moneyLendFormFragment_selectorField_friend;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
-	private int CREATE_EXCHANGE = 0;
-	private int SET_EXCHANGE_RATE_FLAG = 1;
+	private static int CREATE_EXCHANGE = 0;
+	private static int SET_EXCHANGE_RATE_FLAG = 1;
 	
 	private HyjModelEditor<MoneyPayback> mMoneyPaybackEditor = null;
 	private HyjImageField mImageFieldPicture = null;
@@ -921,8 +915,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
      					if (psa.getFriendUserId() != null) {
      						// 不能选择自己作为债务人
      						if (psa.getFriendUserId().equals(
-     								HyjApplication.getInstance().getCurrentUser()
-     										.getId())) {
+     							HyjApplication.getInstance().getCurrentUser().getId())) {
      							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
      							break;
      						}
