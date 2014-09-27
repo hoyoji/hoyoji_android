@@ -149,10 +149,10 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		}else{
 			mNumericAmount.setNumber(moneyDepositIncomeContainer.getAmount());
 		}
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+//		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-		}
+//		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {
 			@Override
