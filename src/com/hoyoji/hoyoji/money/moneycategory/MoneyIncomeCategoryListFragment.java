@@ -294,7 +294,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		bundle.putInt("OFFSET", offset);
 		bundle.putInt("LIMIT", pageSize);
 		if(lastSelectedMainCategoryId != AdapterView.INVALID_ROW_ID){
-			MoneyExpenseCategory category = Model.load(MoneyExpenseCategory.class, lastSelectedMainCategoryId);
+			MoneyIncomeCategory category = Model.load(MoneyIncomeCategory.class, lastSelectedMainCategoryId);
 			bundle.putString("parentCategoryId", category.getId());
 		}
 		getLoaderManager().restartLoader(1, bundle,this);
