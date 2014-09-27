@@ -354,7 +354,7 @@ public class MoneyApportionField extends GridView {
 						MoneyApportion apportion;
 						apportion = type.newInstance();
 						apportion.setAmount(0.0);
-						if(projectShareAuthorizations.get(i).getShareType() == null || projectShareAuthorizations.get(i).getShareType().equals("Average")){
+						if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
 							apportion.setApportionType("Average");
 						} else {
 							apportion.setApportionType("Share");
@@ -381,7 +381,7 @@ public class MoneyApportionField extends GridView {
 				apportion.setMoneyId(mMoneyTransactionId);
 				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", project.getId(), apportion.getFriendUserId()).executeSingle();
-				if(projectShareAuthorization.getShareType() == null || projectShareAuthorization.getShareType().equals("Average")){
+				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
 					apportion.setApportionType("Average");
 				} else {
 					apportion.setApportionType("Share");

@@ -208,7 +208,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			super.setFooterLoadStart(l);
 			return;
 		}
-		if(childrenList.getAdapter().getCount() == 1){
+		if(childrenList.getAdapter().getCount() == childrenList.getHeaderViewsCount() + childrenList.getFooterViewsCount()){
 			if(mEmptyView != null){
 				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
 			}

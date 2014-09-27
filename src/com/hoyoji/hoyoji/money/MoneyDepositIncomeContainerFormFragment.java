@@ -349,7 +349,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyDepositIncomeContainerId(moneyIncomeContainer.getId());
-			if(projectShareAuthorizations.get(i).getShareType() == null || projectShareAuthorizations.get(i).getShareType().equals("Average")){
+			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
 				apportion.setApportionType("Average");
 			} else {
 				apportion.setApportionType("Share");
@@ -398,7 +398,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				apportion.setFriendUserId(friendUserId);
 				apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
 				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", moneyDepositIncomeContainer.getProjectId(), friendUserId).executeSingle();
-				if(projectShareAuthorization.getShareType() == null || projectShareAuthorization.getShareType().equals("Average")){
+				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
 					apportion.setApportionType("Average");
 				} else {
 					apportion.setApportionType("Share");
@@ -1133,7 +1133,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     					apportion.setLocalFriendId(psa.getLocalFriendId());
     				}
     				apportion.setAmount(0.0);
-    				if(psa.getShareType() != null && psa.getShareType().equals("Average")){
+    				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
     					apportion.setApportionType("Average");
     				} else {
     					apportion.setApportionType("Share");
