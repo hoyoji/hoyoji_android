@@ -25,8 +25,6 @@ import android.widget.LinearLayout;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -46,8 +44,6 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
-import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -61,7 +57,6 @@ import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -639,7 +634,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					}else{
-						mNumericExchangeRate.setText(null);
+						mNumericExchangeRate.setNumber(null);
 						CREATE_EXCHANGE = 1;
 					}
 				}
@@ -1467,11 +1462,16 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
     }
 
 		private void addAsProjectMember(ProjectShareAuthorization psa){
-			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 			apportion.setFriendUserId(psa.getFriendUserId());
 			apportion.setLocalFriendId(psa.getLocalFriendId());
 			apportion.setAmount(0.0);
-			apportion.setMoneyExpenseContainerId(mMoneyIncomeContainerEditor.getModel().getId());
+			if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+				apportion.setApportionType("Average");
+			} else {
+				apportion.setApportionType("Share");
+			}
+			apportion.setMoneyIncomeContainerId(mMoneyIncomeContainerEditor.getModel().getId());
 			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			} else {

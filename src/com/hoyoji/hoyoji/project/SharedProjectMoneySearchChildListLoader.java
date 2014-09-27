@@ -130,10 +130,10 @@ public class SharedProjectMoneySearchChildListLoader extends AsyncTaskLoader<Lis
 
 	    	String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 	    	
-			List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(Project.class).as("prj").on("main.projectId = prj.id").where("prj.id IS NULL AND date > ? AND date <= ?", currentUserId, dateFrom, dateTo).orderBy("date DESC").execute();
+			List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(Project.class).as("prj").on("main.projectId = prj.id").where("prj.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(Project.class).as("prj").on("main.projectId = prj.id").where("prj.id IS NULL AND date > ? AND date <= ?", currentUserId,  dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(Project.class).as("prj").on("main.projectId = prj.id").where("prj.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomes);
 	    	
 	    	Collections.sort(list, mDateComparator);

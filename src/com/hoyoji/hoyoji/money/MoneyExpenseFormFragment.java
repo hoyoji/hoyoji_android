@@ -540,7 +540,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					} else {
-						mNumericExchangeRate.setText(null);
+						mNumericExchangeRate.setNumber(null);
 						CREATE_EXCHANGE = 1;
 					}
 				}

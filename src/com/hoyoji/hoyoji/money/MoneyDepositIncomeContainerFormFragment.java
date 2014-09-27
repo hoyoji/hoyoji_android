@@ -557,7 +557,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					}else{
-						mNumericExchangeRate.setText(null);
+						mNumericExchangeRate.setNumber(null);
 						CREATE_EXCHANGE = 1;
 					}
 				}
@@ -1133,6 +1133,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     					apportion.setLocalFriendId(psa.getLocalFriendId());
     				}
     				apportion.setAmount(0.0);
+    				if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+    					apportion.setApportionType("Average");
+    				} else {
+    					apportion.setApportionType("Share");
+    				}
     				apportion.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModel().getId());
     				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
