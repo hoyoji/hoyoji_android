@@ -739,7 +739,15 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
 				((TextView)view).setText("充值卡充值");
 			} else {
-				((TextView)view).setText("转账");
+				if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
+					((TextView)view).setText("从"+moneyTransfer.getTransferIn().getName()+"转到"+moneyTransfer.getTransferOut().getName());
+				} else if(moneyTransfer.getTransferOut() != null){
+					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转出");
+				} else if(moneyTransfer.getTransferIn() != null){
+					((TextView)view).setText("转入到"+moneyTransfer.getTransferIn().getName());
+				} else {
+					((TextView)view).setText("转账");
+				}
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -748,7 +756,7 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyTransfer)object).getTransferOutAmount());
+			numericView.setNumber(((MoneyTransfer)object).getTransferOutLocalAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
@@ -774,7 +782,11 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			return true;
 		} else if(view.getId() == R.id.homeListItem_owner){
 			MoneyTransfer moneyTransfer = ((MoneyTransfer)object);
-			((TextView)view).setText(Friend.getFriendUserDisplayName(moneyTransfer.getOwnerUserId()));
+			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+				((TextView)view).setText(moneyTransfer.getTransferInFriend().getDisplayName());
+			} else {
+				((TextView)view).setText("");
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			((TextView)view).setText(((MoneyTransfer)object).getDisplayRemark());
