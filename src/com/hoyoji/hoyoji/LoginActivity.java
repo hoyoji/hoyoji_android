@@ -969,7 +969,7 @@ public class LoginActivity extends HyjActivity {
 						JSONArray jsonArray = (JSONArray) object;
 						for (int i = 0; i < jsonArray.length(); i++) {
 							JSONArray array = jsonArray.optJSONArray(i);
-							for (int j = 0; j < jsonArray.length(); j++) {
+							for (int j = 0; j < array.length(); j++) {
 								JSONObject obj = array.optJSONObject(j);
 								if (obj != null) {
 									if(HyjApplication.getIsDebuggable()){

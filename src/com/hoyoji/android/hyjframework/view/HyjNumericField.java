@@ -96,7 +96,7 @@ public class HyjNumericField extends LinearLayout {
 			public void onFocusChange(View v, boolean hasFocus) {
 				mClearOldText = true;
 				if(hasFocus){
-					mEditTextEdit.setSelection(0, mEditTextEdit.getText().toString().length());
+					mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
 				}
 			}
 		});
@@ -128,7 +128,7 @@ public class HyjNumericField extends LinearLayout {
 				if(mClearOldText == true){
 					mClearOldText = false;
 					if(s != null && s.length() > 0 && oldText != null && oldText.length() > 0){
-						mEditTextEdit.setText(s.subSequence(arg1, s.length()));
+						mEditTextEdit.setText(s.subSequence(arg1, arg1 + arg2 + 1));
 						mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
 					}
 				}
@@ -156,7 +156,7 @@ public class HyjNumericField extends LinearLayout {
 		mEditTextEdit.setText(text);
 		mClearOldText = true;
 		if(mEditTextEdit.getText() != null){
-			mEditTextEdit.setSelection(0, mEditTextEdit.getText().length());
+			mEditTextEdit.setSelection(mEditTextEdit.getText().length());
 		}
 	}
 	
