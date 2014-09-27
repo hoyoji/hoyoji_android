@@ -1133,7 +1133,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     					apportion.setLocalFriendId(psa.getLocalFriendId());
     				}
     				apportion.setAmount(0.0);
-    				if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+    				if(psa.getShareType() != null && psa.getShareType().equals("Average")){
     					apportion.setApportionType("Average");
     				} else {
     					apportion.setApportionType("Share");

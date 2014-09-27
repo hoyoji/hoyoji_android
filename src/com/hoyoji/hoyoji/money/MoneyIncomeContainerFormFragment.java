@@ -1405,7 +1405,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
      				long _id = data.getLongExtra("MODEL_ID", -1);
     				String type = data.getStringExtra("MODEL_TYPE");
     				ProjectShareAuthorization psa = null;
-    				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
     				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
     					psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
     				} else {
@@ -1466,7 +1465,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			apportion.setFriendUserId(psa.getFriendUserId());
 			apportion.setLocalFriendId(psa.getLocalFriendId());
 			apportion.setAmount(0.0);
-			if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+			if(psa.getShareType() != null && psa.getShareType().equals("Average")){
 				apportion.setApportionType("Average");
 			} else {
 				apportion.setApportionType("Share");

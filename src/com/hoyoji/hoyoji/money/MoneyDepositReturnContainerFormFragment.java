@@ -350,7 +350,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyDepositReturnContainerId(moneyIncomeContainer.getId());
-			if(projectShareAuthorizations.get(i).getShareType() == null || projectShareAuthorizations.get(i).getShareType().equals("Average")){
+			if(projectShareAuthorizations.get(i).getShareType() != null && projectShareAuthorizations.get(i).getShareType().equals("Average")){
 				apportion.setApportionType("Average");
 			} else {
 				apportion.setApportionType("Share");
@@ -1121,7 +1121,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
     					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
     					apportion.setFriendUserId(psa.getFriendUserId());
-        				if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+        				if(psa.getShareType() != null && psa.getShareType().equals("Average")){
         					apportion.setApportionType("Average");
         				} else {
         					apportion.setApportionType("Share");
@@ -1134,7 +1134,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 //    						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
 //    						if(psa != null){
 //								apportion.setFriendUserId(psa.getFriendUserId());
-//			    				if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+//			    				if(psa.getShareType() != null && psa.getShareType().equals("Average")){
 //			    					apportion.setApportionType("Average");
 //			    				} else {
 //			    					apportion.setApportionType("Share");

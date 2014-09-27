@@ -123,12 +123,11 @@ public class HyjNumericField extends LinearLayout {
 	        }
 	       
 	        @Override
-	        public void onTextChanged(CharSequence s, int arg1, int arg2,
-	                int arg3) {
+	        public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if(mClearOldText == true){
 					mClearOldText = false;
 					if(s != null && s.length() > 0 && oldText != null && oldText.length() > 0){
-						mEditTextEdit.setText(s.subSequence(arg1, arg1 + arg2 + 1));
+						mEditTextEdit.setText(s.subSequence(start, start + count));
 						mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
 					}
 				}

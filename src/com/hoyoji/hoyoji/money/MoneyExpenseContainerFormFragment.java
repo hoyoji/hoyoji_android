@@ -1525,7 +1525,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		apportion.setFriendUserId(psa.getFriendUserId());
 		apportion.setLocalFriendId(psa.getLocalFriendId());
 		apportion.setAmount(0.0);
-		if(psa.getShareType() == null || psa.getShareType().equals("Average")){
+		if(psa.getShareType() != null && psa.getShareType().equals("Average")){
 			apportion.setApportionType("Average");
 		} else {
 			apportion.setApportionType("Share");

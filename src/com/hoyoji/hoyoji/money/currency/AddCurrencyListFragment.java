@@ -169,7 +169,6 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 	}
 
 
-
 	@Override
 	public boolean onQueryTextSubmit(String searchText) {
 		if(searchText != null){
