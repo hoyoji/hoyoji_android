@@ -735,8 +735,9 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency().getSymbol());
-			numericView.setNumber(((MoneyTransfer)object).getTransferOutLocalAmount());
+			MoneyTransfer moneyTransfer = (MoneyTransfer)object;
+			numericView.setPrefix(moneyTransfer.getProject().getCurrencySymbol());
+			numericView.setNumber(moneyTransfer.getTransferProjectAmount());
 			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
