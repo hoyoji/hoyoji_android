@@ -171,7 +171,7 @@ public class LoginActivity extends HyjActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						LoginActivity.this.openActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
+						LoginActivity.this.openBlankActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
 					}
 				});
 		

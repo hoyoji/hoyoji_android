@@ -16,6 +16,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.models.UserData;
@@ -23,7 +24,7 @@ import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
 import com.hoyoji.hoyoji_android.R;
 
 
-public class FindPasswordFragment extends HyjUserFragment {
+public class FindPasswordFragment extends HyjFragment {
 	private EditText mUserNameView;
 	private EditText mFindPasswordEmailView;
 
