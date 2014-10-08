@@ -385,7 +385,7 @@ public class MainActivity extends HyjUserActivity {
 		mBadgeViewforMessage.setBadgeCount(0);
 		mBadgeViewforMessage.setMaxLines(1);
 		mBadgeViewforMessage.setSingleLine();
-		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
+//		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
 		mTabMessage.removeView(mBadgeViewforMessage);
 		mTabMessage.addView(mBadgeViewforMessage);
 	}
