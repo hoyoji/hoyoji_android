@@ -39,12 +39,12 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
-            <Button
+            <!-- <Button
                 android:id="@+id/button_find_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="@string/loginActivity_action_find_password" />
+                android:text="@string/loginActivity_action_find_password" /> -->
 
             <Button
                 android:id="@+id/button_sign_in"

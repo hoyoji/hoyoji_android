@@ -19,7 +19,7 @@ public class AppConstants {
     
     
     /** 当前 DEMO 应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY */
-    public static final String WEIBO_CONNECT_APP_KEY      = "2695180998";
+    public static final String WEIBO_CONNECT_APP_KEY      = "2302145186";
 
     /** 
      * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。

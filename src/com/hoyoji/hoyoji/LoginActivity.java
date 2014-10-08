@@ -97,7 +97,7 @@ public class LoginActivity extends HyjActivity {
 	private ImageButton mLoginQQButton;
 	private ImageButton mLoginWBButton;
 	private ImageButton mLoginWXButton;
-	private Button mFindPasswordButton;
+//	private Button mFindPasswordButton;
 
     private UserInfo mInfo;
     public static QQAuth mQQAuth;
@@ -166,14 +166,14 @@ public class LoginActivity extends HyjActivity {
 				}
 			});
 
-		mFindPasswordButton = (Button)findViewById(R.id.button_find_password);
-		mFindPasswordButton.setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						LoginActivity.this.openBlankActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
-					}
-				});
+//		mFindPasswordButton = (Button)findViewById(R.id.button_find_password);
+//		mFindPasswordButton.setOnClickListener(
+//				new View.OnClickListener() {
+//					@Override
+//					public void onClick(View view) {
+//						LoginActivity.this.openBlankActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
+//					}
+//				});
 		
 		if(mWeiboAuth == null){
 	        mWeiboAuth = new WeiboAuth(this, AppConstants.WEIBO_CONNECT_APP_KEY, AppConstants.WEIBO_CONNECT_REDIRECT_URL, AppConstants.WEIBO_CONNECT_SCOPE);
@@ -222,13 +222,14 @@ public class LoginActivity extends HyjActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case R.id.loginActivity_action_forgot_password:
+		switch (item.getItemId()) {
+		case R.id.loginActivity_action_forgot_password:
 //		   Bundle bundle = new Bundle();
 //		   bundle.putString("clickType", "findPassword");
 //    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
-//    	   return true;
-//		}
+		   LoginActivity.this.openBlankActivityWithFragment(FindPasswordFragment.class, R.string.findPasswordFragment_title, null);
+    	   return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

@@ -37,6 +37,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
@@ -83,7 +84,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
+public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 
 	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
@@ -97,6 +98,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.translucent);    
+		WXEntryActivity.this.setContentView(R.layout.activity_wxentry);   
 
 		mUserName = "";
 		// setContentView(R.layout.entry);
@@ -177,6 +180,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		// default:
 		// break;
 		// }
+		finish();
 	}
 
 	// ����Ӧ�÷��͵�΢�ŵ�����������Ӧ����ص�÷���
@@ -334,8 +338,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				try {
 					JSONObject json = (JSONObject) object;
 					// ((HyjActivity)getActivity()).dismissProgressDialog();
-					// getActivity().displayDialog("绑定WX失败",
-					// json.getJSONObject("__summary").getString("msg"));
+					 WXEntryActivity.this.displayDialog("绑定WX失败",
+					 json.getJSONObject("__summary").getString("msg"));
 					finish();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -347,6 +351,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	}
 
 	private void doWXLogin(final JSONObject values) {
+		WXEntryActivity.this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+ 				R.string.loginActivity_progress_signing_in);
 
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
@@ -362,24 +368,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 					// relogin();
 					// LoginActivity.this.dismissProgressDialog();
 				} else {
-					// 在本地找不到该QQ用户，我们到服务器上去找
+					// 在本地找不到该WX用户，我们到服务器上去找
 					loginWXFromServer(true, values);
 				}
 			}
 
 			@Override
 			public Object doInBackground(String... string) {
-				File file = new File("/data/data/"
-						+ HyjApplication.getInstance().getPackageName()
-						+ "/databases/");
+				File file = new File("/data/data/"+ HyjApplication.getInstance().getPackageName()+ "/databases/");
 				if (file.isDirectory()) {
 					File[] fileArray = file.listFiles();
 					if (null != fileArray && 0 != fileArray.length) {
 						for (int i = 0; i < fileArray.length; i++) {
 
 							String dbName = fileArray[i].getName();
-							if (dbName.endsWith(".db")
-									|| dbName.endsWith("-journal")) {
+							if (dbName.endsWith(".db") || dbName.endsWith("-journal")) {
 								continue;
 							}
 
@@ -387,9 +390,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							SQLiteDatabase rDb = null;
 							DatabaseHelper mDbHelper = null;
 							try {
-								Configuration config = new Configuration.Builder(
-										HyjApplication.getInstance())
-										.setDatabaseName(dbName).create();
+								Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(dbName).create();
 								mDbHelper = new DatabaseHelper(config);
 								rDb = mDbHelper.getReadableDatabase();
 
@@ -412,8 +413,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 								String userId = null;
 								if (cursor.getCount() > 0) {
 									cursor.moveToFirst();
-									userId = cursor.getString(cursor
-											.getColumnIndexOrThrow("userId"));
+									userId = cursor.getString(cursor.getColumnIndexOrThrow("userId"));
 									cursor.close();
 									rDb.close();
 									mDbHelper.close();
@@ -441,11 +441,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	}
 
-	private void loginWXFromServer(final boolean createUserDatabaseEntry,
-			final JSONObject loginInfo) {
+	private void loginWXFromServer(final boolean createUserDatabaseEntry,final JSONObject loginInfo) {
 		if (createUserDatabaseEntry == true) {
-			java.util.Currency currency = java.util.Currency.getInstance(Locale
-					.getDefault());
+			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
 			try {
 				loginInfo.put("currencyId", currency.getCurrencyCode());
 			} catch (JSONException e1) {
@@ -463,29 +461,18 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 					userId = jsonObject.getJSONObject("user").getString("id");
 
 					if (createUserDatabaseEntry == true) {
-						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
-								WXEntryActivity.this);
-						final SQLiteDatabase wDb = mDbHelper
-								.getWritableDatabase();
+						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(WXEntryActivity.this);
+						final SQLiteDatabase wDb = mDbHelper.getWritableDatabase();
 						ContentValues values = new ContentValues();
 						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
-						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME,
-								mUserName);
+						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME,mUserName);
 
 						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
 						wDb.close();
 						mDbHelper.close();
-						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject
-								.getJSONObject("userData")
-								.optString("password"), loginInfo
-								.optString("access_token")), jsonObject);
+						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
-						if (((HyjApplication) getApplication())
-								.loginWXFirstTime(userId, HyjUtil.ifNull(
-										jsonObject.getJSONObject("userData")
-												.optString("password"),
-										loginInfo.optString("access_token")),
-										jsonObject)) {
+						if (((HyjApplication) getApplication()).loginWXFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"),loginInfo.optString("access_token")),jsonObject)) {
 							relogin();
 						}
 						WXEntryActivity.this.dismissProgressDialog();
@@ -493,7 +480,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				finish();
 			}
 
 			@Override
@@ -510,15 +496,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			}
 		};
 
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(),
-				"loginWX");
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(),"loginWX");
 	}
 
 	// 该WX好友第一次在本机登录，我们需要下载好友数据到本地
-	private void loginWXUserFirstTime(String userId, String password,
-			JSONObject jsonUser) throws JSONException {
-		if (((HyjApplication) getApplication()).loginWXFirstTime(userId,
-				password, jsonUser)) {
+	private void loginWXUserFirstTime(String userId, String password,JSONObject jsonUser) throws JSONException {
+		if (((HyjApplication) getApplication()).loginWXFirstTime(userId,password, jsonUser)) {
 			downloadUserData();
 		} else {
 			this.dismissProgressDialog();
@@ -894,16 +877,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	// finish();
 	// }
 
-	protected void displayDialog(Object object, String string) {
-		// TODO Auto-generated method stub
-
-	}
-
-	protected void dismissProgressDialog() {
-		// TODO Auto-generated method stub
-
-	}
-
 	private static class HyjHttpWXLoginAsyncTask extends HyjAsyncTask {
 
 		public HyjHttpWXLoginAsyncTask(HyjAsyncTaskCallbacks callbacks) {
@@ -1058,5 +1031,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				return -1;
 			}
 		}
+	}
+
+	@Override
+	protected Integer getContentView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

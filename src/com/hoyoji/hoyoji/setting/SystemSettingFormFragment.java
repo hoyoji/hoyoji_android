@@ -725,9 +725,9 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			public void errorCallback(Object object) {
 				try {
 					JSONObject json = (JSONObject) object;
-					((HyjActivity)getActivity()).dismissProgressDialog();
 					((HyjActivity)getActivity()).displayDialog("解绑微信不成功",
 						json.getJSONObject("__summary").getString("msg"));
+					((HyjActivity)getActivity()).dismissProgressDialog();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
