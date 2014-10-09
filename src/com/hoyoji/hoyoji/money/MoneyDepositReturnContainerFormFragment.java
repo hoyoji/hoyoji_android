@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -21,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -82,6 +84,8 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
 	private boolean hasEditPermission = true;
+	private TextView mTextViewApportionFieldTitle;
+	private DataSetObserver mApportionCountObserver;
 	
 	@Override
 	public Integer useContentView() {
@@ -364,6 +368,14 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private void setupApportionField(MoneyDepositReturnContainer moneyDepositReturnContainer) {
 
 		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_apportionField);
+		mTextViewApportionFieldTitle = (TextView) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_apportionField_title);
+		mApportionCountObserver = new DataSetObserver(){
+	        @Override
+	        public void onChanged() {
+	    		mTextViewApportionFieldTitle.setText(getString(R.string.moneyDepositReturnContainerFormFragment_moneyApportionField_title)+"("+mApportionFieldApportions.getApportionCount()+")");
+	        }
+		};
+		mApportionFieldApportions.getAdapter().registerDataSetObserver(mApportionCountObserver);
 		
 		List<MoneyDepositReturnApportion> moneyApportions = null;
 		
@@ -1182,5 +1194,10 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				}
 				return mNewProjectShareAuthorization;
 			}
+		}
+
+		@Override
+		public void onDestroy(){
+			mApportionFieldApportions.getAdapter().unregisterDataSetObserver(mApportionCountObserver);
 		}
 	}

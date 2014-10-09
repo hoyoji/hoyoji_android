@@ -84,6 +84,17 @@ public class MoneyApportionField extends GridView {
 		return mImageGridAdapter;
 	}
 	
+	public int getApportionCount(){
+		int count = 0;
+		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() != ApportionItem.DELETED){
+				count ++;
+			}
+		}
+		return count;
+	}
+	
 	public boolean addApportion(MoneyApportion apportion, String projectId, int state){
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
