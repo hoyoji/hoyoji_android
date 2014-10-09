@@ -90,10 +90,22 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
 			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
 			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite){
+			shareOtherFriend();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void shareOtherFriend() {
+		Intent intent=new Intent(Intent.ACTION_SEND);   
+        intent.setType("image/*");   
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Share");   
+        intent.putExtra(Intent.EXTRA_TEXT, "www.baidu.com (分享自好友记AA记账)");   
+        
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
+        startActivity(Intent.createChooser(intent, "分享")); 
+	}
 
 
 	@Override
@@ -310,10 +322,10 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
