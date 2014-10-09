@@ -40,6 +40,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.WBLogin;
+import com.hoyoji.hoyoji.models.WXLogin;
 import com.hoyoji.hoyoji.setting.BindEmailFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
@@ -224,9 +225,9 @@ public class LoginActivity extends HyjActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 //		switch (item.getItemId()) {
 //		case R.id.loginActivity_action_forgot_password:
-//		   Bundle bundle = new Bundle();
-//		   bundle.putString("clickType", "findPassword");
-//    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
+////		   Bundle bundle = new Bundle();
+////		   bundle.putString("clickType", "findPassword");
+////    	   LoginActivity.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_findPassword_title, bundle);
 //    	   return true;
 //		}
 		return super.onOptionsItemSelected(item);
@@ -871,6 +872,10 @@ public class LoginActivity extends HyjActivity {
 			belongsToes.put(jsonObj);
 			
 			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "WXLogin");
+			belongsToes.put(jsonObj);
+			
+			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "MessageBox");
 //			jsonObj.put("ownerUserId", HyjApplication.getInstance()
 //					.getCurrentUser().getId());
@@ -1028,6 +1033,14 @@ public class LoginActivity extends HyjActivity {
 											figureUrl = obj.getString("profile_image_url");
 										}
 										wbLogin.save();
+									} else if (obj.optString("__dataType")
+											.equals("WXLogin")) {
+										WXLogin wxLogin = new WXLogin();
+										wxLogin.loadFromJSON(obj, true);
+										if(!obj.isNull("headimgurl")){
+											figureUrl = obj.getString("headimgurl");
+										}
+										wxLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
 										Friend friend = new Friend();
