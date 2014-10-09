@@ -1516,6 +1516,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		@Override
 		public void onDestroy(){
+			super.onDestroy();
 			mApportionFieldApportions.getAdapter().unregisterDataSetObserver(mApportionCountObserver);
 		}
 	}

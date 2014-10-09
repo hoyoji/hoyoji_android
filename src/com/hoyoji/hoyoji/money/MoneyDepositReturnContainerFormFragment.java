@@ -1198,6 +1198,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 
 		@Override
 		public void onDestroy(){
+			super.onDestroy();
 			mApportionFieldApportions.getAdapter().unregisterDataSetObserver(mApportionCountObserver);
 		}
 	}
