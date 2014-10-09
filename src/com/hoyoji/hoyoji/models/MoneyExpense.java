@@ -174,17 +174,17 @@ public class MoneyExpense extends HyjModel{
 	public Double getLocalAmount(){
 		Double rate = null;
 		String userCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
-			if(!userCurrencyId.equals(this.getProjectCurrencyId())){
-				Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProjectCurrencyId());
-				if(exchange != null){
-				   	rate = exchange;
-			    }
-			}
+		if(!userCurrencyId.equals(this.getProjectCurrencyId())){
+			Double exchange = Exchange.getExchangeRate(userCurrencyId, this.getProjectCurrencyId());
+			if(exchange != null){
+			   	rate = exchange;
+		    }
+		}
 
-			if(rate == null){
-				return null;
-			} 
-			return this.getAmount0()*this.getExchangeRate()/rate;
+		if(rate == null){
+			return null;
+		} 
+		return this.getAmount0()*this.getExchangeRate()/rate;
 	}
 
 	public Double getProjectAmount(){

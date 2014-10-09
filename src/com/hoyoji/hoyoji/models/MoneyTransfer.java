@@ -153,24 +153,24 @@ public class MoneyTransfer extends HyjModel{
 		return mTransferOutAmount;
 	}
 	
-	public Double getTransferOutLocalAmount() {
+	public Double getTransferProjectAmount() {
 		Double rate = null;
-		Currency userCurrency = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrency();
+		Currency projectCurrency = this.getProject().getCurrency();
 		if(this.getTransferOut() != null){
-			if(userCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
+			if(projectCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),projectCurrency.getId());
 			    if(exchange != null){
 			    	rate = exchange;
 			    }
 			}
 			return this.getTransferOutAmount0()*rate;
 		}else if(this.getTransferIn() != null){
-			if(userCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
+			if(projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
 				rate = 1.0;
 			}else{
-				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),userCurrency.getId());
+				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),projectCurrency.getId());
 			    if(exchange != null){
 			    	rate = exchange;
 			    }

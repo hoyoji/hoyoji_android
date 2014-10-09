@@ -146,7 +146,7 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 					try {
 						ActiveAndroid.beginTransaction();
 						Currency newCurrency = new Currency();
-						newCurrency.loadFromJSON(object, true);
+						newCurrency.loadFromJSON(object, false);
 						newCurrency.save();
 						ActiveAndroid.setTransactionSuccessful();
 					} finally {
@@ -167,7 +167,6 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 	public boolean onQueryTextChange(String arg0) {
 		return false;
 	}
-
 
 
 	@Override

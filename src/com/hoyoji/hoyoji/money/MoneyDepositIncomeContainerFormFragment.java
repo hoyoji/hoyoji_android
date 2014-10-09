@@ -149,10 +149,10 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		}else{
 			mNumericAmount.setNumber(moneyDepositIncomeContainer.getAmount());
 		}
-		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+//		if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
 			mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-		}
+//		}
 		
 		mNumericAmount.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -349,7 +349,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 			apportion.setMoneyDepositIncomeContainerId(moneyIncomeContainer.getId());
-			if(projectShareAuthorizations.get(i).getShareType() == null || projectShareAuthorizations.get(i).getShareType().equals("Average")){
+			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
 				apportion.setApportionType("Average");
 			} else {
 				apportion.setApportionType("Share");
@@ -398,7 +398,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				apportion.setFriendUserId(friendUserId);
 				apportion.setMoneyDepositIncomeContainerId(moneyDepositIncomeContainer.getId());
 				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", moneyDepositIncomeContainer.getProjectId(), friendUserId).executeSingle();
-				if(projectShareAuthorization.getShareType() == null || projectShareAuthorization.getShareType().equals("Average")){
+				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
 					apportion.setApportionType("Average");
 				} else {
 					apportion.setApportionType("Share");
@@ -557,7 +557,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						mNumericExchangeRate.setNumber(rate);
 						CREATE_EXCHANGE = 0;
 					}else{
-						mNumericExchangeRate.setText(null);
+						mNumericExchangeRate.setNumber(null);
 						CREATE_EXCHANGE = 1;
 					}
 				}
@@ -1133,6 +1133,11 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     					apportion.setLocalFriendId(psa.getLocalFriendId());
     				}
     				apportion.setAmount(0.0);
+    				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
+    					apportion.setApportionType("Average");
+    				} else {
+    					apportion.setApportionType("Share");
+    				}
     				apportion.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModel().getId());
     				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());

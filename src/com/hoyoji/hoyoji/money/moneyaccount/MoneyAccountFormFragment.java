@@ -126,12 +126,20 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 
 		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(
 				R.id.moneyAccountFormFragment_textField_accountType);
-		mSpinnerFieldAccountType
-				.setItems(
-						R.array.moneyAccountFormFragment_spinnerField_accountType_array,
-						new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"/*, "Debt" */});
+		if(moneyAccount.getAccountType().equals("Debt")){
+			mSpinnerFieldAccountType
+			.setItems(
+					R.array.moneyAccountFormFragment_spinnerField_accountType_array_debt,
+					new String[] {"Debt"});
+		} else {
+			mSpinnerFieldAccountType
+					.setItems(
+							R.array.moneyAccountFormFragment_spinnerField_accountType_array,
+							new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"});
+		}
 		mSpinnerFieldAccountType
 				.setSelectedValue(moneyAccount.getAccountType());
+		
 		mSpinnerFieldAccountType.setEnabled(modelId == -1
 				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		mSpinnerFieldAccountType.setOnItemSelectedListener(new OnItemSelectedListener(){
@@ -288,7 +296,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		fillData();
 
 		mMoneyAccountEditor.validate();
-
+				
 		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
 			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
 				mMoneyAccountEditor.setValidationError("friend", R.string.moneyAccountFormFragment_editText_hint_friend);

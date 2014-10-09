@@ -31,6 +31,7 @@ public class HyjNumericField extends LinearLayout {
 	
 	private TextView mTextViewLabel;
 	private EditText mEditTextEdit;
+	protected boolean mClearOldText;
 
 	public HyjNumericField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -87,12 +88,13 @@ public class HyjNumericField extends LinearLayout {
 			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
-		mEditTextEdit.setText(mEditText);
+		setText(mEditText);
 		mTextViewLabel.setText(mLabelText);
 		
 		mEditTextEdit.setOnFocusChangeListener(new OnFocusChangeListener(){
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
+				mClearOldText = true;
 				if(hasFocus){
 					mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
 				}
@@ -105,13 +107,36 @@ public class HyjNumericField extends LinearLayout {
 					KeyEvent keyEvent) {
 				if (id == EditorInfo.IME_ACTION_DONE
 						|| id == EditorInfo.IME_NULL) {	
-					 InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				        inputMethodManager.hideSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(), 0);
+					InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+			        inputMethodManager.hideSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(), 0);
 				   	return true;
 				}
 				return false;
 			}
 		});
+		mEditTextEdit.addTextChangedListener(new TextWatcher() {
+			CharSequence oldText = null;
+	        @Override
+	        public void beforeTextChanged(CharSequence s, int arg1, int arg2,
+	                int arg3) {
+	        	oldText = s;
+	        }
+	       
+	        @Override
+	        public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(mClearOldText == true){
+					mClearOldText = false;
+					if(s != null && s.length() > 0 && oldText != null && oldText.length() > 0){
+						mEditTextEdit.setText(s.subSequence(start, start + count));
+						mEditTextEdit.setSelection(mEditTextEdit.getText().toString().length());
+					}
+				}
+	        }
+	       
+	        @Override
+	        public void afterTextChanged(Editable s) {
+	        }
+	    });
 	}
 	
 	public void setOnFocusChangeListener(OnFocusChangeListener l){
@@ -126,10 +151,11 @@ public class HyjNumericField extends LinearLayout {
 		mEditTextEdit.addTextChangedListener(watcher);
 	}
 	
-	public void setText(String text){
+	private void setText(String text){
 		mEditTextEdit.setText(text);
-		if(text != null){
-			mEditTextEdit.setSelection(text.length());
+		mClearOldText = true;
+		if(mEditTextEdit.getText() != null){
+			mEditTextEdit.setSelection(mEditTextEdit.getText().length());
 		}
 	}
 	

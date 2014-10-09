@@ -23,6 +23,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -208,7 +209,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 			super.setFooterLoadStart(l);
 			return;
 		}
-		if(childrenList.getAdapter().getCount() == 1){
+		if(childrenList.getAdapter().getCount() == childrenList.getHeaderViewsCount() + childrenList.getFooterViewsCount()){
 			if(mEmptyView != null){
 				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
 			}
@@ -291,6 +292,10 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		Bundle bundle = new Bundle();
 		bundle.putInt("OFFSET", offset);
 		bundle.putInt("LIMIT", pageSize);
+		if(lastSelectedMainCategoryId != AdapterView.INVALID_ROW_ID){
+			MoneyExpenseCategory category = Model.load(MoneyExpenseCategory.class, lastSelectedMainCategoryId);
+			bundle.putString("parentCategoryId", category.getId());
+		}
 		getLoaderManager().restartLoader(1, bundle,this);
 	}
 		

@@ -23,6 +23,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -30,6 +31,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 
 public class MoneyIncomeCategoryListFragment extends HyjUserListFragment implements 
@@ -291,6 +293,10 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		Bundle bundle = new Bundle();
 		bundle.putInt("OFFSET", offset);
 		bundle.putInt("LIMIT", pageSize);
+		if(lastSelectedMainCategoryId != AdapterView.INVALID_ROW_ID){
+			MoneyIncomeCategory category = Model.load(MoneyIncomeCategory.class, lastSelectedMainCategoryId);
+			bundle.putString("parentCategoryId", category.getId());
+		}
 		getLoaderManager().restartLoader(1, bundle,this);
 	}
 		

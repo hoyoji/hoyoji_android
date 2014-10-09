@@ -45,7 +45,6 @@
                     hyj:style="no_label"
                     hyj:editTextBold="true"
                     hyj:editTextBorder="none"
-                    hyj:editTextColor="#339900"
                     hyj:hintText="@string/moneyDepositReturnContainerFormFragment_editText_hint_amount"
                     hyj:labelText="@string/moneyDepositReturnContainerFormFragment_textView_amount" >
 

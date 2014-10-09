@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils.TruncateAt;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -382,6 +383,9 @@ public class MainActivity extends HyjUserActivity {
 		
 		mBadgeViewforMessage.setHideOnNull(true);
 		mBadgeViewforMessage.setBadgeCount(0);
+		mBadgeViewforMessage.setMaxLines(1);
+		mBadgeViewforMessage.setSingleLine();
+//		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
 		mTabMessage.removeView(mBadgeViewforMessage);
 		mTabMessage.addView(mBadgeViewforMessage);
 	}

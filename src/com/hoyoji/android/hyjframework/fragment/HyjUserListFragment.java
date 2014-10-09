@@ -157,7 +157,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //        } else {
 //        }
 
-		if(l.getAdapter().getCount() == 1){
+		if(l.getAdapter().getCount() == l.getHeaderViewsCount() + l.getFooterViewsCount()){
 			if(mEmptyView != null){
 				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
 			}
