@@ -2,10 +2,13 @@ package com.hoyoji.hoyoji.friend;
 
 import java.util.List;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ import com.hoyoji.android.hyjframework.view.HyjBooleanView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
@@ -42,11 +46,18 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.SendMessageToWX;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.sdk.openapi.WXMediaMessage;
+import com.tencent.mm.sdk.openapi.WXWebpageObject;
+import com.tencent.mm.sdk.platformtools.Util;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
 	private static final int EDIT_FRIEND_DETAILS = 0;
 	private ContentObserver mUserChangeObserver = null;
+	private IWXAPI api;
 	
 	@Override
 	public Integer useContentView() {
@@ -91,13 +102,19 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
 			return true;
 		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite){
-			shareOtherFriend();
+			inviteOtherFriend();
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_wxFriend){
+			inviteWXFriend();
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_qqFriend){
+			inviteQQFriend();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void shareOtherFriend() {
+	public void inviteOtherFriend() {
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
         intent.putExtra(Intent.EXTRA_SUBJECT, "Share");   
@@ -105,6 +122,32 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
         startActivity(Intent.createChooser(intent, "分享")); 
+	}
+	
+	public void inviteWXFriend() {
+		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
+		WXWebpageObject webpage = new WXWebpageObject();
+		webpage.webpageUrl = "http://hoyojitest.doapp.com/invite.php?id=uuid";
+		WXMediaMessage msg = new WXMediaMessage(webpage);
+		msg.title = "邀请成为好友";
+		msg.description = "邀请您成为好友记好友，一起参与记账";
+		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+		msg.thumbData = Util.bmpToByteArray(thumb, true);
+		
+		SendMessageToWX.Req req = new SendMessageToWX.Req();
+		req.transaction = buildTransaction("webpage");
+		req.message = msg;
+//		req.scene = isTimelineCb.isChecked() ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;
+		api.sendReq(req);
+		
+	}
+	
+	public void inviteQQFriend() {
+		
+	}
+	
+	private String buildTransaction(final String type) {
+		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
 	}
 
 

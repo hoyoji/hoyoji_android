@@ -205,44 +205,49 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
 			return;
 		}
-		SendAuth.Resp sendAuthResp = (SendAuth.Resp) resp;
-		// byte[] accessToken = HyjUtil
-		// .getHtmlByteArray("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-		// + AppConstants.WX_APP_ID
-		// + "&secret="
-		// + AppConstants.WX_APP_SECRET
-		// + "&code="
-		// + sendAuthResp.token + "&grant_type=authorization_code");
-		// try {
-		// String str = new String(accessToken, "UTF-8").toString();
-		// Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-		// } catch (UnsupportedEncodingException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 		
-		onReqState = sendAuthResp.state;
-
-		HyjAsyncTaskCallbacks callbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void errorCallback(Object object) {
-				JSONObject jsonObj = (JSONObject) object;
-				try {
-					HyjUtil.displayToast(jsonObj.getJSONObject("__summary")
-							.getString("msg"));
-				} catch (JSONException e) {
+		if(resp instanceof SendAuth.Resp){
+			SendAuth.Resp sendAuthResp = (SendAuth.Resp) resp;
+			// byte[] accessToken = HyjUtil
+			// .getHtmlByteArray("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
+			// + AppConstants.WX_APP_ID
+			// + "&secret="
+			// + AppConstants.WX_APP_SECRET
+			// + "&code="
+			// + sendAuthResp.token + "&grant_type=authorization_code");
+			// try {
+			// String str = new String(accessToken, "UTF-8").toString();
+			// Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+			// } catch (UnsupportedEncodingException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			
+			onReqState = sendAuthResp.state;
+	
+			HyjAsyncTaskCallbacks callbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void errorCallback(Object object) {
+					JSONObject jsonObj = (JSONObject) object;
+					try {
+						HyjUtil.displayToast(jsonObj.getJSONObject("__summary")
+								.getString("msg"));
+					} catch (JSONException e) {
+					}
+					finish();
 				}
-				finish();
-			}
-
-			@Override
-			public void finishCallback(Object object) {
-				JSONObject jsonAccessToken = (JSONObject) object;
-
-				doLoginOrBind(jsonAccessToken);
-			}
-		};
-		HyjHttpWXLoginAsyncTask.newInstance(sendAuthResp.token, callbacks);
+	
+				@Override
+				public void finishCallback(Object object) {
+					JSONObject jsonAccessToken = (JSONObject) object;
+	
+					doLoginOrBind(jsonAccessToken);
+				}
+			};
+			HyjHttpWXLoginAsyncTask.newInstance(sendAuthResp.token, callbacks);
+		} else {
+			finish();
+		}
 	}
 
 	private void doLoginOrBind(JSONObject jsonAccessToken) {
