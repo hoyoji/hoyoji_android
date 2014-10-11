@@ -92,6 +92,9 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
+	
 	@Column(name = "ownerFriendId")
 	private String mOwnerFriendId;
 
