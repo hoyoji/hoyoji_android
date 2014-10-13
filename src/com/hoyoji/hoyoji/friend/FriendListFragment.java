@@ -172,7 +172,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 		};
    	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "inviteFriend");
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "inviteLink");
 	 }
 
 	public void inviteOtherFriend(String id) {
@@ -182,7 +182,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
         intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-        startActivity(Intent.createChooser(intent, HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为好友记好友，一起参与记账")); 
+        startActivity(Intent.createChooser(intent, "邀请好友，一起参与记账")); 
 	}
 	
 	public void inviteWXFriend(String id) {
