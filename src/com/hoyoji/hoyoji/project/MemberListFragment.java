@@ -162,6 +162,10 @@ public class MemberListFragment extends HyjUserListFragment{
 	public void inviteFriend(final String way) {
 		JSONObject inviteFriendObject = new JSONObject();
    		try {
+   				Intent intent = getActivity().getIntent();
+	   			Long modelId = intent.getLongExtra("MODEL_ID", -1);
+	   			Project project =  Model.load(Project.class, modelId);
+	   			inviteFriendObject.put("data", project.getId());
 				inviteFriendObject.put("title", "邀请您加入好友记项目");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为加入好友记项目，一起参与记账");
