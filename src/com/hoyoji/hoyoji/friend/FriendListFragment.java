@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +16,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -168,13 +172,31 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	public void inviteOtherFriend(String id) {
 		Intent intent=new Intent(Intent.ACTION_SEND);   
-        intent.setType("image/*");   
-        intent.putExtra(Intent.EXTRA_TITLE, "邀请成为好友");  
-        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
-        intent.putExtra(Intent.EXTRA_TEXT,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);  
+        intent.setType("text/plain");   
         
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-        startActivity(Intent.createChooser(intent, "邀请成为好友")); 
+//      File f;
+//		try {
+//			f = HyjUtil.createImageFile("invite_friend", "PNG");
+//			if(!f.exists()){
+//		        Bitmap bmp = HyjUtil.getCommonBitmap(R.drawable.invite_friend);
+//			    FileOutputStream out;
+//				out = new FileOutputStream(f);
+//				bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+//				out.close();
+//			}
+//	        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+        
+	        intent.putExtra(Intent.EXTRA_TITLE, "邀请成为好友");  
+	        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
+	        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。\n\n" + HyjApplication.getServerUrl()+"m/invite.html?id=" + id);  
+	        
+	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
+	        startActivity(Intent.createChooser(intent, "邀请成为好友")); 
+	        
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			HyjUtil.displayToast(e.getMessage());
+//		}
 	}
 	
 	public void inviteWXFriend(String id) {
