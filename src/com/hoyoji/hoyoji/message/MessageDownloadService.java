@@ -128,32 +128,30 @@ public class MessageDownloadService extends Service {
 								List<Message> projectShareMessages = new ArrayList<Message>();
 								try {
 									ActiveAndroid.beginTransaction();
-									if (jsonArray.length() > 0) {
-										for (int i = 0; i < jsonArray.length(); i++) {
-											JSONObject jsonMessage = jsonArray
-													.optJSONObject(i);
-											Message newMessage = new Message();
-											newMessage.loadFromJSON(
-													jsonMessage, true);
-											newMessage.save();
-											if (newMessage
-													.getType().startsWith(
-															"System.Friend.")) {
-												friendMessages.add(newMessage);
-											} else if (newMessage
-													.getType()
-													.startsWith(
-															"Project.Share.")) {
-												projectShareMessages
-														.add(newMessage);
-											}
-											if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0
-													|| lastMessagesDownloadTime
-															.compareTo(jsonMessage
-																	.optString("lastServerUpdateTime")) < 0) {
-												lastMessagesDownloadTime = jsonMessage
-														.optString("lastServerUpdateTime");
-											}
+									for (int i = 0; i < jsonArray.length(); i++) {
+										JSONObject jsonMessage = jsonArray
+												.optJSONObject(i);
+										Message newMessage = new Message();
+										newMessage.loadFromJSON(
+												jsonMessage, true);
+										newMessage.save();
+										if (newMessage
+												.getType().startsWith(
+														"System.Friend.")) {
+											friendMessages.add(newMessage);
+										} else if (newMessage
+												.getType()
+												.startsWith(
+														"Project.Share.")) {
+											projectShareMessages
+													.add(newMessage);
+										}
+										if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0
+												|| lastMessagesDownloadTime
+														.compareTo(jsonMessage
+																.optString("lastServerUpdateTime")) < 0) {
+											lastMessagesDownloadTime = jsonMessage
+													.optString("lastServerUpdateTime");
 										}
 									}
 
@@ -242,9 +240,8 @@ public class MessageDownloadService extends Service {
 				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				if(psa == null){
-					continue;
-				}
-				if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
+					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
+				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();
@@ -262,6 +259,39 @@ public class MessageDownloadService extends Service {
 		}
 
 	}
+	private void loadAllProjectShareAuthorizations(String projectId) {
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+					JSONArray jsonArray = ((JSONArray) object).optJSONArray(0);
+
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObj = jsonArray.optJSONObject(i);
+
+						HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.optString("id"));
+						model.loadFromJSON(jsonObj, true);
+						model.save();
+					}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+			}
+		};
+		try{
+			JSONArray data = new JSONArray();
+			JSONObject newObj = new JSONObject();
+			newObj = new JSONObject();
+			newObj.put("__dataType", "ProjectShareAuthorization");
+			newObj.put("main.projectId", projectId);
+			data.put(newObj);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData, final Boolean oldOwnerDataOnly) {
 		// load new ProjectData from server
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
@@ -373,10 +403,8 @@ public class MessageDownloadService extends Service {
 //							}
 							JSONObject jsonObj = jsonObjects.optJSONObject(j);
 							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
-							if(model != null){
-								model.loadFromJSON(jsonObj, true);
-								model.save();
-							}
+							model.loadFromJSON(jsonObj, true);
+							model.save();
 						}	
 					}
 
