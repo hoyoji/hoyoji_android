@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.friend;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,8 +132,11 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	
 	public void inviteFriend(final String way) {
 		JSONObject inviteFriendObject = new JSONObject();
+		final String id = UUID.randomUUID().toString();
    		try {
-				inviteFriendObject.put("title", "好友记(AA记账)邀请成为好友");
+				inviteFriendObject.put("id", id);
+				inviteFriendObject.put("__dataType", "InviteLink");
+				inviteFriendObject.put("title", "邀请成为好友");
 				inviteFriendObject.put("type", "Friend");
 				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为好友记好友，一起参与记账");
 				inviteFriendObject.put("state", "Open");
@@ -145,18 +149,13 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				try {
-					JSONObject jsonObject = (JSONObject) object;
 					if(way.equals("Other")){
-						inviteOtherFriend(jsonObject.opt("id").toString());
+						inviteOtherFriend(id);
 					} else if(way.equals("WX")){
-						inviteWXFriend(jsonObject.opt("id").toString());
+						inviteWXFriend(id);
 					} else if(way.equals("QQ")){
-						inviteQQFriend(jsonObject.opt("id").toString());
+						inviteQQFriend(id);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 
 			@Override
@@ -172,7 +171,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 		};
    	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "inviteLink");
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "postData");
 	 }
 
 	public void inviteOtherFriend(String id) {
