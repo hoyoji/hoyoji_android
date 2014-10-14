@@ -62,7 +62,6 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	private static final int EDIT_FRIEND_DETAILS = 0;
 	private ContentObserver mUserChangeObserver = null;
 	private IWXAPI api;
-	private Tencent mTencent;
 	private QQShare mQQShare = null;
 	public static QQAuth mQQAuth;
 	
@@ -170,8 +169,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public void inviteOtherFriend(String id) {
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
-        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
-        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);  
+        intent.putExtra(Intent.EXTRA_TITLE, "邀请成为好友");  
+        intent.putExtra(Intent.EXTRA_SUBJECT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。");   
+        intent.putExtra(Intent.EXTRA_TEXT,  HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);  
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
         startActivity(Intent.createChooser(intent, "邀请成为好友")); 
