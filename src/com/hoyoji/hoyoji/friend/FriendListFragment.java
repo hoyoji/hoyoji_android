@@ -185,7 +185,10 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 //				out.close();
 //			}
 //	        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-        
+
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	        intent.putExtra(Intent.EXTRA_TITLE, "邀请成为好友");  
 	        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
 	        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。\n\n" + HyjApplication.getServerUrl()+"m/invite.html?id=" + id);  
@@ -193,10 +196,6 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
 	        startActivity(Intent.createChooser(intent, "邀请成为好友")); 
 	        
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			HyjUtil.displayToast(e.getMessage());
-//		}
 	}
 	
 	public void inviteWXFriend(String id) {
