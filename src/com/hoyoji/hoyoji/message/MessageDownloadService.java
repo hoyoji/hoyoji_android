@@ -255,6 +255,7 @@ public class MessageDownloadService extends Service {
 	
 				}
 			} catch (JSONException e1) {
+				e1.printStackTrace();
 			}
 		}
 
