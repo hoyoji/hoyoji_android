@@ -171,7 +171,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 		};
    	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "postData");
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + inviteFriendObject.toString() + "]", "postData");
 	 }
 
 	public void inviteOtherFriend(String id) {
