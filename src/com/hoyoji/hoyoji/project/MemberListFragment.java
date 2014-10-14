@@ -210,7 +210,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
         intent.putExtra(Intent.EXTRA_TITLE, "邀请加入项目");  
-        intent.putExtra(Intent.EXTRA_SUBJECT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");   
+        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请加入项目");   
         intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
