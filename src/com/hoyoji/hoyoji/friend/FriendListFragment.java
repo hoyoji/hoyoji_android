@@ -177,7 +177,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public void inviteOtherFriend(String id) {
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
-        intent.putExtra(Intent.EXTRA_SUBJECT, "好友记(AA记账)邀请成为好友");   
+        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
         intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
@@ -189,7 +189,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		WXWebpageObject webpage = new WXWebpageObject();
 		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = "好友记(AA记账)邀请成为好友";
+		msg.title = "邀请成为好友";
 		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为好友记好友，一起参与记账";
 		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
@@ -205,11 +205,11 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public void inviteQQFriend(String id) {
 		final Bundle params = new Bundle();
 	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "好友记(AA记账)邀请成为好友");
+	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请成为好友");
 	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为好友记好友，一起参与记账");
 	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id);
 	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
-	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友记(AA记账)");
+	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
 //	    params.putInt(QQShare.SHARE_TO_QQ_EXT_INT,  "其他附加功能");		
 	    mQQShare.shareToQQ(getActivity(), params, new BaseUIListener(getActivity()) {
 
