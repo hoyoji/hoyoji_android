@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,10 +22,8 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
@@ -43,15 +40,12 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
-import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
-import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -61,7 +55,6 @@ import com.tencent.mm.sdk.openapi.WXMediaMessage;
 import com.tencent.mm.sdk.openapi.WXWebpageObject;
 import com.tencent.sample.BaseUIListener;
 import com.tencent.sample.Util;
-import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 public class MemberListFragment extends HyjUserListFragment{
@@ -171,9 +164,9 @@ public class MemberListFragment extends HyjUserListFragment{
 	   			inviteFriendObject.put("data", project.getId());
 	   			inviteFriendObject.put("id", id);
 				inviteFriendObject.put("__dataType", "InviteLink");
-				inviteFriendObject.put("title", "邀请您加入好友记项目");
+				inviteFriendObject.put("title", "邀请加入项目");
 				inviteFriendObject.put("type", "ProjectShare");
-				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为加入好友记项目: "+project.getName()+", 一起参与记账");
+				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -216,8 +209,8 @@ public class MemberListFragment extends HyjUserListFragment{
 			
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
-        intent.putExtra(Intent.EXTRA_TITLE, "邀请您加入好友记项目");  
-        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请您加入好友记项目: "+project.getName()+", 一起参与记账");   
+        intent.putExtra(Intent.EXTRA_TITLE, "邀请加入项目");  
+        intent.putExtra(Intent.EXTRA_SUBJECT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");   
         intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
@@ -230,11 +223,12 @@ public class MemberListFragment extends HyjUserListFragment{
 		Project project =  Model.load(Project.class, modelId);
 		
 		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
+		api.registerApp(AppConstants.WX_APP_ID);
 		WXWebpageObject webpage = new WXWebpageObject();
 		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = "邀请加入好友记项目";
-		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入好友记项目: "+project.getName()+", 一起参与记账";
+		msg.title = "邀请加入项目";
+		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。";
 		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
 		
@@ -253,8 +247,8 @@ public class MemberListFragment extends HyjUserListFragment{
 		
 		final Bundle params = new Bundle();
 	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请您加入好友记项目");
-	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入好友记项目: "+project.getName()+", 一起参与记账");
+	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请加入项目");
+	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");
 	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);
 	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
 	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
