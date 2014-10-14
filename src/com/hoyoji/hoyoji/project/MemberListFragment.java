@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.UUID;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -161,11 +163,14 @@ public class MemberListFragment extends HyjUserListFragment{
 	
 	public void inviteFriend(final String way) {
 		JSONObject inviteFriendObject = new JSONObject();
+		final String id = UUID.randomUUID().toString();
    		try {
    				Intent intent = getActivity().getIntent();
 	   			Long modelId = intent.getLongExtra("MODEL_ID", -1);
 	   			Project project =  Model.load(Project.class, modelId);
 	   			inviteFriendObject.put("data", project.getId());
+	   			inviteFriendObject.put("id", id);
+				inviteFriendObject.put("__dataType", "InviteLink");
 				inviteFriendObject.put("title", "邀请您加入好友记项目");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您成为加入好友记项目，一起参与记账");
@@ -179,18 +184,13 @@ public class MemberListFragment extends HyjUserListFragment{
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				try {
-					JSONObject jsonObject = (JSONObject) object;
 					if(way.equals("Other")){
-						inviteOtherFriend(jsonObject.opt("id").toString());
+						inviteOtherFriend(id);
 					} else if(way.equals("WX")){
-						inviteWXFriend(jsonObject.opt("id").toString());
+						inviteWXFriend(id);
 					} else if(way.equals("QQ")){
-						inviteQQFriend(jsonObject.opt("id").toString());
+						inviteQQFriend(id);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 
 			@Override
@@ -206,7 +206,7 @@ public class MemberListFragment extends HyjUserListFragment{
 			}
 		};
    	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "inviteLink");
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + inviteFriendObject.toString() + "]", "postData");
 	 }
 
 	public void inviteOtherFriend(String id) {
@@ -214,7 +214,7 @@ public class MemberListFragment extends HyjUserListFragment{
         intent.setType("image/*");   
         intent.putExtra(Intent.EXTRA_TITLE, "邀请您加入好友记项目");  
         intent.putExtra(Intent.EXTRA_SUBJECT, "邀请您加入好友记项目，一起记账");   
-        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id);   
+        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
         startActivity(Intent.createChooser(intent, "邀请项目成员，一起参与记账")); 
@@ -223,9 +223,9 @@ public class MemberListFragment extends HyjUserListFragment{
 	public void inviteWXFriend(String id) {
 		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
 		WXWebpageObject webpage = new WXWebpageObject();
-		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id;
+		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = "邀请加入好友记项目";
+		msg.title = "邀请您加入好友记项目";
 		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您加入好友记项目，一起参与记账";
 		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
@@ -243,7 +243,7 @@ public class MemberListFragment extends HyjUserListFragment{
 	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
 	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请您加入好友记项目");
 	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + "邀请您加入好友记项目，一起参与记账");
-	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.php?id=" + id);
+	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);
 	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
 	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "邀请您加入好基友项目");
 //	    params.putInt(QQShare.SHARE_TO_QQ_EXT_INT,  "其他附加功能");		
