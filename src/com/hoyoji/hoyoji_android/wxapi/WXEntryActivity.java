@@ -202,7 +202,8 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 			break;
 		}
 		if (result != R.string.errcode_success) {
-			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+//			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+			finish();
 			return;
 		}
 		
