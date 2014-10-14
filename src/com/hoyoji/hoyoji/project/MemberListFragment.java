@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.UUID;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -161,11 +163,14 @@ public class MemberListFragment extends HyjUserListFragment{
 	
 	public void inviteFriend(final String way) {
 		JSONObject inviteFriendObject = new JSONObject();
+		final String id = UUID.randomUUID().toString();
    		try {
    				Intent intent = getActivity().getIntent();
 	   			Long modelId = intent.getLongExtra("MODEL_ID", -1);
 	   			Project project =  Model.load(Project.class, modelId);
 	   			inviteFriendObject.put("data", project.getId());
+	   			inviteFriendObject.put("id", id);
+				inviteFriendObject.put("__dataType", "InviteLink");
 				inviteFriendObject.put("title", "邀请您加入好友记项目");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为加入好友记项目: "+project.getName()+", 一起参与记账");
@@ -179,18 +184,13 @@ public class MemberListFragment extends HyjUserListFragment{
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-				try {
-					JSONObject jsonObject = (JSONObject) object;
 					if(way.equals("Other")){
-						inviteOtherFriend(jsonObject.opt("id").toString());
+						inviteOtherFriend(id);
 					} else if(way.equals("WX")){
-						inviteWXFriend(jsonObject.opt("id").toString());
+						inviteWXFriend(id);
 					} else if(way.equals("QQ")){
-						inviteQQFriend(jsonObject.opt("id").toString());
+						inviteQQFriend(id);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 
 			@Override
@@ -206,7 +206,7 @@ public class MemberListFragment extends HyjUserListFragment{
 			}
 		};
    	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, inviteFriendObject.toString(), "inviteLink");
+   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + inviteFriendObject.toString() + "]", "postData");
 	 }
 
 	public void inviteOtherFriend(String id) {
