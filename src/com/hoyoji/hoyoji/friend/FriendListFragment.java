@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -195,7 +196,6 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	        
 	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
 	        startActivity(Intent.createChooser(intent, "邀请成为好友")); 
-	        
 	}
 	
 	public void inviteWXFriend(String id) {
@@ -229,19 +229,19 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
             @Override
             public void onCancel() {
-            		Util.toastMessage(getActivity(), "onCancel: ");
+//            		Util.toastMessage(getActivity(), "onCancel: ");
             }
 
             @Override
             public void onComplete(Object response) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
+//                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
             }
 
             @Override
             public void onError(UiError e) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
+//                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
             }
 
         });
