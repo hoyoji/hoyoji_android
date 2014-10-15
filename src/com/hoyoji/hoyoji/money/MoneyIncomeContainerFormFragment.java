@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -97,6 +98,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private TextView mTextViewApportionFieldTitle;
 	private DataSetObserver mApportionCountObserver;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
+	private ImageButton mButtonExpandMore;
 	
 	@Override
 	public Integer useContentView() {
@@ -361,6 +363,24 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 				}else{
 					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_toast_select_currency);
+				}
+			}
+		});
+
+		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
+		mButtonExpandMore.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mRemarkFieldRemark.getVisibility() == View.GONE){
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+					mRemarkFieldRemark.setVisibility(View.VISIBLE);
+					mSelectorFieldFinancialOwner.setVisibility(View.VISIBLE);
+					mSelectorFieldFriend.setVisibility(View.VISIBLE);
+				} else {
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
+					mRemarkFieldRemark.setVisibility(View.GONE);
+					mSelectorFieldFinancialOwner.setVisibility(View.GONE);
+					mSelectorFieldFriend.setVisibility(View.GONE);
 				}
 			}
 		});

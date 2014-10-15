@@ -240,11 +240,27 @@
             android:layout_marginTop="5dip"
             android:background="#E0E0E0" />
 
+        <ImageButton
+            android:id="@id/expand_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_expand" />
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="#E0E0E0" />
+        
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
             android:id="@+id/moneyIncomeContainerFormFragment_textField_remark"
             hyj:style="no_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             hyj:editTextBorder="none"
             hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_remark"
             hyj:labelText="@string/moneyIncomeFormFragment_textView_remark" />
@@ -255,12 +271,14 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
+            android:visibility="gone"
             android:background="#E0E0E0" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyIncomeContainerFormFragment_selectorField_friend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+            android:visibility="gone"
                     hyj:editTextBorder="none"
                     hyj:hintText="@string/moneyIncomeFormFragment_editText_hint_friend"
                     hyj:labelText="@string/moneyIncomeFormFragment_textView_friend" >
@@ -272,12 +290,14 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
+            android:visibility="gone"
             android:background="#E0E0E0" />
                 
            <com.hoyoji.android.hyjframework.view.HyjSelectorField
                android:id="@+id/projectFormFragment_selectorField_financialOwner"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+            android:visibility="gone"
                hyj:hintText="@string/projectFormFragment_editText_hint_financialOwner"
                hyj:labelText="@string/projectFormFragment_textView_financialOwner" >
            </com.hoyoji.android.hyjframework.view.HyjSelectorField>
@@ -288,6 +308,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
+            android:visibility="gone"
             android:background="#E0E0E0" />
         
         <Button
