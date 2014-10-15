@@ -75,7 +75,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private ImageView mImageViewClearFriend = null;
+//	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -247,6 +247,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				Project project = HyjModel.getModel(Project.class,
 						mSelectorFieldProject.getModelId());
 				bundle.putLong("MODEL_ID", project.get_mId());
+//				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
 				openActivityWithFragmentForResult(
 						SelectApportionMemberListFragment.class,
 						R.string.friendListFragment_title_select_friend_creditor,
@@ -254,15 +255,15 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mImageViewClearFriend = (ImageView) getView().findViewById(
-				R.id.moneyBorrowFormFragment_imageView_clear_friend);
-		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldFriend.setModelId(null);
-				mSelectorFieldFriend.setText("");
-			}
-		});
+//		mImageViewClearFriend = (ImageView) getView().findViewById(
+//				R.id.moneyBorrowFormFragment_imageView_clear_friend);
+//		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mSelectorFieldFriend.setModelId(null);
+//				mSelectorFieldFriend.setText("");
+//			}
+//		});
 
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
 				R.id.moneyBorrowFormFragment_textField_remark);
@@ -315,9 +316,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
-		if(project.getFinancialOwnerUserId() != null){
+		if(modelId == -1){
+			if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+			}
+		} else if(moneyBorrow.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(moneyBorrow.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyBorrow.getFinancialOwnerUserId()));
 		}
 		
 		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
@@ -329,7 +335,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					bundle.putString("NULL_ITEM", "无财务负责人");
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
@@ -607,6 +613,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setReturnDate(mDateTimeFieldReturnDate.getText());
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if (mSelectorFieldMoneyAccount.getModelId() != null) {
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,
 					mSelectorFieldMoneyAccount.getModelId());
@@ -1129,6 +1136,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					return;
 				}
 
+				if(project.getFinancialOwnerUserId() != null){
+					mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+				} else {
+					mSelectorFieldFinancialOwner.setModelId(null);
+					mSelectorFieldFinancialOwner.setText(null);
+				}
+					
 				mSelectorFieldProject.setText(project.getDisplayName() + "("
 						+ project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
@@ -1167,81 +1182,87 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		case GET_FRIEND_ID:
          	 if (resultCode == Activity.RESULT_OK) {
         		 long _id = data.getLongExtra("MODEL_ID", -1);
- 				String type = data.getStringExtra("MODEL_TYPE");
 
- 				ProjectShareAuthorization psa = null;
- 				if ("ProjectShareAuthorization".equalsIgnoreCase(type)) {
- 					psa = ProjectShareAuthorization.load(
- 							ProjectShareAuthorization.class, _id);
- 					if (psa.getFriendUserId() != null) {
- 						// 不能选择自己作为债务人
- 						if (psa.getFriendUserId().equals(
- 								HyjApplication.getInstance().getCurrentUser()
- 										.getId())) {
- 							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
- 							break;
- 						}
- 						mSelectorFieldFriend.setText(psa.getFriendDisplayName());
- 						mSelectorFieldFriend.setModelId(psa.getFriendUserId());
- 						mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
- 					} else {
+  	   	       	if(_id == -1){
+  		       		mSelectorFieldFinancialOwner.setText(null);
+  		       		mSelectorFieldFinancialOwner.setModelId(null);
+  	       		} else {
+	 				String type = data.getStringExtra("MODEL_TYPE");
+	
+	 				ProjectShareAuthorization psa = null;
+	 				if ("ProjectShareAuthorization".equalsIgnoreCase(type)) {
+	 					psa = ProjectShareAuthorization.load(
+	 							ProjectShareAuthorization.class, _id);
+	 					if (psa.getFriendUserId() != null) {
+	 						// 不能选择自己作为债务人
+	 						if (psa.getFriendUserId().equals(
+	 								HyjApplication.getInstance().getCurrentUser()
+	 										.getId())) {
+	 							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+	 							break;
+	 						}
+	 						mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+	 						mSelectorFieldFriend.setModelId(psa.getFriendUserId());
+	 						mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
+	 					} else {
+		     				mSelectorFieldFriend.setText(psa.getFriendDisplayName());
+		     				mSelectorFieldFriend.setModelId(psa.getLocalFriendId());
+		     				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
+	 					}
+	 				} else {
+	 					final Friend friend = Friend.load(Friend.class, _id);
+	 					if (friend.getFriendUserId() != null) {
+	 						// 不能选择自己作为债务人
+	 						if (friend.getFriendUserId().equals(
+	 								HyjApplication.getInstance().getCurrentUser()
+	 										.getId())) {
+	 							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
+	 							break;
+	 						}
+								psa = new Select()
+									.from(ProjectShareAuthorization.class)
+									.where("friendUserId=? AND projectId=? AND state <> 'Delete'",
+											friend.getFriendUserId(),
+											mSelectorFieldProject.getModelId())
+									.executeSingle();
+	 					} else {
+								psa = new Select()
+									.from(ProjectShareAuthorization.class)
+									.where("localFriendId=? AND projectId=? AND state <> 'Delete'",
+											friend.getId(),
+											mSelectorFieldProject.getModelId())
+									.executeSingle();
+	 					}
+	
+						if(psa == null){
+							((HyjActivity)getActivity()).displayDialog(R.string.moneyBorrowFormFragment_editText_error_friend_not_member, R.string.moneyApportionField_select_confirm_apportion_add_as_member, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+									new DialogCallbackListener() {
+										@Override
+										public void doPositiveClick(Object object) {
+											Bundle bundle = new Bundle();
+											bundle.putString("PROJECTID", mSelectorFieldProject.getModelId());
+											if(friend.getFriendUserId() != null){
+												bundle.putString("FRIEND_USERID", friend.getFriendUserId());
+											} else {
+												bundle.putString("LOCAL_FRIENDID", friend.getId());
+											}
+											openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+										}
+				
+										@Override
+										public void doNegativeClick() {
+											HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend_not_member);
+										}
+									});
+							
+		//					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+							break;
+						}
 	     				mSelectorFieldFriend.setText(psa.getFriendDisplayName());
 	     				mSelectorFieldFriend.setModelId(psa.getLocalFriendId());
 	     				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
- 					}
- 				} else {
- 					final Friend friend = Friend.load(Friend.class, _id);
- 					if (friend.getFriendUserId() != null) {
- 						// 不能选择自己作为债务人
- 						if (friend.getFriendUserId().equals(
- 								HyjApplication.getInstance().getCurrentUser()
- 										.getId())) {
- 							HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend);
- 							break;
- 						}
-							psa = new Select()
-								.from(ProjectShareAuthorization.class)
-								.where("friendUserId=? AND projectId=? AND state <> 'Delete'",
-										friend.getFriendUserId(),
-										mSelectorFieldProject.getModelId())
-								.executeSingle();
- 					} else {
-							psa = new Select()
-								.from(ProjectShareAuthorization.class)
-								.where("localFriendId=? AND projectId=? AND state <> 'Delete'",
-										friend.getId(),
-										mSelectorFieldProject.getModelId())
-								.executeSingle();
- 					}
-
-					if(psa == null){
-						((HyjActivity)getActivity()).displayDialog(R.string.moneyBorrowFormFragment_editText_error_friend_not_member, R.string.moneyApportionField_select_confirm_apportion_add_as_member, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
-								new DialogCallbackListener() {
-									@Override
-									public void doPositiveClick(Object object) {
-										Bundle bundle = new Bundle();
-										bundle.putString("PROJECTID", mSelectorFieldProject.getModelId());
-										if(friend.getFriendUserId() != null){
-											bundle.putString("FRIEND_USERID", friend.getFriendUserId());
-										} else {
-											bundle.putString("LOCAL_FRIENDID", friend.getId());
-										}
-										openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
-									}
-			
-									@Override
-									public void doNegativeClick() {
-										HyjUtil.displayToast(R.string.moneyBorrowFormFragment_editText_error_friend_not_member);
-									}
-								});
-						
-	//					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
-						break;
-					}
-     				mSelectorFieldFriend.setText(psa.getFriendDisplayName());
-     				mSelectorFieldFriend.setModelId(psa.getLocalFriendId());
-     				mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, true);
- 				}
+	 				}
+  	       		}
   			}
   			break;
  		case ADD_AS_PROJECT_MEMBER:

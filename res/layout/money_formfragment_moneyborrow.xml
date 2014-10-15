@@ -99,7 +99,7 @@
                 android:layout_marginLeft="5dip"
                 android:background="#E0E0E0" />
 
-            <FrameLayout
+           <!--  <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" >
@@ -110,18 +110,19 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="0dp"
-                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" /> -->
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
+                    android:layout_weight="1"
                     android:id="@+id/moneyBorrowFormFragment_selectorField_friend"
                     hyj:style="top_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     hyj:editTextBorder="none"
                     hyj:hintText="@string/moneyBorrowFormFragment_editText_hint_friend"
                     hyj:labelText="@string/moneyBorrowFormFragment_textView_friend" >
                 </com.hoyoji.android.hyjframework.view.HyjSelectorField>
-            </FrameLayout>
+            <!-- </FrameLayout> -->
         </LinearLayout>
         
         <View

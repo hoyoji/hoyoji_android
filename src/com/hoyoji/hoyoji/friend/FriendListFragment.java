@@ -30,6 +30,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
@@ -90,6 +92,32 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	}
 
 
+	@Override
+	protected View useHeaderView(Bundle savedInstanceState){
+		Intent intent = getActivity().getIntent();
+		String nullItemName = intent.getStringExtra("NULL_ITEM");
+		if(nullItemName == null){
+			return null;
+		}
+		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.friend_listitem_friend, null);
+		TextView nameView = (TextView)view.findViewById(R.id.friendListItem_nickName);
+		nameView.setText(nullItemName);
+		view.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(getActivity().getCallingActivity() != null){
+					Intent intent = new Intent();
+					intent.putExtra("MODEL_ID", -1);
+					intent.putExtra("MODEL_TYPE", "Friend");
+					getActivity().setResult(Activity.RESULT_OK, intent);
+					getActivity().finish();
+				}
+			}
+			
+		});
+		return view;
+	}
 
 	@Override
 	public void onInitViewData() {

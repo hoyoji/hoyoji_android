@@ -87,7 +87,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyIncomeCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private ImageView mImageViewClearFriend = null;
+//	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
@@ -250,20 +250,22 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
 				MoneyIncomeContainerFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payer, null, GET_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payer, bundle, GET_FRIEND_ID);
 			}
 		}); 
 		
-		mImageViewClearFriend = (ImageView) getView().findViewById(
-				R.id.moneyIncomeContainerFormFragment_imageView_clear_friend);
-		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldFriend.setModelId(null);
-				mSelectorFieldFriend.setText("");
-			}
-		});
+//		mImageViewClearFriend = (ImageView) getView().findViewById(
+//				R.id.moneyIncomeContainerFormFragment_imageView_clear_friend);
+//		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mSelectorFieldFriend.setModelId(null);
+//				mSelectorFieldFriend.setText("");
+//			}
+//		});
 		
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_textField_remark);
@@ -285,9 +287,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
-		if(project.getFinancialOwnerUserId() != null){
+		if(modelId == -1){
+			if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+			}
+		} else if(moneyIncomeContainer.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
 		}
 		
 		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
@@ -299,7 +306,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					bundle.putString("NULL_ITEM", "无财务负责人");
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
@@ -692,7 +699,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
-		
+
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if(mSelectorFieldFriend.getModelId() != null){
 			Friend friend = HyjModel.getModel(Friend.class, mSelectorFieldFriend.getModelId());
 			modelCopy.setFriend(friend);
@@ -1392,7 +1400,15 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}
-	         		
+
+					if(project.getFinancialOwnerUserId() != null){
+						mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+					} else {
+						mSelectorFieldFinancialOwner.setModelId(null);
+						mSelectorFieldFinancialOwner.setText(null);
+					}
+						
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
@@ -1404,15 +1420,21 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
-            		Friend friend = Friend.load(Friend.class, _id);
-            		
-            		if(HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){
-    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
-    					return;
-    				}
-            		
-            		mSelectorFieldFriend.setText(friend.getDisplayName());
-            		mSelectorFieldFriend.setModelId(friend.getId());
+
+     	   	       	if(_id == -1){
+     		       		mSelectorFieldFinancialOwner.setText(null);
+     		       		mSelectorFieldFinancialOwner.setModelId(null);
+     	       		} else {
+	            		Friend friend = Friend.load(Friend.class, _id);
+	            		
+	            		if(HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){
+	    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
+	    					return;
+	    				}
+	            		
+	            		mSelectorFieldFriend.setText(friend.getDisplayName());
+	            		mSelectorFieldFriend.setModelId(friend.getId());
+     	       		}
             	 }
             	 break;
 
