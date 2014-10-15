@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -168,11 +169,14 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	public void inviteOtherFriend(String id) {
 		Intent intent=new Intent(Intent.ACTION_SEND);   
-        intent.setType("image/*");   
+        intent.setType("image/*");
+        ComponentName comp = new ComponentName("com.tencent.mm","com.tencent.mm.ui.tools.ShareToTimeLineUI");
+		intent.setComponent(comp);
+		intent.setAction("android.intent.action.SEND");
+        intent.putExtra(Intent.EXTRA_STREAM, android.net.Uri.parse("http://hoyojitest.duapp.com/imgs/invite_friend.png"));
         intent.putExtra(Intent.EXTRA_TITLE, "邀请成为好友");  
         intent.putExtra(Intent.EXTRA_SUBJECT, "邀请成为好友");   
         intent.putExtra(Intent.EXTRA_TEXT,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);  
-        
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
         startActivity(Intent.createChooser(intent, "邀请成为好友")); 
 	}
@@ -208,19 +212,19 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
             @Override
             public void onCancel() {
-            		Util.toastMessage(getActivity(), "onCancel: ");
+//            		Util.toastMessage(getActivity(), "onCancel: ");
             }
 
             @Override
             public void onComplete(Object response) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
+//                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
             }
 
             @Override
             public void onError(UiError e) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
+//                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
             }
 
         });
