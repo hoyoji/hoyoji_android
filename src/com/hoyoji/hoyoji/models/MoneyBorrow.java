@@ -398,6 +398,14 @@ public class MoneyBorrow extends HyjModel{
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
+	public String getFinancialOwnerUserId() {
+		return mFinancialOwnerUserId;
+	}
+
+	public void setFinancialOwnerUserId(String financialOwnerUserId) {
+		this.mFinancialOwnerUserId = financialOwnerUserId;
+	}
+	
 	public String getLocation() {
 		return mLocation;
 	}

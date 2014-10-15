@@ -68,6 +68,9 @@ public class MoneyIncomeContainer extends HyjModel {
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
+
 	@Column(name = "location")
 	private String mLocation;
 
@@ -348,6 +351,14 @@ public class MoneyIncomeContainer extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
+	public String getFinancialOwnerUserId() {
+		return mFinancialOwnerUserId;
+	}
+
+	public void setFinancialOwnerUserId(String financialOwnerUserId) {
+		this.mFinancialOwnerUserId = financialOwnerUserId;
+	}
+	
 	public User getOwnerUser() {
 		return getModel(User.class, mOwnerUserId);
 	}

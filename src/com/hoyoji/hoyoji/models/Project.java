@@ -164,8 +164,8 @@ public class Project extends HyjModel {
 		return mFinancialOwnerUserId;
 	}
 
-	public void setFinancialOwnerUserId(String mFinancialOwnerUserId) {
-		this.mFinancialOwnerUserId = mFinancialOwnerUserId;
+	public void setFinancialOwnerUserId(String financialOwnerUserId) {
+		this.mFinancialOwnerUserId = financialOwnerUserId;
 	}
 	
 	public String getCurrencyId() {
