@@ -126,11 +126,11 @@ public class MemberListFragment extends HyjUserListFragment{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		
+		Project project = Project.load(Project.class, modelId);
 		if(item.getItemId() == R.id.memberListFragment_action_member_addnew){
-			Intent intent = getActivity().getIntent();
-			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			
-			Project project = Project.load(Project.class, modelId);
 			
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				Bundle bundle = new Bundle();
@@ -142,14 +142,26 @@ public class MemberListFragment extends HyjUserListFragment{
 				return false;
 			}
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite){
-			inviteFriend("Other");
-			return true;
+			Bundle bundle = new Bundle();
+			bundle.putLong("PROJECT_ID", modelId);
+			bundle.putString("INVITE_TYPE", "Other");
+			openActivityWithFragment(InviteMemberFormFragment.class, R.string.inviteMemberFormFragment_send_title, bundle);
+//			inviteFriend("Other");
+//			return true;
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite_wxFriend){
-			inviteFriend("WX");
-			return true;
+			Bundle bundle = new Bundle();
+			bundle.putLong("PROJECT_ID", modelId);
+			bundle.putString("INVITE_TYPE", "WX");
+			openActivityWithFragment(InviteMemberFormFragment.class, R.string.inviteMemberFormFragment_send_title, bundle);
+//			inviteFriend("WX");
+//			return true;
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite_qqFriend){
-			inviteFriend("QQ");
-			return true;
+			Bundle bundle = new Bundle();
+			bundle.putLong("PROJECT_ID", modelId);
+			bundle.putString("INVITE_TYPE", "QQ");
+			openActivityWithFragment(InviteMemberFormFragment.class, R.string.inviteMemberFormFragment_send_title, bundle);
+//			inviteFriend("QQ");
+//			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -257,19 +269,19 @@ public class MemberListFragment extends HyjUserListFragment{
 
             @Override
             public void onCancel() {
-            		Util.toastMessage(getActivity(), "onCancel: ");
+//            		Util.toastMessage(getActivity(), "onCancel: ");
             }
 
             @Override
             public void onComplete(Object response) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
+//                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
             }
 
             @Override
             public void onError(UiError e) {
                 // TODO Auto-generated method stub
-                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
+//                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
             }
 
         });
