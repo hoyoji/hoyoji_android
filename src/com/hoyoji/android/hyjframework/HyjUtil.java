@@ -63,11 +63,13 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 public class HyjUtil {
 	public static void displayToast(int msg){
-		Toast.makeText(HyjApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
+		ToastUtils.showMessageLong(HyjApplication.getInstance(), msg);
+//		Toast.makeText(HyjApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
 	}
 	
 	public static void displayToast(String msg){
-		Toast.makeText(HyjApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
+		ToastUtils.showMessageLong(HyjApplication.getInstance(), msg);
+//		Toast.makeText(HyjApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
 	}
 	
 	public static void flattenJSONArray(JSONArray array, List<JSONObject> list){
