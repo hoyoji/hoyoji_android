@@ -68,9 +68,16 @@ public class MessageListFragment extends HyjUserListFragment{
 		if(limit == 0){
 			limit = getListPageSize();
 		}
+		String selection = null;
+		String[] selectionArgs = null;
+		
+		if(arg1.getString("STATE") != null){
+			selection = "state=?";
+			selectionArgs = new String[]{arg1.getString("STATE")};
+		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Message.class, null),
-				new String[]{"_id", "id"}, null, null, "date DESC LIMIT " + (limit + offset)
+				new String[]{"_id", "id"}, selection, selectionArgs, "date DESC LIMIT " + (limit + offset)
 			);
 		
 		return (Loader<Object>)loader;
