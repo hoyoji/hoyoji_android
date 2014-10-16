@@ -485,8 +485,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				try {
 					JSONObject json = (JSONObject) object;
 					WXEntryActivity.this.dismissProgressDialog();
-					WXEntryActivity.this.displayDialog("登录失败", json
-							.getJSONObject("__summary").getString("msg"));
+					HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -829,8 +828,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 					WXEntryActivity.this.dismissProgressDialog();
 					try {
 						JSONObject json = (JSONObject) object;
-						WXEntryActivity.this.displayDialog(null, json
-								.getJSONObject("__summary").getString("msg"));
+						HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
