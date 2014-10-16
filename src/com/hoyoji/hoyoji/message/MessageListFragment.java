@@ -16,6 +16,8 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,10 +32,13 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
+import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 
 public class MessageListFragment extends HyjUserListFragment{
 	
 	private ChangeObserver mChangeObserver;
+	private Button mAllMessageButton;
+	private Button mReadMessageButton;
 
 	@Override
 	public Integer useContentView() {
@@ -80,6 +85,20 @@ public class MessageListFragment extends HyjUserListFragment{
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		mAllMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_all_messgae);
+		mAllMessageButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				
+    		}
+		});
+		mReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_read_message);
+		mReadMessageButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				
+    		}
+		});
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
