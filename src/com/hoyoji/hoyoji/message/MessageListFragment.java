@@ -79,8 +79,8 @@ public class MessageListFragment extends HyjUserListFragment{
 		String[] selectionArgs = null;
 		
 		if(mIsSelectUnreadMessages == true){
-			selection = "messageState <> ?";
-			selectionArgs = new String[]{"Read"};
+			selection = "messageState <> ? and messageState <> ?";
+			selectionArgs = new String[]{"read","closed"};
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Message.class, null),
@@ -102,7 +102,7 @@ public class MessageListFragment extends HyjUserListFragment{
 				getLoaderManager().restartLoader(0, new Bundle(), MessageListFragment.this);
     		}
 		});
-		mUnReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_read_message);
+		mUnReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_un_read_message);
 		mUnReadMessageButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
