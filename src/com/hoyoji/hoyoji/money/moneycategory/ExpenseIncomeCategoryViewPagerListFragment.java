@@ -99,9 +99,9 @@ public class ExpenseIncomeCategoryViewPagerListFragment extends HyjUserFragment 
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "支出分类管理";
+				return "支出分类";
 			case 1:
-				return "收入分类管理";
+				return "收入分类";
 			}
 			return null;
 		}

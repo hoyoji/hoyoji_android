@@ -446,12 +446,12 @@ public class MainActivity extends HyjUserActivity {
 				 openActivityWithFragment(MoneyReportFragment.class,
 				 R.string.moneyReportFragment_title, null);
 				 break;
-		case 2:
-			openActivityWithFragment(MessageListFragment.class,
-					R.string.friendListFragment_title_manage_message, null);
-			break;
+//		case 2:
+//			openActivityWithFragment(MessageListFragment.class,
+//					R.string.friendListFragment_title_manage_message, null);
+//			break;
 		
-		case 3:
+		case 2:
 			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
 					R.string.currency_exchang_eviewpager_listFragment_title, null);
 			break;
@@ -472,15 +472,15 @@ public class MainActivity extends HyjUserActivity {
 //			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
 //					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
 //			break;
-		case 4:
+		case 3:
 			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
 					R.string.expense_income_viewpager_listFragment_title, null);
 			break;
-		case 5:
+		case 4:
 			openActivityWithFragment(SystemSettingFormFragment.class,
 					R.string.systemSettingFormFragment_title, null);
 			break;
-		case 6:
+		case 5:
 			HyjApplication.getInstance().switchUser();
 			break;
 		}
