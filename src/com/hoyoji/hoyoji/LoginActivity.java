@@ -1120,7 +1120,7 @@ public class LoginActivity extends HyjActivity {
 								@Override
 								public Object doInBackground(String... string) {
 									Bitmap thumbnail = null;
-									thumbnail = Util.getbitmap(figureUrl1);
+									thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
 									return thumbnail;
 								}
 							});

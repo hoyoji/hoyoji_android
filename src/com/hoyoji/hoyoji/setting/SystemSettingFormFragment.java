@@ -571,7 +571,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 						@Override
 						public Object doInBackground(String... string) {
 							Bitmap thumbnail = null;
-							thumbnail = Util.getbitmap(figureUrl1);
+							thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
 							return thumbnail;
 						}
 					});
@@ -960,7 +960,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 						@Override
 						public Object doInBackground(String... string) {
 							Bitmap thumbnail = null;
-							thumbnail = Util.getbitmap(profile_image_url1);
+							thumbnail = Util.getBitmapFromUrl(profile_image_url1, 1);
 							return thumbnail;
 						}
 					});
