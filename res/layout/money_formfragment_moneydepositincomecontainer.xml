@@ -239,6 +239,22 @@
             android:layout_marginTop="5dip"
             android:background="#E0E0E0" />
 
+           <com.hoyoji.android.hyjframework.view.HyjSelectorField
+               android:id="@+id/projectFormFragment_selectorField_financialOwner"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               hyj:hintText="@string/projectFormFragment_editText_hint_financialOwner"
+               hyj:labelText="@string/projectFormFragment_textView_financialOwner" >
+           </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+           
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="#E0E0E0" />
+        
         <Button
             android:id="@id/button_save"
             android:layout_width="fill_parent"

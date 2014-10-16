@@ -38,7 +38,7 @@
         />	
         
 	 <View 
-        android:id="@+id/field_separator"
+        android:id="@id/field_separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
     	android:layout_marginTop="10dip"

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -56,6 +57,7 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
+import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -65,6 +67,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_CATEGORY_ID = 5;
 	private final static int GET_REMARK = 6;
+	protected static final int GET_FINANCIALOWNER_ID = 0;
 	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
@@ -78,13 +81,16 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
-	private ImageView mImageViewClearFriend = null;
+//	private ImageView mImageViewClearFriend = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
 	private boolean hasEditPermission = true;
+	private HyjSelectorField mSelectorFieldFinancialOwner;
+	private ImageButton mButtonExpandMore;
+	private LinearLayout mLinearLayoutExpandMore;
 
 	@Override
 	public Integer useContentView() {
@@ -236,6 +242,8 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
 				MoneyExpenseFormFragment.this
 						.openActivityWithFragmentForResult(
 								FriendListFragment.class,
@@ -244,15 +252,15 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mImageViewClearFriend = (ImageView) getView().findViewById(
-				R.id.moneyExpenseFormFragment_imageView_clear_friend);
-		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldFriend.setModelId(null);
-				mSelectorFieldFriend.setText("");
-			}
-		});
+//		mImageViewClearFriend = (ImageView) getView().findViewById(
+//				R.id.moneyExpenseFormFragment_imageView_clear_friend);
+//		mImageViewClearFriend.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mSelectorFieldFriend.setModelId(null);
+//				mSelectorFieldFriend.setText("");
+//			}
+//		});
 		
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
 				R.id.moneyExpenseFormFragment_textField_remark);
@@ -272,6 +280,32 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
+		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
+		if(modelId == -1){
+			if(project.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+			}
+		} else if(moneyExpense.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(moneyExpense.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyExpense.getFinancialOwnerUserId()));
+		}
+		
+		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mSelectorFieldProject.getModelId() == null){
+					HyjUtil.displayToast("请先选择一个项目。");
+				} else {
+					Bundle bundle = new Bundle();
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+				}
+			}
+		});
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseFormFragment_imageView_camera);
 		takePictureButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -327,6 +361,21 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
+		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseFormFragment_expandMore);
+		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
+		mButtonExpandMore.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+				} else {
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
+					mLinearLayoutExpandMore.setVisibility(View.GONE);
+				}
+			}
+		});
+		
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
 			setExchangeRate(false);
@@ -559,6 +608,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setMoneyAccount(moneyAccount);
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
@@ -807,7 +857,15 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					HyjUtil.displayToast(R.string.app_permission_no_edit);
 					return;
 				}
-				
+
+				if(project.getFinancialOwnerUserId() != null){
+					mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+				} else {
+					mSelectorFieldFinancialOwner.setModelId(null);
+					mSelectorFieldFinancialOwner.setText(null);
+				}
+					
 				mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
 				setExchangeRate(false);
@@ -847,6 +905,34 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				}
 			}
 			break;
+        case GET_FINANCIALOWNER_ID:
+	       	 if(resultCode == Activity.RESULT_OK){
+	       		long _id = data.getLongExtra("MODEL_ID", -1);
+	       		if(_id == -1){
+		       		mSelectorFieldFinancialOwner.setText(null);
+		       		mSelectorFieldFinancialOwner.setModelId(null);
+	       		} else {
+		       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
+	
+		       		if(psa == null){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
+						return;
+		       		} else if(psa.getFriendUserId() == null){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
+						return;
+		       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+						return;
+		       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
+						return;
+		       		}
+		       		
+		       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+		       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
+	       		}
+	       	 }
+	       	 break;
 		}
 		
 	}

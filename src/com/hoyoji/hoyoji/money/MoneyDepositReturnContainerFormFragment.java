@@ -66,6 +66,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private static final int GET_REMARK = 5;
+	protected static final int GET_FINANCIALOWNER_ID = 0;
 	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
@@ -86,6 +87,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private boolean hasEditPermission = true;
 	private TextView mTextViewApportionFieldTitle;
 	private DataSetObserver mApportionCountObserver;
+	private HyjSelectorField mSelectorFieldFinancialOwner;
 	
 	@Override
 	public Integer useContentView() {
@@ -98,7 +100,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		final MoneyDepositReturnContainer moneyDepositReturnContainer;
 		
 		Intent intent = getActivity().getIntent();
-		long modelId = intent.getLongExtra("MODEL_ID", -1);
+		final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
 			moneyDepositReturnContainer =  new Select().from(MoneyDepositReturnContainer.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyDepositReturnContainer.hasEditPermission();
@@ -216,7 +218,33 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 								bundle, GET_REMARK);
 			}
 		});
+
+		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
+		if(modelId == -1){
+			if(project.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+			}
+		} else if(moneyDepositReturnContainer.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(moneyDepositReturnContainer.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyDepositReturnContainer.getFinancialOwnerUserId()));
+		}
 		
+		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mSelectorFieldProject.getModelId() == null){
+					HyjUtil.displayToast("请先选择一个项目。");
+				} else {
+					Bundle bundle = new Bundle();
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+				}
+			}
+		});
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
@@ -590,6 +618,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 		
@@ -1109,7 +1138,15 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						HyjUtil.displayToast(R.string.app_permission_no_edit);
 						return;
 					}
-	         		
+
+					if(project.getFinancialOwnerUserId() != null){
+						mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+					} else {
+						mSelectorFieldFinancialOwner.setModelId(null);
+						mSelectorFieldFinancialOwner.setText(null);
+					}
+						
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
@@ -1170,6 +1207,34 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     				}
     			}
      			break;
+             case GET_FINANCIALOWNER_ID:
+    	       	 if(resultCode == Activity.RESULT_OK){
+    	       		long _id = data.getLongExtra("MODEL_ID", -1);
+    	       		if(_id == -1){
+    		       		mSelectorFieldFinancialOwner.setText(null);
+    		       		mSelectorFieldFinancialOwner.setModelId(null);
+    	       		} else {
+	    	       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
+	
+	    	       		if(psa == null){
+	    					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
+	    					return;
+	    	       		} else if(psa.getFriendUserId() == null){
+	    					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
+	    					return;
+	    	       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+	    					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+	    					return;
+	    	       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+	    					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
+	    					return;
+	    	       		}
+	    	       		
+	    	       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+	    	       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
+    	       		}
+    	       	 }
+    	       	 break;
           }
     }
 		// inner class

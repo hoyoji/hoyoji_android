@@ -84,7 +84,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private CheckBox mCheckBoxAutoApportion = null;
 	private PrentProjectListAdapter mParentProjectListAdapter = null;
 	private HyjSelectorField mSelectorFieldFinancialOwner = null;
-	private ImageView mImageViewClearFinancialOwner = null;
+//	private ImageView mImageViewClearFinancialOwner = null;
 
 	@Override
 	public Integer useContentView() {
@@ -191,28 +191,34 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				if(mProjectEditor.getModel().get_mId() == null){
-					mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
-					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(HyjApplication.getInstance().getCurrentUser().getId()));
+					if(mSelectorFieldFinancialOwner.getModelId() != null){
+						mSelectorFieldFinancialOwner.setModelId(null);
+						mSelectorFieldFinancialOwner.setText(null);
+					} else {
+						mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
+						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(HyjApplication.getInstance().getCurrentUser().getId()));
+					}
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());
 					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		}); 
 		
 		
-		mImageViewClearFinancialOwner = (ImageView) getView().findViewById(
-				R.id.projectFormFragment_imageView_clear_financialOwner);
-		mImageViewClearFinancialOwner.setEnabled(editPermission);
-		mImageViewClearFinancialOwner.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSelectorFieldFinancialOwner.setModelId(null);
-				mSelectorFieldFinancialOwner.setText("");
-			}
-		});
+//		mImageViewClearFinancialOwner = (ImageView) getView().findViewById(
+//				R.id.projectFormFragment_imageView_clear_financialOwner);
+//		mImageViewClearFinancialOwner.setEnabled(editPermission);
+//		mImageViewClearFinancialOwner.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mSelectorFieldFinancialOwner.setModelId(null);
+//				mSelectorFieldFinancialOwner.setText("");
+//			}
+//		});
 		
 		
 		
@@ -657,24 +663,29 @@ public class ProjectFormFragment extends HyjUserFormFragment {
         case GET_FINANCIALOWNER_ID:
 	       	 if(resultCode == Activity.RESULT_OK){
 	       		long _id = data.getLongExtra("MODEL_ID", -1);
-	       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
-
-	       		if(psa == null){
-					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
-					return;
-	       		} else if(psa.getFriendUserId() == null){
-					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
-					return;
-	       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
-					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
-					return;
-	       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-					HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
-					return;
+	       		if(_id == -1){
+		       		mSelectorFieldFinancialOwner.setText(null);
+		       		mSelectorFieldFinancialOwner.setModelId(null);
+	       		} else {
+		       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
+	
+		       		if(psa == null){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
+						return;
+		       		} else if(psa.getFriendUserId() == null){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
+						return;
+		       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+						return;
+		       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+						HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
+						return;
+		       		}
+		       		
+		       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+		       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
 	       		}
-	       		
-	       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
-	       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
 	       	 }
 	       	 break;
 		}

@@ -22,6 +22,9 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -109,6 +112,33 @@ public class MemberListFragment extends HyjUserListFragment{
 	}
 
 
+	@Override
+	protected View useHeaderView(Bundle savedInstanceState){
+		Intent intent = getActivity().getIntent();
+		String nullItemName = intent.getStringExtra("NULL_ITEM");
+		if(nullItemName == null){
+			return null;
+		}
+		FrameLayout view =  (FrameLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_member, null);
+		TextView nameView = (TextView)view.findViewById(R.id.memberListItem_name);
+		nameView.setText(nullItemName);
+		view.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(getActivity().getCallingActivity() != null){
+					Intent intent = new Intent();
+					intent.putExtra("MODEL_ID", -1);
+					intent.putExtra("MODEL_TYPE", "ProjectShareAuthorization");
+					getActivity().setResult(Activity.RESULT_OK, intent);
+					getActivity().finish();
+				}
+			}
+			
+		});
+		return view;
+	}
+	
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();

@@ -127,4 +127,8 @@ public class HyjSelectorField extends LinearLayout {
 	public TextView getEditText(){
 		return mEditTextEdit;
 	}
+
+	public CharSequence getHint() {
+		return mEditTextEdit.getHint();
+	}
 }

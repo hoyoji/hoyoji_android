@@ -83,6 +83,10 @@ public class MoneyReturn extends HyjModel{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
+
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
+	
 	@Column(name = "ownerFriendId")
 	private String mOwnerFriendId;
 
@@ -419,6 +423,14 @@ public class MoneyReturn extends HyjModel{
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
+	public String getFinancialOwnerUserId() {
+		return mFinancialOwnerUserId;
+	}
+
+	public void setFinancialOwnerUserId(String financialOwnerUserId) {
+		this.mFinancialOwnerUserId = financialOwnerUserId;
+	}
+	
 	public String getLocation() {
 		return mLocation;
 	}
@@ -634,7 +646,7 @@ public class MoneyReturn extends HyjModel{
 			}
 		} else if(this.getFriendUserId() != null){
 			displayName = Friend.getFriendUserDisplayName(this.getFriendUserId());
-			if(displayName.isEmpty()){
+			if(displayName.length() == 0){
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", this.getFriendUserId(), this.getProjectId()).executeSingle();
 				if(psa != null){
 					return psa.getFriendUserName();
