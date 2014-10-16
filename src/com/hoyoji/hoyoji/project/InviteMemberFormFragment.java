@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.project;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
@@ -119,7 +121,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 				inviteFriendObject.put("__dataType", "InviteLink");
 				inviteFriendObject.put("title", "邀请加入项目");
 				inviteFriendObject.put("type", "ProjectShare");
-				inviteFriendObject.put("date", new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
+				inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
 				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {
