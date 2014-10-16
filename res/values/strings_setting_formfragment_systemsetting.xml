@@ -34,7 +34,7 @@
     <string name="systemSettingFormFragment_toast_unBindWB">解绑微博</string>
     <string name="systemSettingFormFragment_toast_unBindingWB">正在解绑微博&#8230;</string>
     
-    <string name="systemSettingFormFragment_textView_password">密码</string>
+    <string name="systemSettingFormFragment_textView_password">登录密码</string>
     <string name="systemSettingFormFragment_button_changePassword">修改密码</string>
     
     <string name="systemSettingFormFragment_textView_uploadPicture">上传大图</string>
@@ -42,10 +42,10 @@
     
     <string name="systemSettingFormFragment_checkBox_validation_addFriend">加我为好友时是否需要验证</string>
 
-    <string name="systemSettingFormFragment_textView_moneyExpenseColor">支出金额颜色</string>
+    <string name="systemSettingFormFragment_textView_moneyExpenseColor">支出颜色</string>
     <string name="systemSettingFormFragment_button_moneyExpenseColorPicker">请选择支出金额颜色</string>
     
-    <string name="systemSettingFormFragment_textView_moneyIncomeColor">收入金额颜色</string>
+    <string name="systemSettingFormFragment_textView_moneyIncomeColor">收入颜色</string>
     <string name="systemSettingFormFragment_button_moneyIncomeColorPicker">请选择收入金额颜色</string>
     
     <string name="systemSettingFormFragment_textView_about">关于好友记</string>

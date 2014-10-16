@@ -19,9 +19,10 @@
 	        android:layout_height="wrap_content">
 	    </ListView>
 	    <Button android:id="@id/list_field_listViewHeader" 
-	        	  android:gravity="center_horizontal"
+	        	  android:gravity="center_horizontal|center_vertical"
 	              android:layout_width="match_parent"
 	              android:layout_height="42dip"
+	              android:background="#E0E0E0"
 				  android:text="@string/app_listfield_add"/>
 	</LinearLayout>
 <!-- 
