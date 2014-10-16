@@ -85,4 +85,7 @@
 	<string name="errcode_deny">发送被拒绝</string>
 	<string name="errcode_unknown">发送返回</string>
 	
+	<string name="read_message">已读消息</string>
+	<string name="all_message">全部消息</string>
+	
 </resources>
