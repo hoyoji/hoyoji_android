@@ -72,9 +72,11 @@ import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
+import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
@@ -450,26 +452,35 @@ public class MainActivity extends HyjUserActivity {
 			break;
 		
 		case 3:
-			openActivityWithFragment(ExchangeListFragment.class,
-					R.string.exchangeListFragment_title_manage_exchange, null);
+			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
+					R.string.currency_exchang_eviewpager_listFragment_title, null);
 			break;
+		
+//		case 3:
+//			openActivityWithFragment(ExchangeListFragment.class,
+//					R.string.exchangeListFragment_title_manage_exchange, null);
+//			break;
+//		case 4:
+//			openActivityWithFragment(CurrencyListFragment.class,
+//					R.string.currencyListFragment_title_manage_currency, null);
+//			break;
+//		case 4:
+//			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+//					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
+//			break;
+//		case 5:
+//			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
+//					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
+//			break;
 		case 4:
-			openActivityWithFragment(CurrencyListFragment.class,
-					R.string.currencyListFragment_title_manage_currency, null);
+			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
+					R.string.expense_income_viewpager_listFragment_title, null);
 			break;
 		case 5:
-			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
-			break;
-		case 6:
-			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
-					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
-			break;
-		case 7:
 			openActivityWithFragment(SystemSettingFormFragment.class,
 					R.string.systemSettingFormFragment_title, null);
 			break;
-		case 8:
+		case 6:
 			HyjApplication.getInstance().switchUser();
 			break;
 		}
