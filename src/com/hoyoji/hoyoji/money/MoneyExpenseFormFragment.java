@@ -90,6 +90,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 	private boolean hasEditPermission = true;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
 	private ImageButton mButtonExpandMore;
+	private LinearLayout mLinearLayoutExpandMore;
 
 	@Override
 	public Integer useContentView() {
@@ -360,20 +361,17 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			}
 		});
 
+		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseFormFragment_expandMore);
 		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
 		mButtonExpandMore.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mRemarkFieldRemark.getVisibility() == View.GONE){
+				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
 					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
-					mRemarkFieldRemark.setVisibility(View.VISIBLE);
-					mSelectorFieldFinancialOwner.setVisibility(View.VISIBLE);
-					mSelectorFieldFriend.setVisibility(View.VISIBLE);
+					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
 				} else {
 					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
-					mRemarkFieldRemark.setVisibility(View.GONE);
-					mSelectorFieldFinancialOwner.setVisibility(View.GONE);
-					mSelectorFieldFriend.setVisibility(View.GONE);
+					mLinearLayoutExpandMore.setVisibility(View.GONE);
 				}
 			}
 		});
