@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,11 +16,13 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -32,13 +33,14 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 
 public class MessageListFragment extends HyjUserListFragment{
 	
 	private ChangeObserver mChangeObserver;
 	private Button mAllMessageButton;
-	private Button mReadMessageButton;
+	private Button mUnReadMessageButton;
+	private boolean mIsSelectUnreadMessages = false;
 
 	@Override
 	public Integer useContentView() {
@@ -76,9 +78,9 @@ public class MessageListFragment extends HyjUserListFragment{
 		String selection = null;
 		String[] selectionArgs = null;
 		
-		if(arg1.getString("STATE") != null){
-			selection = "state=?";
-			selectionArgs = new String[]{arg1.getString("STATE")};
+		if(mIsSelectUnreadMessages == true){
+			selection = "messageState <> ?";
+			selectionArgs = new String[]{"Read"};
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Message.class, null),
@@ -87,7 +89,7 @@ public class MessageListFragment extends HyjUserListFragment{
 		
 		return (Loader<Object>)loader;
 	}
-
+	
 
 	@Override
 	public void onInitViewData() {
@@ -96,14 +98,16 @@ public class MessageListFragment extends HyjUserListFragment{
 		mAllMessageButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				
+				mIsSelectUnreadMessages = false;
+				getLoaderManager().restartLoader(0, new Bundle(), MessageListFragment.this);
     		}
 		});
-		mReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_read_message);
-		mReadMessageButton.setOnClickListener(new OnClickListener(){
+		mUnReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_read_message);
+		mUnReadMessageButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				
+				mIsSelectUnreadMessages = true;
+				getLoaderManager().restartLoader(0, new Bundle(), MessageListFragment.this);
     		}
 		});
 		if (mChangeObserver == null) {
