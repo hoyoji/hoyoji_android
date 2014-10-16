@@ -478,7 +478,7 @@ public class Util {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public static Bitmap getbitmap(String imageUri) {
+	public static Bitmap getBitmapFromUrl(String imageUri, int sampleSize) {
 		Log.v(TAG, "getbitmap:" + imageUri);
 		// 显示网络上的图片
 		Bitmap bitmap = null;
@@ -489,7 +489,11 @@ public class Util {
 			conn.setDoInput(true);
 			conn.connect();
 			InputStream is = conn.getInputStream();
-			bitmap = BitmapFactory.decodeStream(is);
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+	        opts.inSampleSize = sampleSize;
+	        opts.inPurgeable=true;
+	        opts.inInputShareable=true;
+			bitmap = BitmapFactory.decodeStream(is, null, opts);
 			is.close();
 
 			Log.v(TAG, "image download finished." + imageUri);

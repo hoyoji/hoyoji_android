@@ -319,7 +319,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 						@Override
 						public Object doInBackground(String... string) {
 							Bitmap thumbnail = null;
-							thumbnail = Util.getbitmap(headimgurl);
+							thumbnail = Util.getBitmapFromUrl(headimgurl, 4);
 							return thumbnail;
 						}
 					});
@@ -810,7 +810,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 												String... string) {
 											Bitmap thumbnail = null;
 											thumbnail = Util
-													.getbitmap(figureUrl1);
+													.getBitmapFromUrl(figureUrl1, 1);
 											return thumbnail;
 										}
 									});
