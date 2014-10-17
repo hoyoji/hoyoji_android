@@ -288,21 +288,14 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 								FileOutputStream out;
 								try {
 									Picture figure = new Picture();
-									File imgFile = HyjUtil.createImageFile
-
-									(figure.getId() + "_icon");
+									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
 									if (imgFile != null) {
 										out = new FileOutputStream(imgFile);
-										thumbnail.compress
-
-										(Bitmap.CompressFormat.JPEG, 90, out);
+										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
 										out.close();
 										out = null;
 
-										figure.setRecordId
-
-										(HyjApplication.getInstance()
-												.getCurrentUser().getId());
+										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
 										figure.setRecordType("User");
 										figure.setDisplayOrder(0);
 										figure.setPictureType("JPEG");
@@ -344,8 +337,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				try {
 					JSONObject json = (JSONObject) object;
 					// ((HyjActivity)getActivity()).dismissProgressDialog();
-					 WXEntryActivity.this.displayDialog("绑定WX失败",
-					 json.getJSONObject("__summary").getString("msg"));
+					HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
 					finish();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -493,8 +485,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				try {
 					JSONObject json = (JSONObject) object;
 					WXEntryActivity.this.dismissProgressDialog();
-					WXEntryActivity.this.displayDialog("登录失败", json
-							.getJSONObject("__summary").getString("msg"));
+					HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -837,8 +828,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 					WXEntryActivity.this.dismissProgressDialog();
 					try {
 						JSONObject json = (JSONObject) object;
-						WXEntryActivity.this.displayDialog(null, json
-								.getJSONObject("__summary").getString("msg"));
+						HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

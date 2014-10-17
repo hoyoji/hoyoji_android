@@ -88,8 +88,8 @@
 	<string name="un_read_message">未读消息</string>
 	<string name="all_message">全部消息</string>
 	
-	<string name="currency_exchang_eviewpager_listFragment_title">本币汇率管理</string>
+	<string name="currency_exchang_eviewpager_listFragment_title">币种汇率</string>
 	
-	<string name="expense_income_viewpager_listFragment_title">收支分类管理</string>
+	<string name="expense_income_viewpager_listFragment_title">收支分类</string>
 	
 </resources>
