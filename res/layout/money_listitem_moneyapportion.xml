@@ -28,10 +28,9 @@
             <TextView
                 android:id="@+id/moneyApportionListItem_friendName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
 				android:layout_toRightOf="@id/moneyApportionListItem_picture"
 				android:layout_alignTop="@id/moneyApportionListItem_picture"
-				android:layout_alignBottom="@id/moneyApportionListItem_picture"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:maxLines="1"
@@ -54,11 +53,14 @@
 
     <com.hoyoji.android.hyjframework.view.HyjNumericView
         android:id="@+id/moneyApportionListItem_amount"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
+        android:background="@color/red"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+		android:layout_below="@id/moneyApportionListItem_picture"
+		android:gravity="center"
         android:ellipsize="marquee"
-        android:gravity="center_horizontal"
         android:maxLines="1"
         android:singleLine="true" />
 
