@@ -5,6 +5,6 @@
     <string name="projectListFragment_title_select_project">选择项目</string>
     <string name="projectListFragment_title_select_parent_project">选择上级项目</string>
     <string name="projectListFragment_view_transactions">项目流水</string>
-    <string name="projectListFragment_title_shared_project">共享来的收支</string>
+    <string name="projectListFragment_title_shared_project">共享来的账务</string>
     
 </resources>

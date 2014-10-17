@@ -313,6 +313,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			hideSaveAction();
 		}
 	}
+	
 	private void setAveragePercentage(ProjectShareAuthorization projectShareAuthorization) {
 		//将成员设成平均分摊
 		double fixedPercentageTotal = 0.0;

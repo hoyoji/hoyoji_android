@@ -41,7 +41,7 @@ import com.hoyoji.hoyoji.models.UserData;
 public class SubProjectListFragment extends HyjUserListFragment {
 //	public final static int ADD_SUB_PROJECT = 0;
 	private static final int EDIT_PROJECT_DETAILS = 0;
-	public final static int VIEW_PROJECT_MEMBERS = 1;
+	private static final int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
@@ -60,7 +60,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return fragment;
 	}
 	
-	
 	public String getTitle(){
 		String title = getArguments().getString("title");
 		if(title == null){
@@ -74,22 +73,30 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return R.layout.project_listfragment_subproject;
 	}
 
-
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
 				new String[] {"_id", "id","id", "id", "id"},
-				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
-				0); 
-	}	
-	
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects }, 0); 
+	}
+
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
 		String parentProjectId = getArguments().getString("parentProjectId");
 		if(parentProjectId == null){
 			mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_project, null);
+			
+			// 添加 "共享来的收支" 到 headerView
+			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
+				}
+		    });
+			setSharedProjectHeaderView(mHeaderViewSharedProject);
+		
 			return mHeaderViewSharedProject;
 		} else {
 			return null;
@@ -141,17 +148,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override
 	public void onInitViewData() {
-		if(mHeaderViewSharedProject != null){
-			// 添加“共享来的收支”到headerView
-			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-					openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
-				}
-		    });
-			setSharedProjectHeaderView(mHeaderViewSharedProject);
-		}
-		
 		super.onInitViewData();
 		
 		if (mChangeObserver == null) {
@@ -172,9 +168,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 							UserData.class, null), true,
 							mChangeObserver);
 		}
-
-		
-		
 	}
 
 	
@@ -247,40 +240,20 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		imageButton.setEnabled(false);
 
 		ImageView picture = (ImageView)view.findViewById(R.id.projectListItem_picture);
-		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_share));
+		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_local_project));
 		picture.setEnabled(false);
 		
-			((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的收支");
-			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
-			
-			view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
-			HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
+		((TextView)view.findViewById(R.id.projectListItem_name)).setText(R.string.projectListFragment_title_shared_project);
+//		((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
+		
+		view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
+		HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
 //			numericView.setSuffix(null);
 //			numericView.setTextColor(Color.BLACK);
 //			numericView.setPrefix("-");
 //			numericView.setText(null);
-			numericView.setVisibility(View.GONE);
-//			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-//			numericView.setSuffix(null);
-////			Double depositBalance = project.getDepositBalance();
-////			if(depositBalance == 0){
-////				numericView.setTextColor(Color.BLACK);
-////				numericView.setPrefix(project.getCurrencySymbol());
-////			} else if(depositBalance < 0){
-////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-////				numericView.setPrefix("支出"+project.getCurrencySymbol());
-////			}else{
-////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-////				numericView.setPrefix("收入"+project.getCurrencySymbol());
-////			}
-////			numericView.setNumber(Math.abs(depositBalance));
-//			numericView.setNumber(0.0);
-//			numericView.setTextColor(Color.BLACK);
-			
-
-			
-			
-	}	
+		numericView.setVisibility(View.GONE);
+	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -319,7 +292,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //			
 //			numericView.setNumber(Math.abs(projectBalance));
 //			return true;
-		}else if(view.getId() == R.id.projectListItem_depositTotal) {
+		} else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			String projectId = cursor.getString(columnIndex);
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
@@ -354,7 +327,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			if(!project.getSubProjects().isEmpty()){
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
 				((ImageButton)view).setEnabled(true);
-			}else{
+			} else {
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
 				((ImageButton)view).setEnabled(false);
 			}
