@@ -247,19 +247,19 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		imageButton.setEnabled(false);
 
 		ImageView picture = (ImageView)view.findViewById(R.id.projectListItem_picture);
-		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_share));
+		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_local_project));
 		picture.setEnabled(false);
 		
-			((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的收支");
-			((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
-			
-			view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
-			HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
+		((TextView)view.findViewById(R.id.projectListItem_name)).setText("共享来的账务");
+//		((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
+		
+		view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
+		HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
 //			numericView.setSuffix(null);
 //			numericView.setTextColor(Color.BLACK);
 //			numericView.setPrefix("-");
 //			numericView.setText(null);
-			numericView.setVisibility(View.GONE);
+		numericView.setVisibility(View.GONE);
 //			numericView.setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
 //			numericView.setSuffix(null);
 ////			Double depositBalance = project.getDepositBalance();
@@ -276,9 +276,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 ////			numericView.setNumber(Math.abs(depositBalance));
 //			numericView.setNumber(0.0);
 //			numericView.setTextColor(Color.BLACK);
-			
-
-			
 			
 	}	
 	
