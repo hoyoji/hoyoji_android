@@ -21,6 +21,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -162,17 +164,15 @@ public class MemberListFragment extends HyjUserListFragment{
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		
 		Project project = Project.load(Project.class, modelId);
+		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			HyjUtil.displayToast("您不能在共享来的项目添加共享成员");
+			return true;
+		}
 		if(item.getItemId() == R.id.memberListFragment_action_member_addnew){
-			
-			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				Bundle bundle = new Bundle();
 				bundle.putLong("PROJECT_ID", modelId);
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
 				return true;
-			}else{
-				HyjUtil.displayToast("您不能在共享来的项目添加共享成员");
-				return false;
-			}
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite){
 			Bundle bundle = new Bundle();
 			bundle.putLong("PROJECT_ID", modelId);
@@ -372,6 +372,17 @@ public class MemberListFragment extends HyjUserListFragment{
 //		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
 //		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
 //		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		Project project = Project.load(Project.class, modelId);
+		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			getOptionsMenu().findItem(R.id.memberListFragment_action_member_add).setVisible(false);
+		}
 	}
 	
 	@Override

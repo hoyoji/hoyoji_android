@@ -42,6 +42,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	private View mFooterView;
 //	protected int mListPageSize = 10;
 	private TextView mEmptyView = null;
+	private Menu mOptionsMenu;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -111,6 +112,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		mOptionsMenu = menu;
 	    // Inflate the menu items for use in the action bar
 		if(useOptionsMenuView() != null){
 			inflater.inflate(useOptionsMenuView(), menu);
@@ -134,7 +136,10 @@ public abstract class HyjListFragment extends ListFragment implements
 	public void onInitViewData(){
 		
 	}
-	
+
+	public Menu getOptionsMenu(){
+		return mOptionsMenu;
+	}
 
 	public void setFooterLoadStart(ListView l){
 		if(l.getAdapter().getCount() == 1){
