@@ -80,8 +80,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_project,
 				null,
-				new String[] {"_id", "id","id", "id", "id", "id"},
-				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_inOutTotal, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
+				new String[] {"_id", "id","id", "id", "id"},
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects },
 				0); 
 	}	
 	
@@ -290,7 +290,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 					((TextView)view).setText(ownerUserName);
 				}
 				return true;
-		} else if(view.getId() == R.id.projectListItem_inOutTotal) {
+//		} 
+//else if(view.getId() == R.id.projectListItem_inOutTotal) {
 //			HyjNumericView numericView = (HyjNumericView)view;
 //			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 //			
@@ -310,7 +311,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //			}
 //			
 //			numericView.setNumber(Math.abs(projectBalance));
-			return true;
+//			return true;
 		}else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
 			String projectId = cursor.getString(columnIndex);

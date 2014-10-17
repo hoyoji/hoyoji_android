@@ -53,11 +53,8 @@
 
     <com.hoyoji.android.hyjframework.view.HyjNumericView
         android:id="@+id/moneyApportionListItem_amount"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
 		android:layout_below="@id/moneyApportionListItem_picture"
 		android:gravity="center"
         android:ellipsize="marquee"
