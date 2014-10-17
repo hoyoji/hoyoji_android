@@ -50,7 +50,10 @@
 			android:layout_toLeftOf="@id/memberListItem_actualTotal"
 	    	android:gravity="center_vertical"
 	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"/>
+	    	android:textColor="@android:color/darker_gray"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"/>
 		
 		<TextView android:id="@+id/memberListItem_name"  
 		    android:layout_width="wrap_content"   
@@ -60,7 +63,9 @@
 			android:layout_toLeftOf="@id/memberListItem_apportionTotal"
 	    	android:gravity="center_vertical"
 		    android:textStyle="bold"
-	    	android:layout_gravity="left" />	
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"/>	
 	    	
 		<TextView android:id="@+id/memberListItem_remark"  
 		    android:layout_width="wrap_content"   
@@ -70,6 +75,9 @@
 			android:layout_toLeftOf="@id/memberListItem_settlement"
 	    	android:gravity="center_vertical"
 	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"/>	
+	    	android:textColor="@android:color/darker_gray"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"/>	
 
 </RelativeLayout>

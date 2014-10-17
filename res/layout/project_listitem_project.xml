@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:paddingTop="0dp"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
@@ -11,17 +11,18 @@
     <ImageView
         android:id="@+id/projectListItem_picture"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="70dp"
         android:layout_alignParentLeft="true"
 		android:layout_centerVertical="true"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="@drawable/abc_tab_indicator_ab_holo"
         android:clickable="true" />
     
     <ImageButton
         android:id="@+id/projectListItem_action_viewSubProjects"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:paddingLeft="10dp"
@@ -51,17 +52,24 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/projectListItem_picture"
-	        android:layout_toLeftOf="@id/projectListItem_depositTotalLabel"
-	        android:layout_centerVertical="true"/>
+	        android:layout_toLeftOf="@id/projectListItem_depositTotal"
+	        android:layout_centerVertical="true"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"/>
     	<TextView 
 	        android:id="@+id/projectListItem_owner"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/projectListItem_picture"
-			android:layout_below="@id/projectListItem_name"
+	        android:layout_toLeftOf="@id/projectListItem_depositTotalLabel"
+			android:layout_above="@id/projectListItem_name"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text=""/>
+		    android:text=""
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"/>
 		    
 <!-- 	    <TextView 
 	        android:id="@+id/projectListItem_inOutTotalLabel"  
