@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
@@ -119,7 +121,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(nullItemName == null){
 			return null;
 		}
-		FrameLayout view =  (FrameLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_member, null);
+		RelativeLayout view =  (RelativeLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_member, null);
 		TextView nameView = (TextView)view.findViewById(R.id.memberListItem_name);
 		nameView.setText(nullItemName);
 		view.setOnClickListener(new OnClickListener(){

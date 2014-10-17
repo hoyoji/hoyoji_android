@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
@@ -7,71 +7,69 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:descendantFocusability="blocksDescendants">
- <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/memberListItem_picture"
+    
+ 	<com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/memberListItem_picture"
          android:layout_width="56dp"
          android:layout_height="56dp"
-         android:background="@drawable/ic_action_person"
-         android:layout_gravity="center_vertical"/>
+         android:layout_alignParentLeft="true"
+         android:layout_centerVertical="true"
+         android:background="@drawable/ic_action_person"/>
      
-	 <LinearLayout 
-	     android:layout_width="wrap_content"
-	     android:layout_height="match_parent" 
-	     android:layout_gravity="center_vertical"
-	     android:paddingLeft="66dip"
-	     android:orientation="vertical" >
-		<com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_percentage"  
-		    android:layout_width="wrap_content"  
-		    android:layout_height="0dp"
-		    android:layout_weight="1"
-	    	android:layout_gravity="left" 
-	    	android:gravity="center_vertical"
-	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"/>
+		<!--  ================================= right side ============================ -->
 		
-		<TextView android:id="@+id/memberListItem_name"  
-		    android:layout_width="wrap_content"   
-		    android:layout_height="0dp"
-		    android:layout_weight="1"
-	    	android:gravity="center_vertical"
-		    android:textStyle="bold"
-	    	android:layout_gravity="left" />	
-	    	
-		<TextView android:id="@+id/memberListItem_remark"  
-		    android:layout_width="wrap_content"   
-		    android:layout_height="0dp"
-		    android:layout_weight="1"
-	    	android:gravity="center_vertical"
-	    	android:layout_gravity="left" 
-	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"/>	
-	</LinearLayout>
-	
-	<LinearLayout 
-	     android:layout_width="wrap_content"
-	     android:layout_height="wrap_content"
-	     android:layout_gravity="center_vertical|right" 
-	     android:gravity="right" 
-	     android:orientation="vertical" >
 	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_actualTotal"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_centerVertical="true"
 	    	android:textColor="@android:color/darker_gray"
 	    	android:text=""/>
 	    
 	    <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_apportionTotal"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_alignParentTop="true"
 	    	android:textColor="@android:color/darker_gray"
 	    	android:text=""/>
 	    
-	<!--      <TextView android:id="@+id/memberListItem_settlement_label"  
-		    android:layout_width="wrap_content"   
-		    android:layout_height="wrap_content"
-	    	android:textColor="@android:color/darker_gray"
-		    android:text="" /> -->
 	     <com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_settlement"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_alignParentBottom="true"
 	    	android:text=""/>
-	</LinearLayout>
-</FrameLayout>
+	     
+		<!-- ================================= left side ============================ -->
+	 
+		<com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/memberListItem_percentage"  
+		    android:layout_width="wrap_content"  
+		    android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/memberListItem_picture"
+			android:layout_alignParentTop="true"
+			android:layout_toLeftOf="@id/memberListItem_actualTotal"
+	    	android:gravity="center_vertical"
+	    	android:textSize="12sp"
+	    	android:textColor="@android:color/darker_gray"/>
+		
+		<TextView android:id="@+id/memberListItem_name"  
+		    android:layout_width="wrap_content"   
+		    android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/memberListItem_picture"
+         	android:layout_centerVertical="true"
+			android:layout_toLeftOf="@id/memberListItem_apportionTotal"
+	    	android:gravity="center_vertical"
+		    android:textStyle="bold"
+	    	android:layout_gravity="left" />	
+	    	
+		<TextView android:id="@+id/memberListItem_remark"  
+		    android:layout_width="wrap_content"   
+		    android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/memberListItem_picture"
+			android:layout_alignParentBottom="true"
+			android:layout_toLeftOf="@id/memberListItem_settlement"
+	    	android:gravity="center_vertical"
+	    	android:textSize="12sp"
+	    	android:textColor="@android:color/darker_gray"/>	
+
+</RelativeLayout>
