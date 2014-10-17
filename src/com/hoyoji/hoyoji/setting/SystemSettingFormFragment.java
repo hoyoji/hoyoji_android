@@ -151,17 +151,13 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mTextFieldUserName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
 		mTextFieldUserName.setText(user.getUserName());
-		mTextFieldUserName.setEnabled(false);
-		mTextFieldUserName.setTextColor(Color.BLACK);
 		
 		mTextFieldNickName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
 		
 		if(user.getNickName() == null || user.getNickName().equals("")) {
 			mTextFieldNickName.setText("无昵称");
-			mTextFieldNickName.setEnabled(false);
 		} else {
 			mTextFieldNickName.setText(user.getNickName());
-			mTextFieldNickName.setEnabled(true);
 		}
 		
 		mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_email);
@@ -553,7 +549,6 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 					if(!jsonObject.optString("nickName").equals(user.getNickName())){
 						user.setNickName(jsonObject.optString("nickName"));
 						mTextFieldNickName.setText(user.getNickName());
-						mTextFieldNickName.setEnabled(true);
 					}
 				}
 				final String figureUrl1 = jsonObject.optString("figureUrl");
