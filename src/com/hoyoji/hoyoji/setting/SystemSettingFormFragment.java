@@ -38,6 +38,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -93,8 +94,8 @@ import com.tencent.tauth.UiError;
 
 
 public class SystemSettingFormFragment extends HyjUserFragment {
-	private HyjTextField mTextFieldUserName = null;
-	private HyjTextField mTextFieldNickName = null;
+	private TextView mTextFieldUserName = null;
+	private TextView mTextFieldNickName = null;
 	private HyjTextField mTextFieldEmail = null;
 	private Button mButtonEmail = null;
 	private HyjTextField mTextFieldPhone = null;
@@ -112,6 +113,9 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private Button mButtonMoneyIncomeColorPicker = null;
 	private HyjImageView takePictureButton = null;
 	private ChangeObserver mChangeObserver;
+	
+	private RelativeLayout mRelativeLayoutBindID = null;
+	private Button mButtonSwitchUser = null;
 
 	private Resources r = null;
 	
@@ -145,13 +149,20 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 //		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		user =  HyjApplication.getInstance().getCurrentUser();
 		
-		mTextFieldUserName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
+		mTextFieldUserName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
 		mTextFieldUserName.setText(user.getUserName());
 		mTextFieldUserName.setEnabled(false);
 		mTextFieldUserName.setTextColor(Color.BLACK);
 		
-		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
-		mTextFieldNickName.setText(user.getNickName());
+		mTextFieldNickName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
+		
+		if(user.getNickName() == null || user.getNickName().equals("")) {
+			mTextFieldNickName.setText("无昵称");
+			mTextFieldNickName.setEnabled(false);
+		} else {
+			mTextFieldNickName.setText(user.getNickName());
+			mTextFieldNickName.setEnabled(true);
+		}
 		
 		mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.systemSettingFormFragment_textField_email);
 		mTextFieldEmail.setEditable(false);
@@ -326,20 +337,36 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mChangeObserver = new ChangeObserver();
 		this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 				mChangeObserver);
+		
+		mRelativeLayoutBindID = (RelativeLayout) getView().findViewById(R.id.bindID_relativeLayout);	
+		mRelativeLayoutBindID.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				HyjUtil.displayToast("aaaa");
+			}
+		});
+		
+		mButtonSwitchUser = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_switchUser);	
+		mButtonSwitchUser.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				HyjApplication.getInstance().switchUser();
+			}
+		});
 	}
 	
 	@Override
 	public void onStop() {
-		User curUser = HyjApplication.getInstance().getCurrentUser();
-		String newNickName = mTextFieldNickName.getText().trim();
-		String curNickName = curUser.getNickName();
-		if(curNickName == null){
-			curNickName = "";
-		}
-		if(!newNickName.equals(curNickName)){
-			curUser.setNickName(newNickName);
-			curUser.save();
-		}
+//		User curUser = HyjApplication.getInstance().getCurrentUser();
+//		String newNickName = mTextFieldNickName.getText().trim();
+//		String curNickName = curUser.getNickName();
+//		if(curNickName == null){
+//			curNickName = "";
+//		}
+//		if(!newNickName.equals(curNickName)){
+//			curUser.setNickName(newNickName);
+//			curUser.save();
+//		}
 		super.onStop();
 	}
 
@@ -526,6 +553,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 					if(!jsonObject.optString("nickName").equals(user.getNickName())){
 						user.setNickName(jsonObject.optString("nickName"));
 						mTextFieldNickName.setText(user.getNickName());
+						mTextFieldNickName.setEnabled(true);
 					}
 				}
 				final String figureUrl1 = jsonObject.optString("figureUrl");

@@ -262,7 +262,6 @@
 	        
 	        <com.hoyoji.android.hyjframework.view.HyjDateTimeField
 	            android:id="@+id/moneyBorrowFormFragment_textField_returnDate"
-	            hyj:style="top_label"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="2"

@@ -25,11 +25,11 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_action_person" /> -->
             
-                 <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/systemSettingFormFragment_imageView_camera"
+           <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/systemSettingFormFragment_imageView_camera"
 	         android:layout_width="56dp"
 	         android:layout_height="56dp"
 		     android:background="@drawable/ic_action_person"
-	         android:layout_gravity="center_vertical"/>
+	         android:layout_gravity="left|center_vertical"/>
 <!-- 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,15 +38,36 @@
                 android:orientation="vertical"
                 android:paddingLeft="66dp" >
  -->
-                <com.hoyoji.android.hyjframework.view.HyjTextField
+ 			<LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_gravity="center_vertical"
+               	android:layout_marginLeft="80dp"
+		        android:orientation="vertical" >
+		        
+		
+		        <TextView
+		            android:id="@+id/systemSettingFormFragment_textField_nickName"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" 
+		            android:textSize="8pt"/>
+                <TextView
                     android:id="@+id/systemSettingFormFragment_textField_userName"
-                    hyj:style="no_label"
-               		android:layout_gravity="center_vertical"
-               		android:paddingLeft="80dp"
                		android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    hyj:labelText="@string/systemSettingFormFragment_textView_userName" />
+                    android:enabled="false"
+                    android:textSize="6pt"
+                    android:textColor="#DDDDDD"/>
                 
+               </LinearLayout>
+               
+		        	<Button
+                    android:id="@+id/systemSettingFormFragment_button_switchUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="right"
+                    android:text="切换" />
 	            <!-- <Button
 	                android:id="@+id/systemSettingFormFragment_button_changePassword"
 	                android:layout_width="wrap_content"
@@ -54,7 +75,7 @@
 	                android:text="@string/systemSettingFormFragment_button_changePassword" /> -->
             <!-- </LinearLayout> -->
         </FrameLayout>
-
+        
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"
@@ -62,13 +83,57 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="#E0E0E0" />
+        
+        <RelativeLayout
+            android:id="@+id/bindID_relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <com.hoyoji.android.hyjframework.view.HyjTextField
-            android:id="@+id/systemSettingFormFragment_textField_nickName"
-            android:layout_width="fill_parent"
-            android:layout_height="43dp"
-            hyj:hintText="@string/systemSettingFormFragment_editText_hint_nickName"
-            hyj:labelText="@string/systemSettingFormFragment_textView_nickName" />
+            <TextView
+                android:id="@+id/systemSettingFormFragment_textView_bindID"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="@string/systemSettingFormFragment_textView_bindID" />
+            
+            <ImageView
+                android:id="@+id/systemSettingFormFragment_button_bindEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bind_qq"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/systemSettingFormFragment_button_bindEmail" />
+            <ImageView
+                android:id="@+id/systemSettingFormFragment_button_bindWB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bind_wb"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/systemSettingFormFragment_button_bindEmail"
+                android:text="@string/systemSettingFormFragment_button_bindWB" />
+            
+            <ImageView
+                android:id="@+id/systemSettingFormFragment_button_bindWX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bind_wx"
+                android:layout_toLeftOf="@id/systemSettingFormFragment_button_bindWB"
+                android:layout_centerVertical="true"
+                android:text="@string/systemSettingFormFragment_button_bindWX" />
+
+            <ImageView
+                android:id="@+id/systemSettingFormFragment_button_bindQQ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/systemSettingFormFragment_button_bindWX"
+                android:src="@drawable/bind_email"
+                android:text="@string/systemSettingFormFragment_button_bindQQ" />
+
+        </RelativeLayout>
 
         <View
             android:id="@id/field_separator"

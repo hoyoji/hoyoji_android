@@ -51,4 +51,11 @@
     <string name="systemSettingFormFragment_textView_about">关于好友记</string>
     <string name="systemSettingFormFragment_textView_version"></string>
     
+    <string name="systemSettingFormFragment_textView_bindID">绑定账户</string>
+    
+    <string name="systemSettingFormFragment_button_bindQQ">绑定QQ</string>
+    <string name="systemSettingFormFragment_button_bindWX">绑定微信</string>
+    <string name="systemSettingFormFragment_button_bindWB">绑定微博</string>
+    <string name="systemSettingFormFragment_button_bindEmail">绑定邮箱</string>
+    
 </resources>

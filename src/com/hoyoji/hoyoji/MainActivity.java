@@ -480,9 +480,9 @@ public class MainActivity extends HyjUserActivity {
 			openActivityWithFragment(SystemSettingFormFragment.class,
 					R.string.systemSettingFormFragment_title, null);
 			break;
-		case 5:
-			HyjApplication.getInstance().switchUser();
-			break;
+//		case 5:
+//			HyjApplication.getInstance().switchUser();
+//			break;
 		}
 
 		mDrawerLayout.closeDrawer(mDrawerList);
