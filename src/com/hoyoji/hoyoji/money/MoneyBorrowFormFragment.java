@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -83,6 +84,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 	private boolean hasEditPermission = true;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
+	private ImageButton mButtonBorrowMore;
+	private LinearLayout mLinearLayoutExpandMore;
 
 	@Override
 	public Integer useContentView() {
@@ -381,6 +384,21 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			setExchangeRate(true);
 		}
 		setPermission();
+		
+		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyBorrowFormFragment_expandMore);
+		mButtonBorrowMore = (ImageButton)getView().findViewById(R.id.expand_more);
+		mButtonBorrowMore.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
+					mButtonBorrowMore.setImageResource(R.drawable.ic_action_collapse);
+					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+				} else {
+					mButtonBorrowMore.setImageResource(R.drawable.ic_action_expand);
+					mLinearLayoutExpandMore.setVisibility(View.GONE);
+				}
+			}
+		});
 	}
 
 	@Override
