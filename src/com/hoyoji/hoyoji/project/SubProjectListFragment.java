@@ -41,7 +41,7 @@ import com.hoyoji.hoyoji.models.UserData;
 public class SubProjectListFragment extends HyjUserListFragment {
 //	public final static int ADD_SUB_PROJECT = 0;
 	private static final int EDIT_PROJECT_DETAILS = 0;
-	public final static int VIEW_PROJECT_MEMBERS = 1;
+	private static final int VIEW_PROJECT_MEMBERS = 1;
 	private ContentObserver mChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
@@ -253,7 +253,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //			numericView.setPrefix("-");
 //			numericView.setText(null);
 		numericView.setVisibility(View.GONE);
-	}	
+	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -327,7 +327,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			if(!project.getSubProjects().isEmpty()){
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
 				((ImageButton)view).setEnabled(true);
-			}else{
+			} else {
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
 				((ImageButton)view).setEnabled(false);
 			}
