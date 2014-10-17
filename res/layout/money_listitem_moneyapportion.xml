@@ -10,6 +10,7 @@
             android:layout_height="56dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp"
             android:background="@drawable/ic_action_person" />
 
             <TextView
