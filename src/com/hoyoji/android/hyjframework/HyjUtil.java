@@ -510,13 +510,6 @@ public class HyjUtil {
 	     * @param token   Token 对象
 	     */
 	    public static void writeAccessToken(Oauth2AccessToken token) {
-//	        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
-//	        Editor editor = pref.edit();
-//	        editor.putString(KEY_UID, token.getUid());
-//	        editor.putString(KEY_ACCESS_TOKEN, token.getToken());
-//	        editor.putLong(KEY_EXPIRES_IN, token.getExpiresTime());
-//	        editor.commit();
-	        
 	        WBLogin wbLogin = new Select().from(WBLogin.class).where("userId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 	        wbLogin.setAccessToken(token.getToken());
 	        wbLogin.setOpenId(token.getUid());
@@ -533,7 +526,6 @@ public class HyjUtil {
 	     */
 	    public static Oauth2AccessToken readAccessToken() {
 	        Oauth2AccessToken token = new Oauth2AccessToken();
-//	        SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 	        WBLogin wbLogin = new Select().from(WBLogin.class).where("userId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 	        token.setUid(wbLogin.getOpenId());
 	        token.setToken(wbLogin.getAccessToken());
