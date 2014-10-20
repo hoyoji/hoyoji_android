@@ -28,6 +28,7 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
 
@@ -155,8 +156,10 @@ public class HyjApplication extends Application {
 		currentUser = authenticateUser(userId, password);
 		if(currentUser != null){
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit(); 
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
@@ -201,8 +204,10 @@ public class HyjApplication extends Application {
 			qqLogin.save();
 
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit(); 
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
@@ -285,9 +290,11 @@ public class HyjApplication extends Application {
 				user.save();
 			}
 			
-            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0); 
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit(); 
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
@@ -373,8 +380,10 @@ public class HyjApplication extends Application {
 			}
 			
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit(); 
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
@@ -418,9 +427,11 @@ public class HyjApplication extends Application {
 				wbLogin.loadFromJSON(jsonObject, false);
 				wbLogin.save();
 
-	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-	            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-	            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit(); 
+	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0); 
+	            Editor editor = userInfo.edit();
+	            editor.putString("userId", currentUser.getId()).commit();  
+	            editor.putString("password", currentUser.getUserData().getPassword());
+	            editor.commit(); 
 //	            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //	    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //						public void onFail(Object arg0, int arg1, String arg2) {
@@ -504,8 +515,10 @@ public class HyjApplication extends Application {
 			}
 			
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit();   
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
@@ -577,8 +590,10 @@ public class HyjApplication extends Application {
 		currentUser = authenticateUser(userId, password);
 		if(currentUser != null){
             SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            userInfo.edit().putString("userId", currentUser.getId()).commit();  
-            userInfo.edit().putString("password", currentUser.getUserData().getPassword()).commit();  
+            Editor editor = userInfo.edit();
+            editor.putString("userId", currentUser.getId()).commit();  
+            editor.putString("password", currentUser.getUserData().getPassword());
+            editor.commit();  
 //            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
 //    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
 //					public void onFail(Object arg0, int arg1, String arg2) {
