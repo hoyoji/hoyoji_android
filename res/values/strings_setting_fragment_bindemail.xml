@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bindEmailFragment_title">绑定邮箱</string>
-    <string name="changePasswordFragment_toast_changing">正在修改密码&#8230;</string>
     <string name="bindPhoneFragment_findPassword_title">找回密码</string>
 
  	<string name="bindEmailFragment_textView_email">电子邮箱</string>
