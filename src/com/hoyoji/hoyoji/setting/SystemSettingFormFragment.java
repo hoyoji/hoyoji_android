@@ -88,11 +88,11 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		
 		mTextFieldNickName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_nickName);
 		
-		if(user.getNickName() == null || user.getNickName().equals("")) {
-			mTextFieldNickName.setText("无昵称");
-		} else {
-			mTextFieldNickName.setText(user.getNickName());
-		}
+//		if(user.getNickName() == null || user.getNickName().equals("")) {
+//			mTextFieldNickName.setText("无昵称");
+//		} else {
+//			mTextFieldNickName.setText(user.getNickName());
+//		}
 		
 		
 		mButtonChangePassword = (Button) getView().findViewById(R.id.systemSettingFormFragment_button_changePassword);
@@ -259,7 +259,12 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mTextFieldNickName.setText(HyjApplication.getInstance().getCurrentUser().getNickName());
+		User user = HyjApplication.getInstance().getCurrentUser();
+		if(user.getNickName() == null || user.getNickName().equals("")) {
+			mTextFieldNickName.setText("无昵称");
+		} else {
+			mTextFieldNickName.setText(user.getNickName());
+		}
 		takePictureButton.setImage(HyjApplication.getInstance().getCurrentUser().getPicture());
     }
 	
