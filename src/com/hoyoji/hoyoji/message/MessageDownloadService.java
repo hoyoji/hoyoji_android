@@ -344,7 +344,6 @@ public class MessageDownloadService extends Service {
 //		try{
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
-			Project project = HyjModel.getModel(Project.class, projectId);
 			removeListModelFromDB(new Select().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
@@ -369,7 +368,8 @@ public class MessageDownloadService extends Service {
 			removeListModelFromDB(new Select().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			removeListModelFromDB(new Select().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			
+
+			Project project = HyjModel.getModel(Project.class, projectId);
 			if(!project.getOwnerUserId().equals(curUserId)){
 				removeListModelFromDB(new Select().from(ProjectShareAuthorization.class).where("projectId=? AND (friendUserId IS NULL OR (friendUserId<>? AND ownerUserId <> friendUserId))", projectId, curUserId).execute());
 			}
