@@ -210,7 +210,11 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 //			if(this.getFriendUserId() == null){
 //			if(!this.getProject().isProjectMember(this.getLocalFriendId(), this.getFriendUserId())){
 		if(!HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
-				debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
+				if(getMoneyIncomeContainer().getFinancialOwnerUserId() != null){
+					debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), null, getMoneyIncomeContainer().getFinancialOwnerUserId());
+				} else {
+					debtAccount = MoneyAccount.getDebtAccount(this.getProject().getCurrencyId(), this.getLocalFriendId(), this.getFriendUserId());
+				}
 		}
 //			}
 //		}
