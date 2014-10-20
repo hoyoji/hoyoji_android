@@ -84,39 +84,39 @@ public class BindIDFragment extends HyjFragment {
 	}
 	
 	 public void onInitViewData() {
-		 mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.bindIDFormFragment_textField_email);
+		 mTextFieldEmail = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_email);
 			mTextFieldEmail.setEditable(false);
 
 			
-			mButtonEmail = (Button) getView().findViewById(R.id.bindIDFormFragment_button_emailBinding);
+			mButtonEmail = (Button) getView().findViewById(R.id.bindIDFragment_button_emailBinding);
 
 			setEmailField();
 			
-			mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.bindIDFormFragment_textField_phone);
+			mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_phone);
 			mTextFieldPhone.setEditable(false);
 			
-			mButtonPhone = (Button) getView().findViewById(R.id.bindIDFormFragment_button_phoneBinding);
+			mButtonPhone = (Button) getView().findViewById(R.id.bindIDFragment_button_phoneBinding);
 			
 			setPhoneField();
 
-			mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.bindIDFormFragment_textField_QQ);
+			mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_QQ);
 			mTextFieldQQ.setEditable(false);
 			
-			mTextFieldWX = (HyjTextField) getView().findViewById(R.id.bindIDFormFragment_textField_WX);
+			mTextFieldWX = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_WX);
 			mTextFieldWX.setEditable(false);
 			
-			mTextFieldWB = (HyjTextField) getView().findViewById(R.id.bindIDFormFragment_textField_WB);
+			mTextFieldWB = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_WB);
 			mTextFieldWB.setEditable(false);
 			
-			mButtonQQ = (Button) getView().findViewById(R.id.bindIDFormFragment_button_QQBinding);
+			mButtonQQ = (Button) getView().findViewById(R.id.bindIDFragment_button_QQBinding);
 			
 			setQQField();
 			
-			mButtonWX = (Button) getView().findViewById(R.id.bindIDFormFragment_button_WXBinding);
+			mButtonWX = (Button) getView().findViewById(R.id.bindIDFragment_button_WXBinding);
 			
 			setWXField();
 			
-			mButtonWB = (Button) getView().findViewById(R.id.bindIDFormFragment_button_WBBinding);
+			mButtonWB = (Button) getView().findViewById(R.id.bindIDFragment_button_WBBinding);
 			
 			setWBField();
 			

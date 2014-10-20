@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -64,7 +65,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private int mExpenseColor = 0;
 	private int mIncomeColor = 0;
 	
-	private LinearLayout mLinearLayoutChangeNickName = null;
+	private FrameLayout mLinearLayoutChangeNickName = null;
 	
 	
 	@Override
@@ -234,7 +235,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mRelativeLayoutBindID.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				SystemSettingFormFragment.this.openActivityWithFragment(BindIDFragment.class, R.string.bindEmailFragment_title, null);
+				SystemSettingFormFragment.this.openActivityWithFragment(BindIDFragment.class, R.string.bindIDFragment_title, null);
 			}
 		});
 		
@@ -246,7 +247,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			}
 		});
 		
-		mLinearLayoutChangeNickName = (LinearLayout) getView().findViewById(R.id.change_nickname);	
+		mLinearLayoutChangeNickName = (FrameLayout) getView().findViewById(R.id.change_nickname);	
 		mLinearLayoutChangeNickName.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

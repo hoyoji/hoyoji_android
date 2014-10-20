@@ -16,83 +16,83 @@
         android:orientation="vertical" >
 
         <com.hoyoji.android.hyjframework.view.HyjTextField
-            android:id="@+id/bindIDFormFragment_textField_email"
+            android:id="@+id/bindIDFragment_textField_email"
             android:layout_width="match_parent"
             android:layout_height="43dp"
-            hyj:hintText="@string/bindIDFormFragment_editText_hint_email"
-            hyj:labelText="@string/bindIDFormFragment_textView_email" >
+            hyj:hintText="@string/bindIDFragment_editText_hint_email"
+            hyj:labelText="@string/bindIDFragment_textView_email" >
 
                 <Button
-                    android:id="@+id/bindIDFormFragment_button_emailBinding"
+                    android:id="@+id/bindIDFragment_button_emailBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 	              android:background="#E0E0E0"
 	              android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/bindIDFormFragment_button_emailBinding" />
+                    android:text="@string/bindIDFragment_button_emailBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
 
             <com.hoyoji.android.hyjframework.view.HyjTextField
-                android:id="@+id/bindIDFormFragment_textField_phone"
+                android:id="@+id/bindIDFragment_textField_phone"
                 android:layout_width="fill_parent"
                 android:layout_height="43dp"
-                hyj:hintText="@string/bindIDFormFragment_editText_hint_phone"
-                hyj:labelText="@string/bindIDFormFragment_textView_phone" >
+                hyj:hintText="@string/bindIDFragment_editText_hint_phone"
+                hyj:labelText="@string/bindIDFragment_textView_phone" >
 
                 <Button
-                    android:id="@+id/bindIDFormFragment_button_phoneBinding"
+                    android:id="@+id/bindIDFragment_button_phoneBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 	              android:background="#E0E0E0"
 	              android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/bindIDFormFragment_button_phoneBinding" />
-            </com.hoyoji.android.hyjframework.view.HyjTextField>
-            
-            <com.hoyoji.android.hyjframework.view.HyjTextField
-                android:id="@+id/bindIDFormFragment_textField_QQ"
-                android:layout_width="fill_parent"
-                android:layout_height="43dp"
-                hyj:hintText="@string/bindIDFormFragment_editText_hint_QQ"
-                hyj:labelText="@string/bindIDFormFragment_textView_QQ" >
-
-                <Button
-                    android:id="@+id/bindIDFormFragment_button_QQBinding"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
-	              android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/bindIDFormFragment_button_QQBinding" />
+                    android:text="@string/bindIDFragment_button_phoneBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
             
             <com.hoyoji.android.hyjframework.view.HyjTextField
-                android:id="@+id/bindIDFormFragment_textField_WX"
+                android:id="@+id/bindIDFragment_textField_QQ"
                 android:layout_width="fill_parent"
                 android:layout_height="43dp"
-                hyj:hintText="@string/bindIDFormFragment_editText_hint_WX"
-                hyj:labelText="@string/bindIDFormFragment_textView_WX" >
+                hyj:hintText="@string/bindIDFragment_editText_hint_QQ"
+                hyj:labelText="@string/bindIDFragment_textView_QQ" >
 
                 <Button
-                    android:id="@+id/bindIDFormFragment_button_WXBinding"
+                    android:id="@+id/bindIDFragment_button_QQBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 	              android:background="#E0E0E0"
 	              android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/bindIDFormFragment_button_WXBinding" />
+                    android:text="@string/bindIDFragment_button_QQBinding" />
+            </com.hoyoji.android.hyjframework.view.HyjTextField>
+            
+            <com.hoyoji.android.hyjframework.view.HyjTextField
+                android:id="@+id/bindIDFragment_textField_WX"
+                android:layout_width="fill_parent"
+                android:layout_height="43dp"
+                hyj:hintText="@string/bindIDFragment_editText_hint_WX"
+                hyj:labelText="@string/bindIDFragment_textView_WX" >
+
+                <Button
+                    android:id="@+id/bindIDFragment_button_WXBinding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+	              android:background="#E0E0E0"
+	              android:gravity="center_horizontal|center_vertical"
+                    android:text="@string/bindIDFragment_button_WXBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
             
              <com.hoyoji.android.hyjframework.view.HyjTextField
-                android:id="@+id/bindIDFormFragment_textField_WB"
+                android:id="@+id/bindIDFragment_textField_WB"
                 android:layout_width="fill_parent"
                 android:layout_height="43dp"
-                hyj:hintText="@string/bindIDFormFragment_editText_hint_WB"
-                hyj:labelText="@string/bindIDFormFragment_textView_WB" >
+                hyj:hintText="@string/bindIDFragment_editText_hint_WB"
+                hyj:labelText="@string/bindIDFragment_textView_WB" >
 
                 <Button
-                    android:id="@+id/bindIDFormFragment_button_WBBinding"
+                    android:id="@+id/bindIDFragment_button_WBBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 	              android:background="#E0E0E0"
 	              android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/bindIDFormFragment_button_WBBinding" />
+                    android:text="@string/bindIDFragment_button_WBBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
     </LinearLayout>
     
