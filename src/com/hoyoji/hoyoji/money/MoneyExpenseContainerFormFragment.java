@@ -313,7 +313,12 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
-		if(moneyExpenseContainer.getFinancialOwnerUserId() != null){
+		if(modelId == -1){
+			if(project.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+			}
+		} else if(moneyExpenseContainer.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(moneyExpenseContainer.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyExpenseContainer.getFinancialOwnerUserId()));
 		}
@@ -1123,47 +1128,62 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							//更新相关好友的借贷账户
 							if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 								MoneyAccount debtAccount = null;
-//								boolean isNewProjectMember = apportionEditor.getModelCopy().getFriendUserId() != null;
-//								if(!isNewProjectMember){
+								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+									debtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId());
+								} else {
 									debtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId());
-//								}
-								if(api.getState() == ApportionItem.NEW){
-					                if(debtAccount != null){
+								}
+								if(api.getState() == ApportionItem.NEW) {
+									// 该分摊是新增加的，我们更新借贷账户的余额即可
+					                if(debtAccount != null) {
 					                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
 					                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					                	debtAccountEditor.save();
-					                }else{
-					                	MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                } else {
+					                	// 创建新的借贷账户
+					                	if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+											MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                	} else {
+					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+						                }
 							        }
-								} else{
+								} else {
+									// 该分摊是旧的，我们要更新其对应的旧借贷账户
 									MoneyAccount oldDebtAccount = null;
-//									if(apportionEditor.getModel().getFriendUserId() == null){
-									oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
-//									}
-									if(debtAccount == null){
+									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() != null) {
+										oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseContainerEditor.getModel().getProject().getCurrencyId(), null, mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId());
+									} else {
+										oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyExpenseContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
+									}
+									if(debtAccount == null) {
+										// 新账户不存在：更新老账户，创建新账户
 										if(oldDebtAccount != null){
 											HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
 											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
 											oldDebtAccountEditor.save();
 										}
-//										if(!isNewProjectMember){
-											MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
-//										}
+										// 创建新的借贷账户
+					                	if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+											MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                	} else {
+					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                	}
 									}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
+										// 新老借贷账户一样
 					                	HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
 										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 										oldDebtAccountEditor.save();
 									}else{
+										// 新账户存在，更新新账户
 										if(oldDebtAccount != null){
 											HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
 											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
 											oldDebtAccountEditor.save();
 										}	
-//										if(!isNewProjectMember){
-											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
-											debtAccountEditor.save();
-//										}
+
+										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+										debtAccountEditor.save();
 					                }
 								}
 						    }
@@ -1209,73 +1229,235 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyExpense.save();
 							} else {
+
+								MoneyBorrow moneyBorrowOfFinancialOwner = null;
 								MoneyLend moneyLend = null;
 								if(apportion.get_mId() == null){
 									moneyLend = new MoneyLend();
+									moneyBorrowOfFinancialOwner = new MoneyBorrow();
 								} else {
-									moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
+									moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+									
+									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() , "");
+									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
+									if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+										moneyLend.delete();
+										moneyLend = new MoneyLend();
+									}
+									
+									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() != null){
+										moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+										if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+											moneyBorrowOfFinancialOwner.delete();
+											moneyBorrowOfFinancialOwner = new MoneyBorrow();
+										}
+									} else {
+										moneyBorrowOfFinancialOwner = new MoneyBorrow();
+									}
 								}
-								moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
-								moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
-								moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
-								moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
-								moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
-								moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
-								moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-								moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
-								moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
-								moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
-								
-								if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
-									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
-									moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
-								} else {
-									moneyLend.setMoneyAccountId(null, null);
-								}
+								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
+									moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyLend.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+									moneyLend.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+									moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+									
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+									} else {
+										moneyLend.setMoneyAccountId(null, null);
+									}
 
-								moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
-								moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
-								moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
-								moneyLend.save();
+									moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyLend.save();
+								} else {
+									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
+									moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyLend.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyLend.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyLend.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId());
+									moneyLend.setLocalFriendId(null);
+									moneyLend.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyLend.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyLend.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+									
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+									} else {
+										moneyLend.setMoneyAccountId(null, null);
+									}
+
+									moneyLend.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyLend.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyLend.save();
+
+									//===================================================================================================
+									
+									moneyBorrowOfFinancialOwner.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyBorrowOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
+									moneyBorrowOfFinancialOwner.setOwnerUserId(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId());
+									moneyBorrowOfFinancialOwner.setOwnerFriendId(null);
+									moneyBorrowOfFinancialOwner.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyBorrowOfFinancialOwner.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyBorrowOfFinancialOwner.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyBorrowOfFinancialOwner.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+									moneyBorrowOfFinancialOwner.setLocalFriendId(null);
+									moneyBorrowOfFinancialOwner.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyBorrowOfFinancialOwner.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyBorrowOfFinancialOwner.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyBorrowOfFinancialOwner.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+									} else {
+										moneyBorrowOfFinancialOwner.setMoneyAccountId(null, null);
+									}
+									
+									moneyBorrowOfFinancialOwner.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyBorrowOfFinancialOwner.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyBorrowOfFinancialOwner.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyBorrowOfFinancialOwner.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyBorrowOfFinancialOwner.save();
+									
+								}
 								
 
 								MoneyBorrow moneyBorrow = null;
+								MoneyLend moneyLendOfFinancialOwner = null;
 								if(apportion.get_mId() == null){
 									moneyBorrow = new MoneyBorrow();
+									moneyLendOfFinancialOwner = new MoneyLend();
 								} else {
-									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
+									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+									
+									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() , "");
+									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
+									if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+										moneyBorrow.delete();
+										moneyBorrow = new MoneyBorrow();
+									}
+									
+									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() != null){
+										moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+										if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+											moneyLendOfFinancialOwner.delete();
+											moneyLendOfFinancialOwner = new MoneyLend();
+										}
+									} else {
+										moneyLendOfFinancialOwner = new MoneyLend();
+									}
 								}
-								moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
-								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
-								if(apportionEditor.getModelCopy().getFriendUserId() != null){
-									moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
-									moneyBorrow.setOwnerFriendId(null);
+								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+									moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
+									if(apportionEditor.getModelCopy().getFriendUserId() != null){
+										moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+										moneyBorrow.setOwnerFriendId(null);
+									} else {
+										moneyBorrow.setOwnerUserId(null);
+										moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+									}
+									moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyBorrow.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+									moneyBorrow.setLocalFriendId(null);
+									moneyBorrow.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyBorrow.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyBorrow.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+	
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyBorrow.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+									} else {
+										moneyBorrow.setMoneyAccountId(null, null);
+									}
+									
+									moneyBorrow.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyBorrow.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyBorrow.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyBorrow.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyBorrow.save();
 								} else {
-									moneyBorrow.setOwnerUserId("");
-									moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-								}
-								moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
-								moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
-								moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
-								moneyBorrow.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-								moneyBorrow.setLocalFriendId(null);
-								moneyBorrow.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
-								moneyBorrow.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
-								moneyBorrow.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+									moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
+									if(apportionEditor.getModelCopy().getFriendUserId() != null){
+										moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+										moneyBorrow.setOwnerFriendId(null);
+									} else {
+										moneyBorrow.setOwnerUserId(null);
+										moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+									}
+									moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyBorrow.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId());
+									moneyBorrow.setLocalFriendId(null);
+									moneyBorrow.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyBorrow.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyBorrow.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+	
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyBorrow.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+									} else {
+										moneyBorrow.setMoneyAccountId(null, null);
+									}
+									
+									moneyBorrow.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyBorrow.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyBorrow.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyBorrow.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyBorrow.save();
+									
+									//===================================================================================================
+									
+									moneyLendOfFinancialOwner.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
+									moneyLendOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
+									moneyLendOfFinancialOwner.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
+									moneyLendOfFinancialOwner.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
+									moneyLendOfFinancialOwner.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
+									moneyLendOfFinancialOwner.setOwnerUserId(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId());
+									moneyLendOfFinancialOwner.setOwnerFriendId(null);
+									if(apportionEditor.getModelCopy().getFriendUserId() != null){
+										moneyLendOfFinancialOwner.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+										moneyLendOfFinancialOwner.setLocalFriendId(null);
+									} else {
+										moneyLendOfFinancialOwner.setFriendUserId(null);
+										moneyLendOfFinancialOwner.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+									}
+									moneyLendOfFinancialOwner.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+									moneyLendOfFinancialOwner.setGeoLat(mMoneyExpenseContainerEditor.getModelCopy().getGeoLat());
+									moneyLendOfFinancialOwner.setGeoLon(mMoneyExpenseContainerEditor.getModelCopy().getGeoLon());
+									
+									if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
+										MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
+										moneyLendOfFinancialOwner.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+									} else {
+										moneyLendOfFinancialOwner.setMoneyAccountId(null, null);
+									}
 
-								if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
-									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
-									moneyBorrow.setMoneyAccountId(null, moneyAccount.getCurrencyId());
-								} else {
-									moneyBorrow.setMoneyAccountId(null, null);
+									moneyLendOfFinancialOwner.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
+									moneyLendOfFinancialOwner.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
+									moneyLendOfFinancialOwner.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
+									moneyLendOfFinancialOwner.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+									moneyLendOfFinancialOwner.save();
+
 								}
 								
-								moneyBorrow.setLocation(mMoneyExpenseContainerEditor.getModelCopy().getLocation());
-								moneyBorrow.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
-								moneyBorrow.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
-								moneyBorrow.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
-								moneyBorrow.save();
 								
 								MoneyExpense moneyExpense = null;
 								if(apportion.get_mId() == null){
