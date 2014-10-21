@@ -399,6 +399,12 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
+
+		// 在修改模式下自动展开
+		if(modelId != -1){
+			mButtonBorrowMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

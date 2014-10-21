@@ -377,7 +377,12 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					}
 				}
 			});
-			
+
+			// 在修改模式下自动展开
+			if(modelId != -1){
+				mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+				mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+			}
 			setPermission();
 	}
 	

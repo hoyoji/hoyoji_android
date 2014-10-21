@@ -365,21 +365,12 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		
-		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseFormFragment_expandMore);
-		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
-		mButtonExpandMore.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
-					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
-					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
-				} else {
-					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
-					mLinearLayoutExpandMore.setVisibility(View.GONE);
-				}
-			}
-		});
+
+		// 在修改模式下自动展开
+		if(modelId != -1){
+			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+		}
 		
 		setPermission();
 	}

@@ -343,7 +343,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		
+
+		// 在修改模式下自动展开
+		if(modelId != -1){
+			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+		}
 			
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
