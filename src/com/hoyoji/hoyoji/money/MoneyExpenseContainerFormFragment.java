@@ -1029,8 +1029,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							} 
 						
 							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
-							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
-							if(moneyBorrow != null){
+							List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).execute();
+							for(MoneyBorrow moneyBorrow : moneyBorrows){
 								moneyBorrow.delete();
 							} 
 							oldProjectShareAuthorizationEditor.save();
@@ -1039,8 +1039,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 							oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 							oldProjectShareAuthorizationEditor.save();
-							MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
-							if(moneyLend != null){
+							List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).execute();
+							for(MoneyLend moneyLend : moneyLends){
 								moneyLend.delete();
 							} 
 						}

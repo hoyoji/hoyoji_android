@@ -415,6 +415,11 @@ public class MemberListFragment extends HyjUserListFragment{
 					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 				}
 			}
+			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
+				((TextView)view).setTextColor(Color.BLUE);
+			} else {
+				((TextView)view).setTextColor(Color.BLACK);
+			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_picture) {
 			String friendUserId = cursor.getString(columnIndex);
