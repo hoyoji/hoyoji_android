@@ -619,9 +619,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												} 
 											
 												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (moneyExpenseApportion.getAmount0() * moneyExpenseApportion.getMoneyExpenseContainer().getExchangeRate()));
-												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
-												if(moneyBorrow != null){
-													moneyBorrow.delete();
+												List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).execute();
+												for(MoneyBorrow mb : moneyBorrows){
+													mb.delete();
 												} 
 												oldProjectShareAuthorizationEditor.save();
 												
@@ -629,10 +629,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (moneyExpenseApportion.getAmount0() * moneyExpenseApportion.getMoneyExpenseContainer().getExchangeRate()));
 												oldProjectShareAuthorizationEditor.save();
-												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
-												if(moneyLend != null){
-													moneyLend.delete();
-												} 
+												List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).execute();
+												for(MoneyLend ml : moneyLends){
+													ml.delete();
+												}
 											}
 																					
 											moneyExpenseApportion.delete();
@@ -1229,7 +1229,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								moneyExpense.save();
 							} else {
-
+								
 								MoneyBorrow moneyBorrowOfFinancialOwner = null;
 								MoneyLend moneyLend = null;
 								if(apportion.get_mId() == null){
@@ -1331,7 +1331,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyBorrowOfFinancialOwner.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 									moneyBorrowOfFinancialOwner.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 									moneyBorrowOfFinancialOwner.save();
-									
 								}
 								
 
@@ -1341,18 +1340,22 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyBorrow = new MoneyBorrow();
 									moneyLendOfFinancialOwner = new MoneyLend();
 								} else {
-									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+									if(apportionEditor.getModelCopy().getFriendUserId() != null){
+										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
+									} else {
+										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerFriendId=?", apportion.getId(), apportionEditor.getModelCopy().getLocalFriendId()).executeSingle();
+									}
 									
 									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() , "");
 									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
-									if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+									if(moneyBorrow != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 										moneyBorrow.delete();
 										moneyBorrow = new MoneyBorrow();
 									}
 									
 									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() != null){
 										moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-										if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+										if(moneyBorrowOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 											moneyLendOfFinancialOwner.delete();
 											moneyLendOfFinancialOwner = new MoneyLend();
 										}
@@ -1391,7 +1394,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyBorrow.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 									moneyBorrow.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 									moneyBorrow.save();
-								} else {
+								} else if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(apportionEditor.getModelCopy().getFriendUserId())){
 									moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 									moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
 									if(apportionEditor.getModelCopy().getFriendUserId() != null){
@@ -1477,7 +1480,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								moneyExpense.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyExpense.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyExpense.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
-//								moneyExpense.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 								moneyExpense.setFriendUserId(mMoneyExpenseContainerEditor.getModelCopy().getFriendUserId());
 								moneyExpense.setLocalFriendId(null);
 								moneyExpense.setExchangeRate(mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
