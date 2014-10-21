@@ -1684,8 +1684,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 
  	   	       	if(_id == -1){
- 		       		mSelectorFieldFinancialOwner.setText(null);
- 		       		mSelectorFieldFinancialOwner.setModelId(null);
+ 	   	       		mSelectorFieldFriend.setText(null);
+ 	   	       		mSelectorFieldFriend.setModelId(null);
  	       		} else {
 					Friend friend = Friend.load(Friend.class, _id);
 					

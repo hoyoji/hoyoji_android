@@ -83,7 +83,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private LinearLayout mLinearLayoutExchangeRate = null;
 
 	private boolean hasEditPermission = true;
-	private HyjSelectorField mSelectorFieldFinancialOwner;
+//	private HyjSelectorField mSelectorFieldFinancialOwner;
 	private ImageButton mButtonBorrowMore;
 	private LinearLayout mLinearLayoutExpandMore;
 
@@ -317,32 +317,32 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
-		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
-		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
-				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
-			}
-		} else if(moneyBorrow.getFinancialOwnerUserId() != null){
-				mSelectorFieldFinancialOwner.setModelId(moneyBorrow.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyBorrow.getFinancialOwnerUserId()));
-		}
-		
-		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个项目。");
-				} else {
-					Bundle bundle = new Bundle();
-					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
-					bundle.putLong("MODEL_ID", project.get_mId());
-					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
-				}
-			}
-		}); 
+//		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+//		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
+//		if(modelId == -1){
+//			if(project.getFinancialOwnerUserId() != null){
+//				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+//				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+//			}
+//		} else if(moneyBorrow.getFinancialOwnerUserId() != null){
+//				mSelectorFieldFinancialOwner.setModelId(moneyBorrow.getFinancialOwnerUserId());
+//				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyBorrow.getFinancialOwnerUserId()));
+//		}
+//		
+//		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				if(mSelectorFieldProject.getModelId() == null){
+//					HyjUtil.displayToast("请先选择一个项目。");
+//				} else {
+//					Bundle bundle = new Bundle();
+//					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+//					bundle.putLong("MODEL_ID", project.get_mId());
+//					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+//					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+//				}
+//			}
+//		}); 
 		
 		mImageViewRefreshRate = (ImageView) getView().findViewById(
 				R.id.moneyBorrowFormFragment_imageButton_refresh_exchangeRate);
@@ -637,7 +637,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setReturnDate(mDateTimeFieldReturnDate.getText());
-		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
+//		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if (mSelectorFieldMoneyAccount.getModelId() != null) {
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,
 					mSelectorFieldMoneyAccount.getModelId());
@@ -1160,13 +1160,13 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 					return;
 				}
 
-				if(project.getFinancialOwnerUserId() != null){
-					mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
-					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
-				} else {
-					mSelectorFieldFinancialOwner.setModelId(null);
-					mSelectorFieldFinancialOwner.setText(null);
-				}
+//				if(project.getFinancialOwnerUserId() != null){
+//					mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+//					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
+//				} else {
+//					mSelectorFieldFinancialOwner.setModelId(null);
+//					mSelectorFieldFinancialOwner.setText(null);
+//				}
 					
 				mSelectorFieldProject.setText(project.getDisplayName() + "("
 						+ project.getCurrencyId() + ")");
@@ -1208,8 +1208,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
         		 long _id = data.getLongExtra("MODEL_ID", -1);
 
   	   	       	if(_id == -1){
-  		       		mSelectorFieldFinancialOwner.setText(null);
-  		       		mSelectorFieldFinancialOwner.setModelId(null);
+ 	   	       		mSelectorFieldFriend.setText(null);
+ 	   	       		mSelectorFieldFriend.setModelId(null);
   	       		} else {
 	 				String type = data.getStringExtra("MODEL_TYPE");
 	
@@ -1314,8 +1314,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	       	 if(resultCode == Activity.RESULT_OK){
 	       		long _id = data.getLongExtra("MODEL_ID", -1);
 	       		if(_id == -1){
-		       		mSelectorFieldFinancialOwner.setText(null);
-		       		mSelectorFieldFinancialOwner.setModelId(null);
+//		       		mSelectorFieldFinancialOwner.setText(null);
+//		       		mSelectorFieldFinancialOwner.setModelId(null);
 	       		} else {
 		       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
 	
@@ -1333,8 +1333,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						return;
 		       		}
 		       		
-		       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
-		       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
+//		       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+//		       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
 	       		}
 	       	 }
 	       	 break;

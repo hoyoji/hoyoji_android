@@ -831,15 +831,20 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
-            		Friend friend = Friend.load(Friend.class, _id);
-            		
-            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
-    					return;
+            		if(_id == -1){
+     	   	       		mSelectorFieldFriend.setText(null);
+     	   	       		mSelectorFieldFriend.setModelId(null);
+    				} else {
+	            		Friend friend = Friend.load(Friend.class, _id);
+	            		
+	            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
+	    					return;
+	    				}
+	            		
+	            		mSelectorFieldFriend.setText(friend.getDisplayName());
+	            		mSelectorFieldFriend.setModelId(friend.getId());
     				}
-            		
-            		mSelectorFieldFriend.setText(friend.getDisplayName());
-            		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;
 

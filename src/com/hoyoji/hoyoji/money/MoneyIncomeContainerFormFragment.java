@@ -1444,10 +1444,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
 
-     	   	       	if(_id == -1){
-     		       		mSelectorFieldFinancialOwner.setText(null);
-     		       		mSelectorFieldFinancialOwner.setModelId(null);
-     	       		} else {
+            		if(_id == -1){
+     	   	       		mSelectorFieldFriend.setText(null);
+     	   	       		mSelectorFieldFriend.setModelId(null);
+    				} else {
 	            		Friend friend = Friend.load(Friend.class, _id);
 	            		
 	            		if(HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){

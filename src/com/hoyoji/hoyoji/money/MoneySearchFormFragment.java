@@ -192,9 +192,14 @@ public class MoneySearchFormFragment extends HyjUserFormFragment {
 		case GET_FRIEND_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
-				Friend friend = Friend.load(Friend.class, _id);
-				mSelectorFieldFriend.setText(friend.getDisplayName());
-				mSelectorFieldFriend.setModelId(friend.getId());
+				if(_id == -1){
+ 	   	       		mSelectorFieldFriend.setText(null);
+ 	   	       		mSelectorFieldFriend.setModelId(null);
+				} else {
+					Friend friend = Friend.load(Friend.class, _id);
+					mSelectorFieldFriend.setText(friend.getDisplayName());
+					mSelectorFieldFriend.setModelId(friend.getId());
+				}
 			}
 			break;
 		}

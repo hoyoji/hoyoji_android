@@ -741,29 +741,34 @@ private void sendEditProjectShareAuthorizationToServer() {
 	              case GET_FRIEND_ID:
 	            	 if(resultCode == Activity.RESULT_OK){
 	            		 long _id = data.getLongExtra("MODEL_ID", -1);
-	 	         		 Friend friend = Friend.load(Friend.class, _id);
- 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-	 	       				if(friend.getFriendUserId() != null){
-	 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
-		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-		 	       					return;
-		 	       				}
-		 	 	         	} else {
-		 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
-		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-		 	       					return;
-	 	       					}
-		 	       			}
- 	         			 }
- 	         			if(friend.getFriendUserId() != null){
- 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
- 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
- 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
- 	         			} else {
- 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
- 	         				mSelectorFieldFriend.setModelId(friend.getId());
- 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
- 	         			}
+	            		 if(_id == -1){
+	      	   	       		mSelectorFieldFriend.setText(null);
+	      	   	       		mSelectorFieldFriend.setModelId(null);
+	     				} else {
+		 	         		 Friend friend = Friend.load(Friend.class, _id);
+	 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+		 	       				if(friend.getFriendUserId() != null){
+		 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+			 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+			 	       					return;
+			 	       				}
+			 	 	         	} else {
+			 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
+			 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+			 	       					return;
+		 	       					}
+			 	       			}
+	 	         			 }
+	 	         			if(friend.getFriendUserId() != null){
+	 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+	 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+	 	         			} else {
+	 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	         				mSelectorFieldFriend.setModelId(friend.getId());
+	 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+	 	         			}
+	     				}
 	            	 }
 	            	 break;
 	          }
