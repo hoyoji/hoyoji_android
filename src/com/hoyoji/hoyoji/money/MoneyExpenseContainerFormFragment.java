@@ -1370,7 +1370,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
 										moneyBorrow.setOwnerFriendId(null);
 									} else {
-										moneyBorrow.setOwnerUserId(null);
+										moneyBorrow.setOwnerUserId(""); // 设为"",使他不会自动使用当前的用户id
 										moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 									}
 									moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
@@ -1401,7 +1401,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										moneyBorrow.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
 										moneyBorrow.setOwnerFriendId(null);
 									} else {
-										moneyBorrow.setOwnerUserId(null);
+										moneyBorrow.setOwnerUserId("");  // 设为"",使他不会自动使用当前的用户id
 										moneyBorrow.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 									}
 									moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
@@ -1474,7 +1474,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyExpense.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
 									moneyExpense.setOwnerFriendId(null);
 								} else {
-									moneyExpense.setOwnerUserId("");
+									moneyExpense.setOwnerUserId("");  // 设为"",使他不会自动使用当前的用户id
 									moneyExpense.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 								}
 								moneyExpense.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
