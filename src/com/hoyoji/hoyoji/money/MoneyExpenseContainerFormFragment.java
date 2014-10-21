@@ -625,8 +625,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 											
 												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (moneyExpenseApportion.getAmount0() * moneyExpenseApportion.getMoneyExpenseContainer().getExchangeRate()));
 												List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).execute();
-												for(MoneyBorrow mb : moneyBorrows){
-													mb.delete();
+												for(MoneyBorrow moneyBorrow : moneyBorrows){
+													moneyBorrow.delete();
 												} 
 												oldProjectShareAuthorizationEditor.save();
 												
@@ -635,8 +635,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (moneyExpenseApportion.getAmount0() * moneyExpenseApportion.getMoneyExpenseContainer().getExchangeRate()));
 												oldProjectShareAuthorizationEditor.save();
 												List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).execute();
-												for(MoneyLend ml : moneyLends){
-													ml.delete();
+												for(MoneyLend moneyLend : moneyLends){
+													moneyLend.delete();
 												}
 											}
 																					
