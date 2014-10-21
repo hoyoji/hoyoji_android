@@ -1558,13 +1558,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							moneyExpense.delete();
 						}
 					} else {
-						MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
-						if(moneyLend != null){
+						List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", apportion.getId()).execute();
+						for(MoneyLend moneyLend : moneyLends){
 							moneyLend.delete();
 						} 
 						//if(apportion.getFriendUserId() != null){
-							MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
-							if(moneyBorrow != null){
+							List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", apportion.getId()).execute();
+							for(MoneyBorrow moneyBorrow : moneyBorrows){
 								moneyBorrow.delete();
 							} 
 							MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
