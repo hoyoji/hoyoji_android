@@ -504,8 +504,6 @@ public class MoneyLend extends HyjModel{
 	public void save(){
 		if(this.getOwnerUserId() == null){
 			this.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-		} else if(this.getOwnerUserId().equals("")){
-			this.setOwnerUserId(null);
 		}
 		super.save();
 	}
