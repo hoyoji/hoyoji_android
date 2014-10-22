@@ -77,10 +77,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	public void onInitViewData(){
 		super.onInitViewData();
 		r = getResources();
-		User user;
-//		Intent intent = getActivity().getIntent();
-//		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		user =  HyjApplication.getInstance().getCurrentUser();
+		User user =  HyjApplication.getInstance().getCurrentUser();
 		
 		mTextFieldUserName = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textField_userName);
 		mTextFieldUserName.setText(user.getUserName());
@@ -261,25 +258,17 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		super.onResume();
 		User user = HyjApplication.getInstance().getCurrentUser();
 		if(user.getNickName() == null || user.getNickName().equals("")) {
-			mTextFieldNickName.setText("无昵称");
+			mTextFieldNickName.setText("[无昵称]");
+			mTextFieldNickName.setEnabled(false);
 		} else {
 			mTextFieldNickName.setText(user.getNickName());
+			mTextFieldNickName.setEnabled(true);
 		}
-		takePictureButton.setImage(HyjApplication.getInstance().getCurrentUser().getPicture());
+//		takePictureButton.setImage(user.getPicture());
     }
 	
 	@Override
 	public void onStop() {
-//		User curUser = HyjApplication.getInstance().getCurrentUser();
-//		String newNickName = mTextFieldNickName.getText().trim();
-//		String curNickName = curUser.getNickName();
-//		if(curNickName == null){
-//			curNickName = "";
-//		}
-//		if(!newNickName.equals(curNickName)){
-//			curUser.setNickName(newNickName);
-//			curUser.save();
-//		}
 		super.onStop();
 	}
 
