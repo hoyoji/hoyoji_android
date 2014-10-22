@@ -394,6 +394,20 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						.getInstance().getCurrentUser().getId());
 
 				newProjectShareAuthorization.save();
+				
+				ProjectShareAuthorization newProjectShareAuthorization2 = new ProjectShareAuthorization();
+				newProjectShareAuthorization2.setProjectId(mProjectEditor
+						.getModelCopy().getId());
+				newProjectShareAuthorization2.setState("Accept");
+				newProjectShareAuthorization2.setFriendUserId(null);
+				newProjectShareAuthorization2.setSharePercentage(0.0);
+				newProjectShareAuthorization2.setSharePercentageType("Average");
+				newProjectShareAuthorization2.setShareAllSubProjects(false);
+				newProjectShareAuthorization2.setOwnerUserId(HyjApplication
+						.getInstance().getCurrentUser().getId());
+				newProjectShareAuthorization2.setFriendUserName("待定成员");
+
+				newProjectShareAuthorization2.save();
 			}
 
 			if (mProjectEditor.getModelCopy().get_mId() != null

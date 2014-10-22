@@ -175,6 +175,10 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
 				}
   				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+			} else {
+				mSelectorFieldFriend.setModelId(null);
+				mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 			}
 		} else {
 			String friendUserId = intent.getStringExtra("FRIEND_USERID");
@@ -242,7 +246,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				sendInviteMessage();
 			}
 		});
-		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) || projectShareAuthorization.getLocalFriendId() == null){
 			mButtonSendInvite.setVisibility(View.GONE);
 			mCheckBoxSendInvite.setVisibility(View.GONE);
 			mCheckBoxShareAllSubProjects.setEnabled(false);

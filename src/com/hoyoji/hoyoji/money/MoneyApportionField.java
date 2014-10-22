@@ -503,7 +503,7 @@ public class MoneyApportionField extends GridView {
 				
 				if(vh.apportionItem.getApportion().getFriendUser() != null){
 					vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
-				} else {
+				} else if(vh.apportionItem.getApportion().getLocalFriendId() != null){
 					Friend friend = HyjModel.getModel(Friend.class, vh.apportionItem.getApportion().getLocalFriendId());
 					if(friend == null){
 //						User user = HyjModel.getModel(User.class, vh.apportionItem.getApportion().getOwnerUserId());
@@ -517,6 +517,8 @@ public class MoneyApportionField extends GridView {
 					} else {
 						vh.imageViewPicture.setImage((Picture)null);
 					}
+				} else {
+					vh.imageViewPicture.setImage((Picture)null);
 				}
 //				if(vh.apportionItem.getFriend() != null){
 //					vh.textViewFriendName.setText(vh.apportionItem.getFriend().getDisplayName());
@@ -608,9 +610,13 @@ public class MoneyApportionField extends GridView {
 				if(mApportion.getFriendUserId() != null) {
 					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=? AND state <> ?", 
 						mProjectId, mApportion.getFriendUserId(), "Delete").executeSingle();
-				} else {
+				} else if(mApportion.getLocalFriendId() != null){
 					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> ?", 
 							mProjectId, mApportion.getLocalFriendId(), "Delete").executeSingle();
+				} else {
+					// 返回 待定成员 ？
+					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId IS NULL AND friendUserId IS NULL AND state <> ?", 
+							mProjectId, "Delete").executeSingle();
 				}
 			} 
 			return mProjectShareAuthorization;
@@ -628,7 +634,7 @@ public class MoneyApportionField extends GridView {
 			if(mFriend == null){
 				if(mApportion.getFriendUserId() != null){
 					mFriend = new Select().from(Friend.class).where("friendUserId=?",mApportion.getFriendUserId()).executeSingle();
-				} else {
+				} else if(mApportion.getLocalFriendId() != null){
 					mFriend = HyjModel.getModel(Friend.class, mApportion.getLocalFriendId());
 				}
 			}

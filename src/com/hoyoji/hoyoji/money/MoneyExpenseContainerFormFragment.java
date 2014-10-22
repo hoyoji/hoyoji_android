@@ -1063,9 +1063,12 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							} else if(apportion.getFriendUserId() != null){
 								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
 										mMoneyExpenseContainerEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
-							} else {
+							} else if(apportion.getLocalFriendId() != null){
 								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", 
 										mMoneyExpenseContainerEditor.getModelCopy().getProjectId(), apportion.getLocalFriendId()).executeSingle();
+							} else {
+								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId IS NULL AND friendUserId IS NULL", 
+										mMoneyExpenseContainerEditor.getModelCopy().getProjectId()).executeSingle();
 							}
 							HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 							

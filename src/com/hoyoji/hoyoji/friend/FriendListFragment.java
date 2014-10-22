@@ -458,7 +458,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 
 			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
-				((TextView)view).setTextColor(Color.BLUE);
+				((TextView)view).setTextColor(getResources().getColor(R.color.darkblue));
 			} else {
 				((TextView)view).setTextColor(Color.BLACK);
 			}
