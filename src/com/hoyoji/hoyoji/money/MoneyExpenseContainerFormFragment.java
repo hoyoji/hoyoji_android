@@ -1287,7 +1287,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 									moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 									moneyLend.save();
-								} else {
+								} else  if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
 									moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
