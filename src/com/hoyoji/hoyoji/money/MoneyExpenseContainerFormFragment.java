@@ -1264,8 +1264,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									
 									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() , "");
 									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
-									if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+									if(moneyLend != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 										moneyLend.delete();
+										moneyLend = new MoneyLend();
+									}
+									if(moneyLend == null){
 										moneyLend = new MoneyLend();
 									}
 									
@@ -1377,6 +1380,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
 									if(moneyBorrow != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 										moneyBorrow.delete();
+										moneyBorrow = new MoneyBorrow();
+									}
+									if(moneyBorrow == null){
 										moneyBorrow = new MoneyBorrow();
 									}
 									
