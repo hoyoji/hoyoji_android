@@ -246,20 +246,33 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				sendInviteMessage();
 			}
 		});
-		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) || projectShareAuthorization.getLocalFriendId() == null){
-			mButtonSendInvite.setVisibility(View.GONE);
-			mCheckBoxSendInvite.setVisibility(View.GONE);
-			mCheckBoxShareAllSubProjects.setEnabled(false);
-			mCheckBoxShareAuthExpenseSelf.setEnabled(false);
-			mCheckBoxShareAuthExpenseAdd.setEnabled(false);
-			mCheckBoxShareAuthExpenseEdit.setEnabled(false);
-			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
-			mBooleanFieldSharePercentageType.setEnabled(false);
-			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
-			if(this.mOptionsMenu != null){
-				hideSaveAction();
+		if(modelId != -1){
+			boolean canNotEdit = false;
+			if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				canNotEdit = true;
+			} else {
+				// 如果是待定成员也不能修改
+				 if(projectShareAuthorization.getLocalFriendId() != null){
+					 Friend f = Friend.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
+					 if(f != null && f.getToBeDetermined()){
+						 canNotEdit = true;
+					 }
+				 }
 			}
-			
+			if(canNotEdit){
+				mButtonSendInvite.setVisibility(View.GONE);
+				mCheckBoxSendInvite.setVisibility(View.GONE);
+				mCheckBoxShareAllSubProjects.setEnabled(false);
+				mCheckBoxShareAuthExpenseSelf.setEnabled(false);
+				mCheckBoxShareAuthExpenseAdd.setEnabled(false);
+				mCheckBoxShareAuthExpenseEdit.setEnabled(false);
+				mCheckBoxShareAuthExpenseDelete.setEnabled(false);
+				mBooleanFieldSharePercentageType.setEnabled(false);
+				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				if(this.mOptionsMenu != null){
+					hideSaveAction();
+				}
+			}
 		}
 		
 		
@@ -312,9 +325,22 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		if(mProjectShareAuthorizationEditor != null && mProjectShareAuthorizationEditor.getModel().get_mId() != null && 
-				!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			hideSaveAction();
+		if(mProjectShareAuthorizationEditor != null && mProjectShareAuthorizationEditor.getModel().get_mId() != null){
+				boolean canNotEdit = false;
+				if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					canNotEdit = true;
+				} else {
+					// 如果是待定成员也不能修改
+					 if(mProjectShareAuthorizationEditor.getModel().getLocalFriendId() != null){
+						 Friend f = Friend.getModel(Friend.class, mProjectShareAuthorizationEditor.getModel().getLocalFriendId());
+						 if(f != null && f.getToBeDetermined()){
+							 canNotEdit = true;
+						 }
+					 }
+				}
+				if(canNotEdit){
+					hideSaveAction();
+				}
 		}
 	}
 	

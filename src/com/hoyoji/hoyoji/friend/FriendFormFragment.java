@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -113,6 +115,18 @@ public class FriendFormFragment extends HyjUserFormFragment {
 
 		if(modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		} else if(friend.getToBeDetermined()){
+			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+			if(this.mOptionsMenu != null){
+				hideSaveAction();
+			}
+		}
+	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		if(mFriendEditor != null && mFriendEditor.getModel().get_mId() != null && !mFriendEditor.getModel().getToBeDetermined()){
+			hideSaveAction();
 		}
 	}
 	
