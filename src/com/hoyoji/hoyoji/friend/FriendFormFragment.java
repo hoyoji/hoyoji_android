@@ -125,7 +125,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		if(mFriendEditor != null && mFriendEditor.getModel().get_mId() != null && !mFriendEditor.getModel().getToBeDetermined()){
+		if(mFriendEditor != null && mFriendEditor.getModel().get_mId() != null && mFriendEditor.getModel().getToBeDetermined()){
 			hideSaveAction();
 		}
 	}
