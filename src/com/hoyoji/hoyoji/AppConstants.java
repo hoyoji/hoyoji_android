@@ -2,8 +2,8 @@ package com.hoyoji.hoyoji;
 
 public class AppConstants {
     public static String BAIDU_APP_KEY = "vGuQWvEP5Za9lUPm9RXtaqKG";
-//    public static String TENTCENT_CONNECT_APP_ID="101126102";
-    public static String TENTCENT_CONNECT_APP_ID="1101515571";
+//    public static String TENTCENT_CONNECT_APP_ID="1101515571";
+    public static String TENTCENT_CONNECT_APP_ID="101162541";
     
     //申请的开发appid
     public static final String WX_APP_ID = "wx97c0bcb2e912118a";
