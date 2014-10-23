@@ -382,7 +382,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		
+
+		// 在修改模式下自动展开
+		if(modelId != -1){
+			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+		}
 			
 			getView().findViewById(R.id.moneyIncomeContainerFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 				@Override
@@ -1439,10 +1444,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
 
-     	   	       	if(_id == -1){
-     		       		mSelectorFieldFinancialOwner.setText(null);
-     		       		mSelectorFieldFinancialOwner.setModelId(null);
-     	       		} else {
+            		if(_id == -1){
+     	   	       		mSelectorFieldFriend.setText(null);
+     	   	       		mSelectorFieldFriend.setModelId(null);
+    				} else {
 	            		Friend friend = Friend.load(Friend.class, _id);
 	            		
 	            		if(HyjApplication.getInstance().getCurrentUser().getId().equals(friend.getFriendUserId())){

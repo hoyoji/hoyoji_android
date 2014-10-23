@@ -343,7 +343,12 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		
+
+		// 在修改模式下自动展开
+		if(modelId != -1){
+			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+		}
 			
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
@@ -826,15 +831,20 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
-            		Friend friend = Friend.load(Friend.class, _id);
-            		
-            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
-    					return;
+            		if(_id == -1){
+     	   	       		mSelectorFieldFriend.setText(null);
+     	   	       		mSelectorFieldFriend.setModelId(null);
+    				} else {
+	            		Friend friend = Friend.load(Friend.class, _id);
+	            		
+	            		if(friend.getFriendUserId() != null && friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	    					HyjUtil.displayToast(R.string.moneyIncomeFormFragment_editText_error_friend);
+	    					return;
+	    				}
+	            		
+	            		mSelectorFieldFriend.setText(friend.getDisplayName());
+	            		mSelectorFieldFriend.setModelId(friend.getId());
     				}
-            		
-            		mSelectorFieldFriend.setText(friend.getDisplayName());
-            		mSelectorFieldFriend.setModelId(friend.getId());
             	 }
             	 break;
 

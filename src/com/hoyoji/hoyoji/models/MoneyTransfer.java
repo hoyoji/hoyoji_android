@@ -52,6 +52,12 @@ public class MoneyTransfer extends HyjModel{
 	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
+
+	@Column(name = "transferInExchangeRate")
+	private Double mTransferInExchangeRate;
+	
+	@Column(name = "transferOutExchangeRate")
+	private Double mTransferOutExchangeRate;
 	
 	@Column(name = "projectId")
 	private String mProjectId;
@@ -154,12 +160,10 @@ public class MoneyTransfer extends HyjModel{
 	}
 	
 	public Double getTransferProjectAmount() {
-		Double rate = null;
+		Double rate = 1.0;
 		Currency projectCurrency = this.getProject().getCurrency();
 		if(this.getTransferOut() != null){
-			if(projectCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
-				rate = 1.0;
-			}else{
+			if(!projectCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
 				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),projectCurrency.getId());
 			    if(exchange != null){
 			    	rate = exchange;
@@ -167,9 +171,7 @@ public class MoneyTransfer extends HyjModel{
 			}
 			return this.getTransferOutAmount0()*rate;
 		}else if(this.getTransferIn() != null){
-			if(projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
-				rate = 1.0;
-			}else{
+			if(!projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
 				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),projectCurrency.getId());
 			    if(exchange != null){
 			    	rate = exchange;
@@ -358,11 +360,33 @@ public class MoneyTransfer extends HyjModel{
 		return mExchangeRate;
 	}
 
-	public void setExchangeRate(Double mExchangeRate) {
-		if(mExchangeRate != null){
-			mExchangeRate = HyjUtil.toFixed2(mExchangeRate);
+	public void setExchangeRate(Double exchangeRate) {
+		if(exchangeRate != null){
+			exchangeRate = HyjUtil.toFixed2(exchangeRate);
 		}
-		this.mExchangeRate = mExchangeRate;
+		this.mExchangeRate = exchangeRate;
+	}
+	
+	public Double getTransferInExchangeRate() {
+		return mTransferInExchangeRate;
+	}
+
+	public void setTransferInExchangeRate(Double exchangeRate) {
+		if(exchangeRate != null){
+			exchangeRate = HyjUtil.toFixed2(exchangeRate);
+		}
+		this.mTransferInExchangeRate = exchangeRate;
+	}
+	
+	public Double getTransferOutExchangeRate() {
+		return mTransferOutExchangeRate;
+	}
+
+	public void setTransferOutExchangeRate(Double exchangeRate) {
+		if(exchangeRate != null){
+			exchangeRate = HyjUtil.toFixed2(exchangeRate);
+		}
+		this.mTransferOutExchangeRate = exchangeRate;
 	}
 
 	public String getProjectId() {

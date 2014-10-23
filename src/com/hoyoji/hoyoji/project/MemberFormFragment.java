@@ -175,6 +175,10 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
 				}
   				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+			} else {
+				mSelectorFieldFriend.setModelId(null);
+				mSelectorFieldFriend.setText(projectShareAuthorization.getFriendUserName());
+  				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
 			}
 		} else {
 			String friendUserId = intent.getStringExtra("FRIEND_USERID");
@@ -242,20 +246,33 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				sendInviteMessage();
 			}
 		});
-		if(modelId != -1 && !mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			mButtonSendInvite.setVisibility(View.GONE);
-			mCheckBoxSendInvite.setVisibility(View.GONE);
-			mCheckBoxShareAllSubProjects.setEnabled(false);
-			mCheckBoxShareAuthExpenseSelf.setEnabled(false);
-			mCheckBoxShareAuthExpenseAdd.setEnabled(false);
-			mCheckBoxShareAuthExpenseEdit.setEnabled(false);
-			mCheckBoxShareAuthExpenseDelete.setEnabled(false);
-			mBooleanFieldSharePercentageType.setEnabled(false);
-			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
-			if(this.mOptionsMenu != null){
-				hideSaveAction();
+		if(modelId != -1){
+			boolean canNotEdit = false;
+			if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				canNotEdit = true;
+			} else {
+				// 如果是待定成员也不能修改
+				 if(projectShareAuthorization.getLocalFriendId() != null){
+					 Friend f = Friend.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
+					 if(f != null && f.getToBeDetermined()){
+						 canNotEdit = true;
+					 }
+				 }
 			}
-			
+			if(canNotEdit){
+				mButtonSendInvite.setVisibility(View.GONE);
+				mCheckBoxSendInvite.setVisibility(View.GONE);
+				mCheckBoxShareAllSubProjects.setEnabled(false);
+				mCheckBoxShareAuthExpenseSelf.setEnabled(false);
+				mCheckBoxShareAuthExpenseAdd.setEnabled(false);
+				mCheckBoxShareAuthExpenseEdit.setEnabled(false);
+				mCheckBoxShareAuthExpenseDelete.setEnabled(false);
+				mBooleanFieldSharePercentageType.setEnabled(false);
+				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				if(this.mOptionsMenu != null){
+					hideSaveAction();
+				}
+			}
 		}
 		
 		
@@ -308,9 +325,22 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		if(mProjectShareAuthorizationEditor != null && mProjectShareAuthorizationEditor.getModel().get_mId() != null && 
-				!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			hideSaveAction();
+		if(mProjectShareAuthorizationEditor != null && mProjectShareAuthorizationEditor.getModel().get_mId() != null){
+				boolean canNotEdit = false;
+				if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					canNotEdit = true;
+				} else {
+					// 如果是待定成员也不能修改
+					 if(mProjectShareAuthorizationEditor.getModel().getLocalFriendId() != null){
+						 Friend f = Friend.getModel(Friend.class, mProjectShareAuthorizationEditor.getModel().getLocalFriendId());
+						 if(f != null && f.getToBeDetermined()){
+							 canNotEdit = true;
+						 }
+					 }
+				}
+				if(canNotEdit){
+					hideSaveAction();
+				}
 		}
 	}
 	
@@ -741,29 +771,34 @@ private void sendEditProjectShareAuthorizationToServer() {
 	              case GET_FRIEND_ID:
 	            	 if(resultCode == Activity.RESULT_OK){
 	            		 long _id = data.getLongExtra("MODEL_ID", -1);
-	 	         		 Friend friend = Friend.load(Friend.class, _id);
- 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-	 	       				if(friend.getFriendUserId() != null){
-	 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
-		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-		 	       					return;
-		 	       				}
-		 	 	         	} else {
-		 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
-		 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
-		 	       					return;
-	 	       					}
-		 	       			}
- 	         			 }
- 	         			if(friend.getFriendUserId() != null){
- 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
- 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
- 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
- 	         			} else {
- 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
- 	         				mSelectorFieldFriend.setModelId(friend.getId());
- 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
- 	         			}
+	            		 if(_id == -1){
+	      	   	       		mSelectorFieldFriend.setText(null);
+	      	   	       		mSelectorFieldFriend.setModelId(null);
+	     				} else {
+		 	         		 Friend friend = Friend.load(Friend.class, _id);
+	 	         			 for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+		 	       				if(friend.getFriendUserId() != null){
+		 	       					if(psa.getFriendUserId() != null && psa.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){
+			 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+			 	       					return;
+			 	       				}
+			 	 	         	} else {
+			 	       				if(psa.getLocalFriendId() != null && psa.getLocalFriendId().equalsIgnoreCase(friend.getId())){
+			 	       					HyjUtil.displayToast(R.string.memberFormFragment_toast_friend_already_exists);
+			 	       					return;
+		 	       					}
+			 	       			}
+	 	         			 }
+	 	         			if(friend.getFriendUserId() != null){
+	 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
+	 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+	 	         			} else {
+	 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
+	 	         				mSelectorFieldFriend.setModelId(friend.getId());
+	 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+	 	         			}
+	     				}
 	            	 }
 	            	 break;
 	          }

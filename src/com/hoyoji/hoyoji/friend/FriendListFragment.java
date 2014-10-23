@@ -17,6 +17,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -444,15 +445,22 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.friendListItem_nickName){
+			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
 			if(cursor.getString(columnIndex) != null && cursor.getString(columnIndex).length() > 0){
 				((TextView)view).setText(cursor.getString(columnIndex));
 			} else {
-				User user = HyjModel.getModel(User.class, cursor.getString(cursor.getColumnIndex("friendUserId")));
+				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user != null){
 					((TextView)view).setText(user.getDisplayName());
 				} else {
 					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 				}
+			}
+
+			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
+				((TextView)view).setTextColor(getResources().getColor(R.color.darkblue));
+			} else {
+				((TextView)view).setTextColor(Color.BLACK);
 			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_picture){

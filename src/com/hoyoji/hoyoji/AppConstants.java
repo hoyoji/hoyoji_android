@@ -9,14 +9,12 @@ public class AppConstants {
     public static final String WX_APP_ID = "wx97c0bcb2e912118a";
     
     public static final String WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
-    
-    public static class ShowMsgActivity {
-        public static final String STitle = "showmsg_title";
-        public static final String SMessage = "showmsg_message";
-        public static final String BAThumbData = "showmsg_thumb_data";
-        
-    }
-    
+
+//    public static class ShowMsgActivity {
+//        public static final String STitle = "showmsg_title";
+//        public static final String SMessage = "showmsg_message";
+//        public static final String BAThumbData = "showmsg_thumb_data";   
+//    }
     
     /** 当前 DEMO 应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY */
     public static final String WEIBO_CONNECT_APP_KEY      = "2302145186";
