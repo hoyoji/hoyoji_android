@@ -163,6 +163,10 @@ public class HyjNumericField extends LinearLayout {
 		return mEditTextEdit.getText();
 	}
 	
+	public void setTextViewLabel(String text){
+		mTextViewLabel.setText(text);
+	}
+	
 	public void setNumber(Double number){
 		if(number == null){
 			setText("");
