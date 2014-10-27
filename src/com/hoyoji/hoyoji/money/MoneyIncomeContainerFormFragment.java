@@ -1320,7 +1320,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									
 									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() , "");
 									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
-									if(moneyBorrow != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+									if(moneyLend != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 										moneyLend.delete();
 										moneyLend = new MoneyLend();
 									}
