@@ -161,25 +161,27 @@ public class MoneyTransfer extends HyjModel{
 	
 	public Double getTransferProjectAmount() {
 		Double rate = 1.0;
-		Currency projectCurrency = this.getProject().getCurrency();
-		if(this.getTransferOut() != null){
-			if(!projectCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
-				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),projectCurrency.getId());
-			    if(exchange != null){
-			    	rate = exchange;
-			    }
-			}
-			return this.getTransferOutAmount0()*rate;
-		}else if(this.getTransferIn() != null){
-			if(!projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
-				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),projectCurrency.getId());
-			    if(exchange != null){
-			    	rate = exchange;
-			    }
-			}
+//		Currency projectCurrency = this.getProject().getCurrency();
+		if(this.getTransferOutExchangeRate() != null){
+//			if(!projectCurrency.getId().equals(this.getTransferOut().getCurrencyId())){
+//				Double exchange = Exchange.getExchangeRate(this.getTransferOut().getCurrencyId(),projectCurrency.getId());
+//			    if(exchange != null){
+//			    	rate = exchange;
+//			    }
+//			}
+			return this.getTransferOutAmount0()*this.getTransferOutExchangeRate();
+		}else if(this.getTransferInExchangeRate() != null){
+//			if(!projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
+//				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),projectCurrency.getId());
+//			    if(exchange != null){
+//			    	rate = exchange;
+//			    }
+//			}
+			return this.getTransferInAmount0()*this.getTransferInExchangeRate();
+		}else{
 			return this.getTransferInAmount0()*rate;
 		}
-		return null;
+//		return null;
 	}
 
 	public void setTransferOutAmount(Double mTransferOutAmount) {
