@@ -47,7 +47,6 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -64,7 +63,6 @@ import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
-
 
 public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
@@ -649,7 +647,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyIncomeCategory.setEnabled(false);
-
 			mSelectorFieldFriend.setEnabled(false);
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
@@ -950,9 +947,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	            
 				
 					if(api.getState() == ApportionItem.DELETED ){
-						
 						ProjectShareAuthorization oldProjectShareAuthorization;
-						
 						if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 							// 更新旧项目的分摊支出
 							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
@@ -1198,14 +1193,53 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 							} else {
 								MoneyLend moneyLendOfFinancialOwner = null;
 								MoneyBorrow moneyBorrow = null;
+								
+								
+								MoneyLend moneyLend = null;
+								MoneyBorrow moneyBorrowOfFinancialOwner = null;
+								
 								if(apportion.get_mId() == null){
 									moneyBorrow = new MoneyBorrow();
 									moneyLendOfFinancialOwner = new MoneyLend();
+									
+									moneyLend = new MoneyLend();
+									moneyBorrowOfFinancialOwner = new MoneyBorrow();
 								} else {
-									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+									if(apportionEditor.getModelCopy().getFriendUserId() != null){
+										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
+										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
+									} else {
+										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND localFriendId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), apportionEditor.getModelCopy().getLocalFriendId()).executeSingle();
+										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerFriendId=?", apportion.getId(), apportionEditor.getModelCopy().getLocalFriendId()).executeSingle();
+									}
 									
 									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() , "");
 									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
+									if(mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() != null){
+										if(apportionEditor.getModel().getFriendUserId() != null){
+											moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
+										} else {
+											moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND localFriendId = ?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
+										}
+										if(moneyBorrowOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+											moneyBorrowOfFinancialOwner.delete();
+											moneyBorrowOfFinancialOwner = new MoneyBorrow();
+										}
+										if(moneyBorrowOfFinancialOwner == null) {
+											moneyBorrowOfFinancialOwner = new MoneyBorrow();
+										}
+									} else {
+										moneyBorrowOfFinancialOwner = new MoneyBorrow();
+									}
+									
+									if(moneyLend != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+										moneyLend.delete();
+										moneyLend = new MoneyLend();
+									}
+									if(moneyLend == null){
+										moneyLend = new MoneyLend();
+									}
+									
 									if(moneyBorrow != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 										moneyBorrow.delete();
 										moneyBorrow = new MoneyBorrow();
@@ -1306,41 +1340,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								}
 								
 
-								MoneyLend moneyLend = null;
-								MoneyBorrow moneyBorrowOfFinancialOwner = null;
-								if(apportion.get_mId() == null){
-									moneyLend = new MoneyLend();
-									moneyBorrowOfFinancialOwner = new MoneyBorrow();
-								} else {
-									if(apportionEditor.getModelCopy().getFriendUserId() != null){
-										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
-									} else {
-										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerFriendId=?", apportion.getId(), apportionEditor.getModelCopy().getLocalFriendId()).executeSingle();
-									}
-									
-									String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() , "");
-									String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
-									if(moneyLend != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
-										moneyLend.delete();
-										moneyLend = new MoneyLend();
-									}
-									if(moneyLend == null){
-										moneyLend = new MoneyLend();
-									}
-									
-									if(mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() != null){
-										moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-										if(moneyBorrowOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
-											moneyBorrowOfFinancialOwner.delete();
-											moneyBorrowOfFinancialOwner = new MoneyBorrow();
-										}
-										if(moneyBorrowOfFinancialOwner == null) {
-											moneyBorrowOfFinancialOwner = new MoneyBorrow();
-										}
-									} else {
-										moneyBorrowOfFinancialOwner = new MoneyBorrow();
-									}
-								}
+								
 								if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
 									moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
