@@ -35,6 +35,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
@@ -75,8 +76,27 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
+	private ImageView mImageViewTransferOutProjectRefreshRate = null;
+	private ImageView mImageViewProjectTransferInRefreshRate = null;
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
+	
+	private LinearLayout mLinearLayoutTransferOutProject = null;
+	private LinearLayout mLinearLayoutProjectTransferIn = null;
+	
+	private View mViewSeparatorTransferOutProject = null;
+	private View mViewSeparatorProjectTransferIn = null;
+	private Project project = null;
+	
+	private HyjTextField transferOutCurrency = null;
+	private HyjTextField transferProjectCurrency = null;
+	
+	private HyjTextField projectTransferInCurrency = null;
+	private HyjTextField transferInCurrency = null;
+	
+	private HyjNumericField transferOutProjectExchangeRate = null;
+	private HyjNumericField projectTransferInExchangeRate = null;
+	
 	
 	@Override
 	public Integer useContentView() {
@@ -90,8 +110,27 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		Intent intent = getActivity().getIntent();
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
+		
+		transferOutCurrency = (HyjTextField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferOutCurrency);
+		transferProjectCurrency = (HyjTextField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferProjectCurrency);
+		projectTransferInCurrency = (HyjTextField) getView().findViewById(R.id.moneyTransferFormFragment_textField_projectTransferInCurrency);
+		transferInCurrency = (HyjTextField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferInCurrency);
+		
+		transferOutProjectExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferOutProjectExchangeRate);
+		projectTransferInExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_projectTransferInExchangeRate);
+		
 		if(modelId != -1){
 			moneyTransfer =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
+			
+			mViewSeparatorTransferOutProject = (View) getView().findViewById(R.id.field_separator_transferOutProject);
+			mLinearLayoutTransferOutProject = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_transferOutProject);
+			
+			mViewSeparatorProjectTransferIn = (View) getView().findViewById(R.id.field_separator_projectTransferIn);
+			mLinearLayoutProjectTransferIn = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_projectTransferIn);
+			mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
+			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+			mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+			mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
 		} else {
 			moneyTransfer = new MoneyTransfer();
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
@@ -110,6 +149,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 //					moneyTransfer.setTransferOutLocalFriendId(localFriendId);
 //				}
 //			}
+			
 		}
 		mMoneyTransferEditor = moneyTransfer.newModelEditor();
 		
@@ -176,7 +216,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				mSelectorFieldTransferOut.setModelId(activeAccount.getId());
 				mViewSeparatorTransferOut.setVisibility(View.VISIBLE);
          		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
-         		
 			}
 		});
 		
@@ -253,12 +292,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mViewSeparatorTransferInAmount = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferInamount);
 		
-		Project project;
+		
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyTransfer.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
 			project = moneyTransfer.getProject();
+			
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyTransferFormFragment_selectorField_project);
 		
@@ -290,8 +330,57 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					int count) {
 				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
 					mNumericTransferInAmount.setNumber(Double.valueOf(s.toString()) * mNumericTransferOutAmount.getNumber());
+					projectTransferInExchangeRate.setNumber(Double.valueOf(s.toString()) / transferOutProjectExchangeRate.getNumber());
 				}else{
 					mNumericTransferInAmount.setNumber(null);
+				}
+			}
+			
+		});
+		
+		transferOutProjectExchangeRate.getEditText().addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
+					if(transferOutProjectExchangeRate.getEditText().isFocused()){
+						if(transferOutProjectExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+							projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+						}
+					}
+				}
+			}
+			
+		});
+		
+		projectTransferInExchangeRate.getEditText().addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
+					if(projectTransferInExchangeRate.getEditText().isFocused()){
+						if(projectTransferInExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+							transferOutProjectExchangeRate.setNumber(mNumericExchangeRate.getNumber() / projectTransferInExchangeRate.getNumber());
+						}
+					}
 				}
 			}
 			
@@ -371,6 +460,102 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		mImageViewTransferOutProjectRefreshRate = (ImageView) getView().findViewById(R.id.moneyTransferFormFragment_imageButton_refresh_transferOutProjectExchangeRate);	
+		mImageViewTransferOutProjectRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mSelectorFieldTransferOut.getModelId() != null && mSelectorFieldProject.getModelId() != null){
+					HyjUtil.startRoateView(mImageViewRefreshRate);
+					MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class, mSelectorFieldTransferOut.getModelId());
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					String getTransferOutCurrencyId = transferOut.getCurrencyId();
+					String projectCurrencyId = project.getCurrencyId();
+					String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+					Double transferOutActivityCurrencyRate; 
+					if (getTransferOutCurrencyId.equals(activityCurrencyId)) {
+						transferOutActivityCurrencyRate = 1.00;
+					} else {
+						transferOutActivityCurrencyRate = Exchange.getExchangeRate(getTransferOutCurrencyId, activityCurrencyId);
+					}
+					Double activityCurrencyProjectRate;
+					
+					if (activityCurrencyId.equals(projectCurrencyId)) {
+						activityCurrencyProjectRate = 1.00;
+					} else {
+						activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, projectCurrencyId);
+					}
+					transferOutProjectExchangeRate.setNumber(transferOutActivityCurrencyRate * activityCurrencyProjectRate);
+					HyjUtil.stopRoateView(mImageViewRefreshRate);
+				}else{
+					HyjUtil.displayToast(R.string.moneyTransferFormFragment_toast_select_currency);
+				}
+			}
+		});
+		
+		
+		mImageViewProjectTransferInRefreshRate = (ImageView) getView().findViewById(R.id.moneyTransferFormFragment_imageButton_refresh_projectTransferInExchangeRate);	
+		mImageViewProjectTransferInRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(transferOutProjectExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+					projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+				} else {
+					if(mSelectorFieldProject.getModelId() != null && mSelectorFieldTransferIn.getModelId() != null){
+						HyjUtil.startRoateView(mImageViewRefreshRate);
+						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+						MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class, mSelectorFieldTransferIn.getModelId());
+						
+						String getTransferInCurrencyId = transferIn.getCurrencyId();
+						String projectCurrencyId = project.getCurrencyId();
+						String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+						Double transferOutActivityCurrencyRate; 
+						if (projectCurrencyId.equals(activityCurrencyId)) {
+							transferOutActivityCurrencyRate = 1.00;
+						} else {
+							transferOutActivityCurrencyRate = Exchange.getExchangeRate(projectCurrencyId, activityCurrencyId);
+						}
+						Double activityCurrencyProjectRate;
+						
+						if (activityCurrencyId.equals(getTransferInCurrencyId)) {
+							activityCurrencyProjectRate = 1.00;
+						} else {
+							activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, getTransferInCurrencyId);
+						}
+						projectTransferInExchangeRate.setNumber(transferOutActivityCurrencyRate * activityCurrencyProjectRate);
+						HyjUtil.stopRoateView(mImageViewRefreshRate);
+					}else{
+						HyjUtil.displayToast(R.string.moneyTransferFormFragment_toast_select_currency);
+					}
+				}
+				
+			}
+		});
+		
+		String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+		String getTransferOutCurrencyId = moneyTransfer.getTransferOut().getCurrencyId();
+		String projectCurrencyId = project.getCurrencyId();
+		Double transferOutActivityCurrencyRate; 
+		if (getTransferOutCurrencyId.equals(activityCurrencyId)) {
+			transferOutActivityCurrencyRate = 1.00;
+		} else {
+			transferOutActivityCurrencyRate = Exchange.getExchangeRate(getTransferOutCurrencyId, activityCurrencyId);
+		}
+		Double activityCurrencyProjectRate;
+		
+		if (activityCurrencyId.equals(projectCurrencyId)) {
+			activityCurrencyProjectRate = 1.00;
+		} else {
+			activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, projectCurrencyId);
+		}
+		if(modelId != -1){
+			transferOutProjectExchangeRate.setNumber(moneyTransfer.getTransferOutExchangeRate());
+			projectTransferInExchangeRate.setNumber(moneyTransfer.getTransferInExchangeRate());
+			transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
+			transferProjectCurrency.setText(moneyTransfer.getProject().getCurrency().getName() + "(" + moneyTransfer.getProject().getCurrencyId() + ")");
+			projectTransferInCurrency.setText(moneyTransfer.getProject().getCurrency().getName() + "(" + moneyTransfer.getProject().getCurrencyId() + ")");
+			transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
+		}
 			setPermission();
 			
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
@@ -378,7 +563,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				setExchangeRate(false);
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}else{
-				setExchangeRate(true);
+				//setExchangeRate(true);
 			}
 	}
 	
@@ -425,6 +610,10 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
      		mViewSeparatorTransferIn.setVisibility(View.GONE);
      		mSelectorFieldTransferIn.setVisibility(View.GONE);
 		}
+		transferOutCurrency.setEnabled(false);
+		transferProjectCurrency.setEnabled(false);
+		projectTransferInCurrency.setEnabled(false);
+		transferInCurrency.setEnabled(false);
 	}
 
 	private void setupDeleteButton(HyjModelEditor<MoneyTransfer> moneyTransferEditor) {
@@ -479,48 +668,146 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void setExchangeRate(Boolean editInit){
-		if(mSelectorFieldTransferOut.getModelId() != null && mSelectorFieldTransferIn.getModelId()!= null){
-			MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
-			MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
-			
-			String fromCurrency = transferOut.getCurrencyId();
-			String toCurrency = transferIn.getCurrencyId();
-			
-			if(fromCurrency.equals(toCurrency)){
-				if(SET_EXCHANGE_RATE_FLAG != 1){//新增或修改打开时不做setNumber
-					mNumericExchangeRate.setNumber(1.00);
-					CREATE_EXCHANGE = 0;
+			if(mSelectorFieldTransferOut.getModelId() != null && mSelectorFieldTransferIn.getModelId()!= null){
+				MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
+				MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
+				
+				String fromCurrency = transferOut.getCurrencyId();
+				String toCurrency = transferIn.getCurrencyId();
+				
+				if(fromCurrency.equals(toCurrency)){
+					if(SET_EXCHANGE_RATE_FLAG != 1){//新增或修改打开时不做setNumber
+						mNumericExchangeRate.setNumber(1.00);
+						CREATE_EXCHANGE = 0;
+					}
+					mViewSeparatorExchange.setVisibility(View.GONE);
+					mLinearLayoutExchangeRate.setVisibility(View.GONE);
+					mViewSeparatorTransferInAmount.setVisibility(View.GONE);
+					mNumericTransferInAmount.setVisibility(View.GONE);
+					
+				}else{
+					mViewSeparatorExchange.setVisibility(View.VISIBLE);
+					mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
+					mViewSeparatorTransferInAmount.setVisibility(View.VISIBLE);
+					mNumericTransferInAmount.setVisibility(View.VISIBLE);
+					
+					if(!editInit){//修改时init不需要set Rate
+						Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
+						if(rate != null){
+							mNumericExchangeRate.setNumber(rate);
+							CREATE_EXCHANGE = 0;
+							
+						}else{
+							mNumericExchangeRate.setNumber(null);
+							CREATE_EXCHANGE = 1;
+						}
+					}
 				}
+				
+				String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+				String getTransferOutCurrencyId = transferOut.getCurrencyId();
+				String projectCurrencyId = project.getCurrencyId();
+				Double transferOutActivityCurrencyRate; 
+				if (getTransferOutCurrencyId.equals(activityCurrencyId)) {
+					transferOutActivityCurrencyRate = 1.00;
+				} else {
+					transferOutActivityCurrencyRate = Exchange.getExchangeRate(getTransferOutCurrencyId, activityCurrencyId);
+				}
+				Double activityCurrencyProjectRate;
+				
+				if (activityCurrencyId.equals(projectCurrencyId)) {
+					activityCurrencyProjectRate = 1.00;
+				} else {
+					activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, projectCurrencyId);
+				}
+				transferOutProjectExchangeRate.setNumber(transferOutActivityCurrencyRate * activityCurrencyProjectRate);
+				
+				if (mNumericExchangeRate.getNumber() != null){
+					projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+				}
+				
+				
+				transferOutCurrency.setText(transferOut.getCurrency().getName() + "(" + transferOut.getCurrencyId() + ")");
+				transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+				projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+				transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
+				
+			}else{
 				mViewSeparatorExchange.setVisibility(View.GONE);
 				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 				mViewSeparatorTransferInAmount.setVisibility(View.GONE);
 				mNumericTransferInAmount.setVisibility(View.GONE);
-			}else{
-				mViewSeparatorExchange.setVisibility(View.VISIBLE);
-				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
-				mViewSeparatorTransferInAmount.setVisibility(View.VISIBLE);
-				mNumericTransferInAmount.setVisibility(View.VISIBLE);
 				
-				if(!editInit){//修改时init不需要set Rate
-					Double rate = Exchange.getExchangeRate(fromCurrency, toCurrency);
-					if(rate != null){
-						mNumericExchangeRate.setNumber(rate);
-						CREATE_EXCHANGE = 0;
-					}else{
-						mNumericExchangeRate.setNumber(null);
-						CREATE_EXCHANGE = 1;
+				if (mSelectorFieldTransferOut.getModelId() != null){
+					String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+					MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
+					String getTransferOutCurrencyId = transferOut.getCurrencyId();
+					String projectCurrencyId = project.getCurrencyId();
+					Double transferOutActivityCurrencyRate; 
+					if (getTransferOutCurrencyId.equals(activityCurrencyId)) {
+						transferOutActivityCurrencyRate = 1.00;
+					} else {
+						transferOutActivityCurrencyRate = Exchange.getExchangeRate(getTransferOutCurrencyId, activityCurrencyId);
 					}
+					Double activityCurrencyProjectRate;
+					
+					if (activityCurrencyId.equals(projectCurrencyId)) {
+						activityCurrencyProjectRate = 1.00;
+					} else {
+						activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, projectCurrencyId);
+					}
+					transferOutProjectExchangeRate.setNumber(transferOutActivityCurrencyRate * activityCurrencyProjectRate);
+					
+					transferOutCurrency.setText(transferOut.getCurrency().getName() + "(" + transferOut.getCurrencyId() + ")");
+					transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+				} else {
+					transferOutProjectExchangeRate.setNumber(null);
+					transferOutCurrency.setText(null);
+					transferProjectCurrency.setText(null);
+					mViewSeparatorTransferOutProject.setVisibility(View.GONE);
+					mLinearLayoutTransferOutProject.setVisibility(View.GONE);
 				}
+				
+				if(mSelectorFieldTransferIn.getModelId() != null){
+					String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+					MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
+					String getTransferInCurrencyId = transferIn.getCurrencyId();
+					String projectCurrencyId = project.getCurrencyId();
+					Double projectActivityCurrencyRate; 
+					if (projectCurrencyId.equals(activityCurrencyId)) {
+						projectActivityCurrencyRate = 1.00;
+					} else {
+						projectActivityCurrencyRate = Exchange.getExchangeRate(projectCurrencyId, activityCurrencyId);
+					}
+					Double activityTransferInRate;
+					
+					if (activityCurrencyId.equals(getTransferInCurrencyId)) {
+						activityTransferInRate = 1.00;
+					} else {
+						activityTransferInRate = Exchange.getExchangeRate(activityCurrencyId, getTransferInCurrencyId);
+					}
+					projectTransferInExchangeRate.setNumber(projectActivityCurrencyRate * activityTransferInRate);
+					
+					projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+					transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
+				} else {
+					projectTransferInExchangeRate.setNumber(null);
+					projectTransferInCurrency.setText(null);
+					transferInCurrency.setText(null);
+					mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
+					mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
+				}
+				
+				
 			}
 			
-		}else{
-			mViewSeparatorExchange.setVisibility(View.GONE);
-			mLinearLayoutExchangeRate.setVisibility(View.GONE);
-			mViewSeparatorTransferInAmount.setVisibility(View.GONE);
-			mNumericTransferInAmount.setVisibility(View.GONE);
-		}
-			SET_EXCHANGE_RATE_FLAG = 0;
-			setTransferInAmount();
+			if(mSelectorFieldTransferOut.getModelId() == null && mSelectorFieldTransferIn.getModelId() != null) {
+				mNumericTransferOutAmount.setTextViewLabel("转入金额");
+			} else {
+				mNumericTransferOutAmount.setTextViewLabel("转出金额");
+			}
+				SET_EXCHANGE_RATE_FLAG = 0;
+				setTransferInAmount();
 	}
 	
 	private void setTransferInAmount(){
@@ -557,7 +844,8 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		
+		modelCopy.setTransferOutExchangeRate(transferOutProjectExchangeRate.getNumber());
+		modelCopy.setTransferInExchangeRate(projectTransferInExchangeRate.getNumber());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}
 	
@@ -627,6 +915,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					newExchange.setRate(moneyTransferModel.getExchangeRate());
 					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
+					
 				}else if(moneyTransferModel.getTransferOut() != null && moneyTransferModel.getTransferIn() != null){
 					String localCurrencyId = moneyTransferModel.getTransferOut().getCurrencyId();
 					String foreignCurrencyId = moneyTransferModel.getTransferIn().getCurrencyId();
@@ -719,6 +1008,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
          switch(requestCode){
              case GET_TRANSFEROUT_FRIEND_ID :
             	 if(resultCode == Activity.RESULT_OK){
+            		 Intent intent = getActivity().getIntent();
+         			long modelId = intent.getLongExtra("MODEL_ID", -1);
+         			
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
              		
@@ -730,13 +1022,60 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
                  		mSelectorFieldTransferOut.setVisibility(View.VISIBLE);
                  		mSelectorFieldTransferOut.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
                  		mSelectorFieldTransferOut.setModelId(activeAccount.getId());
+                 		
+                 		
+                 		String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+                		String getTransferOutCurrencyId = activeAccount.getCurrencyId();
+                		String projectCurrencyId = project.getCurrencyId();
+                		Double transferOutActivityCurrencyRate; 
+                		if (getTransferOutCurrencyId.equals(activityCurrencyId)) {
+                			transferOutActivityCurrencyRate = 1.00;
+                		} else {
+                			transferOutActivityCurrencyRate = Exchange.getExchangeRate(getTransferOutCurrencyId, activityCurrencyId);
+                		}
+                		Double activityCurrencyProjectRate;
+                		
+                		if (activityCurrencyId.equals(projectCurrencyId)) {
+                			activityCurrencyProjectRate = 1.00;
+                		} else {
+                			activityCurrencyProjectRate = Exchange.getExchangeRate(activityCurrencyId, projectCurrencyId);
+                		}
+                		transferOutProjectExchangeRate.setNumber(transferOutActivityCurrencyRate * activityCurrencyProjectRate);
+                		transferOutCurrency.setText(activeAccount.getCurrency().getName() + "(" + activeAccount.getCurrencyId() + ")");
+                		transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+                		mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
+            			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+            			
+            			
+            			if (modelId == -1) {
+            				setExchangeRate(false);
+            			} else {
+            				setExchangeRate(true);
+            			}
                  		return;
+             		} else {
+             			mSelectorFieldTransferOut.setText(null);
+             			mSelectorFieldTransferOut.setModelId(null);
+             			if (modelId == -1) {
+            				setExchangeRate(false);
+            			} else {
+            				setExchangeRate(true);
+            			}
              		}
              		
              		mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
              		mViewSeparatorTransferOut.setVisibility(View.GONE);
              		mSelectorFieldTransferOut.setVisibility(View.GONE);
+             		
+
+    				transferOutProjectExchangeRate.setNumber(null);
+    				transferOutCurrency.setText(null);
+    				transferProjectCurrency.setText(null);
+    				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
+    				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+    				
+    				
              	 }
              	 break;
      		case GET_REMARK:
@@ -756,6 +1095,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	        	 break;
              case GET_TRANSFERIN_FRIEND_ID :
             	 if(resultCode == Activity.RESULT_OK){
+            		 Intent intent = getActivity().getIntent();
+         			long modelId = intent.getLongExtra("MODEL_ID", -1);
+            		 
              		long _id = data.getLongExtra("MODEL_ID", -1);
              		Friend friend = Friend.load(Friend.class, _id);
              		
@@ -767,13 +1109,60 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
                  		mSelectorFieldTransferIn.setVisibility(View.VISIBLE);
                  		mSelectorFieldTransferIn.setText(activeAccount.getName() + "(" + activeAccount.getCurrencyId() + ")");
                  		mSelectorFieldTransferIn.setModelId(activeAccount.getId());
+                 		
+                 		String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+        				String getTransferInCurrencyId = activeAccount.getCurrencyId();
+        				String projectCurrencyId = project.getCurrencyId();
+        				Double projectActivityCurrencyRate; 
+        				if (projectCurrencyId.equals(activityCurrencyId)) {
+        					projectActivityCurrencyRate = 1.00;
+        				} else {
+        					projectActivityCurrencyRate = Exchange.getExchangeRate(projectCurrencyId, activityCurrencyId);
+        				}
+        				Double activityTransferInRate;
+        				
+        				if (activityCurrencyId.equals(getTransferInCurrencyId)) {
+        					activityTransferInRate = 1.00;
+        				} else {
+        					activityTransferInRate = Exchange.getExchangeRate(activityCurrencyId, getTransferInCurrencyId);
+        				}
+        				projectTransferInExchangeRate.setNumber(projectActivityCurrencyRate * activityTransferInRate);
+        				
+        				projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+        				transferInCurrency.setText(activeAccount.getCurrency().getName() + "(" + activeAccount.getCurrencyId() + ")");
+        				
+        				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+        				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+                 		
+        				
+        				if (modelId == -1) {
+            				setExchangeRate(false);
+            			} else {
+            				setExchangeRate(true);
+            			}
                  		return;
+             		} else {
+             			mSelectorFieldTransferIn.setText(null);
+             			mSelectorFieldTransferIn.setModelId(null);
+             			if (modelId == -1) {
+            				setExchangeRate(false);
+            			} else {
+            				setExchangeRate(true);
+            			}
              		}
              		
              		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
              		mSelectorFieldTransferInFriend.setModelId(friend.getId());
              		mViewSeparatorTransferIn.setVisibility(View.GONE);
              		mSelectorFieldTransferIn.setVisibility(View.GONE);
+             		
+             		projectTransferInExchangeRate.setNumber(null);
+    				projectTransferInCurrency.setText(null);
+    				transferInCurrency.setText(null);
+    				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
+    				mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
+    				
+    				
              	 }
              	 break;
              case GET_TRANSFERIN_ID:
@@ -788,9 +1177,18 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              case GET_PROJECT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
-	         		Project project = Project.load(Project.class, _id);
+	         		project = Project.load(Project.class, _id);
 	         		mSelectorFieldProject.setText(project.getDisplayName());
 	         		mSelectorFieldProject.setModelId(project.getId());
+	         		
+	         		Intent intent = getActivity().getIntent();
+	         		long modelId = intent.getLongExtra("MODEL_ID", -1);
+	         		
+	         		if (modelId == -1) {
+        				setExchangeRate(false);
+        			} else {
+        				setExchangeRate(true);
+        			}
 	        	 }
 	        	 break;
           }

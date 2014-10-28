@@ -40,7 +40,7 @@
    <string name="moneyTransferFormFragment_editText_validationError_beyondMAX_exchangeRate">汇率超出范围</string>
    
    <string name="moneyTransferFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
-   <string name="moneyTransferFormFragment_toast_select_currency">请先选择账户和项目</string> 
+   <string name="moneyTransferFormFragment_toast_select_currency">请先选择账户和项目</string>
    
    <string name="moneyTransferFormFragment_textView_project">项目</string>
    <string name="moneyTransferFormFragment_editText_hint_project">请选择项目</string>
@@ -50,4 +50,19 @@
     
    <string name="moneyTransferFormFragment_editText_validationError_both_friend">转入人或转出人不能都是好友</string>
    <string name="moneyTransferFormFragment_editText_validationError_same_account">同一个账户不需要转账</string>
+   
+   <string name="moneyTransferFormFragment_textView_transferOutCurrency">转出币种</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferOutCurrency">请输入转出币种</string>
+   
+   <string name="moneyTransferFormFragment_textView_transferInCurrency">转入币种</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferInCurrency">请输入转入币种</string>
+   
+   <string name="moneyTransferFormFragment_textView_transferProjectCurrency">项目币种</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferProjectCurrency">请输入项目币种</string>
+   
+   <string name="moneyTransferFormFragment_textView_transferOutProjectExchangeRate">汇率</string>
+   <string name="moneyTransferFormFragment_editText_hint_transferOutProjectExchangeRate">请输入汇率</string>
+   
+   <string name="moneyTransferFormFragment_textView_projectTransferInExchangeRate">汇率</string>
+   <string name="moneyTransferFormFragment_editText_hint_projectTransferInExchangeRate">请输入汇率</string>
 </resources>

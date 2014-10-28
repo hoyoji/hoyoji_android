@@ -929,7 +929,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				((TextView)view).setText("充值卡充值");
 			} else {
 				if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
-					((TextView)view).setText("从"+moneyTransfer.getTransferIn().getName()+"转到"+moneyTransfer.getTransferOut().getName());
+					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转到"+moneyTransfer.getTransferIn().getName());
 				} else if(moneyTransfer.getTransferOut() != null){
 					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转出");
 				} else if(moneyTransfer.getTransferIn() != null){
