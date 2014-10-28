@@ -62,6 +62,9 @@ public class MoneyTransfer extends HyjModel{
 	@Column(name = "projectId")
 	private String mProjectId;
 
+	@Column(name = "projectCurrencyId")
+	private String mProjectCurrencyId;
+	
 	@Column(name = "transferType")
 	private String mTransferType;
 	
