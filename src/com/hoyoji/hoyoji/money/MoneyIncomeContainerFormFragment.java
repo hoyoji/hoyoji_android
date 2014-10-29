@@ -1243,7 +1243,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										moneyBorrowOfFinancialOwner = new MoneyBorrow();
 									}
 									if(moneyBorrowOfFinancialOwner == null) {
-										// 财务负责人向分摊人借入
 										moneyBorrowOfFinancialOwner = new MoneyBorrow();
 									}
 									
@@ -1544,13 +1543,13 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 							moneyIncome.delete();
 						}
 					} else {
-						MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
-						if(moneyBorrow != null){
+						List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", apportion.getId()).execute();
+						for(MoneyBorrow moneyBorrow : moneyBorrows){
 							moneyBorrow.delete();
 						} 
 //						if(apportion.getFriendUserId() != null){
-							MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
-							if(moneyLend != null){
+							List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", apportion.getId()).execute();
+							for(MoneyLend moneyLend : moneyLends){
 								moneyLend.delete();
 							} 
 							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
