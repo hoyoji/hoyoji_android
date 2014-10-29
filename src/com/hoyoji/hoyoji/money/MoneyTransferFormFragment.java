@@ -843,6 +843,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProjectCurrencyId(project.getCurrencyId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setTransferOutExchangeRate(transferOutProjectExchangeRate.getNumber());
 		modelCopy.setTransferInExchangeRate(projectTransferInExchangeRate.getNumber());

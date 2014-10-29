@@ -437,6 +437,14 @@ public class MoneyTransfer extends HyjModel{
 	public void setOwnerUserId(String mOwnerUserId) {
 		this.mOwnerUserId = mOwnerUserId;
 	}
+	
+	public String getProjectCurrencyId() {
+		return mProjectCurrencyId;
+	}
+
+	public void setProjectCurrencyId(String mProjectCurrencyId) {
+		this.mProjectCurrencyId = mProjectCurrencyId;
+	}
 
 	public String getLocation() {
 		return mLocation;
