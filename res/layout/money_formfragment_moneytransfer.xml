@@ -86,13 +86,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" >
 
-                <ImageView
+                <!-- <ImageView
                     android:id="@+id/moneyTransferFormFragment_imageView_clear_transferOutFriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="0dp"
-                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" /> -->
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyTransferFormFragment_selectorField_transferOutFriend"
@@ -140,13 +140,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" >
 
-                <ImageView
+               <!--  <ImageView
                     android:id="@+id/moneyTransferFormFragment_imageView_clear_transferInFriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="0dp"
-                    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+                    android:src="@drawable/abc_ic_clear_search_api_holo_light" /> -->
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyTransferFormFragment_selectorField_transferInFriend"

@@ -71,6 +71,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
+	private Project project = null;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneytopup;
@@ -206,7 +208,6 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		
 		mViewSeparatorTransferInAmount = (View) getView().findViewById(R.id.moneyTopupFormFragment_separatorField_transferInamount);
 		
-		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyTopup.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
@@ -494,6 +495,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		
 		modelCopy.setTransferInAmount(mNumericTransferInAmount.getNumber());
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
+		modelCopy.setProjectCurrencyId(project.getCurrencyId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
@@ -757,11 +759,29 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
              case GET_PROJECT_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
-	         		Project project = Project.load(Project.class, _id);
+	         		project = Project.load(Project.class, _id);
 	         		mSelectorFieldProject.setText(project.getDisplayName());
 	         		mSelectorFieldProject.setModelId(project.getId());
 	        	 }
 	        	 break;
           }
     }
+	
+	public Double transferExchangeRate (String transferInCurrencyId , String transferOutCurrencyId) {
+		String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+		Double transferInActivityRate; 
+		if (transferInCurrencyId.equals(activityCurrencyId)) {
+			transferInActivityRate = 1.00;
+		} else {
+			transferInActivityRate = Exchange.getExchangeRate(transferInCurrencyId, activityCurrencyId);
+		}
+		Double activityTransferOutRate;
+		
+		if (activityCurrencyId.equals(transferOutCurrencyId)) {
+			activityTransferOutRate = 1.00;
+		} else {
+			activityTransferOutRate = Exchange.getExchangeRate(activityCurrencyId, transferOutCurrencyId);
+		}
+		return transferInActivityRate * activityTransferOutRate;
+	}
 }
