@@ -36,7 +36,7 @@ public class Friend extends HyjModel {
 	private String mFriendCategoryId;
 	
 	@Column(name = "toBeDetermined")
-	private Boolean mToBeDetermined;
+	private Boolean mToBeDetermined = false;
 
 	@Column(name = "lastSyncTime")
 	private String mLastSyncTime;
