@@ -1204,7 +1204,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									moneyLend = new MoneyLend();
 									moneyBorrowOfFinancialOwner = new MoneyBorrow();
 								} else {
-									if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+									if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+											|| mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 										if(apportionEditor.getModelCopy().getFriendUserId() != null){
 											// 记账人向财务负责人借入
 											moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), apportionEditor.getModelCopy().getFriendUserId()).executeSingle();
@@ -1270,7 +1271,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										moneyLendOfFinancialOwner = new MoneyLend();
 									}
 								}
-								if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+								if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+										|| mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyBorrow.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 									moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
 									moneyBorrow.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
@@ -1350,7 +1352,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								
 
 								
-								if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+								if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+										|| mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyLend.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
 									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
 									if(apportionEditor.getModelCopy().getFriendUserId() != null){

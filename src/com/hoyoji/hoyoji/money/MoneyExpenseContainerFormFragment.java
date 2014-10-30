@@ -1263,7 +1263,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyBorrow = new MoneyBorrow();
 									moneyLendOfFinancialOwner = new MoneyLend();
 								} else {
-									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() == null){
+									if(mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId() == null
+											|| mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 										if(apportionEditor.getModel().getFriendUserId() != null){
 											moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
 											moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
@@ -1320,7 +1321,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										moneyBorrowOfFinancialOwner = new MoneyBorrow();
 									}
 								}
-								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+										|| mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
 									moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
@@ -1344,7 +1346,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 									moneyLend.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 									moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 									moneyLend.save();
-								} else  if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								} else if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 									moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
 									moneyLend.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
@@ -1401,7 +1403,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 								
 								
-								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null){
+								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+										|| mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 									moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
 									if(apportionEditor.getModelCopy().getFriendUserId() != null){
