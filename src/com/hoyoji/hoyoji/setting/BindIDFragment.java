@@ -92,12 +92,12 @@ public class BindIDFragment extends HyjFragment {
 
 			setEmailField();
 			
-			mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_phone);
-			mTextFieldPhone.setEditable(false);
+//			mTextFieldPhone = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_phone);
+//			mTextFieldPhone.setEditable(false);
+//			
+//			mButtonPhone = (Button) getView().findViewById(R.id.bindIDFragment_button_phoneBinding);
 			
-			mButtonPhone = (Button) getView().findViewById(R.id.bindIDFragment_button_phoneBinding);
-			
-			setPhoneField();
+//			setPhoneField();
 
 			mTextFieldQQ = (HyjTextField) getView().findViewById(R.id.bindIDFragment_textField_QQ);
 			mTextFieldQQ.setEditable(false);
@@ -204,32 +204,32 @@ public class BindIDFragment extends HyjFragment {
 	   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, findPasswordJsonObject.toString(), "unBindEmail");
 		 }
 		
-		private void setPhoneField() {
-			mTextFieldPhone.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getPhone());
-			if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
-				mButtonPhone.setText("解绑");
-				mButtonPhone.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						Bundle bundle = new Bundle();
-						bundle.putString("clickType", "unBindPhone");
-						BindIDFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_unBindPhone_title, bundle);
-						
-					}
-				});
-			}else{
-				mButtonPhone.setText("绑定");
-				mButtonPhone.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						BindIDFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_title, null);
-						
-					}
-				});
-			}
-		}
+//		private void setPhoneField() {
+//			mTextFieldPhone.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getPhone());
+//			if(mTextFieldPhone.getText() != null && mTextFieldPhone.getText().length() > 0){
+//				mButtonPhone.setText("解绑");
+//				mButtonPhone.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						Bundle bundle = new Bundle();
+//						bundle.putString("clickType", "unBindPhone");
+//						BindIDFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_unBindPhone_title, bundle);
+//						
+//					}
+//				});
+//			}else{
+//				mButtonPhone.setText("绑定");
+//				mButtonPhone.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						BindIDFragment.this.openActivityWithFragment(BindPhoneFragment.class, R.string.bindPhoneFragment_title, null);
+//						
+//					}
+//				});
+//			}
+//		}
 	 
 		
 		private void setQQField() {
@@ -746,23 +746,23 @@ public class BindIDFragment extends HyjFragment {
 		}
 		 
 		 
-		 private class ChangeObserver extends ContentObserver {
-				public ChangeObserver() {
-					super(new Handler());
-				}
-
-				@Override
-				public boolean deliverSelfNotifications() {
-					return true;
-				}
-
-				@Override
-				public void onChange(boolean selfChange) {
-					setPhoneField();
-					if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
-//						mButtonChangePassword.setText("修改密码");
-					} 
-				}
-			}
+//		 private class ChangeObserver extends ContentObserver {
+//				public ChangeObserver() {
+//					super(new Handler());
+//				}
+//
+//				@Override
+//				public boolean deliverSelfNotifications() {
+//					return true;
+//				}
+//
+//				@Override
+//				public void onChange(boolean selfChange) {
+////					setPhoneField();
+//					if(HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+////						mButtonChangePassword.setText("修改密码");
+//					} 
+//				}
+//			}
 	 
 }
