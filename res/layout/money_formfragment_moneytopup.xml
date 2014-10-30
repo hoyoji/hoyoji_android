@@ -207,6 +207,171 @@
                     android:src="@drawable/ic_action_refresh_rotate" />
             </LinearLayout>
         </LinearLayout>
+        
+        <View
+            android:id="@+id/field_separator_transferOutProject"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="#E0E0E0" 
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/moneyTopupFormFragment_LinerLayout_transferOutProject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjTextField
+                    android:id="@+id/moneyTopupFormFragment_textField_transferOutCurrency"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferOutCurrency"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferOutCurrency" />
+
+                <View
+                    android:id="@+id/moneyTopupFormFragment_separatorField_transferOutCurrency"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:background="#E0E0E0" />
+
+                <com.hoyoji.android.hyjframework.view.HyjTextField
+                    android:id="@+id/moneyTopupFormFragment_textField_transferProjectCurrency"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferProjectCurrency"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferProjectCurrency" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="#E0E0E0" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTopupFormFragment_textField_transferOutProjectExchangeRate"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferOutProjectExchangeRate"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferOutProjectExchangeRate" />
+
+                <ImageView
+                    android:id="@+id/moneyTopupFormFragment_imageButton_refresh_transferOutProjectExchangeRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_refresh_rotate" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <View
+            android:id="@+id/field_separator_projectTransferIn"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="#E0E0E0" 
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/moneyTopupFormFragment_LinerLayout_projectTransferIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjTextField
+                    android:id="@+id/moneyTopupFormFragment_textField_projectTransferInCurrency"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferProjectCurrency"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferProjectCurrency" />
+
+                <View
+                    android:id="@+id/moneyTopupFormFragment_separatorField_transferInCurrency"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:background="#E0E0E0" />
+                
+                <com.hoyoji.android.hyjframework.view.HyjTextField
+                    android:id="@+id/moneyTopupFormFragment_textField_transferInCurrency"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    hyj:editTextBold="true"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_transferInCurrency"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_transferInCurrency" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dip"
+                android:background="#E0E0E0" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <com.hoyoji.android.hyjframework.view.HyjNumericField
+                    android:id="@+id/moneyTopupFormFragment_textField_projectTransferInExchangeRate"
+                    hyj:style="top_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    hyj:editTextBorder="none"
+                    hyj:hintText="@string/moneyTopupFormFragment_editText_hint_projectTransferInExchangeRate"
+                    hyj:labelText="@string/moneyTopupFormFragment_textView_projectTransferInExchangeRate" />
+
+                <ImageView
+                    android:id="@+id/moneyTopupFormFragment_imageButton_refresh_projectTransferInExchangeRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_refresh_rotate" />
+            </LinearLayout>
+        </LinearLayout>
 
         <View
             android:id="@id/field_separator"

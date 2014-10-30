@@ -46,4 +46,19 @@
    <string name="moneyTopupFormFragment_editText_hint_remark">无备注</string>
     
    <string name="moneyTopupFormFragment_editText_validationError_same_account">同一个账户不需要转账</string>
+   
+   <string name="moneyTopupFormFragment_textView_transferOutCurrency">转出币种</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferOutCurrency">请输入转出币种</string>
+   
+   <string name="moneyTopupFormFragment_textView_transferInCurrency">转入币种</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferInCurrency">请输入转入币种</string>
+   
+   <string name="moneyTopupFormFragment_textView_transferProjectCurrency">项目币种</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferProjectCurrency">请输入项目币种</string>
+   
+   <string name="moneyTopupFormFragment_textView_transferOutProjectExchangeRate">汇率</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferOutProjectExchangeRate">请输入汇率</string>
+   
+   <string name="moneyTopupFormFragment_textView_projectTransferInExchangeRate">汇率</string>
+   <string name="moneyTopupFormFragment_editText_hint_projectTransferInExchangeRate">请输入汇率</string>
 </resources>

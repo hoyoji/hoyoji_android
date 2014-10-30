@@ -33,6 +33,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
@@ -71,8 +72,26 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	private View mViewSeparatorExchange = null;
 	private LinearLayout mLinearLayoutExchangeRate = null;
 	
-	private Project project = null;
+	private LinearLayout mLinearLayoutTransferOutProject = null;
+	private LinearLayout mLinearLayoutProjectTransferIn = null;
 	
+	private Project project = null;
+	private View mViewSeparatorTransferOutProject = null;
+	private View mViewSeparatorProjectTransferIn = null;
+	
+	private HyjTextField transferOutCurrency = null;
+	private HyjTextField transferProjectCurrency = null;
+	
+	private HyjTextField projectTransferInCurrency = null;
+	private HyjTextField transferInCurrency = null;
+	
+	private HyjNumericField transferOutProjectExchangeRate = null;
+	private HyjNumericField projectTransferInExchangeRate = null;
+	
+	private ImageView mImageViewTransferOutProjectRefreshRate = null;
+	private ImageView mImageViewProjectTransferInRefreshRate = null;
+	
+	private MoneyTransfer moneyTopup;
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneytopup;
@@ -81,12 +100,38 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyTransfer moneyTopup;
+		
 		
 		Intent intent = getActivity().getIntent();
 		long modelId = intent.getLongExtra("MODEL_ID", -1);
+		
+		transferOutCurrency = (HyjTextField) getView().findViewById(R.id.moneyTopupFormFragment_textField_transferOutCurrency);
+		transferProjectCurrency = (HyjTextField) getView().findViewById(R.id.moneyTopupFormFragment_textField_transferProjectCurrency);
+		projectTransferInCurrency = (HyjTextField) getView().findViewById(R.id.moneyTopupFormFragment_textField_projectTransferInCurrency);
+		transferInCurrency = (HyjTextField) getView().findViewById(R.id.moneyTopupFormFragment_textField_transferInCurrency);
+		
+		transferOutProjectExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTopupFormFragment_textField_transferOutProjectExchangeRate);
+		projectTransferInExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTopupFormFragment_textField_projectTransferInExchangeRate);
+		
+		mViewSeparatorTransferOutProject = (View) getView().findViewById(R.id.field_separator_transferOutProject);
+		mLinearLayoutTransferOutProject = (LinearLayout) getView().findViewById(R.id.moneyTopupFormFragment_LinerLayout_transferOutProject);
+		
+		mViewSeparatorProjectTransferIn = (View) getView().findViewById(R.id.field_separator_projectTransferIn);
+		mLinearLayoutProjectTransferIn = (LinearLayout) getView().findViewById(R.id.moneyTopupFormFragment_LinerLayout_projectTransferIn);
+		
 		if(modelId != -1){
 			moneyTopup =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
+			
+			mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
+			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+			mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+			mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+			transferOutProjectExchangeRate.setNumber(moneyTopup.getTransferOutExchangeRate());
+			projectTransferInExchangeRate.setNumber(moneyTopup.getTransferInExchangeRate());
+			transferOutCurrency.setText(moneyTopup.getTransferOut().getCurrency().getName() + "(" + moneyTopup.getTransferOut().getCurrencyId() + ")");
+			transferProjectCurrency.setText(moneyTopup.getProject().getCurrency().getName() + "(" + moneyTopup.getProject().getCurrencyId() + ")");
+			projectTransferInCurrency.setText(moneyTopup.getProject().getCurrency().getName() + "(" + moneyTopup.getProject().getCurrencyId() + ")");
+			transferInCurrency.setText(moneyTopup.getTransferIn().getCurrency().getName() + "(" + moneyTopup.getTransferIn().getCurrencyId() + ")");
 		} else {
 			moneyTopup = new MoneyTransfer();
 			moneyTopup.setTransferInId(null);
@@ -154,6 +199,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		if(transferOut != null){
 			mSelectorFieldTransferOut.setModelId(transferOut.getId());
 			mSelectorFieldTransferOut.setText(transferOut.getName() + "(" + transferOut.getCurrencyId() + ")");
+			
+			transferOutCurrency.setText(transferOut.getCurrency().getName() + "(" + transferOut.getCurrencyId() + ")");
 		}
 		mSelectorFieldTransferOut.setOnClickListener(new OnClickListener(){
 			@Override
@@ -185,6 +232,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		if(transferIn != null){
 			mSelectorFieldTransferIn.setModelId(transferIn.getId());
 			mSelectorFieldTransferIn.setText(transferIn.getName() + "(" + transferIn.getCurrencyId() + ")");
+			transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
 		}
 		mSelectorFieldTransferIn.setOnClickListener(new OnClickListener(){
 			@Override
@@ -219,6 +267,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		if(project != null){
 			mSelectorFieldProject.setModelId(project.getId());
 			mSelectorFieldProject.setText(project.getDisplayName());
+			transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+			projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -244,8 +294,57 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 					int count) {
 				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
 					mNumericTransferInAmount.setNumber(Double.valueOf(s.toString()) * mNumericTransferOutAmount.getNumber());
+					projectTransferInExchangeRate.setNumber(Double.valueOf(s.toString()) / transferOutProjectExchangeRate.getNumber());
 				}else{
 					mNumericTransferInAmount.setNumber(null);
+				}
+			}
+			
+		});
+		
+		transferOutProjectExchangeRate.getEditText().addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
+					if(transferOutProjectExchangeRate.getEditText().isFocused()){
+						if(transferOutProjectExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+							projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+						}
+					}
+				}
+			}
+			
+		});
+		
+		projectTransferInExchangeRate.getEditText().addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
+					if(projectTransferInExchangeRate.getEditText().isFocused()){
+						if(projectTransferInExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+							transferOutProjectExchangeRate.setNumber(mNumericExchangeRate.getNumber() / projectTransferInExchangeRate.getNumber());
+						}
+					}
 				}
 			}
 			
@@ -325,6 +424,47 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		mImageViewTransferOutProjectRefreshRate = (ImageView) getView().findViewById(R.id.moneyTopupFormFragment_imageButton_refresh_transferOutProjectExchangeRate);	
+		mImageViewTransferOutProjectRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mSelectorFieldTransferOut.getModelId() != null && mSelectorFieldProject.getModelId() != null){
+					HyjUtil.startRoateView(mImageViewRefreshRate);
+					MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class, mSelectorFieldTransferOut.getModelId());
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
+					
+					HyjUtil.stopRoateView(mImageViewRefreshRate);
+				}else{
+					HyjUtil.displayToast(R.string.moneyTopupFormFragment_toast_select_currency);
+				}
+			}
+		});
+		
+		
+		mImageViewProjectTransferInRefreshRate = (ImageView) getView().findViewById(R.id.moneyTopupFormFragment_imageButton_refresh_projectTransferInExchangeRate);	
+		mImageViewProjectTransferInRefreshRate.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(transferOutProjectExchangeRate.getNumber() != null && mNumericExchangeRate.getNumber() != null) {
+					projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+				} else {
+					if(mSelectorFieldProject.getModelId() != null && mSelectorFieldTransferIn.getModelId() != null){
+						HyjUtil.startRoateView(mImageViewRefreshRate);
+						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+						MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class, mSelectorFieldTransferIn.getModelId());
+						
+						projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
+						HyjUtil.stopRoateView(mImageViewRefreshRate);
+					}else{
+						HyjUtil.displayToast(R.string.moneyTopupFormFragment_toast_select_currency);
+					}
+				}
+				
+			}
+		});
+		
 		setPermission();
 		
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
@@ -346,6 +486,10 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void setPermission() {
+		transferOutCurrency.setEnabled(false);
+		transferProjectCurrency.setEnabled(false);
+		projectTransferInCurrency.setEnabled(false);
+		transferInCurrency.setEnabled(false);
 //		if(mSelectorFieldTransferInFriend.getModelId() == null 
 //				&& (mSelectorFieldTransferOut.getModelId()== null || mSelectorFieldTransferIn.getModelId() == null)){
 //			
@@ -459,11 +603,50 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 				}
 			}
 			
+			transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
+			
+			if (mNumericExchangeRate.getNumber() != null){
+				projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+			}
+			
+			transferOutCurrency.setText(transferOut.getCurrency().getName() + "(" + transferOut.getCurrencyId() + ")");
+			transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+			projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+			transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
+			
 		}else{
 			mViewSeparatorExchange.setVisibility(View.GONE);
 			mLinearLayoutExchangeRate.setVisibility(View.GONE);
 			mViewSeparatorTransferInAmount.setVisibility(View.GONE);
 			mNumericTransferInAmount.setVisibility(View.GONE);
+			
+			if (mSelectorFieldTransferOut.getModelId() != null){
+				MoneyAccount transferOut = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferOut.getModelId());
+				transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
+				
+				transferOutCurrency.setText(transferOut.getCurrency().getName() + "(" + transferOut.getCurrencyId() + ")");
+				transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+			} else {
+				transferOutProjectExchangeRate.setNumber(null);
+				transferOutCurrency.setText(null);
+				transferProjectCurrency.setText(null);
+				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
+				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+			}
+			
+			if(mSelectorFieldTransferIn.getModelId() != null){
+				MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
+				projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
+				
+				projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+				transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
+			} else {
+				projectTransferInExchangeRate.setNumber(null);
+				projectTransferInCurrency.setText(null);
+				transferInCurrency.setText(null);
+				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
+				mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
+			}
 		}
 			SET_EXCHANGE_RATE_FLAG = 0;
 			setTransferInAmount();
@@ -497,7 +680,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setProjectCurrencyId(project.getCurrencyId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
-		
+		modelCopy.setTransferOutExchangeRate(transferOutProjectExchangeRate.getNumber());
+		modelCopy.setTransferInExchangeRate(projectTransferInExchangeRate.getNumber());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}
 	
@@ -721,6 +905,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
 	         		mSelectorFieldTransferOut.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		mSelectorFieldTransferOut.setModelId(moneyAccount.getId());
+	         		
+	         		transferOutCurrency.setText(moneyAccount.getCurrency().getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		setExchangeRate(false);
 	        	 }
 	        	 break;
@@ -735,10 +921,23 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
              		if(moneyAccount != null){
                  		mSelectorFieldTransferIn.setText(moneyAccount.getDisplayName());
                  		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
+                 		transferInCurrency.setText(moneyAccount.getCurrency().getName() + "(" + moneyAccount.getCurrencyId() + ")");
              		} else {
              			mSelectorFieldTransferIn.setText(friend.getDisplayName() + "充值卡1");
                  		mSelectorFieldTransferIn.setModelId(null);
+             			transferInCurrency.setText(moneyTopup.getTransferOut().getCurrency().getName() + "(" + moneyTopup.getTransferOut().getCurrencyId() + ")");
              		}
+             		
+             		Intent intent = getActivity().getIntent();
+	         		long modelId = intent.getLongExtra("MODEL_ID", -1);
+	         		
+	         		if (modelId == -1) {
+        				setExchangeRate(false);
+        			} else {
+        				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+        				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+        				setExchangeRate(true);
+        			}
              	 }
              	 break;
      		case GET_REMARK:
@@ -753,6 +952,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	         		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, _id);
 	         		mSelectorFieldTransferIn.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		mSelectorFieldTransferIn.setModelId(moneyAccount.getId());
+	         		transferInCurrency.setText(moneyAccount.getCurrency().getName() + "(" + moneyAccount.getCurrencyId() + ")");
 	         		setExchangeRate(false);
 	        	 }
 	        	 break;
@@ -762,6 +962,17 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	         		project = Project.load(Project.class, _id);
 	         		mSelectorFieldProject.setText(project.getDisplayName());
 	         		mSelectorFieldProject.setModelId(project.getId());
+	         		transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+	    			projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
+	    			
+	    			Intent intent = getActivity().getIntent();
+	         		long modelId = intent.getLongExtra("MODEL_ID", -1);
+	         		
+	         		if (modelId == -1) {
+        				setExchangeRate(false);
+        			} else {
+        				setExchangeRate(true);
+        			}
 	        	 }
 	        	 break;
           }

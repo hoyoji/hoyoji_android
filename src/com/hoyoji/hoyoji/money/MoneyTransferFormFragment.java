@@ -61,11 +61,11 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjNumericField mNumericTransferOutAmount = null;
 	private HyjSelectorField mSelectorFieldTransferOutFriend = null;
-	private ImageView mImageViewClearTransferOutFriend = null;
+//	private ImageView mImageViewClearTransferOutFriend = null;
 	private View mViewSeparatorTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferOut = null;
 	private HyjSelectorField mSelectorFieldTransferInFriend = null;
-	private ImageView mImageViewClearTransferInFriend = null;
+//	private ImageView mImageViewClearTransferInFriend = null;
 	private View mViewSeparatorTransferIn = null;
 	private HyjSelectorField mSelectorFieldTransferIn = null;
 	private HyjNumericField mNumericTransferInAmount = null;
