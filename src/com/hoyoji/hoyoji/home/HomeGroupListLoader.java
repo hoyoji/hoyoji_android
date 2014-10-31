@@ -407,6 +407,22 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
+						"SELECT MAX(date) FROM MoneyDepositExpenseContainer WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
 						"SELECT MAX(date) FROM MoneyDepositIncomeContainer WHERE date <= ?",
 						args);
 		if (cursor != null) {
@@ -455,7 +471,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ?",
+						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

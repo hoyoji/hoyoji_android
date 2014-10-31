@@ -56,6 +56,7 @@ import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
