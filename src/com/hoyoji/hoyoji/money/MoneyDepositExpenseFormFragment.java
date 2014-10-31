@@ -423,7 +423,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 //										
 //									    selfProjectAuthorizationEditor.save();
 										
-										List<MoneyLend> financialOwnerMoneyLends = new Select().from(MoneyLend.class).where("depositExpenseId = ?", moneyLend.getId()).execute();
+										List<MoneyLend> financialOwnerMoneyLends = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ?", moneyLend.getId()).execute();
 										for(MoneyLend m : financialOwnerMoneyLends)	{
 											m.delete();
 										}
