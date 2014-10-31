@@ -204,7 +204,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
             @Override
             public void onCancel() {
 //            		Util.toastMessage(getActivity(), "onCancel: ");
-            	getActivity().finish();
+            	//getActivity().finish();
             }
 
             @Override
