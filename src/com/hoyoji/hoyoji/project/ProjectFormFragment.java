@@ -70,6 +70,8 @@ import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyFormFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
+import com.hoyoji.hoyoji.setting.ChangePasswordFragment;
+import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
 public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
@@ -132,7 +134,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((HyjActivity)getActivity()).displayDialog("财务负责人","财务负责人是");
+				ProjectFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
 			}
 		});
 		

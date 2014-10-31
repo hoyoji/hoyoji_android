@@ -57,6 +57,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
@@ -88,7 +89,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 	protected TextView mTextViewApportionFieldTitle;
 	private DataSetObserver mApportionCountObserver;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
-	
+	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
 	
@@ -279,6 +280,15 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				}
 			}
 		});
+		
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyDepositIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+			}
+		});
+		
 		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyDepositIncomeContainerFormFragment_imageButton_refresh_exchangeRate);	
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener(){
 			@Override
