@@ -35,6 +35,7 @@ import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
@@ -409,7 +410,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				((TextView)view).setText("(分摊)借出");
 			} else if(((MoneyLend)object).getMoneyIncomeApportionId() != null){
 				((TextView)view).setText("(分摊)借出");
-			} else if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
+			} else if(((MoneyLend)object).getMoneyDepositExpenseContainerId() != null){
 				((TextView)view).setText("预缴会费");
 			}else {
 				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
@@ -642,15 +643,19 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				if(((MoneyLend)object).getMoneyExpenseApportionId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyLend) object).getMoneyExpenseApportion().getMoneyExpenseContainer().get_mId());
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-				} else if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
-					bundle.putLong("MODEL_ID", object.get_mId());
+				} else if(((MoneyLend)object).getMoneyDepositExpenseContainerId() != null){
+					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, ((MoneyLend)object).getMoneyDepositExpenseContainerId());
+					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
 					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					bundle.putLong("MODEL_ID", object.get_mId());
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
 				return true;
-			} else if(object instanceof MoneyReturn){
+			}  else if(object instanceof MoneyDepositExpenseContainer){
+				openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				return true;
+			}  else if(object instanceof MoneyReturn){
 				if(((MoneyReturn)object).getMoneyDepositReturnApportionId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyReturn) object).getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
 					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);

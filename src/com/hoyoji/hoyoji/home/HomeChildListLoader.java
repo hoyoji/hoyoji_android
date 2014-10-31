@@ -13,6 +13,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -105,6 +106,9 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomeContainers);
 	    	
+	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositExpenseContainers);
+	    	
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
@@ -117,7 +121,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
 	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
@@ -171,6 +175,13 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				}
 				if(rhs instanceof MoneyDepositIncomeContainer){
 					rhsStr = ((MoneyDepositIncomeContainer) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyDepositExpenseContainer){
+					lhsStr = ((MoneyDepositExpenseContainer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyDepositExpenseContainer){
+					rhsStr = ((MoneyDepositExpenseContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyDepositReturnContainer){

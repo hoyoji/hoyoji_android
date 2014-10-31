@@ -973,7 +973,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							MoneyLend moneyLend = null;
 							if(apportion.get_mId() == null){
 								moneyLend = new MoneyLend();
-								moneyLend.setLendType("Deposit");
+//								moneyLend.setLendType("Deposit");
+								moneyLend.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModelCopy().getId());
 							} else {
 								moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 							}
@@ -1100,7 +1101,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					MoneyLend moneyLend = null;
 					if(apportion.get_mId() == null){
 						moneyLend = new MoneyLend();
-						moneyLend.setLendType("Deposit");
+//						moneyLend.setLendType("Deposit");
+						moneyLend.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModelCopy().getId());
 					} else {
 						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 					}

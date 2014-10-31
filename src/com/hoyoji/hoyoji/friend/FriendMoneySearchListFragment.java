@@ -36,6 +36,7 @@ import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -838,7 +839,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyLend)object).getLendType().equalsIgnoreCase("Deposit")){
+			if(((MoneyLend)object).getMoneyDepositExpenseContainerId() != null){
 				((TextView)view).setText("预缴会费");
 			}else{
 				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
@@ -1066,13 +1067,18 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 				return true;
 			} else if(object instanceof MoneyLend){
 				MoneyLend moneyLend = (MoneyLend) object;
-				if(moneyLend.getLendType().equalsIgnoreCase("Deposit")){
+				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
+					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
+					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
 					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
 				return true;
-			} else if(object instanceof MoneyReturn){
+			}  else if(object instanceof MoneyDepositExpenseContainer){
+				openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				return true;
+			}  else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;
 				if(moneyReturn.getReturnType().equalsIgnoreCase("Deposit")){
 					bundle.putLong("MODEL_ID", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());

@@ -92,24 +92,23 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyLend moneyLend;
+		MoneyDepositExpenseContainer moneyLend;
 		
 		Intent intent = getActivity().getIntent();
 	    final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyLend =  new Select().from(MoneyLend.class).where("_id=?", modelId).executeSingle();
+			moneyLend =  new Select().from(MoneyDepositExpenseContainer.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyLend.hasEditPermission();
 		} else {
-			moneyLend = new MoneyLend();
-			moneyLend.setLendType("Deposit");
+			moneyLend = new MoneyDepositExpenseContainer();
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
 				moneyLend.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
-			if(intent.getStringExtra("counterpartId") != null){
-				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
-			}
+//			if(intent.getStringExtra("counterpartId") != null){
+//				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
+//			}
 		}
 		mMoneyDepositExpenseContainerEditor = moneyLend.newModelEditor();
 		
@@ -739,19 +738,19 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 //						 selfProjectAuthorizationEditor.save();
 					
 				// 如果有财务负责人，生成财务负责人到收款人的借出
-				MoneyLend moneyLendOfFinancialOwner = null;
+//				MoneyLend moneyLendOfFinancialOwner = null;
 				MoneyLend moneyLendToFinancialOwner = null;
 				if(newMoneyLendModel.get_mId() == null){
-					moneyLendOfFinancialOwner = new MoneyLend();
+//					moneyLendOfFinancialOwner = new MoneyLend();
 					moneyLendToFinancialOwner = new MoneyLend();
 				} else {
 					String previousFinancialOwnerUserId = HyjUtil.ifNull(oldMoneyLendModel.getFinancialOwnerUserId() , "");
 					String currentFinancialOwnerUserId = HyjUtil.ifNull(newMoneyLendModel.getFinancialOwnerUserId() , "");
-					moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("depositExpenseId = ? AND ownerUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
-					if(moneyLendOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
-						moneyLendOfFinancialOwner.delete();
-						moneyLendOfFinancialOwner = new MoneyLend();
-					}
+//					moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("depositExpenseId = ? AND ownerUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
+//					if(moneyLendOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+//						moneyLendOfFinancialOwner.delete();
+//						moneyLendOfFinancialOwner = new MoneyLend();
+//					}
 					moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
 					if(moneyLendToFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 						moneyLendToFinancialOwner.delete();
@@ -760,31 +759,32 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				}
 				if(newMoneyLendModel.getFinancialOwnerUserId() != null
 						&& !newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					moneyLendOfFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
-					moneyLendOfFinancialOwner.setDate(newMoneyLendModel.getDate());
-					moneyLendOfFinancialOwner.setAmount(newMoneyLendModel.getAmount());
-					moneyLendOfFinancialOwner.setAddress(newMoneyLendModel.getAddress());
-					moneyLendOfFinancialOwner.setCurrencyId1(newMoneyLendModel.getCurrencyId());
-					moneyLendOfFinancialOwner.setExchangeRate(newMoneyLendModel.getExchangeRate());
-					moneyLendOfFinancialOwner.setFinancialOwnerUserId(null);
-					moneyLendOfFinancialOwner.setFriendAccountId(newMoneyLendModel.getFriendUserId());
-					moneyLendOfFinancialOwner.setFriendUserId(newMoneyLendModel.getFriendUserId());
-					moneyLendOfFinancialOwner.setGeoLat(newMoneyLendModel.getGeoLat());
-					moneyLendOfFinancialOwner.setGeoLon(newMoneyLendModel.getGeoLon());
-					moneyLendOfFinancialOwner.setLocalFriendId(newMoneyLendModel.getLocalFriendId());
-					moneyLendOfFinancialOwner.setLocation(newMoneyLendModel.getLocation());
-					moneyLendOfFinancialOwner.setMoneyAccountId(newMoneyLendModel.getMoneyAccountId(), newMoneyLendModel.getMoneyAccount().getCurrencyId());
-					moneyLendOfFinancialOwner.setOwnerUserId(newMoneyLendModel.getFinancialOwnerUserId());
-					moneyLendOfFinancialOwner.setOwnerFriendId(null);
-					moneyLendOfFinancialOwner.setPaybackDate(newMoneyLendModel.getPaybackDate());
-					moneyLendOfFinancialOwner.setPaybackedAmount(newMoneyLendModel.getPaybackedAmount());
-					moneyLendOfFinancialOwner.setProjectId(newMoneyLendModel.getProjectId(), newMoneyLendModel.getProjectCurrencyId());
-					moneyLendOfFinancialOwner.setPictureId(newMoneyLendModel.getPictureId());
-					moneyLendOfFinancialOwner.setRemark(newMoneyLendModel.getRemark());
-					
-					moneyLendOfFinancialOwner.save();
+//					moneyLendOfFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
+//					moneyLendOfFinancialOwner.setDate(newMoneyLendModel.getDate());
+//					moneyLendOfFinancialOwner.setAmount(newMoneyLendModel.getAmount());
+//					moneyLendOfFinancialOwner.setAddress(newMoneyLendModel.getAddress());
+//					moneyLendOfFinancialOwner.setCurrencyId1(newMoneyLendModel.getCurrencyId());
+//					moneyLendOfFinancialOwner.setExchangeRate(newMoneyLendModel.getExchangeRate());
+//					moneyLendOfFinancialOwner.setFinancialOwnerUserId(null);
+//					moneyLendOfFinancialOwner.setFriendAccountId(newMoneyLendModel.getFriendUserId());
+//					moneyLendOfFinancialOwner.setFriendUserId(newMoneyLendModel.getFriendUserId());
+//					moneyLendOfFinancialOwner.setGeoLat(newMoneyLendModel.getGeoLat());
+//					moneyLendOfFinancialOwner.setGeoLon(newMoneyLendModel.getGeoLon());
+//					moneyLendOfFinancialOwner.setLocalFriendId(newMoneyLendModel.getLocalFriendId());
+//					moneyLendOfFinancialOwner.setLocation(newMoneyLendModel.getLocation());
+//					moneyLendOfFinancialOwner.setMoneyAccountId(newMoneyLendModel.getMoneyAccountId(), newMoneyLendModel.getMoneyAccount().getCurrencyId());
+//					moneyLendOfFinancialOwner.setOwnerUserId(newMoneyLendModel.getFinancialOwnerUserId());
+//					moneyLendOfFinancialOwner.setOwnerFriendId(null);
+//					moneyLendOfFinancialOwner.setPaybackDate(newMoneyLendModel.getPaybackDate());
+//					moneyLendOfFinancialOwner.setPaybackedAmount(newMoneyLendModel.getPaybackedAmount());
+//					moneyLendOfFinancialOwner.setProjectId(newMoneyLendModel.getProjectId(), newMoneyLendModel.getProjectCurrencyId());
+//					moneyLendOfFinancialOwner.setPictureId(newMoneyLendModel.getPictureId());
+//					moneyLendOfFinancialOwner.setRemark(newMoneyLendModel.getRemark());
+//					
+//					moneyLendOfFinancialOwner.save();
 					
 					moneyLendToFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
+//					moneyLendToFinancialOwner.setLendType("Deposit");
 					moneyLendToFinancialOwner.setDate(newMoneyLendModel.getDate());
 					moneyLendToFinancialOwner.setAmount(newMoneyLendModel.getAmount());
 					moneyLendToFinancialOwner.setAddress(newMoneyLendModel.getAddress());

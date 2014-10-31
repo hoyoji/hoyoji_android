@@ -59,21 +59,21 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 	
 	@Column(name = "paybackedAmount")
 	private Double mPaybackedAmount;
-
-	// 导入的或新增借入时，替本地好友生成的
-	@Column(name = "moneyBorrowId")
-	private String mMoneyBorrowId;
+//
+//	// 导入的或新增借入时，替本地好友生成的
+//	@Column(name = "moneyBorrowId")
+//	private String mMoneyBorrowId;
 	
-	// 当预交会费有财务负责人时，会生成多一笔借出（从财务负责人到收款人）
-	// 此时，两笔指出将会用这个字段关连
-	@Column(name = "moneyDepositExpenseContainerId")
-	private String mMoneyDepositExpenseContainerId;
-
-	@Column(name = "moneyExpenseApportionId")
-	private String mMoneyExpenseApportionId;
-	
-	@Column(name = "moneyIncomeApportionId")
-	private String mMoneyIncomeApportionId;
+//	// 当预交会费有财务负责人时，会生成多一笔借出（从财务负责人到收款人）
+//	// 此时，两笔指出将会用这个字段关连
+//	@Column(name = "moneyDepositExpenseContainerId")
+//	private String mMoneyDepositExpenseContainerId;
+//
+//	@Column(name = "moneyExpenseApportionId")
+//	private String mMoneyExpenseApportionId;
+//	
+//	@Column(name = "moneyIncomeApportionId")
+//	private String mMoneyIncomeApportionId;
 
 	@Column(name = "remark")
 	private String mRemark;
@@ -234,6 +234,7 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 
 	public void setProject(Project mProject) {
 		this.mProjectId = mProject.getId();
+		this.mProjectCurrencyId = mProject.getCurrencyId();
 	}
 
 	public String getProjectId() {

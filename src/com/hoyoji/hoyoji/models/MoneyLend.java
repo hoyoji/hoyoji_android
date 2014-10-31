@@ -68,6 +68,9 @@ public class MoneyLend extends HyjModel{
 	// 此时，两笔指出将会用这个字段关连
 	@Column(name = "moneyDepositExpenseContainerId")
 	private String mMoneyDepositExpenseContainerId;
+	
+	@Column(name = "moneyDepositIncomeContainerId")
+	private String mMoneyDepositIncomeContainerId;
 
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
@@ -75,8 +78,8 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "moneyIncomeApportionId")
 	private String mMoneyIncomeApportionId;
 
-	@Column(name = "lendType")
-	private String mLendType;
+//	@Column(name = "lendType")
+//	private String mLendType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -125,7 +128,7 @@ public class MoneyLend extends HyjModel{
 		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mPaybackedAmount = 0.00;
-		mLendType = "Lend";
+//		mLendType = "Lend";
 	}
 
 	public String getId() {
@@ -362,17 +365,17 @@ public class MoneyLend extends HyjModel{
 		this.mPaybackedAmount = mPaybackedAmount;
 	}
 
-	public String getLendType() {
-		if(mLendType == null){
-			return "Lend";
-		}
-		return mLendType;
-	}
-	
-	public void setLendType(String mLendType) {
-		this.mLendType = mLendType;
-	}
-	
+//	public String getLendType() {
+//		if(mLendType == null){
+//			return "Lend";
+//		}
+//		return mLendType;
+//	}
+//	
+//	public void setLendType(String mLendType) {
+//		this.mLendType = mLendType;
+//	}
+//	
 	public String getRemark() {
 		return mRemark;
 	}
@@ -698,6 +701,17 @@ public class MoneyLend extends HyjModel{
 
 	public void setMoneyDepositExpenseContainerId(String id) {
 		this.mMoneyDepositExpenseContainerId = id;
+	}
+	public void setMoneyDepositIncomeContainerId(String id) {
+		this.mMoneyDepositIncomeContainerId = id;
+	}
+
+	public String getMoneyDepositExpenseContainerId() {
+		return this.mMoneyDepositExpenseContainerId;
+	}
+
+	public String getMoneyDepositIncomeContainerId() {
+		return this.mMoneyDepositIncomeContainerId;
 	}
 
 }
