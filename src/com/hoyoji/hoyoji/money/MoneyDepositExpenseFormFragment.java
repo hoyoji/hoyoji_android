@@ -410,13 +410,16 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyLend.getAmount());
 										moneyAccountEditor.save();
 
+										MoneyAccount debtAccount;
 										if(moneyLend.getFinancialOwnerUserId() != null){
-											MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyLend.getProject().getCurrencyId(), null, moneyLend.getFinancialOwnerUserId());
-											HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-											debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getProjectAmount());
-											debtAccountEditor.save();
+											debtAccount = MoneyAccount.getDebtAccount(moneyLend.getProject().getCurrencyId(), null, moneyLend.getFinancialOwnerUserId());
+										} else {
+											debtAccount = MoneyAccount.getDebtAccount(moneyLend.getProject().getCurrencyId(), moneyLend.getLocalFriendId(), moneyLend.getFriendUserId());
 										}
-										
+
+										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getProjectAmount());
+										debtAccountEditor.save();
 //										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
 //										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
 //									    selfProjectAuthorizationEditor.getModelCopy().setActualTotalLend(projectAuthorization.getActualTotalLend() - moneyLend.getProjectAmount());
