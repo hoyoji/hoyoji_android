@@ -1332,6 +1332,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										moneyBorrowOfFinancialOwner = new MoneyBorrow();
 									}
 								}
+								
 								if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
 										|| mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									moneyLend.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());

@@ -415,7 +415,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					newProjectShareAuthorization2.setFriendUserId(null);
 					newProjectShareAuthorization2.setLocalFriendId(toBeDeterminedFriend.getId());
 					newProjectShareAuthorization2.setSharePercentage(0.0);
-					newProjectShareAuthorization2.setSharePercentageType("Average");
+					newProjectShareAuthorization2.setSharePercentageType("Fix");
 					newProjectShareAuthorization2.setShareAllSubProjects(false);
 					newProjectShareAuthorization2.setOwnerUserId(HyjApplication
 							.getInstance().getCurrentUser().getId());

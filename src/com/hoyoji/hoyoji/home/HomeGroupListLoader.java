@@ -16,6 +16,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
+import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
@@ -65,6 +66,9 @@ public class HomeGroupListLoader extends
 //		context.getContentResolver().registerContentObserver(
 //				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
 //				mChangeObserver);
+		context.getContentResolver().registerContentObserver(
+				ContentProvider.createUri(MoneyDepositExpenseContainer.class, null), true,
+				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyDepositIncomeContainer.class, null), true,
 				mChangeObserver);
@@ -407,6 +411,22 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
+						"SELECT MAX(date) FROM MoneyDepositExpenseContainer WHERE date <= ?",
+						args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			if(cursor.getString(0) != null){
+				if(dateString == null
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
+				}
+			}
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
 						"SELECT MAX(date) FROM MoneyDepositIncomeContainer WHERE date <= ?",
 						args);
 		if (cursor != null) {
@@ -455,7 +475,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ?",
+						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
