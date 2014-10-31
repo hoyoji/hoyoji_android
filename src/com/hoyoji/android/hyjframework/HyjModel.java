@@ -14,6 +14,7 @@ import com.hoyoji.hoyoji.models.MessageBox;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
@@ -260,6 +261,11 @@ public abstract class HyjModel extends Model  implements Cloneable {
 			model = HyjModel.getModel(MoneyDepositIncomeApportion.class, id);
 			if(model == null){
 				model = new MoneyDepositIncomeApportion();
+			}
+		} else if (tableName.equalsIgnoreCase("MoneyDepositExpenseContainer")) {
+			model = HyjModel.getModel(MoneyDepositExpenseContainer.class, id);
+			if(model == null){
+				model = new MoneyDepositExpenseContainer();
 			}
 		} else if (tableName.equalsIgnoreCase("MoneyDepositReturnApportion")) {
 			model = HyjModel.getModel(MoneyDepositReturnApportion.class, id);
