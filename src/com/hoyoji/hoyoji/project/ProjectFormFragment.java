@@ -57,6 +57,7 @@ import com.hoyoji.android.hyjframework.view.HyjListField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.Currency;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
@@ -79,6 +80,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
 	private HyjTextField mTextFieldProjectRemarkName = null;
+	private TextView mTextViewFinancialOwner;
 	private HyjListField mListFieldParentProject = null;
 	private HyjSelectorField mSelectorFieldProjectCurrency = null;
 	private CheckBox mCheckBoxAutoApportion = null;
@@ -126,7 +128,14 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 //				}
 //			});
 //		}
-
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				((HyjActivity)getActivity()).displayDialog("财务负责人","财务负责人是");
+			}
+		});
+		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(
 				R.id.projectFormFragment_textField_projectName);
 		mTextFieldProjectName.setText(project.getName());
