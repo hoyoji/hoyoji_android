@@ -751,7 +751,13 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 //						moneyLendOfFinancialOwner.delete();
 //						moneyLendOfFinancialOwner = new MoneyLend();
 //					}
-					moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
+
+					if(oldMoneyLendModel.getFinancialOwnerUserId() != null
+							&& !oldMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
+					} else {
+						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), oldMoneyLendModel.getFriendUserId()).executeSingle();
+					}
 					if(moneyLendToFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 						moneyLendToFinancialOwner.delete();
 						moneyLendToFinancialOwner = new MoneyLend();
@@ -759,6 +765,10 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				}
 				if(newMoneyLendModel.getFinancialOwnerUserId() != null
 						&& !newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					moneyLendToFinancialOwner.setFriendUserId(newMoneyLendModel.getFinancialOwnerUserId());
+				} else {
+					moneyLendToFinancialOwner.setFriendUserId(newMoneyLendModel.getFriendUserId());
+				}
 //					moneyLendOfFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
 //					moneyLendOfFinancialOwner.setDate(newMoneyLendModel.getDate());
 //					moneyLendOfFinancialOwner.setAmount(newMoneyLendModel.getAmount());
@@ -792,7 +802,6 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					moneyLendToFinancialOwner.setExchangeRate(newMoneyLendModel.getExchangeRate());
 					moneyLendToFinancialOwner.setFinancialOwnerUserId(null);
 					moneyLendToFinancialOwner.setFriendAccountId(newMoneyLendModel.getFriendUserId());
-					moneyLendToFinancialOwner.setFriendUserId(newMoneyLendModel.getFinancialOwnerUserId());
 					moneyLendToFinancialOwner.setLocalFriendId(null);
 					moneyLendToFinancialOwner.setGeoLat(newMoneyLendModel.getGeoLat());
 					moneyLendToFinancialOwner.setGeoLon(newMoneyLendModel.getGeoLon());
@@ -807,7 +816,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 					moneyLendToFinancialOwner.setRemark(newMoneyLendModel.getRemark());
 					
 					moneyLendToFinancialOwner.save();
-				}
+
 				mMoneyDepositExpenseContainerEditor.save();
 				ActiveAndroid.setTransactionSuccessful();
 				if(getActivity().getCallingActivity() != null){
