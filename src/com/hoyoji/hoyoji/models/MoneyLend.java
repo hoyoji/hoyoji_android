@@ -63,6 +63,11 @@ public class MoneyLend extends HyjModel{
 	// 导入的或新增借入时，替本地好友生成的
 	@Column(name = "moneyBorrowId")
 	private String mMoneyBorrowId;
+	
+	// 当预交会费有财务负责人时，会生成多一笔借出（从财务负责人到收款人）
+	// 此时，两笔指出将会用这个字段关连
+	@Column(name = "depositExpenseId")
+	private String mDepositExpenseId;
 
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
@@ -689,6 +694,10 @@ public class MoneyLend extends HyjModel{
 			displayName = Friend.getFriendUserDisplayName(this.getOwnerFriendId(), null, this.getProjectId());
 		}
 		return displayName;
+	}
+
+	public void setDepositExpenseId(String id) {
+		this.mDepositExpenseId = id;
 	}
 
 }
