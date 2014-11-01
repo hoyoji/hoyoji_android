@@ -20,8 +20,7 @@
    <string name="projectFormFragment_checkBox_autoApportion">自动分摊</string>
    <string name="projectFormFragment_checkBox_hint_autoApportion">新增账务时，账务金额在成员间自动分摊</string>
    
-   <string name="projectFormFragment_textView_hint_financialOwner">账务负责人负责管理资金</string>
-   <string name="projectFormFragment_textView_particular_explain_financialOwner">账务负责人负责管理资金</string>
+   <string name="projectFormFragment_textView_hint_financialOwner">建议多人记账的团体活动时设置...</string>
    
    <string name="projectFormFragment_textView_financialOwner">财务负责人</string>
    <string name="projectFormFragment_editText_hint_financialOwner">无财务负责人</string>

@@ -59,6 +59,7 @@ import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
+import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -97,6 +98,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private TextView mTextViewApportionFieldTitle;
 	private DataSetObserver mApportionCountObserver;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
+	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
 	
@@ -313,6 +315,15 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
+		
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+			}
+		});
+		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyIncomeContainerFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override

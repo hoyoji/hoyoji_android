@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -48,6 +49,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -81,6 +83,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 	
 	private boolean hasEditPermission = true;
 	private HyjSelectorField mSelectorFieldFinancialOwner;
+	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
 	
@@ -289,6 +292,15 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
+		
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MoneyDepositExpenseFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+			}
+		});
+		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyDepositExpenseFormFragment_imageView_camera);	
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override

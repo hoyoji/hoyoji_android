@@ -304,6 +304,12 @@
                hyj:labelText="@string/projectFormFragment_textView_financialOwner" >
            </com.hoyoji.android.hyjframework.view.HyjSelectorField>
            
+           <TextView
+	        android:id="@+id/projectFormFragment_textView_hint_financialOwner"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/projectFormFragment_textView_hint_financialOwner" />
+           
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"
