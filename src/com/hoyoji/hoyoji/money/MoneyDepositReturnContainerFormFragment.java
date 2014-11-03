@@ -1018,16 +1018,16 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 								}
 							}
 						}
-						if(moneyReturn != null){
+						if(moneyReturn == null){
 							moneyReturn = new MoneyReturn();
 						}
-						if(moneyPayback != null){
+						if(moneyPayback == null){
 							moneyPayback = new MoneyPayback();
 						}
-						if(moneyReturnOfFinancialOwner != null){
+						if(moneyReturnOfFinancialOwner == null){
 							moneyReturnOfFinancialOwner = new MoneyReturn();
 						}
-						if(moneyPaybackOfFinancialOwner != null){
+						if(moneyPaybackOfFinancialOwner == null){
 							moneyPaybackOfFinancialOwner = new MoneyPayback();
 						}
 						

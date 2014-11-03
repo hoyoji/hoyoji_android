@@ -1014,16 +1014,16 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 								}
 							}
 						}
-						if(moneyBorrow != null){
+						if(moneyBorrow == null){
 							moneyBorrow = new MoneyBorrow();
 						}
-						if(moneyLend != null){
+						if(moneyLend == null){
 							moneyLend = new MoneyLend();
 						}
-						if(moneyBorrowOfFinancialOwner != null){
+						if(moneyBorrowOfFinancialOwner == null){
 							moneyBorrowOfFinancialOwner = new MoneyBorrow();
 						}
-						if(moneyLendOfFinancialOwner != null){
+						if(moneyLendOfFinancialOwner == null){
 							moneyLendOfFinancialOwner = new MoneyLend();
 						}
 						
