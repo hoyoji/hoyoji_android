@@ -316,7 +316,7 @@ public class MoneySearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"),
+							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -342,7 +342,7 @@ public class MoneySearchGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
+							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositReturn"),
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
