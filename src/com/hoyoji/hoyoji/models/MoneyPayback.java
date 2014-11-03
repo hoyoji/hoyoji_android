@@ -67,6 +67,9 @@ public class MoneyPayback extends HyjModel{
 
 	@Column(name = "moneyPaybackApportionId")
 	private String mMoneyPaybackApportionId;
+	
+	@Column(name = "moneyDepositReturnApportionId")
+	private String mMoneyDepositReturnApportionId;
 
 	@Column(name = "paybackType")
 	private String mPaybackType;
@@ -628,6 +631,11 @@ public class MoneyPayback extends HyjModel{
 //			}
 		}
 		return displayName;
+	}
+
+	public void setMoneyDepositReturnApportionId(String id) {
+		this.mMoneyDepositReturnApportionId = id;
+		
 	}
 
 //	public String getRemoteLocalFriendName() {

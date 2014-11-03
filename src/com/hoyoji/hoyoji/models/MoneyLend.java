@@ -69,8 +69,8 @@ public class MoneyLend extends HyjModel{
 	@Column(name = "moneyDepositExpenseContainerId")
 	private String mMoneyDepositExpenseContainerId;
 	
-	@Column(name = "moneyDepositIncomeContainerId")
-	private String mMoneyDepositIncomeContainerId;
+	@Column(name = "moneyDepositIncomeApportionId")
+	private String mMoneyDepositIncomeApportionId;
 
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
@@ -702,16 +702,16 @@ public class MoneyLend extends HyjModel{
 	public void setMoneyDepositExpenseContainerId(String id) {
 		this.mMoneyDepositExpenseContainerId = id;
 	}
-	public void setMoneyDepositIncomeContainerId(String id) {
-		this.mMoneyDepositIncomeContainerId = id;
+	public void setMoneyDepositIncomeApportionId(String id) {
+		this.mMoneyDepositIncomeApportionId = id;
 	}
 
 	public String getMoneyDepositExpenseContainerId() {
 		return this.mMoneyDepositExpenseContainerId;
 	}
 
-	public String getMoneyDepositIncomeContainerId() {
-		return this.mMoneyDepositIncomeContainerId;
+	public String getMoneyDepositIncomeApportionId() {
+		return this.mMoneyDepositIncomeApportionId;
 	}
 
 }

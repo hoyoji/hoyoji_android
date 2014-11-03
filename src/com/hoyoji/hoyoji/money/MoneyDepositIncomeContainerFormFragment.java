@@ -1061,7 +1061,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						moneyBorrow.save();
 						
 						if(apportionEditor.getModelCopy().getLocalFriendId() != null){
-							moneyLend.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModelCopy().getId());
+							moneyLend.setMoneyDepositIncomeApportionId(apportionEditor.getModelCopy().getId());
 //							moneyLend.setMoneyBorrowId(moneyBorrow.getId());
 							moneyLend.setAmount(apportionEditor.getModelCopy().getAmount0());
 							moneyLend.setDate(mMoneyDepositIncomeContainerEditor.getModelCopy().getDate());
@@ -1111,7 +1111,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							moneyBorrowOfFinancialOwner.setProject(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject());
 							moneyBorrowOfFinancialOwner.save();
 							
-							moneyLendOfFinancialOwner.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModelCopy().getId());
+							moneyLendOfFinancialOwner.setMoneyDepositIncomeApportionId(apportionEditor.getModelCopy().getId());
 //							moneyLendOfFinancialOwner.setMoneyBorrowId(moneyBorrow.getId());
 							moneyLendOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
 							moneyLendOfFinancialOwner.setDate(mMoneyDepositIncomeContainerEditor.getModelCopy().getDate());
@@ -1151,21 +1151,24 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						psaEditor.getModelCopy().setActualTotalLend(psa.getActualTotalLend() - apportion.getAmount0()*mMoneyDepositIncomeContainerEditor.getModel().getExchangeRate());
 						psaEditor.save();
 					
-						MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=?", apportion.getId()).executeSingle();
-						if(moneyBorrow != null){
+						List<MoneyBorrow> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=?", apportion.getId()).execute();
+						for(MoneyBorrow moneyBorrow : moneyBorrows){
 							MoneyAccount debtAccount = null;
-							debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getLocalFriendId(), moneyBorrow.getFriendUserId());
-							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
-							debtAccountEditor.save();
-							moneyBorrow.delete();
-							
-							if(moneyBorrow.getLocalFriendId() != null){
-								MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
-								if(moneyLend != null){
-									moneyLend.delete();
+							if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyBorrow.getOwnerUserId())){
+								if(mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId() != null){
+									debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), null, mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId());
+								} else {
+									debtAccount = MoneyAccount.getDebtAccount(moneyBorrow.getProject().getCurrencyId(), moneyBorrow.getLocalFriendId(), moneyBorrow.getFriendUserId());
 								}
+								HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+								debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + moneyBorrow.getProjectAmount());
+								debtAccountEditor.save();
 							}
+							moneyBorrow.delete();
+						}
+						List<MoneyLend> moneyLends = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=?", apportion.getId()).execute();
+						for(MoneyLend moneyLend : moneyLends){
+							moneyLend.delete();
 						}
 						apportion.delete();
 				}
@@ -1187,7 +1190,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				
 				MoneyBorrow moneyBorrow = null;
 				moneyBorrow = new MoneyBorrow();
-				moneyBorrow.setBorrowType("Deposit");
+//				moneyBorrow.setBorrowType("Deposit");
 				
 				//自己一定是项目成员，所以不用更新借贷账户
 //				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", apportion.getFriendUserId()).executeSingle();
@@ -1234,7 +1237,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					if(apportion.get_mId() == null){
 						moneyLend = new MoneyLend();
 //						moneyLend.setLendType("Deposit");
-						moneyLend.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModelCopy().getId());
+						moneyLend.setMoneyDepositIncomeApportionId(apportion.getId());
 					} else {
 						moneyLend = new Select().from(MoneyLend.class).where("moneyBorrowId=? AND ownerFriendId=?", moneyBorrow.getId(), moneyBorrow.getLocalFriendId()).executeSingle();
 					}
