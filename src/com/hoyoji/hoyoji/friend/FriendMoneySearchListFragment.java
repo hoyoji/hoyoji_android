@@ -51,7 +51,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
@@ -225,7 +225,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
@@ -1124,13 +1124,13 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
 					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
 					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
 				return true;
 			}  else if(object instanceof MoneyDepositExpenseContainer){
-				openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				return true;
 			}  else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;

@@ -55,7 +55,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
+public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -157,7 +157,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyDepositExpenseFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				MoneyDepositExpenseContainerFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -177,7 +177,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositExpenseFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyDepositExpenseContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -258,7 +258,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldRemark.getText());
 				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
-				MoneyDepositExpenseFormFragment.this
+				MoneyDepositExpenseContainerFormFragment.this
 						.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
@@ -297,7 +297,7 @@ public class MoneyDepositExpenseFormFragment extends HyjUserFormFragment {
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyDepositExpenseFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				MoneyDepositExpenseContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
 			}
 		});
 		

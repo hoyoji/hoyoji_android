@@ -75,7 +75,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
@@ -197,7 +197,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-							openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
 							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
@@ -360,7 +360,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 					R.string.moneyPaybackFormFragment_title_addnew, null);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
@@ -1338,13 +1338,13 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
 					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
 					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
 				return true;
 			}  else if(object instanceof MoneyDepositExpenseContainer){
-				openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				return true;
 			} else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;

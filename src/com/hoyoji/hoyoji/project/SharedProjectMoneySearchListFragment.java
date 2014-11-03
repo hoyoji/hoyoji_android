@@ -50,7 +50,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;

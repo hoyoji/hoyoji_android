@@ -209,7 +209,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 					R.string.moneyPaybackFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-			openActivityWithFragment(MoneyDepositExpenseFormFragment.class,
+			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class,
 					R.string.moneyDepositExpenseFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
@@ -1112,13 +1112,13 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
 					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
 					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
-					openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
 				return true;
 			}  else if(object instanceof MoneyDepositExpenseContainer){
-				openActivityWithFragment(MoneyDepositExpenseFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
 				return true;
 			}  else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;
