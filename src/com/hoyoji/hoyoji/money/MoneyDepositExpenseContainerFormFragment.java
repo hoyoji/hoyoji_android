@@ -401,15 +401,15 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 
 		Button buttonDelete = (Button) getView().findViewById(R.id.button_delete);
 		
-		final MoneyDepositExpenseContainer moneyLend = moneyDepositExpenseContainerEditor.getModelCopy();
+		final MoneyDepositExpenseContainer moneyDepositExpenseContainer = moneyDepositExpenseContainerEditor.getModelCopy();
 		
-		if (moneyLend.get_mId() == null) {
+		if (moneyDepositExpenseContainer.get_mId() == null) {
 			buttonDelete.setVisibility(View.GONE);
 		} else {
 			buttonDelete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(moneyLend.hasDeletePermission()){
+					if(moneyDepositExpenseContainer.hasDeletePermission()){
 					((HyjActivity)getActivity()).displayDialog(R.string.app_action_delete_list_item, R.string.app_confirm_delete, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
 							new DialogCallbackListener() {
 								@Override
@@ -417,20 +417,20 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 									try {
 										ActiveAndroid.beginTransaction();
 
-										MoneyAccount moneyAccount = moneyLend.getMoneyAccount();
+										MoneyAccount moneyAccount = moneyDepositExpenseContainer.getMoneyAccount();
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyLend.getAmount());
+										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyDepositExpenseContainer.getAmount());
 										moneyAccountEditor.save();
 
 										MoneyAccount debtAccount;
-										if(moneyLend.getFinancialOwnerUserId() != null){
-											debtAccount = MoneyAccount.getDebtAccount(moneyLend.getProject().getCurrencyId(), null, moneyLend.getFinancialOwnerUserId());
+										if(moneyDepositExpenseContainer.getFinancialOwnerUserId() != null){
+											debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), null, moneyDepositExpenseContainer.getFinancialOwnerUserId());
 										} else {
-											debtAccount = MoneyAccount.getDebtAccount(moneyLend.getProject().getCurrencyId(), moneyLend.getLocalFriendId(), moneyLend.getFriendUserId());
+											debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), moneyDepositExpenseContainer.getLocalFriendId(), moneyDepositExpenseContainer.getFriendUserId());
 										}
 
 										HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyLend.getProjectAmount());
+										debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyDepositExpenseContainer.getProjectAmount());
 										debtAccountEditor.save();
 //										ProjectShareAuthorization projectAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(moneyLend.getProjectId());
 //										HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = projectAuthorization.newModelEditor();
@@ -438,12 +438,12 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 //										
 //									    selfProjectAuthorizationEditor.save();
 										
-										List<MoneyLend> financialOwnerMoneyLends = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ?", moneyLend.getId()).execute();
+										List<MoneyLend> financialOwnerMoneyLends = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ?", moneyDepositExpenseContainer.getId()).execute();
 										for(MoneyLend m : financialOwnerMoneyLends)	{
 											m.delete();
 										}
 										
-										moneyLend.delete();
+										moneyDepositExpenseContainer.delete();
 										
 										HyjUtil.displayToast(R.string.app_delete_success);
 										ActiveAndroid.setTransactionSuccessful();

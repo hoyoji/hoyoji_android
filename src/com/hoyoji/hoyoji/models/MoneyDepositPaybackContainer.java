@@ -14,8 +14,8 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
-@Table(name = "MoneyPayback", id = BaseColumns._ID)
-public class MoneyPayback extends HyjModel{
+@Table(name = "MoneyDepositPaybackContainer", id = BaseColumns._ID)
+public class MoneyDepositPaybackContainer extends HyjModel{
 
 	@Column(name = "id", index = true, unique = true)
 	private String mUUID;
@@ -57,24 +57,21 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "interest")
 	private Double mInterest;
 	
-	@Column(name = "moneyLendId")
-	private String mMoneyLendId;
+//	@Column(name = "moneyLendId")
+//	private String mMoneyLendId;
+//
+//	// 由还款导入生成的
+//	@Column(name = "moneyReturnId")
+//	private String mMoneyReturnId;
+//
+//	@Column(name = "moneyPaybackApportionId")
+//	private String mMoneyPaybackApportionId;
+//	
+//	@Column(name = "moneyDepositReturnApportionId")
+//	private String mMoneyDepositReturnApportionId;
 
-	// 由还款导入生成的
-	@Column(name = "moneyReturnId")
-	private String mMoneyReturnId;
-
-	@Column(name = "moneyPaybackApportionId")
-	private String mMoneyPaybackApportionId;
-	
-	@Column(name = "moneyDepositReturnApportionId")
-	private String mMoneyDepositReturnApportionId;
-	
-	@Column(name = "moneyDepositReturnApportionId")
-	private String mMoneyDepositPaybackContainerId;
-
-	@Column(name = "paybackType")
-	private String mPaybackType;
+//	@Column(name = "paybackType")
+//	private String mPaybackType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -115,7 +112,7 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
 	
-	public MoneyPayback(){
+	public MoneyDepositPaybackContainer(){
 		super();
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		mUUID = UUID.randomUUID().toString();
@@ -123,7 +120,7 @@ public class MoneyPayback extends HyjModel{
 		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
-		mPaybackType = "Payback";
+//		mPaybackType = "Payback";
 	}
 
 	public String getId() {
@@ -352,25 +349,25 @@ public class MoneyPayback extends HyjModel{
 		this.mInterest = mInterest;
 	}
 
-	public String getMoneyLendId() {
-		return mMoneyLendId;
-	}
-
-	public void setMoneyLendId(String mMoneyLendId) {
-		this.mMoneyLendId = mMoneyLendId;
-	}
-	
-	public MoneyLend getMoneyLend(){
-		if(mMoneyLendId == null){
-			return null;
-		}
-		return (MoneyLend) getModel(MoneyLend.class, mMoneyLendId);
-	}
-	
-	public void setMoneyLend(MoneyLend mMoneyLend) {
-		this.mMoneyLendId = mMoneyLend.getId();
-	}
-	
+//	public String getMoneyLendId() {
+//		return mMoneyLendId;
+//	}
+//
+//	public void setMoneyLendId(String mMoneyLendId) {
+//		this.mMoneyLendId = mMoneyLendId;
+//	}
+//	
+//	public MoneyLend getMoneyLend(){
+//		if(mMoneyLendId == null){
+//			return null;
+//		}
+//		return (MoneyLend) getModel(MoneyLend.class, mMoneyLendId);
+//	}
+//	
+//	public void setMoneyLend(MoneyLend mMoneyLend) {
+//		this.mMoneyLendId = mMoneyLend.getId();
+//	}
+//	
 	public String getRemark() {
 		return mRemark;
 	}
@@ -584,9 +581,9 @@ public class MoneyPayback extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public void setMoneyReturnId(String moneyReturnId) {
-		this.mMoneyReturnId = moneyReturnId;
-	}
+//	public void setMoneyReturnId(String moneyReturnId) {
+//		this.mMoneyReturnId = moneyReturnId;
+//	}
 	
 	public String getCurrencyId1() {
 		return mCurrencyId;
@@ -596,13 +593,13 @@ public class MoneyPayback extends HyjModel{
 		this.mCurrencyId = mCurrencyId;
 	}
 
-	public void setPaybackType(String type) {
-		this.mPaybackType = type;
-	}
-	
-	public String getPaybackType() {
-		return this.mPaybackType;
-	}
+//	public void setPaybackType(String type) {
+//		this.mPaybackType = type;
+//	}
+//	
+//	public String getPaybackType() {
+//		return this.mPaybackType;
+//	}
 
 	public String getFriendDisplayName() {
 		String displayName = "";
@@ -635,10 +632,10 @@ public class MoneyPayback extends HyjModel{
 		return displayName;
 	}
 
-	public void setMoneyDepositReturnApportionId(String id) {
-		this.mMoneyDepositReturnApportionId = id;
-		
-	}
+//	public void setMoneyDepositReturnApportionId(String id) {
+//		this.mMoneyDepositReturnApportionId = id;
+//		
+//	}
 
 //	public String getRemoteLocalFriendName() {
 //		// TODO Auto-generated method stub
