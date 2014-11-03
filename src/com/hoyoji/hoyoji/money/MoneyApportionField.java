@@ -207,7 +207,7 @@ public class MoneyApportionField extends GridView {
 			}
 		}
 		if(mImageGridAdapter.getCount() > 0){
-			if(fixedTotal != totalAmount){
+			if(fixedTotal != totalAmount && firstNonDeletedItem != null){
 				double adjustedAmount = firstNonDeletedItem.getAmount() + (totalAmount - fixedTotal);
 				firstNonDeletedItem.setAmount(adjustedAmount);
 			}
