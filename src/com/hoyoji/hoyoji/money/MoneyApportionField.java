@@ -193,6 +193,7 @@ public class MoneyApportionField extends GridView {
 		
 		// 平均分摊 = （总金额-定额分摊-占股分摊） / 平均分摊人数
 		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
+		ApportionItem firstNonDeletedItem = null;
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if(api.getState() != ApportionItem.DELETED) {
@@ -200,12 +201,15 @@ public class MoneyApportionField extends GridView {
 					api.setAmount(averageAmount);
 					fixedTotal += api.getAmount();
 				}
+				if(firstNonDeletedItem == null){
+					firstNonDeletedItem = api;
+				}
 			}
 		}
 		if(mImageGridAdapter.getCount() > 0){
 			if(fixedTotal != totalAmount){
-				double adjustedAmount = mImageGridAdapter.getItem(0).getAmount() + (totalAmount - fixedTotal);
-				mImageGridAdapter.getItem(0).setAmount(adjustedAmount);
+				double adjustedAmount = firstNonDeletedItem.getAmount() + (totalAmount - fixedTotal);
+				firstNonDeletedItem.setAmount(adjustedAmount);
 			}
 		}
 		mImageGridAdapter.notifyDataSetChanged();
