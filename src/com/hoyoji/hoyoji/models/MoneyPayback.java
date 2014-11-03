@@ -70,7 +70,7 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "moneyDepositReturnApportionId")
 	private String mMoneyDepositReturnApportionId;
 	
-	@Column(name = "moneyDepositReturnApportionId")
+	@Column(name = "mMoneyDepositPaybackContainerId")
 	private String mMoneyDepositPaybackContainerId;
 
 	@Column(name = "paybackType")
@@ -637,6 +637,11 @@ public class MoneyPayback extends HyjModel{
 
 	public void setMoneyDepositReturnApportionId(String id) {
 		this.mMoneyDepositReturnApportionId = id;
+		
+	}
+
+	public void setMoneyDepositPaybackContainerId(String id) {
+		this.mMoneyDepositPaybackContainerId = id;
 		
 	}
 

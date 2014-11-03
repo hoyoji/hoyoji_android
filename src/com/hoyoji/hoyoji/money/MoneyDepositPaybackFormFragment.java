@@ -42,7 +42,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
-import com.hoyoji.hoyoji.models.MoneyLend;
+import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -697,7 +697,11 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldMoneyPaybackModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+							if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
+								MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+							} else {
+								MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+							}
 						}
 					}
 					
@@ -715,6 +719,83 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 //					}
 //					selfProjectAuthorizationEditor.save();
 					
+					// 如果有财务负责人，生成财务负责人到收款人的借出
+					MoneyPayback moneyPaybackToFinancialOwner = null;
+					if(newMoneyPaybackModel.get_mId() == null){
+//						MoneyPaybackOfFinancialOwner = new MoneyPayback();
+						moneyPaybackToFinancialOwner = new MoneyPayback();
+					} else {
+						String previousFinancialOwnerUserId = HyjUtil.ifNull(oldMoneyPaybackModel.getFinancialOwnerUserId() , "");
+						String currentFinancialOwnerUserId = HyjUtil.ifNull(newMoneyPaybackModel.getFinancialOwnerUserId() , "");
+//						MoneyPaybackOfFinancialOwner = new Select().from(MoneyPayback.class).where("depositExpenseId = ? AND ownerUserId = ?", oldMoneyPaybackModel.getId(), previousFinancialOwnerUserId).executeSingle();
+//						if(MoneyPaybackOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+//							MoneyPaybackOfFinancialOwner.delete();
+//							MoneyPaybackOfFinancialOwner = new MoneyPayback();
+//						}
+
+						if(oldMoneyPaybackModel.getFinancialOwnerUserId() != null
+								&& !oldMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), previousFinancialOwnerUserId).executeSingle();
+						} else {
+							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getFriendUserId()).executeSingle();
+						}
+						if(moneyPaybackToFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+							moneyPaybackToFinancialOwner.delete();
+							moneyPaybackToFinancialOwner = new MoneyPayback();
+						}
+					}
+					if(newMoneyPaybackModel.getFinancialOwnerUserId() != null
+							&& !newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						moneyPaybackToFinancialOwner.setFriendUserId(newMoneyPaybackModel.getFinancialOwnerUserId());
+					} else {
+						moneyPaybackToFinancialOwner.setFriendUserId(newMoneyPaybackModel.getFriendUserId());
+					}
+//						MoneyPaybackOfFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyPaybackModel.getId());
+//						MoneyPaybackOfFinancialOwner.setDate(newMoneyPaybackModel.getDate());
+//						MoneyPaybackOfFinancialOwner.setAmount(newMoneyPaybackModel.getAmount());
+//						MoneyPaybackOfFinancialOwner.setAddress(newMoneyPaybackModel.getAddress());
+//						MoneyPaybackOfFinancialOwner.setCurrencyId1(newMoneyPaybackModel.getCurrencyId());
+//						MoneyPaybackOfFinancialOwner.setExchangeRate(newMoneyPaybackModel.getExchangeRate());
+//						MoneyPaybackOfFinancialOwner.setFinancialOwnerUserId(null);
+//						MoneyPaybackOfFinancialOwner.setFriendAccountId(newMoneyPaybackModel.getFriendUserId());
+//						MoneyPaybackOfFinancialOwner.setFriendUserId(newMoneyPaybackModel.getFriendUserId());
+//						MoneyPaybackOfFinancialOwner.setGeoLat(newMoneyPaybackModel.getGeoLat());
+//						MoneyPaybackOfFinancialOwner.setGeoLon(newMoneyPaybackModel.getGeoLon());
+//						MoneyPaybackOfFinancialOwner.setLocalFriendId(newMoneyPaybackModel.getLocalFriendId());
+//						MoneyPaybackOfFinancialOwner.setLocation(newMoneyPaybackModel.getLocation());
+//						MoneyPaybackOfFinancialOwner.setMoneyAccountId(newMoneyPaybackModel.getMoneyAccountId(), newMoneyPaybackModel.getMoneyAccount().getCurrencyId());
+//						MoneyPaybackOfFinancialOwner.setOwnerUserId(newMoneyPaybackModel.getFinancialOwnerUserId());
+//						MoneyPaybackOfFinancialOwner.setOwnerFriendId(null);
+//						MoneyPaybackOfFinancialOwner.setPaybackDate(newMoneyPaybackModel.getPaybackDate());
+//						MoneyPaybackOfFinancialOwner.setPaybackedAmount(newMoneyPaybackModel.getPaybackedAmount());
+//						MoneyPaybackOfFinancialOwner.setProjectId(newMoneyPaybackModel.getProjectId(), newMoneyPaybackModel.getProjectCurrencyId());
+//						MoneyPaybackOfFinancialOwner.setPictureId(newMoneyPaybackModel.getPictureId());
+//						MoneyPaybackOfFinancialOwner.setRemark(newMoneyPaybackModel.getRemark());
+//						
+//						MoneyPaybackOfFinancialOwner.save();
+						
+						moneyPaybackToFinancialOwner.setMoneyDepositPaybackContainerId(newMoneyPaybackModel.getId());
+//						moneyPaybackToFinancialOwner.setLendType("Deposit");
+						moneyPaybackToFinancialOwner.setDate(newMoneyPaybackModel.getDate());
+						moneyPaybackToFinancialOwner.setAmount(newMoneyPaybackModel.getAmount());
+						moneyPaybackToFinancialOwner.setAddress(newMoneyPaybackModel.getAddress());
+						moneyPaybackToFinancialOwner.setCurrencyId1(newMoneyPaybackModel.getCurrencyId1());
+						moneyPaybackToFinancialOwner.setExchangeRate(newMoneyPaybackModel.getExchangeRate());
+						moneyPaybackToFinancialOwner.setFinancialOwnerUserId(null);
+						moneyPaybackToFinancialOwner.setFriendAccountId(newMoneyPaybackModel.getFriendUserId());
+						moneyPaybackToFinancialOwner.setLocalFriendId(null);
+						moneyPaybackToFinancialOwner.setGeoLat(newMoneyPaybackModel.getGeoLat());
+						moneyPaybackToFinancialOwner.setGeoLon(newMoneyPaybackModel.getGeoLon());
+						moneyPaybackToFinancialOwner.setLocation(newMoneyPaybackModel.getLocation());
+						moneyPaybackToFinancialOwner.setMoneyAccountId(newMoneyPaybackModel.getMoneyAccountId(), newMoneyPaybackModel.getMoneyAccount().getCurrencyId());
+//						moneyPaybackToFinancialOwner.setOwnerUserId(newMoneyPaybackModel.getFinancialOwnerUserId());
+//						moneyPaybackToFinancialOwner.setOwnerFriendId(null);
+						moneyPaybackToFinancialOwner.setProjectId(newMoneyPaybackModel.getProjectId(), newMoneyPaybackModel.getProject().getCurrencyId());
+						moneyPaybackToFinancialOwner.setPictureId(newMoneyPaybackModel.getPictureId());
+						moneyPaybackToFinancialOwner.setRemark(newMoneyPaybackModel.getRemark());
+						
+						moneyPaybackToFinancialOwner.save();
+
 					
 					
 				mMoneyDepositPaybackContainerEditor.save();

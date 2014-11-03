@@ -989,10 +989,16 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						MoneyLend moneyLendOfFinancialOwner = null;
 						if(apportion.get_mId() != null){
 							moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-							moneyLend = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=? AND ownerFriendId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
-							moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-							moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-							
+							if(apportionEditor.getModel().getLocalFriendId() != null){
+								moneyLend = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=? AND ownerFriendId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
+							} else {
+								moneyLend = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
+							}
+							if(mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId() != null &&
+									!mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+								moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositIncomeApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+							}
 							String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositIncomeContainerEditor.getModel().getFinancialOwnerUserId() , "");
 							String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
 							if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
