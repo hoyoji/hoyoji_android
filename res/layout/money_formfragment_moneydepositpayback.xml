@@ -226,7 +226,8 @@
 	        android:id="@+id/projectFormFragment_textView_hint_financialOwner"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/projectFormFragment_textView_hint_financialOwner" />
+	        android:text="@string/projectFormFragment_textView_hint_financialOwner"
+	        android:enabled="false" />
            
         <View
             android:id="@id/field_separator"
