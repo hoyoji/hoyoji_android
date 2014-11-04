@@ -115,8 +115,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						moneyAccount.getCurrencyId());
 			}
 			if (intent.getStringExtra("counterpartId") != null) {
-				moneyBorrow.setMoneyLendId(intent
-						.getStringExtra("counterpartId"));
+//				moneyBorrow.setMoneyLendId(intent
+//						.getStringExtra("counterpartId"));
 			}
 		}
 		mMoneyBorrowEditor = moneyBorrow.newModelEditor();
@@ -1078,7 +1078,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 							oldSelfProjectAuthorizationEditor.save();
 						}
 
-						moneyLend.setMoneyBorrowId(moneyBorrowModel.getId());
+//						moneyLend.setMoneyBorrowId(moneyBorrowModel.getId());
 						moneyLend.setAmount(moneyBorrowModel.getAmount0());
 						moneyLend.setDate(moneyBorrowModel.getDate());
 						moneyLend.setRemark(moneyBorrowModel.getRemark());

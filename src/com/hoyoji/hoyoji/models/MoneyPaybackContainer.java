@@ -51,11 +51,11 @@ public class MoneyPaybackContainer extends HyjModel{
 	@Column(name = "interest")
 	private Double mInterest;
 	
-	@Column(name = "moneyLendId")
-	private String mMoneyLendId;
-
-	@Column(name = "moneyReturnId")
-	private String mMoneyReturnId;
+//	@Column(name = "moneyLendId")
+//	private String mMoneyLendId;
+//
+//	@Column(name = "moneyReturnId")
+//	private String mMoneyReturnId;
 //
 //	@Column(name = "moneyPaybackApportionId")
 //	private String mMoneyPaybackApportionId;
@@ -322,24 +322,24 @@ public class MoneyPaybackContainer extends HyjModel{
 		this.mInterest = mInterest;
 	}
 
-	public String getMoneyLendId() {
-		return mMoneyLendId;
-	}
-
-	public void setMoneyLendId(String mMoneyLendId) {
-		this.mMoneyLendId = mMoneyLendId;
-	}
-	
-	public MoneyLend getMoneyLend(){
-		if(mMoneyLendId == null){
-			return null;
-		}
-		return (MoneyLend) getModel(MoneyLend.class, mMoneyLendId);
-	}
-	
-	public void setMoneyLend(MoneyLend mMoneyLend) {
-		this.mMoneyLendId = mMoneyLend.getId();
-	}
+//	public String getMoneyLendId() {
+//		return mMoneyLendId;
+//	}
+//
+//	public void setMoneyLendId(String mMoneyLendId) {
+//		this.mMoneyLendId = mMoneyLendId;
+//	}
+//	
+//	public MoneyLend getMoneyLend(){
+//		if(mMoneyLendId == null){
+//			return null;
+//		}
+//		return (MoneyLend) getModel(MoneyLend.class, mMoneyLendId);
+//	}
+//	
+//	public void setMoneyLend(MoneyLend mMoneyLend) {
+//		this.mMoneyLendId = mMoneyLend.getId();
+//	}
 	
 	public String getRemark() {
 		return mRemark;
@@ -541,7 +541,7 @@ public class MoneyPaybackContainer extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public void setMoneyReturnId(String moneyReturnId) {
-		this.mMoneyReturnId = moneyReturnId;
-	}
+//	public void setMoneyReturnId(String moneyReturnId) {
+//		this.mMoneyReturnId = moneyReturnId;
+//	}
 }

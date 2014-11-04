@@ -1191,7 +1191,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								Intent intent = getActivity().getIntent();
 								String counterpartId = intent.getStringExtra("counterpartId");
 								if(counterpartId != null) {
-									moneyIncome.setMoneyExpenseId(counterpartId);
+//									moneyIncome.setMoneyExpenseId(counterpartId);
 								}
 
 								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
@@ -1497,7 +1497,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								Intent intent = getActivity().getIntent();
 								String counterpartId = intent.getStringExtra("counterpartId");
 								if(counterpartId != null){
-									moneyIncome.setMoneyExpenseId(counterpartId);
+//									moneyIncome.setMoneyExpenseId(counterpartId);
 								}
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
@@ -1615,7 +1615,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				Intent intent = getActivity().getIntent();
 				String counterpartId = intent.getStringExtra("counterpartId");
 				if(counterpartId != null){
-					moneyIncome.setMoneyExpenseId(counterpartId);
+//					moneyIncome.setMoneyExpenseId(counterpartId);
 				}
 				moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 				moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());

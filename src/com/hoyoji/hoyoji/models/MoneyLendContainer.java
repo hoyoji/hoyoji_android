@@ -53,8 +53,8 @@ public class MoneyLendContainer extends HyjModel{
 	@Column(name = "paybackedAmount")
 	private Double mPaybackedAmount;
 
-	@Column(name = "moneyBorrowId")
-	private String mMoneyBorrowId;
+//	@Column(name = "moneyBorrowId")
+//	private String mMoneyBorrowId;
 //
 //	@Column(name = "moneyExpenseApportionId")
 //	private String mMoneyExpenseApportionId;
@@ -536,9 +536,9 @@ public class MoneyLendContainer extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public void setMoneyBorrowId(String moneyBorrowId) {
-		this.mMoneyBorrowId = moneyBorrowId;
-	}
+//	public void setMoneyBorrowId(String moneyBorrowId) {
+//		this.mMoneyBorrowId = moneyBorrowId;
+//	}
 
 //	public void setMoneyExpenseApportionId(String id) {
 //		this.mMoneyExpenseApportionId = id;

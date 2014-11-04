@@ -64,8 +64,8 @@ public class MoneyExpense extends HyjModel{
 	private String mProjectCurrencyId;
 
 	// 如果有，说明该支出是从该收入导入生成的
-	@Column(name = "moneyIncomeId")
-	private String mMoneyIncomeId;
+//	@Column(name = "moneyIncomeId")
+//	private String mMoneyIncomeId;
 	
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
@@ -585,13 +585,13 @@ public class MoneyExpense extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public String getMoneyIncomeId(){
-		return mMoneyIncomeId;
-	}
-	
-	public void setMoneyIncomeId(String moneyIncomeId) {
-		this.mMoneyIncomeId = moneyIncomeId;
-	}
+//	public String getMoneyIncomeId(){
+//		return mMoneyIncomeId;
+//	}
+//	
+//	public void setMoneyIncomeId(String moneyIncomeId) {
+//		this.mMoneyIncomeId = moneyIncomeId;
+//	}
 
 	public void setMoneyExpenseApportionId(String id) {
 		this.mMoneyExpenseApportionId = id;

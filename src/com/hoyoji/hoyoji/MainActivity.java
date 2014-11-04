@@ -92,10 +92,10 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
 public class MainActivity extends HyjUserActivity {
-	private String[] mDrawerListerTitles = null;
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
+//	private String[] mDrawerListerTitles = null;
+//	private DrawerLayout mDrawerLayout;
+//	private ListView mDrawerList;
+//	private ActionBarDrawerToggle mDrawerToggle;
 	MenuItem mSyncButton = null;
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -167,41 +167,44 @@ public class MainActivity extends HyjUserActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-		// set a custom shadow that overlays the main content when the drawer
-		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
-
-		// Set the adapter for the list view
-		mDrawerListerTitles = getResources().getStringArray(
-				R.array.mainActivity_drawer_list_titles);
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.main_drawer_list_item, mDrawerListerTitles));
-		// Set the list's click listener
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.mainActivity_drawer_open,
-				R.string.mainActivity_drawer_close) {
-
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View view) {
-				supportInvalidateOptionsMenu(); // creates call to
-												// onPrepareOptionsMenu()
-			}
-
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-				supportInvalidateOptionsMenu(); // creates call to
-												// onPrepareOptionsMenu()
-			}
-		};
-
-		// Set the drawer toggle as the DrawerListener
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        
+//		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+//
+//		// set a custom shadow that overlays the main content when the drawer
+//		// opens
+//		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+//				GravityCompat.START);
+//
+//		// Set the adapter for the list view
+//		mDrawerListerTitles = getResources().getStringArray(
+//				R.array.mainActivity_drawer_list_titles);
+//		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+//				R.layout.main_drawer_list_item, mDrawerListerTitles));
+//		// Set the list's click listener
+//		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//
+//		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+//				R.drawable.ic_drawer, R.string.mainActivity_drawer_open,
+//				R.string.mainActivity_drawer_close) {
+//
+//			/** Called when a drawer has settled in a completely closed state. */
+//			public void onDrawerClosed(View view) {
+//				supportInvalidateOptionsMenu(); // creates call to
+//												// onPrepareOptionsMenu()
+//			}
+//
+//			/** Called when a drawer has settled in a completely open state. */
+//			public void onDrawerOpened(View drawerView) {
+//				supportInvalidateOptionsMenu(); // creates call to
+//												// onPrepareOptionsMenu()
+//			}
+//		};
+//
+//		// Set the drawer toggle as the DrawerListener
+//		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		initView();
@@ -396,99 +399,99 @@ public class MainActivity extends HyjUserActivity {
 
 	/* Called whenever we call invalidateOptionsMenu() */
 	// @Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
-		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		// If the nav drawer is open, hide action items related to the content
+//		// view
+//		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+//		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+//
+////		MenuItem refreshItem = menu.findItem(R.id.mainActivity_action_sync);
+////		if (refreshItem != null) {
+////			final View view = MenuItemCompat.getActionView(refreshItem);
+////			if(HyjApplication.getInstance().getIsSyncing()){
+//////				setRefreshActionButtonState(true, updateUploadCount(view, null));
+////			} else {
+////				updateUploadCount(view, null);
+////			}
+////			view.setOnClickListener(new OnClickListener() {
+////				@Override
+////				public void onClick(View v) {
+////					if(!HyjUtil.hasNetworkConnection()){
+////						HyjUtil.displayToast(R.string.server_connection_disconnected);
+////						return;
+////					}
+////					if (!HyjApplication.getInstance().getIsSyncing()) {
+////						uploadData(true);
+////					}
+////				}
+////			});
+////		}
+//
+//		return super.onPrepareOptionsMenu(menu);
+//	}
 
-//		MenuItem refreshItem = menu.findItem(R.id.mainActivity_action_sync);
-//		if (refreshItem != null) {
-//			final View view = MenuItemCompat.getActionView(refreshItem);
-//			if(HyjApplication.getInstance().getIsSyncing()){
-////				setRefreshActionButtonState(true, updateUploadCount(view, null));
-//			} else {
-//				updateUploadCount(view, null);
-//			}
-//			view.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					if(!HyjUtil.hasNetworkConnection()){
-//						HyjUtil.displayToast(R.string.server_connection_disconnected);
-//						return;
-//					}
-//					if (!HyjApplication.getInstance().getIsSyncing()) {
-//						uploadData(true);
-//					}
-//				}
-//			});
+//	private class DrawerItemClickListener implements
+//			ListView.OnItemClickListener {
+//		@Override
+//		public void onItemClick(AdapterView parent, View view, int position,
+//				long id) {
+//			selectItem(position);
 //		}
+//	}
 
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
-				long id) {
-			selectItem(position);
-		}
-	}
-
-	private void selectItem(int position) {
-		// Highlight the selected item, update the title, and close the drawer
-		mDrawerList.setItemChecked(position, true);
-		switch (position) {
-		 case 0 :
-				 openActivityWithFragment(MoneySearchListFragment.class,
-				 R.string.moneySearchListFragment_title, null);
-				 break;
-		 case 1 :
-				 openActivityWithFragment(MoneyReportFragment.class,
-				 R.string.moneyReportFragment_title, null);
-				 break;
+//	private void selectItem(int position) {
+//		// Highlight the selected item, update the title, and close the drawer
+//		mDrawerList.setItemChecked(position, true);
+//		switch (position) {
+//		 case 0 :
+//				 openActivityWithFragment(MoneySearchListFragment.class,
+//				 R.string.moneySearchListFragment_title, null);
+//				 break;
+//		 case 1 :
+//				 openActivityWithFragment(MoneyReportFragment.class,
+//				 R.string.moneyReportFragment_title, null);
+//				 break;
+////		case 2:
+////			openActivityWithFragment(MessageListFragment.class,
+////					R.string.friendListFragment_title_manage_message, null);
+////			break;
+//		
 //		case 2:
-//			openActivityWithFragment(MessageListFragment.class,
-//					R.string.friendListFragment_title_manage_message, null);
+//			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
+//					R.string.currency_exchang_eviewpager_listFragment_title, null);
 //			break;
-		
-		case 2:
-			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
-					R.string.currency_exchang_eviewpager_listFragment_title, null);
-			break;
-		
+//		
+////		case 3:
+////			openActivityWithFragment(ExchangeListFragment.class,
+////					R.string.exchangeListFragment_title_manage_exchange, null);
+////			break;
+////		case 4:
+////			openActivityWithFragment(CurrencyListFragment.class,
+////					R.string.currencyListFragment_title_manage_currency, null);
+////			break;
+////		case 4:
+////			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+////					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
+////			break;
+////		case 5:
+////			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
+////					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
+////			break;
 //		case 3:
-//			openActivityWithFragment(ExchangeListFragment.class,
-//					R.string.exchangeListFragment_title_manage_exchange, null);
+//			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
+//					R.string.expense_income_viewpager_listFragment_title, null);
 //			break;
 //		case 4:
-//			openActivityWithFragment(CurrencyListFragment.class,
-//					R.string.currencyListFragment_title_manage_currency, null);
+//			openActivityWithFragment(SystemSettingFormFragment.class,
+//					R.string.systemSettingFormFragment_title, null);
 //			break;
-//		case 4:
-//			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
-//			break;
-//		case 5:
-//			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
-//			break;
-		case 3:
-			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
-					R.string.expense_income_viewpager_listFragment_title, null);
-			break;
-		case 4:
-			openActivityWithFragment(SystemSettingFormFragment.class,
-					R.string.systemSettingFormFragment_title, null);
-			break;
-//		case 5:
-//			HyjApplication.getInstance().switchUser();
-//			break;
-		}
-
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
+////		case 5:
+////			HyjApplication.getInstance().switchUser();
+////			break;
+//		}
+//
+//		mDrawerLayout.closeDrawer(mDrawerList);
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -520,40 +523,40 @@ public class MainActivity extends HyjUserActivity {
 		return true;
 	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
+//	@Override
+//	protected void onPostCreate(Bundle savedInstanceState) {
+//		super.onPostCreate(savedInstanceState);
+//		// Sync the toggle state after onRestoreInstanceState has occurred.
+//		mDrawerToggle.syncState();
+//	}
+//
+//	@Override
+//	public void onConfigurationChanged(Configuration newConfig) {
+//		super.onConfigurationChanged(newConfig);
+//		mDrawerToggle.onConfigurationChanged(newConfig);
+//	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Pass the event to ActionBarDrawerToggle, if it returns
-		// true, then it has handled the app icon touch event
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-
-//		 if(item.getItemId() == R.id.mainActivity_action_sync){
-//			 	if(!HyjUtil.hasNetworkConnection()){
-//					HyjUtil.displayToast(R.string.server_connection_disconnected);
-//					return true;
-//				}
-//				if (!HyjApplication.getInstance().getIsSyncing()) {
-//					uploadData(true);
-//					return true;
-//				}
-//		 }
-		
-		return super.onOptionsItemSelected(item);
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		// Pass the event to ActionBarDrawerToggle, if it returns
+//		// true, then it has handled the app icon touch event
+//		if (mDrawerToggle.onOptionsItemSelected(item)) {
+//			return true;
+//		}
+//
+////		 if(item.getItemId() == R.id.mainActivity_action_sync){
+////			 	if(!HyjUtil.hasNetworkConnection()){
+////					HyjUtil.displayToast(R.string.server_connection_disconnected);
+////					return true;
+////				}
+////				if (!HyjApplication.getInstance().getIsSyncing()) {
+////					uploadData(true);
+////					return true;
+////				}
+////		 }
+//		
+//		return super.onOptionsItemSelected(item);
+//	}
 
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

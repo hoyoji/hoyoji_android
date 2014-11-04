@@ -103,7 +103,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				moneyPayback.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
+//				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
 			}
 		}
 		mMoneyPaybackEditor = moneyPayback.newModelEditor();
@@ -846,7 +846,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 									oldSelfProjectAuthorizationEditor.save();
 								}
 
-								moneyReturn.setMoneyPaybackId(moneyPaybackModel.getId());
+//								moneyReturn.setMoneyPaybackId(moneyPaybackModel.getId());
 								moneyReturn.setAmount(moneyPaybackModel.getAmount0());
 								moneyReturn.setDate(moneyPaybackModel.getDate());
 								moneyReturn.setRemark(moneyPaybackModel.getRemark());

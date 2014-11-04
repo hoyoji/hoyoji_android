@@ -87,8 +87,13 @@ import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
+import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerListFragment;
+import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerListFragment;
+import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
+import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
 public class HomeListFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -331,52 +336,103 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //			return true;
 //		}
 		// Handle your other action bar items...
-		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
-			openActivityWithFragment(MoneyExpenseContainerFormFragment.class,
-					R.string.moneyExpenseFormFragment_title_addnew, null);
+		
+		switch (item.getItemId()) {
+		 case R.id.homeListFragment_action_transactions :
+				 openActivityWithFragment(MoneySearchListFragment.class,
+				 R.string.moneySearchListFragment_title, null);
+				return true;
+		 case R.id.homeListFragment_action_report :
+				 openActivityWithFragment(MoneyReportFragment.class,
+				 R.string.moneyReportFragment_title, null);
+					return true;
+//		case 2:
+//			openActivityWithFragment(MessageListFragment.class,
+//					R.string.friendListFragment_title_manage_message, null);
+//			break;
+		
+		case R.id.homeListFragment_action_currency:
+			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
+					R.string.currency_exchang_eviewpager_listFragment_title, null);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_income) {
-			openActivityWithFragment(MoneyIncomeContainerFormFragment.class,
-					R.string.moneyIncomeFormFragment_title_addnew, null);
+		
+//		case 3:
+//			openActivityWithFragment(ExchangeListFragment.class,
+//					R.string.exchangeListFragment_title_manage_exchange, null);
+//			break;
+//		case 4:
+//			openActivityWithFragment(CurrencyListFragment.class,
+//					R.string.currencyListFragment_title_manage_currency, null);
+//			break;
+//		case 4:
+//			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+//					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
+//			break;
+//		case 5:
+//			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
+//					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
+//			break;
+		case R.id.homeListFragment_action_category:
+			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
+					R.string.expense_income_viewpager_listFragment_title, null);
 			return true;
-		} 
-		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
-			openActivityWithFragment(MoneyTransferFormFragment.class,
-					R.string.moneyTransferFormFragment_title_addnew, null);
+		case R.id.homeListFragment_action_setting:
+			openActivityWithFragment(SystemSettingFormFragment.class,
+					R.string.systemSettingFormFragment_title, null);
 			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
-			openActivityWithFragment(MoneyBorrowFormFragment.class,
-					R.string.moneyBorrowFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
-			openActivityWithFragment(MoneyLendFormFragment.class,
-					R.string.moneyLendFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
-			openActivityWithFragment(MoneyReturnFormFragment.class,
-					R.string.moneyReturnFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
-			openActivityWithFragment(MoneyPaybackFormFragment.class,
-					R.string.moneyPaybackFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
-			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class,
-					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
-			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
-					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
-			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
-					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
-			return true;
-		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
-			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
-					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
-			return true;
+//		case 5:
+//			HyjApplication.getInstance().switchUser();
+//			break;
 		}
+		
+		
+		
+//		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
+//			openActivityWithFragment(MoneyExpenseContainerFormFragment.class,
+//					R.string.moneyExpenseFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_income) {
+//			openActivityWithFragment(MoneyIncomeContainerFormFragment.class,
+//					R.string.moneyIncomeFormFragment_title_addnew, null);
+//			return true;
+//		} 
+//		else if (item.getItemId() == R.id.mainActivity_action_money_addnew_transfer) {
+//			openActivityWithFragment(MoneyTransferFormFragment.class,
+//					R.string.moneyTransferFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_borrow) {
+//			openActivityWithFragment(MoneyBorrowFormFragment.class,
+//					R.string.moneyBorrowFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_lend) {
+//			openActivityWithFragment(MoneyLendFormFragment.class,
+//					R.string.moneyLendFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_return) {
+//			openActivityWithFragment(MoneyReturnFormFragment.class,
+//					R.string.moneyReturnFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_payback) {
+//			openActivityWithFragment(MoneyPaybackFormFragment.class,
+//					R.string.moneyPaybackFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositExpense) {
+//			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class,
+//					R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositIncome) {
+//			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class,
+//					R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositReturn) {
+//			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class,
+//					R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+//			return true;
+//		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
+//			openActivityWithFragment(MoneyDepositPaybackFormFragment.class,
+//					R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 	

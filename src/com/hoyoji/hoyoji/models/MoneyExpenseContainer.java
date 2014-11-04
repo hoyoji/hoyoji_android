@@ -56,8 +56,8 @@ public class MoneyExpenseContainer extends HyjModel{
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
-	@Column(name = "moneyIncomeId")
-	private String mMoneyIncomeId;
+//	@Column(name = "moneyIncomeId")
+//	private String mMoneyIncomeId;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -519,12 +519,12 @@ public class MoneyExpenseContainer extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public String getMoneyIncomeId(){
-		return mMoneyIncomeId;
-	}
-	
-	public void setMoneyIncomeId(String moneyIncomeId) {
-		this.mMoneyIncomeId = moneyIncomeId;
-	}
+//	public String getMoneyIncomeId(){
+//		return mMoneyIncomeId;
+//	}
+//	
+//	public void setMoneyIncomeId(String moneyIncomeId) {
+//		this.mMoneyIncomeId = moneyIncomeId;
+//	}
 
 }

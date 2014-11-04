@@ -51,12 +51,12 @@ public class MoneyReturnContainer extends HyjModel{
 	@Column(name = "interest")
 	private Double mInterest;
 	
-	@Column(name = "moneyBorrowId")
-	private String mMoneyBorrowId;
-
-	// 如果有，说明该还款是从该收款导入生成的
-	@Column(name = "moneyPaybackId")
-	private String mMoneyPaybackId;
+//	@Column(name = "moneyBorrowId")
+//	private String mMoneyBorrowId;
+//
+//	// 如果有，说明该还款是从该收款导入生成的
+//	@Column(name = "moneyPaybackId")
+//	private String mMoneyPaybackId;
 
 //	@Column(name = "moneyReturnApportionId")
 //	private String mMoneyReturnApportionId;
@@ -322,24 +322,24 @@ public class MoneyReturnContainer extends HyjModel{
 		this.mInterest = mInterest;
 	}
 
-	public String getMoneyBorrowId() {
-		return mMoneyBorrowId;
-	}
-
-	public void setMoneyBorrowId(String mMoneyBorrowId) {
-		this.mMoneyBorrowId = mMoneyBorrowId;
-	}
-	
-	public MoneyBorrow getMoneyBorrow(){
-		if(mMoneyBorrowId == null){
-			return null;
-		}
-		return (MoneyBorrow) getModel(MoneyBorrow.class, mMoneyBorrowId);
-	}
-	
-	public void setMoneyBorrow(MoneyBorrow mMoneyBorrow) {
-		this.mMoneyBorrowId = mMoneyBorrow.getId();
-	}
+//	public String getMoneyBorrowId() {
+//		return mMoneyBorrowId;
+//	}
+//
+//	public void setMoneyBorrowId(String mMoneyBorrowId) {
+//		this.mMoneyBorrowId = mMoneyBorrowId;
+//	}
+//	
+//	public MoneyBorrow getMoneyBorrow(){
+//		if(mMoneyBorrowId == null){
+//			return null;
+//		}
+//		return (MoneyBorrow) getModel(MoneyBorrow.class, mMoneyBorrowId);
+//	}
+//	
+//	public void setMoneyBorrow(MoneyBorrow mMoneyBorrow) {
+//		this.mMoneyBorrowId = mMoneyBorrow.getId();
+//	}
 	
 	public String getRemark() {
 		return mRemark;
@@ -541,7 +541,7 @@ public class MoneyReturnContainer extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public void setMoneyPaybackId(String moneyPaybackId) {
-		this.mMoneyPaybackId = moneyPaybackId;
-	}
+//	public void setMoneyPaybackId(String moneyPaybackId) {
+//		this.mMoneyPaybackId = moneyPaybackId;
+//	}
 }

@@ -33,7 +33,7 @@
         </menu>
 	</item>
     -->
-    <item
+    <!-- <item
         android:id="@+id/mainActivity_action_money_addnew"
         android:icon="@drawable/ic_action_new"
         android:title="@string/mainActivity_action_money_addnew"
@@ -98,6 +98,34 @@
                 </menu>
             </item>
         </menu>
-    </item>
+    </item> -->
 
+    <item
+        android:id="@+id/homeListFragment_action_menu"
+        android:title="@string/homeListFragment_action_more"
+        android:icon="@drawable/ic_action_overflow"
+        hoyoji:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/homeListFragment_action_transactions"
+                android:title="查找流水"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_report"
+                android:title="账务报表"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_currency"
+                android:title="币种汇率"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_category"
+                android:title="收支分类"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_setting"
+                android:title="设置"
+                hoyoji:showAsAction="never"/>
+        </menu>
+	</item>
 </menu>
