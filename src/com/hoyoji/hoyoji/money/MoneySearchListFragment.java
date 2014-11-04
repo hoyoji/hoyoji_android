@@ -38,6 +38,7 @@ import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
@@ -322,6 +323,8 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return setMoneyLendItemValue(view, object, name);
 		} else if(object instanceof MoneyReturn){
 			return setMoneyReturnItemValue(view, object, name);
+		} else if(object instanceof MoneyDepositPaybackContainer){
+			return setMoneyDepositPaybackContainerItemValue(view, object, name);
 		} else if(object instanceof MoneyPayback){
 			return setMoneyPaybackItemValue(view, object, name);
 		}
@@ -984,6 +987,59 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		}
 	}
 	
+	private boolean setMoneyDepositPaybackContainerItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyDepositPaybackContainer)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("会费退回");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getProject().getDisplayName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setPrefix(((MoneyDepositPaybackContainer)object).getProject().getCurrencySymbol());
+			numericView.setNumber(((MoneyDepositPaybackContainer)object).getProjectAmount());
+			numericView.setTextColor(Color.BLACK);
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyDepositPaybackContainer)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyDepositPaybackContainer)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyDepositPaybackContainer)object).getLocalAmount())));
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
 	private boolean setMoneyPaybackItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
@@ -1137,7 +1193,10 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
 				}
 				return true;
-			} else if(object instanceof Message){
+			} else if(object instanceof MoneyDepositPaybackContainer){
+				openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				return true;
+			}  else if(object instanceof Message){
 				Message msg = (Message)object;
 				if(msg.getType().equals("System.Friend.AddRequest") ){
 					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);

@@ -36,6 +36,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
@@ -584,6 +585,59 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 		}
 	}
 	
+	private boolean setMoneyDepositPaybackContainerItemValue(View view, Object object, String name) {
+		if(view.getId() == R.id.homeListItem_date){
+			((HyjDateTimeView)view).setText(((MoneyDepositPaybackContainer)object).getDate());
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText("会费退回");
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getProject().getDisplayName());
+			return true;
+	    } else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView numericView = (HyjNumericView)view;
+			numericView.setPrefix(((MoneyDepositPaybackContainer)object).getProject().getCurrencySymbol());
+			numericView.setNumber(((MoneyDepositPaybackContainer)object).getProjectAmount());
+			numericView.setTextColor(Color.BLACK);
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
+
+			if(view.getTag() == null){
+				view.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Picture pic = (Picture)v.getTag();
+						if(pic == null){
+							return;
+						}
+						Bundle bundle = new Bundle();
+						bundle.putString("pictureName", pic.getId());
+						bundle.putString("pictureType", pic.getPictureType());
+						openActivityWithFragment(HyjImagePreviewFragment.class, R.string.app_preview_picture, bundle);
+					}
+				});
+			}
+			view.setTag(((MoneyDepositPaybackContainer)object).getPicture());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyDepositPaybackContainer)object).getProject().getCurrencyId())){
+				((TextView)view).setText("");
+			} else {
+				((TextView)view).setText("折合:"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + String.format("%.2f", HyjUtil.toFixed2(((MoneyDepositPaybackContainer)object).getLocalAmount())));
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getDisplayRemark());
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
 	private boolean setMoneyPaybackItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
@@ -724,7 +778,10 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
 				}
 				return true;
-			} 
+			} else if(object instanceof MoneyDepositPaybackContainer){
+				openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				return true;
+			}  
 		}
 		return false;
     } 

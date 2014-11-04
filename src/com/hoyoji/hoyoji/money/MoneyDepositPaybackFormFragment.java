@@ -735,9 +735,9 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 
 						if(oldMoneyPaybackModel.getFinancialOwnerUserId() != null
 								&& !oldMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), previousFinancialOwnerUserId).executeSingle();
+							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), previousFinancialOwnerUserId).executeSingle();
 						} else {
-							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getFriendUserId()).executeSingle();
+							moneyPaybackToFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId = ? AND friendUserId = ?", oldMoneyPaybackModel.getId(), oldMoneyPaybackModel.getFriendUserId()).executeSingle();
 						}
 						if(moneyPaybackToFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 							moneyPaybackToFinancialOwner.delete();

@@ -15,6 +15,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
@@ -109,6 +110,9 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositExpenseContainers);
 	    	
+	    	List<HyjModel> moneyDepositPaybackContainers = new Select().from(MoneyDepositPaybackContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositPaybackContainers);
+	    	
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
@@ -127,7 +131,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 //	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();
@@ -182,6 +187,13 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				}
 				if(rhs instanceof MoneyDepositExpenseContainer){
 					rhsStr = ((MoneyDepositExpenseContainer) rhs).getDate();
+				}
+				
+				if(lhs instanceof MoneyDepositPaybackContainer){
+					lhsStr = ((MoneyDepositPaybackContainer) lhs).getDate();
+				}
+				if(rhs instanceof MoneyDepositPaybackContainer){
+					rhsStr = ((MoneyDepositPaybackContainer) rhs).getDate();
 				}
 				
 				if(lhs instanceof MoneyDepositReturnContainer){
