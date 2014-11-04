@@ -70,11 +70,11 @@ public class MoneyPayback extends HyjModel{
 	@Column(name = "moneyDepositReturnApportionId")
 	private String mMoneyDepositReturnApportionId;
 	
-	@Column(name = "mMoneyDepositPaybackContainerId")
+	@Column(name = "moneyDepositPaybackContainerId")
 	private String mMoneyDepositPaybackContainerId;
 
-	@Column(name = "paybackType")
-	private String mPaybackType;
+//	@Column(name = "paybackType")
+//	private String mPaybackType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -123,7 +123,7 @@ public class MoneyPayback extends HyjModel{
 		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mInterest = 0.00;
-		mPaybackType = "Payback";
+//		mPaybackType = "Payback";
 	}
 
 	public String getId() {
@@ -596,13 +596,13 @@ public class MoneyPayback extends HyjModel{
 		this.mCurrencyId = mCurrencyId;
 	}
 
-	public void setPaybackType(String type) {
-		this.mPaybackType = type;
-	}
-	
-	public String getPaybackType() {
-		return this.mPaybackType;
-	}
+//	public void setPaybackType(String type) {
+//		this.mPaybackType = type;
+//	}
+//	
+//	public String getPaybackType() {
+//		return this.mPaybackType;
+//	}
 
 	public String getFriendDisplayName() {
 		String displayName = "";
@@ -643,6 +643,10 @@ public class MoneyPayback extends HyjModel{
 	public void setMoneyDepositPaybackContainerId(String id) {
 		this.mMoneyDepositPaybackContainerId = id;
 		
+	}
+
+	public Object getMoneyDepositPaybackContainerId() {
+		return this.mMoneyDepositPaybackContainerId;
 	}
 
 //	public String getRemoteLocalFriendName() {

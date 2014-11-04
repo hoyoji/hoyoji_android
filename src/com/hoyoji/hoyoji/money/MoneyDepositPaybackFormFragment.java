@@ -96,35 +96,35 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		MoneyPayback moneyPayback;
+		MoneyDepositPaybackContainer moneyDepositPaybackContainer;
 		
 		Intent intent = getActivity().getIntent();
 	    final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyPayback =  new Select().from(MoneyPayback.class).where("_id=?", modelId).executeSingle();
-			hasEditPermission = moneyPayback.hasEditPermission();
+			moneyDepositPaybackContainer =  new Select().from(MoneyPayback.class).where("_id=?", modelId).executeSingle();
+			hasEditPermission = moneyDepositPaybackContainer.hasEditPermission();
 		} else {
-			moneyPayback = new MoneyPayback();
-			moneyPayback.setPaybackType("Deposit");
+			moneyDepositPaybackContainer = new MoneyDepositPaybackContainer();
+//			moneyPayback.setPaybackType("Deposit"); 
 			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 			if(moneyAccountId != null){
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
-				moneyPayback.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
+				moneyDepositPaybackContainer.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
-			if(intent.getStringExtra("counterpartId") != null){
-				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
-			}
+//			if(intent.getStringExtra("counterpartId") != null){
+//				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
+//			}
 		}
-		mMoneyDepositPaybackContainerEditor = moneyPayback.newModelEditor();
+		mMoneyDepositPaybackContainerEditor = moneyDepositPaybackContainer.newModelEditor();
 		
 		setupDeleteButton(mMoneyDepositPaybackContainerEditor);
 		
 		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_imageField_picture);		
-		mImageFieldPicture.setImages(moneyPayback.getPictures());
+		mImageFieldPicture.setImages(moneyDepositPaybackContainer.getPictures());
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyPayback.getDate());
+			mDateTimeFieldDate.setText(moneyDepositPaybackContainer.getDate());
 		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_amount);		
@@ -133,7 +133,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
 			mNumericAmount.setNumber(amount*exchangeRate);
 		}else{
-			mNumericAmount.setNumber(moneyPayback.getAmount());
+			mNumericAmount.setNumber(moneyDepositPaybackContainer.getAmount());
 		}
 		
 //		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_paybackDate);
@@ -146,7 +146,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 //		mNumericFieldPaybackedAmount.setVisibility(View.GONE);
 //		mSeparatorFieldPaybackedAmount.setVisibility(View.GONE);
 			
-		MoneyAccount moneyAccount = moneyPayback.getMoneyAccount();
+		MoneyAccount moneyAccount = moneyDepositPaybackContainer.getMoneyAccount();
 		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_moneyAccount);
 
 		if(moneyAccount != null){
@@ -165,10 +165,10 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
-		if(moneyPayback.get_mId() == null && projectId != null){
+		if(moneyDepositPaybackContainer.get_mId() == null && projectId != null){
 			project = HyjModel.getModel(Project.class, projectId);
 		}else{
-			project = moneyPayback.getProject();
+			project = moneyDepositPaybackContainer.getProject();
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_project);
 		
@@ -185,17 +185,17 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_exchangeRate);		
-		mNumericExchangeRate.setNumber(moneyPayback.getExchangeRate());
+		mNumericExchangeRate.setNumber(moneyDepositPaybackContainer.getExchangeRate());
 		
 		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyDepositPaybackFormFragment_separatorField_exchange);
 		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyDepositPaybackFormFragment_linearLayout_exchangeRate);
 		
 		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_selectorField_friend);
 		String friendUserId = null;
-		if(moneyPayback.get_mId() == null){
+		if(moneyDepositPaybackContainer.get_mId() == null){
 			friendUserId = intent.getStringExtra("friendUserId");//从消息导入
 		} else {
-			friendUserId = moneyPayback.getFriendUserId();
+			friendUserId = moneyDepositPaybackContainer.getFriendUserId();
 		}
 		if(friendUserId != null){
 			mSelectorFieldFriend.setModelId(friendUserId);
@@ -224,7 +224,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 //		});
 
 		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_remark);
-		mRemarkFieldRemark.setText(moneyPayback.getRemark());
+		mRemarkFieldRemark.setText(moneyDepositPaybackContainer.getRemark());
 		mRemarkFieldRemark.setEditable(false);
 		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
 			@Override
@@ -247,9 +247,9 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}
-		} else if(moneyPayback.getFinancialOwnerUserId() != null){
-				mSelectorFieldFinancialOwner.setModelId(moneyPayback.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyPayback.getFinancialOwnerUserId()));
+		} else if(moneyDepositPaybackContainer.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(moneyDepositPaybackContainer.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyDepositPaybackContainer.getFinancialOwnerUserId()));
 		}
 		
 		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){

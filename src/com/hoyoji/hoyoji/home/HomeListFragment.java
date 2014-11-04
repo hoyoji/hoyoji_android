@@ -1214,7 +1214,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
+			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
 				((TextView)view).setText("会费退回");
 			}else{
 				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
@@ -1348,7 +1348,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				return true;
 			} else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;
-				if(moneyReturn.getReturnType().equalsIgnoreCase("Deposit")){
+				if(moneyReturn.getMoneyDepositReturnApportionId() != null){
 					bundle.putLong("MODEL_ID", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
 					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				}else{
@@ -1357,7 +1357,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				return true;
 			} else if(object instanceof MoneyPayback){
 				MoneyPayback moneyPayback = (MoneyPayback) object;
-				if(moneyPayback.getPaybackType().equalsIgnoreCase("Deposit")){
+				if(moneyPayback.getMoneyDepositPaybackContainerId() != null){
 					openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);

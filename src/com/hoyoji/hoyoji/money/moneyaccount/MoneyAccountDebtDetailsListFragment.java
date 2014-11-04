@@ -533,7 +533,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyReturn)object).getReturnType().equalsIgnoreCase("Deposit")){
+			if(((MoneyReturn)object).getMoneyDepositReturnApportionId() != null){
 				((TextView)view).setText("会费还款");
 			} else {
 				((TextView)view).setText("还款给" + ((MoneyReturn)object).getFriendDisplayName());
@@ -589,7 +589,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
+			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
 				((TextView)view).setText("会费退回");
 			}else {
 				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
@@ -718,7 +718,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				return true;
 			} else if(object instanceof MoneyPayback){
 				bundle.putLong("MODEL_ID", object.get_mId());
-				if(((MoneyPayback)object).getPaybackType().equalsIgnoreCase("Deposit")){
+				if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
 					openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
