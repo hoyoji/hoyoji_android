@@ -101,7 +101,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 	    final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			moneyDepositPaybackContainer =  new Select().from(MoneyPayback.class).where("_id=?", modelId).executeSingle();
+			moneyDepositPaybackContainer =  new Select().from(MoneyDepositPaybackContainer.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyDepositPaybackContainer.hasEditPermission();
 		} else {
 			moneyDepositPaybackContainer = new MoneyDepositPaybackContainer();
