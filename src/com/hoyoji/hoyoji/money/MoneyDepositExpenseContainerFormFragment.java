@@ -815,7 +815,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 					moneyLendToFinancialOwner.setAddress(newMoneyLendModel.getAddress());
 					moneyLendToFinancialOwner.setCurrencyId1(newMoneyLendModel.getCurrencyId());
 					moneyLendToFinancialOwner.setExchangeRate(newMoneyLendModel.getExchangeRate());
-					moneyLendToFinancialOwner.setFinancialOwnerUserId(null);
+//					moneyLendToFinancialOwner.setFinancialOwnerUserId(null);
 					moneyLendToFinancialOwner.setFriendAccountId(newMoneyLendModel.getFriendUserId());
 					moneyLendToFinancialOwner.setLocalFriendId(null);
 					moneyLendToFinancialOwner.setGeoLat(newMoneyLendModel.getGeoLat());

@@ -781,7 +781,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 						moneyPaybackToFinancialOwner.setAddress(newMoneyPaybackModel.getAddress());
 						moneyPaybackToFinancialOwner.setCurrencyId1(newMoneyPaybackModel.getCurrencyId1());
 						moneyPaybackToFinancialOwner.setExchangeRate(newMoneyPaybackModel.getExchangeRate());
-						moneyPaybackToFinancialOwner.setFinancialOwnerUserId(null);
+//						moneyPaybackToFinancialOwner.setFinancialOwnerUserId(null);
 						moneyPaybackToFinancialOwner.setFriendAccountId(newMoneyPaybackModel.getFriendUserId());
 						moneyPaybackToFinancialOwner.setLocalFriendId(null);
 						moneyPaybackToFinancialOwner.setGeoLat(newMoneyPaybackModel.getGeoLat());

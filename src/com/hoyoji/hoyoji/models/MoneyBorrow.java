@@ -92,8 +92,8 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
-	@Column(name = "financialOwnerUserId")
-	private String mFinancialOwnerUserId;
+//	@Column(name = "financialOwnerUserId")
+//	private String mFinancialOwnerUserId;
 	
 	@Column(name = "ownerFriendId")
 	private String mOwnerFriendId;
@@ -398,13 +398,13 @@ public class MoneyBorrow extends HyjModel{
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getFinancialOwnerUserId() {
-		return mFinancialOwnerUserId;
-	}
-
-	public void setFinancialOwnerUserId(String financialOwnerUserId) {
-		this.mFinancialOwnerUserId = financialOwnerUserId;
-	}
+//	public String getFinancialOwnerUserId() {
+//		return mFinancialOwnerUserId;
+//	}
+//
+//	public void setFinancialOwnerUserId(String financialOwnerUserId) {
+//		this.mFinancialOwnerUserId = financialOwnerUserId;
+//	}
 	
 	public String getLocation() {
 		return mLocation;
