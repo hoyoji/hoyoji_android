@@ -24,6 +24,7 @@ import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
@@ -193,6 +194,9 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	List<HyjModel> moneyDepositExpenses = new Select().from(MoneyDepositExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositExpenses);
 	    	
+	    	List<HyjModel> moneyDepositPaybacks = new Select().from(MoneyDepositPaybackContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	list.addAll(moneyDepositPaybacks);
+	    	
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
@@ -211,7 +215,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).as("main").where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Return"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").where(" moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	

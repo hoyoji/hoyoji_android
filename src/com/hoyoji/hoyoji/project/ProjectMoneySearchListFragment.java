@@ -1220,6 +1220,8 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 			} else if(object instanceof MoneyPayback){
 				MoneyPayback moneyPayback = (MoneyPayback) object;
 				if(moneyPayback.getMoneyDepositPaybackContainerId() != null){
+					MoneyDepositPaybackContainer moneyDepositPaybackContainer = HyjModel.getModel(MoneyDepositPaybackContainer.class, moneyPayback.getMoneyDepositPaybackContainerId());
+					bundle.putLong("MODEL_ID", moneyDepositPaybackContainer.get_mId());
 					openActivityWithFragment(MoneyDepositPaybackFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
