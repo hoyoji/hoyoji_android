@@ -107,6 +107,11 @@
         android:layout_height="wrap_content"
         hyj:hintText="@string/projectFormFragment_editText_hint_projectCurrency"
         hyj:labelText="@string/projectFormFragment_textView_projectCurrency" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/projectFormFragment_textView_hint_projectCurrency"
+        android:textColor="#999999"/>
     
         <View 
         android:id="@id/field_separator"

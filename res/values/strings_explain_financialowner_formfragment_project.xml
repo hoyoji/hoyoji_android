@@ -4,7 +4,6 @@
     
    <string name="explainFinancialOwnerFragment_title">财务负责人</string>
    <string name="explainFinancialOwnerFragment_textView_explain_financialOwner">
-        \t\t<font size="18"  color="red">财务负责人:</font>建议多人记账的团体活动时设置...\n
         \t\t 建议多人记账的团体活动时设置，把所有参与人员在活动中的应付应收直接和财务负责人挂钩，形成和财务负责人之间的借贷关系，便于统计和结算。\n
 		\t\t以30人的大学聚会为例，假设有五个组织者：ABCDE，这五人订场地、订餐、买水果零食、收聚会费等，各有职务，各自记账。现设置A为财务负责人，假如B订聚会场地用了600元（20元/人），C买水果零食300元（10元/人），那么\n
 		\t\tB还应从A处收回570元\n

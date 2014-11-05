@@ -22,6 +22,8 @@
    
    <string name="projectFormFragment_textView_hint_financialOwner">建议多人记账的团体活动时设置...</string>
    
+   <string name="projectFormFragment_textView_hint_projectCurrency">结算币种：项目账务结算时使用的币种</string>
+   
    <string name="projectFormFragment_textView_financialOwner">财务负责人</string>
    <string name="projectFormFragment_editText_hint_financialOwner">无财务负责人</string>
    
