@@ -157,6 +157,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	}
 	
 	public void inviteFriend(final String way) {
+		((HyjActivity) getActivity()).displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);
+		
 		JSONObject inviteFriendObject = new JSONObject();
 		final String id = UUID.randomUUID().toString();
    		try {
@@ -175,6 +177,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
+				((HyjActivity) getActivity()).dismissProgressDialog();
 					if(way.equals("Other")){
 						inviteOtherFriend(id);
 					} else if(way.equals("WX")){
@@ -186,6 +189,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 			@Override
 			public void errorCallback(Object object) {
+				((HyjActivity) getActivity()).dismissProgressDialog();
 				try {
 					JSONObject json = (JSONObject) object;
 					((HyjActivity) getActivity()).displayDialog(null,
