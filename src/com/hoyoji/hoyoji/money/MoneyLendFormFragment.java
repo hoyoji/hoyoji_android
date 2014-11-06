@@ -832,7 +832,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 									oldSelfProjectAuthorizationEditor.save();
 								}
 
-//								moneyBorrow.setMoneyLendId(moneyLendModel.getId());
+								moneyBorrow.setMoneyLendId(moneyLendModel.getId());
 								moneyBorrow.setAmount(moneyLendModel.getAmount0());
 								moneyBorrow.setDate(moneyLendModel.getDate());
 								moneyBorrow.setRemark(moneyLendModel.getRemark());

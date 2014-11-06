@@ -62,8 +62,8 @@ public class MoneyBorrow extends HyjModel{
 	private Double mReturnedAmount;
 
 	// 如果有，说明该借入是从该借出导入生成的，或是替本地好友生成的
-//	@Column(name = "moneyLendId")
-//	private String mMoneyLendId;
+	@Column(name = "moneyLendId")
+	private String mMoneyLendId;
 
 	@Column(name = "isImported")
 	private Boolean mIsImported;
@@ -592,9 +592,9 @@ public class MoneyBorrow extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-//	public void setMoneyLendId(String moneyLendId) {
-//		this.mMoneyLendId = moneyLendId;
-//	}
+	public void setMoneyLendId(String moneyLendId) {
+		this.mMoneyLendId = moneyLendId;
+	}
 
 	public void setMoneyIncomeApportionId(String id) {
 		this.mMoneyIncomeApportionId = id;
