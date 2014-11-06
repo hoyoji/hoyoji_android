@@ -56,7 +56,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragment {
+public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -159,7 +159,7 @@ public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragmen
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -179,7 +179,7 @@ public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragmen
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -208,7 +208,7 @@ public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragmen
 				Bundle bundle = new Bundle();
 				Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 				bundle.putLong("MODEL_ID", project.get_mId());
-				MoneyDepositPaybackFormContainerFragment.this
+				MoneyDepositPaybackContainerFormFragment.this
 				.openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_debtor, bundle, GET_FRIEND_ID);
 			}
 		}); 
@@ -232,7 +232,7 @@ public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragmen
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldRemark.getText());
 				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
-				MoneyDepositPaybackFormContainerFragment.this
+				MoneyDepositPaybackContainerFormFragment.this
 						.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
@@ -271,7 +271,7 @@ public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragmen
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
 			}
 		});
 		

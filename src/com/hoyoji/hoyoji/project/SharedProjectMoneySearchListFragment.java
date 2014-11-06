@@ -52,7 +52,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormContainerFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositPaybackContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;

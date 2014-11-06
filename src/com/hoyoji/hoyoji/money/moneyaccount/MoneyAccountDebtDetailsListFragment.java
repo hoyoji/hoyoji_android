@@ -50,7 +50,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormContainerFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositPaybackContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
@@ -236,7 +236,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					R.string.moneyDepositReturnContainerFormFragment_title_addnew, queryParams);
 			return true;
 		} else if (item.getItemId() == R.id.mainActivity_action_money_addnew_depositPayback) {
-			openActivityWithFragment(MoneyDepositPaybackFormContainerFragment.class,
+			openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class,
 					R.string.moneyDepositPaybackFormFragment_title_addnew, queryParams);
 			return true;
 		}
@@ -782,16 +782,16 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			} else if(object instanceof MoneyPayback){
 				if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyPayback) object).getMoneyDepositPaybackContainer().get_mId());
-					openActivityWithFragment(MoneyDepositPaybackFormContainerFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else if(((MoneyPayback)object).getMoneyDepositReturnApportionId() != null){
 					bundle.putLong("MODEL_ID", ((MoneyPayback) object).getMoneyDepositReturnApportion().get_mId());
-					openActivityWithFragment(MoneyDepositPaybackFormContainerFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
 				}
 				return true;
 			} else if(object instanceof MoneyDepositPaybackContainer){
-				openActivityWithFragment(MoneyDepositPaybackFormContainerFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				return true;
 			}  
 		}
