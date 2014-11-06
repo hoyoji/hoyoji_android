@@ -722,4 +722,8 @@ public class MoneyLend extends HyjModel{
 		
 	}
 
+	public MoneyDepositIncomeApportion getMoneyDepositIncomeApportion() {
+		return HyjModel.getModel(MoneyDepositIncomeApportion.class, this.getMoneyDepositIncomeApportionId());
+	}
+
 }
