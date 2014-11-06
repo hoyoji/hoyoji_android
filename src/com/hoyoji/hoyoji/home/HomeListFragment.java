@@ -1057,7 +1057,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
+			if(((MoneyBorrow)object).getMoneyDepositIncomeApportionId() != null){
 				((TextView)view).setText("预收会费");
 			} else {
 				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
@@ -1440,7 +1440,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 				return true;
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
-				if(moneyBorrow.getBorrowType().equalsIgnoreCase("Deposit")){
+				if(moneyBorrow.getMoneyDepositIncomeApportionId() != null){
 					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
 					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
 				}else{

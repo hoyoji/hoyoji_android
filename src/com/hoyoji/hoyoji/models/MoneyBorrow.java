@@ -82,9 +82,9 @@ public class MoneyBorrow extends HyjModel{
 	private String mMoneyDepositIncomeApportionId;
 	
 	// Borrow :
-	// Deposit :
-	@Column(name = "borrowType")
-	private String mBorrowType;
+//	// Deposit :
+//	@Column(name = "borrowType")
+//	private String mBorrowType;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -133,7 +133,7 @@ public class MoneyBorrow extends HyjModel{
 		this.setProject(userData.getActiveProject());
 		mExchangeRate = 1.00;
 		mReturnedAmount = 0.00; 
-		mBorrowType = "Borrow";
+//		mBorrowType = "Borrow";
 	}
 
 	public String getId() {
@@ -629,16 +629,16 @@ public class MoneyBorrow extends HyjModel{
 		return HyjModel.getModel(MoneyExpenseApportion.class, this.mMoneyExpenseApportionId);
 	}
 
-	public String getBorrowType() {
-		if(mBorrowType == null){
-			return "Borrow";
-		}
-		return this.mBorrowType;
-	}
-	
-	public void setBorrowType(String mBorrowType) {
-		this.mBorrowType = mBorrowType;
-	}
+//	public String getBorrowType() {
+//		if(mBorrowType == null){
+//			return "Borrow";
+//		}
+//		return this.mBorrowType;
+//	}
+//	
+//	public void setBorrowType(String mBorrowType) {
+//		this.mBorrowType = mBorrowType;
+//	}
 	
 	public String getCurrencyId1() {
 		return mCurrencyId;
