@@ -424,7 +424,11 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 
 										MoneyAccount debtAccount;
 										if(moneyDepositExpenseContainer.getFinancialOwnerUserId() != null){
-											debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), null, moneyDepositExpenseContainer.getFinancialOwnerUserId());
+											if(moneyDepositExpenseContainer.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+												debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), moneyDepositExpenseContainer.getLocalFriendId(), moneyDepositExpenseContainer.getFriendUserId());
+											} else {
+												debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), null, moneyDepositExpenseContainer.getFinancialOwnerUserId());
+											}
 										} else {
 											debtAccount = MoneyAccount.getDebtAccount(moneyDepositExpenseContainer.getProject().getCurrencyId(), moneyDepositExpenseContainer.getLocalFriendId(), moneyDepositExpenseContainer.getFriendUserId());
 										}
