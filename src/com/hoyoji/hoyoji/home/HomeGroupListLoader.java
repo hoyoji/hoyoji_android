@@ -262,7 +262,7 @@ public class HomeGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?",
+							"WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -504,7 +504,7 @@ public class HomeGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND date <= ?",
+						"SELECT MAX(date) FROM MoneyLend WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date <= ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

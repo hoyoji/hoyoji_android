@@ -125,7 +125,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 	    	
 	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
