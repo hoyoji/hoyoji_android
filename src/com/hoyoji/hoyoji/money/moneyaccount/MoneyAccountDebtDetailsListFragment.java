@@ -337,7 +337,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				((TextView)view).setText("(分摊)借入");
 			} else if(((MoneyBorrow)object).getMoneyExpenseApportionId() != null){
 				((TextView)view).setText("(分摊)借入");
-			} else if(((MoneyBorrow)object).getBorrowType().equalsIgnoreCase("Deposit")){
+			} else if(((MoneyBorrow)object).getMoneyDepositIncomeApportionId() != null){
 				((TextView)view).setText("预收会费");
 			} else {
 				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
@@ -466,7 +466,9 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 				((TextView)view).setText("(分摊)借出");
 			} else if(((MoneyLend)object).getMoneyDepositExpenseContainerId() != null){
 				((TextView)view).setText("预缴会费");
-			}else {
+			} else if(((MoneyLend)object).getMoneyDepositIncomeApportionId() != null){
+				((TextView)view).setText("预缴会费");
+			} else {
 				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
 			return true;
