@@ -522,7 +522,7 @@ public class MoneyExpenseContainer extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public boolean getIsImported() {
+	public Boolean getIsImported() {
 		return this.mIsImported;
 	}
 

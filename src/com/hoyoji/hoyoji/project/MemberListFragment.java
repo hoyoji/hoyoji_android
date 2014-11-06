@@ -338,7 +338,9 @@ public class MemberListFragment extends HyjUserListFragment{
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			ProjectShareAuthorization memberToBeDetermined = ProjectShareAuthorization.load(ProjectShareAuthorization.class, id);
-			if(memberToBeDetermined.getFriend().getToBeDetermined()){
+			if(memberToBeDetermined.getFriend() == null){
+				HyjUtil.displayToast("只有项目所有者才允许编辑待定成员");
+			} else if(memberToBeDetermined.getFriend().getToBeDetermined()){
 				openActivityWithFragment(MemberToBeDeterminedFormFragment.class, R.string.memberTBDFormFragment_title_edit, bundle);
 			} else {
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);

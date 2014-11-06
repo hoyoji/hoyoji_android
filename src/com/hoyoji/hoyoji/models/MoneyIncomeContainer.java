@@ -582,7 +582,7 @@ public class MoneyIncomeContainer extends HyjModel {
 		this.mIsImported = b;
 	}
 
-	public boolean getIsImported() {
+	public Boolean getIsImported() {
 		return this.mIsImported;
 	}
 }
