@@ -784,7 +784,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 					bundle.putLong("MODEL_ID", ((MoneyPayback) object).getMoneyDepositPaybackContainer().get_mId());
 					openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else if(((MoneyPayback)object).getMoneyDepositReturnApportionId() != null){
-					bundle.putLong("MODEL_ID", ((MoneyPayback) object).getMoneyDepositReturnApportion().get_mId());
+					bundle.putLong("MODEL_ID", ((MoneyPayback) object).getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
 					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);

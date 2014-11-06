@@ -666,7 +666,7 @@ public class MoneyPayback extends HyjModel{
 		return this.mMoneyDepositReturnApportionId;
 	}
 
-	public Model getMoneyDepositReturnApportion() {
+	public MoneyDepositReturnApportion getMoneyDepositReturnApportion() {
 		return HyjModel.getModel(MoneyDepositReturnApportion.class, this.getMoneyDepositReturnApportionId());
 	}
 
