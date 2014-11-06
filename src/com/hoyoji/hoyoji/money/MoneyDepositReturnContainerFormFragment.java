@@ -543,7 +543,11 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 												if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
 													MoneyAccount debtAccount;
 													if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-														debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+														if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+														} else {
+															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+														}
 													} else {
 														debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
 													}
@@ -1165,7 +1169,11 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
 							MoneyAccount debtAccount;
 							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-								debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+								} else {
+									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+								}
 							} else {
 								debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
 							}
