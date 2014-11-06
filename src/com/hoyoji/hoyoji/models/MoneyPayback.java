@@ -666,6 +666,10 @@ public class MoneyPayback extends HyjModel{
 		return this.mMoneyDepositReturnApportionId;
 	}
 
+	public Model getMoneyDepositReturnApportion() {
+		return HyjModel.getModel(MoneyDepositReturnApportion.class, this.getMoneyDepositReturnApportionId());
+	}
+
 //	public String getRemoteLocalFriendName() {
 //		// TODO Auto-generated method stub
 //		return "本地好友";
