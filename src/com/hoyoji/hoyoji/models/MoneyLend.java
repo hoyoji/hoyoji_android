@@ -64,6 +64,9 @@ public class MoneyLend extends HyjModel{
 //	@Column(name = "moneyBorrowId")
 //	private String mMoneyBorrowId;
 	
+	@Column(name = "isImported")
+	private Boolean mIsImported;
+	
 	// 当预交会费有财务负责人时，会生成多一笔借出（从财务负责人到收款人）
 	// 此时，两笔指出将会用这个字段关连
 	@Column(name = "moneyDepositExpenseContainerId")
@@ -712,6 +715,11 @@ public class MoneyLend extends HyjModel{
 
 	public String getMoneyDepositIncomeApportionId() {
 		return this.mMoneyDepositIncomeApportionId;
+	}
+
+	public void setIsImported(boolean b) {
+		this.mIsImported = b;
+		
 	}
 
 }

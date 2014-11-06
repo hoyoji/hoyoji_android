@@ -63,6 +63,8 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 //	// 导入的或新增借入时，替本地好友生成的
 //	@Column(name = "moneyBorrowId")
 //	private String mMoneyBorrowId;
+	@Column(name = "isImported")
+	private Boolean mIsImported;
 	
 //	// 当预交会费有财务负责人时，会生成多一笔借出（从财务负责人到收款人）
 //	// 此时，两笔指出将会用这个字段关连
@@ -551,6 +553,11 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 
 	public String getProjectCurrencyId() {
 		return this.mProjectCurrencyId;
+	}
+
+	public void setIsImported(boolean b) {
+		this.mIsImported = b;
+		
 	}
 
 }

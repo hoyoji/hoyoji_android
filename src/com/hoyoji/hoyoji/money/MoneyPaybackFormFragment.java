@@ -103,7 +103,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 				moneyPayback.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-//				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
+				moneyPayback.setIsImported(true);
 			}
 		}
 		mMoneyPaybackEditor = moneyPayback.newModelEditor();

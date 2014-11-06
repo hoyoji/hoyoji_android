@@ -56,9 +56,12 @@ public class MoneyIncomeContainer extends HyjModel {
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
-	@Column(name = "moneyExpenseId")
-	private String mMoneyExpenseId;
+//	@Column(name = "moneyExpenseId")
+//	private String mMoneyExpenseId;
 	
+	@Column(name = "isImported")
+	private Boolean mIsImported;
+		
 	@Column(name = "remark")
 	private String mRemark;
 
@@ -567,11 +570,19 @@ public class MoneyIncomeContainer extends HyjModel {
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-	public void setMoneyExpenseId(String moneyExpenseId) {
-		this.mMoneyExpenseId = moneyExpenseId;
+//	public void setMoneyExpenseId(String moneyExpenseId) {
+//		this.mMoneyExpenseId = moneyExpenseId;
+//	}
+//
+//	public String getMoneyExpenseId() {
+//		return this.mMoneyExpenseId;
+//	}
+
+	public void setIsImported(boolean b) {
+		this.mIsImported = b;
 	}
 
-	public String getMoneyExpenseId() {
-		return this.mMoneyExpenseId;
+	public boolean getIsImported() {
+		return this.mIsImported;
 	}
 }

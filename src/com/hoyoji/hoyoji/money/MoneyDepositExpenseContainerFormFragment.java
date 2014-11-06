@@ -109,9 +109,9 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
 				moneyLend.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
-//			if(intent.getStringExtra("counterpartId") != null){
-//				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
-//			}
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyLend.setIsImported(true);
+			}
 		}
 		mMoneyDepositExpenseContainerEditor = moneyLend.newModelEditor();
 		

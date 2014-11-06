@@ -108,7 +108,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 				moneyLend.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-//				moneyLend.setMoneyBorrowId(intent.getStringExtra("counterpartId"));
+				moneyLend.setIsImported(true);
 			}
 		}
 		mMoneyLendEditor = moneyLend.newModelEditor();

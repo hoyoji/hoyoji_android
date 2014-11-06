@@ -111,9 +111,9 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, moneyAccountId);
 				moneyDepositPaybackContainer.setMoneyAccountId(moneyAccountId, moneyAccount.getCurrencyId());
 			}
-//			if(intent.getStringExtra("counterpartId") != null){
-//				moneyPayback.setMoneyReturnId(intent.getStringExtra("counterpartId"));
-//			}
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyDepositPaybackContainer.setIsImported(true);
+			}
 		}
 		mMoneyDepositPaybackContainerEditor = moneyDepositPaybackContainer.newModelEditor();
 		

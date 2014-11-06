@@ -37,6 +37,9 @@ public class MoneyDepositReturnContainer extends HyjModel {
 	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
+
+	@Column(name = "isImported")
+	private Boolean mIsImported;
 	
 	@Column(name = "remark")
 	private String mRemark;
@@ -451,4 +454,11 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
+	public Boolean getIsImported() {
+		return this.mIsImported;
+	}
+
+	public void setIsImported(Boolean b) {
+		this.mIsImported = b;
+	}
 }

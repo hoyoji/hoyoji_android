@@ -1176,17 +1176,27 @@ public class MainActivity extends HyjUserActivity {
 									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
 									recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());
 									recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
-//									if(model instanceof MoneyDepositIncomeApportion){
-//										MoneyDepositIncomeApportion moneyDepositIncomeApportion = (MoneyDepositIncomeApportion)model;
-//										if(moneyDepositIncomeApportion != null){
-//											recordData.put("financialOwnerUserId", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getFinancialOwnerUserId());
-//										}
-//									} else if(model instanceof MoneyDepositReturnApportion){
-//										MoneyDepositReturnApportion moneyDepositReturnApportion = (MoneyDepositReturnApportion)model;
-//										if(moneyDepositReturnApportion != null){
-//											recordData.put("financialOwnerUserId", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getFinancialOwnerUserId());
-//										}
-//									}
+									if(model instanceof MoneyDepositIncomeApportion){
+										MoneyDepositIncomeApportion moneyDepositIncomeApportion = (MoneyDepositIncomeApportion)model;
+										if(moneyDepositIncomeApportion != null){
+											recordData.put("isImported", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getIsImported());
+										}
+									} else if(model instanceof MoneyDepositReturnApportion){
+										MoneyDepositReturnApportion moneyDepositReturnApportion = (MoneyDepositReturnApportion)model;
+										if(moneyDepositReturnApportion != null){
+											recordData.put("isImported", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getIsImported());
+										}
+									} else if(model instanceof MoneyExpenseApportion){
+										MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
+										if(moneyExpenseApportion != null){
+											recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
+										}
+									} else if(model instanceof MoneyIncomeApportion){
+										MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
+										if(moneyIncomeApportion != null){
+											recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
+										}
+									}
 								} else if(model instanceof MoneyExpenseContainer){
 									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
 									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());

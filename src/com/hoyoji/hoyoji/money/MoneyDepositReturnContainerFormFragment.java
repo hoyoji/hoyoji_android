@@ -116,6 +116,9 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			if(moneyDepositReturnContainer.get_mId() == null && moneyAccountId != null){
 				moneyDepositReturnContainer.setMoneyAccountId(moneyAccountId);
 			}
+			if(intent.getStringExtra("counterpartId") != null){
+				moneyDepositReturnContainer.setIsImported(true);
+			}
 		}
 		
 		mMoneyDepositReturnContainerEditor = new MoneyDepositReturnContainerEditor(moneyDepositReturnContainer);
@@ -1058,12 +1061,6 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						} else {
 							moneyReturn.setMoneyAccountId(null, null);
 						}
-
-//						Intent intent = getActivity().getIntent();
-//						String counterpartId = intent.getStringExtra("counterpartId");
-//						if(counterpartId != null){
-//							moneyReturn.setmoneyPaybackId(counterpartId);
-//						}
 						moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 						moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 						moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
@@ -1231,13 +1228,6 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				} else {
 					moneyReturn.setMoneyAccountId(null, null);
 				}
-
-				Intent intent = getActivity().getIntent();
-				String counterpartId = intent.getStringExtra("counterpartId");
-				if(counterpartId != null){
-//					moneyReturn.setMoneyPaybackId(counterpartId);
-				}
-				
 				moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
 				moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
 				moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());

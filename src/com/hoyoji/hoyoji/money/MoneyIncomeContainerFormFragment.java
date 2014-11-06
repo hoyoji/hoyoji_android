@@ -124,7 +124,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyIncomeContainer.setMoneyAccountId(moneyAccountId);
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-				moneyIncomeContainer.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
+				moneyIncomeContainer.setIsImported(true);
 			}
 		}
 		
@@ -509,7 +509,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyIncomeApportion>();
-			if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && moneyIncomeContainer.getMoneyExpenseId() == null){
+			if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					MoneyIncomeApportion apportion = new MoneyIncomeApportion();
@@ -1188,12 +1188,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									moneyIncome.setMoneyAccountId(null, null);
 								}
 
-								Intent intent = getActivity().getIntent();
-								String counterpartId = intent.getStringExtra("counterpartId");
-								if(counterpartId != null) {
-//									moneyIncome.setMoneyExpenseId(counterpartId);
-								}
-
 								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
 								moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
@@ -1493,12 +1487,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								} else {
 									moneyIncome.setMoneyAccountId(null, null);
 								}
-
-								Intent intent = getActivity().getIntent();
-								String counterpartId = intent.getStringExtra("counterpartId");
-								if(counterpartId != null){
-//									moneyIncome.setMoneyExpenseId(counterpartId);
-								}
 								moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 								moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
 								moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
@@ -1611,11 +1599,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
 				} else {
 					moneyIncome.setMoneyAccountId(null, null);
-				}
-				Intent intent = getActivity().getIntent();
-				String counterpartId = intent.getStringExtra("counterpartId");
-				if(counterpartId != null){
-//					moneyIncome.setMoneyExpenseId(counterpartId);
 				}
 				moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
 				moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());

@@ -63,6 +63,9 @@ public class MoneyPayback extends HyjModel{
 	// 由还款导入生成的
 //	@Column(name = "moneyReturnId")
 //	private String mMoneyReturnId;
+	
+	@Column(name = "isImported")
+	private Boolean mIsImported;
 
 	@Column(name = "moneyPaybackApportionId")
 	private String mMoneyPaybackApportionId;
@@ -647,6 +650,11 @@ public class MoneyPayback extends HyjModel{
 
 	public String getMoneyDepositPaybackContainerId() {
 		return this.mMoneyDepositPaybackContainerId;
+	}
+
+	public void setIsImported(boolean b) {
+		this.mIsImported = b;
+		
 	}
 
 //	public String getRemoteLocalFriendName() {

@@ -104,7 +104,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 				moneyIncome.setMoneyAccount(moneyAccount);
 			}
 			if(intent.getStringExtra("counterpartId") != null){
-//				moneyIncome.setMoneyExpenseId(intent.getStringExtra("counterpartId"));
+				moneyIncome.setIsImported(true);
 			}
 		}
 		

@@ -66,6 +66,9 @@ public class MoneyExpense extends HyjModel{
 	// 如果有，说明该支出是从该收入导入生成的
 //	@Column(name = "moneyIncomeId")
 //	private String mMoneyIncomeId;
+
+	@Column(name = "isImported")
+	private Boolean mIsImported;
 	
 	@Column(name = "moneyExpenseApportionId")
 	private String mMoneyExpenseApportionId;
@@ -628,5 +631,10 @@ public class MoneyExpense extends HyjModel{
 
 	public String getProjectCurrencyId() {
 		return this.mProjectCurrencyId;
+	}
+
+	public void setIsImported(boolean b) {
+		this.mIsImported = b;
+		
 	}
 }
