@@ -56,7 +56,7 @@ import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 
-public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
+public class MoneyDepositPaybackFormContainerFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
@@ -159,7 +159,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("excludeType", "Debt");
 				
-				MoneyDepositPaybackFormFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
+				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragmentForResult(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_select_moneyAccount, bundle, GET_MONEYACCOUNT_ID);
 			}
 		});	
 		
@@ -179,7 +179,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
+				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
 		
@@ -208,7 +208,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 				bundle.putLong("MODEL_ID", project.get_mId());
-				MoneyDepositPaybackFormFragment.this
+				MoneyDepositPaybackFormContainerFragment.this
 				.openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_debtor, bundle, GET_FRIEND_ID);
 			}
 		}); 
@@ -232,7 +232,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldRemark.getText());
 				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
-				MoneyDepositPaybackFormFragment.this
+				MoneyDepositPaybackFormContainerFragment.this
 						.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
@@ -271,7 +271,7 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				MoneyDepositPaybackFormContainerFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
 			}
 		});
 		
@@ -657,7 +657,11 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 					if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
 						newDebtAccount = MoneyAccount.getDebtAccount(newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId());
 					} else {
-						newDebtAccount = MoneyAccount.getDebtAccount(newMoneyPaybackModel.getProject().getCurrencyId(), null, newMoneyPaybackModel.getFinancialOwnerUserId());
+						if(newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId());
+						} else {
+							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyPaybackModel.getProject().getCurrencyId(), null, newMoneyPaybackModel.getFinancialOwnerUserId());
+						}
 					}
 					if(newMoneyPaybackModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
@@ -668,7 +672,11 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 				    		if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
 				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
 						   	} else {
-				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   		if(newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+								} else {	
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   		}
 					    	}
 				    	}
 					}else{
@@ -676,7 +684,11 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 						if(oldMoneyPaybackModel.getFinancialOwnerUserId() == null){
 							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
 						} else {
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), null, oldMoneyPaybackModel.getFinancialOwnerUserId());
+							if(oldMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyPaybackModel.getLocalFriendId(), oldMoneyPaybackModel.getFriendUserId());
+							} else {
+								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), null, oldMoneyPaybackModel.getFinancialOwnerUserId());
+							}
 						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
@@ -698,10 +710,14 @@ public class MoneyDepositPaybackFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.save();
 							}
 							if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
-								MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
-							} else {
-								MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
-							}
+				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   	} else {
+						   		if(newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+								} else {	
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   		}
+					    	}
 						}
 					}
 					

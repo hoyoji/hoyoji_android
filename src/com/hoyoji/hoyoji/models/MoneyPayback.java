@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import android.provider.BaseColumns;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
@@ -655,6 +656,10 @@ public class MoneyPayback extends HyjModel{
 	public void setIsImported(boolean b) {
 		this.mIsImported = b;
 		
+	}
+
+	public Model getMoneyDepositPaybackContainer() {
+		return HyjModel.getModel(MoneyDepositPaybackContainer.class, this.getMoneyDepositPaybackContainerId());
 	}
 
 //	public String getRemoteLocalFriendName() {

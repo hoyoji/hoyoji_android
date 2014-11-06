@@ -32,7 +32,7 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
-import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositPaybackFormContainerFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
@@ -218,7 +218,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 				}
 			} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddReturn")){
 				if("Deposit".equalsIgnoreCase(messageData.optString("returnType"))){
-					openActivityWithFragmentForResult(MoneyDepositPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositPayback, bundle, IMPORT_MONEY);
+					openActivityWithFragmentForResult(MoneyDepositPaybackFormContainerFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositPayback, bundle, IMPORT_MONEY);
 				} else {
 					openActivityWithFragmentForResult(MoneyPaybackFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_payback, bundle, IMPORT_MONEY);
 				}
