@@ -106,6 +106,8 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 	}
 
 	public void sendInviteMessage(final String way) {
+		((HyjActivity) getActivity()).displayProgressDialog(R.string.inviteMemberFormFragment_action_invite_title,R.string.inviteMemberFormFragment_action_invite_content);
+		
 		JSONObject inviteFriendObject = new JSONObject();
 		final String id = UUID.randomUUID().toString();
    		try {
@@ -133,17 +135,19 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-					if(way.equals("Other")){
-						inviteOtherFriend(id);
-					} else if(way.equals("WX")){
-						inviteWXFriend(id);
-					} else if(way.equals("QQ")){
-						inviteQQFriend(id);
-					}
+				((HyjActivity) getActivity()).dismissProgressDialog();
+				if(way.equals("Other")){
+					inviteOtherFriend(id);
+				} else if(way.equals("WX")){
+					inviteWXFriend(id);
+				} else if(way.equals("QQ")){
+					inviteQQFriend(id);
+				}
 			}
 
 			@Override
 			public void errorCallback(Object object) {
+				((HyjActivity) getActivity()).dismissProgressDialog();
 				try {
 					JSONObject json = (JSONObject) object;
 					((HyjActivity) getActivity()).displayDialog(null,

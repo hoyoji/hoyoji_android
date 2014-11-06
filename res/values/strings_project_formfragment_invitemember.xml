@@ -29,5 +29,8 @@
    
    <string name="memberFormFragment_textView_send_invite">发送消息给邀请好友共享项目。\n如果不发送，您可以在该项目下记录与该好友相关的账务，但是该好友将看不到该项目的数据。</string>
    <string name="app_action_send_invite">邀请好友共享项目</string>
+   
+   <string name="inviteMemberFormFragment_action_invite_title">邀请成员</string>
+   <string name="inviteMemberFormFragment_action_invite_content">正在邀请...</string>
 
 </resources>
