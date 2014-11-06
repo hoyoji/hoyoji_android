@@ -663,7 +663,7 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public String getMoneyDepositReturnApportionId() {
-		return this.getMoneyDepositReturnApportionId();
+		return this.mMoneyDepositReturnApportionId;
 	}
 
 //	public String getRemoteLocalFriendName() {
