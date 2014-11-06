@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/moneyApportionField_title" >
+                android:text="拆分成员" >
             </TextView>
 
             <LinearLayout
@@ -119,7 +119,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/app_action_save" />
+            android:text="拆分待定成员" />
     </LinearLayout>
 
 </ScrollView>

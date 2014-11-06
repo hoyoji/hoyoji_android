@@ -87,16 +87,14 @@ public class MemberToBeDeterminedFormFragment extends HyjUserFormFragment {
 		mTextFieldProjectName.setText(project.getDisplayName());
 		mTextFieldProjectName.setEnabled(false);
 		
-		if(modelId != -1){
-			boolean canNotEdit = false;
-			if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				canNotEdit = true;
-			}
-			if(canNotEdit){
-				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
-				if(this.mOptionsMenu != null){
-					hideSaveAction();
-				}
+		boolean canNotEdit = false;
+		if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			canNotEdit = true;
+		}
+		if(canNotEdit){
+			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+			if(this.mOptionsMenu != null){
+				hideSaveAction();
 			}
 		}
 	}
@@ -108,15 +106,7 @@ public class MemberToBeDeterminedFormFragment extends HyjUserFormFragment {
 				boolean canNotEdit = false;
 				if(!mProjectShareAuthorizationEditor.getModel().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					canNotEdit = true;
-				} else {
-					// 如果是待定成员也不能修改
-					 if(mProjectShareAuthorizationEditor.getModel().getLocalFriendId() != null){
-						 Friend f = Friend.getModel(Friend.class, mProjectShareAuthorizationEditor.getModel().getLocalFriendId());
-						 if(f != null && f.getToBeDetermined()){
-							 canNotEdit = true;
-						 }
-					 }
-				}
+				} 
 				if(canNotEdit){
 					hideSaveAction();
 				}
