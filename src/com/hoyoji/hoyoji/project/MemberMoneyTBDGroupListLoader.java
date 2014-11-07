@@ -276,7 +276,7 @@ public class MemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -288,7 +288,7 @@ public class MemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -305,7 +305,7 @@ public class MemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyDepositIncomeContainer main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -321,7 +321,7 @@ public class MemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyDepositReturnContainer main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

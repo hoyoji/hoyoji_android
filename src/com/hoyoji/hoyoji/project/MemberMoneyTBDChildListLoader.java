@@ -114,16 +114,16 @@ public class MemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
-	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("main").join(MoneyExpenseApportion.class).as("apr").on("main.id = apr.moneyExpenseContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenseContainers = new Select("main.*").from(MoneyExpenseContainer.class).as("main").join(MoneyExpenseApportion.class).as("apr").on("main.id = apr.moneyExpenseContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
 	    	list.addAll(moneyExpenseContainers);
 	    	
-	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).as("main").join(MoneyIncomeApportion.class).as("apr").on("main.id = apr.moneyIncomeContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomeContainers = new Select("main.*").from(MoneyIncomeContainer.class).as("main").join(MoneyIncomeApportion.class).as("apr").on("main.id = apr.moneyIncomeContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomeContainers);
 	    	
-	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).as("main").join(MoneyDepositIncomeApportion.class).as("apr").on("main.id = apr.moneyDepositIncomeContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositIncomes = new Select("main.*").from(MoneyDepositIncomeContainer.class).as("main").join(MoneyDepositIncomeApportion.class).as("apr").on("main.id = apr.moneyDepositIncomeContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
-	    	List<HyjModel> moneyDepositReturns = new Select().from(MoneyDepositReturnContainer.class).as("main").join(MoneyDepositReturnApportion.class).as("apr").on("main.id = apr.moneyDepositReturnContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositReturns = new Select("main.*").from(MoneyDepositReturnContainer.class).as("main").join(MoneyDepositReturnApportion.class).as("apr").on("main.id = apr.moneyDepositReturnContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();
 	    	list.addAll(moneyDepositReturns);
 	    	
 	    	Collections.sort(list, mDateComparator);
