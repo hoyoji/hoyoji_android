@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -34,6 +35,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer.MoneyExpenseContainerEditor;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
@@ -203,59 +205,87 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		if(!projectShareAuthorization.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			return;
 		}
+		if(mApportionFieldApportions.getAdapter().getCount() == 0){
+			HyjUtil.displayToast("请选择拆分成员");
+			return;
+		}
 
 		((HyjActivity) MemberTBDFormFragment.this.getActivity())
 		.displayProgressDialog(
 				R.string.memberTBDFormFragment_title_split,
 				R.string.memberTBDFormFragment_progress_splitting);
 	
-		doSplitExpenseContainers();
+		ActiveAndroid.beginTransaction();
+		try {
+			
+			doSplitExpenseContainers();
+
+			
+			ActiveAndroid.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ActiveAndroid.endTransaction();
+		
 		
 		((HyjActivity) MemberTBDFormFragment.this.getActivity()).dismissProgressDialog();
 		HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
 	}	
 
-	
 	private void doSplitExpenseContainers() {
-		List<MoneyExpenseContainer> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).as("container")
+		List<MoneyExpenseContainer> moneyExpenseContainers = new Select("container.*").from(MoneyExpenseContainer.class).as("container")
 								.join(MoneyExpenseApportion.class).as("apportion").on("container.id = apportion.moneyExpenseContainerId").
 								where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
 		
 		for(MoneyExpenseContainer moneyExpenseContainer : moneyExpenseContainers){
-			List mergedApportions = new Select().from(MoneyExpenseApportion.class).where("moneyExpenseContainerId=?", moneyExpenseContainer.getId()).execute(); 
-			mergeApportions(MoneyExpenseApportion.class, mergedApportions);
-			setApportionsAmount(mergedApportions, moneyExpenseContainer.getAmount0());
-			moneyExpenseContainer.saveApportions(mergedApportions);
+			List apportions = moneyExpenseContainer.getApportions();//new Select().from(MoneyExpenseApportion.class).where("moneyExpenseContainerId=?", moneyExpenseContainer.getId()).execute(); 
+			List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyExpenseApportion.class, apportions, moneyExpenseContainer.getId());
+			
+			MoneyExpenseContainer.saveApportions(apportionItems, new MoneyExpenseContainerEditor(moneyExpenseContainer));
 		}
 	}
 	
-	private void mergeApportions(Class<? extends MoneyApportion> modelClass, List<MoneyApportion> mergedApportions){
+	private List<ApportionItem> makeMoneyApportionItems(Class<? extends MoneyApportion> modelClass, List<MoneyApportion> apportions, String apportionContainerId){
 		Set<String> apportionsSet = new HashSet<String>();
-		int positionOfTBD = -1;
+		List<ApportionItem> apportionItems = new ArrayList<ApportionItem>();
+		MoneyApportion apportionTBD = null;
+		double amountTBD = 0.0;
+		ApportionItem apiTBD = null;
 		
-		for(int i = 0; i < mergedApportions.size(); i++){
-			MoneyApportion apportion = mergedApportions.get(i);
-			apportionsSet.add(HyjUtil.ifNull(apportion.getFriendUserId(), apportion.getLocalFriendId()));
-		}
-		if(positionOfTBD > -1){
-			mergedApportions.remove(positionOfTBD);
+		for(int i = 0; i < apportions.size(); i++){
+			MoneyApportion apportion = apportions.get(i);
+			if(!projectShareAuthorization.getLocalFriendId().equals(apportion.getLocalFriendId())){
+				apportionsSet.add(HyjUtil.ifNull(apportion.getFriendUserId(), apportion.getLocalFriendId()));
+			} else {
+				apportionTBD = apportion;
+				amountTBD = apportionTBD.getAmount();
+			}
 		}
 		
 		for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
 			ApportionItem<MoneyApportion> api = mApportionFieldApportions.getAdapter().getItem(i);
 			MoneyApportion apiApportion = api.getApportion();
 			
-			if(apportionsSet.contains(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()))){
+			if(!apportionsSet.contains(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()))){
 				MoneyApportion apportion;
 				try {
-					apportion = (MoneyApportion) modelClass.newInstance();
+					if(projectShareAuthorization.getLocalFriendId().equals(apiApportion.getLocalFriendId())){
+						apiTBD = api;
+						apportion = apportionTBD;
+					} else {
+						apportion = (MoneyApportion) modelClass.newInstance();
+						apportion.setFriendUserId(apiApportion.getFriendUserId());
+						apportion.setLocalFriendId(apiApportion.getLocalFriendId());
+						apportion.setMoneyId(apportionContainerId);
+					}
 					
 					apportion.setApportionType(apiApportion.getApportionType());
-					apportion.setFriendUserId(apiApportion.getFriendUserId());
-					apportion.setLocalFriendId(apiApportion.getLocalFriendId());
 					
-					mergedApportions.add(apportion);
-					apportionsSet.add(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()));
+					ApportionItem apportionItem = new ApportionItem(apportion, projectShareAuthorization.getProject().getId(), ApportionItem.NEW);
+					apportionItems.add(apportionItem);
+					
+//					apportionsSet.add(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()));
+					
 					
 				} catch (java.lang.InstantiationException e) {
 					e.printStackTrace();
@@ -264,10 +294,77 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 				}
 			}
 		}
+		
+		// 如果拆分里没有待定成员，我们把原来的待定成员移除
+		if(apiTBD == null && amountTBD == 0.0){
+			ApportionItem apportionItemTBD = new ApportionItem(apportionTBD, projectShareAuthorization.getProject().getId(), ApportionItem.DELETED);
+			apportionItems.add(apportionItemTBD);
+		}
+		
+		if(apportionItems.size() > 0){
+			setApportionsAmount(apportionItems, amountTBD);
+		}
+		return apportionItems;
 	}
 	
-	private void setApportionsAmount(List<MoneyApportion> mergedApportions, Double totalAmount){
+	private void setApportionsAmount(List<ApportionItem> mergedApportions, Double totalAmount){
+		double fixedTotal = 0.0;
+		double sharePercentageTotal = 0.0;
 		
+		double averageAmount = 0.0;
+		double shareTotal = 0.0;
+		int numOfAverage = 0;
+		
+		for(int i = 0; i < mergedApportions.size(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				if(api.getApportionType().equalsIgnoreCase("Average")){
+					numOfAverage++;
+					sharePercentageTotal += api.getSharePercentage();
+				} else if(api.getApportionType().equalsIgnoreCase("Share")){
+//					api.setAmount(api.getAmount());
+					sharePercentageTotal += api.getSharePercentage();
+				} else {
+					fixedTotal += api.getAmount();
+				}
+			}
+		}
+		
+		
+		// 占股分摊=（总金额-定额分摊）*占股/（分摊人所占股数）
+		shareTotal = totalAmount - fixedTotal;
+		for(int i = 0; i < mergedApportions.size(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				if(api.getApportionType().equalsIgnoreCase("Share")){
+					Double shareAmount = shareTotal * api.getSharePercentage() / sharePercentageTotal;
+					api.setAmount(shareAmount);
+					fixedTotal += api.getAmount();
+				}
+			}
+		}
+		
+		// 平均分摊 = （总金额-定额分摊-占股分摊） / 平均分摊人数
+		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
+		ApportionItem firstNonDeletedItem = null;
+		for(int i = 0; i < mergedApportions.size(); i++){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
+			if(api.getState() != ApportionItem.DELETED) {
+				if(api.getApportionType().equalsIgnoreCase("Average")){
+					api.setAmount(averageAmount);
+					fixedTotal += api.getAmount();
+				}
+				if(firstNonDeletedItem == null){
+					firstNonDeletedItem = api;
+				}
+			}
+		}
+		if(mergedApportions.size() > 0){
+			if(fixedTotal != totalAmount && firstNonDeletedItem != null){
+				double adjustedAmount = firstNonDeletedItem.getAmount() + (totalAmount - fixedTotal);
+				firstNonDeletedItem.setAmount(adjustedAmount);
+			}
+		}
 	}
 
 	@Override

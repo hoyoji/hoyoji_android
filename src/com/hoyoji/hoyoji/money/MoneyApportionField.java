@@ -589,7 +589,7 @@ public class MoneyApportionField extends GridView {
 //			mProjectId = projectId;
 //		}
 //		
-		ApportionItem(T apportion, String projectId, int state){
+		public ApportionItem(T apportion, String projectId, int state){
 			mApportion = apportion;
 			mState = state;
 			mProjectId = projectId;
