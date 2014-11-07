@@ -7,7 +7,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp" >
 
-    <ExpandableListView
+    <com.hoyoji.android.hyjframework.view.HyjExpandableListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -367,8 +367,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			menu.add(EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, R.string.friendCategoryFormFragment_title_edit);
 			super.onCreateContextMenu(menu, v, menuInfo);
 		} else {
-			menu.add(0, EDIT_FRIEND_DETAILS, 0, "好友资料");
-			menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+//			menu.add(0, EDIT_FRIEND_DETAILS, 0, "好友资料");
+//			menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 		}
 	}		
 	

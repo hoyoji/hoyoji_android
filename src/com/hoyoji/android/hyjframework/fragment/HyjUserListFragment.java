@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
+import com.hoyoji.android.hyjframework.view.HyjListView;
+import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,16 +38,19 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	SimpleCursorAdapter.ViewBinder, 
 	SimpleAdapter.ViewBinder{
 	
-	public final static int DELETE_LIST_ITEM = 1024;
-	public final static int CANCEL_LIST_ITEM = 1025;
+//	public final static int DELETE_LIST_ITEM = 1024;
+//	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
 	protected View mFooterView;
 	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
 	private Menu mOptionsMenu;
+	protected DisplayMetrics displayMetrics;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+			displayMetrics = getResources().getDisplayMetrics();
+		
 			//View v = super.onCreateView(inflater, container, savedInstanceState);
 			ViewGroup rootView = (ViewGroup) inflater.inflate(useContentView(), container, false);
 			//rootView.addView(v, 0);
@@ -79,7 +85,21 @@ public abstract class HyjUserListFragment extends ListFragment implements
 				doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
 			}
 	    });
-	    
+//	    getListView().setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
+	    if(getListView() instanceof HyjListView){
+		    ((HyjListView)getListView()).setOnOverScrollByListener(new OnOverScrollByListener(){
+				@Override
+				public void onOverScrollBy(int deltaX, int deltaY, int scrollX,
+						int scrollY, int scrollRangeX, int scrollRangeY,
+						int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+	
+					final float density = displayMetrics.density;
+					if(scrollY / density > 50.0){
+						doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
+					}
+				}
+		    });
+	    }
 		getListView().addFooterView(mFooterView, null, false);
 //		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 		this.registerForContextMenu(getListView());

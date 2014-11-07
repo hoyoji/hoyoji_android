@@ -221,18 +221,18 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		return super.onContextItemSelected(item);
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
-		if(mi.id == -1){
-			return;
-		}
-		menu.add(0, EDIT_PROJECT_DETAILS, 0, "项目资料");
-		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "项目成员");
-		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-//		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//		super.onCreateContextMenu(menu, v, menuInfo);
+//		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
+//		if(mi.id == -1){
+//			return;
+//		}
+//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "项目资料");
+//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "项目成员");
+//		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+//	}
 	
 	private void setSharedProjectHeaderView(ViewGroup view) {
 		ImageButton imageButton = (ImageButton)view.findViewById(R.id.projectListItem_action_viewSubProjects);

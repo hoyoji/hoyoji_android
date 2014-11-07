@@ -4,6 +4,8 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter.OnGetChildrenCursorListener;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
+import com.hoyoji.android.hyjframework.view.HyjExpandableListView;
+import com.hoyoji.android.hyjframework.view.HyjExpandableListView.OnOverScrollByListener;
 import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,9 +51,11 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	protected View mFooterView;
 	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
+	private DisplayMetrics displayMetrics;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+			displayMetrics = getResources().getDisplayMetrics();
 			//View v = super.onCreateView(inflater, container, savedInstanceState);
 			ViewGroup rootView = (ViewGroup) inflater.inflate(useContentView(), container, false);
 			//rootView.addView(v, 0);
@@ -95,6 +100,21 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), getListPageSize());
 			}
 		});
+//	    mExpandableListView.setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
+	    if(getListView() instanceof HyjExpandableListView){
+		    ((HyjExpandableListView)getListView()).setOnOverScrollByListener(new OnOverScrollByListener(){
+				@Override
+				public void onOverScrollBy(int deltaX, int deltaY, int scrollX,
+						int scrollY, int scrollRangeX, int scrollRangeY,
+						int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+	
+					final float density = displayMetrics.density;
+					if(scrollY / density > 50.0){
+						doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), getListPageSize());
+					}
+				}
+		    });
+	    }
 		getListView().setEmptyView(mEmptyView);
 		this.registerForContextMenu(getListView());
 		ExpandableListAdapter adapter = (ExpandableListAdapter) getListView().getExpandableListAdapter();
