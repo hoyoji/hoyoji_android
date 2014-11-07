@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -32,8 +31,6 @@ import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
@@ -62,9 +59,6 @@ import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
-import com.hoyoji.hoyoji.money.MoneySearchChildListLoader;
-import com.hoyoji.hoyoji.money.MoneySearchFormFragment;
-import com.hoyoji.hoyoji.money.MoneySearchGroupListLoader;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 
@@ -79,6 +73,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 //	private Long mDateFrom;
 //	private Long mDateTo;
 //	private String mDisplayType;
+	private String mLocalFriendId;
 	
 	@Override
 	public Integer useContentView() {
@@ -99,6 +94,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 	protected View useHeaderView(Bundle savedInstanceState){
 		Intent intent = getActivity().getIntent();
 		final Long project_id = intent.getLongExtra("PROJECT_ID", -1);
+		mLocalFriendId = intent.getStringExtra("LOCAL_FRIENDID");
 		if(project_id != -1){
 			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
 		}
@@ -137,6 +133,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 		Bundle queryParams = new Bundle();
 		if(mProject != null){
 			queryParams.putString("projectId", mProject.getId());
+			queryParams.putString("localFriendId", mLocalFriendId);
 		}
 //		if(mMoneyAccount != null){
 //			queryParams.putString("moneyAccountId", mMoneyAccount.getId());
@@ -250,9 +247,9 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 //		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
-			loader = new MoneySearchGroupListLoader(getActivity(), arg1);
+			loader = new MemberMoneyTBDGroupListLoader(getActivity(), arg1);
 		} else {
-			loader = new MoneySearchChildListLoader(getActivity(), arg1);
+			loader = new MemberMoneyTBDChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
 	}
@@ -274,7 +271,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((MoneySearchGroupListLoader)loader).hasMoreData());
+			this.setFooterLoadFinished(((MemberMoneyTBDGroupListLoader)loader).hasMoreData());
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);
@@ -1127,7 +1124,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 	public void doFetchMore(int offset, int pageSize){
 		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
-		((MoneySearchGroupListLoader)loader).fetchMore(null);	
+		((MemberMoneyTBDGroupListLoader)loader).fetchMore(null);	
 	}
 	
 	@Override  

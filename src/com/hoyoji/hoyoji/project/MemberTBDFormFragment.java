@@ -143,6 +143,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("PROJECT_ID", project.get_mId());
+				bundle.putString("LOCAL_FRIENDID", projectShareAuthorization.getLocalFriendId());
 				openActivityWithFragment(ProjectMoneyTBDListFragment.class, R.string.memberTBDFormFragment_title_transactions, bundle);
 			}
 		});
@@ -296,7 +297,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		}
 		
 		// 如果拆分里没有待定成员，我们把原来的待定成员移除
-		if(apiTBD == null && amountTBD == 0.0){
+		if(apiTBD == null && (amountTBD == 0.0 || apportionItems.size() > 0)){
 			ApportionItem apportionItemTBD = new ApportionItem(apportionTBD, projectShareAuthorization.getProject().getId(), ApportionItem.DELETED);
 			apportionItems.add(apportionItemTBD);
 		}
