@@ -328,7 +328,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 						apportion.setMoneyId(apportionContainerId);
 					}
 					
-					apportion.setApportionType(apiApportion.getApportionType());
+					apportion.setApportionType(api.getApportionType());
 					
 					ApportionItem apportionItem = new ApportionItem(apportion, projectShareAuthorization.getProject().getId(), ApportionItem.NEW);
 					apportionItems.add(apportionItem);
