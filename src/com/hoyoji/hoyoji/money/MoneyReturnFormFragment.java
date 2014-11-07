@@ -822,7 +822,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 									oldSelfProjectAuthorizationEditor.save();
 								}
 
-//								moneyPayback.setMoneyReturnId(moneyReturnModel.getId());
+								moneyPayback.setMoneyReturnId(moneyReturnModel.getId());
 								moneyPayback.setAmount(moneyReturnModel.getAmount0());
 								moneyPayback.setDate(moneyReturnModel.getDate());
 								moneyPayback.setRemark(moneyReturnModel.getRemark());

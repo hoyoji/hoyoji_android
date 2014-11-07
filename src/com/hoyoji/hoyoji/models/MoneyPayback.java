@@ -61,9 +61,8 @@ public class MoneyPayback extends HyjModel{
 //	@Column(name = "moneyLendId")
 //	private String mMoneyLendId;
 
-	// 由还款导入生成的
-//	@Column(name = "moneyReturnId")
-//	private String mMoneyReturnId;
+	@Column(name = "moneyReturnId")
+	private String mMoneyReturnId;
 	
 	@Column(name = "isImported")
 	private Boolean mIsImported;
@@ -588,9 +587,9 @@ public class MoneyPayback extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-//	public void setMoneyReturnId(String moneyReturnId) {
-//		this.mMoneyReturnId = moneyReturnId;
-//	}
+	public void setMoneyReturnId(String moneyReturnId) {
+		this.mMoneyReturnId = moneyReturnId;
+	}
 	
 	public String getCurrencyId1() {
 		return mCurrencyId;

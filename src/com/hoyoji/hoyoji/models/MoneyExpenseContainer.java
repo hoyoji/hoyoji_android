@@ -12,6 +12,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "MoneyExpenseContainer", id = BaseColumns._ID)
@@ -537,5 +538,9 @@ public class MoneyExpenseContainer extends HyjModel{
 //	public void setMoneyIncomeId(String moneyIncomeId) {
 //		this.mMoneyIncomeId = moneyIncomeId;
 //	}
+
+	public void saveApportions(List<MoneyExpenseApportion> apportions){
+		
+	}
 
 }

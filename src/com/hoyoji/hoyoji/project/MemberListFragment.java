@@ -341,7 +341,7 @@ public class MemberListFragment extends HyjUserListFragment{
 			if(memberToBeDetermined.getFriend() == null){
 				HyjUtil.displayToast("只有项目所有者才允许编辑待定成员");
 			} else if(memberToBeDetermined.getFriend().getToBeDetermined()){
-				openActivityWithFragment(MemberToBeDeterminedFormFragment.class, R.string.memberTBDFormFragment_title_edit, bundle);
+				openActivityWithFragment(MemberTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
 			}

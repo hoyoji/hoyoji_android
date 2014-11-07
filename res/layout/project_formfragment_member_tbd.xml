@@ -34,6 +34,14 @@
             android:text="@string/memberTBDFormFragment_textView_message"
             />
         
+        <Button
+            android:id="@+id/memberTBDFormFragment_button_transactions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="#E0E0E0"
+            android:text="查看拆分账务" />
+        
        <!--  <CheckBox
             android:id="@+id/memberTBDFormFragment_checkBox_delete_tbd"
             android:layout_width="match_parent"
@@ -41,6 +49,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/memberTBDFormFragment_checkBox_delete_tbd" />
          -->
+         
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"

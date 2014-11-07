@@ -68,8 +68,8 @@ public class MoneyReturn extends HyjModel{
 //	private String mReturnType;
 
 	// 如果有，说明该还款是从该收款导入生成的
-//	@Column(name = "moneyPaybackId")
-//	private String mMoneyPaybackId;
+	@Column(name = "moneyPaybackId")
+	private String mMoneyPaybackId;
 
 //	@Column(name = "moneyReturnApportionId")
 //	private String mMoneyReturnApportionId;
@@ -585,9 +585,9 @@ public class MoneyReturn extends HyjModel{
 		return psa.getProjectShareMoneyExpenseDelete();
 	}
 
-//	public void setMoneyPaybackId(String moneyPaybackId) {
-//		this.mMoneyPaybackId = moneyPaybackId;
-//	}
+	public void setMoneyPaybackId(String moneyPaybackId) {
+		this.mMoneyPaybackId = moneyPaybackId;
+	}
 //	public String getMoneyPaybackId() {
 //		return this.mMoneyPaybackId;
 //	}

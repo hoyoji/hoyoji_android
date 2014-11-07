@@ -2,11 +2,12 @@
 <resources>
     
     
-   <string name="memberTBDFormFragment_title_addnew">拆分待定成员</string>
-   <string name="memberTBDFormFragment_title_edit">拆分待定成员</string>
+   <string name="memberTBDFormFragment_title_split">拆分待定成员</string>
    
-   <string name="memberTBDFormFragment_progress_adding">正在拆分待定成员</string>
-   <string name="memberTBDFormFragment_toast_share_add_success">成功在服务器上拆分待定成员\n\n您须同步后才能从服务器上下载最新的拆分结果</string>
+   <string name="memberTBDFormFragment_title_transactions">拆分账务</string>
+   
+   <string name="memberTBDFormFragment_progress_splitting">正在拆分待定成员</string>
+   <string name="memberTBDFormFragment_toast_split_success">成功拆分待定成员</string>
    
    <string name="memberTBDFormFragment_textView_projectName">项目名称</string>
    
