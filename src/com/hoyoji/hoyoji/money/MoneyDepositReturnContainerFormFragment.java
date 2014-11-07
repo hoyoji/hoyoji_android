@@ -46,6 +46,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer.MoneyDepositReturnContainerEditor;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -532,38 +533,39 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 										Iterator<MoneyDepositReturnApportion> moneyDepositReturnApportions = moneyDepositReturnContainer.getApportions().iterator();
 										while (moneyDepositReturnApportions.hasNext()) {
 											MoneyDepositReturnApportion moneyDepositReturnAportion = moneyDepositReturnApportions.next();
-											// 维护缴款人的 ProjectShareAuthorization
-											ProjectShareAuthorization psa = moneyDepositReturnAportion.getProjectShareAuthorization();
-											HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
-											psaEditor.getModelCopy().setActualTotalPayback(psa.getActualTotalPayback() - moneyDepositReturnAportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
-											psaEditor.save();
-											
-											List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", moneyDepositReturnAportion.getId()).execute();
-											for(MoneyReturn moneyReturn : moneyReturns){
-												if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
-													MoneyAccount debtAccount;
-													if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-														if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-														} else {
-															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
-														}
-													} else {
-														debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-													}
-													HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-													debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-													debtAccountEditor.save();
-												}
-												moneyReturn.delete();
-											} 
-
-											List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", moneyDepositReturnAportion.getId()).execute();
-											for(MoneyPayback moneyPayback : moneyPaybacks){
-												moneyPayback.delete();
-											}
-												
-											moneyDepositReturnAportion.delete();
+											MoneyDepositReturnContainer.deleteApportion(moneyDepositReturnAportion, mMoneyDepositReturnContainerEditor);
+//											// 维护缴款人的 ProjectShareAuthorization
+//											ProjectShareAuthorization psa = moneyDepositReturnAportion.getProjectShareAuthorization();
+//											HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
+//											psaEditor.getModelCopy().setActualTotalPayback(psa.getActualTotalPayback() - moneyDepositReturnAportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
+//											psaEditor.save();
+//											
+//											List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", moneyDepositReturnAportion.getId()).execute();
+//											for(MoneyReturn moneyReturn : moneyReturns){
+//												if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
+//													MoneyAccount debtAccount;
+//													if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
+//														if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//														} else {
+//															debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+//														}
+//													} else {
+//														debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//													}
+//													HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//													debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
+//													debtAccountEditor.save();
+//												}
+//												moneyReturn.delete();
+//											} 
+//
+//											List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", moneyDepositReturnAportion.getId()).execute();
+//											for(MoneyPayback moneyPayback : moneyPaybacks){
+//												moneyPayback.delete();
+//											}
+//												
+//											moneyDepositReturnAportion.delete();
 										}
 
 										moneyDepositReturnContainer.delete();
@@ -593,7 +595,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyDepositReturnContainerEditor.getModel().getProjectAmount());
+//			mNumericAmount.setNumber(mMoneyDepositReturnContainerEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyAccount.setEnabled(false);
@@ -863,293 +865,293 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		 MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 			int count = adapter.getCount();
 			int savedCount = 0;
-			for (int i = 0; i < count; i++) {
-				ApportionItem<MoneyApportion> api = adapter.getItem(i);
-				MoneyDepositReturnApportion apportion = (MoneyDepositReturnApportion) api.getApportion();
-	            
-					if(api.getState() == ApportionItem.DELETED ){
-						
-						// 维护缴款人的 ProjectShareAuthorization
-						ProjectShareAuthorization psa = api.getProjectShareAuthorization();
-						HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
-						psaEditor.getModelCopy().setActualTotalReturn(psa.getActualTotalReturn() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
-						psaEditor.save();
-
-						List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
-						for(MoneyReturn moneyReturn : moneyReturns){
-							if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())) {
-								MoneyAccount debtAccount = null;
-								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
-								} else {
-									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-								}
-								HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-								debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-								debtAccountEditor.save();
-								moneyReturn.delete();
-							}
-						}
-						List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
-						for(MoneyPayback moneyPayback : moneyPaybacks){
-							moneyPayback.delete();
-						}
-						apportion.delete();
-					} else {
-						HyjModelEditor<MoneyDepositReturnApportion> apportionEditor = apportion.newModelEditor();
-						if(api.getState() != ApportionItem.UNCHANGED		
-								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())
-								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositReturnContainerEditor.getModel().getMoneyAccountId())) {
-							api.saveToCopy(apportionEditor.getModelCopy());
-						}
-						
-						MoneyAccount debtAccount = null;
-						// 该好友是网络好友 或 该好友是本地好友
-						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
-							if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-								debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportion.getLocalFriendId(), apportion.getFriendUserId());
-							} else {
-								debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
-							}
-						} else {
-							debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportion.getLocalFriendId(), apportion.getFriendUserId());
-						}
-						if(api.getState() == ApportionItem.NEW){
-			                if(debtAccount != null){
-			                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-			                	debtAccountEditor.save();
-			                }else{
-			                	if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
-									if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-									} else {
-				                		MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-				                	}
-			                	} else {
-			                		MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-					            }
-							}
-						} else{
-							MoneyAccount oldDebtAccount = null;
-							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
-								} else {
-									oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
-								}
-							} else {
-								oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
-							}
-							
-							if(debtAccount == null){
-								if(oldDebtAccount != null){
-									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
-									oldDebtAccountEditor.save();
-								}
-								if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
-									if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-									} else {
-										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-									}
-								} else {
-									MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-								}
-							}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
-								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-								oldDebtAccountEditor.save();
-							}else{
-								if(oldDebtAccount != null){
-									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-				                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
-									oldDebtAccountEditor.save();
-								}
-								HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-				               	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-				               	debtAccountEditor.save();
-							}
-						}
-						
-
-						// 维护缴款人的 ProjectShareAuthorization
-						ProjectShareAuthorization newPsa = api.getProjectShareAuthorization();
-						HyjModelEditor<ProjectShareAuthorization> newPsaEditor = newPsa.newModelEditor();
-						if(apportion.get_mId() == null) {
-							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-						} else if(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())){
-							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() - apportionEditor.getModel().getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-						} else {
-							ProjectShareAuthorization oldPsa;
-							if(apportion.getFriendUserId() != null){
-								oldPsa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId AND state <> 'Delete'", mMoneyDepositReturnContainerEditor.getModel().getProjectId(), apportion.getFriendUserId()).executeSingle();
-							} else {
-								oldPsa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId AND state <> 'Delete'", mMoneyDepositReturnContainerEditor.getModel().getProjectId(), apportion.getLocalFriendId()).executeSingle();
-							}
-							HyjModelEditor<ProjectShareAuthorization> oldPsaEditor = oldPsa.newModelEditor();
-							oldPsaEditor.getModelCopy().setActualTotalPayback(oldPsa.getActualTotalPayback() - apportionEditor.getModel().getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
-							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-						}
-						newPsaEditor.save();
-						
-						MoneyReturn moneyReturn = null;
-						MoneyPayback moneyPayback = null;
-						MoneyReturn moneyReturnOfFinancialOwner = null;
-						MoneyPayback moneyPaybackOfFinancialOwner = null;
-						if(apportion.get_mId() != null){
-							moneyReturn = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-							if(apportionEditor.getModel().getLocalFriendId() != null){
-								moneyPayback = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerFriendId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
-							} else {
-								moneyPayback = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
-							}
-							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null &&
-									!mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-								moneyReturnOfFinancialOwner = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-								moneyPaybackOfFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-							}
-							String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() , "");
-							String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
-							if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
-								if(moneyReturn != null){
-									moneyReturn.delete();
-									moneyReturn = new MoneyReturn();
-								}
-								if(moneyPayback != null){
-									moneyPayback.delete();
-									moneyPayback = new MoneyPayback();
-								}
-								if(moneyReturnOfFinancialOwner != null){
-									moneyReturnOfFinancialOwner.delete();
-									moneyReturnOfFinancialOwner = new MoneyReturn();
-								}
-								if(moneyPaybackOfFinancialOwner != null){
-									moneyPaybackOfFinancialOwner.delete();
-									moneyPaybackOfFinancialOwner = new MoneyPayback();
-								}
-							}
-						}
-						if(moneyReturn == null){
-							moneyReturn = new MoneyReturn();
-						}
-						if(moneyPayback == null){
-							moneyPayback = new MoneyPayback();
-						}
-						if(moneyReturnOfFinancialOwner == null){
-							moneyReturnOfFinancialOwner = new MoneyReturn();
-						}
-						if(moneyPaybackOfFinancialOwner == null){
-							moneyPaybackOfFinancialOwner = new MoneyPayback();
-						}
-						
-						moneyReturn.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
-						moneyReturn.setAmount(apportionEditor.getModelCopy().getAmount0());
-						moneyReturn.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
-						moneyReturn.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
-						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
-								|| HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
-							moneyReturn.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
-							moneyReturn.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-						} else {
-							moneyReturn.setFriendUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
-						}
-						moneyReturn.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-						moneyReturn.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
-						moneyReturn.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
-						
-						if(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId() != null){
-							MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId());
-							moneyReturn.setMoneyAccountId(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
-						} else {
-							moneyReturn.setMoneyAccountId(null, null);
-						}
-						moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
-						moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
-						moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-						moneyReturn.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
-						moneyReturn.save();
-						
-						if(apportionEditor.getModelCopy().getLocalFriendId() != null){
-							moneyPayback.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
-//							moneyPayback.setmoneyReturnId(moneyReturn.getId());
-							moneyPayback.setAmount(apportionEditor.getModelCopy().getAmount0());
-							moneyPayback.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
-							moneyPayback.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
-							if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
-									|| HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
-								moneyPayback.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-							} else {
-								moneyPayback.setFriendUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
-							}
-							moneyPayback.setLocalFriendId(null);
-							moneyPayback.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-							moneyPayback.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
-							moneyPayback.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
-							moneyPayback.setMoneyAccountId(null, moneyReturn.getCurrencyId1());
-							moneyPayback.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
-							moneyPayback.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
-							moneyPayback.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-							moneyPayback.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
-							moneyPayback.setOwnerFriendId(apportionEditor.getModel().getLocalFriendId());
-							moneyPayback.setOwnerUserId("");
-							moneyPayback.save();
-						}
-						
-						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null
-								&& !HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
-							moneyReturnOfFinancialOwner.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
-							moneyReturnOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
-							moneyReturnOfFinancialOwner.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
-							moneyReturnOfFinancialOwner.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
-							moneyReturnOfFinancialOwner.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
-							moneyReturnOfFinancialOwner.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
-							moneyReturnOfFinancialOwner.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-							moneyReturnOfFinancialOwner.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
-							moneyReturnOfFinancialOwner.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
-							moneyReturnOfFinancialOwner.setOwnerUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
-							
-							if(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId() != null){
-								MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId());
-								moneyReturnOfFinancialOwner.setMoneyAccountId(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
-							} else {
-								moneyReturnOfFinancialOwner.setMoneyAccountId(null, null);
-							}
-							moneyReturnOfFinancialOwner.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
-							moneyReturnOfFinancialOwner.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
-							moneyReturnOfFinancialOwner.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-							moneyReturnOfFinancialOwner.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
-							moneyReturnOfFinancialOwner.save();
-							
-							moneyPaybackOfFinancialOwner.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
-//							moneyPaybackOfFinancialOwner.setmoneyReturnId(moneyReturn.getId());
-							moneyPaybackOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
-							moneyPaybackOfFinancialOwner.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
-							moneyPaybackOfFinancialOwner.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
-							moneyPaybackOfFinancialOwner.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-							moneyPaybackOfFinancialOwner.setLocalFriendId(null);
-							moneyPaybackOfFinancialOwner.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
-							moneyPaybackOfFinancialOwner.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
-							moneyPaybackOfFinancialOwner.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
-							moneyPaybackOfFinancialOwner.setMoneyAccountId(null, moneyReturn.getCurrencyId1());
-							moneyPaybackOfFinancialOwner.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
-							moneyPaybackOfFinancialOwner.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
-							moneyPaybackOfFinancialOwner.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
-							moneyPaybackOfFinancialOwner.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
-							moneyPaybackOfFinancialOwner.setOwnerUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
-							moneyPaybackOfFinancialOwner.save();
-						}
-						
-//						if(api.getState() != ApportionItem.UNCHANGED
+//			for (int i = 0; i < count; i++) {
+//				ApportionItem<MoneyApportion> api = adapter.getItem(i);
+//				MoneyDepositReturnApportion apportion = (MoneyDepositReturnApportion) api.getApportion();
+//	            
+//					if(api.getState() == ApportionItem.DELETED ){
+//						
+//						// 维护缴款人的 ProjectShareAuthorization
+//						ProjectShareAuthorization psa = api.getProjectShareAuthorization();
+//						HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
+//						psaEditor.getModelCopy().setActualTotalReturn(psa.getActualTotalReturn() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
+//						psaEditor.save();
+//
+//						List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
+//						for(MoneyReturn moneyReturn : moneyReturns){
+//							if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())) {
+//								MoneyAccount debtAccount = null;
+//								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
+//									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+//								} else {
+//									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//								}
+//								HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//								debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
+//								debtAccountEditor.save();
+//								moneyReturn.delete();
+//							}
+//						}
+//						List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
+//						for(MoneyPayback moneyPayback : moneyPaybacks){
+//							moneyPayback.delete();
+//						}
+//						apportion.delete();
+//					} else {
+//						HyjModelEditor<MoneyDepositReturnApportion> apportionEditor = apportion.newModelEditor();
+//						if(api.getState() != ApportionItem.UNCHANGED		
 //								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())
 //								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositReturnContainerEditor.getModel().getMoneyAccountId())) {
-							apportionEditor.save();
+//							api.saveToCopy(apportionEditor.getModelCopy());
 //						}
-						savedCount++;
-					}
-			}
-			
+//						
+//						MoneyAccount debtAccount = null;
+//						// 该好友是网络好友 或 该好友是本地好友
+//						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+//							if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//								debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportion.getLocalFriendId(), apportion.getFriendUserId());
+//							} else {
+//								debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
+//							}
+//						} else {
+//							debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportion.getLocalFriendId(), apportion.getFriendUserId());
+//						}
+//						if(api.getState() == ApportionItem.NEW){
+//			                if(debtAccount != null){
+//			                	HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//			                	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//			                	debtAccountEditor.save();
+//			                }else{
+//			                	if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+//									if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//									} else {
+//				                		MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//				                	}
+//			                	} else {
+//			                		MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//					            }
+//							}
+//						} else{
+//							MoneyAccount oldDebtAccount = null;
+//							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
+//								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//									oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
+//								} else {
+//									oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+//								}
+//							} else {
+//								oldDebtAccount = MoneyAccount.getDebtAccount(mMoneyDepositReturnContainerEditor.getModel().getProject().getCurrencyId(), apportionEditor.getModel().getLocalFriendId(), apportionEditor.getModel().getFriendUserId());
+//							}
+//							
+//							if(debtAccount == null){
+//								if(oldDebtAccount != null){
+//									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+//									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+//									oldDebtAccountEditor.save();
+//								}
+//								if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
+//									if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//									} else {
+//										MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId()), null, mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//									}
+//								} else {
+//									MoneyAccount.createDebtAccount(apportion.getFriendDisplayName(mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getId()), apportion.getLocalFriendId(), apportion.getFriendUserId(), mMoneyDepositReturnContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//								}
+//							}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
+//								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+//			                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//								oldDebtAccountEditor.save();
+//							}else{
+//								if(oldDebtAccount != null){
+//									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
+//				                	oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+//									oldDebtAccountEditor.save();
+//								}
+//								HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//				               	debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//				               	debtAccountEditor.save();
+//							}
+//						}
+//						
+//
+//						// 维护缴款人的 ProjectShareAuthorization
+//						ProjectShareAuthorization newPsa = api.getProjectShareAuthorization();
+//						HyjModelEditor<ProjectShareAuthorization> newPsaEditor = newPsa.newModelEditor();
+//						if(apportion.get_mId() == null) {
+//							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//						} else if(mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())){
+//							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() - apportionEditor.getModel().getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//						} else {
+//							ProjectShareAuthorization oldPsa;
+//							if(apportion.getFriendUserId() != null){
+//								oldPsa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId AND state <> 'Delete'", mMoneyDepositReturnContainerEditor.getModel().getProjectId(), apportion.getFriendUserId()).executeSingle();
+//							} else {
+//								oldPsa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId AND state <> 'Delete'", mMoneyDepositReturnContainerEditor.getModel().getProjectId(), apportion.getLocalFriendId()).executeSingle();
+//							}
+//							HyjModelEditor<ProjectShareAuthorization> oldPsaEditor = oldPsa.newModelEditor();
+//							oldPsaEditor.getModelCopy().setActualTotalPayback(oldPsa.getActualTotalPayback() - apportionEditor.getModel().getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
+//							newPsaEditor.getModelCopy().setActualTotalPayback(newPsa.getActualTotalPayback() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//						}
+//						newPsaEditor.save();
+//						
+//						MoneyReturn moneyReturn = null;
+//						MoneyPayback moneyPayback = null;
+//						MoneyReturn moneyReturnOfFinancialOwner = null;
+//						MoneyPayback moneyPaybackOfFinancialOwner = null;
+//						if(apportion.get_mId() != null){
+//							moneyReturn = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//							if(apportionEditor.getModel().getLocalFriendId() != null){
+//								moneyPayback = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerFriendId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
+//							} else {
+//								moneyPayback = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
+//							}
+//							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null &&
+//									!mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//								moneyReturnOfFinancialOwner = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+//								moneyPaybackOfFinancialOwner = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=? AND ownerUserId=?", apportionEditor.getModel().getId(), mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+//							}
+//							String previousFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() , "");
+//							String currentFinancialOwnerUserId = HyjUtil.ifNull(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() , "");
+//							if(!previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
+//								if(moneyReturn != null){
+//									moneyReturn.delete();
+//									moneyReturn = new MoneyReturn();
+//								}
+//								if(moneyPayback != null){
+//									moneyPayback.delete();
+//									moneyPayback = new MoneyPayback();
+//								}
+//								if(moneyReturnOfFinancialOwner != null){
+//									moneyReturnOfFinancialOwner.delete();
+//									moneyReturnOfFinancialOwner = new MoneyReturn();
+//								}
+//								if(moneyPaybackOfFinancialOwner != null){
+//									moneyPaybackOfFinancialOwner.delete();
+//									moneyPaybackOfFinancialOwner = new MoneyPayback();
+//								}
+//							}
+//						}
+//						if(moneyReturn == null){
+//							moneyReturn = new MoneyReturn();
+//						}
+//						if(moneyPayback == null){
+//							moneyPayback = new MoneyPayback();
+//						}
+//						if(moneyReturnOfFinancialOwner == null){
+//							moneyReturnOfFinancialOwner = new MoneyReturn();
+//						}
+//						if(moneyPaybackOfFinancialOwner == null){
+//							moneyPaybackOfFinancialOwner = new MoneyPayback();
+//						}
+//						
+//						moneyReturn.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
+//						moneyReturn.setAmount(apportionEditor.getModelCopy().getAmount0());
+//						moneyReturn.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
+//						moneyReturn.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
+//						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+//								|| HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
+//							moneyReturn.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+//							moneyReturn.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+//						} else {
+//							moneyReturn.setFriendUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
+//						}
+//						moneyReturn.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//						moneyReturn.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
+//						moneyReturn.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
+//						
+//						if(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId() != null){
+//							MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId());
+//							moneyReturn.setMoneyAccountId(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+//						} else {
+//							moneyReturn.setMoneyAccountId(null, null);
+//						}
+//						moneyReturn.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
+//						moneyReturn.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
+//						moneyReturn.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
+//						moneyReturn.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
+//						moneyReturn.save();
+//						
+//						if(apportionEditor.getModelCopy().getLocalFriendId() != null){
+//							moneyPayback.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
+////							moneyPayback.setmoneyReturnId(moneyReturn.getId());
+//							moneyPayback.setAmount(apportionEditor.getModelCopy().getAmount0());
+//							moneyPayback.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
+//							moneyPayback.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
+//							if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() == null
+//									|| HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
+//								moneyPayback.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//							} else {
+//								moneyPayback.setFriendUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
+//							}
+//							moneyPayback.setLocalFriendId(null);
+//							moneyPayback.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//							moneyPayback.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
+//							moneyPayback.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
+//							moneyPayback.setMoneyAccountId(null, moneyReturn.getCurrencyId1());
+//							moneyPayback.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
+//							moneyPayback.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
+//							moneyPayback.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
+//							moneyPayback.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
+//							moneyPayback.setOwnerFriendId(apportionEditor.getModel().getLocalFriendId());
+//							moneyPayback.setOwnerUserId("");
+//							moneyPayback.save();
+//						}
+//						
+//						if(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId() != null
+//								&& !HyjApplication.getInstance().getCurrentUser().getId().equals(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId())){
+//							moneyReturnOfFinancialOwner.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
+//							moneyReturnOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
+//							moneyReturnOfFinancialOwner.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
+//							moneyReturnOfFinancialOwner.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
+//							moneyReturnOfFinancialOwner.setFriendUserId(apportionEditor.getModelCopy().getFriendUserId());
+//							moneyReturnOfFinancialOwner.setLocalFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+//							moneyReturnOfFinancialOwner.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//							moneyReturnOfFinancialOwner.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
+//							moneyReturnOfFinancialOwner.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
+//							moneyReturnOfFinancialOwner.setOwnerUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
+//							
+//							if(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId() != null){
+//								MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId());
+//								moneyReturnOfFinancialOwner.setMoneyAccountId(mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+//							} else {
+//								moneyReturnOfFinancialOwner.setMoneyAccountId(null, null);
+//							}
+//							moneyReturnOfFinancialOwner.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
+//							moneyReturnOfFinancialOwner.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
+//							moneyReturnOfFinancialOwner.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
+//							moneyReturnOfFinancialOwner.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
+//							moneyReturnOfFinancialOwner.save();
+//							
+//							moneyPaybackOfFinancialOwner.setMoneyDepositReturnApportionId(apportionEditor.getModelCopy().getId());
+////							moneyPaybackOfFinancialOwner.setmoneyReturnId(moneyReturn.getId());
+//							moneyPaybackOfFinancialOwner.setAmount(apportionEditor.getModelCopy().getAmount0());
+//							moneyPaybackOfFinancialOwner.setDate(mMoneyDepositReturnContainerEditor.getModelCopy().getDate());
+//							moneyPaybackOfFinancialOwner.setRemark(mMoneyDepositReturnContainerEditor.getModelCopy().getRemark());
+//							moneyPaybackOfFinancialOwner.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//							moneyPaybackOfFinancialOwner.setLocalFriendId(null);
+//							moneyPaybackOfFinancialOwner.setExchangeRate(mMoneyDepositReturnContainerEditor.getModelCopy().getExchangeRate());
+//							moneyPaybackOfFinancialOwner.setGeoLat(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLat());
+//							moneyPaybackOfFinancialOwner.setGeoLon(mMoneyDepositReturnContainerEditor.getModelCopy().getGeoLon());
+//							moneyPaybackOfFinancialOwner.setMoneyAccountId(null, moneyReturn.getCurrencyId1());
+//							moneyPaybackOfFinancialOwner.setLocation(mMoneyDepositReturnContainerEditor.getModelCopy().getLocation());
+//							moneyPaybackOfFinancialOwner.setAddress(mMoneyDepositReturnContainerEditor.getModelCopy().getAddress());
+//							moneyPaybackOfFinancialOwner.setPictureId(mMoneyDepositReturnContainerEditor.getModelCopy().getPictureId());
+//							moneyPaybackOfFinancialOwner.setProject(mMoneyDepositReturnContainerEditor.getModelCopy().getProject());
+//							moneyPaybackOfFinancialOwner.setOwnerUserId(mMoneyDepositReturnContainerEditor.getModelCopy().getFinancialOwnerUserId());
+//							moneyPaybackOfFinancialOwner.save();
+//						}
+//						
+////						if(api.getState() != ApportionItem.UNCHANGED
+////								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositReturnContainerEditor.getModel().getProjectId())
+////								|| !mMoneyDepositReturnContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositReturnContainerEditor.getModel().getMoneyAccountId())) {
+//							apportionEditor.save();
+////						}
+//						savedCount++;
+//					}
+//			}
+//			
 			// 从隐藏掉的分摊里面删除原来的分摊
 			Iterator<ApportionItem<MoneyApportion>> it = mApportionFieldApportions.getHiddenApportions().iterator();
 			while (it.hasNext()) {
@@ -1157,38 +1159,39 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				ApportionItem<MoneyApportion> item = it.next();
 				if (item.getState() != ApportionItem.NEW) {
 					MoneyDepositReturnApportion apportion = ((MoneyDepositReturnApportion) item.getApportion());
+					MoneyDepositReturnContainer.deleteApportion(apportion, mMoneyDepositReturnContainerEditor);
 					
-					// 维护缴款人的 ProjectShareAuthorization
-					ProjectShareAuthorization psa = item.getProjectShareAuthorization();
-					HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
-					psaEditor.getModelCopy().setActualTotalPayback(psa.getActualTotalPayback() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
-					psaEditor.save();
-					
-					List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
-					for(MoneyReturn moneyReturn : moneyReturns){
-						if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
-							MoneyAccount debtAccount;
-							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
-								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-								} else {
-									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
-								}
-							} else {
-								debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-							}
-							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-							debtAccountEditor.save();
-						}
-						moneyReturn.delete();
-					}
-					
-					List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
-					for(MoneyPayback moneyPayback : moneyPaybacks){
-						moneyPayback.delete();
-					}
-					apportion.delete();
+//					// 维护缴款人的 ProjectShareAuthorization
+//					ProjectShareAuthorization psa = item.getProjectShareAuthorization();
+//					HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
+//					psaEditor.getModelCopy().setActualTotalPayback(psa.getActualTotalPayback() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
+//					psaEditor.save();
+//					
+//					List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
+//					for(MoneyReturn moneyReturn : moneyReturns){
+//						if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyReturn.getOwnerUserId())){
+//							MoneyAccount debtAccount;
+//							if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId() != null){
+//								if(mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//								} else {
+//									debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), null, mMoneyDepositReturnContainerEditor.getModel().getFinancialOwnerUserId());
+//								}
+//							} else {
+//								debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//							}
+//							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//							debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
+//							debtAccountEditor.save();
+//						}
+//						moneyReturn.delete();
+//					}
+//					
+//					List<MoneyPayback> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
+//					for(MoneyPayback moneyPayback : moneyPaybacks){
+//						moneyPayback.delete();
+//					}
+//					apportion.delete();
 				}
 			}
 			
@@ -1398,30 +1401,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
     	       	 break;
           }
     }
-		// inner class
-		private static class MoneyDepositReturnContainerEditor extends HyjModelEditor<MoneyDepositReturnContainer> {
-			private  ProjectShareAuthorization mOldProjectShareAuthorization;
-			private  ProjectShareAuthorization mNewProjectShareAuthorization;
-			
-			public MoneyDepositReturnContainerEditor(MoneyDepositReturnContainer model) {
-				super(model);
-			}
-			
-			public ProjectShareAuthorization getOldSelfProjectShareAuthorization(){
-				if(mOldProjectShareAuthorization == null){
-					return new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", this.getModel().getOwnerUserId(), this.getModel().getProjectId()).executeSingle();
-				}
-				return mOldProjectShareAuthorization;
-			}
-			
-			public ProjectShareAuthorization getNewSelfProjectShareAuthorization(){
-				if(mNewProjectShareAuthorization == null){
-					return new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", HyjApplication.getInstance().getCurrentUser().getId(), this.getModelCopy().getProjectId()).executeSingle();
-				}
-				return mNewProjectShareAuthorization;
-			}
-		}
-
+		
 		@Override
 		public void onDestroy(){
 			super.onDestroy();

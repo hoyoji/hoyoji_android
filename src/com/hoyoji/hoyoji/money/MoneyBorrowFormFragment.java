@@ -557,8 +557,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 				&& !hasEditPermission) {
 			mDateTimeFieldDate.setEnabled(false);
 
-			mNumericAmount.setNumber(mMoneyBorrowEditor.getModel()
-					.getProjectAmount());
+//			mNumericAmount.setNumber(mMoneyBorrowEditor.getModel()
+//					.getProjectAmount());
 			mNumericAmount.setEnabled(false);
 
 			mDateTimeFieldReturnDate.setEnabled(false);

@@ -448,7 +448,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		if(mMoneyReturnEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericFieldAmount.setNumber(mMoneyReturnEditor.getModel().getProjectAmount());
+//			mNumericFieldAmount.setNumber(mMoneyReturnEditor.getModel().getProjectAmount());
 			mNumericFieldAmount.setEnabled(false);
 			
 			mSelectorFieldFriend.setEnabled(false);

@@ -33,9 +33,18 @@ import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer.MoneyDepositIncomeContainerEditor;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer.MoneyDepositReturnContainerEditor;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer.MoneyExpenseContainerEditor;
+import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
@@ -220,6 +229,9 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		try {
 			
 			doSplitExpenseContainers();
+			doSplitIncomeContainers();
+			doSplitDepositIncomeContainers();
+			doSplitDepositReturnContainers();
 
 			
 			ActiveAndroid.setTransactionSuccessful();
@@ -232,7 +244,43 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		((HyjActivity) MemberTBDFormFragment.this.getActivity()).dismissProgressDialog();
 		HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
 	}	
-
+	 
+	 private void doSplitDepositReturnContainers() {
+			List<MoneyDepositReturnContainer> moneyDepositReturnContainers = new Select("container.*").from(MoneyDepositReturnContainer.class).as("container")
+									.join(MoneyDepositReturnApportion.class).as("apportion").on("container.id = apportion.moneyDepositReturnContainerId").
+									where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
+			
+			for(MoneyDepositReturnContainer moneyDepositReturnContainer : moneyDepositReturnContainers){
+				List apportions = moneyDepositReturnContainer.getApportions();
+				List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyDepositReturnApportion.class, apportions, moneyDepositReturnContainer.getId());
+				MoneyDepositReturnContainer.saveApportions(apportionItems, new MoneyDepositReturnContainerEditor(moneyDepositReturnContainer));
+			}
+		}
+	 
+	 private void doSplitDepositIncomeContainers() {
+			List<MoneyDepositIncomeContainer> moneyDepositIncomeContainers = new Select("container.*").from(MoneyDepositIncomeContainer.class).as("container")
+									.join(MoneyDepositIncomeApportion.class).as("apportion").on("container.id = apportion.moneyDepositIncomeContainerId").
+									where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
+			
+			for(MoneyDepositIncomeContainer moneyDepositIncomeContainer : moneyDepositIncomeContainers){
+				List apportions = moneyDepositIncomeContainer.getApportions();
+				List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyDepositIncomeApportion.class, apportions, moneyDepositIncomeContainer.getId());
+				MoneyDepositIncomeContainer.saveApportions(apportionItems, new MoneyDepositIncomeContainerEditor(moneyDepositIncomeContainer));
+			}
+		}
+	 
+	 private void doSplitIncomeContainers() {
+		List<MoneyIncomeContainer> moneyIncomeContainers = new Select("container.*").from(MoneyIncomeContainer.class).as("container")
+								.join(MoneyIncomeApportion.class).as("apportion").on("container.id = apportion.moneyIncomeContainerId").
+								where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
+		
+		for(MoneyIncomeContainer moneyIncomeContainer : moneyIncomeContainers){
+			List apportions = moneyIncomeContainer.getApportions();
+			List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyIncomeApportion.class, apportions, moneyIncomeContainer.getId());
+			MoneyIncomeContainer.saveApportions(apportionItems, new MoneyIncomeContainerEditor(moneyIncomeContainer));
+		}
+	}
+	 
 	private void doSplitExpenseContainers() {
 		List<MoneyExpenseContainer> moneyExpenseContainers = new Select("container.*").from(MoneyExpenseContainer.class).as("container")
 								.join(MoneyExpenseApportion.class).as("apportion").on("container.id = apportion.moneyExpenseContainerId").

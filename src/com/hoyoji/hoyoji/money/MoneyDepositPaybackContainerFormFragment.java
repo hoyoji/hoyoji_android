@@ -442,7 +442,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		if(mMoneyDepositPaybackContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyDepositPaybackContainerEditor.getModel().getProjectAmount());
+//			mNumericAmount.setNumber(mMoneyDepositPaybackContainerEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 //			mDateTimeFieldPaybackDate.setEnabled(false);

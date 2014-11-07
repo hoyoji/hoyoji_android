@@ -551,7 +551,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 		if(mMoneyExpenseEditor.getModelCopy().get_mId() != null && !hasEditPermission){
 			mDateTimeFieldDate.setEnabled(false);
 			
-			mNumericAmount.setNumber(mMoneyExpenseEditor.getModel().getProjectAmount());
+//			mNumericAmount.setNumber(mMoneyExpenseEditor.getModel().getProjectAmount());
 			mNumericAmount.setEnabled(false);
 			
 			mSelectorFieldMoneyExpenseCategory.setEnabled(false);
