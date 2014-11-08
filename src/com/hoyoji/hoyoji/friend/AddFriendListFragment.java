@@ -114,11 +114,11 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		}
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		// do nothing, clear the delete item from super class
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v,
+//			ContextMenuInfo menuInfo) {
+//		// do nothing, clear the delete item from super class
+//	}
 
 	@Override
 	public boolean onQueryTextChange(String arg0) {

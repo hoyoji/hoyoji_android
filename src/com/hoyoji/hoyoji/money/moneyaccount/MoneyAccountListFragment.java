@@ -103,16 +103,16 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		return super.onContextItemSelected(item);
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
-		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
-			if(adapterContextMenuInfo.id != -1){
-				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "账户资料");
-				menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-			}
-		}
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
+//		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
+//			if(adapterContextMenuInfo.id != -1){
+//				menu.add(0, EDIT_MONEYACCOUNT_DETAILS, 0, "账户资料");
+//				menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+//			}
+//		}
+//	}
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 		super.onCreateLoader(groupPos, arg1);

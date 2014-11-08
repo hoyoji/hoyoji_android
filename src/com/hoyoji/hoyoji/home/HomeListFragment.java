@@ -436,10 +436,10 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//		
+//	}
 	
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {

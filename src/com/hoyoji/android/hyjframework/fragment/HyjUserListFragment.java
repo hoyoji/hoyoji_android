@@ -102,7 +102,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	    }
 		getListView().addFooterView(mFooterView, null, false);
 //		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
-		this.registerForContextMenu(getListView());
+//		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){
 			ListAdapter adapter = useListViewAdapter();
 			if(adapter instanceof SimpleCursorAdapter){

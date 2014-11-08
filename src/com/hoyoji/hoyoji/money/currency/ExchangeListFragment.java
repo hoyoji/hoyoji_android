@@ -125,13 +125,13 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		return true;
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		//super.onCreateContextMenu(menu, v, menuInfo);
-//		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
-//		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
-//		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//		//super.onCreateContextMenu(menu, v, menuInfo);
+////		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "项目成员");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+////		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
