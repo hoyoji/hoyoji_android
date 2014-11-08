@@ -30,6 +30,8 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjListView;
+import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 
@@ -77,7 +79,6 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		getListView().setOnItemLongClickListener(this);
 		
 
-
 		mFrecentCategory.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
 		px = TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP, 10,
@@ -122,6 +123,21 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 				doFetchMore(childrenList,childrenListAdapter.getCount(), getListPageSize());
 			}
 	    });
+//	    childrenList.setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
+	    if(childrenList instanceof HyjListView){
+		    ((HyjListView)childrenList).setOnOverScrollByListener(new OnOverScrollByListener(){
+				@Override
+				public void onOverScrollBy(int deltaX, int deltaY, int scrollX,
+						int scrollY, int scrollRangeX, int scrollRangeY,
+						int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+	
+					final float density = displayMetrics.density;
+					if(scrollY / density > 50.0){
+						doFetchMore(childrenList, childrenList.getAdapter().getCount(), getListPageSize());
+					}
+				}
+		    });
+	    }
 	    childrenList.addFooterView(mFooterView, null, false);
 		this.registerForContextMenu(childrenList);
 		childrenListAdapter = (SimpleCursorAdapter) useListViewAdapter();
@@ -331,7 +347,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		v.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
 		float px = TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP, 10,
-				this.getResources().getDisplayMetrics());
+				displayMetrics);
 		v.setPadding((int)px, 0, 0, 0);
 		
 		Bundle bundle = new Bundle();
@@ -427,7 +443,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 				v.setBackgroundResource(R.drawable.abc_tab_selected_focused_holo);
 				float px = TypedValue.applyDimension(
 						TypedValue.COMPLEX_UNIT_DIP, 10,
-						v.getResources().getDisplayMetrics());
+						displayMetrics);
 				v.setPadding((int)px, 0, 0, 0);
 			} else {
 //				v.setBackground(null);

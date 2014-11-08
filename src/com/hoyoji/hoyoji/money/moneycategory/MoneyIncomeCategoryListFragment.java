@@ -30,6 +30,8 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjListView;
+import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -123,6 +125,21 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 				doFetchMore(childrenList,childrenListAdapter.getCount()-1, getListPageSize());
 			}
 	    });
+//	    childrenList.setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
+	    if(childrenList instanceof HyjListView){
+		    ((HyjListView)childrenList).setOnOverScrollByListener(new OnOverScrollByListener(){
+				@Override
+				public void onOverScrollBy(int deltaX, int deltaY, int scrollX,
+						int scrollY, int scrollRangeX, int scrollRangeY,
+						int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+	
+					final float density = displayMetrics.density;
+					if(scrollY / density > 50.0){
+						doFetchMore(childrenList, childrenList.getAdapter().getCount(), getListPageSize());
+					}
+				}
+		    });
+	    }
 	    childrenList.addFooterView(mFooterView, null, false);
 		this.registerForContextMenu(childrenList);
 		childrenListAdapter = (SimpleCursorAdapter) useListViewAdapter();

@@ -45,7 +45,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
 	private Menu mOptionsMenu;
-	protected DisplayMetrics displayMetrics;
+	protected static DisplayMetrics displayMetrics;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
