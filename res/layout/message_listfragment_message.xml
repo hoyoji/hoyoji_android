@@ -13,13 +13,13 @@
               android:layout_height="match_parent"
               android:drawSelectorOnTop="false"
               android:layout_marginBottom="48dip"/>
-
+<!-- 
     <TextView android:id="@id/android:empty"
         	  android:gravity="center_horizontal|center_vertical"
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:background="#E0E0E0"
-              android:text="@string/app_listview_no_content"/>
+              android:text="@string/app_listview_no_content"/> -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dip"

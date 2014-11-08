@@ -42,7 +42,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //	public final static int CANCEL_LIST_ITEM = 1025;
 	private boolean mIsViewInited = false;
 	protected View mFooterView;
-	protected TextView mEmptyView;
+//	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
 	private Menu mOptionsMenu;
 	protected static DisplayMetrics displayMetrics;
@@ -57,7 +57,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 			if(useToolbarView() != null){
 				// populate bottom toolbar
 			}
-			mEmptyView = (TextView)rootView.findViewById(android.R.id.empty);
+//			mEmptyView = (TextView)rootView.findViewById(android.R.id.empty);
 			return rootView;
 	}
 	
@@ -182,14 +182,14 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //        } else {
 //        }
 
-		if(l.getAdapter().getCount() == l.getHeaderViewsCount() + l.getFooterViewsCount()){
-			if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
-			}
-		} else {
+//		if(l.getAdapter().getCount() == l.getHeaderViewsCount() + l.getFooterViewsCount()){
+//			if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
+//			}
+//		} else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
             ((TextView)mFooterView).setEnabled(false);
-		}
+//		}
 	}
 	
 	public void setFooterLoadFinished(ListView l, int count){
@@ -199,9 +199,9 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_no_content);
-	        }
+//	        if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_no_content);
+//	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}

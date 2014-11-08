@@ -55,6 +55,7 @@ public class ExchangeListFragment extends HyjUserListFragment{
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		super.onCreateLoader(arg0, arg1);
 		int offset = arg1.getInt("OFFSET");
 		int limit = arg1.getInt("LIMIT");
 		if(limit == 0){

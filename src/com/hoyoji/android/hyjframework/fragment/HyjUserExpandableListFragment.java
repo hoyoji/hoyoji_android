@@ -49,7 +49,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	protected boolean mIsViewInited = false;
 	protected ExpandableListView mExpandableListView;
 	protected View mFooterView;
-	protected TextView mEmptyView;
+//	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
 	private DisplayMetrics displayMetrics;
 	
@@ -59,7 +59,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			//View v = super.onCreateView(inflater, container, savedInstanceState);
 			ViewGroup rootView = (ViewGroup) inflater.inflate(useContentView(), container, false);
 			//rootView.addView(v, 0);
-			mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
+//			mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
 			
 			mExpandableListView = (ExpandableListView) rootView.findViewById(android.R.id.list);
 			mExpandableListView.setOnChildClickListener(this);
@@ -115,7 +115,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				}
 		    });
 	    }
-		getListView().setEmptyView(mEmptyView);
+//		getListView().setEmptyView(mEmptyView);
 		this.registerForContextMenu(getListView());
 		ExpandableListAdapter adapter = (ExpandableListAdapter) getListView().getExpandableListAdapter();
 		if(adapter == null){
@@ -129,38 +129,38 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		}
 	}
 	public void setFooterLoadStart(){
-        if(getListView().getExpandableListAdapter().getGroupCount() == 0){
-        	mEmptyView.setText(R.string.app_listview_footer_fetching_more);
-        } else {
+//        if(getListView().getExpandableListAdapter().getGroupCount() == 0){
+//        	mEmptyView.setText(R.string.app_listview_footer_fetching_more);
+//        } else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
-        }
+//        }
         ((TextView)mFooterView).setEnabled(false);
 	}
 	
 	public void setFooterLoadFinished(int count){
         mFooterView.setEnabled(true);
-        mEmptyView.setText(R.string.app_listview_no_content);
+//        mEmptyView.setText(R.string.app_listview_no_content);
 		if(count >= getListView().getExpandableListAdapter().getGroupCount() + getListPageSize()){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		}  else if(count == 0 && getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_no_content);
-	        }
+//	        if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_no_content);
+//	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}
 	}
 	public void setFooterLoadFinished(boolean hasMoreData){
         mFooterView.setEnabled(true);
-        mEmptyView.setText(R.string.app_listview_no_content);
+//        mEmptyView.setText(R.string.app_listview_no_content);
 		if(hasMoreData){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		}  else if(getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_no_content);
-	        }
+//	        if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_no_content);
+//	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}

@@ -227,14 +227,14 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			super.setFooterLoadStart(l);
 			return;
 		}
-		if(childrenList.getAdapter().getCount() == 1){
-			if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
-			}
-		} else {
+//		if(childrenList.getAdapter().getCount() == 1){
+//			if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
+//			}
+//		} else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
             ((TextView)mFooterView).setEnabled(false);
-		}
+//		}
 	}
 
 	@Override
@@ -247,9 +247,9 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_more);
 			} else if(count == 0 && l.getAdapter().getCount() == offset){
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_no_content);
-		        if(super.mEmptyView != null){
-					super.mEmptyView.setText(R.string.app_listview_no_content);
-		        }
+//		        if(super.mEmptyView != null){
+//					super.mEmptyView.setText(R.string.app_listview_no_content);
+//		        }
 			} else {
 			    ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 			}
@@ -260,9 +260,9 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_no_content);
-	        }
+//	        if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_no_content);
+//	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}

@@ -55,6 +55,7 @@ public class CurrencyListFragment extends HyjUserListFragment{
 
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
+		super.onCreateLoader(arg0, arg1);
 		int offset = arg1.getInt("OFFSET");
 		int limit = arg1.getInt("LIMIT");
 		if(limit == 0){
@@ -140,10 +141,10 @@ public class CurrencyListFragment extends HyjUserListFragment{
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-		}
+//		@Override
+//		public void onChange(boolean selfChange, Uri uri) {
+//			super.onChange(selfChange, uri);
+//		}
 
 		@Override
 		public void onChange(boolean selfChange) {
