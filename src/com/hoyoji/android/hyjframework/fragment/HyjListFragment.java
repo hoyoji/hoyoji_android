@@ -44,7 +44,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	private boolean mIsViewInited = false;
 	private View mFooterView;
 //	protected int mListPageSize = 10;
-	private TextView mEmptyView = null;
+//	private TextView mEmptyView = null;
 	private Menu mOptionsMenu;
 	private DisplayMetrics displayMetrics;
 	
@@ -54,7 +54,7 @@ public abstract class HyjListFragment extends ListFragment implements
 			//View v = super.onCreateView(inflater, container, savedInstanceState);
 			ViewGroup rootView = (ViewGroup) inflater.inflate(useContentView(), container, false);
 			//rootView.addView(v, 0);
-			mEmptyView  = (TextView)rootView.findViewById(android.R.id.empty);
+//			mEmptyView  = (TextView)rootView.findViewById(android.R.id.empty);
 			if(useToolbarView() != null){
 				// populate bottom toolbar
 			}
@@ -162,14 +162,14 @@ public abstract class HyjListFragment extends ListFragment implements
 	}
 
 	public void setFooterLoadStart(ListView l){
-		if(l.getAdapter().getCount() == 1){
-			if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
-			}
-		} else {
+//		if(l.getAdapter().getCount() == 1){
+//			if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_footer_fetching_more);			
+//			}
+//		} else {
             ((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
             ((TextView)mFooterView).setEnabled(false);
-		}
+//		}
 	}
 	
 	public void setFooterLoadFinished(ListView l, int count){
@@ -179,9 +179,9 @@ public abstract class HyjListFragment extends ListFragment implements
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        if(mEmptyView != null){
-				mEmptyView.setText(R.string.app_listview_no_content);
-	        }
+//	        if(mEmptyView != null){
+//				mEmptyView.setText(R.string.app_listview_no_content);
+//	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
 		}

@@ -247,7 +247,7 @@ public class FriendMoneySearchListFragment extends HyjUserExpandableListFragment
 
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-//		super.onCreateLoader(groupPos, arg1);
+		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
 			loader = new MoneySearchGroupListLoader(getActivity(), arg1);
