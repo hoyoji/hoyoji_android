@@ -1,7 +1,5 @@
 package com.hoyoji.android.hyjframework.view;
 
-import com.hoyoji.android.hyjframework.HyjUtil;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -47,6 +45,7 @@ public class HyjListView extends ListView {
 	private void initBounceListView() {
 		final float density = metrics.density;
 		mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+		setOverScrollMode(ListView.OVER_SCROLL_ALWAYS);
 	}
 
 	public void setOnOverScrollByListener(OnOverScrollByListener onOverScrollByListener){

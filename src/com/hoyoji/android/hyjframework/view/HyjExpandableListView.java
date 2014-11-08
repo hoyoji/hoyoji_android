@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 
 public class HyjExpandableListView extends ExpandableListView {
 	private static final int MAX_Y_OVERSCROLL_DISTANCE = 100;
@@ -45,6 +46,7 @@ public class HyjExpandableListView extends ExpandableListView {
 	private void initBounceListView() {
 		final float density = metrics.density;
 		mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+		setOverScrollMode(ListView.OVER_SCROLL_ALWAYS);
 	}
 
 	public void setOnOverScrollByListener(OnOverScrollByListener onOverScrollByListener){
