@@ -10,6 +10,7 @@ import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -46,6 +47,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //	protected int mListPageSize = 10;
 	private Menu mOptionsMenu;
 	protected static DisplayMetrics displayMetrics;
+	protected View mHeaderView;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -68,13 +70,20 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	protected View useHeaderView(Bundle savedInstanceState){
 		return null;
 	}
+
+	public int getHeaderHeight(){
+		if(mHeaderView != null){
+			return mHeaderView.getHeight();
+		} 
+		return 0;
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		View headerView = useHeaderView(savedInstanceState); 
-		if(headerView != null){
-			getListView().addHeaderView(headerView);
+		mHeaderView = useHeaderView(savedInstanceState); 
+		if(mHeaderView != null){
+			getListView().addHeaderView(mHeaderView);
 		}
 		getListView().setFooterDividersEnabled(true);
 		
@@ -197,15 +206,18 @@ public abstract class HyjUserListFragment extends ListFragment implements
         int offset = l.getHeaderViewsCount() + l.getFooterViewsCount();
 		if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        ((TextView)mFooterView).setHeight(200);
+	        ((TextView)mFooterView).setBackgroundColor(Color.TRANSPARENT);
+	        ((TextView)mFooterView).setHeight(getListView().getHeight()-getHeaderHeight());
 //	        if(mEmptyView != null){
 //				mEmptyView.setText(R.string.app_listview_no_content);
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}

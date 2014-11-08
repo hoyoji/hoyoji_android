@@ -9,6 +9,7 @@ import com.hoyoji.android.hyjframework.view.HyjExpandableListView.OnOverScrollBy
 import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -52,6 +53,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
 	private DisplayMetrics displayMetrics;
+	protected View mHeaderView;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -88,9 +90,9 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		View headerView = useHeaderView(savedInstanceState); 
-		if(headerView != null){
-			getListView().addHeaderView(headerView);
+		mHeaderView = useHeaderView(savedInstanceState); 
+		if(mHeaderView != null){
+			getListView().addHeaderView(mHeaderView);
 		}
 		mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 		getListView().addFooterView(mFooterView);
@@ -137,20 +139,30 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
         ((TextView)mFooterView).setEnabled(false);
 	}
 	
+	public int getHeaderHeight(){
+		if(mHeaderView != null){
+			return mHeaderView.getHeight();
+		} 
+		return 0;
+	}
+	
 	public void setFooterLoadFinished(int count){
         mFooterView.setEnabled(true);
 //        mEmptyView.setText(R.string.app_listview_no_content);
 		if(count >= getListView().getExpandableListAdapter().getGroupCount() + getListPageSize()){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		}  else if(count == 0 && getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        ((TextView)mFooterView).setHeight(200);
+	        ((TextView)mFooterView).setBackgroundColor(Color.TRANSPARENT);
+	        ((TextView)mFooterView).setHeight(getListView().getHeight()-getHeaderHeight());
 //	        if(mEmptyView != null){
 //				mEmptyView.setText(R.string.app_listview_no_content);
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}
@@ -159,15 +171,18 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //        mEmptyView.setText(R.string.app_listview_no_content);
 		if(hasMoreData){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		}  else if(getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
-	        ((TextView)mFooterView).setHeight(200);
+	        ((TextView)mFooterView).setBackgroundColor(Color.TRANSPARENT);
+	        ((TextView)mFooterView).setHeight(getListView().getHeight()-getHeaderHeight());
 //	        if(mEmptyView != null){
 //				mEmptyView.setText(R.string.app_listview_no_content);
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
+	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}
