@@ -402,6 +402,9 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 
 	@Override
 	public void doFetchMore(int offset, int pageSize){
+//		if(getLoaderManager().getLoader(-1) != null && getLoaderManager().getLoader(-1).isStarted()){
+//			return;
+//		}
 		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
 		((SharedProjectMoneySearchGroupListLoader)loader).fetchMore(null);	

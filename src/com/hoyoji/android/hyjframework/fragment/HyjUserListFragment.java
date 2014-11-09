@@ -64,7 +64,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 	
 	protected int getListPageSize() {
-		return 10;
+		return displayMetrics.heightPixels / 40;
 	}
 	
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -265,6 +265,9 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //    }  
 	
 	public void doFetchMore(ListView l, int offset, int pageSize){
+//		if(getLoaderManager().getLoader(0) != null && getLoaderManager().getLoader(0).isStarted()){
+//			return;
+//		}
 		Bundle bundle = new Bundle();
 		bundle.putInt("OFFSET", offset);
 		bundle.putInt("LIMIT", pageSize);

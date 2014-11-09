@@ -45,6 +45,7 @@ public class HomeGroupListLoader extends
 	private Integer mLoadLimit = 10;
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
+	private boolean mIsLoading;
 
 	public HomeGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
@@ -113,6 +114,7 @@ public class HomeGroupListLoader extends
 	 */
 	@Override
 	public List<Map<String, Object>> loadInBackground() {
+		mIsLoading = true;
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
@@ -814,6 +816,10 @@ public class HomeGroupListLoader extends
 	public boolean hasMoreData() {
 		return mHasMoreData;
 	}
+	
+	public boolean isLoading(){
+		return mIsLoading;
+	}
 
 	/**
 	 * Called when there is new data to deliver to the client. The super class
@@ -829,6 +835,7 @@ public class HomeGroupListLoader extends
 			// deliver its results.
 			super.deliverResult(objects);
 		}
+		mIsLoading = false;
 	}
 
 	@Override
@@ -843,6 +850,7 @@ public class HomeGroupListLoader extends
 	 */
 	@Override
 	protected void onStartLoading() {
+//		super.onStartLoading();
 		if (mGroupList != null) {
 			// If we currently have a result available, deliver it
 			// immediately.
@@ -861,17 +869,18 @@ public class HomeGroupListLoader extends
 	 */
 	@Override
 	protected void onStopLoading() {
+//		super.onStopLoading();
 		// Attempt to cancel the current load task if possible.
 		cancelLoad();
 	}
 
-	/**
-	 * Handles a request to cancel a load.
-	 */
-	@Override
-	public void onCanceled(List<Map<String, Object>> objects) {
-		super.onCanceled(objects);
-	}
+//	/**
+//	 * Handles a request to cancel a load.
+//	 */
+//	@Override
+//	public void onCanceled(List<Map<String, Object>> objects) {
+//		super.onCanceled(objects);
+//	}
 
 	/**
 	 * Handles a request to completely reset the Loader.

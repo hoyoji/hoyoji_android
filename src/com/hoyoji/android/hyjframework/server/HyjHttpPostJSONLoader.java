@@ -34,6 +34,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	    private String mTarget = null;
 	    private String mPostData = "";
 	    private Integer errorMsg = null;
+		private boolean mIsLoading;
 	    
 	    public HyjHttpPostJSONLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -65,6 +66,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	     */
 	    @Override 
 	    public List<JSONObject> loadInBackground() {
+	        mIsLoading = true;
 			if (HyjUtil.hasNetworkConnection()) {
 		    	Object object = null;
 		    	if(mTarget != null){
@@ -103,6 +105,7 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	            // deliver its results.
 	            super.deliverResult(objects);
 	        }
+	        mIsLoading = false;
 	    }
 
 	    /**
@@ -151,4 +154,8 @@ public class HyjHttpPostJSONLoader extends AsyncTaskLoader<List<JSONObject>> {
 	        
 	        mJSONList = null;
 	    }
+
+		public boolean isLoading() {
+			return mIsLoading;
+		}
 }

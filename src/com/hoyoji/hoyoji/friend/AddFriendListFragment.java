@@ -160,6 +160,10 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 
 	@Override
 	public void doFetchMore(ListView l, int offset, int pageSize) {
+		Loader loader = getLoaderManager().getLoader(0);
+		if(loader != null && ((HyjHttpPostJSONLoader)loader).isLoading()){
+			return;
+		}
 		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
@@ -177,7 +181,10 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		Bundle bundle = new Bundle();
 		bundle.putString("target", "findData");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		Loader loader = getLoaderManager().getLoader(0);
+		if(loader == null){
+			getLoaderManager().restartLoader(0, bundle, this);
+			loader = getLoaderManager().getLoader(0);
+		}
 		((HyjHttpPostJSONLoader) loader).changePostQuery(bundle);
 	}
 

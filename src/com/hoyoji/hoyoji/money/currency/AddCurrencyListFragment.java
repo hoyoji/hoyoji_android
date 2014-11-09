@@ -204,6 +204,10 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 	
 	@Override
 	public void doFetchMore(ListView l, int offset, int pageSize){
+		Loader loader = getLoaderManager().getLoader(0);
+		if(loader != null && ((HyjHttpPostJSONLoader)loader).isLoading()){
+			return;
+		}
 		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
@@ -222,13 +226,15 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 		Bundle bundle = new Bundle();
 		bundle.putString("target", "findCurrency");
 		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		Loader loader = getLoaderManager().getLoader(0);
+		if(loader == null){
+			getLoaderManager().restartLoader(0, bundle, this);
+			loader = getLoaderManager().getLoader(0);
+		}
 		((HyjHttpPostJSONLoader)loader).changePostQuery(bundle);		
 	}
 
 	@Override
 	public void setFooterLoadFinished(ListView l, int count){
-
 		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
         super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
 	}

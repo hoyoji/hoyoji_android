@@ -968,6 +968,9 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 
 	@Override
 	public void doFetchMore(int offset, int pageSize){
+//		if(getLoaderManager().getLoader(-1) != null && getLoaderManager().getLoader(-1).isStarted()){
+//			return;
+//		}
 		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
 		((MoneyAccountSearchGroupListLoader)loader).fetchMore(null);	

@@ -313,6 +313,9 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 
 	@Override
 	public void doFetchMore(ListView l, int offset, int pageSize){
+//		if(getLoaderManager().getLoader(1) != null && getLoaderManager().getLoader(1).isStarted()){
+//			return;
+//		}
 		if(l == getListView()){
 			super.doFetchMore(l, offset, pageSize);
 			return;
