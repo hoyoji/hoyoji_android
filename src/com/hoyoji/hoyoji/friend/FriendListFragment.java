@@ -384,7 +384,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	
 	protected int getListPageSize(){
-		return 10000;
+		return (int) (displayMetrics.heightPixels / displayMetrics.density / 40);
 	}
 	
 	

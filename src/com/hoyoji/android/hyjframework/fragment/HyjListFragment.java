@@ -195,7 +195,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	}
 
 	protected int getListPageSize() {
-		return displayMetrics.heightPixels / 40;
+		return (int) (displayMetrics.heightPixels / displayMetrics.density / 40);
 	}
 
 

@@ -52,7 +52,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	protected View mFooterView;
 //	protected TextView mEmptyView;
 //	protected int mListPageSize = 10;
-	private DisplayMetrics displayMetrics;
+	protected DisplayMetrics displayMetrics;
 	protected View mHeaderView;
 	
 	@Override
@@ -80,7 +80,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 	
 	protected int getListPageSize(){
-		return displayMetrics.heightPixels / 40;
+		return (int) (displayMetrics.heightPixels / displayMetrics.density / 40);
 	}
 	
 	protected View useHeaderView(Bundle savedInstanceState){
