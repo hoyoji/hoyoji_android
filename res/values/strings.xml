@@ -41,6 +41,7 @@
     <string name="app_action_money_income">收入</string>
     <string name="app_action_money_transfer">转账</string>
     <string name="app_action_money_debt">借贷</string>
+    <string name="app_action_money_template">快记</string>
     <string name="app_action_money_topup">会费</string>
     
     <string name="app_permission_no_addnew">抱歉，您在该项目没有新增权限</string>

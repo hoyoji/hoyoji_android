@@ -165,32 +165,39 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //    		}
 //		});
 		
-		getView().findViewById(R.id.homeListFragment_action_money_debt).setOnClickListener(new OnClickListener(){
+//		getView().findViewById(R.id.homeListFragment_action_money_debt).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				PopupMenu popup = new PopupMenu(getActivity(), v);
+//				MenuInflater inflater = popup.getMenuInflater();
+//				inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
+//				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//					@Override
+//					public boolean onMenuItemClick(MenuItem item) {
+//						if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
+//							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
+//						} 
+//						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
+//							openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
+//						} 
+//						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
+//							openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
+//						} 
+//						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
+//							openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
+//						} 
+//						return false;
+//					}
+//				});
+//				popup.show();
+//			}
+//		});
+		
+		getView().findViewById(R.id.homeListFragment_action_money_template).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				PopupMenu popup = new PopupMenu(getActivity(), v);
-				MenuInflater inflater = popup.getMenuInflater();
-				inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
-				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
-							openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
-						} 
-						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
-							openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
-						} 
-						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
-							openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
-						} 
-						else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
-							openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
-						} 
-						return false;
-					}
-				});
-				popup.show();
-			}
+				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+    		}
 		});
 		
 		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
@@ -220,14 +227,39 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		
 		getView().findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View v) {
 				PopupMenu popup = new PopupMenu(getActivity(), v);
 				MenuInflater inflater = popup.getMenuInflater();
 				inflater.inflate(R.menu.home_more_actions, popup.getMenu());
 				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
-						if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
+						if (item.getItemId() == R.id.homeTopup_action_money_addnew_debt) {
+
+							PopupMenu popup = new PopupMenu(getActivity(), v);
+							MenuInflater inflater = popup.getMenuInflater();
+							inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
+							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+								@Override
+								public boolean onMenuItemClick(MenuItem item) {
+									if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
+										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
+									} 
+									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
+										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
+									} 
+									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
+										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
+									} 
+									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
+										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
+									} 
+									return false;
+								}
+							});
+							popup.show();
+						
+						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
 							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
 							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
