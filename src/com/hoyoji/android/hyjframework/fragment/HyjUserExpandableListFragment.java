@@ -105,15 +105,21 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //	    mExpandableListView.setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
 	    if(getListView() instanceof HyjExpandableListView){
 		    ((HyjExpandableListView)getListView()).setOnOverScrollByListener(new OnOverScrollByListener(){
+				private boolean mIsFetchingMore = false;
+
 				@Override
 				public void onOverScrollBy(int deltaX, int deltaY, int scrollX,
 						int scrollY, int scrollRangeX, int scrollRangeY,
 						int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
 	
 					final float density = displayMetrics.density;
-					if(scrollY / density > 50.0){
+					if(!mIsFetchingMore && scrollY / density > 50.0){
+						mIsFetchingMore   = true;
 						doFetchMore(getListView().getExpandableListAdapter().getGroupCount(), getListPageSize());
+					} else if(scrollY == 0){
+						mIsFetchingMore  = false;
 					}
+					
 				}
 		    });
 	    }
