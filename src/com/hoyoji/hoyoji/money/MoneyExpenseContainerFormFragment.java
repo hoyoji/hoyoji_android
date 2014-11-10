@@ -34,6 +34,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
@@ -77,6 +78,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private final static int GET_CATEGORY_ID = 5;
 	private final static int GET_REMARK = 6;
+	private final static int GET_AMOUNT = 8;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
 	protected static final int GET_FINANCIALOWNER_ID = 7;
 	
@@ -106,6 +108,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
+	
+	private TextView calculatorTextView = null;
 
 	@Override
 	public Integer useContentView() {
@@ -165,8 +169,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyExpenseContainerFormFragment.this
-						.openActivityWithFragmentForResult(
+				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
 								ProjectListFragment.class,
 								R.string.projectListFragment_title_select_project,
 								null, GET_PROJECT_ID);
@@ -311,6 +314,19 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
 								bundle, GET_REMARK);
+			}
+		});
+		
+		calculatorTextView = (TextView) getView().findViewById(R.id.calculator);
+		calculatorTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putDouble("AMOUNT", mNumericAmount.getNumber()!=null?mNumericAmount.getNumber():0.00);
+				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+								HyjCalculatorFormFragment.class,
+								R.string.hyjCalculatorFormFragment_title,
+								bundle, GET_AMOUNT);
 			}
 		});
 
@@ -1736,6 +1752,12 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			break;
 			
 		case GET_REMARK:
+			if (resultCode == Activity.RESULT_OK) {
+				String text = data.getStringExtra("TEXT");
+				mRemarkFieldRemark.setText(text);
+			}
+			break;
+		case GET_AMOUNT:
 			if (resultCode == Activity.RESULT_OK) {
 				String text = data.getStringExtra("TEXT");
 				mRemarkFieldRemark.setText(text);
