@@ -16,6 +16,11 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="@style/AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!-- <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:colorForeground">@android:color/background_dark</item>
+        <item name="android:colorForegroundInverse">@android:color/background_light</item> -->
+        
          <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
     </style>
 
