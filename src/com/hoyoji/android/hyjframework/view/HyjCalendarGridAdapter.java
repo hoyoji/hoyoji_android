@@ -134,17 +134,17 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(R.layout.calendar_grid_item, null);
 		 }
 		TextView textView = (TextView) convertView.findViewById(R.id.tvtext);
-		String d = dayNumber[position].split("\\.")[0];
+		String d = dayNumber[position];
 
-		SpannableString sp = new SpannableString(d);
-		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sp.setSpan(new RelativeSizeSpan(1.2f) , 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		SpannableString sp = new SpannableString(d);
+//		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		sp.setSpan(new RelativeSizeSpan(1.2f) , 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //		if(dv != null ||dv != ""){
 //            sp.setSpan(new RelativeSizeSpan(0.75f), d.length()+1, dayNumber[position].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //		}
 //		sp.setSpan(new ForegroundColorSpan(Color.MAGENTA), 14, 16, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-		textView.setText(sp);
-		textView.setTextColor(Color.GRAY);
+//		textView.setText(sp);
+//		textView.setTextColor(Color.GRAY);
 		
 //		if(position<7){
 //			//设置周
@@ -153,14 +153,29 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 //			textView.setTextSize(14);
 //		}
 		
+//		if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
+//			// 当前月信息显示
+//			textView.setTextColor(Color.BLACK);// 当月字体设黑
+//
+//		}
+//		if(currentFlag == position){ 
+//			//设置当天的背景
+//			textView.setTextColor(res.getColor(R.color.hoyoji_red));
+//		}
 		if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
 			// 当前月信息显示
-			textView.setTextColor(Color.BLACK);// 当月字体设黑
+			convertView.setVisibility(View.VISIBLE);
+//			textView.setTextColor(Color.LTGRAY);// 当月字体设黑
+			textView.setText(d);
 
-		}
-		if(currentFlag == position){ 
-			//设置当天的背景
-			textView.setTextColor(res.getColor(R.color.hoyoji_red));
+			if(currentFlag == position){ 
+				//设置当天的背景
+				textView.setTextColor(Color.BLACK);
+			} else {
+				textView.setTextColor(Color.LTGRAY);
+			}
+		} else {
+			convertView.setVisibility(View.INVISIBLE);
 		}
 		return convertView;
 	}
@@ -179,7 +194,6 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	private void getweek(int year, int month) {
 		int j = 1;
 		int flag = 0;
-		String lunarDay = "";
 		
 		//得到当前月的所有日程日期(这些日期需要标记)
 
@@ -190,10 +204,10 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 //			}
 			 if(i < dayOfWeek){  //前一个月
 				int temp = lastDaysOfMonth - dayOfWeek+1;
-				dayNumber[i] = (temp + i)+"."+lunarDay;
+				dayNumber[i] = (temp + i)+"";
 			}else if(i < daysOfMonth + dayOfWeek){   //本月
 				String day = String.valueOf(i-dayOfWeek+1);   //得到的日期
-				dayNumber[i] = i-dayOfWeek+1+"."+lunarDay;
+				dayNumber[i] = i-dayOfWeek+1+"";
 				//对于当前月才去标记当前日期
 				if(sys_year.equals(String.valueOf(year)) && sys_month.equals(String.valueOf(month)) && sys_day.equals(day)){
 					//标记当前日期
@@ -202,16 +216,16 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 				setShowYear(String.valueOf(year));
 				setShowMonth(String.valueOf(month));
 			}else{   //下一个月
-				dayNumber[i] = j+"."+lunarDay;
+				dayNumber[i] = j+"";
 				j++;
 			}
 		}
-        
-        String abc = "";
-        for(int i = 0; i < dayNumber.length; i++){
-        	 abc = abc+dayNumber[i]+":";
-        }
-        Log.d("DAYNUMBER",abc);
+//        
+//        String abc = "";
+//        for(int i = 0; i < dayNumber.length; i++){
+//        	 abc = abc+dayNumber[i]+":";
+//        }
+//        Log.d("DAYNUMBER",abc);
 
 
 	}
