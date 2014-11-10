@@ -26,8 +26,9 @@
                     android:id="@+id/bindIDFragment_button_emailBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
-	              android:gravity="center_horizontal|center_vertical"
+		            android:background="@drawable/button_circle"
+		            android:textSize="16sp"
+	              	android:gravity="center_horizontal|center_vertical"
                     android:text="@string/bindIDFragment_button_emailBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
 
@@ -42,7 +43,8 @@
                     android:id="@+id/bindIDFragment_button_phoneBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+		            android:background="@drawable/round_button"
+		            android:textSize="16sp"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/bindIDFragment_button_phoneBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField> -->
@@ -58,7 +60,8 @@
                     android:id="@+id/bindIDFragment_button_QQBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+		            android:background="@drawable/button_circle"
+		            android:textSize="16sp"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/bindIDFragment_button_QQBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -74,7 +77,8 @@
                     android:id="@+id/bindIDFragment_button_WXBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+		            android:background="@drawable/button_circle"
+		            android:textSize="16sp"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/bindIDFragment_button_WXBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -90,7 +94,8 @@
                     android:id="@+id/bindIDFragment_button_WBBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+		            android:background="@drawable/button_circle"
+		            android:textSize="16sp"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/bindIDFragment_button_WBBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
