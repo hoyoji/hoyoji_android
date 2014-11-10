@@ -37,26 +37,39 @@
                 android:layout_gravity="left"
                 android:orientation="vertical"
                 android:paddingLeft="66dp" >
+				<RelativeLayout
+				    android:layout_width="match_parent"
+                	android:layout_height="wrap_content">
 
-                <com.hoyoji.android.hyjframework.view.HyjNumericField
-                    android:id="@+id/moneyExpenseContainerFormFragment_textField_amount"
-                    hyj:style="no_label"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    hyj:editTextBold="true"
-                    hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
-                    hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
-
-                    <requestFocus />
-                </com.hoyoji.android.hyjframework.view.HyjNumericField>
+	                <com.hoyoji.android.hyjframework.view.HyjNumericField
+	                    android:id="@+id/moneyExpenseContainerFormFragment_textField_amount"
+	                    hyj:style="no_label"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentLeft="true"
+	                    android:layout_marginBottom="5dip"
+	                    android:layout_toLeftOf="@+id/calculator"
+	                    android:layout_toRightOf="@+id/calculator"
+	                    hyj:editTextBold="true"
+	                    hyj:editTextBorder="none"
+	                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
+	                    hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
+	
+	                </com.hoyoji.android.hyjframework.view.HyjNumericField>
+	                <TextView 
+	                    android:id="@+id/calculator"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentRight="true"
+	                    android:layout_marginBottom="0dip"
+	                    android:background="@drawable/calculator"/>
+                </RelativeLayout>
 
                 <View
                     android:id="@id/field_separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
-                    android:layout_marginTop="5dip"
                     android:background="#E0E0E0" />
 
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
