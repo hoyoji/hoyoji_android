@@ -116,7 +116,7 @@
         android:id="@+id/id_tab_line"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:background="@color/green" >
+        android:background="@color/hoyoji_red" >
     </View>
      <View 
         android:id="@id/field_separator"

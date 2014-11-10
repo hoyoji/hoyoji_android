@@ -226,23 +226,23 @@ public class MainActivity extends HyjUserActivity {
 				switch (position)
 				{
 					case 0:
-						mAccount.setTextColor(getResources().getColor(R.color.green));
+						mAccount.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						
 	//					mTabAccount.removeView(mBadgeViewforAccount);
 	//					mBadgeViewforAccount.setBadgeCount(5);
 	//					mTabAccount.addView(mBadgeViewforAccount);
 						break;
 					case 1:
-						mProject.setTextColor(getResources().getColor(R.color.green));
+						mProject.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 2:
-						mHome.setTextColor(getResources().getColor(R.color.green));
+						mHome.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 3:
-						mFriend.setTextColor(getResources().getColor(R.color.green));
+						mFriend.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 4:
-						mMessage.setTextColor(getResources().getColor(R.color.green));
+						mMessage.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 				}
 

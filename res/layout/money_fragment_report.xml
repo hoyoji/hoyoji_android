@@ -19,7 +19,7 @@
             android:layout_gravity="top"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:textColor="#33b5e5" />
+            android:textColor="@color/hoyoji_red" />
         
     </android.support.v4.view.ViewPager>
 
