@@ -134,13 +134,13 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 				R.id.moneyTransactionSummaryFragment_week);
 		mButtonMonth = (Button) getView().findViewById(
 				R.id.moneyTransactionSummaryFragment_month);
-		mButtonDay.setTextColor(getResources().getColor(R.color.green));
+		mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
 		
 		mButtonDay.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonDay.setTextColor(getResources().getColor(R.color.green));
+				mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -161,7 +161,7 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonWeek.setTextColor(getResources().getColor(R.color.green));
+				mButtonWeek.setTextColor(getResources().getColor(R.color.hoyoji_red));
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -188,7 +188,7 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonMonth.setTextColor(getResources().getColor(R.color.green));
+				mButtonMonth.setTextColor(getResources().getColor(R.color.hoyoji_red));
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);

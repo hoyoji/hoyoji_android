@@ -9,32 +9,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils.TruncateAt;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
@@ -50,7 +42,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
-import com.hoyoji.hoyoji.home.HomeListFragment;
+import com.hoyoji.hoyoji.home.HomeCalendarGridFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -73,21 +65,10 @@ import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.money.MoneySearchListFragment;
-import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerListFragment;
-import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
-import com.hoyoji.hoyoji.money.currency.ExchangeListFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
-import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerListFragment;
-import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
-import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
-import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
-import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.jauker.widget.BadgeView;
-import com.sina.weibo.sdk.auth.WeiboAuth;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -226,23 +207,23 @@ public class MainActivity extends HyjUserActivity {
 				switch (position)
 				{
 					case 0:
-						mAccount.setTextColor(getResources().getColor(R.color.green));
+						mAccount.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						
 	//					mTabAccount.removeView(mBadgeViewforAccount);
 	//					mBadgeViewforAccount.setBadgeCount(5);
 	//					mTabAccount.addView(mBadgeViewforAccount);
 						break;
 					case 1:
-						mProject.setTextColor(getResources().getColor(R.color.green));
+						mProject.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 2:
-						mHome.setTextColor(getResources().getColor(R.color.green));
+						mHome.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 3:
-						mFriend.setTextColor(getResources().getColor(R.color.green));
+						mFriend.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 					case 4:
-						mMessage.setTextColor(getResources().getColor(R.color.green));
+						mMessage.setTextColor(getResources().getColor(R.color.hoyoji_red));
 						break;
 				}
 
@@ -580,7 +561,7 @@ public class MainActivity extends HyjUserActivity {
 				fragment = new ProjectListFragment();
 				break;
 			case 2:
-				fragment = new HomeListFragment();
+				fragment = new HomeCalendarGridFragment();
 				break;
 			case 3:
 				fragment = new FriendListFragment();

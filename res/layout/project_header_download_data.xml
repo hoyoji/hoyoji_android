@@ -14,6 +14,6 @@
         android:layout_height="30dp"
         android:background="#E0E0E0"
         android:textSize="14sp"
-        android:textColor="@color/green"
+        android:textColor="@color/hoyoji_red"
         android:text="该项目尚有流水未从服务器上下载"/>
 </FrameLayout>

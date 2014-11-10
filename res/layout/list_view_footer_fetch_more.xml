@@ -8,5 +8,5 @@
     android:paddingRight="16dp"  
     android:minHeight="48dip"
     android:textColor="@android:color/black" 
-    android:background="#E0E0E0"
+    android:background="@color/hoyoji_lightgray"
     android:text="@string/app_listview_footer_fetch_more"/>

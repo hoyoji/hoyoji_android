@@ -16,12 +16,12 @@
             android:id="@+id/projectListFragment_pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#e9f3f0"
+            android:background="@android:color/transparent"
             android:layout_gravity="top"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
             android:visibility="gone"
-            android:textColor="#33b5e5" />
+            android:textColor="@color/hoyoji_red" />
         
     </android.support.v4.view.ViewPager>
 

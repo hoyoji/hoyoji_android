@@ -245,7 +245,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 			((TextView)super.mFooterView).setEnabled(true);
 			if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_more);
-		        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+		        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 		        ((TextView)super.mFooterView).setHeight(48);
 			} else if(count == 0 && l.getAdapter().getCount() == offset){
 		        ((TextView)super.mFooterView).setText(R.string.app_listview_no_content);
@@ -256,7 +256,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 //		        }
 			} else {
 			    ((TextView)super.mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
-		        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+		        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 		        ((TextView)super.mFooterView).setHeight(48);
 			}
 			return;
@@ -264,7 +264,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		((TextView)mFooterView).setEnabled(true);
 		if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
@@ -275,7 +275,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}
