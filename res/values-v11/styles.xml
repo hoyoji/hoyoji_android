@@ -19,6 +19,18 @@
 	<!-- Application theme. -->
     <style name="AppTheme" parent="@style/AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:colorForeground">@android:color/background_dark</item>
+        <item name="android:colorForegroundInverse">@android:color/background_light</item>
+        
+        
+       <!--  <item name="colorForeground">@android:color/bright_foreground_holo_light</item>
+        <item name="colorForegroundInverse">@android:color/bright_foreground_inverse_holo_light</item>
+        <item name="colorBackground">@android:color/background_holo_light</item>
+        <item name="colorBackgroundCacheHint">@android:drawable/background_cache_hint_selector_holo_light</item> -->
+        
          <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
     </style>
 

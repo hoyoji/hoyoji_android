@@ -183,7 +183,7 @@ public abstract class HyjListFragment extends ListFragment implements
 		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
 		if(count >= l.getAdapter().getCount() + getListPageSize() - offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
@@ -194,7 +194,7 @@ public abstract class HyjListFragment extends ListFragment implements
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}

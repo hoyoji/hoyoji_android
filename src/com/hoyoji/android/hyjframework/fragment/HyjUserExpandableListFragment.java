@@ -157,7 +157,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //        mEmptyView.setText(R.string.app_listview_no_content);
 		if(count >= getListView().getExpandableListAdapter().getGroupCount() + getListPageSize()){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}  else if(count == 0 && getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
@@ -168,7 +168,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}
@@ -177,7 +177,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //        mEmptyView.setText(R.string.app_listview_no_content);
 		if(hasMoreData){
 	        ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}  else if(getListView().getExpandableListAdapter().getGroupCount() == 0){
 	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
@@ -188,7 +188,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //	        }
 		} else {
 		    ((TextView)mFooterView).setText(R.string.app_listview_footer_fetch_no_more);
-	        ((TextView)mFooterView).setBackgroundColor(Color.parseColor("#E0E0E0"));
+	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}
 	}
