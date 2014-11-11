@@ -134,7 +134,6 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
 		
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
