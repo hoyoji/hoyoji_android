@@ -109,7 +109,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
 	
-	private TextView calculatorTextView = null;
+	private ImageButton calculatorTextView = null;
 
 	@Override
 	public Integer useContentView() {
@@ -317,7 +317,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		calculatorTextView = (TextView) getView().findViewById(R.id.calculator);
+		calculatorTextView = (ImageButton) getView().findViewById(R.id.calculator);
 		calculatorTextView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -1759,8 +1759,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			break;
 		case GET_AMOUNT:
 			if (resultCode == Activity.RESULT_OK) {
-				String text = data.getStringExtra("TEXT");
-				mRemarkFieldRemark.setText(text);
+				String calculatorAmount = data.getStringExtra("calculatorAmount");
+				if (calculatorAmount != null){
+					mNumericAmount.setNumber(Double.parseDouble(calculatorAmount));
+				}
 			}
 			break;
 		case GET_CATEGORY_ID:

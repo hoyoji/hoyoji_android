@@ -14,18 +14,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:orientation="vertical">
+        <com.hoyoji.android.hyjframework.view.HyjRemarkField
+            android:id="@+id/hyjCalculatorFormFragment_hyjRemarkField_remark"
+            hyj:style="no_label"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            hyj:editTextBorder="none"
+            hyj:hintText=""
+            hyj:labelText="" 
+            android:gravity="right"/>
 		<TextView 
 		    android:id="@+id/hyjCalculatorFormFragment_textField_amount"
 		    android:layout_width="match_parent"
-	        android:layout_height="60dp"/>
+	        android:layout_height="30dp"
+	        android:textSize="25sp"
+	        android:gravity="right"/>
 	        
-	        <View
-            android:id="@id/field_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+        <View
+           android:id="@id/field_separator"
+           android:layout_width="match_parent"
+           android:layout_height="1dip"
+           android:layout_marginBottom="5dip"
+           android:layout_marginTop="5dip"
+           android:background="#E0E0E0" />
 		   <!--  <ListView
 	            android:id="@+id/hyjCalculatorFromFragment_listView_calculator"
 	            android:layout_width="match_parent"
@@ -112,7 +123,7 @@
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:layout_weight="1"
-		                android:text="－" />
+		                android:text="-" />
 	
 		        </LinearLayout>
 	
@@ -148,7 +159,7 @@
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:layout_weight="1"
-		                android:text="＋" />
+		                android:text="+" />
 	
 		        </LinearLayout>
 	
@@ -209,7 +220,7 @@
 				                android:layout_width="wrap_content"
 				                android:layout_height="wrap_content"
 				                android:layout_weight="1"
-				                android:text="·" />
+				                android:text="." />
 			
 				            
 			
