@@ -39,7 +39,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
     	public void onFetchMore();
     }
     
-    private OnFetchMoreListener mOnFetchMoreListener = null;
+//    private OnFetchMoreListener mOnFetchMoreListener = null;
     
     /**
      * Constructor
@@ -301,9 +301,9 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
 		mViewBinder = viewBinder;
 	}
 	
-	public void setOnFetchMoreListener(OnFetchMoreListener onFetchMoreListener){
-		mOnFetchMoreListener = onFetchMoreListener;
-	}
+//	public void setOnFetchMoreListener(OnFetchMoreListener onFetchMoreListener){
+//		mOnFetchMoreListener = onFetchMoreListener;
+//	}
 	
 	@Override
 	public View getChildView(int groupPosition, int childPosition,

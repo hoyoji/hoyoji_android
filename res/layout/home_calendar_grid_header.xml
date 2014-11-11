@@ -59,7 +59,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="日"
-            android:textColor="@color/hoyoji_lightgray"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -69,7 +69,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="一"
-       	 	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="二"
-        	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -89,7 +89,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="三"
-        	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="四"
-        	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="五"
-        	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -119,7 +119,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="六"
-        	android:id="@+id/home_calendar_grid"
+            android:textColor="@color/lightgray"
             android:textSize="14.0dip" />
     </LinearLayout>
     <com.hoyoji.android.hyjframework.view.HyjCalendarGrid 

@@ -17,39 +17,34 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
-import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.SimpleAdapter.ViewBinder;
 
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
-import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
-import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMoreListener;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
-import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
+import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjCalendarGrid;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
@@ -58,7 +53,6 @@ import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
@@ -97,20 +91,23 @@ import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerListF
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
-public class HomeCalendarGridFragment extends HyjUserExpandableListFragment implements OnFetchMoreListener {
+public class HomeCalendarGridFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
-	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
+//	private List<Map<String, Object>> mListChildTitleData = new ArrayList<Map<String, Object>>();
+	private List<HyjModel> mListChildData = new ArrayList<HyjModel>();
 	private ContentObserver mChangeObserver = null;
 	private Button mExpenseButton;
 	private Button mIncomeButton;
 	private TextView mIncomeStat;
 	private TextView mExpenseStat;
-
+	private HyjCalendarGrid mCalendarGridView;
+	
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	
 	@Override
 	public Integer useContentView() {
-		return R.layout.home_listfragment_home;
+		return R.layout.home_listfragment_home_calendargrid;
 	}
 
 	@Override
@@ -128,8 +125,9 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendar_grid_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
-//		GridView gridView = (GridView) view.findViewById(R.id.home_calendar_grid);
-//
+		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
+		mCalendarGridView.getAdapter().setData(mListGroupData);
+		
 //		HyjCalendarGridAdapter mCalendarGridAdapter = new HyjCalendarGridAdapter(this.getActivity(), getResources());
 //		gridView.setAdapter(mCalendarGridAdapter);
 		return view;
@@ -139,9 +137,6 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 	public void onInitViewData() {
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
-		getListView().setGroupIndicator(null);
 		
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
@@ -163,6 +158,21 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 		
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		
+//		Calendar calToday = Calendar.getInstance();
+//		calToday.set(Calendar.HOUR_OF_DAY, 0);
+//		calToday.clear(Calendar.MINUTE);
+//		calToday.clear(Calendar.SECOND);
+//		calToday.clear(Calendar.MILLISECOND);
+//		String ds = SimpleDateFormat.getDateInstance().format(calToday.getTime());
+////		ds = ds.replaceAll("Z$", "+0000");
+//		HashMap<String, Object> groupObject = new HashMap<String, Object>();
+//		groupObject.put("date", ds);
+//		groupObject.put("dateInMilliSeconds", calToday.getTimeInMillis());
+//		groupObject.put("expenseTotal", 0.0);
+//		groupObject.put("incomeTotal", 0.0);
+//		mListChildTitleData.add(groupObject);
+//		mListChildData.add(null);
 		
 //		getView().findViewById(R.id.homeListFragment_action_money_transfer).setOnClickListener(new OnClickListener(){
 //			@Override
@@ -291,6 +301,9 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 					mChangeObserver);
 		}
 		
+		
+		// 加载日历
+		initLoader(-1);
 	}
 
 	private void updateHeaderStat() {
@@ -348,16 +361,13 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 		}
 		this.mIncomeStat.setText(localCurrencySymbol + HyjUtil.toFixed2(incomeTotal));
 		
+		
 	}
 
 	@Override
-	public ExpandableListAdapter useListViewAdapter() {
-		HomeGroupListAdapter adapter = new HomeGroupListAdapter(
-				getActivity(), mListGroupData, R.layout.home_listitem_group,
-				new String[] { "date", "expenseTotal", "incomeTotal" },
-				new int[] { R.id.homeListItem_group_date, 
-							R.id.homeListItem_group_expenseTotal, 
-							R.id.homeListItem_group_incomeTotal }, 
+	public ListAdapter useListViewAdapter() {
+		HomeListAdapter adapter = new HomeListAdapter(
+				getActivity(), 
 				mListChildData,
 				R.layout.home_listitem_row, 
 				new String[] {"picture", "subTitle", "title", "remark", "date", "amount", "owner"}, 
@@ -483,36 +493,72 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 //		super.onCreateLoader(groupPos, arg1);
 		Object loader;
+		if(arg1 == null){
+			arg1 = new Bundle();
+		}
+			int year = mCalendarGridView.getAdapter().getSelectedYear();
+			int month = mCalendarGridView.getAdapter().getSelectedMonth();
+			
+
+			Calendar calToday = Calendar.getInstance();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month-1);
+			calToday.set(Calendar.HOUR_OF_DAY, 0);
+			calToday.clear(Calendar.MINUTE);
+			calToday.clear(Calendar.SECOND);
+			calToday.clear(Calendar.MILLISECOND);
+
 		if (groupPos < 0) { // 这个是分类
-			loader = new HomeGroupListLoader(getActivity(), arg1);
+			calToday.set(Calendar.DATE, 1);
+			arg1.putLong("startDateInMillis", calToday.getTimeInMillis());
+			
+			calToday.add(Calendar.MONTH, 1);
+			calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
+			arg1.putLong("endDateInMillis", calToday.getTimeInMillis());
+			
+			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
 		} else {
-			loader = new HomeChildListLoader(getActivity(), arg1);
+
+			int day = mCalendarGridView.getAdapter().getSelectedDay();
+			calToday.set(Calendar.DATE, day);
+			arg1.putLong("dateFrom", calToday.getTimeInMillis());
+			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
+			
+			loader = new HomeCalendarGridChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
 	}
 
 	@Override
 	public void onLoadFinished(Loader loader, Object list) {
-		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter) getListView()
-				.getExpandableListAdapter();
 		if (loader.getId() < 0) {
+			
 			ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) list;
 			mListGroupData.clear();
 			mListGroupData.addAll(groupList);
-			for(int i = 0; i < groupList.size(); i++){
-				if(mListChildData.size() <= i){
-					mListChildData.add(null);
-					getListView().expandGroup(i);
-				} else if(getListView().collapseGroup(i)){
-					getListView().expandGroup(i);
-				}
-			}
-			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((HomeGroupListLoader)loader).hasMoreData());
+			mCalendarGridView.getAdapter().notifyDataSetChanged();
+			
+//			for(int i = 0; i < groupList.size(); i++){
+//				Map<String, Object> groupData = groupList.get(i);
+//				if(groupData.get("dateInMilliSeconds").toString().equals(mListChildTitleData.get(0).get("dateInMilliSeconds").toString())){
+//					mListChildTitleData.set(0, groupData);
+//				}
+////				if(mListChildData.size() <= i){
+////					mListChildData.add(null);
+////					getListView().expandGroup(i);
+////				} else if(getListView().collapseGroup(i)){
+//					getListView().expandGroup(i);
+////				}
+//			}
+//			adapter.notifyDataSetChanged();
+//			this.setFooterLoadFinished(false);
+			getLoaderManager().restartLoader(0, null, this);
 		} else {
-				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
-				mListChildData.set(loader.getId(), childList);
-				adapter.notifyDataSetChanged();
+			ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
+			mListChildData.clear();
+			mListChildData.addAll(childList);
+
+			((HomeListAdapter)getListAdapter()).notifyDataSetChanged();
 		}
 		// The list should now be shown.
 		if (isResumed()) {
@@ -524,33 +570,11 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 
 	@Override
 	public void onLoaderReset(Loader<Object> loader) {
-		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter)
-		 getListView().getExpandableListAdapter();
 		 if(loader.getId() < 0){
 				this.mListGroupData.clear();
 		 } else {
-			 if(adapter.getGroupCount() > loader.getId()){
-					this.mListChildData.set(loader.getId(), null);
-			 } else {
-				 getLoaderManager().destroyLoader(loader.getId());
-			 }
+				this.mListChildData.clear();
 		 }
-		
-	}
-
-	@Override
-	public void onGroupExpand(int groupPosition) {
-//		int i = 0;
-//		for(Map.Entry<String, Map<String, Object>> entry : mListGroupData.entrySet()){
-//			if(i == groupPosition){
-				long dateInMilliSeconds = (Long) mListGroupData.get(groupPosition).get("dateInMilliSeconds");
-				Bundle bundle = new Bundle();
-				bundle.putLong("dateFrom", dateInMilliSeconds);
-				bundle.putLong("dateTo", dateInMilliSeconds + 24*3600000);
-				getLoaderManager().restartLoader(groupPosition, bundle, this);
-//			}
-//			i++;
-//		}
 	}
 
 	
@@ -1418,59 +1442,41 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 		}
 	}
 
-	@Override
-	public void onFetchMore() {
-//		Bundle bundle = new Bundle();
-//		bundle.putString("target", "findData");
-//		bundle.putString("postData", (new JSONArray()).put(data).toString());
-//		Loader loader = getLoaderManager().getLoader(-1);
-//		((HomeGroupListLoader)loader).fetchMore(null);	
-	}
-
-	@Override
-	public void doFetchMore(int offset, int pageSize){
-		Loader loader = getLoaderManager().getLoader(-1);
-		if(loader != null && ((HomeGroupListLoader)loader).isLoading()){
-			return;
-		}
-		setFooterLoadStart();
-		((HomeGroupListLoader)loader).fetchMore(null);	
-	}
 	
 	@Override  
-	public boolean onChildClick(ExpandableListView parent, View v,
-			int groupPosition, int childPosition, long id) {
+	public void onListItemClick(ListView parent, View v,
+			int childPosition, long id) {
 		if(id == -1) {
-			 return false;
+			 return;
 		}
 		if(getActivity().getCallingActivity() != null){
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_ID", id);
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
-			return true;
+			return;
 		} else {
-			HyjModel object = (HyjModel) ((HyjSimpleExpandableListAdapter)parent.getExpandableListAdapter()).getChild(groupPosition, childPosition);
+			HyjModel object = (HyjModel) getListAdapter().getItem(childPosition);
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", object.get_mId());
 			if(object instanceof MoneyExpense){
 					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyIncome){
 					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyExpenseContainer){
 					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyIncomeContainer){
 					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyDepositIncomeContainer){
 				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyDepositReturnContainer){
 				openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyTransfer){
 				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
 				if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
@@ -1478,7 +1484,7 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 				} else {
 					openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
 				}
-				return true;
+				return ;
 			} else if(object instanceof MoneyBorrow){
 				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
 				if(moneyBorrow.getMoneyDepositIncomeApportionId() != null){
@@ -1487,7 +1493,7 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 				}else{
 					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
 				}
-				return true;
+				return ;
 			} else if(object instanceof MoneyLend){
 				MoneyLend moneyLend = (MoneyLend) object;
 				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
@@ -1497,10 +1503,10 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 				} else {
 					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
 				}
-				return true;
+				return ;
 			}  else if(object instanceof MoneyDepositExpenseContainer){
 				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof MoneyReturn){
 				MoneyReturn moneyReturn = (MoneyReturn) object;
 				if(moneyReturn.getMoneyDepositReturnApportionId() != null){
@@ -1509,7 +1515,7 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 				}else{
 					openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
 				}
-				return true;
+				return ;
 			} else if(object instanceof MoneyPayback){
 				MoneyPayback moneyPayback = (MoneyPayback) object;
 				if(moneyPayback.getMoneyDepositPaybackContainerId() != null){
@@ -1519,84 +1525,94 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 				} else {
 					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
 				}
-				return true;
+				return ;
 			} else if(object instanceof MoneyDepositPaybackContainer){
 				openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
-				return true;
+				return ;
 			} else if(object instanceof Message){
 				Message msg = (Message)object;
 				if(msg.getType().equals("System.Friend.AddRequest") ){
 					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().equals("System.Friend.AddResponse") ){
 					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().equals("System.Friend.Delete") ){
 					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().equals("Project.Share.AddRequest") ){
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().equals("Project.Share.Accept") ){
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().equals("Project.Share.Delete") ){
 					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
-					return true;
+					return ;
 				} else if(msg.getType().startsWith("Money.Share.Add") ){
 					openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
-					return true;
+					return ;
 				}
 			}
 		}
-		return false;
+		return ;
     } 
-	private static class HomeGroupListAdapter extends HyjSimpleExpandableListAdapter{
-
-		public HomeGroupListAdapter(Context context,
-	            List<Map<String, Object>> groupData, int expandedGroupLayout,
-	                    String[] groupFrom, int[] groupTo,
-	                    List<? extends List<? extends HyjModel>> childData,
+	private static class HomeListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+	    private ViewBinder mViewBinder;
+	    
+		public HomeListAdapter(Context context,
+	                    List<? extends HyjModel> childData,
 	                    int childLayout, String[] childFrom,
 	                    int[] childTo) {
-			super( context, groupData, expandedGroupLayout, groupFrom, groupTo,childData, childLayout, 
-					childFrom, childTo) ;
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
 		}
 		
-		@Override
-		 public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-		            ViewGroup parent) {
-		        View v;
-		        if (convertView == null) {
-		            v = newGroupView(isExpanded, parent);
-		        } else {
-		            v = convertView;
-		        }
-		        bindGroupView(v, (Map<String, ?>) this.getGroup(groupPosition), mGroupFrom, mGroupTo);
-		        
-		        return v;
-		    }
-		 
-		 private void bindGroupView(View view, Map<String, ?> data, String[] from, int[] to) {
-		        int len = to.length;
+	    
+	    public void setViewBinder(ViewBinder viewBinder){
+	    	mViewBinder = viewBinder;
+	    }
+	    
+	    public ViewBinder getViewBinder(){
+	    	return mViewBinder;
+	    }
+	    
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
 
-		        for (int i = 0; i < len; i++) {
-		            View v = view.findViewById(to[i]);
-		            if (v != null) {
-		            	if(v instanceof HyjNumericView){
-		            		HyjNumericView balanceTotalView = (HyjNumericView)v;
-		            		if(v.getId() == R.id.homeListItem_group_expenseTotal){
-		            			balanceTotalView.setPrefix("支出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-			            	} else if(v.getId() == R.id.homeListItem_group_incomeTotal){
-		            			balanceTotalView.setPrefix("收入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-				            }
-		            		balanceTotalView.setNumber(Double.valueOf(data.get(from[i]).toString()));
-		            	} else if(v instanceof TextView){
-		            		((TextView)v).setText((String)data.get(from[i]));
-		            	}
-		            }
-		        }
-		    }
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	mViewBinder.setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
 	}
 	private class ChangeObserver extends ContentObserver {
 //		AsyncTask<String, Void, String> mTask = null;
@@ -1648,7 +1664,8 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
 				public void run() {
-					((HyjSimpleExpandableListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+					((HomeListAdapter) getListAdapter()).notifyDataSetChanged();
+					mCalendarGridView.getAdapter().notifyDataSetChanged();
 				}
 			}, 50);
 			updateHeaderStat();
