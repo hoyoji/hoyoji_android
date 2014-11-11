@@ -59,7 +59,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="日"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -69,7 +69,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="一"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="二"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -89,7 +89,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="三"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="四"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="五"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
 
         <TextView
@@ -119,11 +119,11 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="六"
-            android:textColor="@color/lightgray"
+            	android:textColor="@android:color/darker_gray"
             android:textSize="14.0dip" />
     </LinearLayout>
     <com.hoyoji.android.hyjframework.view.HyjCalendarGrid 
+        android:id="@+id/home_calendar_grid"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        android:id="@+id/home_calendar_grid"/>
+            android:layout_height="wrap_content"/>
 </LinearLayout>

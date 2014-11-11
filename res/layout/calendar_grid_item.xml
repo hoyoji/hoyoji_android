@@ -4,37 +4,40 @@
     android:layout_height="wrap_content"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+     android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/tvincome"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+    	android:paddingBottom="2dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:text="¥1009"
         android:textColor="#FF0000"
-        android:textSize="9sp" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/tvexpense"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:textColor="#339900"
         android:text="¥320"
-        android:textSize="9sp" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/tvtext"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+    	android:layout_marginBottom="2dp"
+        android:layout_gravity="center_horizontal"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:singleLine="true"

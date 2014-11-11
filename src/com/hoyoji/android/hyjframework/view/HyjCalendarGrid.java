@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
@@ -15,7 +16,7 @@ public class HyjCalendarGrid extends GridView {
 	public HyjCalendarGrid(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.setNumColumns(7);
-//		this.setGravity(Gravity.CENTER);
+		this.setGravity(Gravity.CENTER);
 //		this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		mCalendarGridAdapter = new HyjCalendarGridAdapter(context, r);
@@ -38,14 +39,5 @@ public class HyjCalendarGrid extends GridView {
 		return mCalendarGridAdapter;
 	}
 	
-//	@Override
-//    public boolean onInterceptTouchEvent(MotionEvent arg0) {
-//		getParent().requestDisallowInterceptTouchEvent(true);
-//        return false;
-//    }
-	
-	@Override  
-	public boolean onTouchEvent(MotionEvent event) {  
-		return false;
-	}  
+
 }

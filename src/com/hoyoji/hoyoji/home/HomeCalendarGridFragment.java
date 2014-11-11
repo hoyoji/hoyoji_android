@@ -35,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter.OnFetchMor
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
+import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
@@ -126,6 +128,10 @@ public class HomeCalendarGridFragment extends HyjUserExpandableListFragment impl
 		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendar_grid_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
+//		GridView gridView = (GridView) view.findViewById(R.id.home_calendar_grid);
+//
+//		HyjCalendarGridAdapter mCalendarGridAdapter = new HyjCalendarGridAdapter(this.getActivity(), getResources());
+//		gridView.setAdapter(mCalendarGridAdapter);
 		return view;
 	}
 	
