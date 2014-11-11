@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.Stack;
 import android.app.Activity;
 import android.content.Intent;
+import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,12 +16,13 @@ import android.widget.TextView;
 
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
+import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 
 public class HyjCalculatorFormFragment extends HyjUserFormFragment implements OnClickListener{
 
 	private TextView mHyjTextViewAmount = null;
-	private HyjRemarkField mHyjRemarkFieldAmount = null;
+	private TextView mHyjRemarkFieldAmount = null;
 	boolean mTextCannotbeEmpty = false;
 	boolean isClear = false; //用于是否显示器需要被清理
 	
@@ -60,8 +63,9 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 		Double amount = intent.getDoubleExtra("AMOUNT",0.00);
 		
 		mHyjTextViewAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_textField_amount);
-		mHyjRemarkFieldAmount = (HyjRemarkField) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
-		mHyjRemarkFieldAmount.setEditable(false);
+		mHyjRemarkFieldAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
+		mHyjRemarkFieldAmount.setMovementMethod(ScrollingMovementMethod.getInstance());  
+//		mHyjRemarkFieldAmount.setHorizontalGravity(Gravity.RIGHT);//右对齐
 		mHyjTextViewAmount.setText(subZeroAndDot(amount+ ""));
 		
 		button_0 = (Button)getView().findViewById(R.id.hyjCalculatorFromFragment_button_0);
@@ -166,7 +170,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	        	DecimalFormat df = new DecimalFormat( "###############0.00");//   16位整数位，两小数位 
 	        	String setResult = df.format(result); 
 	        	
-	        	mHyjRemarkFieldAmount.setText(exp==""?exp + "=" + subZeroAndDot(setResult):mHyjRemarkFieldAmount.getText()+"\n"+exp+ "=" + subZeroAndDot(setResult));
+	        	mHyjRemarkFieldAmount.setText(exp.equals("")?exp + "=" + subZeroAndDot(setResult):mHyjRemarkFieldAmount.getText()+"\n"+exp+ "=" + subZeroAndDot(setResult));
 	        	mHyjTextViewAmount.setText(subZeroAndDot(setResult));
         	}
         }else{
