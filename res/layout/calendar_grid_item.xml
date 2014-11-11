@@ -41,7 +41,7 @@
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:singleLine="true"
-        android:textColor="@color/lightgray"
+        android:textColor="@android:color/darker_gray"
         android:textSize="14sp" />
 
 </LinearLayout>
