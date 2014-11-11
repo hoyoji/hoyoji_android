@@ -176,8 +176,37 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		getDayNumber(year,month);
 	}
 	
+	public void setJumpCalendar(int jumpMonth,int jumpYear){
+		
+		int stepYear = currentYear+jumpYear;
+		int stepMonth = currentMonth+jumpMonth ;
+		if(stepMonth > 0){
+			//往下一个月滑动
+			if(stepMonth%12 == 0){
+				stepYear = currentYear + stepMonth/12 -1;
+				stepMonth = 12;
+			}else{
+				stepYear = currentYear + stepMonth/12;
+				stepMonth = stepMonth%12;
+			}
+		}else{
+			//往上一个月滑动
+			stepYear = currentYear - 1 + stepMonth/12;
+			stepMonth = stepMonth%12 + 12;
+			if(stepMonth%12 == 0){
+				
+			}
+		}
+	
+//		currentYear = stepYear;  //得到当前的年份
+//		currentMonth = stepMonth;  //得到本月 （jumpMonth为滑动的次数，每滑动一次就增加一月或减一月）
+//		currentDay = day_c;  //得到当前日期是哪天
+		
+		setCalendar(stepYear, stepMonth);
+		
+	}
 
-	public void setJumpCalendar(Context context,Resources rs,int jumpMonth,int jumpYear,int year_c,int month_c,int day_c){
+	public void setJumpCalendar(int jumpMonth,int jumpYear,int year_c,int month_c,int day_c){
 		
 		int stepYear = year_c+jumpYear;
 		int stepMonth = month_c+jumpMonth ;
@@ -281,21 +310,21 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		return  (dayOfWeek+daysOfMonth+7)-1;
 	}
 	
-	public int getSelectedYear() {
-		return selectedYear;
+	public int getCurrentYear() {
+		return currentYear;
 	}
 
-	public void setSelectedYear(int showYear) {
-		this.selectedYear = showYear;
+//	public void setSelectedYear(int showYear) {
+//		this.selectedYear = showYear;
+//	}
+
+	public int getCurrentMonth() {
+		return currentMonth;
 	}
 
-	public int getSelectedMonth() {
-		return selectedMonth;
-	}
-
-	public void setSelectedMonth(int showMonth) {
-		this.selectedMonth = showMonth;
-	}
+//	public void setSelectedMonth(int showMonth) {
+//		this.selectedMonth = showMonth;
+//	}
 	
 //	public String getAnimalsYear() {
 //		return animalsYear;
@@ -386,5 +415,13 @@ public void setData(List<Map<String, Object>> listGroupData) {
 
 public void setSelectedDay(int d) {
 	selectedDay = d;
+}
+
+
+public int getSelectedYear() {
+	return selectedYear;
+}
+public int getSelectedMonth() {
+	return selectedMonth;
 }
 }

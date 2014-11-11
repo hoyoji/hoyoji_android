@@ -131,7 +131,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		mCalendarGridView.getAdapter().setData(mListGroupData);
 
 		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -141,10 +140,25 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(0, null, HomeCalendarGridFragment.this);
 				
 			}
-			
 		});
-//		HyjCalendarGridAdapter mCalendarGridAdapter = new HyjCalendarGridAdapter(this.getActivity(), getResources());
-//		gridView.setAdapter(mCalendarGridAdapter);
+		view.findViewById(R.id.home_stat_previous_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mCalendarGridView.getAdapter().setJumpCalendar(-1, 0);
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+			}
+		});
+		view.findViewById(R.id.home_stat_next_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mCalendarGridView.getAdapter().setJumpCalendar(1, 0);
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+			}
+		});
 		return view;
 	}
 	
@@ -511,19 +525,20 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		if(arg1 == null){
 			arg1 = new Bundle();
 		}
-			int year = mCalendarGridView.getAdapter().getSelectedYear();
-			int month = mCalendarGridView.getAdapter().getSelectedMonth();
 			
 
 			Calendar calToday = Calendar.getInstance();
-			calToday.set(Calendar.YEAR, year);
-			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.HOUR_OF_DAY, 0);
 			calToday.clear(Calendar.MINUTE);
 			calToday.clear(Calendar.SECOND);
 			calToday.clear(Calendar.MILLISECOND);
 
 		if (groupPos < 0) { // 这个是分类
+
+			int year = mCalendarGridView.getAdapter().getCurrentYear();
+			int month = mCalendarGridView.getAdapter().getCurrentMonth();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.DATE, 1);
 			arg1.putLong("startDateInMillis", calToday.getTimeInMillis());
 			
@@ -533,8 +548,11 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			
 			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
 		} else {
-
+			int year = mCalendarGridView.getAdapter().getSelectedYear();
+			int month = mCalendarGridView.getAdapter().getSelectedMonth();
 			int day = mCalendarGridView.getAdapter().getSelectedDay();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.DATE, day);
 			arg1.putLong("dateFrom", calToday.getTimeInMillis());
 			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
