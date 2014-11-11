@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -29,12 +30,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter.ViewBinder;
 
 import com.activeandroid.Cache;
@@ -100,6 +104,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	private Button mIncomeButton;
 	private TextView mIncomeStat;
 	private TextView mExpenseStat;
+	private TextView mCurrentMonth;
+	private TextView mCurrentYear;
 	private HyjCalendarGrid mCalendarGridView;
 	
 	private DateFormat mDateFormat = new SimpleDateFormat(
@@ -127,9 +133,67 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
 		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
 		mCalendarGridView.getAdapter().setData(mListGroupData);
+		mCurrentMonth = (TextView) view.findViewById(R.id.home_stat_month);
+		mCurrentYear = (TextView) view.findViewById(R.id.home_stat_year);
 		
-//		HyjCalendarGridAdapter mCalendarGridAdapter = new HyjCalendarGridAdapter(this.getActivity(), getResources());
-//		gridView.setAdapter(mCalendarGridAdapter);
+		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition((int) arg3));
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+
+				getLoaderManager().restartLoader(0, null, HomeCalendarGridFragment.this);
+				
+			}
+		});
+		view.findViewById(R.id.home_stat_previous_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mCalendarGridView.getAdapter().setJumpCalendar(-1, 0);
+				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
+				
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+			}
+		});
+		view.findViewById(R.id.home_stat_next_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mCalendarGridView.getAdapter().setJumpCalendar(1, 0);
+				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
+				
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+			}
+		});
+		view.findViewById(R.id.home_stat_center).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {  
+				    //下面的参数是用户设置完之后的时间  
+				    @Override  
+				    public void onDateSet(DatePicker view, int year, int monthOfYear,  
+				            int dayOfMonth) {  
+						mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
+						mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+						mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
+						
+						mListGroupData.clear();
+						mCalendarGridView.getAdapter().notifyDataSetChanged();
+						getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+				    }  
+				};  
+				DatePickerDialog dialog = new DatePickerDialog(getActivity(),  
+	                    mDateSetListener,  
+	                    mCalendarGridView.getAdapter().getCurrentYear(), mCalendarGridView.getAdapter().getCurrentMonth()-1, mCalendarGridView.getAdapter().getSelectedDay());
+				dialog.show();
+			}
+		});
 		return view;
 	}
 	
@@ -496,19 +560,20 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		if(arg1 == null){
 			arg1 = new Bundle();
 		}
-			int year = mCalendarGridView.getAdapter().getSelectedYear();
-			int month = mCalendarGridView.getAdapter().getSelectedMonth();
 			
 
 			Calendar calToday = Calendar.getInstance();
-			calToday.set(Calendar.YEAR, year);
-			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.HOUR_OF_DAY, 0);
 			calToday.clear(Calendar.MINUTE);
 			calToday.clear(Calendar.SECOND);
 			calToday.clear(Calendar.MILLISECOND);
 
 		if (groupPos < 0) { // 这个是分类
+
+			int year = mCalendarGridView.getAdapter().getCurrentYear();
+			int month = mCalendarGridView.getAdapter().getCurrentMonth();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.DATE, 1);
 			arg1.putLong("startDateInMillis", calToday.getTimeInMillis());
 			
@@ -518,8 +583,11 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			
 			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
 		} else {
-
+			int year = mCalendarGridView.getAdapter().getSelectedYear();
+			int month = mCalendarGridView.getAdapter().getSelectedMonth();
 			int day = mCalendarGridView.getAdapter().getSelectedDay();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month-1);
 			calToday.set(Calendar.DATE, day);
 			arg1.putLong("dateFrom", calToday.getTimeInMillis());
 			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
