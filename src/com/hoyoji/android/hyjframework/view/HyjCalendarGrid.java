@@ -1,5 +1,7 @@
 package com.hoyoji.android.hyjframework.view;
 
+import com.hoyoji.android.hyjframework.HyjUtil;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
@@ -7,6 +9,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class HyjCalendarGrid extends GridView {
@@ -22,6 +25,8 @@ public class HyjCalendarGrid extends GridView {
 		mCalendarGridAdapter = new HyjCalendarGridAdapter(context, r);
 		this.setAdapter(mCalendarGridAdapter);
 	}
+	
+	
 	
 	@Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

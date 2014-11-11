@@ -32,19 +32,19 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	private int[] dayNumber = new int[42];  //一个gridview中的日期存入此数组中
 //	private static String week[] = {"周日","周一","周二","周三","周四","周五","周六"};
 
-//	private Resources res = null;
+	private Resources res = null;
 //	private Drawable drawable = null;
 	
-//	private int currentYear = -1;
-//	private int currentMonth = -1;
-//	private int currentDay = -1;
+	private int currentYear = -1;
+	private int currentMonth = -1;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
-	private int currentFlag = -1;     //用于标记当天
+//	private int currentFlag = -1;     //用于标记当天
 	
-	private int showYear = -1;   //用于在头部显示的年份
-	private int showMonth = -1;  //用于在头部显示的月份
-	private int showDay = -1;
+	
+	private int selectedYear = -1;   //用于在头部显示的年份
+	private int selectedMonth = -1;  //用于在头部显示的月份
+	private int selectedDay = -1;
 //	private String animalsYear = ""; 
 	private String leapMonth = "";   //闰哪一个月
 //	private String cyclical = "";   //天干地支
@@ -59,7 +59,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	public HyjCalendarGridAdapter(Context context, Resources rs){
 		this.context= context;
 		this.sc = new SpecialCalendar();
-//		this.res = rs;
+		this.res = rs;
 	
 		Date date = new Date();
 		sysDate = sdf.format(date);  //当期日期
@@ -148,11 +148,18 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 				viewCache.tvIncome.setVisibility(View.INVISIBLE);
 			}
 			
-			if(currentFlag == position){ 
-				//设置当天的背景
+			// 显示当天
+			if(this.sys_day == d && this.sys_month == this.currentMonth && this.sys_year == this.currentYear){
 				viewCache.tvDay.setTextColor(Color.BLACK);
 			} else {
 				viewCache.tvDay.setTextColor(Color.GRAY);
+			}
+			
+			// 显示选定的日期
+			if(this.selectedDay == d && this.selectedMonth == this.currentMonth && this.selectedYear == this.currentYear){
+				convertView.setBackgroundColor(Color.LTGRAY);
+			} else {
+				convertView.setBackgroundColor(Color.TRANSPARENT);
 			}
 		} else {
 			convertView.setVisibility(View.INVISIBLE);
@@ -166,7 +173,6 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		daysOfMonth = sc.getDaysOfMonth(isLeapyear, month);  //某月的总天数
 		dayOfWeek = sc.getWeekdayOfMonth(year, month);      //某月第一天为星期几
 		lastDaysOfMonth = sc.getDaysOfMonth(isLeapyear, month-1);  //上一个月的总天数
-		Log.d("DAY", isLeapyear+" ======  "+daysOfMonth+"  ============  "+dayOfWeek+"  =========   "+lastDaysOfMonth);
 		getDayNumber(year,month);
 	}
 	
@@ -204,7 +210,8 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	//将一个月中的每一天的值添加入数组dayNumber中
 	private void getDayNumber(int year, int month) {
 		int j = 1;
-		int flag = 0;
+		this.currentMonth = month;
+		this.currentYear = year;
 		
 		//得到当前月的所有日程日期(这些日期需要标记)
 
@@ -222,10 +229,12 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 				//对于当前月才去标记当前日期
 				if(sys_year == year && sys_month == month && sys_day == day){
 					//标记当前日期
-					currentFlag = i;
+					if(selectedDay == -1){
+						selectedYear = year;
+						selectedMonth = month;
+						selectedDay = day;
+					}
 				}	
-				setSelectedYear(year);
-				setSelectedMonth(month);
 			}else{   //下一个月
 				dayNumber[i] = j;
 				j++;
@@ -244,7 +253,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	
 	
 	public int getSelectedDay(){
-		return dayNumber[currentFlag];
+		return selectedDay;
 	}
 
 	/**
@@ -252,7 +261,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	 * @param position
 	 * @return
 	 */
-	public int getSelectedDay(int position){
+	public int getDayAtPosition(int position){
 		return dayNumber[position];
 	}
 	
@@ -273,19 +282,19 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	}
 	
 	public int getSelectedYear() {
-		return showYear;
+		return selectedYear;
 	}
 
 	public void setSelectedYear(int showYear) {
-		this.showYear = showYear;
+		this.selectedYear = showYear;
 	}
 
 	public int getSelectedMonth() {
-		return showMonth;
+		return selectedMonth;
 	}
 
 	public void setSelectedMonth(int showMonth) {
-		this.showMonth = showMonth;
+		this.selectedMonth = showMonth;
 	}
 	
 //	public String getAnimalsYear() {
@@ -372,5 +381,10 @@ private static class SpecialCalendar {
 
 public void setData(List<Map<String, Object>> listGroupData) {
 	mListGroupData = listGroupData;
+}
+
+
+public void setSelectedDay(int d) {
+	selectedDay = d;
 }
 }

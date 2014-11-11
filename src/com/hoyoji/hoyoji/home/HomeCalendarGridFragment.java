@@ -29,12 +29,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter.ViewBinder;
 
 import com.activeandroid.Cache;
@@ -127,7 +129,20 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
 		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
 		mCalendarGridView.getAdapter().setData(mListGroupData);
-		
+
+		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition((int) arg3));
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+
+				getLoaderManager().restartLoader(0, null, HomeCalendarGridFragment.this);
+				
+			}
+			
+		});
 //		HyjCalendarGridAdapter mCalendarGridAdapter = new HyjCalendarGridAdapter(this.getActivity(), getResources());
 //		gridView.setAdapter(mCalendarGridAdapter);
 		return view;
