@@ -10,10 +10,12 @@ import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji_android.R;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -56,12 +58,13 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	private int sys_day = -1;
 	private SpecialCalendar sc;
 	private List<Map<String, Object>> mListGroupData;
+	private static Drawable drawableSelectedBackground;
 	
 	public HyjCalendarGridAdapter(Context context, Resources rs){
 		this.context= context;
 		this.sc = new SpecialCalendar();
 		this.res = rs;
-	
+		drawableSelectedBackground = res.getDrawable(R.drawable.button_rectangle_round_10);
 		Date date = new Date();
 		sysDate = sdf.format(date);  //当期日期
 		sys_year = Integer.parseInt(sysDate.split("-")[0]);
@@ -108,6 +111,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		TextView tvDay;
 	}
 	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewCache viewCache;
@@ -170,7 +174,12 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			
 			// 显示选定的日期
 			if(this.selectedDay == d && this.selectedMonth == this.currentMonth && this.selectedYear == this.currentYear){
-				convertView.setBackgroundColor(Color.LTGRAY);
+				int sdk = android.os.Build.VERSION.SDK_INT;
+				if(sdk  < Build.VERSION_CODES.JELLY_BEAN){
+					convertView.setBackgroundDrawable(drawableSelectedBackground);
+				} else {
+					convertView.setBackground(drawableSelectedBackground);
+				}
 			} else {
 				convertView.setBackgroundColor(Color.TRANSPARENT);
 			}
