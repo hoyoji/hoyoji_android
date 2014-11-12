@@ -21,7 +21,6 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="0dp"
 				    android:layout_weight="2"
-				    android:textStyle="bold"
 				    android:textSize="15sp"
 				    android:text="11月"
 		        />
@@ -102,7 +101,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="日"
-            android:textColor="@color/lightgray"
+            android:textColor="@color/hoyoji_red"
             android:textSize="14.0dip" />
 
         <TextView
@@ -162,7 +161,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="六"
-            android:textColor="@color/lightgray"
+            android:textColor="@color/hoyoji_red"
             android:textSize="14.0dip" />
     </LinearLayout>
     <com.hoyoji.android.hyjframework.view.HyjCalendarGrid 

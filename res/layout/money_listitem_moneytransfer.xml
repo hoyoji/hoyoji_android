@@ -29,7 +29,6 @@
 		<TextView android:id="@+id/moneyIncomeListItem_category"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
-		    android:textStyle="bold"
 	    	android:layout_gravity="left" 
 	    	android:text="分类名称" />	
 	    	
@@ -57,7 +56,6 @@
 		<com.hoyoji.android.hyjframework.view.HyjNumericView android:id="@+id/moneyIncomeListItem_amount"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
-		    android:textStyle="bold"
 	    	android:textColor="#339900"
 	    	android:layout_gravity="right" />	
 	    	
