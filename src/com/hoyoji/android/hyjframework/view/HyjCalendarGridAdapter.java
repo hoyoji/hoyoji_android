@@ -64,7 +64,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		this.context= context;
 		this.sc = new SpecialCalendar();
 		this.res = rs;
-		drawableSelectedBackground = res.getDrawable(R.drawable.button_rectangle_round_10);
+		drawableSelectedBackground = res.getDrawable(R.drawable.button_rectangle_round_5);
 		Date date = new Date();
 		sysDate = sdf.format(date);  //当期日期
 		sys_year = Integer.parseInt(sysDate.split("-")[0]);
