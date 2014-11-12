@@ -495,6 +495,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					}
 				});
 
+		setPermission();
+		
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
 			setExchangeRate(false);
@@ -503,7 +505,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			setExchangeRate(true);
 		}
 		
-		setPermission();
 	}
 
 	@Override

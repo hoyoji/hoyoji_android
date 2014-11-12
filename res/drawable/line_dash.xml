@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle" android:useLevel="false">
-            <corners android:radius="5dip" />
-            <stroke android:width="2dp" android:color="@color/hoyoji_red" />
-		    <solid android:color="@android:color/transparent" />
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="line">
+		    <stroke
+		        android:dashGap="3dp"
+		        android:dashWidth="6dp"
+		        android:color="#63a219" />
+			<!-- 虚线的高度 -->
+		    <size android:height="1dp" />
         </shape>
-       
-   	</item>
-    <item>
-        <shape android:shape="rectangle" android:useLevel="false">
-            <corners android:radius="5dip" />
-            <stroke android:width="1dp" android:color="@color/hoyoji_red" />
-		    <solid android:color="@android:color/transparent" />
-        </shape>
-    </item>
-
-</selector>

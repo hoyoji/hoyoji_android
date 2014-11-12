@@ -37,7 +37,7 @@
                 android:layout_gravity="left"
                 android:orientation="vertical"
                 android:paddingLeft="66dp" >
-				<RelativeLayout
+				<FrameLayout
 				    android:layout_width="match_parent"
                 	android:layout_height="wrap_content">
 
@@ -46,10 +46,8 @@
 	                    hyj:style="no_label"
 	                    android:layout_width="match_parent"
 	                    android:layout_height="wrap_content"
-	                    android:layout_alignParentLeft="true"
-	                    android:layout_marginBottom="5dip"
-	                    android:layout_toLeftOf="@+id/calculator"
-	                    android:layout_toRightOf="@+id/calculator"
+	                    android:layout_marginRight="40dp"
+	                    android:layout_gravity="center_vertical"
 	                    hyj:editTextBold="true"
 	                    hyj:editTextBorder="none"
 	                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
@@ -57,12 +55,12 @@
 	
 	                </com.hoyoji.android.hyjframework.view.HyjNumericField>
 	                <ImageButton android:id="@+id/calculator"
-	                    android:layout_width="wrap_content"
+	                    android:layout_width="40dp"
 	                    android:layout_height="wrap_content"
-	                    android:layout_alignParentRight="true"
-	                    android:layout_marginBottom="0dip"
-	                    android:background="@drawable/calculator"/>
-                </RelativeLayout>
+	                    android:layout_gravity="right|center_vertical"
+	                    android:src="@drawable/calculator"
+	                    android:background="@android:color/transparent"/>
+                </FrameLayout>
 
                 <View
                     android:id="@id/field_separator"
@@ -234,7 +232,7 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="20dip"
             android:layout_marginTop="2dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_dash" />
 
         <com.hoyoji.hoyoji.money.MoneyApportionField
             android:id="@+id/moneyExpenseContainerFormFragment_apportionField"
