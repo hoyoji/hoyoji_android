@@ -3,12 +3,10 @@ package com.hoyoji.android.hyjframework.fragment;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-
 import com.hoyoji.hoyoji_android.R;
 
 public abstract class HyjUserFormFragment extends HyjUserFragment {
-	private Button mSaveButton = null;
+	private View mSaveButton = null;
 	
 	@Override
 	public Integer useOptionsMenuView(){
@@ -27,7 +25,7 @@ public abstract class HyjUserFormFragment extends HyjUserFragment {
 	
 	@Override
 	public void onInitViewData (){
-			mSaveButton = (Button) getView().findViewById(R.id.button_save);
+			mSaveButton = getView().findViewById(R.id.button_save);
 			if(mSaveButton != null){
 				mSaveButton.setOnClickListener(
 			        new OnClickListener() {

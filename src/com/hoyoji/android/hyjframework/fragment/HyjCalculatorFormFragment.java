@@ -63,10 +63,19 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 		Double amount = intent.getDoubleExtra("AMOUNT",0.00);
 		
 		mHyjTextViewAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_textField_amount);
-		mHyjRemarkFieldAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
-		mHyjRemarkFieldAmount.setMovementMethod(ScrollingMovementMethod.getInstance());  
-//		mHyjRemarkFieldAmount.setHorizontalGravity(Gravity.RIGHT);//右对齐
 		mHyjTextViewAmount.setText(subZeroAndDot(amount+ ""));
+		mHyjTextViewAmount.post(new Runnable(){
+			@Override
+			public void run() {
+//				mHyjTextViewAmount.setGravity(Gravity.RIGHT);
+				mHyjTextViewAmount.setMovementMethod(ScrollingMovementMethod.getInstance()); 
+//				mHyjTextViewAmount.scrollTo(mHyjTextViewAmount.getRight(), 0);
+
+			}
+		});
+		mHyjRemarkFieldAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
+//		mHyjRemarkFieldAmount.setHorizontalGravity(Gravity.RIGHT);//右对齐
+		
 		
 		button_0 = (Button)getView().findViewById(R.id.hyjCalculatorFromFragment_button_0);
 		button_1 = (Button)getView().findViewById(R.id.hyjCalculatorFromFragment_button_1);
@@ -110,21 +119,6 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
     public void onClick(View e) {
         Button btn = (Button)e;
         String exp = mHyjTextViewAmount.getText().toString();
-        if(isClear &&(
-              btn.getText().equals("0")
-            ||btn.getText().equals("1")
-            ||btn.getText().equals("2")
-            ||btn.getText().equals("3")
-            ||btn.getText().equals("4")
-            ||btn.getText().equals("5")
-            ||btn.getText().equals("6")
-            ||btn.getText().equals("7")
-            ||btn.getText().equals("8")
-            ||btn.getText().equals("9")
-            ||btn.getText().equals("."))){
-        	mHyjTextViewAmount.setText("");
-            isClear = false;
-        }
         if(btn.getText().equals(".")){
         	if(!isEmpty(exp)){
 	        	String[] expStrArray = exp.split("\\.");
@@ -150,7 +144,11 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
         }else if(btn.getText().equals("+")){
         	canSet(exp,"+");
         }else if(btn.getText().equals("-")){
-        	canSet(exp,"-");
+        	if(exp.equals("")) {
+        		mHyjTextViewAmount.setText("-");
+        	} else{
+            	canSet(exp,"-");
+        	}
         }else if(btn.getText().equals("×")){
         	canSet(exp,"×");
         }else if(btn.getText().equals("÷")){
@@ -170,7 +168,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	        	DecimalFormat df = new DecimalFormat( "###############0.00");//   16位整数位，两小数位 
 	        	String setResult = df.format(result); 
 	        	
-	        	mHyjRemarkFieldAmount.setText(exp.equals("")?exp + "=" + subZeroAndDot(setResult):mHyjRemarkFieldAmount.getText()+"\n"+exp+ "=" + subZeroAndDot(setResult));
+	        	mHyjRemarkFieldAmount.setText(mHyjRemarkFieldAmount.getText().toString().equals("")?exp + "=" + subZeroAndDot(setResult):mHyjRemarkFieldAmount.getText()+"\n"+exp+ "=" + subZeroAndDot(setResult));
 	        	mHyjTextViewAmount.setText(subZeroAndDot(setResult));
         	}
         }else{
@@ -179,7 +177,6 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
         	} else {
         		mHyjTextViewAmount.setText(exp+""+btn.getText());
         	}
-            isClear = false;
         }
     }
 	
@@ -303,28 +300,30 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
         switch (ope) {
         // 如果是加号或者减号，则
         case '+':
-            result = a.add(b);
+//            result = a.add(b);
+            result = new BigDecimal(Double.parseDouble(a.toString())+Double.parseDouble(b.toString()));
             // 将操作结果放入操作数栈
             numbers.push(result);
             break;
         case '-':
             // 将操作结果放入操作数栈
-            result = a.subtract(b);
+//            result = a.subtract(b);
+            result = new BigDecimal(Double.parseDouble(a.toString())-Double.parseDouble(b.toString()));
             numbers.push(result);
             break;
         case '*':
 //        	MathContext mc = new MathContext(2, RoundingMode.HALF_DOWN);
 //            result = a.multiply(b,mc);
-        	result = new BigDecimal(Integer.parseInt(a.toString())*Integer.parseInt(b.toString()));
+        	result = new BigDecimal(Double.parseDouble(a.toString())*Double.parseDouble(b.toString()));
             // 将操作结果放入操作数栈
             numbers.push(result);
             break;
         case '/':
 //        	MathContext dc = new MathContext(2, RoundingMode.HALF_DOWN);
-        	if ( Integer.parseInt(b.toString()) == 0) {
+        	if ( Double.parseDouble(b.toString()) == 0) {
         		result = new BigDecimal(0);
         	} else {
-        		result = new BigDecimal(Integer.parseInt(a.toString())/Integer.parseInt(b.toString()));
+        		result = new BigDecimal(Double.parseDouble(a.toString())/Double.parseDouble(b.toString()));
 //        		result = a.divide(b,dc);// 将操作结果放入操作数栈
         	}
             numbers.push(result);
@@ -365,6 +364,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	 @Override
 	 public void onSave(View v){
 		 super.onSave(v);
+		 button_equal.performClick();
 		 Intent intent = new Intent();
 		 intent.putExtra("calculatorAmount", mHyjTextViewAmount.getText().toString());
 		 getActivity().setResult(Activity.RESULT_OK, intent);

@@ -1,6 +1,5 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji_android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,22 +8,28 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HyjCalculatorFormFragment" >
-	<LinearLayout
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:orientation="vertical">
         <TextView
             android:id="@+id/hyjCalculatorFormFragment_hyjRemarkField_remark"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:gravity="right"/>
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/hyjCalculatorFormFragment_textField_amount"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:textSize="20sp"
+            android:paddingRight="5dp"
+            android:gravity="right|bottom"/>
 		<TextView 
 		    android:id="@+id/hyjCalculatorFormFragment_textField_amount"
 		    android:layout_width="match_parent"
-	        android:layout_height="30dp"
+	        android:layout_height="48dp"
+	        android:background="@color/hoyoji_lightgray"
+	        android:layout_above="@id/field_separator"
 	        android:textSize="25sp"
-	        android:gravity="right"/>
+	        android:scrollbars="horizontal"
+	        android:singleLine="true"
+	        android:paddingRight="5dp"
+	        android:ellipsize="marquee"
+	        android:gravity="right|center_vertical"/>
 	        
         <View
            android:id="@id/field_separator"
@@ -32,6 +37,7 @@
            android:layout_height="1dip"
            android:layout_marginBottom="5dip"
            android:layout_marginTop="5dip"
+            android:layout_above="@+id/buttonGroup"
            android:background="#E0E0E0" />
 		   <!--  <ListView
 	            android:id="@+id/hyjCalculatorFromFragment_listView_calculator"
@@ -47,8 +53,10 @@
 		        android:text="TextView" /> -->
 	
 		    <LinearLayout
+		        android:id="@+id/buttonGroup"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
 		        android:orientation="vertical" >
 	
 		        <LinearLayout
@@ -177,8 +185,7 @@
 		            android:layout_height="wrap_content"
 		            android:weightSum="4" >
 			        <LinearLayout
-			            android:id="@+id/tableRow5"
-			            android:layout_width="wrap_content"
+			            android:layout_width="0dp"
 			            android:layout_height="wrap_content"
 			            android:layout_weight="3"
 			            android:orientation="vertical" >
@@ -214,14 +221,21 @@
 			
 				        </LinearLayout>
 				        <LinearLayout
-				            android:id="@+id/tableRow5"
 				            android:layout_width="match_parent"
 				            android:layout_height="wrap_content"
-				            android:weightSum="2" >
+				            android:weightSum="3" >
+				            <ImageButton
+					           android:id="@id/button_save"
+					           android:layout_width="0dp"
+					           android:layout_height="match_parent"
+					           android:src="@drawable/ic_action_accept"
+					           android:background="@drawable/button_circle"
+					           android:layout_weight="1"
+					           android:text="@string/app_action_save" />
 			
 				            <Button
 				                android:id="@+id/hyjCalculatorFromFragment_button_0"
-				                android:layout_width="wrap_content"
+				                android:layout_width="0dp"
 				                android:layout_height="wrap_content"
 				                android:background="@drawable/button_circle"
 				                android:layout_weight="1"
@@ -229,7 +243,7 @@
 			
 				            <Button
 				                android:id="@+id/hyjCalculatorFromFragment_button_point"
-				                android:layout_width="wrap_content"
+				                android:layout_width="0dp"
 				                android:layout_height="wrap_content"
 				                android:background="@drawable/button_circle"
 				                android:layout_weight="1"
@@ -239,23 +253,22 @@
 			
 				        </LinearLayout>
 				    </LinearLayout>
-				    <Button
-		                android:id="@+id/hyjCalculatorFromFragment_button_equal"
-		                android:layout_width="wrap_content"
-		                android:layout_height="fill_parent"
-		                android:background="@drawable/button_circle"
-		                android:layout_weight="1"
-		                android:text="=" />
+				    <FrameLayout
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="1">
+
+					    <Button
+					        android:id="@+id/hyjCalculatorFromFragment_button_equal"
+					        android:layout_width="40dp"
+					        android:layout_height="match_parent"
+					        android:layout_gravity="center"
+					        android:background="@drawable/button_rectangle"
+					        android:text="=" />
+
+				    </FrameLayout>
 				</LinearLayout>
 			    
 		    </LinearLayout>
 	        
-	       <Button
-	           android:id="@id/button_save"
-	           android:layout_width="match_parent"
-	           android:layout_height="wrap_content"
-	           android:layout_marginTop="10dp"
-	           android:text="@string/app_action_save" />
-	
-	</LinearLayout>
-</ScrollView>
+	</RelativeLayout>
