@@ -28,16 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="收支汇总"
-                android:textStyle="bold" />
+                android:text="收支汇总"/>
 
             <TextView
                 android:id="@+id/moneyTransactionSummaryFragment_inoutTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
-                android:text="..."
-                android:textStyle="bold" />
+                android:text="..."/>
         </FrameLayout>
 
         <FrameLayout
@@ -92,16 +90,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="#E0E0E0"
-                android:text="转账汇总"
-                android:textStyle="bold" />
+                android:text="转账汇总"/>
 
             <TextView
                 android:id="@+id/moneyTransactionSummaryFragment_transferTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
-                android:text="..."
-                android:textStyle="bold" />
+                android:text="..."/>
         </FrameLayout>
 
         <FrameLayout
@@ -155,16 +151,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="借贷汇总"
-                android:textStyle="bold" />
+                android:text="借贷汇总"/>
 
             <TextView
                 android:id="@+id/moneyTransactionSummaryFragment_debtTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
-                android:text="..."
-                android:textStyle="bold" />
+                android:text="..."/>
         </FrameLayout>
 
         <FrameLayout

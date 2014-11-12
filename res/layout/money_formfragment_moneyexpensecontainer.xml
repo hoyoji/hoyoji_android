@@ -271,23 +271,6 @@
             android:orientation="vertical"
             android:visibility="gone">
             
-        <com.hoyoji.android.hyjframework.view.HyjRemarkField
-            android:id="@+id/moneyExpenseContainerFormFragment_textField_remark"
-            hyj:style="no_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            hyj:editTextBorder="none"
-            hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_remark"
-            hyj:labelText="@string/moneyExpenseFormFragment_textView_remark" />
-
-        <View
-            android:id="@id/field_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
-
         <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/moneyExpenseContainerFormFragment_selectorField_friend"
             android:layout_width="match_parent"
@@ -327,6 +310,21 @@
             android:layout_marginTop="5dip"
             android:background="#E0E0E0" />
 		
+        <com.hoyoji.android.hyjframework.view.HyjRemarkField
+            android:id="@+id/moneyExpenseContainerFormFragment_textField_remark"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_remark"
+            hyj:labelText="@string/moneyExpenseFormFragment_textView_remark" />
+
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="#E0E0E0" />
+        
 		</LinearLayout>
 
         <Button

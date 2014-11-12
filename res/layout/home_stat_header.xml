@@ -19,7 +19,6 @@
 		    <TextView android:id="@+id/home_stat_incomeStat"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:textStyle="bold"
 			    android:text="¥0.00"/>
 		</LinearLayout>
 		<LinearLayout 
@@ -37,7 +36,6 @@
 		    <TextView  android:id="@+id/home_stat_expenseStat"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:textStyle="bold"
 			    android:text="¥0.00"/>
 		</LinearLayout>
 		

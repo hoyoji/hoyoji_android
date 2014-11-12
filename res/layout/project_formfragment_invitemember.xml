@@ -50,7 +50,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-				android:textStyle="bold"
                 android:text="@string/inviteMemberFormFragment_textView_shareAuthorization_title" />
             <CheckBox
                 android:id="@+id/inviteMemberFormFragment_checkBox_shareAuthorization_expense_self"
