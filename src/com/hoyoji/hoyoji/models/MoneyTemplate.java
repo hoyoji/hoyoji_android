@@ -10,8 +10,8 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 
-@Table(name = "MOneyTemplet", id = BaseColumns._ID)
-public class MoneyTemplet extends HyjModel {
+@Table(name = "MoneyTemplate", id = BaseColumns._ID)
+public class MoneyTemplate extends HyjModel {
 
 	@Column(name = "id", index = true, unique = true)
 	private String mUUID;
@@ -38,7 +38,7 @@ public class MoneyTemplet extends HyjModel {
 	private Long mLastClientUpdateTime;
 	
 	
-	public MoneyTemplet(){
+	public MoneyTemplate(){
 		super();
 		mUUID = UUID.randomUUID().toString();
 	}

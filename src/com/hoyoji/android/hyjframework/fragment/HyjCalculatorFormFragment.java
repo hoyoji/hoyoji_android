@@ -74,6 +74,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 			}
 		});
 		mHyjRemarkFieldAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
+		mHyjRemarkFieldAmount.setMovementMethod(ScrollingMovementMethod.getInstance()); 
 //		mHyjRemarkFieldAmount.setHorizontalGravity(Gravity.RIGHT);//右对齐
 		
 		
@@ -365,7 +366,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	 public void onSave(View v){
 		 super.onSave(v);
 		 Intent intent = new Intent();
-		 if(mHyjRemarkFieldAmount.getText().toString().equals("")){
+		 if(mHyjTextViewAmount.getText().toString().equals("")){
 			 intent.putExtra("calculatorAmount", "0");
 		 } else {
 			 button_equal.performClick();
