@@ -173,6 +173,10 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			@Override
 			public void onClick(View v) {
 				mCalendarGridView.getAdapter().setJumpCalendar(-1, 0);
+
+				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
+				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
+				
 				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
@@ -186,6 +190,10 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			@Override
 			public void onClick(View v) {
 				mCalendarGridView.getAdapter().setJumpCalendar(1, 0);
+				
+				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
+				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
+				
 				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
@@ -204,8 +212,14 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				    public void onDateSet(DatePicker view, int year, int monthOfYear,  
 				            int dayOfMonth) {  
 				    	if(monthOfYear + 1 != mCalendarGridView.getAdapter().getCurrentMonth() 
-				    			|| mCalendarGridView.getAdapter().getCurrentYear() != year){
+				    			|| mCalendarGridView.getAdapter().getCurrentYear() != year
+				    			|| mCalendarGridView.getAdapter().getSelectedDay() != dayOfMonth){
 							mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
+							
+							mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
+							mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
+							mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
+							
 							mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 							mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 							
