@@ -424,4 +424,25 @@ public int getSelectedYear() {
 public int getSelectedMonth() {
 	return selectedMonth;
 }
+
+
+public void setSelectedYear(int year) {
+	selectedYear = year;
+}
+
+
+public void setSelectedMonth(int month) {
+	selectedMonth = month;
+}
+
+
+public Map<String, Object> getSelectedDayData() {
+	if(selectedDay == -1 || selectedMonth != currentMonth || selectedYear != currentYear){
+		return null;
+	}
+	if(selectedDay <= mListGroupData.size()){
+		return mListGroupData.get(selectedDay-1);
+	}
+	return null;
+}
 }
