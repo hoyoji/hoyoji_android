@@ -1582,7 +1582,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	@Override  
 	public void onListItemClick(ListView parent, View v,
-			int childPosition, long id) {
+			int position, long id) {
 		if(id == -1) {
 			 return;
 		}
@@ -1593,9 +1593,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			getActivity().finish();
 			return;
 		} else {
-			HyjModel object = (HyjModel) getListAdapter().getItem(childPosition);
+			HyjModel object = (HyjModel) getListAdapter().getItem(position-1);
 			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", object.get_mId());
+			bundle.putLong("MODEL_ID", id);
 			if(object instanceof MoneyExpense){
 					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
 				return ;
@@ -1699,7 +1699,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		private int[] mViewIds;
 	    private String[] mFields;
 	    private int mLayoutResource;
-	    private ViewBinder mViewBinder;
+//	    private ViewBinder mViewBinder;
 	    
 		public HomeListAdapter(Context context,
 	                    List<? extends HyjModel> childData,
@@ -1712,16 +1712,10 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	        mViewIds = childTo;
 	        mFields = childFrom;
 		}
-		
 	    
-	    public void setViewBinder(ViewBinder viewBinder){
-	    	mViewBinder = viewBinder;
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
 	    }
-	    
-	    public ViewBinder getViewBinder(){
-	    	return mViewBinder;
-	    }
-	    
 	    
 		/**
 	     * Populate new items in the list.
@@ -1745,7 +1739,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	        Object item = getItem(position);
 	        for(int i=0; i<mViewIds.length; i++){
 	        	View v = viewHolder[i];
-	        	mViewBinder.setViewValue(v, item, mFields[i]);
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
 	        }
 	        
 	        return view;
@@ -1792,11 +1786,14 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //			    };
 //			    mTask.execute();
 //			}	
-			mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			int incomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
+			int expenseColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
+			
+			mExpenseButton.setTextColor(expenseColor);
+			mIncomeButton.setTextColor(incomeColor);
 
-			mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			mExpenseStat.setTextColor(expenseColor);
+			mIncomeStat.setTextColor(incomeColor);
 			
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
