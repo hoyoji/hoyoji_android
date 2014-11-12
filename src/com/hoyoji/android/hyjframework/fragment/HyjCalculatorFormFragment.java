@@ -365,7 +365,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	 public void onSave(View v){
 		 super.onSave(v);
 		 Intent intent = new Intent();
-		 if(mHyjRemarkFieldAmount.getText().toString().equals("")){
+		 if(mHyjTextViewAmount.getText().toString().equals("")){
 			 intent.putExtra("calculatorAmount", "0");
 		 } else {
 			 button_equal.performClick();
