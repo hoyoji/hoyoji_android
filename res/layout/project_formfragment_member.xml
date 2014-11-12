@@ -119,35 +119,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-				android:textStyle="bold"
                 android:text="@string/memberFormFragment_textView_shareAuthorization_title" />
 
            <!--  <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-				android:textStyle="bold"
                 android:text="@string/memberFormFragment_textView_shareAuthorization_title_self" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-				android:textStyle="bold"
                 android:text="@string/memberFormFragment_textView_shareAuthorization_title_add" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-				android:textStyle="bold"
                 android:text="@string/memberFormFragment_textView_shareAuthorization_title_edit" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-				android:textStyle="bold"
                 android:text="@string/memberFormFragment_textView_shareAuthorization_title_delete" /> -->
         <!-- </LinearLayout> -->
 

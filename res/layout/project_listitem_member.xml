@@ -62,7 +62,6 @@
          	android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/memberListItem_apportionTotal"
 	    	android:gravity="center_vertical"
-		    android:textStyle="bold"
             android:ellipsize="marquee"
             android:maxLines="1"
             android:singleLine="true"/>	

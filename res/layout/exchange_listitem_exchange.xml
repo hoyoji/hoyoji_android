@@ -48,8 +48,7 @@
             android:id="@+id/exchangeListItem_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-			android:textStyle="bold"/>
+            android:paddingTop="2dp"/>
         
     </LinearLayout>
 

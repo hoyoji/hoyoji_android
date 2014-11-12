@@ -52,7 +52,7 @@
 	                    hyj:editTextBorder="none"
 	                    hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_amount"
 	                    hyj:labelText="@string/moneyExpenseFormFragment_textView_amount" >
-	
+						<requestFocus />
 	                </com.hoyoji.android.hyjframework.view.HyjNumericField>
 	                <ImageButton android:id="@+id/calculator"
 	                    android:layout_width="40dp"

@@ -20,8 +20,7 @@
         android:layout_gravity="right"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textStyle="bold" />
+        android:paddingRight="16dp" />
     
     <TextView
         android:id="@+id/moneyAccountListItem_accountType"
