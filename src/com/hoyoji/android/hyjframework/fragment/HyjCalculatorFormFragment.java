@@ -364,9 +364,13 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	 @Override
 	 public void onSave(View v){
 		 super.onSave(v);
-		 button_equal.performClick();
 		 Intent intent = new Intent();
-		 intent.putExtra("calculatorAmount", mHyjTextViewAmount.getText().toString());
+		 if(mHyjRemarkFieldAmount.getText().toString().equals("")){
+			 intent.putExtra("calculatorAmount", "0");
+		 } else {
+			 button_equal.performClick();
+			 intent.putExtra("calculatorAmount", mHyjTextViewAmount.getText().toString());
+		 }
 		 getActivity().setResult(Activity.RESULT_OK, intent);
 		 
 		 getActivity().finish();
