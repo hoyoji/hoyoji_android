@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.activeandroid.util.Log;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji_android.R;
 
 import android.content.Context;
@@ -130,16 +131,28 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			if(mListGroupData != null && mListGroupData.size() > position - dayOfWeek){
 				Map<String, Object> data = mListGroupData.get(position - dayOfWeek);
 
-				if(Double.parseDouble(data.get("expenseTotal").toString()) > 0.0){
+				Double expenseTotal = Double.valueOf(data.get("expenseTotal").toString());
+				if(expenseTotal > 0.0){
 					viewCache.tvExpense.setVisibility(View.VISIBLE);
-					viewCache.tvExpense.setText("¥" + data.get("expenseTotal").toString());
+					if(Double.compare(expenseTotal, expenseTotal.longValue()) == 0){
+						viewCache.tvExpense.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + expenseTotal.longValue());
+					} else {
+						viewCache.tvExpense.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + expenseTotal);
+					}
+					viewCache.tvExpense.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				} else {
 					viewCache.tvExpense.setVisibility(View.INVISIBLE);
 				}
 				
-				if(Double.parseDouble(data.get("incomeTotal").toString()) > 0.0){
+				Double incomeTotal = Double.valueOf(data.get("incomeTotal").toString());
+				if(incomeTotal > 0.0){
 					viewCache.tvIncome.setVisibility(View.VISIBLE);
-					viewCache.tvIncome.setText("¥" + data.get("incomeTotal").toString());
+					if(Double.compare(incomeTotal, incomeTotal.longValue()) == 0){
+						viewCache.tvIncome.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + incomeTotal.longValue());
+					} else {
+						viewCache.tvIncome.setText(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol() + incomeTotal);
+					}
+					viewCache.tvIncome.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				} else {
 					viewCache.tvIncome.setVisibility(View.INVISIBLE);
 				}
@@ -423,5 +436,26 @@ public int getSelectedYear() {
 }
 public int getSelectedMonth() {
 	return selectedMonth;
+}
+
+
+public void setSelectedYear(int year) {
+	selectedYear = year;
+}
+
+
+public void setSelectedMonth(int month) {
+	selectedMonth = month;
+}
+
+
+public Map<String, Object> getSelectedDayData() {
+	if(selectedDay == -1 || selectedMonth != currentMonth || selectedYear != currentYear){
+		return null;
+	}
+	if(selectedDay <= mListGroupData.size()){
+		return mListGroupData.get(selectedDay-1);
+	}
+	return null;
 }
 }
