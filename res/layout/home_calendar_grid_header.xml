@@ -43,7 +43,7 @@
 		    android:src="@drawable/ic_action_previous_item" />
 
 		<LinearLayout 
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/home_stat_previous_month"
 		    android:layout_toLeftOf="@id/home_stat_center"
@@ -58,7 +58,6 @@
 		    <TextView android:id="@+id/home_stat_incomeStat"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:textStyle="bold"
 			    android:text="¥0.00"/>
 		</LinearLayout>
 		
@@ -71,7 +70,7 @@
 		    android:src="@drawable/ic_action_next_item" />
 
 		<LinearLayout 
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/home_stat_center"
 		    android:layout_toLeftOf="@id/home_stat_next_month"
@@ -88,7 +87,6 @@
 		    <TextView  android:id="@+id/home_stat_expenseStat"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:textStyle="bold"
 			    android:text="¥0.00"/>
 		</LinearLayout>
 	</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.home;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -486,7 +487,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			cursor.close();
 			cursor = null;
 		}
-		this.mExpenseStat.setText(localCurrencySymbol + HyjUtil.toFixed2(expenseTotal));
+		DecimalFormat df=new DecimalFormat("#.00"); 
+		this.mExpenseStat.setText(localCurrencySymbol + df.format(expenseTotal));
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -502,7 +504,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			cursor.close();
 			cursor = null;
 		}
-		this.mIncomeStat.setText(localCurrencySymbol + HyjUtil.toFixed2(incomeTotal));
+		this.mIncomeStat.setText(localCurrencySymbol + df.format(incomeTotal));
 		
 		
 	}
