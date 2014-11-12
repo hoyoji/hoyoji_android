@@ -26,6 +26,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -59,6 +60,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 2;
 	private final static int GET_FRIEND_ID = 3;
 	private static final int GET_REMARK = 4;
+	private final static int GET_AMOUNT = 8;
 	private static final int TAG_IS_LOCAL_FRIEND = R.id.moneyBorrowFormFragment_selectorField_friend;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
 	protected static final int GET_FINANCIALOWNER_ID = 5;
@@ -86,6 +88,8 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 //	private HyjSelectorField mSelectorFieldFinancialOwner;
 	private ImageButton mButtonBorrowMore;
 	private LinearLayout mLinearLayoutExpandMore;
+	
+	private ImageButton calculatorTextView = null;
 
 	@Override
 	public Integer useContentView() {
@@ -284,6 +288,20 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						bundle, GET_REMARK);
 			}
 		});
+		
+		calculatorTextView = (ImageButton) getView().findViewById(R.id.calculator);
+		calculatorTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putDouble("AMOUNT", mNumericAmount.getNumber()!=null?mNumericAmount.getNumber():0.00);
+				MoneyBorrowFormFragment.this.openActivityWithFragmentForResult(
+								HyjCalculatorFormFragment.class,
+								R.string.hyjCalculatorFormFragment_title,
+								bundle, GET_AMOUNT);
+			}
+		});
+
 		ImageView takePictureButton = (ImageView) getView().findViewById(
 				R.id.moneyBorrowFormFragment_imageView_camera);
 		takePictureButton.setOnClickListener(new OnClickListener() {
@@ -1200,6 +1218,14 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				String text = data.getStringExtra("TEXT");
 				mRemarkFieldRemark.setText(text);
+			}
+			break;
+		case GET_AMOUNT:
+			if (resultCode == Activity.RESULT_OK) {
+				String calculatorAmount = data.getStringExtra("calculatorAmount");
+				if (calculatorAmount != null){
+					mNumericAmount.setNumber(Double.parseDouble(calculatorAmount));
+				}
 			}
 			break;
 		case GET_FRIEND_ID:

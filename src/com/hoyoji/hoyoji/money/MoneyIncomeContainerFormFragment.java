@@ -33,6 +33,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -46,14 +47,11 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
-import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
-import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
@@ -74,6 +72,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private final static int GET_CATEGORY_ID = 5;
 	private static final int GET_REMARK = 6;
+	private final static int GET_AMOUNT = 8;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
 	protected static final int GET_FINANCIALOWNER_ID = 7;
 	
@@ -103,6 +102,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
+	
+	private ImageButton calculatorTextView = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -288,6 +289,19 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								HyjTextInputFormFragment.class,
 								R.string.moneyIncomeFormFragment_textView_remark,
 								bundle, GET_REMARK);
+			}
+		});
+		
+		calculatorTextView = (ImageButton) getView().findViewById(R.id.calculator);
+		calculatorTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putDouble("AMOUNT", mNumericAmount.getNumber()!=null?mNumericAmount.getNumber():0.00);
+				MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(
+								HyjCalculatorFormFragment.class,
+								R.string.hyjCalculatorFormFragment_title,
+								bundle, GET_AMOUNT);
 			}
 		});
 
@@ -1692,6 +1706,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
      				mRemarkFieldRemark.setText(text);
      			}
      			break;
+     		case GET_AMOUNT:
+    			if (resultCode == Activity.RESULT_OK) {
+    				String calculatorAmount = data.getStringExtra("calculatorAmount");
+    				if (calculatorAmount != null){
+    					mNumericAmount.setNumber(Double.parseDouble(calculatorAmount));
+    				}
+    			}
+    			break;
              case GET_CATEGORY_ID:
      			if (resultCode == Activity.RESULT_OK) {
      				long _id = data.getLongExtra("MODEL_ID", -1);

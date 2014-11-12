@@ -29,6 +29,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -62,6 +63,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 	private static final int GET_REMARK = 4;
 	protected static final int GET_FINANCIALOWNER_ID = 0;
 	private int CREATE_EXCHANGE = 0;
+	private final static int GET_AMOUNT = 8;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
 	private HyjModelEditor<MoneyDepositExpenseContainer> mMoneyDepositExpenseContainerEditor = null;
@@ -86,6 +88,8 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 	private TextView mTextViewFinancialOwner;
 	private ImageButton mButtonExpandMore;
 	private LinearLayout mLinearLayoutExpandMore;
+	
+	private ImageButton calculatorTextView = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -263,6 +267,19 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
 								bundle, GET_REMARK);
+			}
+		});
+		
+		calculatorTextView = (ImageButton) getView().findViewById(R.id.calculator);
+		calculatorTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putDouble("AMOUNT", mNumericAmount.getNumber()!=null?mNumericAmount.getNumber():0.00);
+				MoneyDepositExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+								HyjCalculatorFormFragment.class,
+								R.string.hyjCalculatorFormFragment_title,
+								bundle, GET_AMOUNT);
 			}
 		});
 
@@ -930,6 +947,14 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
      				mRemarkFieldRemark.setText(text);
      			}
      			break;
+     		case GET_AMOUNT:
+    			if (resultCode == Activity.RESULT_OK) {
+    				String calculatorAmount = data.getStringExtra("calculatorAmount");
+    				if (calculatorAmount != null){
+    					mNumericAmount.setNumber(Double.parseDouble(calculatorAmount));
+    				}
+    			}
+    			break;
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
              		long _id = data.getLongExtra("MODEL_ID", -1);

@@ -37,19 +37,32 @@
                 android:layout_gravity="left"
                 android:orientation="vertical"
                 android:paddingLeft="66dp" >
+                
+				<FrameLayout
+				    android:layout_width="match_parent"
+                	android:layout_height="wrap_content">
 
-                <com.hoyoji.android.hyjframework.view.HyjNumericField
-                    android:id="@+id/moneyDepositReturnContainerFormFragment_textField_amount"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    hyj:style="no_label"
-                    hyj:editTextBold="true"
-                    hyj:editTextBorder="none"
-                    hyj:hintText="@string/moneyDepositReturnContainerFormFragment_editText_hint_amount"
-                    hyj:labelText="@string/moneyDepositReturnContainerFormFragment_textView_amount" >
-
-                    <requestFocus />
-                </com.hoyoji.android.hyjframework.view.HyjNumericField>
+	                <com.hoyoji.android.hyjframework.view.HyjNumericField
+	                    android:id="@+id/moneyDepositReturnContainerFormFragment_textField_amount"
+	                    hyj:style="no_label"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:layout_marginRight="40dp"
+	                    android:layout_gravity="center_vertical"
+	                    hyj:editTextBold="true"
+	                    hyj:editTextBorder="none"
+	                    hyj:hintText="@string/moneyDepositReturnContainerFormFragment_editText_hint_amount"
+	                    hyj:labelText="@string/moneyDepositReturnContainerFormFragment_textView_amount" >
+						<requestFocus />
+	                </com.hoyoji.android.hyjframework.view.HyjNumericField>
+	                <ImageButton android:id="@+id/calculator"
+	                    android:layout_width="40dp"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="right|center_vertical"
+	                    android:src="@drawable/calculator"
+	                    android:background="@android:color/transparent"/>
+                </FrameLayout>
+                
                 <View
                     android:id="@id/field_separator"
                     android:layout_width="match_parent"
