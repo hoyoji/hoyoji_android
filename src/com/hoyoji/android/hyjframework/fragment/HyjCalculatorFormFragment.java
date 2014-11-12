@@ -74,6 +74,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 			}
 		});
 		mHyjRemarkFieldAmount = (TextView) getView().findViewById(R.id.hyjCalculatorFormFragment_hyjRemarkField_remark);
+		mHyjRemarkFieldAmount.setMovementMethod(ScrollingMovementMethod.getInstance()); 
 //		mHyjRemarkFieldAmount.setHorizontalGravity(Gravity.RIGHT);//右对齐
 		
 		

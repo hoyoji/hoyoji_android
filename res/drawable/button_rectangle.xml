@@ -9,6 +9,7 @@
 			    <corners android:radius="30dip" />
 			     <stroke android:color="@color/hoyoji_red"
 			         android:width="2dp" />
+			     <solid android:color="@android:color/transparent"/>
 			</shape>
 		</item>
         
