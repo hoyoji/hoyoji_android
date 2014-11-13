@@ -51,7 +51,7 @@ public class HomeGroupListLoader extends
 		super(context);
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		if (queryParams != null) {
-			mLoadLimit = queryParams.getInt("limit", 10);
+			mLoadLimit = queryParams.getInt("LIMIT", 10);
 		}
 
 		mChangeObserver = new ChangeObserver();

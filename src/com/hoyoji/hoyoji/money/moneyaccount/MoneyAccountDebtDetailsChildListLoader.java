@@ -87,7 +87,7 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 			if (queryParams != null) {
 				mDateFrom = queryParams.getLong("dateFrom", 0);
 				mDateTo = queryParams.getLong("dateTo", 0);
-				mLoadLimit = queryParams.getInt("limit", 10);
+				mLoadLimit = queryParams.getInt("LIMIT", 10);
 				mProjectId = queryParams.getString("projectId");
 				mMoneyAccountId = queryParams.getString("moneyAccountId");
 //				mFriendUserId = queryParams.getString("friendUserId");

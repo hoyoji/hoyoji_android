@@ -661,7 +661,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-//		super.onCreateLoader(groupPos, arg1);
+		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if(arg1 == null){
 			arg1 = new Bundle();
@@ -690,6 +690,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			arg1.putLong("dateFrom", calToday.getTimeInMillis());
 			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
 			
+
 			loader = new HomeCalendarGridChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
@@ -704,7 +705,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			mListGroupData.addAll(groupList);
 			mCalendarGridView.getAdapter().notifyDataSetChanged();
 //			adapter.notifyDataSetChanged();
-//			this.setFooterLoadFinished(false);
 //			updateGroupHeader();
 			getLoaderManager().restartLoader(0, null, this);
 		} else {
@@ -713,6 +713,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			mListChildData.addAll(childList);
 
 			((HomeListAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
 		}
 		// The list should now be shown.
 		if (isResumed()) {

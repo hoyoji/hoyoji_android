@@ -60,7 +60,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	super(context);
 			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
@@ -75,7 +75,7 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	    public void changeQuery(Bundle queryParams){
 	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}

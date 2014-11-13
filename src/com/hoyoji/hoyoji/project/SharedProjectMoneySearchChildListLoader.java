@@ -87,7 +87,7 @@ public class SharedProjectMoneySearchChildListLoader extends AsyncTaskLoader<Lis
 			if (queryParams != null) {
 				mDateFrom = queryParams.getLong("dateFrom", 0);
 				mDateTo = queryParams.getLong("dateTo", 0);
-				mLoadLimit = queryParams.getInt("limit", 10);
+				mLoadLimit = queryParams.getInt("LIMIT", 10);
 				mFriendUserId = queryParams.getString("friendUserId");
 				mLocalFriendId = queryParams.getString("localFriendId");
 				mLoadLimit += queryParams.getInt("pageSize", 10);
