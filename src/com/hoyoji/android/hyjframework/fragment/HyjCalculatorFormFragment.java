@@ -166,7 +166,7 @@ public class HyjCalculatorFormFragment extends HyjUserFormFragment implements On
 	        	String expStr = exp.replaceAll("×", "*");
 	        	String expString = expStr.replaceAll("÷", "/");
 	        	BigDecimal result = parse(expString);
-	        	DecimalFormat df = new DecimalFormat( "###############0.00");//   16位整数位，两小数位 
+	        	DecimalFormat df = new DecimalFormat( "#0.0000");//   16位整数位，两小数位 
 	        	String setResult = df.format(result); 
 	        	
 	        	mHyjRemarkFieldAmount.setText(mHyjRemarkFieldAmount.getText().toString().equals("")?exp + "=" + subZeroAndDot(setResult):mHyjRemarkFieldAmount.getText()+"\n"+exp+ "=" + subZeroAndDot(setResult));

@@ -90,6 +90,7 @@ import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
+import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerListFragment;
@@ -344,7 +345,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		getView().findViewById(R.id.homeListFragment_action_money_template).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
     		}
 		});
 		
