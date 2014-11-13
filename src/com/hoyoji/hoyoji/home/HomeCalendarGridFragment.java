@@ -477,23 +477,23 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				.getUserData().getActiveCurrencyId();
 		String localCurrencySymbol = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol();
 
-////		Calendar calToday = Calendar.getInstance();
-////		calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getCurrentYear());
-////		calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getCurrentMonth()-1);
-////		calToday.set(Calendar.HOUR_OF_DAY, 0);
-////		calToday.clear(Calendar.MINUTE);
-////		calToday.clear(Calendar.SECOND);
-////		calToday.clear(Calendar.MILLISECOND);
-////		
-////		calToday.set(Calendar.DATE, 1);
-//		long dateFrom = calToday.getTimeInMillis();
-//		
-//		calToday.add(Calendar.MONTH, 1);// 加一个月，变为下月的1号  
-//		calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
-//		long dateTo = calToday.getTimeInMillis() + 1000*60*60*24;
+		Calendar calToday = Calendar.getInstance();
+		calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getCurrentYear());
+		calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getCurrentMonth()-1);
+		calToday.set(Calendar.HOUR_OF_DAY, 0);
+		calToday.clear(Calendar.MINUTE);
+		calToday.clear(Calendar.SECOND);
+		calToday.clear(Calendar.MILLISECOND);
 		
-		long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
-		long dateTo = mCalendarGridView.getAdapter().getDateTo();
+		calToday.set(Calendar.DATE, 1);
+		long dateFrom = calToday.getTimeInMillis();
+		
+		calToday.add(Calendar.MONTH, 1);// 加一个月，变为下月的1号  
+		calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
+		long dateTo = calToday.getTimeInMillis() + 3600000*24;
+		
+//		long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
+//		long dateTo = mCalendarGridView.getAdapter().getDateTo();
 		String[] args = new String[] {mDateFormat.format(new Date(dateFrom)), mDateFormat.format(new Date(dateTo))};
 		double expenseTotal = 0.0;
 		double incomeTotal = 0.0;
@@ -512,7 +512,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			cursor.close();
 			cursor = null;
 		}
-		DecimalFormat df=new DecimalFormat("#.00"); 
+		DecimalFormat df=new DecimalFormat("#0.00"); 
 		this.mExpenseStat.setText(localCurrencySymbol + df.format(expenseTotal));
 		cursor = Cache
 				.openDatabase()

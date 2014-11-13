@@ -194,11 +194,12 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		}
 
 		// 显示当天
-		if (this.sys_day == d && this.sys_month == this.currentMonth
-				&& this.sys_year == this.currentYear) {
+		if (this.sys_day == d && this.sys_month == m
+				&& this.sys_year == y) {
 			viewCache.tvDay.setTextColor(Color.BLACK);
 		} else {
-			if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
+			// 显示当月的
+			if (currentYear == y && currentMonth == m) {
 				viewCache.tvDay.setTextColor(Color.GRAY);
 			} else {
 				viewCache.tvDay.setTextColor(Color.LTGRAY);
@@ -380,21 +381,22 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		
 		int monthIndex = month;
 		int yearIndex = year;
-		if(month == selectedMonth){
-			firstDay = selectedDay - (selectedDay + dayOfWeek - 1) % 7;
+		int selectedDayOffset =  (selectedDay + dayOfWeek - 1) % 7;
+		if(month+year*12 == selectedMonth+selectedYear*12){
+			firstDay = selectedDay - selectedDayOffset;
 			if(firstDay <= 0){
-				firstDay = lastDaysOfMonth - firstDay;
+				firstDay = lastDaysOfMonth + firstDay;
 				monthIndex = lastMonth;
 				yearIndex = lastYear;
 			}
-		} else if(month > selectedMonth){
+		} else if(month+year*12 > selectedMonth+selectedYear*12){
 			firstDay = lastDaysOfMonth - dayOfWeek + 1;
 			monthIndex = lastMonth;
 			yearIndex = lastYear; 
-		} else if(month < selectedMonth){
+		} else if(month+year*12 < selectedMonth+selectedYear*12){
 			firstDay = selectedDay - (selectedDay + dayOfWeek + daysOfMonth - 1) % 7;
 			if(firstDay <= 0){
-				firstDay = daysOfMonth - firstDay;
+				firstDay = daysOfMonth + firstDay;
 			} else {
 				monthIndex = nextMonth;
 				yearIndex = nextYear;
@@ -406,19 +408,35 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			monthNumber[i] = monthIndex;
 			yearNumber[i] = yearIndex;
 			
-			if(month < selectedMonth){
+			if(month+year*12 < selectedMonth+selectedYear*12){
 				if(firstDay == daysOfMonth){
 					firstDay = 0;
 
 					monthIndex = nextMonth;
 					yearIndex = nextYear ;
 				}
-			} else if(month > selectedMonth){
+			} else if(month+year*12 > selectedMonth+selectedYear*12){
 				if(firstDay == lastDaysOfMonth){
 					firstDay = 0;
 					
 					monthIndex = month;
 					yearIndex = year ;
+				}
+			} else {
+				if(selectedDay < selectedDayOffset){
+					if(firstDay == lastDaysOfMonth){
+						firstDay = 0;
+						
+						monthIndex = month;
+						yearIndex = year ;
+					}
+				} else {
+					if(firstDay == daysOfMonth){
+						firstDay = 0;
+						
+						monthIndex = nextMonth;
+						yearIndex = nextYear ;
+					}
 				}
 			}
 
