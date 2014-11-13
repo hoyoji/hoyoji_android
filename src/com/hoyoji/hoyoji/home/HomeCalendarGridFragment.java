@@ -190,7 +190,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
 			}
 		});
-		view.findViewById(R.id.home_stat_previous_month).setOnClickListener(new OnClickListener(){
+		view.findViewById(R.id.home_stat_layout_income).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 //				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
@@ -207,7 +207,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
 			}
 		});
-		view.findViewById(R.id.home_stat_next_month).setOnClickListener(new OnClickListener(){
+		view.findViewById(R.id.home_stat_layout_expense).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 //				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
