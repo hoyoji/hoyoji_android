@@ -8,19 +8,18 @@
  <RelativeLayout
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
-     android:paddingTop="10dp"
-     android:paddingBottom="10dp">
+     android:padding="10dp">
      
 		<TextView
 		    android:id="@+id/home_stat_previous_month"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
 		    android:layout_alignParentLeft="true"
 		    android:background="@android:color/transparent"
-		    android:textColor="@color/lightgray"
-		    android:textSize="20sp"
-		    android:visibility="gone"
-		    android:text="&lt;" />
+		    android:textColor="@color/gainsboro"
+		    android:textSize="25sp"
+		    android:text="\u25C0" />
      
 		<LinearLayout 
 		    android:id="@+id/home_stat_center"
@@ -28,6 +27,8 @@
 		    android:layout_height="wrap_content"
 		    android:orientation="vertical"
 		    android:gravity="center"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp"
 	 		android:layout_centerInParent="true">
 		    <TextView android:id="@+id/home_stat_month"
 				    android:layout_width="wrap_content"
@@ -50,8 +51,6 @@
 		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
-		    android:paddingLeft="20dp"
-		    android:paddingRight="5dp"
 		    android:layout_toLeftOf="@id/home_stat_center"
 		    android:orientation="vertical"
 		    android:layout_centerVertical="true"
@@ -68,14 +67,16 @@
 			    android:text="¥0.00"/>
 		</LinearLayout>
 		
-		<ImageButton
+		<TextView
 		    android:id="@+id/home_stat_next_month"
-		    android:layout_width="40dp"
-		    android:layout_height="match_parent"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
 		    android:layout_alignParentRight="true"
 		    android:background="@android:color/transparent"
-		    android:visibility="gone"
-		    android:src="@drawable/ic_action_next_item" />
+		    android:textColor="@color/gainsboro"
+		    android:textSize="25sp"
+		    android:text="\u25B6" />
 
 		<LinearLayout 
 		    android:id="@+id/home_stat_layout_expense"
@@ -84,8 +85,6 @@
 		    android:layout_toRightOf="@id/home_stat_center"
 		    android:layout_alignParentRight="true"
 		    android:orientation="vertical"
-		    android:paddingLeft="5dp"
-		    android:paddingRight="20dp"
 			android:layout_centerVertical="true"
 	 		android:gravity="center_horizontal">
 		    <TextView 
