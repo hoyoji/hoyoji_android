@@ -340,12 +340,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		app_action_save_template.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				fillData();
 				if(validate()){
 					MoneyTemplate moneyTemplate = new MoneyTemplate();
 					moneyTemplate.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 					moneyTemplate.setType("MoneyExpense");
 					moneyTemplate.setData(mMoneyExpenseContainerEditor.getModelCopy().toJSON().toString());
 					moneyTemplate.save();
+					HyjUtil.displayToast(R.string.app_save_template_success);
 				}
 			}
 		});

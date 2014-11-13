@@ -1,5 +1,8 @@
 package com.hoyoji.hoyoji.money;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,22 +10,19 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.content.ContentProvider;
-import com.hoyoji.android.hyjframework.HyjModelEditor;
-import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.MoneyTemplate;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
 
@@ -32,17 +32,12 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	}
 
 	@Override
-	public Integer useOptionsMenuView() {
-		return R.menu.money_listfragment_moneytemplate;
-	}
-
-	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"pictureId", "date", "amount" },
-				new int[] { R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount },
+				new String[] {"id", "type", "data"},
+				new int[] {R.id.homeListItem_date, R.id.homeListItem_date, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -50,7 +45,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(MoneyExpense.class, null),
+				ContentProvider.createUri(MoneyTemplate.class, null),
 				null, null, null, null
 			);
 		return (Loader<Object>)loader;
@@ -61,68 +56,49 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.moneyExpenseListFragment_action_moneyExpense_addnew){
-			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
 		if(id == -1) {
 			 return;
 		}
-		if(getActivity().getCallingActivity() != null){
-			Intent intent = new Intent();
-			intent.putExtra("MODEL_ID", id);
-			getActivity().setResult(Activity.RESULT_OK, intent);
-			getActivity().finish();
-		} else {
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", id);
-			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-		}
-    }  
-
-	@Override 
-	public void onDeleteListItem(Long id){
-		try {
-				ActiveAndroid.beginTransaction();
-				
-				MoneyExpense moneyExpense = MoneyExpense.load(MoneyExpense.class, id);
-				MoneyAccount moneyAccount = moneyExpense.getMoneyAccount();
-				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
-				moneyExpense.delete();
-				moneyAccountEditor.save();
-				
-			    HyjUtil.displayToast("支出删除成功");
-			    ActiveAndroid.setTransactionSuccessful();
-		} finally {
-		    ActiveAndroid.endTransaction();
-		}
-	}
+		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
+		
+    }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		String id = cursor.getString(cursor.getColumnIndex("id"));
+		String type = cursor.getString(cursor.getColumnIndex("type"));
+		String data = cursor.getString(cursor.getColumnIndex("data"));
+		JSONObject jsonObj = null;
+		try {
+			jsonObj = new JSONObject(data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+//		HyjModel model;
+//		if(type.equals("MoneyExpense")){
+//			model = new MoneyExpense();
+//			model.loadFromJSON(jsonObj, true);
+//		}
+		
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
+//			if(type.equals("MoneyExpense")){
+				((HyjDateTimeView)view).setText(jsonObj.optString("date"));
+//			}
 			return true;
+			
+		
 		} else if(view.getId() == R.id.homeListItem_amount){
-			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix("¥");
-			numericView.setNumber(cursor.getDouble(columnIndex));
+			((HyjDateTimeView)view).setText(jsonObj.optString("amount"));
 			return true;
-		} else if(view.getId() == R.id.homeListItem_picture){
-			HyjImageView imageView = (HyjImageView)view;
-			imageView.setImage(cursor.getString(columnIndex));
-			return true;
+//		}else if(view.getId() == R.id.homeListItem_picture){
+//			HyjImageView imageView = (HyjImageView)view;
+//			imageView.setImage(cursor.getString(columnIndex));
+//			return true;
 		} else {
-			return false;
+			return true;
 		}
 	}
 }
