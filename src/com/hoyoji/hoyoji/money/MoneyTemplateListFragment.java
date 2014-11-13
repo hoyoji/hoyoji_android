@@ -36,8 +36,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"id", "type", "data"},
-				new int[] {R.id.homeListItem_date, R.id.homeListItem_date, R.id.homeListItem_amount},
+				new String[] {"data", "data", "data"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -63,13 +63,16 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			 return;
 		}
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
+		if(template.getType().equals("MoneyExpense")) {
+			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+		}
 		
     }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		String id = cursor.getString(cursor.getColumnIndex("id"));
-		String type = cursor.getString(cursor.getColumnIndex("type"));
+//		String id = cursor.getString(cursor.getColumnIndex("id"));
+//		String type = cursor.getString(cursor.getColumnIndex("type"));
 		String data = cursor.getString(cursor.getColumnIndex("data"));
 		JSONObject jsonObj = null;
 		try {
@@ -91,12 +94,13 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			
 		
 		} else if(view.getId() == R.id.homeListItem_amount){
-			((HyjDateTimeView)view).setText(jsonObj.optString("amount"));
+			((HyjNumericView)view).setText(jsonObj.optString("amount"));
 			return true;
-//		}else if(view.getId() == R.id.homeListItem_picture){
+		}else if(view.getId() == R.id.homeListItem_picture){
 //			HyjImageView imageView = (HyjImageView)view;
 //			imageView.setImage(cursor.getString(columnIndex));
-//			return true;
+			((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
+			return true;
 		} else {
 			return true;
 		}
