@@ -114,11 +114,7 @@ public class HomeCalendarGridGroupListLoader extends
 		
 		DateFormat df = SimpleDateFormat.getDateInstance();
 		Calendar calToday = Calendar.getInstance();
-		long startDateInMillis = mStartDateInMillis;
-//		if(startDateInMillis == -1){
-//			startDateInMillis = getMaxDateInMillis();
-//		}
-		calToday.setTimeInMillis(startDateInMillis);
+		calToday.setTimeInMillis(mStartDateInMillis);
 		calToday.set(Calendar.HOUR_OF_DAY, 0);
 		calToday.clear(Calendar.MINUTE);
 		calToday.clear(Calendar.SECOND);
@@ -129,7 +125,7 @@ public class HomeCalendarGridGroupListLoader extends
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
 
 		int loadCount = 0;
-		while (calToday.getTimeInMillis() <= mEndDateInMillis) {
+		while (calToday.getTimeInMillis() < mEndDateInMillis) {
 			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calToday.getTime()),
