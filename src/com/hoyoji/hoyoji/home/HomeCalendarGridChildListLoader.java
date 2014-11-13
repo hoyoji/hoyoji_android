@@ -50,7 +50,7 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 
 		private DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	    private List<HyjModel> mChildList;
-	    private Integer mLoadLimit = null;
+	    private Integer mLoadLimit = -1;
 	    private long mDateFrom = 0;
 	    private long mDateTo = 0;
 //	    private ChangeObserver mChangeObserver;
@@ -60,7 +60,9 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 	    	super(context);
 			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		if(queryParams.getInt("LIMIT") > 0){
+		    		mLoadLimit = queryParams.getInt("LIMIT");
+	    		}
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
@@ -75,7 +77,7 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 
 	    public void changeQuery(Bundle queryParams){
 	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mDateFrom = queryParams.getLong("dateFrom");
 	    		mDateTo = queryParams.getLong("dateTo");
 	    	}
@@ -95,44 +97,44 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 	    	String dateTo = mDateFormat.format(new Date(mDateTo));
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 	    	
-	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyExpenses);
 	    	
-	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomes = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyIncomes);
 	    	
-	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyExpenseContainers = new Select().from(MoneyExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyExpenseContainers);
 	    	
-	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyIncomeContainers);
 	    	
-	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositExpenseContainers);
 	    	
-	    	List<HyjModel> moneyDepositPaybackContainers = new Select().from(MoneyDepositPaybackContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositPaybackContainers = new Select().from(MoneyDepositPaybackContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositPaybackContainers);
 	    	
-	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositIncomes);
 	    	
-	    	List<HyjModel> moneyDepositReturns = new Select().from(MoneyDepositReturnContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyDepositReturns = new Select().from(MoneyDepositReturnContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositReturns);
 	    	
-	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyTransfers);
 	    	
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyReturns);
 	    	
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 //	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();

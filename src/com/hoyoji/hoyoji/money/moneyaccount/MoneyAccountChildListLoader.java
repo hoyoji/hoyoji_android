@@ -52,7 +52,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    public MoneyAccountChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 			if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
 	    		mFriendId = queryParams.getString("friendId");
@@ -68,7 +68,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 
 	    public void changeQuery(Bundle queryParams){
 	    	if(queryParams != null){
-	    		mLoadLimit = queryParams.getInt("limit");
+	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
 	    		mFriendId = queryParams.getString("friendId");

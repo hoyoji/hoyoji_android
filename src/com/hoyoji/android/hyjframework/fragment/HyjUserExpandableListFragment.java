@@ -408,7 +408,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //		}
 		Bundle bundle = new Bundle();
 		bundle.putInt("OFFSET", offset);
-		bundle.putInt("LIMIT", pageSize);
+		bundle.putInt("LIMIT", offset + pageSize);
 		getLoaderManager().restartLoader(-1, bundle,this);
 	}
 	

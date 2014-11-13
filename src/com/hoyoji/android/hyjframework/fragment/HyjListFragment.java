@@ -73,7 +73,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
+				doFetchMore(getListView(), getListView().getAdapter().getCount() - getListView().getHeaderViewsCount() - getListView().getFooterViewsCount(), getListPageSize());
 			}
 	    });
 
@@ -90,7 +90,7 @@ public abstract class HyjListFragment extends ListFragment implements
 					final float density = displayMetrics.density;
 					if(!mIsFetchingMore && scrollY / density > 50.0){
 						mIsFetchingMore  = true;
-						doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
+						doFetchMore(getListView(), getListView().getAdapter().getCount() - getListView().getHeaderViewsCount() - getListView().getFooterViewsCount(), getListPageSize());
 					} else if(scrollY == 0){
 						mIsFetchingMore  = false;
 					}
@@ -248,6 +248,10 @@ public abstract class HyjListFragment extends ListFragment implements
 //    }  
 	
 	public void doFetchMore(ListView l, int offset, int pageSize){
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", offset);
+		bundle.putInt("LIMIT", offset + pageSize);
+		getLoaderManager().restartLoader(-1, bundle,this);
 	}
 	
 //	@Override

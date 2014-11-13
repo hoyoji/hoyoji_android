@@ -32,7 +32,7 @@ public class MoneyAccountGroupListLoader extends
 	public MoneyAccountGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
 		if(queryParams != null){
-    		mLoadLimit = queryParams.getInt("limit");
+    		mLoadLimit = queryParams.getInt("LIMIT");
     		mExcludeType = queryParams.getString("excludeType");
     		mAccountType = queryParams.getString("accountType");
     		mFriendId = queryParams.getString("friendId");

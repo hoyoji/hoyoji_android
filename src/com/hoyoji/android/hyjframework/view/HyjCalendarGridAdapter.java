@@ -74,7 +74,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		this.mCalendarMode = CALENDAR_MODE_WEEK;
 
 		drawableSelectedBackground = res
-				.getDrawable(R.drawable.button_rectangle_round_5);
+				.getDrawable(R.drawable.button_circle_solid);
 		Date date = new Date();
 		sysDate = sdf.format(date); // 当期日期
 		sys_year = Integer.parseInt(sysDate.split("-")[0]);
@@ -193,30 +193,35 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			viewCache.tvIncome.setVisibility(View.INVISIBLE);
 		}
 
-		// 显示当天
-		if (this.sys_day == d && this.sys_month == m
-				&& this.sys_year == y) {
-			viewCache.tvDay.setTextColor(Color.BLACK);
-		} else {
-			// 显示当月的
-			if (currentYear == y && currentMonth == m) {
-				viewCache.tvDay.setTextColor(Color.GRAY);
-			} else {
-				viewCache.tvDay.setTextColor(Color.LTGRAY);
-			}
-		}
+		
 
 		// 显示选定的日期
 		if (this.selectedDay == d && this.selectedMonth == m
 				&& this.selectedYear == y) {
 			int sdk = android.os.Build.VERSION.SDK_INT;
 			if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-				convertView.setBackgroundDrawable(drawableSelectedBackground);
+//				convertView.setBackgroundDrawable(drawableSelectedBackground);
+				viewCache.tvDay.setBackgroundDrawable(drawableSelectedBackground);
 			} else {
-				convertView.setBackground(drawableSelectedBackground);
+//				convertView.setBackground(drawableSelectedBackground);
+				viewCache.tvDay.setBackground(drawableSelectedBackground);
 			}
+			viewCache.tvDay.setTextColor(Color.WHITE);
 		} else {
-			convertView.setBackgroundColor(Color.TRANSPARENT);
+//			convertView.setBackgroundColor(Color.TRANSPARENT);
+			viewCache.tvDay.setBackgroundColor(Color.TRANSPARENT);
+			// 显示当天
+			if (this.sys_day == d && this.sys_month == m
+					&& this.sys_year == y) {
+				viewCache.tvDay.setTextColor(Color.BLACK);
+			} else {
+				// 显示当月的
+				if (currentYear == y && currentMonth == m) {
+					viewCache.tvDay.setTextColor(Color.GRAY);
+				} else {
+					viewCache.tvDay.setTextColor(Color.LTGRAY);
+				}
+			}
 		}
 		return convertView;
 	}
@@ -300,11 +305,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		public void getDayNumber() {
 			int year = this.currentYear;
 			int month = this.currentMonth;
-			if (this.mCalendarMode == CALENDAR_MODE_WEEK) {
-				getWeekDayNumber(year, month);
-			} else {
-				getMonthDayNumber(year, month);
-			}
+			getDayNumber(year, month);
 		}
 	
 	// 将一个月中的每一天的值添加入数组dayNumber中

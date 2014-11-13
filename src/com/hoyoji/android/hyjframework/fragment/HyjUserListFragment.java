@@ -91,7 +91,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
+				doFetchMore(getListView(), getListView().getAdapter().getCount() - getListView().getHeaderViewsCount() - getListView().getFooterViewsCount(), getListPageSize());
 			}
 	    });
 //	    getListView().setOverscrollFooter(getResources().getDrawable(R.drawable.ic_action_refresh));
@@ -107,7 +107,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 					final float density = displayMetrics.density;
 					if(!mIsFetchingMore  && scrollY / density > 50.0){
 						mIsFetchingMore   = true;
-						doFetchMore(getListView(), getListView().getAdapter().getCount(), getListPageSize());
+						doFetchMore(getListView(), getListView().getAdapter().getCount() - getListView().getHeaderViewsCount() - getListView().getFooterViewsCount(), getListPageSize());
 					} else if(scrollY == 0){
 						mIsFetchingMore  = false;
 					}
@@ -275,8 +275,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //		}
 		Bundle bundle = new Bundle();
 		bundle.putInt("OFFSET", offset);
-		bundle.putInt("LIMIT", pageSize);
-		getLoaderManager().restartLoader(0, bundle,this);
+		bundle.putInt("LIMIT", offset + pageSize);
+		getLoaderManager().restartLoader(0, bundle, this);
 	}
 	
 //	@Override
