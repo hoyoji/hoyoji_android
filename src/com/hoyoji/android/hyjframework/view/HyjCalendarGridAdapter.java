@@ -423,7 +423,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 					yearIndex = year ;
 				}
 			} else {
-				if(selectedDay < selectedDayOffset){
+				if(selectedDay <= selectedDayOffset){
 					if(firstDay == lastDaysOfMonth){
 						firstDay = 0;
 						
