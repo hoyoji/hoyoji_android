@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -25,6 +26,7 @@ import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
+import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -53,6 +55,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	private final static int GET_TRANSFERIN_ID = 4;
 	private final static int GET_PROJECT_ID = 5;
 	private static final int GET_REMARK = 6;
+	private final static int GET_AMOUNT = 8;
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
 	
@@ -92,6 +95,8 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 	private ImageView mImageViewProjectTransferInRefreshRate = null;
 	
 	private MoneyTransfer moneyTopup;
+	
+	private ImageButton calculatorTextView = null;
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneytopup;
@@ -367,6 +372,19 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
 								bundle, GET_REMARK);
+			}
+		});
+		
+		calculatorTextView = (ImageButton) getView().findViewById(R.id.calculator);
+		calculatorTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putDouble("AMOUNT", mNumericTransferOutAmount.getNumber()!=null?mNumericTransferOutAmount.getNumber():0.00);
+				MoneyTopupFormFragment.this.openActivityWithFragmentForResult(
+								HyjCalculatorFormFragment.class,
+								R.string.hyjCalculatorFormFragment_title,
+								bundle, GET_AMOUNT);
 			}
 		});
 		
@@ -946,6 +964,14 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
      				mRemarkFieldRemark.setText(text);
      			}
      			break;
+     		case GET_AMOUNT:
+    			if (resultCode == Activity.RESULT_OK) {
+    				String calculatorAmount = data.getStringExtra("calculatorAmount");
+    				if (calculatorAmount != null){
+    					mNumericTransferOutAmount.setNumber(Double.parseDouble(calculatorAmount));
+    				}
+    			}
+    			break;
              case GET_TRANSFERIN_ID:
 	        	 if(resultCode == Activity.RESULT_OK){
 	         		long _id = data.getLongExtra("MODEL_ID", -1);
