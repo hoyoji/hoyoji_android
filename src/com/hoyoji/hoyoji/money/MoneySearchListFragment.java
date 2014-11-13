@@ -1110,9 +1110,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 //		if(getLoaderManager().getLoader(-1) != null && getLoaderManager().getLoader(-1).isStarted()){
 //			return;
 //		}
-		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
-		((MoneySearchGroupListLoader)loader).fetchMore(null);	
+		if(loader != null){
+			setFooterLoadStart();
+			((MoneySearchGroupListLoader)loader).fetchMore(null);	
+		}
 	}
 	
 	@Override  

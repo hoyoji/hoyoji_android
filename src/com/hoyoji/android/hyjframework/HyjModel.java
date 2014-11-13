@@ -37,6 +37,7 @@ import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Picture;
@@ -373,7 +374,12 @@ public abstract class HyjModel extends Model  implements Cloneable {
 			if(model == null){
 				model = new MoneyExpenseCategory();
 			}
-		}
+		} else if (tableName.equalsIgnoreCase("MoneyTemplate")) {
+			model = HyjModel.getModel(MoneyTemplate.class, id);
+			if(model == null){
+				model = new MoneyTemplate();
+			}
+		} 
 		return model;
 	}
 	
