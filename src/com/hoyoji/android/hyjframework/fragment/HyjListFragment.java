@@ -248,6 +248,10 @@ public abstract class HyjListFragment extends ListFragment implements
 //    }  
 	
 	public void doFetchMore(ListView l, int offset, int pageSize){
+		Bundle bundle = new Bundle();
+		bundle.putInt("OFFSET", offset);
+		bundle.putInt("LIMIT", offset + pageSize);
+		getLoaderManager().restartLoader(-1, bundle,this);
 	}
 	
 //	@Override
