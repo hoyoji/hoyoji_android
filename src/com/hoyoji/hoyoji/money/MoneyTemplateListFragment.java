@@ -3,8 +3,6 @@ package com.hoyoji.hoyoji.money;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
@@ -21,7 +19,6 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
@@ -65,6 +62,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
 		if(template.getType().equals("MoneyExpense")) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+		} else if(template.getType().equals("MoneyIncome")) {
+			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
 		}
 		
     }
@@ -94,6 +93,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			
 		
 		} else if(view.getId() == R.id.homeListItem_amount){
+			((HyjNumericView)view).setPrefix("¥");
 			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_picture){

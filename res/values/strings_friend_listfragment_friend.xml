@@ -4,6 +4,12 @@
     <string name="friendListFragment_action_friend_add">添加网络好友</string>
     <string name="friendListFragment_action_friend_create">创建本地好友</string>
     
+    <string name="friendListFragment_title_invite_qqFriend">邀请QQ好友</string>
+   <string name="friendListFragment_title_invite_wxFriend">邀请微信好友</string>
+   <string name="friendListFragment_title_invite">邀请其他好友</string>
+   
+   <string name="friendListFragment_invite_linksmanage">链接管理</string>
+    
     <string name="friendListFragment_title_select_friend_payee">收款方</string>
     <string name="friendListFragment_title_select_friend_payer">付款方</string>
     <string name="friendListFragment_title_select_friend_creditor">债权人</string>
