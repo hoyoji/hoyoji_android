@@ -16,8 +16,6 @@
         android:fadingEdge="horizontal"
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
-        android:text="¥1009"
-        android:textColor="#FF0000"
         android:textSize="9sp" />
 
     <TextView
@@ -28,16 +26,15 @@
         android:fadingEdge="horizontal"
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
-        android:textColor="#339900"
-        android:text="¥320"
         android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tvtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
     	android:layout_marginBottom="2dp"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:singleLine="true"
