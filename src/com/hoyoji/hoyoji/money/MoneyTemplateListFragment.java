@@ -91,7 +91,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			
 		
 		} else if(view.getId() == R.id.homeListItem_amount){
-			((HyjDateTimeView)view).setText(jsonObj.optString("amount"));
+			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
 			return true;
 //		}else if(view.getId() == R.id.homeListItem_picture){
 //			HyjImageView imageView = (HyjImageView)view;
