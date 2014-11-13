@@ -19,12 +19,15 @@ public class MoneyTemplate extends HyjModel {
 	@Column(name = "date")
 	private String mDate;
 
-	@Column(name = "ownerUserId")
-	private String mOwnerUserId;
+	@Column(name = "type")
+	private String mType;
 
 	@Column(name = "data")
 	private String mData;
 
+	@Column(name = "ownerUserId")
+	private String mOwnerUserId;
+	
 	@Column(name = "_creatorId")
 	private String m_creatorId;
 
@@ -71,6 +74,14 @@ public class MoneyTemplate extends HyjModel {
 
 	public void setDate(String mDate) {
 		this.mDate = mDate;
+	}
+	
+	public String getType() {
+		return mType;
+	}
+
+	public void setType(String mType) {
+		this.mType = mType;
 	}
 
 	public String getData() {
