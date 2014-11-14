@@ -3,8 +3,6 @@ package com.hoyoji.hoyoji.money;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
@@ -21,7 +19,6 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
@@ -36,8 +33,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"id", "type", "data"},
-				new int[] {R.id.homeListItem_date, R.id.homeListItem_date, R.id.homeListItem_amount},
+				new String[] {"data", "data", "data"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -63,13 +60,18 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			 return;
 		}
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
+		if(template.getType().equals("MoneyExpense")) {
+			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+		} else if(template.getType().equals("MoneyIncome")) {
+			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+		}
 		
     }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		String id = cursor.getString(cursor.getColumnIndex("id"));
-		String type = cursor.getString(cursor.getColumnIndex("type"));
+//		String id = cursor.getString(cursor.getColumnIndex("id"));
+//		String type = cursor.getString(cursor.getColumnIndex("type"));
 		String data = cursor.getString(cursor.getColumnIndex("data"));
 		JSONObject jsonObj = null;
 		try {
@@ -91,12 +93,14 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			
 		
 		} else if(view.getId() == R.id.homeListItem_amount){
-			((HyjDateTimeView)view).setText(jsonObj.optString("amount"));
+			((HyjNumericView)view).setPrefix("¥");
+			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
 			return true;
-//		}else if(view.getId() == R.id.homeListItem_picture){
+		}else if(view.getId() == R.id.homeListItem_picture){
 //			HyjImageView imageView = (HyjImageView)view;
 //			imageView.setImage(cursor.getString(columnIndex));
-//			return true;
+			((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
+			return true;
 		} else {
 			return true;
 		}

@@ -24,17 +24,22 @@
 		        hoyoji:showAsAction="always"/>
 		    <item
 		        android:id="@+id/friendListFragment_action_friend_invite_qqFriend"
-		        android:title="@string/friendCategoryFormFragment_title_invite_qqFriend"
+		        android:title="@string/friendListFragment_title_invite_qqFriend"
 		        android:icon="@drawable/ic_action_cc_bcc"
 		        hoyoji:showAsAction="always"/>
 		    <item
 		        android:id="@+id/friendListFragment_action_friend_invite_wxFriend"
-		        android:title="@string/friendCategoryFormFragment_title_invite_wxFriend"
+		        android:title="@string/friendListFragment_title_invite_wxFriend"
 		        android:icon="@drawable/ic_action_cc_bcc"
 		        hoyoji:showAsAction="always"/>
 		    <item
 		        android:id="@+id/friendListFragment_action_friend_invite"
-		        android:title="@string/friendCategoryFormFragment_title_invite"
+		        android:title="@string/friendListFragment_title_invite"
+		        android:icon="@drawable/ic_action_cc_bcc"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/friendListFragment_action_friend_invite_linksmanage"
+		        android:title="@string/friendListFragment_invite_linksmanage"
 		        android:icon="@drawable/ic_action_cc_bcc"
 		        hoyoji:showAsAction="always"/>
         </menu>
