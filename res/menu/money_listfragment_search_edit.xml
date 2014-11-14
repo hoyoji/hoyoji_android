@@ -4,7 +4,7 @@
     	<item
         android:id="@+id/searchListFragment_action_edit"
         android:title="@string/app_action_edit"
-        android:icon="@drawable/ic_action_edit"
+        android:icon="@drawable/ic_action_edit_white"
         hoyoji:showAsAction="always"/>
     	
     	<item
