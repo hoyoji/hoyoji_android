@@ -2,9 +2,6 @@
 <resources>
     
    <string name="friendCategoryFormFragment_title_create">创建好友分类</string>
-   <string name="friendCategoryFormFragment_title_invite_qqFriend">邀请QQ好友</string>
-   <string name="friendCategoryFormFragment_title_invite_wxFriend">邀请微信好友</string>
-   <string name="friendCategoryFormFragment_title_invite">邀请其他好友</string>
    <string name="friendCategoryFormFragment_title_edit">好友分类资料</string>
    
    <string name="friendCategoryFormFragment_textView_name">分类名称</string>
