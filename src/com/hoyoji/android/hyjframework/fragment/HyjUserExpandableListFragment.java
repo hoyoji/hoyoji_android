@@ -68,6 +68,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			mExpandableListView.setOnGroupClickListener(this);
 			mExpandableListView.setOnGroupCollapseListener(this);
 			mExpandableListView.setOnGroupExpandListener(this);
+			mExpandableListView.setFooterDividersEnabled(false);
 			
 			if(useToolbarView() != null){
 				// populate bottom toolbar

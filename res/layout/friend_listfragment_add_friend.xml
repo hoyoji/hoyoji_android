@@ -28,7 +28,7 @@
     <com.hoyoji.android.hyjframework.view.HyjListView android:id="@id/android:list"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:divider="#F3E7CB"
+              android:divider="@drawable/line_dash"
               android:dividerHeight="1dp"
               android:drawSelectorOnTop="false"/>
 

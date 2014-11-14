@@ -9,9 +9,9 @@
     <com.hoyoji.android.hyjframework.view.HyjExpandableListView android:id="@id/android:list"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:divider="#F3E7CB"
+              android:divider="@drawable/line_dash"
               android:dividerHeight="1dp"
-              android:childDivider="#F3E7CB"
+              android:childDivider="@drawable/line_dash"
               android:drawSelectorOnTop="false"/>
 
    <!--  <TextView android:id="@id/android:empty"

@@ -85,7 +85,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		if(mHeaderView != null){
 			getListView().addHeaderView(mHeaderView);
 		}
-		getListView().setFooterDividersEnabled(true);
+		getListView().setFooterDividersEnabled(false);
 		
 	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 	    mFooterView.setOnClickListener(new OnClickListener(){

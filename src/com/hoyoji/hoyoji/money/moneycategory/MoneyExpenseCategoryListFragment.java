@@ -115,7 +115,7 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 		});		
 		
 		childrenList = (ListView)getView().findViewById(R.id.moneyExpenseCategory_list_children);
-		childrenList.setFooterDividersEnabled(true);
+		childrenList.setFooterDividersEnabled(false);
 	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override

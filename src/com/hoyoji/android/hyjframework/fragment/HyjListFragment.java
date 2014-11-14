@@ -67,7 +67,7 @@ public abstract class HyjListFragment extends ListFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		getListView().setFooterDividersEnabled(true);
+		getListView().setFooterDividersEnabled(false);
 		
 	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
 	    mFooterView.setOnClickListener(new OnClickListener(){
