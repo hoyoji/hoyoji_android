@@ -73,6 +73,7 @@
     
 	<Button
 	    android:id="@id/button_save"
+            android:background="@drawable/button_rectangle_round_5"     
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"/>
 	
