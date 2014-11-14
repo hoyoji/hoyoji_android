@@ -6,4 +6,10 @@
 		        android:color="#63a219" />
 			<!-- 虚线的高度 -->
 		    <size android:height="1dp" />
+		     <gradient  
+         android:startColor="#FFFFFF"  
+         android:centerColor="#63a219"  
+         android:endColor="#FFFFFF"  
+         android:height="1px"  
+         android:angle="0"/>  
         </shape>

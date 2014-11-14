@@ -19,7 +19,7 @@
     <item
         android:id="@+id/homeListFragment_action_more"
         android:title="@string/homeListFragment_action_more"
-        android:icon="@drawable/ic_action_overflow"
+        android:icon="@drawable/ic_action_overflow_white"
         hoyoji:showAsAction="always">
         <menu>
             <item
@@ -35,7 +35,7 @@
     -->
     <!-- <item
         android:id="@+id/mainActivity_action_money_addnew"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_action_new_white"
         android:title="@string/mainActivity_action_money_addnew"
         hoyoji:showAsAction="always">
         <menu>
@@ -103,7 +103,7 @@
     <item
         android:id="@+id/homeListFragment_action_menu"
         android:title="@string/homeListFragment_action_more"
-        android:icon="@drawable/ic_action_overflow"
+        android:icon="@drawable/ic_action_overflow_white"
         hoyoji:showAsAction="always">
         <menu>
             <item

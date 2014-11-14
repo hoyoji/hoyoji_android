@@ -45,7 +45,7 @@
 			android:layout_above="@id/projectListItem_depositTotal"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text="项目结余"/>
+		    android:text="账本结余"/>
 	
 	    <TextView
 	        android:id="@+id/projectListItem_name"

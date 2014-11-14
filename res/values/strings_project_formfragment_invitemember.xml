@@ -9,26 +9,26 @@
    <string name="inviteMemberMessageFormFragment_editText_hint_detail">请输入消息内容</string>
    
     
-   <string name="memberFormFragment_title_addnew">添加项目成员</string>
-   <string name="memberFormFragment_title_edit">修改项目成员</string>
+   <string name="memberFormFragment_title_addnew">添加账本成员</string>
+   <string name="memberFormFragment_title_edit">修改账本成员</string>
    
-   <string name="memberFormFragment_progress_adding">正在添加项目成员</string>
+   <string name="memberFormFragment_progress_adding">正在添加账本成员</string>
    <string name="memberFormFragment_progress_saving">正在保存...</string>
    <string name="memberFormFragment_progress_inviting">正在邀請...</string>
-   <string name="memberFormFragment_toast_share_request_sent_success">项目共享请求发送成功，请等待回复</string>
+   <string name="memberFormFragment_toast_share_request_sent_success">账本共享请求发送成功，请等待回复</string>
    <string name="memberFormFragment_toast_share_edit_success">保存成功</string>
-   <string name="memberFormFragment_toast_share_add_success">成功添加项目成员</string>
+   <string name="memberFormFragment_toast_share_add_success">成功添加账本成员</string>
    
-   <string name="memberFormFragment_textView_projectName">项目名称</string>
+   <string name="memberFormFragment_textView_projectName">账本名称</string>
    
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title">账务权限</string>
-   <string name="inviteMemberFormFragment_textView_shareAuthorization_title_self">只允许查看与自己相关的权限</string>
+   <string name="inviteMemberFormFragment_textView_shareAuthorization_title_self">只允许查看与自己相关的账务</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_add">允许新增账务</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_edit">允许修改自己的账务</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_delete">允许删除自己的账务</string>
    
-   <string name="memberFormFragment_textView_send_invite">发送消息给邀请好友共享项目。\n如果不发送，您可以在该项目下记录与该好友相关的账务，但是该好友将看不到该项目的数据。</string>
-   <string name="app_action_send_invite">邀请好友共享项目</string>
+   <string name="memberFormFragment_textView_send_invite">发送消息给邀请好友共享账本。\n如果不发送，您可以在该账本下记录与该好友相关的账务，但是该好友将看不到该账本的数据。</string>
+   <string name="app_action_send_invite">邀请好友共享账本</string>
    
    <string name="inviteMemberFormFragment_action_invite_title">邀请成员</string>
    <string name="inviteMemberFormFragment_action_invite_content">正在邀请...</string>

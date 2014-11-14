@@ -97,9 +97,9 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "项目成员";
+				return "账本成员";
 			case 1:
-				return "非项目成员";
+				return "非账本成员";
 			}
 			return null;
 		}

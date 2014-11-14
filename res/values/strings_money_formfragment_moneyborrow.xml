@@ -26,8 +26,8 @@
    <string name="moneyBorrowFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyBorrowFormFragment_editText_hint_moneyAccount">请选择账户</string>
    
-   <string name="moneyBorrowFormFragment_textView_project">项目</string>
-   <string name="moneyBorrowFormFragment_editText_hint_project">请选择项目</string>
+   <string name="moneyBorrowFormFragment_textView_project">账本</string>
+   <string name="moneyBorrowFormFragment_editText_hint_project">请选择账本</string>
    
    <string name="moneyBorrowFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyBorrowFormFragment_editText_hint_exchangeRate">请输入汇率</string>
@@ -38,12 +38,12 @@
    <string name="moneyBorrowFormFragment_textView_friend">债权人方</string>
    <string name="moneyBorrowFormFragment_editText_hint_friend">请选择债权人</string>
    <string name="moneyBorrowFormFragment_editText_error_friend">自己不能作为债权人，请重新选择</string>
-   <string name="moneyBorrowFormFragment_editText_error_friend_not_member">债权人必须为项目成员</string>
+   <string name="moneyBorrowFormFragment_editText_error_friend_not_member">债权人必须为账本成员</string>
    
    <string name="moneyBorrowFormFragment_textView_remark">备注</string>
    <string name="moneyBorrowFormFragment_editText_hint_remark">无备注</string>
     
    <string name="moneyBorrowFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
-   <string name="moneyBorrowFormFragment_toast_select_currency">请先选择账户和项目</string> 
+   <string name="moneyBorrowFormFragment_toast_select_currency">请先选择账户和账本</string> 
     
 </resources>

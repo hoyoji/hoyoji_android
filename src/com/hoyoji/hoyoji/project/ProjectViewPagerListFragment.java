@@ -99,9 +99,9 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "项目流水";
+				return "账本流水";
 			case 1:
-				return "项目成员";
+				return "账本成员";
 			}
 			return null;
 		}

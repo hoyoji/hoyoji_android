@@ -4,7 +4,7 @@
     <item
         android:id="@+id/friendCategoryListFragment_action_create"
         android:title="@string/friendCategoryListFragment_action_create"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always"/>
     
 </menu>

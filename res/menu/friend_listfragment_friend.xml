@@ -4,7 +4,7 @@
      <item
         android:id="@+id/searchListFragment_action_addfriend"
         android:title="@string/friendListFragment_action_friend_add"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always">
         <menu>
             <item

@@ -421,7 +421,7 @@ public class Project extends HyjModel {
 //			}
 // 		}
 //		if(friendUserId == null){
-//			// 非网络好友，一定不是项目成员
+//			// 非网络好友，一定不是账本成员
 //			return false;
 //		}
 //		ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friendUserId, this.getId()).executeSingle();

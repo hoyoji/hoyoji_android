@@ -63,7 +63,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public String getTitle(){
 		String title = getArguments().getString("title");
 		if(title == null){
-			return "顶级项目";
+			return "顶级账本";
 		}
 		return title;
 	}
@@ -195,11 +195,11 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		Project project = Project.load(Project.class, id);
 		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 		if(userData.getActiveProjectId().equals(project.getId())){
-			HyjUtil.displayToast("默认项目不能删除");
+			HyjUtil.displayToast("默认账本不能删除");
 			return;
 		}
 		project.delete();
-	    HyjUtil.displayToast("项目删除成功");
+	    HyjUtil.displayToast("账本删除成功");
 	}
 
 	@Override
@@ -228,10 +228,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //		if(mi.id == -1){
 //			return;
 //		}
-//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "项目资料");
-//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "项目成员");
+//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "账本资料");
+//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "账本成员");
 //		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子项目");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子账本");
 //	}
 	
 	private void setSharedProjectHeaderView(ViewGroup view) {

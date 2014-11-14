@@ -7,6 +7,6 @@
     <string name="moneyListItem_apportion_share_apport">占股分摊</string>
     
     <string name="moneyListItem_apportion_share">占股</string>
-    <string name="moneyListItem_apportion_non_project_member">非项目成员</string>
+    <string name="moneyListItem_apportion_non_project_member">非账本成员</string>
     
 </resources>

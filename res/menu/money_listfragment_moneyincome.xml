@@ -4,7 +4,7 @@
     <item
         android:id="@+id/moneyIncomeListFragment_action_moneyIncome_addnew"
         android:title="@string/moneyIncomeListFragment_action_moneyIncome_addnew"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always"/>
 
 </menu>

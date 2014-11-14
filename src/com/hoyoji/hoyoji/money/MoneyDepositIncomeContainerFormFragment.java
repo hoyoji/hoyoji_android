@@ -292,7 +292,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个项目。");
+					HyjUtil.displayToast("请先选择一个账本。");
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -534,13 +534,13 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyDepositIncomeContainer.getAmount0());
 
-										//更新项目余额
+										//更新账本余额
 										Project oldProject = moneyDepositIncomeContainer.getProject();
 										HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 										oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() - moneyDepositIncomeContainer.getAmount0()*moneyDepositIncomeContainer.getExchangeRate());
 										oldProjectEditor.save();
 										
-										// 更新旧项目收入所有者的实际借入
+										// 更新旧账本收入所有者的实际借入
 										ProjectShareAuthorization oldProjectShareAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldProject.getId());
 										HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 										oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (moneyDepositIncomeContainer.getAmount0() * moneyDepositIncomeContainer.getExchangeRate()));
@@ -711,7 +711,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				MoneyDepositIncomeContainer oldMoneyDepositIncomeContainerModel = mMoneyDepositIncomeContainerEditor.getModel();
 				MoneyDepositIncomeContainer moneyDepositIncomeContainerModel = mMoneyDepositIncomeContainerEditor.getModelCopy();
 				
-				//设置默认项目和账户
+				//设置默认账本和账户
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 				if(moneyDepositIncomeContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyDepositIncomeContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyDepositIncomeContainerModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
@@ -778,7 +778,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					Project newProject = moneyDepositIncomeContainerModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新项目余额
+					//更新账本余额
 					if(moneyDepositIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
 						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() - oldMoneyDepositIncomeContainerModel.getAmount0()*oldMoneyDepositIncomeContainerModel.getExchangeRate() + moneyDepositIncomeContainerModel.getAmount0()*moneyDepositIncomeContainerModel.getExchangeRate());
 					} else {
@@ -1199,7 +1199,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				moneyBorrow = new MoneyBorrow();
 //				moneyBorrow.setBorrowType("Deposit");
 				
-				//自己一定是项目成员，所以不用更新借贷账户
+				//自己一定是账本成员，所以不用更新借贷账户
 //				Friend friend = new Select().from(Friend.class).where("friendUserId = ?", apportion.getFriendUserId()).executeSingle();
 //				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(mMoneyDepositIncomeContainerEditor.getModelCopy().getProject().getCurrencyId(), apportion.getLocalFriendId(), apportion.getFriendUserId());
 //			    
@@ -1338,7 +1338,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
     				} else {
     					Friend friend = Friend.load(Friend.class, _id);
     					if(friend.getFriendUserId() != null){
-    						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
+    						//看一下该好友是不是账本成员, 如果是，作为账本成员添加
     						psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
     					} else {
     						psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", friend.getId(), mSelectorFieldProject.getModelId()).executeSingle();

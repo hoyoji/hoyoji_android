@@ -321,7 +321,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				Double rate = Exchange.getExchangeRate(moneyAccountCurrencyId, HyjApplication.getInstance()
 					.getCurrentUser().getUserData().getActiveCurrencyId());
 				if (rate != null) {
-					// 汇率已经存在，直接保存新项目
+					// 汇率已经存在，直接保存新账本
 					doSave();
 					return;
 				}

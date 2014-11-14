@@ -548,7 +548,7 @@ public class MoneyExpenseContainer extends HyjModel{
 			MoneyExpenseApportion apportion = (MoneyExpenseApportion) api.getApportion();
 			HyjModelEditor<MoneyExpenseApportion> apportionEditor = apportion.newModelEditor();
 
-					// 分摊好友是项目成员
+					// 分摊好友是账本成员
 					if(api.getState() == ApportionItem.DELETED ){
 						deleteApportion(apportion, mMoneyExpenseContainerEditor);
 					} else {
@@ -562,7 +562,7 @@ public class MoneyExpenseContainer extends HyjModel{
 							Double oldApportionAmount = apportionEditor.getModel().getAmount0();
 							
 							ProjectShareAuthorization projectShareAuthorization;
-							//维护项目成员金额
+							//维护账本成员金额
 							if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 								projectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
 							} else if(apportion.getFriendUserId() != null){
@@ -579,7 +579,7 @@ public class MoneyExpenseContainer extends HyjModel{
 							
 							if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
 									mMoneyExpenseContainerEditor.getModel().getProjectId().equals(mMoneyExpenseContainerEditor.getModelCopy().getProjectId())){
-								 // 该支出是新的，或者该支出的项目没有改变：无旧项目需要更新，只需更新新项目的projectShareAuthorization
+								 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorization.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 								projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 								if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -594,7 +594,7 @@ public class MoneyExpenseContainer extends HyjModel{
 									projectShareAuthorizationEditor.save();
 								}
 							} else {
-								//更新新项目分摊支出
+								//更新新账本分摊支出
 								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(projectShareAuthorization.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
 								projectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(projectShareAuthorization.getActualTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
 								if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -609,7 +609,7 @@ public class MoneyExpenseContainer extends HyjModel{
 									projectShareAuthorizationEditor.save();
 								}
 								
-								//更新老项目分摊支出
+								//更新老账本分摊支出
 								ProjectShareAuthorization oldProjectAuthorization;
 								if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 									oldProjectAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
@@ -1057,9 +1057,9 @@ public class MoneyExpenseContainer extends HyjModel{
 		ProjectShareAuthorization oldProjectShareAuthorization;
 		if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())) {
 			// 把自己从分摊成员中移除：
-			// 1、要更新自己在旧项目中的分摊总额和支出总额，
+			// 1、要更新自己在旧账本中的分摊总额和支出总额，
 			// 2、要删除自己对应的分摊支出
-			// 更新旧项目的分摊支出
+			// 更新旧账本的分摊支出
 			oldProjectShareAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
@@ -1072,11 +1072,11 @@ public class MoneyExpenseContainer extends HyjModel{
 			}
 		} else {
 			// 把别人从分摊成员中移除：
-			// 1、要更新别人在旧项目中的分摊总额、支出总额、借入总额，
+			// 1、要更新别人在旧账本中的分摊总额、支出总额、借入总额，
 			// 2、要删除别人对应的分摊支出和借入，
 			// 3、要删除自己对应的分摊借出，
-			// 4、要更新自己在该项目中的借出总额
-			// 更新旧项目分摊支出
+			// 4、要更新自己在该账本中的借出总额
+			// 更新旧账本分摊支出
 			oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 			

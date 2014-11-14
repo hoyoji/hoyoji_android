@@ -300,7 +300,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个项目。");
+					HyjUtil.displayToast("请先选择一个账本。");
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -438,7 +438,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 //										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyExpense.getAmount());
 //										MoneyExpenseEditor moneyExpenseEditor = new MoneyExpenseEditor(moneyExpense);
 //										
-//										//更新项目余额
+//										//更新账本余额
 //										Project newProject = moneyExpense.getProject();
 //										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 //										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyExpense.getAmount0()*moneyExpense.getExchangeRate());
@@ -450,14 +450,14 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 //											MoneyExpenseApportion moneyExpenseAportion = moneyExpenseApportions.next();
 //											ProjectShareAuthorization oldProjectShareAuthorization;
 //
-//											// 非项目好友不用更新项目分摊
+//											// 非账本好友不用更新账本分摊
 //											if(moneyExpenseAportion.getFriendUserId() == null){
 //												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseAportion.getId()).executeSingle();
 //												if(moneyLend != null){
 //													moneyLend.delete();
 //													//这里不用维护账户余额，因为该笔借出包括在实际支出了
 //												}
-//												// 更新旧项目分摊支出
+//												// 更新旧账本分摊支出
 //												oldProjectShareAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
 //												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //												oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (moneyExpenseAportion.getAmount0() * moneyExpenseAportion.getMoneyExpense().getExchangeRate()));
@@ -473,7 +473,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 //												} 
 //											} else {
 //												if(moneyExpenseAportion.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//													// 更新旧项目的分摊支出
+//													// 更新旧账本的分摊支出
 //													oldProjectShareAuthorization = moneyExpenseEditor.getOldSelfProjectShareAuthorization();
 //													HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //													oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (moneyExpenseAportion.getAmount0() * moneyExpenseAportion.getMoneyExpense().getExchangeRate()));
@@ -485,7 +485,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 //														moneyExpense.delete();
 //													}
 //												} else {
-//													// 更新旧项目分摊支出
+//													// 更新旧账本分摊支出
 //													oldProjectShareAuthorization = moneyExpenseAportion.getProjectShareAuthorization();
 //													HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //													
@@ -691,7 +691,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					MoneyExpense oldMoneyExpenseModel = mMoneyExpenseEditor.getModel();
 					MoneyExpense moneyExpenseModel = mMoneyExpenseEditor.getModelCopy();
 					
-					//设置默认项目和账户
+					//设置默认账本和账户
 					UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 					if(moneyExpenseModel.get_mId() == null 
 							&& !userData.getActiveMoneyAccountId().equals(moneyExpenseModel.getMoneyAccountId()) 
@@ -702,7 +702,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						userDataEditor.save();
 					}
 					
-					// 更新项目的默认分类
+					// 更新账本的默认分类
 					if(moneyExpenseModel.get_mId() == null){
 						HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
 						projectEditor.getModelCopy().setDefaultExpenseCategory(moneyExpenseModel.getMoneyExpenseCategory());
@@ -768,7 +768,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					Project newProject = moneyExpenseModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新项目余额
+					//更新账本余额
 					if(moneyExpenseModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
 						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
 					} else {
@@ -785,7 +785,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					HyjModelEditor<ProjectShareAuthorization> selfProjectAuthorizationEditor = selfProjectAuthorization.newModelEditor();
 				    
 					if(moneyExpenseModel.get_mId() == null || oldMoneyExpenseModel.getProjectId().equals(moneyExpenseModel.getProjectId())){
-					    // 无旧项目可更新
+					    // 无旧账本可更新
 						selfProjectAuthorizationEditor.getModelCopy().setActualTotalExpense(selfProjectAuthorization.getActualTotalExpense() - oldMoneyExpenseModel.getAmount0()*oldMoneyExpenseModel.getExchangeRate() + moneyExpenseModel.getAmount0()*moneyExpenseModel.getExchangeRate());
 						
 					} else {

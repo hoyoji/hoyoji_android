@@ -33,7 +33,7 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
 
-	// 该共享的好友是项目拥有者的本地好友
+	// 该共享的好友是账本拥有者的本地好友
 	@Column(name = "localFriendId")
 	private String mLocalFriendId;
 

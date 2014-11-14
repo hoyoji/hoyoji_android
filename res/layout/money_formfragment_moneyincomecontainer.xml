@@ -336,6 +336,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@drawable/button_rectangle_round_5"     
             android:text="@string/app_action_save" />
         
         <Button
@@ -343,6 +344,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@drawable/button_rectangle_round_5"     
             android:text="@string/app_action_delete"
             android:textColor="#FF0000" />
     </LinearLayout>
