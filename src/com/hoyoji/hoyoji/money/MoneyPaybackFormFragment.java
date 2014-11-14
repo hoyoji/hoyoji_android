@@ -302,7 +302,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 //			@Override
 //			public void onClick(View v) {
 //				if(mSelectorFieldProject.getModelId() == null){
-//					HyjUtil.displayToast("请先选择一个项目。");
+//					HyjUtil.displayToast("请先选择一个账本。");
 //				} else {
 //					Bundle bundle = new Bundle();
 //					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -429,7 +429,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyPayback.getAmount());
 										moneyAccountEditor.save();
 
-										//更新项目余额
+										//更新账本余额
 										Project newProject = moneyPayback.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyPayback.getAmount0()*moneyPayback.getExchangeRate());
@@ -722,7 +722,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 					Project newProject = moneyPaybackModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新项目余额
+					//更新账本余额
 					if(moneyPaybackModel.get_mId() == null){
 						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() + moneyPaybackModel.getProjectAmount());
 						if(moneyPaybackModel.getLocalFriendId() != null){
@@ -968,7 +968,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
 
-	         	// 看一下好友是不是新项目的成员
+	         	// 看一下好友是不是新账本的成员
 	         		if(mSelectorFieldFriend.getModelId() != null) {
 	         			ProjectShareAuthorization psaMember = null;
 						if ((Boolean) mSelectorFieldFriend

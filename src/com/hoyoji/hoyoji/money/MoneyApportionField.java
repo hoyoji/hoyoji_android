@@ -239,14 +239,14 @@ public class MoneyApportionField extends GridView {
 //		Set<String> friendUserSet = new HashSet<String>();
 		Set<String> gridUserSet = new HashSet<String>();
 		
-//		// 把新项目的成员都记录下来
+//		// 把新账本的成员都记录下来
 //		for(int i=0; i < projectShareAuthorizations.size(); i++){
 //			if(!projectShareAuthorizations.get(i).getState().equals("Delete")) {
 //				friendUserSet.add(HyjUtil.ifNull(projectShareAuthorizations.get(i).getFriendUserId(), projectShareAuthorizations.get(i).getLocalFriendId()));
 //			}
 //		}	
 
-		// 把不属于当前项目用户分摊隐藏掉
+		// 把不属于当前账本用户分摊隐藏掉
 		int i = 0; 
 		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
@@ -254,7 +254,7 @@ public class MoneyApportionField extends GridView {
 			mImageGridAdapter.remove(api);
 			
 //			if(api.getApportion().getFriendUserId() != null){
-//				// 项目成员, 但不是新项目的成员, 隐藏起来
+//				// 账本成员, 但不是新账本的成员, 隐藏起来
 //	        	Friend friend = new Select().from(Friend.class).where("friendUserId=?", api.getApportion().getFriendUserId()).executeSingle();
 //				if(!friendUserSet.contains(api.getApportion().getFriendUserId())) {
 //					mHiddenApportionItems.add(api);
@@ -267,12 +267,12 @@ public class MoneyApportionField extends GridView {
 //					i++;
 //				}
 //			} else {
-//				// 非项目成员
+//				// 非账本成员
 //				Friend friend = HyjModel.getModel(Friend.class, api.getApportion().getLocalFriendId());
 //				if(friend.getFriendUserId() != null){ 
 //					// 网络好友
 //					if(!friendUserSet.contains(friend.getFriendUserId())) {
-//						// 也不是是新项目的成员。非项目成员不能转为项目成员，我们只好将其隐藏
+//						// 也不是是新账本的成员。非账本成员不能转为账本成员，我们只好将其隐藏
 ////						mHiddenApportionItems.add(api);
 ////						mImageGridAdapter.remove(api);
 //						gridUserSet.add(friend.getId());
@@ -281,7 +281,7 @@ public class MoneyApportionField extends GridView {
 //					} else {
 //						mHiddenApportionItems.add(api);
 //						mImageGridAdapter.remove(api);
-//						// 是新项目的成员，我们直接转过去
+//						// 是新账本的成员，我们直接转过去
 ////						gridUserSet.add(friend.getFriendUserId());
 ////						api.changeProjectWithProjectMember(project.getId(), friend);
 ////						i++;
@@ -325,13 +325,13 @@ public class MoneyApportionField extends GridView {
 //	        	if(friend.getFriendUserId() != null){ 
 //					// 网络好友
 //					if(!friendUserSet.contains(friend.getFriendUserId())) {
-//						// 也不是是新项目的成员
+//						// 也不是是新账本的成员
 //			        	mImageGridAdapter.add(item);
 //						gridUserSet.add(friend.getId());
 //						item.changeProject(project.getId());
 //			        	it.remove();
 //					} else {
-//						// 是新项目的成员，我们直接转过去
+//						// 是新账本的成员，我们直接转过去
 ////						mImageGridAdapter.add(item);
 ////						gridUserSet.add(friend.getFriendUserId());
 ////						item.changeProjectWithProjectMember(project.getId(), friend);

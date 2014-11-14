@@ -321,7 +321,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个项目。");
+					HyjUtil.displayToast("请先选择一个账本。");
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -587,7 +587,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncomeContainer.getAmount());
 										MoneyIncomeContainerEditor moneyIncomeContainerEditor = new MoneyIncomeContainerEditor(moneyIncomeContainer);
 										
-										//更新项目余额
+										//更新账本余额
 										Project newProject = moneyIncomeContainer.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate());
@@ -602,7 +602,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //											ProjectShareAuthorization oldProjectShareAuthorization;
 //											
 //											if(HyjApplication.getInstance().getCurrentUser().getId().equals(moneyIncomeApportion.getFriendUserId())){
-//												// 更新旧项目的分摊支出
+//												// 更新旧账本的分摊支出
 //												oldProjectShareAuthorization = moneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
 //												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //												oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (moneyIncomeApportion.getAmount0() * moneyIncomeApportion.getMoneyIncomeContainer().getExchangeRate()));
@@ -614,7 +614,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //													moneyIncome.delete();
 //												}
 //											} else {
-//												// 更新旧项目分摊收入// 更新旧项目分摊支出
+//												// 更新旧账本分摊收入// 更新旧账本分摊支出
 //												oldProjectShareAuthorization = moneyIncomeApportion.getProjectShareAuthorization();
 //												HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //												
@@ -814,7 +814,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				MoneyIncomeContainer oldMoneyIncomeContainerModel = mMoneyIncomeContainerEditor.getModel();
 				MoneyIncomeContainer moneyIncomeContainerModel = mMoneyIncomeContainerEditor.getModelCopy();
 				
-				//设置默认项目和账户
+				//设置默认账本和账户
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 				if(moneyIncomeContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(moneyIncomeContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(moneyIncomeContainerModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
@@ -823,7 +823,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					userDataEditor.save();
 				}
 				
-				// 更新项目的默认分类
+				// 更新账本的默认分类
 				if(moneyIncomeContainerModel.get_mId() == null){
 					HyjModelEditor<Project> projectEditor = moneyIncomeContainerModel.getProject().newModelEditor();
 					projectEditor.getModelCopy().setDefaultIncomeCategory(moneyIncomeContainerModel.getMoneyIncomeCategory());
@@ -889,7 +889,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Project newProject = moneyIncomeContainerModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新项目余额
+					//更新账本余额
 					if(moneyIncomeContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
 						newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
 					} else {
@@ -984,7 +984,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //					if(api.getState() == ApportionItem.DELETED ){
 //						ProjectShareAuthorization oldProjectShareAuthorization;
 //						if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
-//							// 更新旧项目的分摊支出
+//							// 更新旧账本的分摊支出
 //							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
 //							HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //							oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
@@ -996,7 +996,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //								moneyIncome.delete();
 //							}
 //						} else {
-//							// 更新旧项目分摊支出
+//							// 更新旧账本分摊支出
 //							oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
 //							HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 //							
@@ -1037,7 +1037,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //						Double oldApportionAmount = apportionEditor.getModel().getAmount0();
 //						
 //						ProjectShareAuthorization projectShareAuthorization;
-//							//维护项目成员金额
+//							//维护账本成员金额
 //						if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 //							projectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
 //						} else if(apportion.getLocalFriendId() != null){
@@ -1052,7 +1052,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //							
 //							if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
 //									mMoneyIncomeContainerEditor.getModel().getProjectId().equals(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
-//								 // 无旧项目可更新
+//								 // 无旧账本可更新
 //								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 //								projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 //								if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -1068,7 +1068,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //								}
 //							
 //							}else{
-//								//更新新项目分摊支出
+//								//更新新账本分摊支出
 //								projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
 //								projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
 //								if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -1083,7 +1083,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //									projectShareAuthorizationEditor.save();
 //								}
 //								
-//								//更新老项目分摊支出
+//								//更新老账本分摊支出
 //								ProjectShareAuthorization oldProjectAuthorization;
 //
 //								if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -1541,10 +1541,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 //					ProjectShareAuthorization oldProjectShareAuthorization;
 ////					if(apportion.getFriendUserId() != null){
 //						if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
-//							// 更新旧项目的分摊支出
+//							// 更新旧账本的分摊支出
 //							oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
 //						} else {
-//							// 更新旧项目分摊支出
+//							// 更新旧账本分摊支出
 //							oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
 //						}
 //						
@@ -1597,7 +1597,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				apportion.setMoneyIncomeContainerId(mMoneyIncomeContainerEditor.getModelCopy().getId());
 				apportion.setApportionType("Average");
 				
-				//更新项目成员的分摊金额
+				//更新账本成员的分摊金额
 				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", 
 						mMoneyIncomeContainerEditor.getModelCopy().getProjectId(), apportion.getFriendUserId()).executeSingle();
 				HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
@@ -1738,7 +1738,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
     				} else {
     					final Friend friend = Friend.load(Friend.class, _id);
     					if(friend.getFriendUserId() != null){
-    						//看一下该好友是不是项目成员, 如果是，作为项目成员添加
+    						//看一下该好友是不是账本成员, 如果是，作为账本成员添加
     						psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
     					} else {
     						psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=?", friend.getId(), mSelectorFieldProject.getModelId()).executeSingle();

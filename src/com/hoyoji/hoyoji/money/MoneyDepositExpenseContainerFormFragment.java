@@ -299,7 +299,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个项目。");
+					HyjUtil.displayToast("请先选择一个账本。");
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -926,7 +926,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
 	         		
-	         		// 看一下好友是不是新项目的成员
+	         		// 看一下好友是不是新账本的成员
 	         		if(mSelectorFieldFriend.getModelId() != null) {
 	        			String friendUserId;
 	        			friendUserId = mSelectorFieldFriend.getModelId();

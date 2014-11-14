@@ -51,7 +51,7 @@ public class MoneyBorrow extends HyjModel{
 	@Column(name = "currencyId")
 	private String mCurrencyId;
 	
-	// 记录项目对应的币种，应该和 projectId 的币种一致
+	// 记录账本对应的币种，应该和 projectId 的币种一致
 	@Column(name = "projectCurrencyId")
 	private String mProjectCurrencyId;
 	

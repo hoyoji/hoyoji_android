@@ -157,7 +157,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		if(moneyReturn.get_mId() == null && projectId != null) {
 			project = HyjModel.getModel(Project.class, projectId);
 		} else {
-			project = moneyReturn.getProject(); // 获取当前项目
+			project = moneyReturn.getProject(); // 获取当前账本
 		}
 		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyReturnFormFragment_selectorField_project);
 		
@@ -275,7 +275,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 //			@Override
 //			public void onClick(View v) {
 //				if(mSelectorFieldProject.getModelId() == null){
-//					HyjUtil.displayToast("请先选择一个项目。");
+//					HyjUtil.displayToast("请先选择一个账本。");
 //				} else {
 //					Bundle bundle = new Bundle();
 //					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -403,7 +403,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
 										moneyAccountEditor.save();
 										
-										//更新项目余额
+										//更新账本余额
 										Project newProject = moneyReturn.getProject();
 										HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyReturn.getProjectAmount());
@@ -698,7 +698,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					Project newProject = moneyReturnModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新项目余额
+					//更新账本余额
 					if(moneyReturnModel.get_mId() == null){
 						newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() + moneyReturnModel.getProjectAmount());
 						if(moneyReturnModel.getLocalFriendId() != null){
@@ -937,7 +937,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
 	         		
-	         	// 看一下好友是不是新项目的成员
+	         	// 看一下好友是不是新账本的成员
 	         		if(mSelectorFieldFriend.getModelId() != null) {
 	         			ProjectShareAuthorization psaMember = null;
 						if ((Boolean) mSelectorFieldFriend

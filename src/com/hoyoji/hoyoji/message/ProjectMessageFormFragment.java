@@ -147,7 +147,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 						ProjectShareAuthorization.class,
 						jsonMsgData.optString("projectShareAuthorizationId"));
 				if (newPSA != null && newPSA.getState().equals("Accept")) {
-					// 该项目共享已经存在
+					// 该账本共享已经存在
 					HyjUtil.displayToast(R.string.projectMessageFormFragment_addShare_already_exists);
 				} else {
 					final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
@@ -193,7 +193,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 									}
 									@Override
 									public void doNegativeClick(){
-										HyjUtil.displayToast("未能获取项目币种到本币的汇率");
+										HyjUtil.displayToast("未能获取账本币种到本币的汇率");
 									}
 								});
 							}
@@ -232,11 +232,11 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 				.getCurrentUser().getId());
 		msg.put("type", "Project.Share.Accept");
 		msg.put("messageState", "new");
-		msg.put("messageTitle", "接受项目共享");
+		msg.put("messageTitle", "接受账本共享");
 		msg.put("date", HyjUtil.formatDateToIOS(new Date()));
 		msg.put("detail", "用户"
 				+ HyjApplication.getInstance().getCurrentUser()
-						.getDisplayName() + "接受了您共享的项目: "
+						.getDisplayName() + "接受了您共享的账本: "
 				+ jsonMsgData.optString("projectName"));
 		msg.put("messageBoxId",
 				jsonMsgData.optString("fromMessageBoxId"));
@@ -435,7 +435,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 							sendAcceptMessageToServer(jsonMsgData);
 							return;
 						} else {
-							HyjUtil.displayToast("未能获取项目币种到本币的汇率");
+							HyjUtil.displayToast("未能获取账本币种到本币的汇率");
 						}
 					} catch (JSONException e) {}
 	         	 }

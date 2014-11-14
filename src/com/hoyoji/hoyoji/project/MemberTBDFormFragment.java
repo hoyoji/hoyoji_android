@@ -428,7 +428,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
  					psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
  				} else {
  					final Friend friend = Friend.load(Friend.class, _id);
- 					//看一下该好友是不是项目成员
+ 					//看一下该好友是不是账本成员
  					if(friend.getFriendUserId() != null){
  						psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), projectShareAuthorization.getProjectId()).executeSingle();
  					} else {

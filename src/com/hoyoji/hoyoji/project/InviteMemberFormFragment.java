@@ -74,9 +74,9 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		
 		
 		sendInviteTitle = (HyjTextField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_title);
-		sendInviteTitle.setText("邀请加入项目");
+		sendInviteTitle.setText("邀请加入账本");
 		sendInviteDetail = (HyjRemarkField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
-		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");
+		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
 		
 		mCheckBoxShareAuthExpenseSelf = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_self);
 		mCheckBoxShareAuthExpenseSelf.setChecked(true);
@@ -121,10 +121,10 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 	   			inviteFriendObject.put("data", projectData.toString());
 	   			inviteFriendObject.put("id", id);
 				inviteFriendObject.put("__dataType", "InviteLink");
-				inviteFriendObject.put("title", "邀请加入项目");
+				inviteFriendObject.put("title", "邀请加入账本");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
-				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入项目: "+project.getName()+"，一起参与记账。");
+				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -170,7 +170,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
         intent.putExtra(Intent.EXTRA_TEXT, sendInviteDetail.getText()+"\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-        startActivity(Intent.createChooser(intent, "邀请项目成员")); 
+        startActivity(Intent.createChooser(intent, "邀请账本成员")); 
         getActivity().finish();
 	}
 	
