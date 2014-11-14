@@ -145,9 +145,6 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_qqFriend){
 			inviteFriend("QQ");
 			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_linksmanage){
-			inviteFriend("QQ");
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

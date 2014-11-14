@@ -1,0 +1,99 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:hyj="http://schemas.android.com/apk/res/com.hoyoji.hoyoji_android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".InviteLinkFormFragment" >
+
+   <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/inviteLinkFormFragment_textView_date"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/inviteLinkFormFragment_textView_date" />
+
+        <EditText
+            android:id="@+id/inviteLinkFormFragment_editText_date"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|right" 
+            android:enabled="false"
+	    	android:ellipsize="start"
+            android:hint="@string/inviteLinkFormFragment_editText_hint_date" 
+                android:maxLines="1"
+                android:singleLine="true">
+        </EditText>
+
+    </LinearLayout>
+    
+   <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/inviteLinkFormFragment_textView_state"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/inviteLinkFormFragment_textView_state" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <RadioButton
+                android:id="@+id/inviteLinkFormFragment_RadioButton_closeState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Close" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/inviteLinkFormFragment_RadioButton_openState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open" >
+            </RadioButton>
+        </RadioGroup>
+        
+    </LinearLayout>
+    
+   <com.hoyoji.android.hyjframework.view.HyjRemarkField
+          android:id="@+id/inviteLinkFormFragment_hyjRemarkField_description"
+          hyj:style="no_label"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          hyj:hintText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description"
+          hyj:labelText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description" />
+    
+	<!-- <Button
+	    android:id="@+id/inviteLinkFormFragment_button_closeLink"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/inviteLinkFormFragment_button_closeLink"/>
+	
+	<Button
+	    android:id="@+id/inviteLinkFormFragment_button_openLink"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/inviteLinkFormFragment_button_openLink"/> -->
+	<Button
+	    android:id="@id/button_save"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/inviteLinkFormFragment_button_onSave"/>
+	
+</LinearLayout>

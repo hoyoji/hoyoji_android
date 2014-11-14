@@ -123,6 +123,10 @@
                 android:title="收支分类"
                 hoyoji:showAsAction="never"/>
             <item
+		        android:id="@+id/friendListFragment_action_friend_invite_linksmanage"
+		        android:title="链接管理"
+		        hoyoji:showAsAction="never"/>
+            <item
                 android:id="@+id/homeListFragment_action_setting"
                 android:title="设置"
                 hoyoji:showAsAction="never"/>

@@ -595,6 +595,11 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
 					R.string.expense_income_viewpager_listFragment_title, null);
 			return true;
+
+		case R.id.friendListFragment_action_friend_invite_linksmanage:
+			openActivityWithFragment(InviteLinkListFragment.class, R.string.systemSettingFormFragment_invite_linksmanage, null);
+			return true;
+			
 		case R.id.homeListFragment_action_setting:
 			openActivityWithFragment(SystemSettingFormFragment.class,
 					R.string.systemSettingFormFragment_title, null);
