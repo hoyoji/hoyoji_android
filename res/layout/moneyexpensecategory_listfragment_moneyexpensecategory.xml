@@ -18,6 +18,8 @@
               android:layout_height="match_parent"
         	  android:choiceMode="singleChoice" 
         	  android:layout_marginBottom="48dp"
+              android:divider="#F3E7CB"
+              android:dividerHeight="1dp"
               android:drawSelectorOnTop="true"/>
     <Button 
         android:id="@+id/moneyExpenseCategory_list_button_addMainCategory"
