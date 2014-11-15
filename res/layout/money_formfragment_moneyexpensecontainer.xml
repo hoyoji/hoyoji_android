@@ -333,7 +333,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_rectangle_round_5"     
+            android:background="#FF0000"     
+            android:textColor="@android:color/white"
             android:text="@string/app_action_save" />
         
         <Button
@@ -341,7 +342,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_rectangle_round_5"     
+            android:background="#FF0000"     
+            android:textColor="@android:color/white"
             android:text="@string/app_action_save_template" />
 
         <Button
@@ -350,7 +352,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/app_action_delete"
-            android:background="@drawable/button_rectangle_round_5"       
+            android:background="@drawable/button_rectangle"       
             android:textColor="#FF0000" />
     </LinearLayout>
 
