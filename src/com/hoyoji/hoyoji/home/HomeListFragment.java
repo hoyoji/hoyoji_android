@@ -107,6 +107,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private int mImageBackgroundColor = Color.parseColor("#FF4C32");
 	@Override
 	public Integer useContentView() {
 		return R.layout.home_listfragment_home;
@@ -602,7 +603,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_unread);
+			imageView.setDefaultImage(R.drawable.ic_action_person);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((Message)object).getFromUserId());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
@@ -674,7 +676,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyExpense)object).getPicture());
 			
 			if(view.getTag() == null){
@@ -749,7 +752,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyIncome)object).getPicture());
 
 			if(view.getTag() == null){
@@ -810,7 +814,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyExpenseContainer)object).getPicture());
 			
 			if(view.getTag() == null){
@@ -867,7 +872,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -923,7 +929,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyDepositIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -980,7 +987,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyDepositReturnContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1048,7 +1056,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyTransfer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1106,7 +1115,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1158,7 +1168,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyDepositExpenseContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1214,7 +1225,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyLend)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1267,7 +1279,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyReturn)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1320,7 +1333,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1377,7 +1391,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture);
+			imageView.setBackgroundColor(mImageBackgroundColor );
 			imageView.setImage(((MoneyPayback)object).getPicture());
 
 			if(view.getTag() == null){

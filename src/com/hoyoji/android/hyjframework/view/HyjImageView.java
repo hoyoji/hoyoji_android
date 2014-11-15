@@ -21,20 +21,24 @@ import com.hoyoji.hoyoji.models.Picture;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.widget.ImageView;
 
 public class HyjImageView extends ImageView {
 	private String mPictureId = "";
-	private int mBackgroundResource = -1;
+//	private int mBackgroundResource = -1;
+	private Drawable mDefaultImage = null;
+	private Resources res;
 	
 	public HyjImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
+		res = context.getResources();
 //		this.setScaleType(ScaleType.FIT_XY);
 //		Resources r = context.getResources();
 //		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
@@ -43,6 +47,7 @@ public class HyjImageView extends ImageView {
 		
 	public HyjImageView(Context context) {
 		super(context);
+		res = context.getResources();
 	}
 //	public void setBackgroundResource(int resId){
 //		if(mBackgroundResource == -1 || resId != mBackgroundResource){
@@ -55,10 +60,11 @@ public class HyjImageView extends ImageView {
 			if(mPictureId != null){
 				mPictureId = null;
 			}
-			if(this.getBackground() == null) {
-				this.setBackgroundResource(R.drawable.ic_action_picture);
+			if(this.mDefaultImage != null) {
+				this.setImageDrawable(this.mDefaultImage);
+			} else {
+				setImageDrawable(null);
 			}
-			setImageDrawable(null);
 		} else if(picture.getId().equals(mPictureId)){
 			return;
 		} else {
@@ -131,5 +137,9 @@ public class HyjImageView extends ImageView {
 		mPictureId = id;
 		HyjBitmapWorkerAsyncTask.loadRemoteBitmap(id, HyjApplication.getServerUrl()+"fetchImageIcon.php", this);
 		
+	}
+
+	public void setDefaultImage(int img) {
+		mDefaultImage = res.getDrawable(img);
 	}
 }
