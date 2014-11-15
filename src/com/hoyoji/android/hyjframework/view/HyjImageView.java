@@ -34,6 +34,7 @@ public class HyjImageView extends ImageView {
 	private String mPictureId = "";
 //	private int mBackgroundResource = -1;
 	private Drawable mDefaultImage = null;
+	private int mDefaultImageId = -1;
 	private Resources res;
 	
 	public HyjImageView(Context context, AttributeSet attrs) {
@@ -140,6 +141,9 @@ public class HyjImageView extends ImageView {
 	}
 
 	public void setDefaultImage(int img) {
-		mDefaultImage = res.getDrawable(img);
+		if(img != this.mDefaultImageId){
+			this.mDefaultImageId = img;
+			mDefaultImage = res.getDrawable(img);
+		}
 	}
 }

@@ -46,6 +46,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	private ViewGroup mHeaderViewSharedProject;
+	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
 	
 	public interface OnSelectSubProjectsListener {
 		public void onSelectSubProjectsListener(String parentProject, String title);
@@ -240,7 +241,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		imageButton.setEnabled(false);
 
 		ImageView picture = (ImageView)view.findViewById(R.id.projectListItem_picture);
-		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_local_project));
+		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
+		picture.setBackgroundColor(Color.parseColor("#FDC54D"));
 		picture.setEnabled(false);
 		
 		((TextView)view.findViewById(R.id.projectListItem_name)).setText(R.string.projectListFragment_title_shared_project);
@@ -344,11 +346,14 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			view.setTag(cursor.getString(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.projectListItem_picture){
+			ImageView imageView= (ImageView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				((ImageView)view).setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_local_project));
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			} else {
-				((ImageView)view).setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_share));
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			}
 			
 			if(view.getTag() == null){

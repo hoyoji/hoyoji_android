@@ -65,6 +65,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	private IWXAPI api;
 	private QQShare mQQShare = null;
 	public static QQAuth mQQAuth;
+
+	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
 	
 	@Override
 	public Integer useContentView() {
@@ -461,15 +463,18 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setDefaultImage(R.drawable.ic_action_person_white);
+			imageView.setBackgroundColor(mImageBackgroundColor);
 			if(cursor.getString(columnIndex) != null){
 				User user = HyjModel.getModel(User.class, cursor.getString(columnIndex));
 				if(user != null){
-					((HyjImageView)view).setImage(user.getPictureId());
+					imageView.setImage(user.getPictureId());
 				} else {
-					((HyjImageView)view).setImage((Picture)null);
+					imageView.setImage((Picture)null);
 				}
 			} else {
-				((HyjImageView)view).setImage((Picture)null);
+				imageView.setImage((Picture)null);
 			}
 	 		if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){

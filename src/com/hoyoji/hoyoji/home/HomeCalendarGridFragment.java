@@ -117,8 +117,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	private HyjCalendarGrid mCalendarGridView;
 	
 	DateFormat df = SimpleDateFormat.getDateInstance();
-	private int mImageBackgroundColorExpense = Color.parseColor("#FF4C32");
-	private int mImageBackgroundColorIncome = Color.parseColor("#FF4C32");
+//	private int mImageBackgroundColorExpense = Color.parseColor("#FF4C32");
+//	private int mImageBackgroundColorIncome = Color.parseColor("#FF4C32");
 	
 	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
 	
@@ -275,8 +275,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		mImageBackgroundColorExpense = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
-		mImageBackgroundColorIncome = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
+//		mImageBackgroundColorExpense = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
+//		mImageBackgroundColorIncome = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
@@ -873,7 +873,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColorExpense);
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyExpense)object).getPicture());
 			
 			if(view.getTag() == null){
@@ -1011,7 +1011,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColorExpense);
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyExpenseContainer)object).getPicture());
 			
 			if(view.getTag() == null){
@@ -1069,7 +1069,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColorIncome );
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()) );
 			imageView.setImage(((MoneyIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1312,7 +1312,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColorIncome );
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()) );
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 
 			if(view.getTag() == null){
