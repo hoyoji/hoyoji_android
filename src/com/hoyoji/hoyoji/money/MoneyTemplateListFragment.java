@@ -16,15 +16,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
 	private ArrayList<String> al = null;
@@ -103,16 +104,15 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			return true;
 			
 		} else if(view.getId() == R.id.homeListItem_amount){
-			((HyjNumericView)view).setPrefix("¥");
+			((HyjNumericView)view).setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
 			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_picture){
 //			HyjImageView imageView = (HyjImageView)view;
 //			imageView.setImage(cursor.getString(columnIndex));
+			((HyjImageView)view).setImage((Picture)null);
 			if (jsonObj.optString("pictureId") != null){
 				((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
-			}else{
-				((HyjImageView)view).setImage((Picture)null);
 			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_remark){
@@ -125,13 +125,14 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(jsonObj.optString("projectId"));
+			Project project = HyjModel.getModel(Project.class, jsonObj.optString("projectId"));
+			((TextView)view).setText(project.getDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
 			return true;
 		}else {
-			return true;
+			return false;
 		}
 	}
 }
