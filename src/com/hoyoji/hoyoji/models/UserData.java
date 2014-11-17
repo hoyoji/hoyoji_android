@@ -175,24 +175,24 @@ public class UserData extends HyjModel {
 
 	public String getIncomeColor() {
 		if(mIncomeColor == null || mIncomeColor.length() == 0){
-			return "#EE4023";
+			return "#" + Integer.toHexString(HyjApplication.getInstance().getResources().getColor(R.color.hoyoji_red)) ;//"#E95055";
 		}
 		return mIncomeColor;
 	}
 
 	public void setIncomeColor(String mIncomeColor) {
-		this.mIncomeColor = "#" + mIncomeColor.substring(2, 8);
+		this.mIncomeColor = "#" + mIncomeColor;
 	}
 	
 	public String getExpenseColor() {
 		if(mExpenseColor == null || mExpenseColor.length() == 0){
-			return "#339900";
+			return "#" + Integer.toHexString(HyjApplication.getInstance().getResources().getColor(R.color.hoyoji_green)); //"#339900";
 		}
 		return mExpenseColor;
 	}
 
 	public void setExpenseColor(String mExpenseColor) {
-		this.mExpenseColor = "#" + mExpenseColor.substring(2, 8);
+		this.mExpenseColor = "#" + mExpenseColor;
 	}
 	
 	public boolean ismPhoneVerified() {

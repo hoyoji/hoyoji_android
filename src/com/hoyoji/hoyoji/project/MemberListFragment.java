@@ -429,16 +429,24 @@ public class MemberListFragment extends HyjUserListFragment{
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_picture) {
+			HyjImageView imageView = (HyjImageView)view;
+			imageView .setDefaultImage(R.drawable.ic_action_person_white);
 			String friendUserId = cursor.getString(columnIndex);
 			if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user == null){
-					((HyjImageView)view).setImage((Picture)null);
+					imageView.setImage((Picture)null);
 				} else {
-					((HyjImageView)view).setImage(user.getPictureId());
+					imageView.setImage(user.getPictureId());
+				}
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				} else {
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
 				}
 			} else {
 				((HyjImageView)view).setImage((Picture)null);
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {

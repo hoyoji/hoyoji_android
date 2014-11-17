@@ -22,7 +22,7 @@
         <item name="android:colorForegroundInverse">@android:color/background_light</item> -->
         
         <item name="actionBarStyle">@style/AppTheme.ActionBar</item>    
-        <item name="popupMenuStyle">@style/AppTheme.ActionBar.PopupMenu</item>
+        <!-- <item name="popupMenuStyle">@style/AppTheme.ActionBar.PopupMenu</item> -->
     </style>
     
     <style name="AppTheme.ActionBar.PopupMenu"
