@@ -994,15 +994,14 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
-				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			}
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			
 			numericView.setPrefix(((MoneyExpenseContainer)object).getProject().getCurrencySymbol());
 			numericView.setSuffix(null);
@@ -1052,6 +1051,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
