@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -51,6 +54,7 @@ import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -105,6 +109,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	
 	private ImageButton calculatorTextView = null;
 	
+	private Button app_action_save_template = null;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.money_formfragment_moneyincomecontainer;
@@ -122,12 +128,27 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncomeContainer.hasEditPermission();
 		} else {
 			moneyIncomeContainer = new MoneyIncomeContainer();
-			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
-			if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
-				moneyIncomeContainer.setMoneyAccountId(moneyAccountId);
-			}
-			if(intent.getStringExtra("counterpartId") != null){
-				moneyIncomeContainer.setIsImported(true);
+			
+			String temPlateData = intent.getStringExtra("DATA");
+			JSONObject temPlateJso = null;
+			if (temPlateData != null) {
+				try {
+					temPlateJso = new JSONObject(temPlateData);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				temPlateJso.remove("id");
+				temPlateJso.remove("date");
+				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
+			} else{
+				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+				if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
+					moneyIncomeContainer.setMoneyAccountId(moneyAccountId);
+				}
+				if(intent.getStringExtra("counterpartId") != null){
+					moneyIncomeContainer.setIsImported(true);
+				}
 			}
 		}
 		
@@ -302,6 +323,22 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 								HyjCalculatorFormFragment.class,
 								R.string.hyjCalculatorFormFragment_title,
 								bundle, GET_AMOUNT);
+			}
+		});
+		
+		app_action_save_template = (Button) getView().findViewById(R.id.button_save_template);
+		app_action_save_template.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				fillData();
+				if(validate()){
+					MoneyTemplate moneyTemplate = new MoneyTemplate();
+					moneyTemplate.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
+					moneyTemplate.setType("MoneyIncome");
+					moneyTemplate.setData(mMoneyIncomeContainerEditor.getModelCopy().toJSON().toString());
+					moneyTemplate.save();
+					HyjUtil.displayToast(R.string.app_save_template_success);
+				}
 			}
 		});
 
@@ -776,6 +813,34 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mRemarkFieldRemark.setError(mMoneyIncomeContainerEditor.getValidationError("remark"));
 		mApportionFieldApportions.setError(mMoneyIncomeContainerEditor.getValidationError("apportionTotalAmount"));
 	}
+	
+	private boolean validate(){
+		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null && !mMoneyIncomeContainerEditor.getModelCopy().hasAddNewPermission(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
+			HyjUtil.displayToast(R.string.app_permission_no_addnew);
+		}else if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
+			HyjUtil.displayToast(R.string.app_permission_no_edit);
+		}else{
+		
+			mMoneyIncomeContainerEditor.validate();
+			
+			if (mApportionFieldApportions.getCount() > 0) {
+				if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(mApportionFieldApportions.getTotalAmount())) {
+					mMoneyIncomeContainerEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
+				} else {
+					mMoneyIncomeContainerEditor.removeValidationError("apportionTotalAmount");
+				}
+			} else {
+				mMoneyIncomeContainerEditor.removeValidationError("apportionTotalAmount");
+			}
+			
+			if(mMoneyIncomeContainerEditor.hasValidationErrors()){
+				showValidatioErrors();
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	 @Override
 	public void onSave(View v){
@@ -783,27 +848,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		fillData();
 		
-		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null && !mMoneyIncomeContainerEditor.getModelCopy().hasAddNewPermission(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
-			HyjUtil.displayToast(R.string.app_permission_no_addnew);
-		}else if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !hasEditPermission){
-			HyjUtil.displayToast(R.string.app_permission_no_edit);
-		}else{
 		
-		mMoneyIncomeContainerEditor.validate();
-		
-		if (mApportionFieldApportions.getCount() > 0) {
-			if (mNumericAmount.getNumber() != null && !mNumericAmount.getNumber().equals(mApportionFieldApportions.getTotalAmount())) {
-				mMoneyIncomeContainerEditor.setValidationError("apportionTotalAmount",R.string.moneyApportionField_select_toast_apportion_totalAmount_not_equal);
-			} else {
-				mMoneyIncomeContainerEditor.removeValidationError("apportionTotalAmount");
-			}
-		} else {
-			mMoneyIncomeContainerEditor.removeValidationError("apportionTotalAmount");
-		}
-		
-		if(mMoneyIncomeContainerEditor.hasValidationErrors()){
-			showValidatioErrors();
-		} else {
 			try {
 				ActiveAndroid.beginTransaction();
 				
@@ -937,8 +982,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			} finally {
 			    ActiveAndroid.endTransaction();
 			}
-		 }
-	  }
+		 
 	}	
 
 	private void savePictures(){
