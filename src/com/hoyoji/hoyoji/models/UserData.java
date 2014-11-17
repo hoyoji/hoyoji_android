@@ -181,7 +181,7 @@ public class UserData extends HyjModel {
 	}
 
 	public void setIncomeColor(String mIncomeColor) {
-		this.mIncomeColor = "#" + mIncomeColor.substring(2, 8);
+		this.mIncomeColor = "#" + mIncomeColor;
 	}
 	
 	public String getExpenseColor() {
@@ -192,7 +192,7 @@ public class UserData extends HyjModel {
 	}
 
 	public void setExpenseColor(String mExpenseColor) {
-		this.mExpenseColor = "#" + mExpenseColor.substring(2, 8);
+		this.mExpenseColor = "#" + mExpenseColor;
 	}
 	
 	public boolean ismPhoneVerified() {
