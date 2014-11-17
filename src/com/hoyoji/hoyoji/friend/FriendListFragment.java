@@ -66,7 +66,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	private QQShare mQQShare = null;
 	public static QQAuth mQQAuth;
 
-	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
+//	private int mImageBackgroundColor = R.color.hoyoji_yellow;
 	
 	@Override
 	public Integer useContentView() {
@@ -473,11 +473,11 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				if(HyjApplication.getInstance().getCurrentUser().getId().equals(userId)){
 					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 				} else {
-					imageView.setBackgroundColor(Color.parseColor("#339900"));
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
 				}
 			} else {
 				imageView.setImage((Picture)null);
-				imageView.setBackgroundColor(mImageBackgroundColor);
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
 			}
 
 			

@@ -120,7 +120,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //	private int mImageBackgroundColorExpense = Color.parseColor("#FF4C32");
 //	private int mImageBackgroundColorIncome = Color.parseColor("#FF4C32");
 	
-	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
+//	private int mImageBackgroundColor = R.color.hoyoji_red;
 	
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -949,7 +949,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyIncome)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1126,7 +1126,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyDepositIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1184,7 +1184,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyDepositReturnContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1253,7 +1253,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyTransfer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1365,7 +1365,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyDepositExpenseContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1422,7 +1422,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyLend)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1476,7 +1476,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyReturn)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1530,7 +1530,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1588,7 +1588,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(mImageBackgroundColor );
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red) );
 			imageView.setImage(((MoneyPayback)object).getPicture());
 
 			if(view.getTag() == null){

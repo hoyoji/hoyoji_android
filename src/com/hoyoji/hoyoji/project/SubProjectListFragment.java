@@ -46,7 +46,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	private ViewGroup mHeaderViewSharedProject;
-	private int mImageBackgroundColor = Color.parseColor("#FDC54D");
+//	private int mImageBackgroundColor = R.color.hoyoji_yellow;
 	
 	public interface OnSelectSubProjectsListener {
 		public void onSelectSubProjectsListener(String parentProject, String title);
@@ -349,10 +349,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			ImageView imageView= (ImageView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				imageView.setBackgroundColor(mImageBackgroundColor);
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			} else {
-				imageView.setBackgroundColor(Color.parseColor("#339900"));
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			}
 			

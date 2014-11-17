@@ -521,7 +521,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
-				numericView.setTextColor(Color.parseColor("#339900"));
+				numericView.setTextColor(getResources().getColor(R.color.hoyoji_green));
 			}
 			
 			numericView.setPrefix(((MoneyDepositReturnContainer)object).getProject().getCurrencySymbol());
