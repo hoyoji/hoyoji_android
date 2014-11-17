@@ -388,6 +388,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageView_camera);
+		takePictureButton.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		takePictureButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

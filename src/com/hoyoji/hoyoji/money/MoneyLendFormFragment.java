@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.money;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -270,6 +271,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		});
 		
 		ImageView takePictureButton = (ImageView) getView().findViewById(R.id.moneyLendFormFragment_imageView_camera);	
+		takePictureButton.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

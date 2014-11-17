@@ -125,7 +125,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
-		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_stat_header, null);
+		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_listfragment_home_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
 		return view;

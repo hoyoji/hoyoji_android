@@ -228,8 +228,8 @@
 					           android:id="@id/button_save"
 					           android:layout_width="0dp"
 					           android:layout_height="match_parent"
-					           android:src="@drawable/ic_action_accept"
-					           android:background="@drawable/button_circle_20"
+					           android:src="@drawable/ic_action_accept_white"
+					           android:background="@drawable/button_circle_solid_20"
 					           android:layout_weight="1"
 					           android:text="@string/app_action_save" />
 			

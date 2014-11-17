@@ -2,7 +2,7 @@
 <resources>
     <color name="hoyoji_red">#E95055</color><!--红色 -->
     
-    <color name="hoyoji_yellow">#FBC700</color><!--黄色 -->
+    <color name="hoyoji_yellow">#FF9B37</color><!--黄色 -->
     
     <color name="hoyoji_green">#0C9C78</color><!--绿色 -->
     
@@ -39,6 +39,7 @@
     <color name="bisque">#FFE4C4</color><!--桔黄色 -->
 
     <color name="moccasin">#FFE4B5</color><!--鹿皮色 -->
+    
     <color name="navajowhite">#FFDEAD</color><!--纳瓦白 -->
 
     <color name="peachpuff">#FFDAB9</color><!--桃色 -->
@@ -124,6 +125,7 @@
 -->
 
     <color name="goldenrod">#DAA520</color><!--金麒麟色 -->
+    
     <color name="orchid">#DA70D6</color><!--淡紫色 -->
 
     <color name="thistle">#D8BFD8</color><!--蓟色 -->
@@ -164,6 +166,7 @@
     <color name="lightblue">#ADD8E6</color><!--亮蓝色 -->
 
     <color name="darkgray">#A9A9A9</color><!--暗灰色 -->
+    
     <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
 
     <color name="brown">#A52A2A</color><!--褐色 -->
@@ -189,6 +192,7 @@
     <color name="darkred">#8B0000</color><!--暗红色 -->
 
     <color name="blueviolet">#8A2BE2</color><!-- 紫罗兰蓝色-->
+    
     <color name="lightskyblue">#87CEFA</color><!--亮天蓝色-->
 
     <color name="skyblue">#87CEEB</color><!--天蓝色 -->

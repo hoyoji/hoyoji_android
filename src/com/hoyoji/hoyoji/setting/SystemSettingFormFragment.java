@@ -177,6 +177,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		}
 		
 		takePictureButton = (HyjImageView) getView().findViewById(R.id.systemSettingFormFragment_imageView_camera);	
+		takePictureButton.setDefaultImage(R.drawable.ic_action_person_white);
 		takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
