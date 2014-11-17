@@ -156,17 +156,16 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		
 		JSONObject inviteFriendObject = new JSONObject();
 		final String id = UUID.randomUUID().toString();
-   		try {
-				inviteFriendObject.put("id", id);
-				inviteFriendObject.put("__dataType", "InviteLink");
-				inviteFriendObject.put("title", "邀请成为好友");
-				inviteFriendObject.put("type", "Friend");
-				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。");
-				inviteFriendObject.put("state", "Open");
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		try {
+			inviteFriendObject.put("id", id);
+			inviteFriendObject.put("__dataType", "InviteLink");
+			inviteFriendObject.put("title", "邀请成为好友");
+			inviteFriendObject.put("type", "Friend");
+			inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。");
+			inviteFriendObject.put("state", "Open");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
    	 
    	// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
@@ -262,13 +261,11 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
             @Override
             public void onComplete(Object response) {
-                // TODO Auto-generated method stub
 //                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
             }
 
             @Override
             public void onError(UiError e) {
-                // TODO Auto-generated method stub
 //                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
             }
 
@@ -463,19 +460,27 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_picture){
+			String userId = cursor.getString(columnIndex);
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_person_white);
-			imageView.setBackgroundColor(mImageBackgroundColor);
 			if(cursor.getString(columnIndex) != null){
-				User user = HyjModel.getModel(User.class, cursor.getString(columnIndex));
+				User user = HyjModel.getModel(User.class, userId);
 				if(user != null){
 					imageView.setImage(user.getPictureId());
 				} else {
 					imageView.setImage((Picture)null);
 				}
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(userId)){
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				} else {
+					imageView.setBackgroundColor(Color.parseColor("#339900"));
+				}
 			} else {
 				imageView.setImage((Picture)null);
+				imageView.setBackgroundColor(mImageBackgroundColor);
 			}
+
+			
 	 		if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
 					@Override

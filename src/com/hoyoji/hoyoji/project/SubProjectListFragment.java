@@ -242,7 +242,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 
 		ImageView picture = (ImageView)view.findViewById(R.id.projectListItem_picture);
 		picture.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
-		picture.setBackgroundColor(Color.parseColor("#FDC54D"));
+		picture.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 		picture.setEnabled(false);
 		
 		((TextView)view.findViewById(R.id.projectListItem_name)).setText(R.string.projectListFragment_title_shared_project);
@@ -349,10 +349,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			ImageView imageView= (ImageView)view;
 			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				imageView.setBackgroundColor(mImageBackgroundColor);
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			} else {
-				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+				imageView.setBackgroundColor(Color.parseColor("#339900"));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			}
 			
