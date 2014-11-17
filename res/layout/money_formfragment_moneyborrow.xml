@@ -29,7 +29,8 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_action_new_picture" />
+                android:background="@color/hoyoji_yellow"
+                android:src="@drawable/ic_action_new_picture_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -445,6 +445,7 @@ public class MoneyApportionField extends GridView {
 				iv = inflater.inflate(R.layout.money_listitem_moneyapportion, null);
 				vh = new ViewHolder();
 				vh.imageViewPicture = (HyjImageView) iv.findViewById(R.id.moneyApportionListItem_picture);
+				vh.imageViewPicture.setDefaultImage(R.drawable.ic_action_person_white);
 				vh.textViewAmount = (HyjNumericView) iv.findViewById(R.id.moneyApportionListItem_amount);
 				vh.textViewPercentage = (TextView) iv.findViewById(R.id.moneyApportionListItem_percentage);
 				vh.textViewFriendName = (TextView) iv.findViewById(R.id.moneyApportionListItem_friendName);
@@ -504,8 +505,14 @@ public class MoneyApportionField extends GridView {
 			}
 			if(vh.apportionItem != getItem(position)){
 				vh.apportionItem = getItem(position);
-				
+
+				vh.imageViewPicture.setBackgroundColor(self.r.getColor(R.color.hoyoji_yellow));
 				if(vh.apportionItem.getApportion().getFriendUser() != null){
+					if(vh.apportionItem.getApportion().getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						vh.imageViewPicture.setBackgroundColor(self.r.getColor(R.color.hoyoji_red));
+					} else {
+						vh.imageViewPicture.setBackgroundColor(self.r.getColor(R.color.hoyoji_green));
+					}
 					vh.imageViewPicture.setImage(vh.apportionItem.getApportion().getFriendUser().getPictureId());
 				} else if(vh.apportionItem.getApportion().getLocalFriendId() != null){
 					Friend friend = HyjModel.getModel(Friend.class, vh.apportionItem.getApportion().getLocalFriendId());
@@ -535,7 +542,7 @@ public class MoneyApportionField extends GridView {
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){
 				vh.textViewAmount.setPrefix(R.string.moneyListItem_apportion_to_be_removed);
 				vh.textViewAmount.setNumber(null);
-				vh.textViewAmount.setTextColor(Color.parseColor("hoyoji_red"));
+				vh.textViewAmount.setTextColor(self.r.getColor(R.color.hoyoji_red));
 				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 				vh.textViewFriendName.setPaintFlags(vh.textViewFriendName.getPaintFlags()
@@ -554,9 +561,9 @@ public class MoneyApportionField extends GridView {
 						& (~Paint.STRIKE_THRU_TEXT_FLAG));
 			}
 			if(vh.apportionItem.getProjectShareAuthorization() == null){
-				vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_non_project_member));
+				vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_non_project_member));
 			} else {
-				vh.textViewPercentage.setText(self.getResources().getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
+				vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
 			}
 			if(vh.apportionItem.getApportionType().equalsIgnoreCase("Average")){
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_average_apport);
