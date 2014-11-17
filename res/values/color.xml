@@ -2,9 +2,9 @@
 <resources>
     <color name="hoyoji_red">#E95055</color><!--红色 -->
     
-    <color name="hoyoji_yellow">#FDC54D</color><!--红色 -->
+    <color name="hoyoji_yellow">#FBC770</color><!--黄色 -->
     
-    <color name="hoyoji_green">#339944</color><!--红色 -->
+    <color name="hoyoji_green">#339944</color><!--绿色 -->
     
     <color name="hoyoji_lightgray">#F8F8F8</color><!--浅灰色 -->
     
