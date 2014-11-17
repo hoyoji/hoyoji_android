@@ -174,7 +174,7 @@ public class UserData extends HyjModel {
 
 	public String getIncomeColor() {
 		if(mIncomeColor == null || mIncomeColor.length() == 0){
-			return "#FF0000";
+			return "hoyoji_red";
 		}
 		return mIncomeColor;
 	}

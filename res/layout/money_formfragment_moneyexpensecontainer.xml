@@ -67,7 +67,7 @@
                     android:layout_height="1dip"
                     android:layout_marginTop="5dip"
                     android:layout_marginBottom="5dip"
-                    android:background="@drawable/line_dash" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
                     android:id="@+id/moneyExpenseContainerFormFragment_textField_date"
@@ -86,7 +86,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/moneyExpenseContainerFormFragment_textField_moneyExpenseCategory"
@@ -103,7 +103,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="@drawable/line_dash" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyExpenseContainerFormFragment_selectorField_project"
@@ -146,7 +146,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="@drawable/line_dash" />
+                android:background="@drawable/line_divider" />
 
             <LinearLayout
                 android:id="@+id/moneyExpenseContainerFormFragment_linearLayout_exchangeRate"
@@ -181,7 +181,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -232,7 +232,7 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="20dip"
             android:layout_marginTop="2dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <com.hoyoji.hoyoji.money.MoneyApportionField
             android:id="@+id/moneyExpenseContainerFormFragment_apportionField"
@@ -246,7 +246,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <ImageButton
             android:id="@id/expand_more"
@@ -261,7 +261,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
         
         <LinearLayout 
             android:id="@+id/moneyExpenseContainerFormFragment_expandMore"
@@ -284,7 +284,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 
         <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/projectFormFragment_selectorField_financialOwner"
@@ -307,7 +307,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
 		
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
             android:id="@+id/moneyExpenseContainerFormFragment_textField_remark"
@@ -324,7 +324,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="@drawable/line_dash" />
+            android:background="@drawable/line_divider" />
         
 		</LinearLayout>
 
@@ -333,8 +333,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="#FF0000"     
-            android:textColor="@android:color/white"
+            android:background="@drawable/button_rectangle"       
+            android:textColor="@color/hoyoji_red" 
             android:text="@string/app_action_save" />
         
         <Button
@@ -342,8 +342,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="#FF0000"     
-            android:textColor="@android:color/white"
+            android:background="@drawable/button_rectangle"       
+            android:textColor="@color/hoyoji_red" 
             android:text="@string/app_action_save_template" />
 
         <Button
@@ -353,7 +353,7 @@
             android:layout_marginTop="20dp"
             android:text="@string/app_action_delete"
             android:background="@drawable/button_rectangle"       
-            android:textColor="#FF0000" />
+            android:textColor="@color/hoyoji_red" />
     </LinearLayout>
 
 </ScrollView>

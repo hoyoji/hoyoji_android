@@ -535,7 +535,7 @@ public class MoneyApportionField extends GridView {
 			if(vh.apportionItem.getState() == ApportionItem.DELETED){
 				vh.textViewAmount.setPrefix(R.string.moneyListItem_apportion_to_be_removed);
 				vh.textViewAmount.setNumber(null);
-				vh.textViewAmount.setTextColor(Color.parseColor("#FF0000"));
+				vh.textViewAmount.setTextColor(Color.parseColor("hoyoji_red"));
 				vh.textViewPercentage.setPaintFlags(vh.textViewPercentage.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 				vh.textViewFriendName.setPaintFlags(vh.textViewFriendName.getPaintFlags()

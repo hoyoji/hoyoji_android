@@ -40,6 +40,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_action_remove"
-        android:textColor="#FF0000" />
+        android:textColor="@color/hoyoji_red" />
 
 </LinearLayout>

@@ -11,9 +11,9 @@
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-              android:divider="@drawable/line_dash"
+              android:divider="@drawable/line_divider"
               android:dividerHeight="1dp"
-              android:childDivider="@drawable/line_dash"
+              android:childDivider="@drawable/line_divider"
         android:drawSelectorOnTop="false" />
 
    <!--  <TextView

@@ -487,7 +487,7 @@ public class MemberListFragment extends HyjUserListFragment{
 //				if(actualTotal.equals(0.0)){
 //					numericView.setTextColor(Color.parseColor("#000000"));
 //				}else{
-//			    	numericView.setTextColor(Color.parseColor("#FF0000"));
+//			    	numericView.setTextColor(Color.parseColor("hoyoji_red"));
 //				}
 			}
 			numericView.setSuffix(null);
@@ -517,7 +517,7 @@ public class MemberListFragment extends HyjUserListFragment{
 //				if(apportionTotal.equals(0.0)){
 //					numericView.setTextColor(Color.parseColor("#000000"));
 //				}else{
-//				numericView.setTextColor(Color.parseColor("#FF0000"));
+//				numericView.setTextColor(Color.parseColor("hoyoji_red"));
 //				}
 			}
 			numericView.setSuffix(null);
