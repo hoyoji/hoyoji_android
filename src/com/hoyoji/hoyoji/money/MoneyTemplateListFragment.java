@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,17 +13,21 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
+import com.hoyoji.hoyoji.models.Picture;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
+	private ArrayList<String> al = null;
 
 	@Override
 	public Integer useContentView() {
@@ -33,8 +39,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"data", "data", "data"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount},
+				new String[] {"data", "data", "data", "data", "data", "data"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount ,R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_title},
 				0); 
 	}	
 
@@ -52,6 +58,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		al = new ArrayList<String>();
 	}
 	
 	@Override  
@@ -59,11 +66,14 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		if(id == -1) {
 			 return;
 		}
+		Bundle bundle = new Bundle();
+//		HyjModel object = (HyjModel) getListAdapter().getItem(position);
+		bundle.putString("DATA", al.get((position +1)*3-1));
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
 		if(template.getType().equals("MoneyExpense")) {
-			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
 		} else if(template.getType().equals("MoneyIncome")) {
-			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
 		}
 		
     }
@@ -73,6 +83,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //		String id = cursor.getString(cursor.getColumnIndex("id"));
 //		String type = cursor.getString(cursor.getColumnIndex("type")); 
 		String data = cursor.getString(cursor.getColumnIndex("data"));
+		al.add(data);
 		JSONObject jsonObj = null;
 		try {
 			jsonObj = new JSONObject(data);
@@ -91,7 +102,6 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //			}
 			return true;
 			
-		
 		} else if(view.getId() == R.id.homeListItem_amount){
 			((HyjNumericView)view).setPrefix("¥");
 			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
@@ -99,9 +109,28 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		}else if(view.getId() == R.id.homeListItem_picture){
 //			HyjImageView imageView = (HyjImageView)view;
 //			imageView.setImage(cursor.getString(columnIndex));
-			((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
+			if (jsonObj.optString("pictureId") != null){
+				((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
+			}else{
+				((HyjImageView)view).setImage((Picture)null);
+			}
 			return true;
-		} else {
+		}else if(view.getId() == R.id.homeListItem_remark){
+//			if(type.equals("MoneyExpense")){
+			if(jsonObj.optString("remark").equals("") || jsonObj.optString("remark") == null){
+				((TextView)view).setText("无备注");
+			}else{
+				((TextView)view).setText(jsonObj.optString("remark"));
+			}
+//			}
+			return true;
+		}else if(view.getId() == R.id.homeListItem_subTitle){
+			((TextView)view).setText(jsonObj.optString("projectId"));
+			return true;
+		}else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
+			return true;
+		}else {
 			return true;
 		}
 	}

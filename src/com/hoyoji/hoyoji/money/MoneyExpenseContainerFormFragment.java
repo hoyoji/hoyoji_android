@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.money;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -129,17 +130,36 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
+		
+		
+		
 		if (modelId != -1) {
 			moneyExpenseContainer = new Select().from(MoneyExpenseContainer.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
-			final String moneyAccountId = intent.getStringExtra("moneyAccountId");
-			if(moneyAccountId != null){
-				moneyExpenseContainer.setMoneyAccountId(moneyAccountId);
-			}
-			if(intent.getStringExtra("counterpartId") != null){
-				moneyExpenseContainer.setIsImported(true);
+			
+			String temPlateData = intent.getStringExtra("DATA");
+			JSONObject temPlateJso = null;
+			if (temPlateData != null) {
+				try {
+					temPlateJso = new JSONObject(temPlateData);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				temPlateJso.remove("id");
+				temPlateJso.remove("date");
+				moneyExpenseContainer.loadFromJSON(temPlateJso,false);
+			} else {
+				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
+				if(moneyAccountId != null){
+					moneyExpenseContainer.setMoneyAccountId(moneyAccountId);
+				}
+				if(intent.getStringExtra("counterpartId") != null){
+					moneyExpenseContainer.setIsImported(true);
+				}
+		
 			}
 		}
 				
@@ -147,8 +167,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		setupDeleteButton(mMoneyExpenseContainerEditor);
 
-		mImageFieldPicture = (HyjImageField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_imageField_picture);
+		mImageFieldPicture = (HyjImageField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageField_picture);
 		mImageFieldPicture.setImages(moneyExpenseContainer.getPictures());
 				
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_date);
@@ -164,13 +183,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			project = moneyExpenseContainer.getProject();
 		}
 		
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_selectorField_project);
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_project);
 
 		if (project != null) {
 			mSelectorFieldProject.setModelId(project.getId());
-			mSelectorFieldProject.setText(project.getDisplayName() + "("
-					+ project.getCurrencyId() + ")");
+			mSelectorFieldProject.setText(project.getDisplayName() + "("+ project.getCurrencyId() + ")");
 		}
 		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
 			@Override
@@ -215,14 +232,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 		
 		MoneyAccount moneyAccount = moneyExpenseContainer.getMoneyAccount();
-		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_selectorField_moneyAccount);
+		mSelectorFieldMoneyAccount = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_moneyAccount);
 
 		if (moneyAccount != null) {
 			mSelectorFieldMoneyAccount.setModelId(moneyAccount.getId());
-			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "("
-					+ moneyAccount.getCurrencyId() + ")");
+			mSelectorFieldMoneyAccount.setText(moneyAccount.getName() + "(" + moneyAccount.getCurrencyId() + ")");
 		}
+		
+		
 		mSelectorFieldMoneyAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -238,19 +255,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		});
 
 
-		mNumericExchangeRate = (HyjNumericField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_textField_exchangeRate);
+		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_exchangeRate);
 		mNumericExchangeRate.setNumber(moneyExpenseContainer.getExchangeRate());
 
-		mViewSeparatorExchange = (View) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_separatorField_exchange);
-		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_linearLayout_exchangeRate);
+		mViewSeparatorExchange = (View) getView().findViewById(R.id.moneyExpenseContainerFormFragment_separatorField_exchange);
+		mLinearLayoutExchangeRate = (LinearLayout) getView().findViewById(R.id.moneyExpenseContainerFormFragment_linearLayout_exchangeRate);
 
-		mSelectorFieldMoneyExpenseCategory = (HyjSelectorField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_textField_moneyExpenseCategory);
-		mSelectorFieldMoneyExpenseCategory.setText(moneyExpenseContainer
-				.getMoneyExpenseCategory());
+		mSelectorFieldMoneyExpenseCategory = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_moneyExpenseCategory);
+		mSelectorFieldMoneyExpenseCategory.setText(moneyExpenseContainer.getMoneyExpenseCategory());
 		if(moneyExpenseContainer.getMoneyExpenseCategoryMain() != null && moneyExpenseContainer.getMoneyExpenseCategoryMain().length() > 0){
 			mSelectorFieldMoneyExpenseCategory.setLabel(moneyExpenseContainer.getMoneyExpenseCategoryMain());
 		}
@@ -305,8 +317,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 //			}
 //		});
 		
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_textField_remark);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyExpenseContainer.getRemark());
 		mRemarkFieldRemark.setEditable(false);
 		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
@@ -419,8 +430,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mImageViewRefreshRate = (ImageView) getView().findViewById(
-				R.id.moneyExpenseContainerFormFragment_imageButton_refresh_exchangeRate);
+		mImageViewRefreshRate = (ImageView) getView().findViewById(R.id.moneyExpenseContainerFormFragment_imageButton_refresh_exchangeRate);
 		mImageViewRefreshRate.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -527,7 +537,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		}else{
 			setExchangeRate(true);
 		}
-		
 	}
 
 	@Override

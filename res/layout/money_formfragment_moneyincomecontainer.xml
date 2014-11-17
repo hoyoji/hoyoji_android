@@ -339,6 +339,14 @@
             android:text="@string/app_action_save" />
         
         <Button
+            android:id="@+id/button_save_template"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_rectangle"    
+            android:text="@string/app_action_save_template" />
+        
+        <Button
             android:id="@id/button_delete"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
