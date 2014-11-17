@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.hoyoji_android.R;
@@ -174,7 +175,7 @@ public class UserData extends HyjModel {
 
 	public String getIncomeColor() {
 		if(mIncomeColor == null || mIncomeColor.length() == 0){
-			return "hoyoji_red";
+			return "#EE4023";
 		}
 		return mIncomeColor;
 	}

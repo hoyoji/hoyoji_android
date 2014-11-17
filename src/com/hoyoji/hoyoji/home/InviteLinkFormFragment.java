@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +35,7 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
 	boolean mHasError = false;
 	private JSONObject jsonObj = null;
 	private String state = null;
-	
+	private Intent intent;
 	@Override
 	public Integer useContentView() {
 		return R.layout.link_formfragment_invite;
@@ -43,7 +44,7 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		Intent intent = getActivity().getIntent();
+		intent = getActivity().getIntent();
 		String inviteLink = intent.getStringExtra("INVITELINK_JSON_OBJECT");
 		
 		try {
@@ -90,7 +91,6 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
    		try {
    				inviteObject.put("id", jsonObj.optString("id"));
    				inviteObject.put("__dataType", "InviteLink");
-   				inviteObject.put("state", "邀请加入项目");
    				inviteObject.put("state", state);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -125,6 +125,8 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
 	public void onSave(){
 		super.onSave();
 		changeLinkState();
+		intent.putExtra("state", state);
+		getActivity().setResult(Activity.RESULT_OK, intent);
 	}
 	
 }

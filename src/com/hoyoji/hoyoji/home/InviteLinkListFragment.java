@@ -5,7 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -17,14 +19,27 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.hoyoji.friend.UserFormFragment;
+import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
+import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji_android.R;
 
 public class InviteLinkListFragment extends HyjUserListFragment {
-
+	private final static int INVITELINK_CHANGESTATE = 1;
 	@Override
 	public Integer useContentView() {
 		return R.layout.link_listfragment_invite;
@@ -39,6 +54,14 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		onQueryLinkList();
 	}
+	
+//	 @Override
+//	public void onResume() {
+//         // TODO Auto-generated method stub
+//         super.onResume();
+//         ((HyjJSONListAdapter) this.getListAdapter()).clear();
+//         onQueryLinkList();
+//     }
 
 	@Override
 	public void initLoader(int loaderId) {
@@ -85,7 +108,8 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 			
 			Bundle bundle = new Bundle();
 			bundle.putString("INVITELINK_JSON_OBJECT", jsonInviteLink.toString());
-			openActivityWithFragment(InviteLinkFormFragment.class, R.string.inviteLinkFormFragment_title, bundle);
+			bundle.putInt("position", position);
+			openActivityWithFragmentForResult(InviteLinkFormFragment.class, R.string.inviteLinkFormFragment_title, bundle, INVITELINK_CHANGESTATE);
 		}
 	}
 
@@ -94,6 +118,7 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 		try {
 			data.put("__dataType", "InviteLink");
 			data.put("__limit", getListPageSize());
+			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			data.put("__offset", 0);
 			data.put("__orderBy", "date ASC");
 		} catch (JSONException e) {
@@ -120,6 +145,7 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 		try {
 			data.put("__dataType", "InviteLink");
 			data.put("__limit", getListPageSize());
+			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			data.put("__offset", offset);
 			data.put("__orderBy", "date ASC");
 		} catch (JSONException e) {
@@ -159,5 +185,25 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 	public void setFooterLoadFinished(ListView l, int count){
 		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
         super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case INVITELINK_CHANGESTATE:
+			if (resultCode == Activity.RESULT_OK) {
+				String state = data.getStringExtra("state");
+				int position = data.getIntExtra("position", -1);
+				JSONObject object = ((HyjJSONListAdapter) this.getListAdapter()).getItem(position);
+				try {
+					object.put("state", state);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				((HyjJSONListAdapter) this.getListAdapter()).notifyDataSetChanged();
+			}
+			break;
+		}
 	}
 }
