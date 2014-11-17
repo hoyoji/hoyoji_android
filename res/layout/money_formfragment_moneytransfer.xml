@@ -66,7 +66,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
                     android:id="@+id/moneyTransferFormFragment_textField_date"
@@ -85,7 +85,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyTransferFormFragment_selectorField_transferOut"
@@ -139,7 +139,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -174,7 +174,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <com.hoyoji.android.hyjframework.view.HyjSelectorField
                 android:id="@+id/moneyTransferFormFragment_selectorField_transferIn"
@@ -193,7 +193,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -221,7 +221,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyTransferFormFragment_selectorField_project"
@@ -238,7 +238,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <LinearLayout
                 android:id="@+id/moneyTransferFormFragment_linearLayout_exchangeRate"
@@ -273,7 +273,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" 
+            android:background="@drawable/line_divider" 
             android:visibility="gone"/>
 
         <LinearLayout
@@ -304,7 +304,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjTextField
                     android:id="@+id/moneyTransferFormFragment_textField_transferProjectCurrency"
@@ -321,7 +321,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -355,7 +355,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" 
+            android:background="@drawable/line_divider" 
             android:visibility="gone"/>
 
         <LinearLayout
@@ -386,7 +386,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
                 
                 <com.hoyoji.android.hyjframework.view.HyjTextField
                     android:id="@+id/moneyTransferFormFragment_textField_transferInCurrency"
@@ -404,7 +404,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -439,7 +439,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <com.hoyoji.android.hyjframework.view.HyjRemarkField
             android:id="@+id/moneyTransferFormFragment_textField_remark"
@@ -456,7 +456,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <Button
             android:id="@id/button_save"

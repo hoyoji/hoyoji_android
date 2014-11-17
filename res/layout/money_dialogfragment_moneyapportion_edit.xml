@@ -33,7 +33,7 @@
         android:layout_height="1dip"
         android:layout_marginBottom="5dip"
         android:layout_marginTop="5dip"
-        android:background="#E0E0E0" />
+        android:background="@drawable/line_divider" />
 
     <Button
         android:id="@+id/moneyApportionDialogFragment_button_delete"

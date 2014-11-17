@@ -43,7 +43,7 @@
         android:layout_height="1dip"
     	android:layout_marginTop="10dip"
     	android:layout_marginBottom="10dip"
-        android:background="#E0E0E0" 
+        android:background="@drawable/line_divider" 
         />
 	 
 	    <com.hoyoji.android.hyjframework.view.HyjRemarkField
@@ -51,7 +51,7 @@
             hyj:style="top_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#E0E0E0"
+            android:background="@drawable/line_divider"
             android:padding="5dip"
             hyj:hintText="@string/userFormFragment_textView_hint_addFriend_request"/>
 	 

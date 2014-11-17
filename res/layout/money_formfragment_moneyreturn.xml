@@ -69,7 +69,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
                 <com.hoyoji.android.hyjframework.view.HyjDateTimeField
                     android:id="@+id/moneyReturnFormFragment_textField_date"
                     hyj:style="no_label"
@@ -87,7 +87,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" 
+                android:background="@drawable/line_divider" 
                     android:visibility="gone" />
 
             <!-- <FrameLayout
@@ -145,7 +145,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,7 +172,7 @@
                     android:layout_height="1dip"
                     android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:background="#E0E0E0" />
+                    android:background="@drawable/line_divider" />
 
                 <com.hoyoji.android.hyjframework.view.HyjSelectorField
                     android:id="@+id/moneyReturnFormFragment_selectorField_project"
@@ -189,7 +189,7 @@
                 android:layout_width="1dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dip"
-                android:background="#E0E0E0" />
+                android:background="@drawable/line_divider" />
 
             <LinearLayout
                 android:id="@+id/moneyReturnFormFragment_linearLayout_exchangeRate"
@@ -224,7 +224,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
         
         <ImageButton
             android:id="@id/expand_more"
@@ -239,7 +239,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
         
         <LinearLayout 
             android:id="@+id/moneyExpenseFormFragment_expandMore"
@@ -263,7 +263,7 @@
 	            android:layout_height="1dip"
 	            android:layout_marginBottom="5dip"
 	            android:layout_marginTop="5dip"
-	            android:background="#E0E0E0" />
+	            android:background="@drawable/line_divider" />
 	
 	          <!--  <com.hoyoji.android.hyjframework.view.HyjSelectorField
 	               android:id="@+id/projectFormFragment_selectorField_financialOwner"
@@ -279,7 +279,7 @@
 	            android:layout_height="1dip"
 	            android:layout_marginBottom="5dip"
 	            android:layout_marginTop="5dip"
-	            android:background="#E0E0E0" /> -->
+	            android:background="@drawable/line_divider" /> -->
 	    </LinearLayout>
         
         <Button

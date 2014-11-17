@@ -86,7 +86,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
         
         <RelativeLayout
             android:id="@+id/bindID_relativeLayout"
@@ -145,7 +145,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
         
             <com.hoyoji.android.hyjframework.view.HyjTextField
                 android:id="@+id/systemSettingFormFragment_textField_email"
@@ -158,7 +158,7 @@
                     android:id="@+id/systemSettingFormFragment_button_emailBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+	              android:background="@drawable/line_divider"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/systemSettingFormFragment_button_emailBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -174,7 +174,7 @@
                     android:id="@+id/systemSettingFormFragment_button_phoneBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+	              android:background="@drawable/line_divider"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/systemSettingFormFragment_button_phoneBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -190,7 +190,7 @@
                     android:id="@+id/systemSettingFormFragment_button_QQBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+	              android:background="@drawable/line_divider"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/systemSettingFormFragment_button_QQBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -206,7 +206,7 @@
                     android:id="@+id/systemSettingFormFragment_button_WXBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+	              android:background="@drawable/line_divider"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/systemSettingFormFragment_button_WXBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -222,7 +222,7 @@
                     android:id="@+id/systemSettingFormFragment_button_WBBinding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-	              android:background="#E0E0E0"
+	              android:background="@drawable/line_divider"
 	              android:gravity="center_horizontal|center_vertical"
                     android:text="@string/systemSettingFormFragment_button_WBBinding" />
             </com.hoyoji.android.hyjframework.view.HyjTextField>
@@ -233,7 +233,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
      	<LinearLayout
             android:layout_width="match_parent"
@@ -263,7 +263,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
         
      	<LinearLayout
             android:layout_width="match_parent"
@@ -293,7 +293,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <CheckBox
             android:id="@+id/systemSettingFormFragment_checkBox_validation_addFriend"
@@ -307,7 +307,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -335,7 +335,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -363,7 +363,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" />
+            android:background="@drawable/line_divider" />
 
         <LinearLayout
             android:id="@+id/systemSettingFormFragment_linearLayout_about"
@@ -393,7 +393,7 @@
             android:layout_height="1dip"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
-            android:background="#E0E0E0" /> -->
+            android:background="@drawable/line_divider" /> -->
 <!-- 
         <Button
             android:id="@id/button_save"
