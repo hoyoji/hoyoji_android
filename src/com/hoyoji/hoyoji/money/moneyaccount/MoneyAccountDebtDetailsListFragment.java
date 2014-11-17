@@ -364,7 +364,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
@@ -421,7 +422,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyDepositExpenseContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -493,7 +495,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyLend)object).getPicture());
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
@@ -554,7 +557,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyReturn)object).getPicture());
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
@@ -606,7 +610,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -665,7 +670,8 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
-			imageView.setBackgroundResource(R.drawable.ic_action_picture);
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow) );
 			imageView.setImage(((MoneyPayback)object).getPicture());
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
