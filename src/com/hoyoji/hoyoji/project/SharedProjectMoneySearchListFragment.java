@@ -258,6 +258,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			MoneyExpense moneyExpense = (MoneyExpense)object;
@@ -279,7 +280,6 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyExpense)object).getProjectAmount());
-			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
@@ -330,6 +330,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			MoneyIncome moneyIncome = (MoneyIncome)object;
@@ -343,7 +344,6 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			
 			Project project = ((MoneyIncome)object).getProject();
 			if(project != null){
 				numericView.setPrefix(project.getCurrencySymbol());
@@ -352,7 +352,6 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(((MoneyIncome)object).getProjectAmount());
-			numericView.setTextColor(Color.BLACK);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
