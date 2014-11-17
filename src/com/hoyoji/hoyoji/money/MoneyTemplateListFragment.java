@@ -71,7 +71,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 //		String id = cursor.getString(cursor.getColumnIndex("id"));
-//		String type = cursor.getString(cursor.getColumnIndex("type"));
+//		String type = cursor.getString(cursor.getColumnIndex("type")); 
 		String data = cursor.getString(cursor.getColumnIndex("data"));
 		JSONObject jsonObj = null;
 		try {
