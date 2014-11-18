@@ -365,6 +365,12 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
+//		mSelectorFieldFinancialOwner.showHelpButton().setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+//			}
+//		});
 		if(modelId == -1){
 			if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());

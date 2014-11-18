@@ -11,7 +11,9 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
@@ -131,4 +133,12 @@ public class HyjSelectorField extends LinearLayout {
 	public CharSequence getHint() {
 		return mEditTextEdit.getHint();
 	}
+	
+	public ImageButton showHelpButton(){
+//		mEditTextEdit.setPadding(5, 0, 20, 0);
+		View button = findViewById(R.id.selector_field_help);
+		button.setVisibility(VISIBLE);
+		return (ImageButton) button;
+	}
+	
 }

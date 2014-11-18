@@ -22,5 +22,13 @@
         android:singleLine="true"
         android:focusable="false" >
     </TextView>
-
+    
+    <ImageButton android:id="@+id/selector_field_help" 
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:src="@drawable/ic_action_help"
+        android:background="@android:color/transparent"
+        />
 </merge>
