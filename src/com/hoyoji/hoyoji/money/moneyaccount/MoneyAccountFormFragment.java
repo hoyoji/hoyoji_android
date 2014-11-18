@@ -15,6 +15,11 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -60,6 +65,16 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private HyjRemarkField mRemarkFieldAccountNumber = null;
 	private HyjRemarkField mRemarkFieldBankAddress = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
+	
+	private LinearLayout autoHideLinearLayout = null;
+	private TextView autoHideTextView = null;
+	private View autoHideView = null;
+	private RadioGroup autoHideRadioGroup = null;
+	private RadioButton autoRadioButton = null;
+	private RadioButton hideRadioButton = null;
+	private RadioButton showRadioButton = null;
+	
+	private String autoRadioButtonString = null;
 
 	@Override
 	public Integer useContentView() {
@@ -75,8 +90,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		String intentAccountType = intent.getStringExtra("accountType");
 		if (modelId != -1) {
-			moneyAccount = new Select().from(MoneyAccount.class)
-					.where("_id=?", modelId).executeSingle();
+			moneyAccount = new Select().from(MoneyAccount.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyAccount = new MoneyAccount();
 			moneyAccount.setFriendId(intent.getStringExtra("friendId"));
@@ -93,15 +107,12 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		}
 		mMoneyAccountEditor = moneyAccount.newModelEditor();
 
-		mTextFieldName = (HyjTextField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_name);
+		mTextFieldName = (HyjTextField) getView().findViewById(R.id.moneyAccountFormFragment_textField_name);
 		mTextFieldName.setText(moneyAccount.getDisplayName());
-		mTextFieldName.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mTextFieldName.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 
 		Currency currency = moneyAccount.getCurrency();
-		mSelectorFieldCurrency = (HyjSelectorField) getView().findViewById(
-				R.id.moneyAccountFormFragment_selectorField_currency);
+		mSelectorFieldCurrency = (HyjSelectorField) getView().findViewById(R.id.moneyAccountFormFragment_selectorField_currency);
 		mSelectorFieldCurrency.setEnabled(modelId == -1);
 		if (currency != null) {
 			mSelectorFieldCurrency.setModelId(currency.getId());
@@ -118,34 +129,64 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		mNumericFieldCurrentBalance = (HyjNumericField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_currentBalance);
+		mNumericFieldCurrentBalance = (HyjNumericField) getView().findViewById(R.id.moneyAccountFormFragment_textField_currentBalance);
 		mNumericFieldCurrentBalance.setNumber(moneyAccount.getCurrentBalance());
-		mNumericFieldCurrentBalance.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mNumericFieldCurrentBalance.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 
-		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_accountType);
+		mSpinnerFieldAccountType = (HyjSpinnerField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountType);
 		if(moneyAccount.getAccountType().equals("Debt")){
-			mSpinnerFieldAccountType
-			.setItems(
-					R.array.moneyAccountFormFragment_spinnerField_accountType_array_debt,
-					new String[] {"Debt"});
+			mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array_debt,new String[] {"Debt"});
+			
+			autoHideLinearLayout = (LinearLayout) getView().findViewById(R.id.moneyAccountFormFragment_linearLayout_autoHide);
+			autoHideTextView = (TextView) getView().findViewById(R.id.moneyAccountFormFragment_textView_autoHide);
+			autoHideView = (View) getView().findViewById(R.id.field_separator_autoHide);
+			autoHideRadioGroup = (RadioGroup) getView().findViewById(R.id.moneyAccountFormFragment_RadioGroup_autoHide);
+			autoRadioButton = (RadioButton) getView().findViewById(R.id.moneyAccountFormFragment_RadioButton_auto);
+			hideRadioButton = (RadioButton) getView().findViewById(R.id.moneyAccountFormFragment_RadioButton_hide);
+			showRadioButton = (RadioButton) getView().findViewById(R.id.moneyAccountFormFragment_RadioButton_show);
+			
+			autoHideLinearLayout.setVisibility(View.VISIBLE);
+			autoHideView.setVisibility(View.VISIBLE);
+			
+			if(moneyAccount.getAutoHide() == null || moneyAccount.getAutoHide().equals("") || moneyAccount.getAutoHide().equals("Show")) {
+				showRadioButton.setChecked(true);
+				autoRadioButtonString = "Show";
+			} else if(moneyAccount.getAutoHide().equals("Hide")){
+				hideRadioButton.setChecked(true);
+				autoRadioButtonString = "Hide";
+			} else {
+				autoRadioButton.setChecked(true);
+				autoRadioButtonString = "Auto";
+			}
+	         //绑定一个匿名监听器
+			autoHideRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	             
+	             @Override
+	             public void onCheckedChanged(RadioGroup arg0, int arg1) {
+	                 // TODO Auto-generated method stub
+	                 //获取变更后的选中项的ID
+	                 int radioButtonId = arg0.getCheckedRadioButtonId();
+	                 //根据ID获取RadioButton的实例
+	                 RadioButton rb = (RadioButton)getView().findViewById(radioButtonId);
+	                 if (rb.getText().equals("显示")){
+	                	 autoRadioButtonString = "Show";
+	                 } else if(rb.getText().equals("隐藏")){
+	                	 autoRadioButtonString = "Hide";
+	                 } else{
+	                	 autoRadioButtonString = "Auto";
+	                 }
+	                 rb.setChecked(true);
+	             }
+	         });
 		} else {
-			mSpinnerFieldAccountType
-					.setItems(
-							R.array.moneyAccountFormFragment_spinnerField_accountType_array,
-							new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"});
+			mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array,new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"});
 		}
-		mSpinnerFieldAccountType
-				.setSelectedValue(moneyAccount.getAccountType());
+		mSpinnerFieldAccountType.setSelectedValue(moneyAccount.getAccountType());
 		
-		mSpinnerFieldAccountType.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mSpinnerFieldAccountType.setEnabled(modelId == -1|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		mSpinnerFieldAccountType.setOnItemSelectedListener(new OnItemSelectedListener(){
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
 				Friend friend = null;
 				if(mSelectorFieldFriend.getModelId() != null){
 					friend = Friend.getModel(Friend.class, mSelectorFieldFriend.getModelId());
@@ -160,8 +201,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		});
 		
 
-		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(
-				R.id.moneyAccountFormFragment_selectorField_friend);
+		mSelectorFieldFriend = (HyjSelectorField) getView().findViewById(R.id.moneyAccountFormFragment_selectorField_friend);
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -182,23 +222,17 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			mSpinnerFieldAccountType.setEnabled(false);
 		}
 		
-		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_accountNumber);
+		mRemarkFieldAccountNumber = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_accountNumber);
 		mRemarkFieldAccountNumber.setText(moneyAccount.getAccountNumber());
-		mRemarkFieldAccountNumber.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mRemarkFieldAccountNumber.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 
-		mRemarkFieldBankAddress = (HyjRemarkField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_bankAddress);
+		mRemarkFieldBankAddress = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_bankAddress);
 		mRemarkFieldBankAddress.setText(moneyAccount.getBankAddress());
-		mRemarkFieldBankAddress.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mRemarkFieldBankAddress.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 
-		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(
-				R.id.moneyAccountFormFragment_textField_remark);
+		mRemarkFieldRemark = (HyjRemarkField) getView().findViewById(R.id.moneyAccountFormFragment_textField_remark);
 		mRemarkFieldRemark.setText(moneyAccount.getRemark());
-		mRemarkFieldRemark.setEnabled(modelId == -1
-				|| !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
+		mRemarkFieldRemark.setEnabled(modelId == -1 || !moneyAccount.getAccountType().equalsIgnoreCase("Debt"));
 		mRemarkFieldRemark.setEditable(false);
 		mRemarkFieldRemark.setOnClickListener(new OnClickListener(){
 			@Override
@@ -206,8 +240,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldRemark.getText());
 				bundle.putString("HINT", "请输入" + mRemarkFieldRemark.getLabelText());
-				MoneyAccountFormFragment.this
-						.openActivityWithFragmentForResult(
+				MoneyAccountFormFragment.this.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
 								R.string.moneyExpenseFormFragment_textView_remark,
 								bundle, GET_REMARK);
@@ -217,9 +250,9 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
-			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt") && this.mOptionsMenu != null){
-				setSaveActionEnable(false);
-			}
+//			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt") && this.mOptionsMenu != null){
+//				setSaveActionEnable(false);
+//			}
 		}
 	}
 //	String mPreviousName = "";
@@ -250,21 +283,21 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    if(mMoneyAccountEditor!= null && mMoneyAccountEditor.getModel().get_mId() != null && mMoneyAccountEditor.getModel().getAccountType().equalsIgnoreCase("Debt")){
-	    	setSaveActionEnable(false);
-	    }
+//	    if(mMoneyAccountEditor!= null && mMoneyAccountEditor.getModel().get_mId() != null && mMoneyAccountEditor.getModel().getAccountType().equalsIgnoreCase("Debt")){
+//	    	setSaveActionEnable(false);
+//	    }
 	}
 	
 	
 	private void fillData() {
-		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor
-				.getModelCopy();
+		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor.getModelCopy();
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setFriendId(mSelectorFieldFriend.getModelId());
 		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
 		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
 		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
+		modelCopy.setAutoHide(autoRadioButtonString);
 		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
 		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
 	}
@@ -273,20 +306,13 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 
 		mTextFieldName.setError(mMoneyAccountEditor.getValidationError("name"));
-		mSelectorFieldCurrency.setError(mMoneyAccountEditor
-				.getValidationError("currency"));
-		mNumericFieldCurrentBalance.setError(mMoneyAccountEditor
-				.getValidationError("currentBalance"));
-		mSpinnerFieldAccountType.setError(mMoneyAccountEditor
-				.getValidationError("accountType"));
-		mSelectorFieldFriend.setError(mMoneyAccountEditor
-				.getValidationError("friend"));
-		mRemarkFieldAccountNumber.setError(mMoneyAccountEditor
-				.getValidationError("accountNumber"));
-		mRemarkFieldBankAddress.setError(mMoneyAccountEditor
-				.getValidationError("bankAddress"));
-		mRemarkFieldRemark.setError(mMoneyAccountEditor
-				.getValidationError("remark"));
+		mSelectorFieldCurrency.setError(mMoneyAccountEditor.getValidationError("currency"));
+		mNumericFieldCurrentBalance.setError(mMoneyAccountEditor.getValidationError("currentBalance"));
+		mSpinnerFieldAccountType.setError(mMoneyAccountEditor.getValidationError("accountType"));
+		mSelectorFieldFriend.setError(mMoneyAccountEditor.getValidationError("friend"));
+		mRemarkFieldAccountNumber.setError(mMoneyAccountEditor.getValidationError("accountNumber"));
+		mRemarkFieldBankAddress.setError(mMoneyAccountEditor.getValidationError("bankAddress"));
+		mRemarkFieldRemark.setError(mMoneyAccountEditor.getValidationError("remark"));
 	}
 
 	@Override

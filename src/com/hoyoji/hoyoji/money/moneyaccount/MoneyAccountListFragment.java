@@ -145,9 +145,13 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			for(int i = 0; i < groupList.size(); i++){
 				if(mListChildData.size() <= i){
 					mListChildData.add(null);
-					getListView().expandGroup(i);
+					if(!groupList.get(i).get("accountType").toString().equals("AutoHide")){
+						getListView().expandGroup(i);
+					}
 				} else if(getListView().collapseGroup(i)){
-					getListView().expandGroup(i);
+					if(!groupList.get(i).get("accountType").toString().equals("AutoHide")){
+						getListView().expandGroup(i);
+					}
 				}
 			}
 			adapter.notifyDataSetChanged();

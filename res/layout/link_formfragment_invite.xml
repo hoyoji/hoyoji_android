@@ -58,14 +58,14 @@
                 android:id="@+id/inviteLinkFormFragment_RadioButton_closeState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Close" >
+                android:text="关闭" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/inviteLinkFormFragment_RadioButton_openState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Open" >
+                android:text="打开" >
             </RadioButton>
         </RadioGroup>
         

@@ -85,13 +85,31 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-			if(!mAccountType.equalsIgnoreCase(mExcludeType)){
-				if(mFriendId == null){
-					return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name_pinYin ASC").execute();
-				} else {
-					return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name_pinYin ASC").execute();
+	    	if(mAccountType.equals("AutoHide")){
+	    		if(!"Debt".equalsIgnoreCase(mExcludeType)){
+					if(mFriendId == null){
+						return new Select().from(MoneyAccount.class).where("accountType=? AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)", "Debt").orderBy("name_pinYin ASC").execute();
+					} else {
+						return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ? AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
+					}
 				}
-			}
+	    	} else if(mAccountType.equals("Debt")){
+	    		if(!"Debt".equalsIgnoreCase(mExcludeType)){
+					if(mFriendId == null){
+						return new Select().from(MoneyAccount.class).where("accountType=? AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)", "Debt").orderBy("name_pinYin ASC").execute();
+					} else {
+						return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ? AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
+					}
+				}
+	    	} else {
+				if(!mAccountType.equalsIgnoreCase(mExcludeType)){
+					if(mFriendId == null){
+						return new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name_pinYin ASC").execute();
+					} else {
+						return new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name_pinYin ASC").execute();
+					}
+				}
+	    	}
 	    	return mChildList;
 	    	
 		}

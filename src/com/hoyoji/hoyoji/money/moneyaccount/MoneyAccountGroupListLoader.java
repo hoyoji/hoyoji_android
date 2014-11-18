@@ -213,6 +213,7 @@ public class MoneyAccountGroupListLoader extends
 					}
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Debt")){
+					String _query = query + " AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)";
 					if(mExcludeType == null || !"Debt".equalsIgnoreCase(mExcludeType)){
 						if(mFriendId == null){
 							args = new String[] {localCurrencyId, localCurrencyId, "Debt" };
@@ -221,7 +222,7 @@ public class MoneyAccountGroupListLoader extends
 						}
 						cursor = Cache
 								.openDatabase()
-								.rawQuery(query, args);
+								.rawQuery(_query, args);
 						if (cursor != null) {
 							balanceTotal = 0;
 							cursor.moveToFirst();
@@ -237,6 +238,59 @@ public class MoneyAccountGroupListLoader extends
 							groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
 							list.add(groupObject);
 						}
+					}
+				} 
+				if(mAccountType == null || mAccountType.equalsIgnoreCase("Debt")){
+					if(mExcludeType == null || !"Debt".equalsIgnoreCase(mExcludeType)){
+						String _query = query + " AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)";
+						if(mFriendId == null){
+							args = new String[] {localCurrencyId, localCurrencyId, "Debt"};
+						} else {
+							args = new String[] {localCurrencyId, localCurrencyId, "Debt", mFriendId};
+						}
+						cursor = Cache
+								.openDatabase()
+								.rawQuery(_query, args);
+						if (cursor != null) {
+							balanceTotal = 0;
+							cursor.moveToFirst();
+							count = cursor.getInt(0);
+							balanceTotal += cursor.getDouble(1);
+							cursor.close();
+							cursor = null;
+						}
+						if(count > 0){
+							groupObject = new HashMap<String, Object>();
+							groupObject.put("name", "隐藏借贷账户");
+							groupObject.put("accountType", "AutoHide");
+							groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+							list.add(groupObject);
+						} 
+//							else {
+//							if(mFriendId == null){
+//								args = new String[] {localCurrencyId, localCurrencyId, "Debt", "Auto"};
+//							} else {
+//								args = new String[] {localCurrencyId, localCurrencyId, "Debt", mFriendId, "Auto"};
+//							}
+//							cursor = Cache
+//									.openDatabase()
+//									.rawQuery(query, args);
+//							if (cursor != null) {
+//								balanceTotal = 0;
+//								cursor.moveToFirst();
+//								count = cursor.getInt(0);
+//								balanceTotal += cursor.getDouble(1);
+//								cursor.close();
+//								cursor = null;
+//							}
+//							if(count > 0 && balanceTotal == 0){
+//								groupObject = new HashMap<String, Object>();
+//								groupObject.put("name", "隐藏借贷账户");
+//								groupObject.put("accountType", "AutoHide");
+//								groupObject.put("balanceTotal", HyjUtil.toFixed2(balanceTotal));
+//								list.add(groupObject);
+//							}
+//						}
 					}
 				}
 				mHasMoreData = false;

@@ -78,7 +78,11 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
                  int radioButtonId = arg0.getCheckedRadioButtonId();
                  //根据ID获取RadioButton的实例
                  RadioButton rb = (RadioButton)getView().findViewById(radioButtonId);
-                 state = (String) rb.getText();
+                 if(rb.getText().equals("打开")) {
+                	 state = "Open";
+                 } else {
+                	 state = "Close";
+                 }
                  rb.setChecked(true);
              }
          });

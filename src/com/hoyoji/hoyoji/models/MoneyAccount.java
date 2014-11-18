@@ -45,6 +45,9 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "accountNumber")
 	private String mAccountNumber;
 	
+	@Column(name = "autoHide")
+	private String mAutoHide;
+	
 	@Column(name = "bankAddress")
 	private String mBankAddress;
 	
@@ -152,10 +155,11 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setCurrentBalance(amount);
 		createDebtAccount.setSharingType("Private");
 		createDebtAccount.setAccountType("Debt");
+		createDebtAccount.setAutoHide("Show");
 		createDebtAccount.setFriendId(friendId);
 		createDebtAccount.save();
 	}
-	
+	 
 //	public static void createDebtAccount(String friendUserId, String currencyId, Double amount){
 //		MoneyAccount createDebtAccount = new MoneyAccount();
 //		createDebtAccount.setName(friendUserId);
@@ -282,6 +286,14 @@ public class MoneyAccount extends HyjModel {
 
 	public void setAccountNumber(String mAccountNumber) {
 		this.mAccountNumber = mAccountNumber;
+	}
+
+	public String getAutoHide() {
+		return mAutoHide;
+	}
+
+	public void setAutoHide(String mAutoHide) {
+		this.mAutoHide = mAutoHide;
 	}
 
 	public String getBankAddress() {

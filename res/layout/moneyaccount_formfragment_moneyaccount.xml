@@ -78,6 +78,59 @@
     </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
     
     <View 
+        android:id="@+id/field_separator_autoHide"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+    	android:visibility="gone"
+        android:background="@drawable/line_divider" 
+        />
+    
+    <LinearLayout
+        android:id="@+id/moneyAccountFormFragment_linearLayout_autoHide"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/moneyAccountFormFragment_textView_autoHide"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/moneyAccountFormFragment_textView_autoHide" />
+
+        <RadioGroup
+            android:id="@+id/moneyAccountFormFragment_RadioGroup_autoHide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <RadioButton
+                android:id="@+id/moneyAccountFormFragment_RadioButton_auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/moneyAccountFormFragment_RadioButton_hide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="隐藏" >
+            </RadioButton>
+            
+            <RadioButton
+                android:id="@+id/moneyAccountFormFragment_RadioButton_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示" >
+            </RadioButton>
+        </RadioGroup>
+        
+    </LinearLayout>
+    
+    <View 
         android:id="@+id/field_separator_friend"
         android:layout_width="match_parent"
         android:layout_height="1dip"
