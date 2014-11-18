@@ -62,7 +62,8 @@ public class UserFormFragment extends HyjUserFormFragment {
 
 			mPicture = (HyjImageView) getView().findViewById(
 					R.id.userFormFragment_imageView_picture);
-			mPicture.loadRemoteImage(mJsonUser.optString("pictureId", null));
+			mPicture.setDefaultImage(R.drawable.ic_action_person_white);
+			mPicture.loadRemoteImage(mJsonUser.optString("pictureId"));
 
 			mTextFieldUserName = (TextView) getView().findViewById(
 					R.id.userFormFragment_textField_userName1);

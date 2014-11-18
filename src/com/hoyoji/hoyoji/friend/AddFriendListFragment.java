@@ -200,6 +200,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 			}
 			return true;
 		} else if (view.getId() == R.id.friendListItem_add_picture) {
+			((HyjImageView) view).setDefaultImage(R.drawable.ic_action_person_white);
 			if (!jsonObj.isNull(field)) {
 				((HyjImageView) view).loadRemoteImage(jsonObj.optString(field));
 			} else {

@@ -126,7 +126,7 @@ public class HyjImageView extends ImageView {
 	}
 	
 	public void loadRemoteImage(final String id){
-		if(id == null || id.length() == 0){
+		if(id == null || id.length() == 0 || id.equals("null")){
 			setImage((Picture)null);
 			return;
 		}

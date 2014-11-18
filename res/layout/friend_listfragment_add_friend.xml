@@ -14,6 +14,7 @@
 	    android:layout_height="wrap_content" 
 	    hoyoji:queryHint="@string/friendListFragment_addFriend_searchView_hint"
         hoyoji:iconifiedByDefault="false">
+        <requestFocus />
 	</android.support.v7.widget.SearchView>
 
 <!-- 	<ImageButton

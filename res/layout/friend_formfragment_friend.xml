@@ -16,7 +16,6 @@
         <com.hoyoji.android.hyjframework.view.HyjImageView android:id="@+id/friendFormFragment_imageView_picture"
 	         android:layout_width="56dp"
 	         android:layout_height="56dp"
-		     android:background="@drawable/ic_action_person"
 	         android:layout_gravity="center_vertical"/>
                  
         <TextView

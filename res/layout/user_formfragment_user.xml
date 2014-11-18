@@ -18,7 +18,7 @@
             	android:id="@+id/userFormFragment_imageView_picture"
 	         android:layout_width="56dp"
 	         android:layout_height="56dp"
-		     android:background="@drawable/ic_action_person"
+		     android:background="@color/hoyoji_green"
 	         android:layout_gravity="center_vertical"/>
                  
         <TextView
@@ -51,8 +51,8 @@
             hyj:style="top_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/line_divider"
-            android:padding="5dip"
+            android:background="@color/hoyoji_lightgray"
+            android:padding="20dip"
             hyj:hintText="@string/userFormFragment_textView_hint_addFriend_request"/>
 	 
 	<Button

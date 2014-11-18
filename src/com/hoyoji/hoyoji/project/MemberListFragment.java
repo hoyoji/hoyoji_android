@@ -126,6 +126,11 @@ public class MemberListFragment extends HyjUserListFragment{
 		RelativeLayout view =  (RelativeLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_member, null);
 		TextView nameView = (TextView)view.findViewById(R.id.memberListItem_name);
 		nameView.setText(nullItemName);
+
+		HyjImageView imageView = (HyjImageView)view.findViewById(R.id.memberListItem_picture);
+		imageView.setBackgroundColor(getResources().getColor(R.color.lightgray));
+		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_person_white));
+		
 		view.setOnClickListener(new OnClickListener(){
 
 			@Override

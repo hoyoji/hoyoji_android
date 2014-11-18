@@ -98,6 +98,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.friend_listitem_friend, null);
 		TextView nameView = (TextView)view.findViewById(R.id.friendListItem_nickName);
 		nameView.setText(nullItemName);
+		HyjImageView imageView = (HyjImageView)view.findViewById(R.id.friendListItem_picture);
+		imageView.setBackgroundColor(getResources().getColor(R.color.lightgray));
+		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_person_white));
 		view.setOnClickListener(new OnClickListener(){
 
 			@Override

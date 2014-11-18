@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyExpense;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 
@@ -76,19 +78,29 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		
 		mTextFieldUserName = (TextView) getView().findViewById(R.id.friendFormFragment_textField_userName1);
 		mTextFieldUserNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_userNickName);
+
+		mPicture = (HyjImageView) getView().findViewById(R.id.friendFormFragment_imageView_picture);	
+		mPicture.setDefaultImage(R.drawable.ic_action_person_white);
 		if(friend.getFriendUserId() != null){
 			mTextFieldUserNickName.setEnabled(false);
 			if(friend.getFriendUser() != null){
-				mPicture = (HyjImageView) getView().findViewById(R.id.friendFormFragment_imageView_picture);	
 				mPicture.setImage(friend.getFriendUser().getPicture());
 				
 				mTextFieldUserName.setText(friend.getFriendUser().getUserName());
 				mTextFieldUserNickName.setText(friend.getFriendUser().getNickName());
 			} else {
+				mPicture.setImage((Picture)null);
 				mTextFieldUserName.setText("无用户名");
 				mTextFieldUserNickName.setText("无好友昵称");
 			}
+			if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				mPicture.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+			} else {
+				mPicture.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
+			}
 		} else {
+			mPicture.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			mPicture.setImage((Picture)null);
 			mTextFieldUserName.setText("[本地好友]");
 			mTextFieldUserNickName.setVisibility(View.GONE);
 			getView().findViewById(R.id.field_separator_userNickName).setVisibility(View.GONE);
