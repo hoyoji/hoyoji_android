@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -23,6 +24,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -40,7 +42,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"data", "data", "data", "data", "data", "data"},
+				new String[] {"data", "id", "type", "id", "id", "id"},
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount ,R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_title},
 				0); 
 	}	
@@ -69,7 +71,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		}
 		Bundle bundle = new Bundle();
 //		HyjModel object = (HyjModel) getListAdapter().getItem(position);
-		bundle.putString("DATA", al.get((position +1)*3-1));
+		bundle.putString("DATA", al.get((position +1)*6-1));
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
 		if(template.getType().equals("MoneyExpense")) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
@@ -81,8 +83,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-//		String id = cursor.getString(cursor.getColumnIndex("id"));
-//		String type = cursor.getString(cursor.getColumnIndex("type")); 
+		String id = cursor.getString(cursor.getColumnIndex("id"));
+		String type = cursor.getString(cursor.getColumnIndex("type")); 
 		String data = cursor.getString(cursor.getColumnIndex("data"));
 		al.add(data);
 		JSONObject jsonObj = null;
@@ -105,15 +107,19 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			
 		} else if(view.getId() == R.id.homeListItem_amount){
 			((HyjNumericView)view).setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")));
+			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")*jsonObj.optDouble("exchangeRate")));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_picture){
-//			HyjImageView imageView = (HyjImageView)view;
+			HyjImageView imageView = (HyjImageView)view;
 //			imageView.setImage(cursor.getString(columnIndex));
-			((HyjImageView)view).setImage((Picture)null);
-			if (jsonObj.optString("pictureId") != null){
-				((HyjImageView)view).setImage(jsonObj.optString("pictureId"));
+			
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			if(type.equals("MoneyExpense")){
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			} else {
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
+			imageView.setImage((Picture)null);
 			return true;
 		}else if(view.getId() == R.id.homeListItem_remark){
 //			if(type.equals("MoneyExpense")){
@@ -130,6 +136,11 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
+			if(type.equals("MoneyExpense")){
+				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			}else{
+				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			}
 			return true;
 		}else {
 			return false;
