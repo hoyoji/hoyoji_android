@@ -883,6 +883,13 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		 MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 			int count = adapter.getCount();
 			int savedCount = 0;
+			
+			List<ApportionItem> apportionItems = new ArrayList<ApportionItem>();
+			for (int i = 0; i < count; i++) {
+				apportionItems.add(adapter.getItem(i));
+			}
+			savedCount = MoneyDepositReturnContainer.saveApportions(apportionItems, mMoneyDepositReturnContainerEditor);
+			
 //			for (int i = 0; i < count; i++) {
 //				ApportionItem<MoneyApportion> api = adapter.getItem(i);
 //				MoneyDepositReturnApportion apportion = (MoneyDepositReturnApportion) api.getApportion();

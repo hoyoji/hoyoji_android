@@ -121,15 +121,14 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		transferOutProjectExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_transferOutProjectExchangeRate);
 		projectTransferInExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyTransferFormFragment_textField_projectTransferInExchangeRate);
-		
+
+		mViewSeparatorTransferOutProject = (View) getView().findViewById(R.id.field_separator_transferOutProject);
+		mViewSeparatorProjectTransferIn = (View) getView().findViewById(R.id.field_separator_projectTransferIn);
+		mLinearLayoutTransferOutProject = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_transferOutProject);
+		mLinearLayoutProjectTransferIn = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_projectTransferIn);
 		if(modelId != -1){
 			moneyTransfer =  new Select().from(MoneyTransfer.class).where("_id=?", modelId).executeSingle();
 			
-			mViewSeparatorTransferOutProject = (View) getView().findViewById(R.id.field_separator_transferOutProject);
-			mLinearLayoutTransferOutProject = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_transferOutProject);
-			
-			mViewSeparatorProjectTransferIn = (View) getView().findViewById(R.id.field_separator_projectTransferIn);
-			mLinearLayoutProjectTransferIn = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_projectTransferIn);
 			mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
 			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
 			mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
@@ -521,10 +520,14 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		if(modelId != -1){
 			transferOutProjectExchangeRate.setNumber(moneyTransfer.getTransferOutExchangeRate());
 			projectTransferInExchangeRate.setNumber(moneyTransfer.getTransferInExchangeRate());
-			transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
+			if(moneyTransfer.getTransferOut() != null){
+				transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
+			}
 			transferProjectCurrency.setText(moneyTransfer.getProject().getCurrency().getName() + "(" + moneyTransfer.getProject().getCurrencyId() + ")");
 			projectTransferInCurrency.setText(moneyTransfer.getProject().getCurrency().getName() + "(" + moneyTransfer.getProject().getCurrencyId() + ")");
-			transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
+			if(moneyTransfer.getTransferIn() != null){
+				transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
+			}
 		}
 			setPermission();
 			
