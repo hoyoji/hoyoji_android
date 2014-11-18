@@ -15,10 +15,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class MoneyApportionEditDialogFragment extends DialogFragment {
 	private HyjNumericField mNumericFieldApportionAmount;
-	private HyjSpinnerField mSpinnerFieldApportionType;
+//	private HyjSpinnerField mSpinnerFieldApportionType;
+	private RadioGroup mRadioGroupApportionType;
 	
 	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType, boolean isProjectMember) {
     	MoneyApportionEditDialogFragment f = new MoneyApportionEditDialogFragment();
@@ -34,7 +37,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       	final String apportionType = getArguments().getString("apportionType");
     	Double apportionAmount = getArguments().getDouble("apportionAmount");
-    	boolean isProjectMember = getArguments().getBoolean("isProjectMember");
+//    	boolean isProjectMember = getArguments().getBoolean("isProjectMember");
     	
         // Inflate layout for the view
         // Pass null as the parent view because its going in the dialog layout
@@ -44,31 +47,57 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     	final HyjNumericField numericFieldApportionAmount = (HyjNumericField)v.findViewById(R.id.moneyApportionDialogFragment_textField_amount);
         numericFieldApportionAmount.setNumber(apportionAmount);
         mNumericFieldApportionAmount = numericFieldApportionAmount;
-        final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
-        mSpinnerFieldApportionType = spinnerFieldApportionType;
-        if(isProjectMember){
-        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Fixed", "Share"});
-        } else {
-        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member, new String[] {"Average", "Fixed"});
-        }
-        spinnerFieldApportionType.setSelectedValue(apportionType);
-		numericFieldApportionAmount.setEnabled(apportionType == "Fixed");
-        spinnerFieldApportionType.setOnItemSelectedListener(new OnItemSelectedListener(){
+//        final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
+//        mSpinnerFieldApportionType = spinnerFieldApportionType;
+//        if(isProjectMember){
+//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Fixed", "Share"});
+//        } else {
+//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member, new String[] {"Average", "Fixed"});
+//        }
+//        spinnerFieldApportionType.setSelectedValue(apportionType);
+//        
+
+        numericFieldApportionAmount.setEnabled("Fixed".equals(apportionType));
+		
+      final RadioGroup radioGroupApportionType = (RadioGroup)v.findViewById(R.id.moneyApportionDialogFragment_radio_type);
+      mRadioGroupApportionType = radioGroupApportionType;
+      if("Average".equals(apportionType)){
+    	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_average);
+      } else if("Fixed".equals(apportionType)){
+    	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_fixed);
+      }      if("Share".equals(apportionType)){
+    	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_share);
+      }
+      
+//        spinnerFieldApportionType.setOnItemSelectedListener(new OnItemSelectedListener(){
+//			@Override
+//			public void onItemSelected(AdapterView<?> arg0, View arg1,
+//					int pos, long arg3) {
+//				if(pos == 1){
+//					numericFieldApportionAmount.setEnabled(true);
+//					numericFieldApportionAmount.showSoftKeyboard();
+//				} else {
+//					numericFieldApportionAmount.setEnabled(false);
+//				}
+//			}
+//			@Override
+//			public void onNothingSelected(AdapterView<?> arg0) {
+//			}
+//        });
+        
+		mRadioGroupApportionType.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int pos, long arg3) {
-				if(pos == 1){
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if(checkedId == R.id.moneyApportionDialogFragment_radio_type_fixed){
 					numericFieldApportionAmount.setEnabled(true);
 					numericFieldApportionAmount.showSoftKeyboard();
 				} else {
 					numericFieldApportionAmount.setEnabled(false);
 				}
+				
 			}
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-        });
-        
+			
+		});
 
         v.findViewById(R.id.moneyApportionDialogFragment_button_delete).setOnClickListener(new OnClickListener(){
 			@Override
@@ -91,7 +120,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int id) {
             			        Bundle args = new Bundle();
             			        args.putDouble("apportionAmount", numericFieldApportionAmount.getNumber());
-            			        args.putString("apportionType", spinnerFieldApportionType.getSelectedValue());
+            			        args.putString("apportionType", getApportionType());
 								((HyjActivity) getActivity()).dialogDoPositiveClick(args);
                             }
                         })
@@ -114,6 +143,15 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 	}
 	
 	public String getApportionType(){
-		return mSpinnerFieldApportionType.getSelectedValue();
+//		return mSpinnerFieldApportionType.getSelectedValue();
+		switch (mRadioGroupApportionType.getCheckedRadioButtonId()){
+			case R.id.moneyApportionDialogFragment_radio_type_average :
+				return "Average";
+			case R.id.moneyApportionDialogFragment_radio_type_fixed :
+				return "Fixed";
+			case R.id.moneyApportionDialogFragment_radio_type_share :
+				return "Share";
+		}
+		return null;
 	}
 }

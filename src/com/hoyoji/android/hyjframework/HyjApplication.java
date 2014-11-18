@@ -26,6 +26,7 @@ import com.tencent.android.tpush.XGPushConfig;
 import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -629,17 +630,22 @@ public class HyjApplication extends Application {
 		}
 	}
 	
-	public void switchUser(){
+	public void switchUser(Context context){
 
 		Intent intent = new Intent(
-				this.getApplicationContext(),
+				context,
 				LoginActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-		startActivity(intent);
+//		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+		context.startActivity(intent);
 	}
 	
 	private User authenticateUser(String userId, String password){
-		return new Select("User.*").from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
+		User user = new Select("User.*").from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
+		if(user == null){
+			return null;
+		} else {
+			return HyjModel.getModel(User.class, user.getId());
+		}
 	}
 
 	public void addFragmentClassMap(String className,
