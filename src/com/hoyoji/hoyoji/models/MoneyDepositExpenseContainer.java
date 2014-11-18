@@ -215,7 +215,13 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 	}
 
 	public void setMoneyAccount(MoneyAccount mMoneyAccount) {
-		this.mMoneyAccountId = mMoneyAccount.getId();
+		if(mMoneyAccount == null){
+			this.setMoneyAccountId(null, null);
+		} else {
+			this.setMoneyAccountId(mMoneyAccount.getId(), mMoneyAccount.getCurrencyId());
+		}
+//		this.mMoneyAccountId = mMoneyAccount.getId();
+//		this.mCurrencyId = mMoneyAccount.getCurrencyId();
 	}
 
 	public String getMoneyAccountId() {

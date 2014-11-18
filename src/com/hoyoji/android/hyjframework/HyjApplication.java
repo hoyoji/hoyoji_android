@@ -640,7 +640,12 @@ public class HyjApplication extends Application {
 	}
 	
 	private User authenticateUser(String userId, String password){
-		return new Select("User.*").from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
+		User user = new Select("User.*").from(User.class).join(UserData.class).on("User.id = UserData.userId").where("User.id=? AND UserData.password=?", new Object[]{userId, password}).executeSingle();
+		if(user == null){
+			return null;
+		} else {
+			return HyjModel.getModel(User.class, user.getId());
+		}
 	}
 
 	public void addFragmentClassMap(String className,
