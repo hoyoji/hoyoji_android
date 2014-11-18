@@ -241,7 +241,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		mButtonSwitchUser.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				HyjApplication.getInstance().switchUser();
+				HyjApplication.getInstance().switchUser(getActivity());
 			}
 		});
 		
