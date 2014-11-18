@@ -826,8 +826,7 @@ public class MainActivity extends HyjUserActivity {
 							errorCallback("下载数据失败，请重试");
 						}
 					} else {
-						errorCallback(jsonResult.optJSONObject("__summary").optString(
-								"msg"));
+						errorCallback(jsonResult.optJSONObject("__summary").optString("msg"));
 					}
 					// } else if(result instanceof JSONArray) {
 					// saveData((JSONArray)result);
