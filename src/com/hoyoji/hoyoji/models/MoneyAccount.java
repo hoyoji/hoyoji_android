@@ -78,6 +78,7 @@ public class MoneyAccount extends HyjModel {
 		mAccountType = "Cash";
 		mCurrentBalance = 0.00;
 		mSharingType = "Private";
+		mAutoHide = "Show";
 	}
 	
 	public String getDisplayName(){
@@ -155,7 +156,6 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setCurrentBalance(amount);
 		createDebtAccount.setSharingType("Private");
 		createDebtAccount.setAccountType("Debt");
-		createDebtAccount.setAutoHide("Show");
 		createDebtAccount.setFriendId(friendId);
 		createDebtAccount.save();
 	}
@@ -278,6 +278,9 @@ public class MoneyAccount extends HyjModel {
 
 	public void setAccountType(String mAccountType) {
 		this.mAccountType = mAccountType;
+		if(mAccountType.equalsIgnoreCase("Debt") && this.get_mId() == null){
+			this.setAutoHide("Auto");
+		}
 	}
 
 	public String getAccountNumber() {

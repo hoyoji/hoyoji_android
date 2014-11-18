@@ -74,7 +74,6 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	private RadioButton hideRadioButton = null;
 	private RadioButton showRadioButton = null;
 	
-	private String autoRadioButtonString = null;
 
 	@Override
 	public Integer useContentView() {
@@ -150,34 +149,31 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			
 			if(moneyAccount.getAutoHide() == null || moneyAccount.getAutoHide().equals("") || moneyAccount.getAutoHide().equals("Show")) {
 				showRadioButton.setChecked(true);
-				autoRadioButtonString = "Show";
 			} else if(moneyAccount.getAutoHide().equals("Hide")){
 				hideRadioButton.setChecked(true);
-				autoRadioButtonString = "Hide";
 			} else {
 				autoRadioButton.setChecked(true);
-				autoRadioButtonString = "Auto";
 			}
 	         //绑定一个匿名监听器
-			autoHideRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-	             
-	             @Override
-	             public void onCheckedChanged(RadioGroup arg0, int arg1) {
-	                 // TODO Auto-generated method stub
-	                 //获取变更后的选中项的ID
-	                 int radioButtonId = arg0.getCheckedRadioButtonId();
-	                 //根据ID获取RadioButton的实例
-	                 RadioButton rb = (RadioButton)getView().findViewById(radioButtonId);
-	                 if (rb.getText().equals("显示")){
-	                	 autoRadioButtonString = "Show";
-	                 } else if(rb.getText().equals("隐藏")){
-	                	 autoRadioButtonString = "Hide";
-	                 } else{
-	                	 autoRadioButtonString = "Auto";
-	                 }
-	                 rb.setChecked(true);
-	             }
-	         });
+//			autoHideRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//	             
+//	             @Override
+//	             public void onCheckedChanged(RadioGroup arg0, int arg1) {
+//	                 // TODO Auto-generated method stub
+//	                 //获取变更后的选中项的ID
+//	                 int radioButtonId = arg0.getCheckedRadioButtonId();
+//	                 //根据ID获取RadioButton的实例
+//	                 RadioButton rb = (RadioButton)getView().findViewById(radioButtonId);
+//	                 if (rb.getText().equals("显示")){
+//	                	 autoRadioButtonString = "Show";
+//	                 } else if(rb.getText().equals("隐藏")){
+//	                	 autoRadioButtonString = "Hide";
+//	                 } else{
+//	                	 autoRadioButtonString = "Auto";
+//	                 }
+//	                 rb.setChecked(true);
+//	             }
+//	         });
 		} else {
 			mSpinnerFieldAccountType.setItems(R.array.moneyAccountFormFragment_spinnerField_accountType_array,new String[] { "Cash", "Deposit", "Topup", "Credit", "Online"});
 		}
@@ -291,15 +287,26 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 	
 	private void fillData() {
 		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor.getModelCopy();
-		modelCopy.setName(mTextFieldName.getText().toString().trim());
-		modelCopy.setFriendId(mSelectorFieldFriend.getModelId());
-		modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
-		modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
-		modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
-		modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
-		modelCopy.setAutoHide(autoRadioButtonString);
-		modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
-		modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
+		if(!"Debt".equals(modelCopy.getAccountType())){
+			modelCopy.setName(mTextFieldName.getText().toString().trim());
+			modelCopy.setFriendId(mSelectorFieldFriend.getModelId());
+			modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
+			modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
+			modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
+			modelCopy.setAccountNumber(mRemarkFieldAccountNumber.getText().toString().trim());
+			modelCopy.setBankAddress(mRemarkFieldBankAddress.getText().toString().trim());
+			modelCopy.setRemark(mRemarkFieldRemark.getText().toString().trim());
+		} else {
+			if(autoHideRadioGroup.getCheckedRadioButtonId() == R.id.moneyAccountFormFragment_RadioButton_auto){
+				modelCopy.setAutoHide("Auto");
+//				autoHideRadioGroup.check(R.id.moneyAccountFormFragment_RadioButton_auto);
+			} else if(autoHideRadioGroup.getCheckedRadioButtonId() == R.id.moneyAccountFormFragment_RadioButton_show){
+				modelCopy.setAutoHide("Show");
+			} else if(autoHideRadioGroup.getCheckedRadioButtonId() == R.id.moneyAccountFormFragment_RadioButton_hide){
+				modelCopy.setAutoHide("Hide");
+			}
+		}
+
 	}
 
 	private void showValidatioErrors() {
