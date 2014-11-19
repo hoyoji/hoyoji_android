@@ -149,9 +149,9 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 						getListView().expandGroup(i);
 					}
 				} else if(getListView().collapseGroup(i)){
-					if(!groupList.get(i).get("accountType").toString().equals("AutoHide")){
+//					if(!groupList.get(i).get("accountType").toString().equals("AutoHide")){
 						getListView().expandGroup(i);
-					}
+//					}
 				}
 			}
 			adapter.notifyDataSetChanged();

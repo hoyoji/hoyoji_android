@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -164,6 +165,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			inviteFriendObject.put("__dataType", "InviteLink");
 			inviteFriendObject.put("title", "邀请成为好友");
 			inviteFriendObject.put("type", "Friend");
+			inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
 			inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您成为好友，一起参与记账。");
 			inviteFriendObject.put("state", "Open");
 		} catch (JSONException e1) {

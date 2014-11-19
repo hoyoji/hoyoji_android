@@ -30,7 +30,6 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 
 public class MoneyTemplateListFragment extends HyjUserListFragment {
-	private ArrayList<String> al = null;
 
 	@Override
 	public Integer useContentView() {
@@ -42,8 +41,8 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"data", "id", "type", "id", "id", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_date, R.id.homeListItem_amount ,R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_title},
+				new String[] {"data", "type", "id", "id", "id"},
+				new int[] {R.id.homeListItem_picture,  R.id.homeListItem_amount ,R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_title},
 				0); 
 	}	
 
@@ -52,7 +51,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(MoneyTemplate.class, null),
-				null, null, null, null
+				null, null, null, "date DESC"
 			);
 		return (Loader<Object>)loader;
 	}
@@ -61,7 +60,6 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		al = new ArrayList<String>();
 	}
 	
 	@Override  
@@ -71,8 +69,10 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		}
 		Bundle bundle = new Bundle();
 //		HyjModel object = (HyjModel) getListAdapter().getItem(position);
-		bundle.putString("DATA", al.get((position +1)*6-1));
+
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
+		bundle.putString("MONEYTEMPLATE_ID", template.getId());
+		bundle.putString("MONEYTEMPLATE_DATA", template.getData());
 		if(template.getType().equals("MoneyExpense")) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
 		} else if(template.getType().equals("MoneyIncome")) {
@@ -86,7 +86,6 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 		String id = cursor.getString(cursor.getColumnIndex("id"));
 		String type = cursor.getString(cursor.getColumnIndex("type")); 
 		String data = cursor.getString(cursor.getColumnIndex("data"));
-		al.add(data);
 		JSONObject jsonObj = null;
 		try {
 			jsonObj = new JSONObject(data);
@@ -99,13 +98,14 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //			model.loadFromJSON(jsonObj, true);
 //		}
 		
-		if(view.getId() == R.id.homeListItem_date){
-//			if(type.equals("MoneyExpense")){
-				((HyjDateTimeView)view).setText(jsonObj.optString("date"));
-//			}
-			return true;
-			
-		} else if(view.getId() == R.id.homeListItem_amount){
+//		if(view.getId() == R.id.homeListItem_date){
+////			if(type.equals("MoneyExpense")){
+//				((HyjDateTimeView)view).setText(jsonObj.optString("date"));
+////			}
+//			return true;
+//			
+//		} else 
+		if(view.getId() == R.id.homeListItem_amount){
 			((HyjNumericView)view).setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
 			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")*jsonObj.optDouble("exchangeRate")));
 			return true;
@@ -135,10 +135,11 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			((TextView)view).setText(project.getDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
 			if(type.equals("MoneyExpense")){
+				((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
+				((TextView)view).setText(jsonObj.optString("moneyIncomeCategoryMain"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			return true;

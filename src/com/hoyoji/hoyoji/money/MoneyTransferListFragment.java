@@ -51,7 +51,7 @@ public class MoneyTransferListFragment extends HyjUserListFragment {
 		super.onCreateLoader(arg0, arg1);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(MoneyTransfer.class, null),
-				null, null, null, null
+				null, null, null, "date DESC"
 			);
 		return (Loader<Object>)loader;
 	}

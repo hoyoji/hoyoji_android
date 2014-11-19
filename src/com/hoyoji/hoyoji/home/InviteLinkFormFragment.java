@@ -1,34 +1,26 @@
 package com.hoyoji.hoyoji.home;
 
-import java.util.Date;
-import java.util.UUID;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.hoyoji_android.R;
 
 
 public class InviteLinkFormFragment extends HyjUserFormFragment{
-	private EditText mEditTextDate = null;
+	private HyjDateTimeField mHyjDateTimeFieldDate = null;
 	private HyjRemarkField mEditTextDescription = null;
 	private Button mCloseLink;
 	private Button mOpenLink;
@@ -54,10 +46,12 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
 			e.printStackTrace();
 		}
 		
-		mEditTextDate = (EditText) getView().findViewById(R.id.inviteLinkFormFragment_editText_date);
-		mEditTextDate.setText(jsonObj.optString("date"));
+		mHyjDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.inviteLinkFormFragment_editText_date);
+		mHyjDateTimeFieldDate.setText(jsonObj.optString("date"));
+		mHyjDateTimeFieldDate.setEnabled(false);
 		mEditTextDescription = (HyjRemarkField) getView().findViewById(R.id.inviteLinkFormFragment_hyjRemarkField_description);
 		mEditTextDescription.setText(jsonObj.optString("description"));
+		mEditTextDescription.setEnabled(false);
 		RadioButton closeRadio = (RadioButton) getView().findViewById(R.id.inviteLinkFormFragment_RadioButton_closeState);
 		RadioButton openRadio = (RadioButton) getView().findViewById(R.id.inviteLinkFormFragment_RadioButton_openState);
 		if(jsonObj.optString("state").equals("Open")) {
