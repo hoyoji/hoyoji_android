@@ -75,7 +75,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.translucent);    
-		WXEntryActivity.this.setContentView(R.layout.activity_wxentry);   
+//		WXEntryActivity.this.setContentView(R.layout.activity_wxentry);   
 
 //		mUserName = "";
 		// setContentView(R.layout.entry);
@@ -211,16 +211,21 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 								.getString("msg"));
 					} catch (JSONException e) {
 					}
+					WXEntryActivity.this.dismissProgressDialog();
 					finish();
 				}
 	
 				@Override
 				public void finishCallback(Object object) {
+					WXEntryActivity.this.dismissProgressDialog();
 					JSONObject jsonAccessToken = (JSONObject) object;
 					doLoginOrBind(jsonAccessToken);
 				}
 			};
 			HyjHttpWXLoginAsyncTask.newInstance(sendAuthResp.token, callbacks);
+
+			WXEntryActivity.this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+	 				R.string.loginActivity_progress_signing_in);
 		} else {
 			finish();
 		}
@@ -235,6 +240,8 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 	}
 
 	private void doBindWX(final JSONObject loginInfo) {
+		WXEntryActivity.this.displayProgressDialog(R.string.loginActivity_action_sign_in,
+ 				R.string.loginActivity_progress_signing_in);
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -306,6 +313,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				} 
 				user.save();
 				HyjUtil.displayToast("WX帐号绑定成功");
+				WXEntryActivity.this.dismissProgressDialog();
 				finish();
 
 			}
@@ -316,6 +324,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 					JSONObject json = (JSONObject) object;
 					// ((HyjActivity)getActivity()).dismissProgressDialog();
 					HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
+					WXEntryActivity.this.dismissProgressDialog();
 					finish();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -481,7 +490,14 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				public void finishCallback(Object object) {
 					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl(), 4);
+					WXEntryActivity.this.dismissProgressDialog();
 				}
+
+				@Override
+				public void errorCallback(Object object) {
+					WXEntryActivity.this.dismissProgressDialog();
+				}
+				
 			});
 		} else {
 			this.dismissProgressDialog();
@@ -1020,6 +1036,6 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 	@Override
 	protected Integer getContentView() {
 		// TODO Auto-generated method stub
-		return null;
+		return R.layout.activity_wxentry;
 	}
 }
