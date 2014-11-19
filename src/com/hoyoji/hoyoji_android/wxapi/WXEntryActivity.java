@@ -5,10 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -27,15 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
-import com.activeandroid.util.Log;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.android.hyjframework.HyjHttpGetExchangeRateAsyncTask;
-import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
@@ -43,46 +37,25 @@ import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbHelper;
 import com.hoyoji.android.hyjframework.userdatabase.HyjUserDbContract.UserDatabaseEntry;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.LoginActivity;
-import com.hoyoji.hoyoji.models.Currency;
-import com.hoyoji.hoyoji.models.Exchange;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.FriendCategory;
-import com.hoyoji.hoyoji.models.MessageBox;
-import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
-import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
-import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectRemark;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.models.WXLogin;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.mm.sdk.openapi.BaseReq;
 import com.tencent.mm.sdk.openapi.BaseResp;
-import com.tencent.mm.sdk.openapi.ConstantsAPI;
 import com.tencent.mm.sdk.openapi.SendAuth;
-import com.tencent.mm.sdk.openapi.ShowMessageFromWX;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.mm.sdk.openapi.WXAppExtendObject;
-import com.tencent.mm.sdk.openapi.WXMediaMessage;
 import com.tencent.sample.Util;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 
@@ -295,11 +268,15 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 										out.close();
 										out = null;
 
-										figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+										figure.setRecordId(user.getId());
 										figure.setRecordType("User");
 										figure.setDisplayOrder(0);
 										figure.setPictureType("JPEG");
 
+										Picture oldPicture = user.getPicture();
+										if(oldPicture != null){
+											oldPicture.delete();
+										}
 										user.setPicture(figure);
 										figure.save();
 
@@ -471,7 +448,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
 						if (((HyjApplication) getApplication()).loginWXFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"),loginInfo.optString("access_token")),jsonObject)) {
-							relogin();
+							LoginActivity.relogin(WXEntryActivity.this);
 						}
 						WXEntryActivity.this.dismissProgressDialog();
 					}
@@ -499,349 +476,356 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 	// 该WX好友第一次在本机登录，我们需要下载好友数据到本地
 	private void loginWXUserFirstTime(String userId, String password,JSONObject jsonUser) throws JSONException {
 		if (((HyjApplication) getApplication()).loginWXFirstTime(userId,password, jsonUser)) {
-			downloadUserData();
+			LoginActivity.downloadUserData(this, new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					// TODO Auto-generated method stub
+					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl());
+				}
+			});
 		} else {
 			this.dismissProgressDialog();
 		}
 	}
+//
+//	private void relogin() {
+//		Intent i = getPackageManager().getLaunchIntentForPackage(
+//				getApplicationContext().getPackageName());
+//		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+//				| Intent.FLAG_ACTIVITY_NEW_TASK);
+//		startActivity(i);
+//		finish();
+//	}
 
-	private void relogin() {
-		Intent i = getPackageManager().getLaunchIntentForPackage(
-				getApplicationContext().getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(i);
-		finish();
-	}
-
-	private void downloadUserData() {
-		User user = HyjApplication.getInstance().getCurrentUser();
-
-		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
-				user.getMessageBoxId1());
-		if (msgBox != null) {
-			this.dismissProgressDialog();
-			relogin();
-			return;
-		}
-
-		// UserData userData = HyjApplication.getInstance().getCurrentUser()
-		// .getUserData();
-
-		// 下载一些用户必须的资料
-		JSONArray belongsToes = new JSONArray();
-		try {
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "QQLogin");
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "WBLogin");
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "WXLogin");
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "MessageBox");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "Project");
-			jsonObj.put("pst.friendUserId", HyjApplication.getInstance()
-					.getCurrentUser().getId());
-			// jsonObj.put("id", userData.getActiveProjectId());
-			belongsToes.put(jsonObj);
-
-			// jsonObj = new JSONObject();
-			// jsonObj.put("__dataType", "ProjectShareAuthorization");
-			// jsonObj.put("state", "Accept");
-			// jsonObj.put("friendUserId", user.getId());
-			//
-			// JSONObject notFilter = new JSONObject();
-			// notFilter.put("ownerUserId", user.getId());
-			// jsonObj.put("__NOT_FILTER__", notFilter);
-			// belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "ProjectShareAuthorization");
-			// jsonObj.put("ownerUserId", user.getId());
-			// JSONObject notFilter = new JSONObject();
-			// notFilter.put("ownerUserId", "");
-			// jsonObj.put("__NOT_FILTER__", notFilter);
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "ProjectRemark");
-			// jsonObj.put("ownerUserId", user.getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "ParentProject");
-			jsonObj.put("parentProjectId", null);
-			// jsonObj.put("subProjectId", userData.getActiveProjectId());
-			// jsonObj.put("ownerUserId", user.getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "FriendCategory");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "Friend");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "Currency");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "Exchange");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "MoneyAccount");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			// jsonObj.put("id", userData.getActiveMoneyAccountId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "MoneyExpenseCategory");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			belongsToes.put(jsonObj);
-
-			jsonObj = new JSONObject();
-			jsonObj.put("__dataType", "MoneyIncomeCategory");
-			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
-			// .getCurrentUser().getId());
-			belongsToes.put(jsonObj);
-
-			// 从服务器上下载基础数据
-			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-				@Override
-				public void finishCallback(Object object) {
-					try {
-						ActiveAndroid.beginTransaction();
-						String figureUrl = null;
-						JSONArray jsonArray = (JSONArray) object;
-						for (int i = 0; i < jsonArray.length(); i++) {
-							JSONArray array = jsonArray.optJSONArray(i);
-							for (int j = 0; j < jsonArray.length(); j++) {
-								JSONObject obj = array.optJSONObject(j);
-								if (obj != null) {
-									if (HyjApplication.getIsDebuggable()) {
-										Log.i("Login Download Data : ",
-												obj.optString("__dataType"));
-									}
-									if (obj.optString("__dataType").equals(
-											"MoneyAccount")) {
-										MoneyAccount moneyAccount = new MoneyAccount();
-										moneyAccount.loadFromJSON(obj, true);
-										moneyAccount.save();
-									} else if (obj
-											.optString("__dataType")
-											.equals("ProjectShareAuthorization")) {
-										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-										newProjectShareAuthorization
-												.loadFromJSON(obj, true);
-										newProjectShareAuthorization.save();
-									} else if (obj.optString("__dataType")
-											.equals("Currency")) {
-										Currency newCurrency = new Currency();
-										newCurrency.loadFromJSON(obj, true);
-										newCurrency.save();
-									} else if (obj.optString("__dataType")
-											.equals("ParentProject")) {
-										ParentProject parentProject = new ParentProject();
-										parentProject.loadFromJSON(obj, true);
-										parentProject.save();
-									} else if (obj.optString("__dataType")
-											.equals("FriendCategory")) {
-										FriendCategory friendCategory = new FriendCategory();
-										friendCategory.loadFromJSON(obj, true);
-										friendCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("Project")) {
-										Project project = new Project();
-										project.loadFromJSON(obj, true);
-										project.save();
-									} else if (obj.optString("__dataType")
-											.equals("MessageBox")) {
-										MessageBox messageBox = new MessageBox();
-										messageBox.loadFromJSON(obj, true);
-										messageBox.save();
-									} else if (obj.optString("__dataType")
-											.equals("QQLogin")) {
-										QQLogin qqLogin = new QQLogin();
-										qqLogin.loadFromJSON(obj, true);
-										if (!obj.isNull("figureUrl")) {
-											figureUrl = obj
-													.getString("figureUrl");
-										}
-										qqLogin.save();
-									} else if (obj.optString("__dataType")
-											.equals("WXLogin")) {
-										WXLogin wxLogin = new WXLogin();
-										wxLogin.loadFromJSON(obj, true);
-										if (!obj.isNull("headimgurl")) {
-											figureUrl = obj
-													.getString("headimgurl");
-										}
-										wxLogin.save();
-									} else if (obj.optString("__dataType")
-											.equals("WBLogin")) {
-										WBLogin wbLogin = new WBLogin();
-										wbLogin.loadFromJSON(obj, true);
-										if (!obj.isNull("profile_image_url")) {
-											figureUrl = obj
-													.getString("profile_image_url");
-										}
-										wbLogin.save();
-									} else if (obj.optString("__dataType")
-											.equals("Friend")) {
-										Friend friend = new Friend();
-										friend.loadFromJSON(obj, true);
-										friend.save();
-									} else if (obj.optString("__dataType")
-											.equals("Exchange")) {
-										Exchange exchange = new Exchange();
-										exchange.loadFromJSON(obj, true);
-										exchange.save();
-									} else if (obj.optString("__dataType")
-											.equals("MoneyExpenseCategory")) {
-										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
-										moneyExpenseCategory.loadFromJSON(obj,
-												true);
-										moneyExpenseCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("MoneyIncomeCategory")) {
-										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
-										moneyIncomeCategory.loadFromJSON(obj,
-												true);
-										moneyIncomeCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("ProjectRemark")) {
-										ProjectRemark projectRemark = new ProjectRemark();
-										projectRemark.loadFromJSON(obj, true);
-										projectRemark.save();
-									}
-								}
-							}
-						}
-
-						ActiveAndroid.setTransactionSuccessful();
-						ActiveAndroid.endTransaction();
-
-						if (figureUrl != null) {
-							final String figureUrl1 = figureUrl;
-							HyjAsyncTask
-									.newInstance(new HyjAsyncTaskCallbacks() {
-										@Override
-										public void finishCallback(Object object) {
-											Bitmap thumbnail = null;
-											if (object != null) {
-												thumbnail = (Bitmap) object;
-											}
-
-											FileOutputStream out;
-											try {
-												Picture figure = new Picture();
-												File imgFile = HyjUtil
-														.createImageFile(figure
-																.getId()
-																+ "_icon");
-												if (imgFile != null) {
-													out = new FileOutputStream(
-															imgFile);
-													thumbnail
-															.compress(
-																	Bitmap.CompressFormat.JPEG,
-																	90, out);
-													out.close();
-													out = null;
-
-													figure.setRecordId(HyjApplication
-															.getInstance()
-															.getCurrentUser()
-															.getId());
-													figure.setRecordType("User");
-													figure.setDisplayOrder(0);
-													figure.setPictureType("JPEG");
-
-													HyjApplication
-															.getInstance()
-															.getCurrentUser()
-															.setPicture(figure);
-													HyjApplication
-															.getInstance()
-															.getCurrentUser()
-															.save();
-													figure.save();
-												}
-											} catch (FileNotFoundException e) {
-												// TODO Auto-generated catch
-												// block
-												e.printStackTrace();
-											} catch (IOException e) {
-												// TODO Auto-generated catch
-												// block
-												e.printStackTrace();
-											}
-										}
-
-										@Override
-										public Object doInBackground(
-												String... string) {
-											Bitmap thumbnail = null;
-											thumbnail = Util
-													.getBitmapFromUrl(figureUrl1, 1);
-											return thumbnail;
-										}
-									});
-						}
-
-						WXEntryActivity.this.dismissProgressDialog();
-						relogin();
-					} catch (Exception e) {
-						ActiveAndroid.endTransaction();
-						WXEntryActivity.this.dismissProgressDialog();
-					}
-				}
-
-				@Override
-				public void errorCallback(Object object) {
-					WXEntryActivity.this.dismissProgressDialog();
-					try {
-						JSONObject json = (JSONObject) object;
-						HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			};
-
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-					belongsToes.toString(), "getData");
-
-		} catch (JSONException e) {
-			//
-		}
-	}
+//	private void downloadUserData() {
+//		User user = HyjApplication.getInstance().getCurrentUser();
+//
+//		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
+//				user.getMessageBoxId1());
+//		if (msgBox != null) {
+//			this.dismissProgressDialog();
+//			relogin();
+//			return;
+//		}
+//
+//		// UserData userData = HyjApplication.getInstance().getCurrentUser()
+//		// .getUserData();
+//
+//		// 下载一些用户必须的资料
+//		JSONArray belongsToes = new JSONArray();
+//		try {
+//			JSONObject jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "QQLogin");
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "WBLogin");
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "WXLogin");
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "MessageBox");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "Project");
+//			jsonObj.put("pst.friendUserId", HyjApplication.getInstance()
+//					.getCurrentUser().getId());
+//			// jsonObj.put("id", userData.getActiveProjectId());
+//			belongsToes.put(jsonObj);
+//
+//			// jsonObj = new JSONObject();
+//			// jsonObj.put("__dataType", "ProjectShareAuthorization");
+//			// jsonObj.put("state", "Accept");
+//			// jsonObj.put("friendUserId", user.getId());
+//			//
+//			// JSONObject notFilter = new JSONObject();
+//			// notFilter.put("ownerUserId", user.getId());
+//			// jsonObj.put("__NOT_FILTER__", notFilter);
+//			// belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "ProjectShareAuthorization");
+//			// jsonObj.put("ownerUserId", user.getId());
+//			// JSONObject notFilter = new JSONObject();
+//			// notFilter.put("ownerUserId", "");
+//			// jsonObj.put("__NOT_FILTER__", notFilter);
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "ProjectRemark");
+//			// jsonObj.put("ownerUserId", user.getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "ParentProject");
+//			jsonObj.put("parentProjectId", null);
+//			// jsonObj.put("subProjectId", userData.getActiveProjectId());
+//			// jsonObj.put("ownerUserId", user.getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "FriendCategory");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "Friend");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			// jsonObj.put("id", userData.getDefaultFriendCategoryId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "Currency");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "Exchange");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "MoneyAccount");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			// jsonObj.put("id", userData.getActiveMoneyAccountId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "MoneyExpenseCategory");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
+//
+//			jsonObj = new JSONObject();
+//			jsonObj.put("__dataType", "MoneyIncomeCategory");
+//			// jsonObj.put("ownerUserId", HyjApplication.getInstance()
+//			// .getCurrentUser().getId());
+//			belongsToes.put(jsonObj);
+//
+//			// 从服务器上下载基础数据
+//			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//				@Override
+//				public void finishCallback(Object object) {
+//					try {
+//						ActiveAndroid.beginTransaction();
+//						String figureUrl = null;
+//						JSONArray jsonArray = (JSONArray) object;
+//						for (int i = 0; i < jsonArray.length(); i++) {
+//							JSONArray array = jsonArray.optJSONArray(i);
+//							for (int j = 0; j < jsonArray.length(); j++) {
+//								JSONObject obj = array.optJSONObject(j);
+//								if (obj != null) {
+//									if (HyjApplication.getIsDebuggable()) {
+//										Log.i("Login Download Data : ",
+//												obj.optString("__dataType"));
+//									}
+//									if (obj.optString("__dataType").equals(
+//											"MoneyAccount")) {
+//										MoneyAccount moneyAccount = new MoneyAccount();
+//										moneyAccount.loadFromJSON(obj, true);
+//										moneyAccount.save();
+//									} else if (obj
+//											.optString("__dataType")
+//											.equals("ProjectShareAuthorization")) {
+//										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+//										newProjectShareAuthorization
+//												.loadFromJSON(obj, true);
+//										newProjectShareAuthorization.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Currency")) {
+//										Currency newCurrency = new Currency();
+//										newCurrency.loadFromJSON(obj, true);
+//										newCurrency.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("ParentProject")) {
+//										ParentProject parentProject = new ParentProject();
+//										parentProject.loadFromJSON(obj, true);
+//										parentProject.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("FriendCategory")) {
+//										FriendCategory friendCategory = new FriendCategory();
+//										friendCategory.loadFromJSON(obj, true);
+//										friendCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Project")) {
+//										Project project = new Project();
+//										project.loadFromJSON(obj, true);
+//										project.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MessageBox")) {
+//										MessageBox messageBox = new MessageBox();
+//										messageBox.loadFromJSON(obj, true);
+//										messageBox.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("QQLogin")) {
+//										QQLogin qqLogin = new QQLogin();
+//										qqLogin.loadFromJSON(obj, true);
+//										if (!obj.isNull("figureUrl")) {
+//											figureUrl = obj
+//													.getString("figureUrl");
+//										}
+//										qqLogin.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("WXLogin")) {
+//										WXLogin wxLogin = new WXLogin();
+//										wxLogin.loadFromJSON(obj, true);
+//										if (!obj.isNull("headimgurl")) {
+//											figureUrl = obj
+//													.getString("headimgurl");
+//										}
+//										wxLogin.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("WBLogin")) {
+//										WBLogin wbLogin = new WBLogin();
+//										wbLogin.loadFromJSON(obj, true);
+//										if (!obj.isNull("profile_image_url")) {
+//											figureUrl = obj
+//													.getString("profile_image_url");
+//										}
+//										wbLogin.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Friend")) {
+//										Friend friend = new Friend();
+//										friend.loadFromJSON(obj, true);
+//										friend.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Exchange")) {
+//										Exchange exchange = new Exchange();
+//										exchange.loadFromJSON(obj, true);
+//										exchange.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MoneyExpenseCategory")) {
+//										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
+//										moneyExpenseCategory.loadFromJSON(obj,
+//												true);
+//										moneyExpenseCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MoneyIncomeCategory")) {
+//										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
+//										moneyIncomeCategory.loadFromJSON(obj,
+//												true);
+//										moneyIncomeCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("ProjectRemark")) {
+//										ProjectRemark projectRemark = new ProjectRemark();
+//										projectRemark.loadFromJSON(obj, true);
+//										projectRemark.save();
+//									}
+//								}
+//							}
+//						}
+//
+//						ActiveAndroid.setTransactionSuccessful();
+//						ActiveAndroid.endTransaction();
+//
+//						if (figureUrl != null) {
+//							final String figureUrl1 = figureUrl;
+//							HyjAsyncTask
+//									.newInstance(new HyjAsyncTaskCallbacks() {
+//										@Override
+//										public void finishCallback(Object object) {
+//											Bitmap thumbnail = null;
+//											if (object != null) {
+//												thumbnail = (Bitmap) object;
+//											}
+//
+//											FileOutputStream out;
+//											try {
+//												Picture figure = new Picture();
+//												File imgFile = HyjUtil
+//														.createImageFile(figure
+//																.getId()
+//																+ "_icon");
+//												if (imgFile != null) {
+//													out = new FileOutputStream(
+//															imgFile);
+//													thumbnail
+//															.compress(
+//																	Bitmap.CompressFormat.JPEG,
+//																	90, out);
+//													out.close();
+//													out = null;
+//
+//													figure.setRecordId(HyjApplication
+//															.getInstance()
+//															.getCurrentUser()
+//															.getId());
+//													figure.setRecordType("User");
+//													figure.setDisplayOrder(0);
+//													figure.setPictureType("JPEG");
+//
+//													HyjApplication
+//															.getInstance()
+//															.getCurrentUser()
+//															.setPicture(figure);
+//													HyjApplication
+//															.getInstance()
+//															.getCurrentUser()
+//															.save();
+//													figure.save();
+//												}
+//											} catch (FileNotFoundException e) {
+//												// TODO Auto-generated catch
+//												// block
+//												e.printStackTrace();
+//											} catch (IOException e) {
+//												// TODO Auto-generated catch
+//												// block
+//												e.printStackTrace();
+//											}
+//										}
+//
+//										@Override
+//										public Object doInBackground(
+//												String... string) {
+//											Bitmap thumbnail = null;
+//											thumbnail = Util
+//													.getBitmapFromUrl(figureUrl1, 1);
+//											return thumbnail;
+//										}
+//									});
+//						}
+//
+//						WXEntryActivity.this.dismissProgressDialog();
+//						relogin();
+//					} catch (Exception e) {
+//						ActiveAndroid.endTransaction();
+//						WXEntryActivity.this.dismissProgressDialog();
+//					}
+//				}
+//
+//				@Override
+//				public void errorCallback(Object object) {
+//					WXEntryActivity.this.dismissProgressDialog();
+//					try {
+//						JSONObject json = (JSONObject) object;
+//						HyjUtil.displayToast(json.getJSONObject("__summary").getString("msg"));
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			};
+//
+//			HyjHttpPostAsyncTask.newInstance(serverCallbacks,
+//					belongsToes.toString(), "getData");
+//
+//		} catch (JSONException e) {
+//			//
+//		}
+//	}
 
 	// private void goToGetMsg() {
 	// Intent intent = new Intent(this, GetFromWXActivity.class);

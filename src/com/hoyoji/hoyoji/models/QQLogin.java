@@ -24,6 +24,9 @@ public class QQLogin extends HyjModel {
 	@Column(name = "nickName")
 	private String mNickName;
 	
+	@Column(name = "figureUrl")
+	private String mFigureUrl;
+	
 	@Column(name = "access_token")
 	private String mAccessToken;
 	
@@ -88,6 +91,15 @@ public class QQLogin extends HyjModel {
 
 	public void setOpenId(String mOpenId) {
 		this.mOpenId = mOpenId;
+	}
+	
+
+	public String getFigureUrl() {
+		return mFigureUrl;
+	}
+
+	public void setFigureUrl(String mFigureUrl) {
+		this.mFigureUrl = mFigureUrl;
 	}
 
 	public String getNickName() {

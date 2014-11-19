@@ -319,6 +319,10 @@ public class BindIDFragment extends HyjFragment {
 											out.close();
 											out = null;
 											
+											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+											if(oldPicture != null){
+												oldPicture.delete();
+											}
 											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
 											figure.setRecordType("User");
 											figure.setDisplayOrder(0);
@@ -647,6 +651,10 @@ public class BindIDFragment extends HyjFragment {
 											out.close();
 											out = null;
 											
+											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+											if(oldPicture != null){
+												oldPicture.delete();
+											}
 											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
 											figure.setRecordType("User");
 											figure.setDisplayOrder(0);

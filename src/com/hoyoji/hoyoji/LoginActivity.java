@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
 import com.activeandroid.DatabaseHelper;
+import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
@@ -59,6 +60,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -501,7 +503,7 @@ public class LoginActivity extends HyjActivity {
 							loginWBUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 						} else {
 							if(((HyjApplication) getApplication()).loginWBFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-								relogin();
+								relogin(LoginActivity.this);
 							}
 							LoginActivity.this.dismissProgressDialog();
 						}
@@ -799,7 +801,7 @@ public class LoginActivity extends HyjActivity {
 
 	private void loginUser(String userId) {
 		if (((HyjApplication) getApplication()).login(userId, mPassword)) {
-			downloadUserData();
+			downloadUserData(this, null);
 		} else {
 			loginFromServer(false);
 		}
@@ -809,7 +811,7 @@ public class LoginActivity extends HyjActivity {
 			throws JSONException {
 		if (((HyjApplication) getApplication()).login(userId, mPassword,
 				jsonUser)) {
-			downloadUserData();
+			downloadUserData(this, null);
 		} else {
 			mPasswordView
 					.setError(getString(R.string.loginActivity_error_incorrect_password));
@@ -822,7 +824,15 @@ public class LoginActivity extends HyjActivity {
 	private void loginQQUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).loginQQFirstTime(userId, password, jsonUser)) {
-			downloadUserData();
+			downloadUserData(this, new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					// TODO Auto-generated method stub
+					QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					downloadUserHeadImage(qqLogin.getFigureUrl());
+				}
+			});
+
 		} else {
 			this.dismissProgressDialog();
 		}
@@ -832,29 +842,89 @@ public class LoginActivity extends HyjActivity {
 	private void loginWBUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).loginWBFirstTime(userId, password, jsonUser)) {
-			downloadUserData();
+			downloadUserData(this, new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					// TODO Auto-generated method stub
+					WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					downloadUserHeadImage(wbLogin.getProfile_image_url());
+				}
+			});
 		} else {
 			this.dismissProgressDialog();
 		}
 	}
 	
-	private void relogin(){
-		Intent i = getPackageManager().getLaunchIntentForPackage(
-				getApplicationContext().getPackageName());
+	public static void relogin(Activity activity){
+		Intent i = activity.getPackageManager().getLaunchIntentForPackage(
+				activity.getApplicationContext().getPackageName());
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(i);
-		finish();
+		activity.startActivity(i);
+		activity.finish();
 	}
 
-	private void downloadUserData() {
+	public static void downloadUserHeadImage(String figureUrl){
+		if(figureUrl != null){
+		final String figureUrl1 = figureUrl;
+		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				Bitmap thumbnail = null;
+				if(object != null){
+					thumbnail = (Bitmap) object;
+				}
+				
+				FileOutputStream out;
+				try {
+					Picture figure = new Picture();
+					File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+					if(imgFile != null){
+						out = new FileOutputStream(imgFile);
+						thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+						out.close();
+						out = null;
+						
+						figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+						figure.setRecordType("User");
+						figure.setDisplayOrder(0);
+						figure.setPictureType("JPEG");
+						
+						Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+						if(oldPicture != null){
+							oldPicture.delete();
+						}
+						HyjApplication.getInstance().getCurrentUser().setPicture(figure);
+						HyjApplication.getInstance().getCurrentUser().save();
+						figure.save();								
+					}
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public Object doInBackground(String... string) {
+				Bitmap thumbnail = null;
+				thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
+				return thumbnail;
+			}
+		});
+	}
+	}
+	
+	public static void downloadUserData(final HyjActivity activity, final HyjAsyncTaskCallbacks callback) {
 		User user = HyjApplication.getInstance().getCurrentUser();
 		
 		MessageBox msgBox = HyjModel.getModel(MessageBox.class,
 				user.getMessageBoxId1());
 		if (msgBox != null) {
-			this.dismissProgressDialog();
-			relogin();
+			activity.dismissProgressDialog();
+			relogin(activity);
 			return;
 		}
 
@@ -971,7 +1041,7 @@ public class LoginActivity extends HyjActivity {
 				public void finishCallback(Object object) {
 					try {
 						ActiveAndroid.beginTransaction();
-						String figureUrl = null;
+//						String figureUrl = null;
 						JSONArray jsonArray = (JSONArray) object;
 						for (int i = 0; i < jsonArray.length(); i++) {
 							JSONArray array = jsonArray.optJSONArray(i);
@@ -1022,25 +1092,25 @@ public class LoginActivity extends HyjActivity {
 											.equals("QQLogin")) {
 										QQLogin qqLogin = new QQLogin();
 										qqLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("figureUrl")){
-											figureUrl = obj.getString("figureUrl");
-										}
+//										if(!obj.isNull("figureUrl")){
+//											figureUrl = obj.getString("figureUrl");
+//										}
 										qqLogin.save();
 									}  else if (obj.optString("__dataType")
 											.equals("WBLogin")) {
 										WBLogin wbLogin = new WBLogin();
 										wbLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("profile_image_url")){
-											figureUrl = obj.getString("profile_image_url");
-										}
+//										if(!obj.isNull("profile_image_url")){
+//											figureUrl = obj.getString("profile_image_url");
+//										}
 										wbLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("WXLogin")) {
 										WXLogin wxLogin = new WXLogin();
 										wxLogin.loadFromJSON(obj, true);
-										if(!obj.isNull("headimgurl")){
-											figureUrl = obj.getString("headimgurl");
-										}
+//										if(!obj.isNull("headimgurl")){
+//											figureUrl = obj.getString("headimgurl");
+//										}
 										wxLogin.save();
 									} else if (obj.optString("__dataType")
 											.equals("Friend")) {
@@ -1079,69 +1149,73 @@ public class LoginActivity extends HyjActivity {
 						ActiveAndroid.endTransaction();
 
 
-						if(figureUrl != null){
-							final String figureUrl1 = figureUrl;
-							HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-								@Override
-								public void finishCallback(Object object) {
-									Bitmap thumbnail = null;
-									if(object != null){
-										thumbnail = (Bitmap) object;
-									}
-									
-									FileOutputStream out;
-									try {
-										Picture figure = new Picture();
-										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-										if(imgFile != null){
-											out = new FileOutputStream(imgFile);
-											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-											out.close();
-											out = null;
-											
-											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-											figure.setRecordType("User");
-											figure.setDisplayOrder(0);
-											figure.setPictureType("JPEG");
-											
-											HyjApplication.getInstance().getCurrentUser().setPicture(figure);
-											HyjApplication.getInstance().getCurrentUser().save();
-											figure.save();								
-										}
-									} catch (FileNotFoundException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-			
-								@Override
-								public Object doInBackground(String... string) {
-									Bitmap thumbnail = null;
-									thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
-									return thumbnail;
-								}
-							});
+//						if(figureUrl != null){
+//							final String figureUrl1 = figureUrl;
+//							HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//								@Override
+//								public void finishCallback(Object object) {
+//									Bitmap thumbnail = null;
+//									if(object != null){
+//										thumbnail = (Bitmap) object;
+//									}
+//									
+//									FileOutputStream out;
+//									try {
+//										Picture figure = new Picture();
+//										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+//										if(imgFile != null){
+//											out = new FileOutputStream(imgFile);
+//											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//											out.close();
+//											out = null;
+//											
+//											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+//											figure.setRecordType("User");
+//											figure.setDisplayOrder(0);
+//											figure.setPictureType("JPEG");
+//											
+//											HyjApplication.getInstance().getCurrentUser().setPicture(figure);
+//											HyjApplication.getInstance().getCurrentUser().save();
+//											figure.save();								
+//										}
+//									} catch (FileNotFoundException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									} catch (IOException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//								}
+//			
+//								@Override
+//								public Object doInBackground(String... string) {
+//									Bitmap thumbnail = null;
+//									thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
+//									return thumbnail;
+//								}
+//							});
+//						}
+						
+						
+						
+						activity.dismissProgressDialog();
+						if(callback != null){
+							callback.finishCallback(null);
 						}
+						relogin(activity);
 						
-						
-						
-						LoginActivity.this.dismissProgressDialog();
-						relogin();
 					} catch (Exception e) {
 						ActiveAndroid.endTransaction();
-						LoginActivity.this.dismissProgressDialog();
+						activity.dismissProgressDialog();
 					}
 				}
 
 				@Override
 				public void errorCallback(Object object) {
-					LoginActivity.this.dismissProgressDialog();
+					activity.dismissProgressDialog();
 					try {
 						JSONObject json = (JSONObject) object;
-						LoginActivity.this.displayDialog(null,
+						activity.displayDialog(null,
 								json.getJSONObject("__summary")
 										.getString("msg"));
 					} catch (Exception e) {
@@ -1154,7 +1228,8 @@ public class LoginActivity extends HyjActivity {
 					belongsToes.toString(), "getData");
 
 		} catch (JSONException e) {
-			//
+
+			e.printStackTrace();
 		}
 	}
 
@@ -1244,7 +1319,7 @@ public class LoginActivity extends HyjActivity {
 						loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
 						if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-							relogin();
+							relogin(LoginActivity.this);
 						}
 						LoginActivity.this.dismissProgressDialog();
 					}
