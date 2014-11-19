@@ -896,14 +896,17 @@ public class MoneyIncomeContainer extends HyjModel {
 								} else {
 									// 记账人向财务负责人借入
 									moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() ).executeSingle();
-									// 分摊人向财务负责人借出
-									moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId() ).executeSingle();
+									
 									// 财务负责人向记账人借出
 									moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
 									if(apportionEditor.getModel().getFriendUserId() != null){
-										// 财务负责人向分摊人借入
+										// 分摊人向财务负责人借出
+										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
+											// 财务负责人向分摊人借入
 										moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId(), apportionEditor.getModel().getFriendUserId()).executeSingle();
 									} else {
+										// 分摊人向财务负责人借出
+										moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=? AND ownerUserId=?", apportion.getId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
 										// 财务负责人向分摊人借入
 										moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=? AND ownerUserId=? AND localFriendId = ?", apportion.getId(), mMoneyIncomeContainerEditor.getModel().getFinancialOwnerUserId(), apportionEditor.getModel().getLocalFriendId()).executeSingle();
 									}
