@@ -54,6 +54,12 @@ public class MoneyAccount extends HyjModel {
 	@Column(name = "friendId")
 	private String mFriendId;
 	
+	@Column(name = "friendUserId")
+	private String mFriendUserId;
+	
+	@Column(name = "localFriendId")
+	private String mLocalFriendId;
+	
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
 
