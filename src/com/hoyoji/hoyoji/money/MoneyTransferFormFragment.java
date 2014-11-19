@@ -538,11 +538,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		// 在修改模式下自动展开
-		if(modelId != -1){
-			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
-			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
-		}
 		
 		if(modelId != -1){
 			transferOutProjectExchangeRate.setNumber(moneyTransfer.getTransferOutExchangeRate());
@@ -563,7 +558,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				setExchangeRate(false);
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}else{
-				//setExchangeRate(true);
+				setExchangeRate(true);
 			}
 	}
 	
