@@ -292,7 +292,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		mNumericTransferInAmount.setNumber(moneyTransfer.getTransferInAmount());
 		mNumericTransferInAmount.setEnabled(false);
 		
-		mViewSeparatorTransferInAmount = (View) getView().findViewById(R.id.moneyTransferFormFragment_separatorField_transferInamount);
+		mViewSeparatorTransferInAmount = (View) getView().findViewById(R.id.field_separator_exchangeRate);
 		
 		
 		String projectId = intent.getStringExtra("projectId");//从消息导入
@@ -953,14 +953,15 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
                 		
                 		transferOutCurrency.setText(activeAccount.getCurrency().getName() + "(" + activeAccount.getCurrencyId() + ")");
                 		transferProjectCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
-                		mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
-            			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+                		
             			
             			
             			if (modelId == -1) {
             				setExchangeRate(false);
             			} else {
             				setExchangeRate(true);
+            				mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
+                			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
             			}
                  		return;
              		} else {
@@ -1033,14 +1034,15 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
         				projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
         				transferInCurrency.setText(activeAccount.getCurrency().getName() + "(" + activeAccount.getCurrencyId() + ")");
         				
-        				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
-        				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+        				
                  		
         				
         				if (modelId == -1) {
             				setExchangeRate(false);
             			} else {
             				setExchangeRate(true);
+            				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+            				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
             			}
                  		return;
              		} else {
