@@ -9,50 +9,45 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".InviteLinkFormFragment" >
-
-   <LinearLayout
+    
+   <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+        android:id="@+id/inviteLinkFormFragment_editText_date"
+        hyj:style="left_label"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/inviteLinkFormFragment_textView_date"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/inviteLinkFormFragment_textView_date" />
-
-        <EditText
-            android:id="@+id/inviteLinkFormFragment_editText_date"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" 
-            android:enabled="false"
-	    	android:ellipsize="start"
-            android:hint="@string/inviteLinkFormFragment_editText_hint_date" 
-                android:maxLines="1"
-                android:singleLine="true">
-        </EditText>
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        layout_gravity="center_horizonta" 
+        android:layout_gravity="right"
+        hyj:editTextBorder="none"
+        hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_date"
+        hyj:labelText="@string/inviteLinkFormFragment_textView_date" />
+   
+   <View
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="@drawable/line_divider" />
     
    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/inviteLinkFormFragment_textView_state"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:gravity="center_vertical"
             android:text="@string/inviteLinkFormFragment_textView_state" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
+            android:layout_weight="2.3"
             android:orientation="horizontal" >
             <RadioButton
                 android:id="@+id/inviteLinkFormFragment_RadioButton_closeState"
@@ -71,6 +66,14 @@
         
     </LinearLayout>
     
+   <View
+      android:id="@id/field_separator"
+      android:layout_width="match_parent"
+      android:layout_height="1dip"
+      android:layout_marginBottom="5dip"
+      android:layout_marginTop="5dip"
+      android:background="@drawable/line_divider" />
+    
    <com.hoyoji.android.hyjframework.view.HyjRemarkField
           android:id="@+id/inviteLinkFormFragment_hyjRemarkField_description"
           hyj:style="no_label"
@@ -78,7 +81,15 @@
           android:layout_height="wrap_content"
           hyj:hintText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description"
           hyj:labelText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description" />
-    
+   
+   <View
+       android:id="@id/field_separator"
+       android:layout_width="match_parent"
+       android:layout_height="1dip"
+       android:layout_marginBottom="5dip"
+       android:layout_marginTop="5dip"
+       android:background="@drawable/line_divider" />
+
 	<!-- <Button
 	    android:id="@+id/inviteLinkFormFragment_button_closeLink"
 	    android:layout_width="fill_parent"

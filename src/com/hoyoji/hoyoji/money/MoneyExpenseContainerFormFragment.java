@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -139,7 +140,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
 			
-			String temPlateData = intent.getStringExtra("DATA");
+			String temPlateID = intent.getStringExtra("MONEYTEMPLATE_ID");
+			if(temPlateID != null){
+				MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
+				moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
+				moneyTemplate.save();
+			}
+			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
 			JSONObject temPlateJso = null;
 			if (temPlateData != null) {
 				try {
@@ -151,6 +158,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				temPlateJso.remove("id");
 				temPlateJso.remove("date");
 				moneyExpenseContainer.loadFromJSON(temPlateJso,false);
+				
 			} else {
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyAccountId != null){

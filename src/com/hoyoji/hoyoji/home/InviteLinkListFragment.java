@@ -19,6 +19,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.hoyoji_android.R;
 
 public class InviteLinkListFragment extends HyjUserListFragment {
@@ -103,7 +104,7 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 			data.put("__limit", getListPageSize());
 			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			data.put("__offset", 0);
-			data.put("__orderBy", "date ASC");
+			data.put("__orderBy", "date DESC");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -130,7 +131,7 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 			data.put("__limit", getListPageSize());
 			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			data.put("__offset", offset);
-			data.put("__orderBy", "date ASC");
+			data.put("__orderBy", "date DESC");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -146,18 +147,19 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 	}
 
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object json, String name) {
+		JSONObject jsonObject = (JSONObject)json;
 		if (view.getId() == R.id.inviteFriendLinkListItem_state) {
-			((TextView) view).setText(cursor.getColumnIndex("state"));
+			((TextView) view).setText(jsonObject.optString(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_date) {
-			((TextView) view).setText(cursor.getColumnIndex("date"));
+			((HyjDateTimeView) view).setText(jsonObject.optString(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_type) {
-			((TextView) view).setText(cursor.getColumnIndex("type"));
+			((TextView) view).setText(jsonObject.optString(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_description) {
-			((TextView) view).setText(cursor.getColumnIndex("description"));
+			((TextView) view).setText(jsonObject.optString(name));
 			return true;
 		} else {
 			return false;
