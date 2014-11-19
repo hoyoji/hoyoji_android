@@ -73,7 +73,7 @@
     
 	<Button
 	    android:id="@id/button_save"
-	    android:text="@string/moneyShareMessageFormFragment_button_import_income"
+	    android:text="@string/moneyShareMessageFormFragment_button_view_transaction"
             android:background="@drawable/button_rectangle"     
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"/>

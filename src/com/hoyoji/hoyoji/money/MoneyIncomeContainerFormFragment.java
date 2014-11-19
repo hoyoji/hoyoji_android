@@ -855,7 +855,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		fillData();
-		
+		if(!validate()){
+			return;
+		}
 		
 			try {
 				ActiveAndroid.beginTransaction();
