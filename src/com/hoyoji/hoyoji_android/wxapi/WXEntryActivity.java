@@ -50,11 +50,14 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.sample.Util;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
@@ -214,7 +217,6 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				@Override
 				public void finishCallback(Object object) {
 					JSONObject jsonAccessToken = (JSONObject) object;
-	
 					doLoginOrBind(jsonAccessToken);
 				}
 			};
@@ -252,60 +254,59 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				}
 				final String headimgurl = jsonObject.optString("headimgurl");
 				if (headimgurl.length() > 0) {
-					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-						@Override
-						public void finishCallback(Object object) {
-							Bitmap thumbnail = null;
-							if (object != null) {
-								thumbnail = (Bitmap) object;
-								FileOutputStream out;
-								try {
-									Picture figure = new Picture();
-									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-									if (imgFile != null) {
-										out = new FileOutputStream(imgFile);
-										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-										out.close();
-										out = null;
-
-										figure.setRecordId(user.getId());
-										figure.setRecordType("User");
-										figure.setDisplayOrder(0);
-										figure.setPictureType("JPEG");
-
-										Picture oldPicture = user.getPicture();
-										if(oldPicture != null){
-											oldPicture.delete();
-										}
-										user.setPicture(figure);
-										figure.save();
-
-									}
-								} catch (FileNotFoundException e) {
-									e.printStackTrace();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-
-							user.save();
-							HyjUtil.displayToast("WX帐号绑定成功");
-							finish();
-						}
-
-						@Override
-						public Object doInBackground(String... string) {
-							Bitmap thumbnail = null;
-							thumbnail = Util.getBitmapFromUrl(headimgurl, 4);
-							return thumbnail;
-						}
-					});
-					finish();
-				} else {
-					user.save();
-					HyjUtil.displayToast("WX帐号绑定成功");
-					finish();
-				}
+					LoginActivity.downloadUserHeadImage(headimgurl, 4);
+//					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//						@Override
+//						public void finishCallback(Object object) {
+//							Bitmap thumbnail = null;
+//							if (object != null) {
+//								thumbnail = (Bitmap) object;
+//								FileOutputStream out;
+//								try {
+//									Picture figure = new Picture();
+//									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+//									if (imgFile != null) {
+//										out = new FileOutputStream(imgFile);
+//										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//										out.close();
+//										out = null;
+//
+//										figure.setRecordId(user.getId());
+//										figure.setRecordType("User");
+//										figure.setDisplayOrder(0);
+//										figure.setPictureType("JPEG");
+//
+//										Picture oldPicture = user.getPicture();
+//										if(oldPicture != null){
+//											oldPicture.delete();
+//										}
+//										user.setPicture(figure);
+//										figure.save();
+//
+//									}
+//								} catch (FileNotFoundException e) {
+//									e.printStackTrace();
+//								} catch (IOException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//
+//							user.save();
+//							HyjUtil.displayToast("WX帐号绑定成功");
+//							finish();
+//						}
+//
+//						@Override
+//						public Object doInBackground(String... string) {
+//							Bitmap thumbnail = null;
+//							thumbnail = Util.getBitmapFromUrl(headimgurl, 4);
+//							return thumbnail;
+//						}
+//					});
+				} 
+				user.save();
+				HyjUtil.displayToast("WX帐号绑定成功");
+				finish();
 
 			}
 
@@ -481,7 +482,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				public void finishCallback(Object object) {
 					// TODO Auto-generated method stub
 					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl());
+					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl(), 4);
 				}
 			});
 		} else {
@@ -863,11 +864,16 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 			super(callbacks);
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		public static HyjHttpWXLoginAsyncTask newInstance(String code,
 				HyjAsyncTaskCallbacks callbacks) {
 			HyjHttpWXLoginAsyncTask newTask = new HyjHttpWXLoginAsyncTask(
 					callbacks);
-			newTask.execute(code);
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				newTask.execute(code);
+			} else {
+				newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, code);
+			}
 			return newTask;
 		}
 

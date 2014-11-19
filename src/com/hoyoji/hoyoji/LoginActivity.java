@@ -829,7 +829,7 @@ public class LoginActivity extends HyjActivity {
 				public void finishCallback(Object object) {
 					// TODO Auto-generated method stub
 					QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					downloadUserHeadImage(qqLogin.getFigureUrl());
+					downloadUserHeadImage(qqLogin.getFigureUrl(), 1);
 				}
 			});
 
@@ -847,7 +847,7 @@ public class LoginActivity extends HyjActivity {
 				public void finishCallback(Object object) {
 					// TODO Auto-generated method stub
 					WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					downloadUserHeadImage(wbLogin.getProfile_image_url());
+					downloadUserHeadImage(wbLogin.getProfile_image_url(), 1);
 				}
 			});
 		} else {
@@ -864,7 +864,7 @@ public class LoginActivity extends HyjActivity {
 		activity.finish();
 	}
 
-	public static void downloadUserHeadImage(String figureUrl){
+	public static void downloadUserHeadImage(String figureUrl, final int sampleSize){
 		if(figureUrl != null){
 		final String figureUrl1 = figureUrl;
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
@@ -910,7 +910,7 @@ public class LoginActivity extends HyjActivity {
 			@Override
 			public Object doInBackground(String... string) {
 				Bitmap thumbnail = null;
-				thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
+				thumbnail = Util.getBitmapFromUrl(figureUrl1, sampleSize);
 				return thumbnail;
 			}
 		});
