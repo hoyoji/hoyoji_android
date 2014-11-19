@@ -754,6 +754,7 @@ public class MoneyExpenseContainer extends HyjModel{
 								
 								MoneyBorrow moneyBorrowOfFinancialOwner = null;
 								MoneyLend moneyLend = null;
+								
 								if(apportion.get_mId() == null){
 									moneyLend = new MoneyLend();
 									moneyBorrowOfFinancialOwner = new MoneyBorrow();
@@ -775,7 +776,7 @@ public class MoneyExpenseContainer extends HyjModel{
 										moneyBorrowOfFinancialOwner = new MoneyBorrow();
 									} else {
 										moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=? AND ownerUserId=? AND friendUserId = ?", apportion.getId(), HyjApplication.getInstance().getCurrentUser().getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
-										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
+										moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
 										
 										moneyBorrowOfFinancialOwner = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=? AND ownerUserId=?", apportion.getId(), mMoneyExpenseContainerEditor.getModel().getFinancialOwnerUserId()).executeSingle();
 										if(apportionEditor.getModel().getFriendUserId() != null){
