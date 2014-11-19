@@ -19,6 +19,7 @@ import com.hoyoji.hoyoji.models.QQLogin;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.models.WBLogin;
+import com.hoyoji.hoyoji.models.WXLogin;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushConfig;
@@ -234,6 +235,53 @@ public class HyjApplication extends Application {
 			return false;
 		}
 	}
+	
+	// 该QQ用户已经存在
+		public boolean loginWX(String userId, JSONObject jsonObject) {
+			User curUser = HyjApplication.getInstance().getCurrentUser();
+			logout();
+			assert(currentUser == null);
+			Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
+			ActiveAndroid.initialize(config, mIsDebuggable);
+			initContentProvider();
+			
+			currentUser = HyjModel.getModel(User.class, userId);
+			if(currentUser != null){
+				WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", userId).executeSingle();
+				wxLogin.loadFromJSON(jsonObject, false);
+				wxLogin.save();
+
+	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+	            Editor editor = userInfo.edit();
+	            editor.putString("userId", currentUser.getId()).commit();  
+	            editor.putString("password", currentUser.getUserData().getPassword());
+	            editor.commit(); 
+//	            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+//	    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+//						public void onFail(Object arg0, int arg1, String arg2) {
+//							XGPushManager.unregisterPush(getApplicationContext());
+//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//						}
+//						@Override
+//						public void onSuccess(Object arg0, int arg1) {
+//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//						}});
+//	            } else {
+//					XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+//	            }
+				return true;
+			} else {
+				ActiveAndroid.dispose();
+				currentUser = curUser;
+				if(curUser != null){
+					config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
+					ActiveAndroid.initialize(config, mIsDebuggable);
+					initContentProvider();
+				}
+				return false;
+			}
+		}
+		
 	
 	public boolean loginWXFirstTime(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();

@@ -64,7 +64,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 
 	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
-	private String mUserName;
+//	private String mUserName;
 	
 	private String onReqState;
 
@@ -77,7 +77,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 		setTheme(R.style.translucent);    
 		WXEntryActivity.this.setContentView(R.layout.activity_wxentry);   
 
-		mUserName = "";
+//		mUserName = "";
 		// setContentView(R.layout.entry);
 
 		// ͨ��WXAPIFactory��������ȡIWXAPI��ʵ��
@@ -417,16 +417,7 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 
 	}
 
-	private void loginWXFromServer(final boolean createUserDatabaseEntry,final JSONObject loginInfo) {
-		if (createUserDatabaseEntry == true) {
-			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
-			try {
-				loginInfo.put("currencyId", currency.getCurrencyCode());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
-
+	private void loginWXFromServer(final boolean loginFirstTime,final JSONObject loginInfo) {
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -436,19 +427,19 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				try {
 					userId = jsonObject.getJSONObject("user").getString("id");
 
-					if (createUserDatabaseEntry == true) {
-						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(WXEntryActivity.this);
-						final SQLiteDatabase wDb = mDbHelper.getWritableDatabase();
-						ContentValues values = new ContentValues();
-						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
-						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME,mUserName);
-
-						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
-						wDb.close();
-						mDbHelper.close();
+					if (loginFirstTime == true) {
+//						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(WXEntryActivity.this);
+//						final SQLiteDatabase wDb = mDbHelper.getWritableDatabase();
+//						ContentValues values = new ContentValues();
+//						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
+//						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, "");
+//
+//						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
+//						wDb.close();
+//						mDbHelper.close();
 						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
-						if (((HyjApplication) getApplication()).loginWXFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"),loginInfo.optString("access_token")),jsonObject)) {
+						if (((HyjApplication) getApplication()).loginWX(userId, jsonObject)) {
 							LoginActivity.relogin(WXEntryActivity.this);
 						}
 						WXEntryActivity.this.dismissProgressDialog();
@@ -470,7 +461,15 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 				finish();
 			}
 		};
-
+		
+		if (loginFirstTime == true) {
+			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+			try {
+				loginInfo.put("currencyId", currency.getCurrencyCode());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(),"loginWX");
 	}
 
@@ -480,7 +479,6 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 			LoginActivity.downloadUserData(this, new HyjAsyncTaskCallbacks(){
 				@Override
 				public void finishCallback(Object object) {
-					// TODO Auto-generated method stub
 					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl(), 4);
 				}
