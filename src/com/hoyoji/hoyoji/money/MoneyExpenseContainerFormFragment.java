@@ -131,8 +131,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
 		
-		
-		
 		if (modelId != -1) {
 			moneyExpenseContainer = new Select().from(MoneyExpenseContainer.class).where("_id=?", modelId).executeSingle();
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
@@ -879,7 +877,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 			if (mMoneyExpenseContainerEditor.hasValidationErrors()) {
 				showValidatioErrors();
-				
 			} else {
 				return true;
 			}
@@ -892,7 +889,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 
 		fillData();
-		if(validate()){
+		if(!validate()){
+			return;
+		}
 			try {
 				ActiveAndroid.beginTransaction();
 
@@ -1033,7 +1032,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			} finally {
 				ActiveAndroid.endTransaction();
 			}
-		}
 	}
 
 	private void savePictures() {
