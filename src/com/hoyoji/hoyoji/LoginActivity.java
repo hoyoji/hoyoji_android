@@ -503,7 +503,7 @@ public class LoginActivity extends HyjActivity {
 							loginWBUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 						} else {
 							if(((HyjApplication) getApplication()).loginWBFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-								relogin(LoginActivity.this);
+								HyjApplication.relogin(LoginActivity.this);
 							}
 							LoginActivity.this.dismissProgressDialog();
 						}
@@ -855,14 +855,7 @@ public class LoginActivity extends HyjActivity {
 		}
 	}
 	
-	public static void relogin(Activity activity){
-		Intent i = activity.getPackageManager().getLaunchIntentForPackage(
-				activity.getApplicationContext().getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		activity.startActivity(i);
-		activity.finish();
-	}
+	
 
 	public static void downloadUserHeadImage(String figureUrl, final int sampleSize){
 		if(figureUrl != null){
@@ -924,7 +917,7 @@ public class LoginActivity extends HyjActivity {
 				user.getMessageBoxId1());
 		if (msgBox != null) {
 			activity.dismissProgressDialog();
-			relogin(activity);
+			HyjApplication.relogin(activity);
 			return;
 		}
 
@@ -1202,7 +1195,7 @@ public class LoginActivity extends HyjActivity {
 						if(callback != null){
 							callback.finishCallback(null);
 						}
-						relogin(activity);
+						HyjApplication.relogin(activity);
 						
 					} catch (Exception e) {
 						ActiveAndroid.endTransaction();
@@ -1286,14 +1279,7 @@ public class LoginActivity extends HyjActivity {
 	}
 	
 	private void loginQQFromServer(final boolean createUserDatabaseEntry, final JSONObject loginInfo) {
-		if(createUserDatabaseEntry == true){
-			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
-			try {
-				loginInfo.put("currencyId", currency.getCurrencyCode());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
+	
 		
 		// 从服务器上下载用户数据
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
@@ -1305,21 +1291,21 @@ public class LoginActivity extends HyjActivity {
 					userId = jsonObject.getJSONObject("user").getString("id");
 
 					if (createUserDatabaseEntry == true) {
-						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
-								LoginActivity.this);
-						final SQLiteDatabase wDb = mDbHelper
-								.getWritableDatabase();
-						ContentValues values = new ContentValues();
-						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
-						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
-
-						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
-						wDb.close();
-						mDbHelper.close();
+//						final HyjUserDbHelper mDbHelper = new HyjUserDbHelper(
+//								LoginActivity.this);
+//						final SQLiteDatabase wDb = mDbHelper
+//								.getWritableDatabase();
+//						ContentValues values = new ContentValues();
+//						values.put(UserDatabaseEntry.COLUMN_NAME_ID, userId);
+//						values.put(UserDatabaseEntry.COLUMN_NAME_USERNAME, mUserName);
+//
+//						wDb.insert(UserDatabaseEntry.TABLE_NAME, null, values);
+//						wDb.close();
+//						mDbHelper.close();
 						loginQQUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
 						if(((HyjApplication) getApplication()).loginQQFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)){
-							relogin(LoginActivity.this);
+							HyjApplication.relogin(LoginActivity.this);
 						}
 						LoginActivity.this.dismissProgressDialog();
 					}
@@ -1341,6 +1327,14 @@ public class LoginActivity extends HyjActivity {
 			}
 		};
 		
+		if(createUserDatabaseEntry == true){
+			java.util.Currency currency = java.util.Currency.getInstance(Locale.getDefault());
+			try {
+				loginInfo.put("currencyId", currency.getCurrencyCode());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, loginInfo.toString(), "loginQQ");
 	}
 	

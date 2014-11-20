@@ -448,8 +448,8 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 //						mDbHelper.close();
 						loginWXUserFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject);
 					} else {
-						if (((HyjApplication) getApplication()).loginWX(userId, jsonObject)) {
-							LoginActivity.relogin(WXEntryActivity.this);
+						if (((HyjApplication) getApplication()).loginWXFirstTime(userId, HyjUtil.ifNull(jsonObject.getJSONObject("userData").optString("password"), loginInfo.optString("access_token")), jsonObject)) {
+							HyjApplication.relogin(WXEntryActivity.this);
 						}
 						WXEntryActivity.this.dismissProgressDialog();
 					}

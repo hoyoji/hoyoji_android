@@ -125,7 +125,7 @@ public class HomeCalendarGridGroupListLoader extends
 		// cal.add(Calendar.WEEK_OF_YEAR, -1);
 
 		int loadCount = 0;
-		while (calToday.getTimeInMillis() < mEndDateInMillis) {
+		while (calToday.getTimeInMillis() <= mEndDateInMillis) {
 			int count = 0;
 			String[] args = new String[] {
 					mDateFormat.format(calToday.getTime()),

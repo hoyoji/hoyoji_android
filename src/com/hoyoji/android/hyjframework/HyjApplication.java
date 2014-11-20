@@ -24,6 +24,7 @@ import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushConfig;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -33,6 +34,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 
 public class HyjApplication extends Application {
 	public final static String TAG = "HyjApplication";
@@ -190,98 +192,98 @@ public class HyjApplication extends Application {
 		}
 	}
 	
-	// 该QQ用户已经存在
-	public boolean loginQQ(String userId, JSONObject jsonObject) {
-		User curUser = HyjApplication.getInstance().getCurrentUser();
-		logout();
-		assert(currentUser == null);
-		Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
-		ActiveAndroid.initialize(config, mIsDebuggable);
-		initContentProvider();
-		
-		currentUser = HyjModel.getModel(User.class, userId);
-		if(currentUser != null){
-			QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", userId).executeSingle();
-			qqLogin.loadFromJSON(jsonObject, false);
-			qqLogin.save();
-
-            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-            Editor editor = userInfo.edit();
-            editor.putString("userId", currentUser.getId()).commit();  
-            editor.putString("password", currentUser.getUserData().getPassword());
-            editor.commit(); 
-//            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
-//    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
-//					public void onFail(Object arg0, int arg1, String arg2) {
-//						XGPushManager.unregisterPush(getApplicationContext());
-//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//					}
-//					@Override
-//					public void onSuccess(Object arg0, int arg1) {
-//						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//					}});
-//            } else {
-//				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//            }
-			return true;
-		} else {
-			ActiveAndroid.dispose();
-			currentUser = curUser;
-			if(curUser != null){
-				config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
-				ActiveAndroid.initialize(config, mIsDebuggable);
-				initContentProvider();
-			}
-			return false;
-		}
-	}
-	
-	// 该QQ用户已经存在
-		public boolean loginWX(String userId, JSONObject jsonObject) {
-			User curUser = HyjApplication.getInstance().getCurrentUser();
-			logout();
-			assert(currentUser == null);
-			Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
-			ActiveAndroid.initialize(config, mIsDebuggable);
-			initContentProvider();
-			
-			currentUser = HyjModel.getModel(User.class, userId);
-			if(currentUser != null){
-				WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", userId).executeSingle();
-				wxLogin.loadFromJSON(jsonObject, false);
-				wxLogin.save();
-
-	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
-	            Editor editor = userInfo.edit();
-	            editor.putString("userId", currentUser.getId()).commit();  
-	            editor.putString("password", currentUser.getUserData().getPassword());
-	            editor.commit(); 
-//	            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
-//	    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
-//						public void onFail(Object arg0, int arg1, String arg2) {
-//							XGPushManager.unregisterPush(getApplicationContext());
-//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//						}
-//						@Override
-//						public void onSuccess(Object arg0, int arg1) {
-//							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//						}});
-//	            } else {
-//					XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
-//	            }
-				return true;
-			} else {
-				ActiveAndroid.dispose();
-				currentUser = curUser;
-				if(curUser != null){
-					config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
-					ActiveAndroid.initialize(config, mIsDebuggable);
-					initContentProvider();
-				}
-				return false;
-			}
-		}
-		
+//	// 该QQ用户已经存在
+//	public boolean loginQQ(String userId, JSONObject jsonObject) {
+//		User curUser = HyjApplication.getInstance().getCurrentUser();
+//		logout();
+//		assert(currentUser == null);
+//		Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
+//		ActiveAndroid.initialize(config, mIsDebuggable);
+//		initContentProvider();
+//		
+//		currentUser = HyjModel.getModel(User.class, userId);
+//		if(currentUser != null){
+//			QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", userId).executeSingle();
+//			qqLogin.loadFromJSON(jsonObject, false);
+//			qqLogin.save();
+//
+//            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+//            Editor editor = userInfo.edit();
+//            editor.putString("userId", currentUser.getId()).commit();  
+//            editor.putString("password", currentUser.getUserData().getPassword());
+//            editor.commit(); 
+////            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+////    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+////					public void onFail(Object arg0, int arg1, String arg2) {
+////						XGPushManager.unregisterPush(getApplicationContext());
+////						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////					}
+////					@Override
+////					public void onSuccess(Object arg0, int arg1) {
+////						XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////					}});
+////            } else {
+////				XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////            }
+//			return true;
+//		} else {
+//			ActiveAndroid.dispose();
+//			currentUser = curUser;
+//			if(curUser != null){
+//				config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
+//				ActiveAndroid.initialize(config, mIsDebuggable);
+//				initContentProvider();
+//			}
+//			return false;
+//		}
+//	}
+//	
+//	// 该QQ用户已经存在
+//		public boolean loginWX(String userId, JSONObject jsonObject) {
+//			User curUser = HyjApplication.getInstance().getCurrentUser();
+//			logout();
+//			assert(currentUser == null);
+//			Configuration config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(userId).create(); 
+//			ActiveAndroid.initialize(config, mIsDebuggable);
+//			initContentProvider();
+//			
+//			currentUser = HyjModel.getModel(User.class, userId);
+//			if(currentUser != null){
+//				WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", userId).executeSingle();
+//				wxLogin.loadFromJSON(jsonObject, false);
+//				wxLogin.save();
+//
+//	            SharedPreferences userInfo = getSharedPreferences("current_user_info", 0);  
+//	            Editor editor = userInfo.edit();
+//	            editor.putString("userId", currentUser.getId()).commit();  
+//	            editor.putString("password", currentUser.getUserData().getPassword());
+//	            editor.commit(); 
+////	            if(curUser != null && !curUser.getId().equals(currentUser.getId())){
+////	    			XGPushManager.unregisterPush(getApplicationContext(), curUser.getId(),new XGIOperateCallback() {
+////						public void onFail(Object arg0, int arg1, String arg2) {
+////							XGPushManager.unregisterPush(getApplicationContext());
+////							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////						}
+////						@Override
+////						public void onSuccess(Object arg0, int arg1) {
+////							XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////						}});
+////	            } else {
+////					XGPushManager.registerPush(getApplicationContext(), currentUser.getId());
+////	            }
+//				return true;
+//			} else {
+//				ActiveAndroid.dispose();
+//				currentUser = curUser;
+//				if(curUser != null){
+//					config = new Configuration.Builder(HyjApplication.getInstance()).setDatabaseName(curUser.getId()).create(); 
+//					ActiveAndroid.initialize(config, mIsDebuggable);
+//					initContentProvider();
+//				}
+//				return false;
+//			}
+//		}
+//		
 	
 	public boolean loginWXFirstTime(String userId, String password, JSONObject jsonObject) {
 		User curUser = HyjApplication.getInstance().getCurrentUser();
@@ -669,6 +671,15 @@ public class HyjApplication extends Application {
 			}
 			return false;
 		}
+	}
+	
+	public static void relogin(Activity activity){
+		Intent i = activity.getPackageManager().getLaunchIntentForPackage(
+				activity.getApplicationContext().getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		activity.startActivity(i);
+		activity.finish();
 	}
 	
 	public void logout(){
