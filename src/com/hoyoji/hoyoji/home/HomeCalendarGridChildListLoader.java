@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -109,10 +110,10 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyIncomeContainers);
 	    	
-	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyDepositExpenseContainers = new Select().from(MoneyDepositExpenseContainer.class).where("ownerUserId = ? AND date > ? AND date <= ?", HyjApplication.getInstance().getCurrentUser().getId(), dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositExpenseContainers);
 	    	
-	    	List<HyjModel> moneyDepositPaybackContainers = new Select().from(MoneyDepositPaybackContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyDepositPaybackContainers = new Select().from(MoneyDepositPaybackContainer.class).where("ownerUserId = ? AND date > ? AND date <= ?", HyjApplication.getInstance().getCurrentUser().getId(), dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyDepositPaybackContainers);
 	    	
 	    	List<HyjModel> moneyDepositIncomes = new Select().from(MoneyDepositIncomeContainer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
@@ -124,17 +125,17 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 	    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).where("date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyTransfers);
 	    	
-	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).where("ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyBorrows);
 	    	
-	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyLends = new Select().from(MoneyLend.class).where("ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyLends);
 	    	
-	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyReturns = new Select().from(MoneyReturn.class).where("ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyReturns);
 	    	
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
+	    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).where("ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").limit(mLoadLimit).execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 //	    	List<HyjModel> messages = new Select().from(Message.class).where("date > ? AND date <= ? AND (messageState=? OR messageState=?)", dateFrom, dateTo, "unread", "new").orderBy("date DESC").execute();

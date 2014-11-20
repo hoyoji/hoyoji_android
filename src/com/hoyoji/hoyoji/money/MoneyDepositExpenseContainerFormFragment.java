@@ -644,31 +644,31 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 					}
 				}
 				
-				MoneyDepositExpenseContainer oldMoneyLendModel = mMoneyDepositExpenseContainerEditor.getModel();
-				MoneyDepositExpenseContainer newMoneyLendModel = mMoneyDepositExpenseContainerEditor.getModelCopy();
+				MoneyDepositExpenseContainer oldMoneyDepositExpenseContainerModel = mMoneyDepositExpenseContainerEditor.getModel();
+				MoneyDepositExpenseContainer newMoneyDepositExpenseContainerModel = mMoneyDepositExpenseContainerEditor.getModelCopy();
 				
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-				if(newMoneyLendModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(newMoneyLendModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(newMoneyLendModel.getProjectId())){
+				if(newMoneyDepositExpenseContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(newMoneyDepositExpenseContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(newMoneyDepositExpenseContainerModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
-					userDataEditor.getModelCopy().setActiveMoneyAccountId(newMoneyLendModel.getMoneyAccountId());
-					userDataEditor.getModelCopy().setActiveProjectId(newMoneyLendModel.getProjectId());
+					userDataEditor.getModelCopy().setActiveMoneyAccountId(newMoneyDepositExpenseContainerModel.getMoneyAccountId());
+					userDataEditor.getModelCopy().setActiveProjectId(newMoneyDepositExpenseContainerModel.getProjectId());
 					userDataEditor.save();
 				}
 				
-				String localCurrencyId = newMoneyLendModel.getMoneyAccount().getCurrencyId();
-				String foreignCurrencyId = newMoneyLendModel.getProject().getCurrencyId();
+				String localCurrencyId = newMoneyDepositExpenseContainerModel.getMoneyAccount().getCurrencyId();
+				String foreignCurrencyId = newMoneyDepositExpenseContainerModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					Exchange newExchange = new Exchange();
-					newExchange.setLocalCurrencyId(newMoneyLendModel.getMoneyAccount().getCurrencyId());
-					newExchange.setForeignCurrencyId(newMoneyLendModel.getProject().getCurrencyId());
-					newExchange.setRate(newMoneyLendModel.getExchangeRate());
+					newExchange.setLocalCurrencyId(newMoneyDepositExpenseContainerModel.getMoneyAccount().getCurrencyId());
+					newExchange.setForeignCurrencyId(newMoneyDepositExpenseContainerModel.getProject().getCurrencyId());
+					newExchange.setRate(newMoneyDepositExpenseContainerModel.getExchangeRate());
 //					newExchange.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					newExchange.save();
 				}else {
 					if(!localCurrencyId.equalsIgnoreCase(foreignCurrencyId)){
 						Exchange exchange = null;
 						Double exRate = null;
-						Double rate = HyjUtil.toFixed2(newMoneyLendModel.getExchangeRate());
+						Double rate = HyjUtil.toFixed2(newMoneyDepositExpenseContainerModel.getExchangeRate());
 						exchange = Exchange.getExchange(localCurrencyId, foreignCurrencyId);
 						if(exchange != null){
 							exRate = exchange.getRate();
@@ -692,17 +692,17 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 				}
 
 //				if(mSelectorFieldMoneyAccount.getModelId() != null){
-				    Double oldAmount = oldMoneyLendModel.getAmount0();
-					MoneyAccount oldMoneyAccount = oldMoneyLendModel.getMoneyAccount();
-					MoneyAccount newMoneyAccount = newMoneyLendModel.getMoneyAccount();
+				    Double oldAmount = oldMoneyDepositExpenseContainerModel.getAmount0();
+					MoneyAccount oldMoneyAccount = oldMoneyDepositExpenseContainerModel.getMoneyAccount();
+					MoneyAccount newMoneyAccount = newMoneyDepositExpenseContainerModel.getMoneyAccount();
 					HyjModelEditor<MoneyAccount> newMoneyAccountEditor = newMoneyAccount.newModelEditor();
 					
-					if(newMoneyLendModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - newMoneyLendModel.getAmount0());
+					if(newMoneyDepositExpenseContainerModel.get_mId() == null || oldMoneyAccount.getId().equals(newMoneyAccount.getId())){
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() + oldAmount - newMoneyDepositExpenseContainerModel.getAmount0());
 					}else{
 						HyjModelEditor<MoneyAccount> oldMoneyAccountEditor = oldMoneyAccount.newModelEditor();
 						oldMoneyAccountEditor.getModelCopy().setCurrentBalance(oldMoneyAccount.getCurrentBalance() + oldAmount);
-						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - newMoneyLendModel.getAmount0());
+						newMoneyAccountEditor.getModelCopy().setCurrentBalance(newMoneyAccount.getCurrentBalance() - newMoneyDepositExpenseContainerModel.getAmount0());
 						oldMoneyAccountEditor.save();
 					}
 					newMoneyAccountEditor.save();
@@ -710,51 +710,51 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 					
 					
 					MoneyAccount newDebtAccount = null;
-					if(newMoneyLendModel.getFinancialOwnerUserId() == null){
-						newDebtAccount = MoneyAccount.getDebtAccount(newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId());
+					if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
+						newDebtAccount = MoneyAccount.getDebtAccount(newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId());
 					} else {
-						if(newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId());
+						if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId());
 						} else {
-							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyLendModel.getProject().getCurrencyId(), null, newMoneyLendModel.getFinancialOwnerUserId());
+							newDebtAccount = MoneyAccount.getDebtAccount(newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId());
 						}
 					}
-					if(newMoneyLendModel.get_mId() == null){
+					if(newMoneyDepositExpenseContainerModel.get_mId() == null){
 				    	if(newDebtAccount != null) {
 				    		HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
-				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + newMoneyLendModel.getProjectAmount());
+				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + newMoneyDepositExpenseContainerModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
 				    	} else {
-				    		if(newMoneyLendModel.getFinancialOwnerUserId() == null){
-								MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+				    		if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
+								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 				    		} else {
-				    			if(newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				    				MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+				    			if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				    				MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 						    	} else {
-									MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), null, newMoneyLendModel.getFinancialOwnerUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 					    		}
 					    	}
 				    	}
 					} else {
 						MoneyAccount oldDebtAccount = null;
-						if(oldMoneyLendModel.getFinancialOwnerUserId() == null){
-							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId());
+						if(oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
+							oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyDepositExpenseContainerModel.getLocalFriendId(), oldMoneyDepositExpenseContainerModel.getFriendUserId());
 						} else {
-							if(oldMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyLendModel.getLocalFriendId(), oldMoneyLendModel.getFriendUserId());
+							if(oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), oldMoneyDepositExpenseContainerModel.getLocalFriendId(), oldMoneyDepositExpenseContainerModel.getFriendUserId());
 							} else {
-								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), null, oldMoneyLendModel.getFinancialOwnerUserId());
+								oldDebtAccount = MoneyAccount.getDebtAccount(oldMoneyAccount.getCurrencyId(), null, oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId());
 							}
 						}
 						if(newDebtAccount != null){
 							HyjModelEditor<MoneyAccount> newDebtAccountEditor = newDebtAccount.newModelEditor();
 							if(oldDebtAccount != null && oldDebtAccount.getId().equals(newDebtAccount.getId())){
-								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - oldMoneyLendModel.getProjectAmount() + newMoneyLendModel.getProjectAmount());
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() - oldMoneyDepositExpenseContainerModel.getProjectAmount() + newMoneyDepositExpenseContainerModel.getProjectAmount());
 							} else {
-								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + newMoneyLendModel.getProjectAmount());
+								newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + newMoneyDepositExpenseContainerModel.getProjectAmount());
 								if(oldDebtAccount != null){
 									HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyLendModel.getProjectAmount());
+									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyDepositExpenseContainerModel.getProjectAmount());
 									oldDebtAccountEditor.save();
 								}
 							}
@@ -762,16 +762,16 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 						} else {
 							if(oldDebtAccount != null) {
 								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyLendModel.getProjectAmount());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyDepositExpenseContainerModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							if(newMoneyLendModel.getFinancialOwnerUserId() == null){
-								MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+							if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
+								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 							} else {
-								if(newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), newMoneyLendModel.getLocalFriendId(), newMoneyLendModel.getFriendUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+								if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 								} else {
-						    		MoneyAccount.createDebtAccount(newMoneyLendModel.getFriendDisplayName(), null, newMoneyLendModel.getFinancialOwnerUserId(), newMoneyLendModel.getProject().getCurrencyId(), newMoneyLendModel.getProjectAmount());
+						    		MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 								}
 							}
 						}
@@ -794,34 +794,34 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 				// 如果有财务负责人，生成财务负责人到收款人的借出
 //				MoneyLend moneyLendOfFinancialOwner = null;
 				MoneyLend moneyLendToFinancialOwner = null;
-				if(newMoneyLendModel.get_mId() == null){
+				if(newMoneyDepositExpenseContainerModel.get_mId() == null){
 //					moneyLendOfFinancialOwner = new MoneyLend();
 					moneyLendToFinancialOwner = new MoneyLend();
 				} else {
-					String previousFinancialOwnerUserId = HyjUtil.ifNull(oldMoneyLendModel.getFinancialOwnerUserId() , "");
-					String currentFinancialOwnerUserId = HyjUtil.ifNull(newMoneyLendModel.getFinancialOwnerUserId() , "");
+					String previousFinancialOwnerUserId = HyjUtil.ifNull(oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() , "");
+					String currentFinancialOwnerUserId = HyjUtil.ifNull(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() , "");
 //					moneyLendOfFinancialOwner = new Select().from(MoneyLend.class).where("depositExpenseId = ? AND ownerUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
 //					if(moneyLendOfFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 //						moneyLendOfFinancialOwner.delete();
 //						moneyLendOfFinancialOwner = new MoneyLend();
 //					}
 
-					if(oldMoneyLendModel.getFinancialOwnerUserId() != null
-							&& !oldMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), previousFinancialOwnerUserId).executeSingle();
+					if(oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() != null
+							&& !oldMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyDepositExpenseContainerModel.getId(), previousFinancialOwnerUserId).executeSingle();
 					} else {
-						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyLendModel.getId(), oldMoneyLendModel.getFriendUserId()).executeSingle();
+						moneyLendToFinancialOwner = new Select().from(MoneyLend.class).where("moneyDepositExpenseContainerId = ? AND friendUserId = ?", oldMoneyDepositExpenseContainerModel.getId(), oldMoneyDepositExpenseContainerModel.getFriendUserId()).executeSingle();
 					}
 					if(moneyLendToFinancialOwner != null && !previousFinancialOwnerUserId.equals(currentFinancialOwnerUserId)){
 						moneyLendToFinancialOwner.delete();
 						moneyLendToFinancialOwner = new MoneyLend();
 					}
 				}
-				if(newMoneyLendModel.getFinancialOwnerUserId() != null
-						&& !newMoneyLendModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					moneyLendToFinancialOwner.setFriendUserId(newMoneyLendModel.getFinancialOwnerUserId());
+				if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() != null
+						&& !newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					moneyLendToFinancialOwner.setFriendUserId(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId());
 				} else {
-					moneyLendToFinancialOwner.setFriendUserId(newMoneyLendModel.getFriendUserId());
+					moneyLendToFinancialOwner.setFriendUserId(newMoneyDepositExpenseContainerModel.getFriendUserId());
 				}
 //					moneyLendOfFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
 //					moneyLendOfFinancialOwner.setDate(newMoneyLendModel.getDate());
@@ -847,27 +847,27 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 //					
 //					moneyLendOfFinancialOwner.save();
 					
-					moneyLendToFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyLendModel.getId());
+					moneyLendToFinancialOwner.setMoneyDepositExpenseContainerId(newMoneyDepositExpenseContainerModel.getId());
 //					moneyLendToFinancialOwner.setLendType("Deposit");
-					moneyLendToFinancialOwner.setDate(newMoneyLendModel.getDate());
-					moneyLendToFinancialOwner.setAmount(newMoneyLendModel.getAmount());
-					moneyLendToFinancialOwner.setAddress(newMoneyLendModel.getAddress());
-					moneyLendToFinancialOwner.setCurrencyId1(newMoneyLendModel.getCurrencyId());
-					moneyLendToFinancialOwner.setExchangeRate(newMoneyLendModel.getExchangeRate());
+					moneyLendToFinancialOwner.setDate(newMoneyDepositExpenseContainerModel.getDate());
+					moneyLendToFinancialOwner.setAmount(newMoneyDepositExpenseContainerModel.getAmount());
+					moneyLendToFinancialOwner.setAddress(newMoneyDepositExpenseContainerModel.getAddress());
+					moneyLendToFinancialOwner.setCurrencyId1(newMoneyDepositExpenseContainerModel.getCurrencyId());
+					moneyLendToFinancialOwner.setExchangeRate(newMoneyDepositExpenseContainerModel.getExchangeRate());
 //					moneyLendToFinancialOwner.setFinancialOwnerUserId(null);
-					moneyLendToFinancialOwner.setFriendAccountId(newMoneyLendModel.getFriendUserId());
+					moneyLendToFinancialOwner.setFriendAccountId(newMoneyDepositExpenseContainerModel.getFriendUserId());
 					moneyLendToFinancialOwner.setLocalFriendId(null);
-					moneyLendToFinancialOwner.setGeoLat(newMoneyLendModel.getGeoLat());
-					moneyLendToFinancialOwner.setGeoLon(newMoneyLendModel.getGeoLon());
-					moneyLendToFinancialOwner.setLocation(newMoneyLendModel.getLocation());
-					moneyLendToFinancialOwner.setMoneyAccountId(newMoneyLendModel.getMoneyAccountId(), newMoneyLendModel.getMoneyAccount().getCurrencyId());
+					moneyLendToFinancialOwner.setGeoLat(newMoneyDepositExpenseContainerModel.getGeoLat());
+					moneyLendToFinancialOwner.setGeoLon(newMoneyDepositExpenseContainerModel.getGeoLon());
+					moneyLendToFinancialOwner.setLocation(newMoneyDepositExpenseContainerModel.getLocation());
+					moneyLendToFinancialOwner.setMoneyAccountId(newMoneyDepositExpenseContainerModel.getMoneyAccountId(), newMoneyDepositExpenseContainerModel.getMoneyAccount().getCurrencyId());
 //					moneyLendToFinancialOwner.setOwnerUserId(newMoneyLendModel.getFinancialOwnerUserId());
 //					moneyLendToFinancialOwner.setOwnerFriendId(null);
-					moneyLendToFinancialOwner.setPaybackDate(newMoneyLendModel.getPaybackDate());
-					moneyLendToFinancialOwner.setPaybackedAmount(newMoneyLendModel.getPaybackedAmount());
-					moneyLendToFinancialOwner.setProjectId(newMoneyLendModel.getProjectId(), newMoneyLendModel.getProjectCurrencyId());
-					moneyLendToFinancialOwner.setPictureId(newMoneyLendModel.getPictureId());
-					moneyLendToFinancialOwner.setRemark(newMoneyLendModel.getRemark());
+					moneyLendToFinancialOwner.setPaybackDate(newMoneyDepositExpenseContainerModel.getPaybackDate());
+					moneyLendToFinancialOwner.setPaybackedAmount(newMoneyDepositExpenseContainerModel.getPaybackedAmount());
+					moneyLendToFinancialOwner.setProjectId(newMoneyDepositExpenseContainerModel.getProjectId(), newMoneyDepositExpenseContainerModel.getProjectCurrencyId());
+					moneyLendToFinancialOwner.setPictureId(newMoneyDepositExpenseContainerModel.getPictureId());
+					moneyLendToFinancialOwner.setRemark(newMoneyDepositExpenseContainerModel.getRemark());
 					
 					moneyLendToFinancialOwner.save();
 
