@@ -608,7 +608,7 @@ public class HyjApplication extends Application {
 		ActiveAndroid.initialize(config, mIsDebuggable);
 		initContentProvider();
 		
-		User user = new Select().from(User.class).where("id=?", userId).executeSingle();
+		User user = HyjModel.getModel(User.class, userId); //new Select().from(User.class).where("id=?", userId).executeSingle();
 		UserData userData;
 		try {
 			ActiveAndroid.beginTransaction();
@@ -676,10 +676,10 @@ public class HyjApplication extends Application {
 	public static void relogin(Activity activity){
 		Intent i = activity.getPackageManager().getLaunchIntentForPackage(
 				activity.getApplicationContext().getPackageName());
-//		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-//				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
 		activity.startActivity(i);
-//		activity.finish();
+		activity.finish();
 	}
 	
 	public void logout(){
