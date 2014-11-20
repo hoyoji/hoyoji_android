@@ -153,16 +153,16 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									ProjectShareAuthorization.class, null), true,
-							mChangeObserver);
-			this.getActivity().getContentResolver()
-			.registerContentObserver(
-					ContentProvider.createUri(
-							ParentProject.class, null), true,
-							mChangeObserver);
+//			this.getActivity().getContentResolver()
+//					.registerContentObserver(
+//							ContentProvider.createUri(
+//									ProjectShareAuthorization.class, null), true,
+//							mChangeObserver);
+//			this.getActivity().getContentResolver()
+//			.registerContentObserver(
+//					ContentProvider.createUri(
+//							ParentProject.class, null), true,
+//							mChangeObserver);
 			this.getActivity().getContentResolver()
 			.registerContentObserver(
 					ContentProvider.createUri(
@@ -405,6 +405,8 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			        @Override
 			        protected void onPostExecute(String result) {
 						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+
+//				    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
 						mTask = null;
 			        }
 			    };
