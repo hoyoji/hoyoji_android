@@ -1193,14 +1193,14 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("预收会费");
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyDepositIncomeContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			
 			numericView.setPrefix(((MoneyDepositIncomeContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositIncomeContainer)object).getProjectAmount());
@@ -1208,7 +1208,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			imageView.setImage(((MoneyDepositIncomeContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1249,14 +1249,14 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("会费还款");
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyDepositReturnContainer)object).getProject().getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			
 			numericView.setPrefix(((MoneyDepositReturnContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositReturnContainer)object).getProjectAmount());
@@ -1264,7 +1264,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyDepositReturnContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1308,18 +1308,22 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
 			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
 				((TextView)view).setText("充值卡充值");
+				((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			} else {
 				if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
 					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转到"+moneyTransfer.getTransferIn().getName());
+					((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 				} else if(moneyTransfer.getTransferOut() != null){
 					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转出");
+					((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				} else if(moneyTransfer.getTransferIn() != null){
 					((TextView)view).setText("转入到"+moneyTransfer.getTransferIn().getName());
+					((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				} else {
 					((TextView)view).setText("转账");
+					((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 				}
 			}
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyTransfer)object).getProject().getDisplayName());
@@ -1329,14 +1333,31 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			MoneyTransfer moneyTransfer = (MoneyTransfer)object;
 			numericView.setPrefix(moneyTransfer.getProject().getCurrencySymbol());
 			numericView.setNumber(moneyTransfer.getTransferProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
+				numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			} else if(moneyTransfer.getTransferOut() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			} else if(moneyTransfer.getTransferIn() != null){
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			} else {
+				numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
+			MoneyTransfer moneyTransfer = (MoneyTransfer)object;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
-			imageView.setImage(((MoneyTransfer)object).getPicture());
+			imageView.setImage(moneyTransfer.getPicture());
 
+			if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			} else if(moneyTransfer.getTransferOut() != null){
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			} else if(moneyTransfer.getTransferIn() != null){
+				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+			} else {
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			}
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
 					@Override
@@ -1380,7 +1401,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			} else {
 				((TextView)view).setText("向" + ((MoneyBorrow)object).getFriendDisplayName() + "借入");
 			}
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
@@ -1389,12 +1410,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyBorrow)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyBorrow)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			imageView.setImage(((MoneyBorrow)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1434,7 +1455,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("预缴会费");
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyDepositExpenseContainer)object).getProject().getDisplayName());
@@ -1443,12 +1464,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyDepositExpenseContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositExpenseContainer)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyDepositExpenseContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1492,7 +1513,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			}else{
 				((TextView)view).setText("借出给" + ((MoneyLend)object).getFriendDisplayName());
 			}
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
@@ -1501,12 +1522,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyLend)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyLend)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));;
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyLend)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1547,7 +1568,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("还款给" + ((MoneyReturn)object).getFriendDisplayName());
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());
@@ -1556,12 +1577,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyReturn)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyReturn)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			imageView.setImage(((MoneyReturn)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1602,7 +1623,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("会费退回");
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getProject().getDisplayName());
@@ -1611,12 +1632,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyDepositPaybackContainer)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyDepositPaybackContainer)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			imageView.setImage(((MoneyDepositPaybackContainer)object).getPicture());
 
 			if(view.getTag() == null){
@@ -1661,7 +1682,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			}else{
 				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
 			}
-			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
 			((TextView)view).setText(((MoneyPayback)object).getProject().getDisplayName());
@@ -1670,12 +1691,12 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			numericView.setPrefix(((MoneyPayback)object).getProject().getCurrencySymbol());
 			numericView.setNumber(((MoneyPayback)object).getProjectAmount());
-			numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
+			numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			imageView.setImage(((MoneyPayback)object).getPicture());
 
 			if(view.getTag() == null){
