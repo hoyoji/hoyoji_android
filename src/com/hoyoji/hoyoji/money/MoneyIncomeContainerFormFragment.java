@@ -517,6 +517,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				setExchangeRate(false);
 				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}else{
+				if(moneyIncomeContainer.getOwnerUserId() != HyjApplication.getInstance().getCurrentUser().getId()) {
+					app_action_save_template.setVisibility(View.GONE);
+				}
 				setExchangeRate(true);
 			}
 			setPermission();
