@@ -188,7 +188,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCalendarGridView.getAdapter().getDayNumber();
 
 				mListGroupData.clear();
-				updateHeaderStat();
+//				updateHeaderStat();
 				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
@@ -205,7 +205,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
 				mListGroupData.clear();
-				updateHeaderStat();
+//				updateHeaderStat();
 				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
@@ -222,7 +222,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
 				mListGroupData.clear();
-				updateHeaderStat();
+//				updateHeaderStat();
 				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
@@ -251,7 +251,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 							mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 							
 							mListGroupData.clear();
-							updateHeaderStat();
+//							updateHeaderStat();
 							updateGroupHeader();
 							mCalendarGridView.getAdapter().notifyDataSetChanged();
 							getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
@@ -427,7 +427,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			}
 		});
 		
-		updateHeaderStat();
+//		updateHeaderStat();
 		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
@@ -503,6 +503,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //		long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
 //		long dateTo = mCalendarGridView.getAdapter().getDateTo();
 		String[] args = new String[] {mDateFormat.format(new Date(dateFrom)), mDateFormat.format(new Date(dateTo))};
+		DecimalFormat df=new DecimalFormat("#0.00"); 
 		double expenseTotal = 0.0;
 		double incomeTotal = 0.0;
 		Cursor cursor = Cache
@@ -516,11 +517,56 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 								+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			expenseTotal = cursor.getDouble(1);
+			expenseTotal += cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
-		DecimalFormat df=new DecimalFormat("#0.00"); 
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			expenseTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			expenseTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE main.transferInId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			expenseTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		
 		this.mExpenseStat.setText(localCurrencySymbol + df.format(expenseTotal));
 		cursor = Cache
 				.openDatabase()
@@ -533,7 +579,52 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			incomeTotal = cursor.getDouble(1);
+			incomeTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			incomeTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			incomeTotal += cursor.getDouble(1);
+			cursor.close();
+			cursor = null;
+		}
+		cursor = Cache
+				.openDatabase()
+				.rawQuery(
+						"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId
+								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+								+ localCurrencyId + "') "
+								+ "WHERE main.transferOutId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			incomeTotal += cursor.getDouble(1);
 			cursor.close();
 			cursor = null;
 		}
@@ -719,6 +810,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			mCalendarGridView.getAdapter().notifyDataSetChanged();
 //			adapter.notifyDataSetChanged();
 //			updateGroupHeader();
+			updateHeaderStat();
 			getLoaderManager().restartLoader(0, null, this);
 		} else {
 			ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
@@ -1841,7 +1933,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 					mCalendarGridView.getAdapter().notifyDataSetChanged();
 				}
 			}, 50);
-			updateHeaderStat();
+//			updateHeaderStat();
 		}
 	}
 	@Override

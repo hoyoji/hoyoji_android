@@ -27,8 +27,10 @@ import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
+import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLendApportion;
@@ -41,7 +43,9 @@ import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositPaybackContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -278,7 +282,14 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 								HyjUtil.displayToast("该支出记录尚未下载，请先进行同步。");
 							}
 						} else {
-							HyjUtil.displayToast("该支出记录尚未下载，请先进行同步。");
+							MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId = ?", apportionId).executeSingle();
+							if(moneyExpense != null){
+								bundle.clear();
+								bundle.putLong("MODEL_ID", moneyExpense.get_mId());
+								openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+							} else {
+								HyjUtil.displayToast("该支出记录尚未下载，请先进行同步。");
+							}
 						}
 					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyIncomeApportion")){
 						MoneyIncomeApportion apportion = HyjModel.getModel(MoneyIncomeApportion.class, apportionId);
@@ -292,7 +303,14 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 								HyjUtil.displayToast("该收入记录尚未下载，请先进行同步。");
 							}
 						} else {
-							HyjUtil.displayToast("该收入记录尚未下载，请先进行同步。");
+							MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId = ?", apportionId).executeSingle();
+							if(moneyIncome != null){
+								bundle.clear();
+								bundle.putLong("MODEL_ID", moneyIncome.get_mId());
+								openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+							} else {
+								HyjUtil.displayToast("该收入记录尚未下载，请先进行同步。");
+							}
 						}
 					} else if (mMessageEditor.getModel().getType().equalsIgnoreCase("Money.Share.AddMoneyDepositIncomeApportion")){
 						if(messageData.optBoolean("isImported")){
