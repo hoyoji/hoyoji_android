@@ -129,8 +129,23 @@ public class MessageListFragment extends HyjUserListFragment{
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> l, View view,
+			int position, long id) {
+		final ListView listView = (ListView)l;
+		if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			exitMultiChoiceMode(listView);
+		} else {	
+			enterMultiChoiceMode(listView, position);
+		}
+		return true;
+	}
+	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}

@@ -85,6 +85,9 @@ public class ExchangeListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id < 0){
 			super.onListItemClick(l, v, position, id);
 			return;
@@ -101,12 +104,12 @@ public class ExchangeListFragment extends HyjUserListFragment{
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-//		Exchange exchange = Exchange.load(Exchange.class, id);
-//		exchange.delete();
-	    HyjUtil.displayToast("汇率不能被删除");
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+////		Exchange exchange = Exchange.load(Exchange.class, id);
+////		exchange.delete();
+//	    HyjUtil.displayToast("汇率不能被删除");
+//	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {

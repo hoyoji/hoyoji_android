@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.fragment.HyjDialogFragment;
@@ -40,6 +41,12 @@ public abstract class HyjActivity extends ActionBarActivity
 	public static final int REQUEST_TAKE_PHOTO = 1024;
 	
 	private ProgressDialog mProgressDialog;
+	public DialogCallbackListener mDialogCallback;
+	public DialogFragment mDialogFragment;
+	private boolean mIsViewInited = false;
+
+	private int mChoiceMode = ListView.CHOICE_MODE_NONE;
+	
 
 //	private GestureDetector gestureScanner;
 	protected abstract Integer getContentView();
@@ -50,10 +57,6 @@ public abstract class HyjActivity extends ActionBarActivity
 	
 	protected void onInitViewData() {
 	}
-
-	public DialogCallbackListener mDialogCallback;
-	public DialogFragment mDialogFragment;
-	private boolean mIsViewInited = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -266,7 +269,13 @@ public abstract class HyjActivity extends ActionBarActivity
     public boolean dispatchTouchEvent(MotionEvent event) {
 //        gestureScanner.onTouchEvent(ev);
 //        return super.dispatchTouchEvent(ev);
-
+		
+		if(event.getAction() == MotionEvent.ACTION_MOVE){
+		     if (mChoiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+			     return false;
+		     }
+		}
+		
 	    View v = getCurrentFocus();
         boolean ret = super.dispatchTouchEvent(event);
 
@@ -381,5 +390,21 @@ public abstract class HyjActivity extends ActionBarActivity
 			}
 		}
 	}
+
+	public void setChoiceMode(int choiceMode) {
+		mChoiceMode  = choiceMode;
+	}
 	
+	public int getChoiceModel(){
+		return mChoiceMode;
+	}
+	
+
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//	     if (mChoiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+//		     return false;
+//	     }
+//         return super.onTouchEvent(event);
+//	}
 }

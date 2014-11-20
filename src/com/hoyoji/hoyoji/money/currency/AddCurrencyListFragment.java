@@ -134,6 +134,9 @@ public class AddCurrencyListFragment extends HyjListFragment implements OnQueryT
 
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) {
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		super.onListItemClick(l, v, position, id);
 		if(id >= 0){
 				JSONObject object = (JSONObject) getListAdapter().getItem(position);

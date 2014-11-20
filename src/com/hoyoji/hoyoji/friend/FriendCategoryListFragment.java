@@ -82,6 +82,9 @@ public class FriendCategoryListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id < 0){
 			super.onListItemClick(l, v, position, id);
 			return;
@@ -98,10 +101,10 @@ public class FriendCategoryListFragment extends HyjUserListFragment{
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
-		friendCategory.delete();
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
+//		friendCategory.delete();
+//	}
 	
 }

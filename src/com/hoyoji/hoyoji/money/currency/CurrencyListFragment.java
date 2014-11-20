@@ -89,6 +89,9 @@ public class CurrencyListFragment extends HyjUserListFragment{
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id < 0){
 			super.onListItemClick(l, v, position, id);
 			return;
@@ -105,12 +108,12 @@ public class CurrencyListFragment extends HyjUserListFragment{
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		Currency currency= Currency.load(Currency.class, id);
-		currency.delete();
-	    HyjUtil.displayToast(R.string.currencyFormFragment_toast_delete_success);
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		Currency currency= Currency.load(Currency.class, id);
+//		currency.delete();
+//	    HyjUtil.displayToast(R.string.currencyFormFragment_toast_delete_success);
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

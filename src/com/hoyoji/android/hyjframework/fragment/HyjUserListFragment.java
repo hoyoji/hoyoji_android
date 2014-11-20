@@ -6,6 +6,7 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjListView;
 import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji_android.R;
 import android.content.Intent;
@@ -28,7 +29,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -37,7 +40,7 @@ import android.widget.TextView;
 public abstract class HyjUserListFragment extends ListFragment implements 
 	LoaderManager.LoaderCallbacks<Object>, 
 	SimpleCursorAdapter.ViewBinder, 
-	SimpleAdapter.ViewBinder{
+	SimpleAdapter.ViewBinder, OnItemLongClickListener{
 	
 //	public final static int DELETE_LIST_ITEM = 1024;
 //	public final static int CANCEL_LIST_ITEM = 1025;
@@ -183,13 +186,44 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	public abstract ListAdapter useListViewAdapter();
 	
 	public void onInitViewData(){
-		
+		getListView().setOnItemLongClickListener(this);
 	}
 
 	public Menu getOptionsMenu(){
 		return mOptionsMenu;
 	}
 
+	public void enterMultiChoiceMode(ListView listView, int position){
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		listView.setItemChecked(position, true);
+		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+	}
+	
+	public void exitMultiChoiceMode(final ListView listView){
+		listView.clearChoices();
+		listView.setItemChecked(0, false);
+		listView.post(new Runnable(){
+			@Override
+			public void run() {
+				listView.setChoiceMode(ListView.CHOICE_MODE_NONE);	
+				((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
+			}
+		});
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> l, View view,
+			int position, long id) {
+//		final ListView listView = (ListView)l;
+//		if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+//			exitMultiChoiceMode(listView);
+//		} else {	
+//			enterMultiChoiceMode(listView, position);
+//		}
+//		return true;
+		return false;
+	}
+	
 	public void setFooterLoadStart(ListView l){
 //        if(l.getItemAtPosition(0) == null){
 //        	((TextView)mFooterView).setText(R.string.app_listview_footer_fetching_more);
@@ -267,7 +301,12 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //	@Override  
 //    public void onListItemClick(ListView l, View v, int position, long id) { 
 //		super.onListItemClick(l, v, position, id);
+//		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+//			return;
+//		}
 //    }  
+	
+	
 	
 	public void doFetchMore(ListView l, int offset, int pageSize){
 //		if(getLoaderManager().getLoader(0) != null && getLoaderManager().getLoader(0).isStarted()){
@@ -282,16 +321,16 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //	@Override
 //	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 //		super.onCreateContextMenu(menu, v, menuInfo);
-//		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
-//		if(mi.id == -1){
-//			return;
-//		}
-//		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
-//		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+////		AdapterContextMenuInfo mi =(AdapterContextMenuInfo) menuInfo;
+////		if(mi.id == -1){
+////			return;
+////		}
+////		menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
+////		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 //	}	
 	
-	public void onDeleteListItem(Long id){
-	}
+//	public void onDeleteListItem(Long id){
+//	}
 	
 
 	@Override

@@ -73,6 +73,9 @@ public class MoneyTransferListFragment extends HyjUserListFragment {
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}
@@ -88,35 +91,35 @@ public class MoneyTransferListFragment extends HyjUserListFragment {
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		try {
-				ActiveAndroid.beginTransaction();
-				
-				MoneyTransfer moneyTransfer = MoneyTransfer.load(MoneyTransfer.class, id);
-				MoneyAccount transferOut = moneyTransfer.getTransferOut();
-				MoneyAccount transferIn = moneyTransfer.getTransferIn();
-				
-				HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
-				HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
-				
-				moneyTransfer.delete();
-				
-				if(transferOut != null){
-					transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
-					transferOutEditor.save();
-				}
-				if(transferIn != null){
-					transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
-					transferInEditor.save();
-				}
-				
-			    HyjUtil.displayToast("转账删除成功");
-			    ActiveAndroid.setTransactionSuccessful();
-		} finally {
-		    ActiveAndroid.endTransaction();
-		}
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		try {
+//				ActiveAndroid.beginTransaction();
+//				
+//				MoneyTransfer moneyTransfer = MoneyTransfer.load(MoneyTransfer.class, id);
+//				MoneyAccount transferOut = moneyTransfer.getTransferOut();
+//				MoneyAccount transferIn = moneyTransfer.getTransferIn();
+//				
+//				HyjModelEditor<MoneyAccount> transferOutEditor = transferOut.newModelEditor();
+//				HyjModelEditor<MoneyAccount> transferInEditor = transferIn.newModelEditor();
+//				
+//				moneyTransfer.delete();
+//				
+//				if(transferOut != null){
+//					transferOutEditor.getModelCopy().setCurrentBalance(transferOut.getCurrentBalance() + moneyTransfer.getTransferOutAmount());
+//					transferOutEditor.save();
+//				}
+//				if(transferIn != null){
+//					transferInEditor.getModelCopy().setCurrentBalance(transferIn.getCurrentBalance() - moneyTransfer.getTransferInAmount());
+//					transferInEditor.save();
+//				}
+//				
+//			    HyjUtil.displayToast("转账删除成功");
+//			    ActiveAndroid.setTransactionSuccessful();
+//		} finally {
+//		    ActiveAndroid.endTransaction();
+//		}
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

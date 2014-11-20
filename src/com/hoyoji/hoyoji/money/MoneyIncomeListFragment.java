@@ -73,6 +73,9 @@ public class MoneyIncomeListFragment extends HyjUserListFragment {
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}
@@ -88,24 +91,24 @@ public class MoneyIncomeListFragment extends HyjUserListFragment {
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		try {
-			ActiveAndroid.beginTransaction();
-			
-			MoneyIncome moneyIncome = MoneyIncome.load(MoneyIncome.class, id);
-			MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
-			HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-			moneyIncome.delete();
-			moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncome.getAmount());
-			moneyAccountEditor.save();
-			
-		    HyjUtil.displayToast("收入删除成功");
-		    ActiveAndroid.setTransactionSuccessful();
-	} finally {
-	    ActiveAndroid.endTransaction();
-	}
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		try {
+//			ActiveAndroid.beginTransaction();
+//			
+//			MoneyIncome moneyIncome = MoneyIncome.load(MoneyIncome.class, id);
+//			MoneyAccount moneyAccount = moneyIncome.getMoneyAccount();
+//			HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+//			moneyIncome.delete();
+//			moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() - moneyIncome.getAmount());
+//			moneyAccountEditor.save();
+//			
+//		    HyjUtil.displayToast("收入删除成功");
+//		    ActiveAndroid.setTransactionSuccessful();
+//	} finally {
+//	    ActiveAndroid.endTransaction();
+//	}
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

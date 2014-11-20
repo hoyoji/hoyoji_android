@@ -104,6 +104,9 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		super.onListItemClick(l, v, position, id);
 		if (id >= 0) {
 			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(position);

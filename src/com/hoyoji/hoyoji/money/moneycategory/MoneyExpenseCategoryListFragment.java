@@ -333,6 +333,9 @@ public class MoneyExpenseCategoryListFragment extends HyjUserListFragment implem
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		super.onListItemClick(l, v, position, id);
 		if(lastSelectedMainCategoryId != AdapterView.INVALID_ROW_ID){
 			for(int i=l.getFirstVisiblePosition(); i <= l.getLastVisiblePosition(); i++){

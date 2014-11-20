@@ -1735,6 +1735,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	@Override  
 	public void onListItemClick(ListView parent, View v,
 			int position, long id) {
+		if(parent.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}

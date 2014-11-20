@@ -174,6 +174,9 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}
@@ -191,17 +194,17 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		Project project = Project.load(Project.class, id);
-		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		if(userData.getActiveProjectId().equals(project.getId())){
-			HyjUtil.displayToast("默认账本不能删除");
-			return;
-		}
-		project.delete();
-	    HyjUtil.displayToast("账本删除成功");
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		Project project = Project.load(Project.class, id);
+//		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+//		if(userData.getActiveProjectId().equals(project.getId())){
+//			HyjUtil.displayToast("默认账本不能删除");
+//			return;
+//		}
+//		project.delete();
+//	    HyjUtil.displayToast("账本删除成功");
+//	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {

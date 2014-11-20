@@ -73,6 +73,9 @@ public class MoneyReturnListFragment extends HyjUserListFragment {
 	
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
+		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}
@@ -88,28 +91,28 @@ public class MoneyReturnListFragment extends HyjUserListFragment {
 		}
     }  
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		try {
-				ActiveAndroid.beginTransaction();
-				
-				MoneyReturn moneyReturn = MoneyReturn.load(MoneyReturn.class, id);
-				MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
-				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
-				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
-				HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
-				moneyReturn.delete();
-				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
-				debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
-				moneyAccountEditor.save();
-				debtAccountEditor.save();
-				
-			    HyjUtil.displayToast("还款删除成功");
-			    ActiveAndroid.setTransactionSuccessful();
-		} finally {
-		    ActiveAndroid.endTransaction();
-		}
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		try {
+//				ActiveAndroid.beginTransaction();
+//				
+//				MoneyReturn moneyReturn = MoneyReturn.load(MoneyReturn.class, id);
+//				MoneyAccount moneyAccount = moneyReturn.getMoneyAccount();
+//				HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
+//				MoneyAccount debtAccount = MoneyAccount.getDebtAccount(moneyReturn.getProject().getCurrencyId(), moneyReturn.getLocalFriendId(), moneyReturn.getFriendUserId());
+//				HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
+//				moneyReturn.delete();
+//				moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyReturn.getAmount() + moneyReturn.getInterest0());
+//				debtAccountEditor.getModelCopy().setCurrentBalance(debtAccount.getCurrentBalance() - moneyReturn.getProjectAmount());
+//				moneyAccountEditor.save();
+//				debtAccountEditor.save();
+//				
+//			    HyjUtil.displayToast("还款删除成功");
+//			    ActiveAndroid.setTransactionSuccessful();
+//		} finally {
+//		    ActiveAndroid.endTransaction();
+//		}
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
