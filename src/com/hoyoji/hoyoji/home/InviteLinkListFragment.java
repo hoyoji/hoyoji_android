@@ -6,24 +6,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.hoyoji_android.R;
 
-public class InviteLinkListFragment extends HyjUserListFragment {
+public class InviteLinkListFragment extends HyjUserListFragment implements OnQueryTextListener{
 	private final static int INVITELINK_CHANGESTATE = 1;
+	protected SearchView mSearchView;
+	protected String mSearchText = "";
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.link_listfragment_invite;
@@ -36,16 +47,24 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 
 	@Override
 	public void onInitViewData() {
-		onQueryLinkList();
+		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
+		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setSubmitButtonEnabled(true);
+		
+		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
+		if(searchImage != null){
+			searchImage.setImageResource(R.drawable.ic_action_search);
+		}
+		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+		if(magImage != null){
+			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+		}
+
+		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
+//		onQueryLinkList();
 	}
 	
-//	 @Override
-//	public void onResume() {
-//         // TODO Auto-generated method stub
-//         super.onResume();
-//         ((HyjJSONListAdapter) this.getListAdapter()).clear();
-//         onQueryLinkList();
-//     }
 
 	@Override
 	public void initLoader(int loaderId) {
@@ -63,8 +82,7 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 	public void onLoadFinished(Loader<Object> loader, Object data) {
 		super.onLoadFinished(loader, data);
 		// Set the new data in the adapter.
-		((HyjJSONListAdapter) this.getListAdapter())
-				.addData((List<JSONObject>) data);
+		((HyjJSONListAdapter) this.getListAdapter()).addData((List<JSONObject>) data);
 	}
 
 	@Override
@@ -96,10 +114,27 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 			openActivityWithFragmentForResult(InviteLinkFormFragment.class, R.string.inviteLinkFormFragment_title, bundle, INVITELINK_CHANGESTATE);
 		}
 	}
+	
+	@Override
+	public boolean onQueryTextChange(String arg0) {
+		return false;
+	}
 
-	public void onQueryLinkList() {
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		mSearchText = searchText.trim();
+		if (searchText.length() == 0) {
+			HyjUtil.displayToast("请输入查询条件");
+			return true;
+		}
+
+	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
+   
 		JSONObject data = new JSONObject();
 		try {
+			data.put("title", mSearchText);
+			data.put("description", mSearchText);
 			data.put("__dataType", "InviteLink");
 			data.put("__limit", getListPageSize());
 			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
@@ -116,7 +151,39 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 			getLoaderManager().destroyLoader(0);
 		}
 		getLoaderManager().restartLoader(0, bundle, this);
+		return true;
 	}
+
+//	public void onQueryLinkList() {
+//		JSONObject data = new JSONObject();
+//		try {
+//			if (mSearchText.length() == 0) {
+//				data.put("__dataType", "InviteLink");
+//				data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//				data.put("__limit", getListPageSize());
+//				data.put("__offset", 0);
+//				data.put("__orderBy", "date DESC");
+//			}else{
+//				data.put("title", mSearchText);
+//				data.put("description", mSearchText);
+//				data.put("__dataType", "InviteLink");
+//				data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//				data.put("__limit", getListPageSize());
+//				data.put("__offset", 0);
+//				data.put("__orderBy", "date ASC");
+//			}
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//		Bundle bundle = new Bundle();
+//		bundle.putString("target", "findData");
+//		bundle.putString("postData", (new JSONArray()).put(data).toString());
+//		if (getLoaderManager().getLoader(0) != null) {
+//			getLoaderManager().destroyLoader(0);
+//		}
+//		getLoaderManager().restartLoader(0, bundle, this);
+//	}
 
 	@Override
 	public void doFetchMore(ListView l, int offset, int pageSize) {
@@ -127,8 +194,10 @@ public class InviteLinkListFragment extends HyjUserListFragment {
 		this.setFooterLoadStart(l);
 		JSONObject data = new JSONObject();
 		try {
+			data.put("title", mSearchText);
+			data.put("description", mSearchText);
 			data.put("__dataType", "InviteLink");
-			data.put("__limit", getListPageSize());
+			data.put("__limit", pageSize);
 			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			data.put("__offset", offset);
 			data.put("__orderBy", "date DESC");
