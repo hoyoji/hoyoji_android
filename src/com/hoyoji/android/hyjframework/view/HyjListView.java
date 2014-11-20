@@ -43,6 +43,7 @@ public class HyjListView extends ListView {
 	}
 
 	private void initBounceListView() {
+		this.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		final float density = metrics.density;
 		mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
 		setOverScrollMode(ListView.OVER_SCROLL_ALWAYS);
