@@ -68,15 +68,15 @@ public class HomeCalendarGridGroupListLoader extends
 //		context.getContentResolver().registerContentObserver(
 //				ContentProvider.createUri(MoneyIncomeContainer.class, null), true,
 //				mChangeObserver);
-		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyDepositExpenseContainer.class, null), true,
-				mChangeObserver);
-		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyDepositIncomeContainer.class, null), true,
-				mChangeObserver);
-		context.getContentResolver().registerContentObserver(
-				ContentProvider.createUri(MoneyDepositReturnContainer.class, null), true,
-				mChangeObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContentProvider.createUri(MoneyDepositExpenseContainer.class, null), true,
+//				mChangeObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContentProvider.createUri(MoneyDepositIncomeContainer.class, null), true,
+//				mChangeObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContentProvider.createUri(MoneyDepositReturnContainer.class, null), true,
+//				mChangeObserver);
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyTransfer.class, null), true,
 				mChangeObserver);
@@ -132,15 +132,19 @@ public class HomeCalendarGridGroupListLoader extends
 					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24 * 3600000)) };
 			double expenseTotal = 0.00;
 			double incomeTotal = 0.00;
+			
 			Cursor cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyExpense main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
+				count += cursor.getDouble(0);
 				expenseTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
@@ -148,25 +152,15 @@ public class HomeCalendarGridGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE mea.id IS NULL AND date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
+				count += cursor.getDouble(0);
 				expenseTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
@@ -174,12 +168,48 @@ public class HomeCalendarGridGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
+				count += cursor.getDouble(0);
+				expenseTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE main.transferInId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getDouble(0);
+				expenseTotal += cursor.getDouble(1);
+				cursor.close();
+				cursor = null;
+			}
+			
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyIncome main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count += cursor.getDouble(0);
 				incomeTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
@@ -187,127 +217,217 @@ public class HomeCalendarGridGroupListLoader extends
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
+				count += cursor.getDouble(0);
+				incomeTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
 			}
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositExpenseContainer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
+				count += cursor.getDouble(0);
+				incomeTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
 			}
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
+							"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+									+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+									+ localCurrencyId
+									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+									+ localCurrencyId + "') "
+									+ "WHERE main.transferOutId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
+				count += cursor.getDouble(0);
+				incomeTotal += cursor.getDouble(1);
 				cursor.close();
 				cursor = null;
 			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer WHERE date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				transferTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE moneyDepositReturnApportionId IS NULL AND date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositPaybackContainer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date >= ? AND date < ?",
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-//				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-//			cursor = Cache
+			
+//			Cursor cursor = Cache
 //					.openDatabase()
 //					.rawQuery(
-//							"SELECT COUNT(*) AS count FROM Message WHERE date > ? AND date <= ? AND (messageState='new' OR messageState='unread') ",
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpense main LEFT JOIN MoneyExpenseApportion mea ON main.moneyExpenseApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE mea.id IS NULL AND date >= ? AND date < ?",
 //							args);
 //			if (cursor != null) {
 //				cursor.moveToFirst();
 //				count += cursor.getInt(0);
+//				expenseTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncome main LEFT JOIN MoneyIncomeApportion mea ON main.moneyIncomeApportionId = mea.id LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE mea.id IS NULL AND date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+//				expenseTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+//				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositExpenseContainer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				transferTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND moneyDepositIncomeApportionId IS NULL AND date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE moneyDepositReturnApportionId IS NULL AND date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositPaybackContainer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
+//				cursor.close();
+//				cursor = null;
+//			}
+//			cursor = Cache
+//					.openDatabase()
+//					.rawQuery(
+//							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+//							"WHERE moneyDepositPaybackContainerId IS null AND moneyDepositReturnApportionId IS NULL AND date >= ? AND date < ?",
+//							args);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count += cursor.getInt(0);
+////				incomeTotal += cursor.getDouble(1);
 //				cursor.close();
 //				cursor = null;
 //			}
