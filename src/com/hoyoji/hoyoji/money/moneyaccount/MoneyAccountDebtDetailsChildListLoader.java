@@ -150,24 +150,24 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 
 			String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 			
-	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?  AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyBorrows = new Select("main.*").from(MoneyBorrow.class).as("main").where("ownerFriendId IS NULL AND date > ? AND date <= ? AND ownerUserId = ?  AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyBorrows);
 //	    	List<HyjModel> moneyBorrows1 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 //	    	list.addAll(moneyBorrows1);
 //	    	List<HyjModel> moneyBorrows2 = new Select("main.*").from(MoneyBorrow.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 //	    	list.addAll(moneyBorrows2);
 	    	
-	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ?  AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyLends = new Select("main.*").from(MoneyLend.class).as("main").where("ownerFriendId IS NULL AND date > ? AND date <= ? AND ownerUserId = ?  AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyLends);
 //	    	List<HyjModel> moneyLends1 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("mea.id = main.moneyExpenseApportionId").where("(main.moneyExpenseApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 //	    	list.addAll(moneyLends1);
 //	    	List<HyjModel> moneyLends2 = new Select("main.*").from(MoneyLend.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("mea.id = main.moneyIncomeApportionId").where("(main.moneyIncomeApportionId IS NOT NULL AND (mea.id IS NULL OR (mea.friendUserId IS NULL AND main.ownerUserId = '" + currentUserId + "'))) AND date > ? AND date <= ? AND" + searchQuery, dateFrom, dateTo).orderBy("date DESC").execute();
 //	    	list.addAll(moneyLends2);
 	    	
-	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyReturns = new Select("main.*").from(MoneyReturn.class).as("main").where("ownerFriendId IS NULL AND date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyReturns);
 	    	
-	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").where("date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
+	    	List<HyjModel> moneyPaybacks = new Select("main.*").from(MoneyPayback.class).as("main").where("ownerFriendId IS NULL AND date > ? AND date <= ? AND ownerUserId = ? AND" + searchQuery, dateFrom, dateTo, currentUserId).orderBy("date DESC").execute();
 	    	list.addAll(moneyPaybacks);
 	    	
 	    	
