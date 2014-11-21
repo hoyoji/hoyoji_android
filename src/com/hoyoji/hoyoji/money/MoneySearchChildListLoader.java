@@ -71,7 +71,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 		private String mMoneyAccountId;
 		private String mFriendUserId;
 		private String mLocalFriendId;
-		private Object mOwnerUserId;
+		private String mOwnerUserId;
 
 	    
 	    public MoneySearchChildListLoader(Context context, Bundle queryParams) {
