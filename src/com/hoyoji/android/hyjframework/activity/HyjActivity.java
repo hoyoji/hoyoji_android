@@ -1,15 +1,10 @@
 package com.hoyoji.android.hyjframework.activity;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -17,12 +12,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,11 +27,8 @@ import com.hoyoji.android.hyjframework.fragment.HyjDialogFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
-import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public abstract class HyjActivity extends ActionBarActivity 
-//implements GestureDetector.OnGestureListener 
 {
 	public static final int REQUEST_TAKE_PHOTO = 1024;
 	
@@ -49,6 +41,7 @@ public abstract class HyjActivity extends ActionBarActivity
 	
 
 //	private GestureDetector gestureScanner;
+//	GestureListener gestureListener = new GestureListener();
 	protected abstract Integer getContentView();
 	
 	protected Integer getOptionsMenuView(){
@@ -61,7 +54,7 @@ public abstract class HyjActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//        gestureScanner = new GestureDetector(HyjActivity.this,this);
+//        gestureScanner = new GestureDetector(HyjActivity.this, gestureListener);
 		if(getContentView() != null){
 			setContentView(getContentView());
 	    }
@@ -267,14 +260,15 @@ public abstract class HyjActivity extends ActionBarActivity
 	
 	@Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-//        gestureScanner.onTouchEvent(ev);
-//        return super.dispatchTouchEvent(ev);
 		
-		if(event.getAction() == MotionEvent.ACTION_MOVE){
-		     if (mChoiceMode == ListView.CHOICE_MODE_MULTIPLE) {
-			     return false;
-		     }
-		}
+//		if(event.getAction() == MotionEvent.ACTION_MOVE){
+//
+//		     if (mChoiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+//		    	 if(gestureListener.isSwipingLeftRight){
+//		    		 return false;
+//		    	 }
+//		     }
+//		}
 		
 	    View v = getCurrentFocus();
         boolean ret = super.dispatchTouchEvent(event);
@@ -294,71 +288,7 @@ public abstract class HyjActivity extends ActionBarActivity
         return ret;
     }
 
-//    @Override
-//    public boolean onSingleTapUp(MotionEvent event) {
-//        View v = getCurrentFocus();
-//
-//        if (v instanceof EditText) {
-//            View w = getCurrentFocus();
-//            int scrcoords[] = new int[2];
-//            w.getLocationOnScreen(scrcoords);
-//            boolean hide = true;
-//
-//            View view = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
-//            ArrayList<View> editTexts = view.getFocusables(0);     // Get All EditTexts in view
-//
-//            for(int i=0; i< editTexts.size(); i++){
-//                View editText = editTexts.get(i);
-//                editText.getLocationOnScreen(scrcoords);
-//                float x = event.getRawX();
-//                float y = event.getRawY();
-//                int viewX = scrcoords[0];
-//                int viewY = scrcoords[1];
-//
-//                // If touch is in any of EditText, keep keyboard active, otherwise hide it.
-//                if (event.getAction() == MotionEvent.ACTION_UP  && ( x > viewX && x < (viewX + editText.getWidth())) && ( y > viewY && y < (viewY + editText.getHeight())) ) {
-//                    hide = false;
-//                }
-//            }
-//
-//            if (hide) {
-//                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-//            }
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onScroll(MotionEvent event, MotionEvent e2, float distanceX, float distanceY) {
-//        return true;
-//    } 
-//
-//	@Override
-//	public boolean onDown(MotionEvent e) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-//			float velocityY) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public void onLongPress(MotionEvent e) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void onShowPress(MotionEvent e) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//	
+	
 	
 
 	@Override
@@ -402,9 +332,35 @@ public abstract class HyjActivity extends ActionBarActivity
 
 //	@Override
 //	public boolean onTouchEvent(MotionEvent event) {
-//	     if (mChoiceMode == ListView.CHOICE_MODE_MULTIPLE) {
-//		     return false;
-//	     }
-//         return super.onTouchEvent(event);
+//      return gestureScanner.onTouchEvent(event);
+////         return super.onTouchEvent(event);
 //	}
+//	
+//	
+//	private final class GestureListener extends SimpleOnGestureListener {
+//
+//        private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+//        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+//		public boolean isSwipingLeftRight;
+//
+//        @Override
+//        public boolean onDown(MotionEvent e) {
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//            float distanceX = e2.getX() - e1.getX();
+//            float distanceY = e2.getY() - e1.getY();
+//            if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+////                if (distanceX > 0)
+//                	isSwipingLeftRight = true;
+////                else
+////                    onSwipeLeft();
+//            } else {
+//            	isSwipingLeftRight = false;
+//            }
+//            return false;
+//        }
+//    }
 }

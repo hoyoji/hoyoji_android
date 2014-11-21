@@ -9,16 +9,22 @@ import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.hoyoji_android.R;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -29,9 +35,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -51,6 +60,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	private Menu mOptionsMenu;
 	protected static DisplayMetrics displayMetrics;
 	protected View mHeaderView;
+	private View mMultiSelectActionBarView;
+	private TextView mSelectedCount;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -157,20 +168,42 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		if(useOptionsMenuView() != null){
+//		if(useOptionsMenuView() != null){
 			setHasOptionsMenu (true);
-		}
+//		}
 	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;
-	    // Inflate the menu items for use in the action bar
-		if(useOptionsMenuView() != null){
-			inflater.inflate(useOptionsMenuView(), menu);
+		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			menu.clear();
+			inflater.inflate(R.menu.multi_select_menu, menu);
+		} else {
+		    // Inflate the menu items for use in the action bar
+			if(useOptionsMenuView() != null){
+				inflater.inflate(useOptionsMenuView(), menu);
+			}
 		}
 	    super.onCreateOptionsMenu(menu, inflater);
 	}
+	
+//	@Override
+//	public void onPrepareOptionsMenu(Menu menu) {
+//		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+////			if(mSelectedCount != null){
+////				mSelectedCount.setText(getListView().getCheckedItemIds().length);
+////			}
+//		}
+//		
+////	    MenuItem mItem = menu.findItem(R.id.action_slelect);
+////	    if(mListView.getCheckedItemCount() == mAdapter.getCount()){
+////	      mItem.setTitle(R.string.action_deselect_all);
+////	    }else{
+////	      mItem.setTitle(R.string.action_select_all);
+////	    } 
+////	    super.onPrepareOptionsMenu(menu);
+//	 }
 
 	public Integer useToolbarView(){
 		return null;
@@ -193,10 +226,28 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return mOptionsMenu;
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void enterMultiChoiceMode(ListView listView, int position){
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setItemChecked(position, true);
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
+		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+		if (mMultiSelectActionBarView == null) {
+		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
+		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_count);
+			  actionBar.setCustomView(mMultiSelectActionBarView);
+			  getListView().setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					mSelectedCount.setText(getListView().getCheckedItemIds().length + "");
+				}
+			  });
+		}
+		mSelectedCount.setText(getListView().getCheckedItemIds().length + "");
+		getActivity().supportInvalidateOptionsMenu();
 	}
 	
 	public void exitMultiChoiceMode(final ListView listView){
@@ -209,6 +260,18 @@ public abstract class HyjUserListFragment extends ListFragment implements
 				((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
 			}
 		});
+
+		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_SHOW_CUSTOM);
+		actionBar.setDisplayShowCustomEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+		if(mOptionsMenu != null){
+			mOptionsMenu.clear();
+		}
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	@Override
@@ -223,6 +286,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 //		return true;
 		return false;
 	}
+		
+	
 	
 	public void setFooterLoadStart(ListView l){
 //        if(l.getItemAtPosition(0) == null){

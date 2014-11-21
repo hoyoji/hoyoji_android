@@ -189,7 +189,7 @@ public class HomeCalendarGridGroupListLoader extends
 									+ localCurrencyId
 									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 									+ localCurrencyId + "') "
-									+ "WHERE main.transferInId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+									+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
 				count += cursor.getDouble(0);
@@ -254,7 +254,7 @@ public class HomeCalendarGridGroupListLoader extends
 									+ localCurrencyId
 									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 									+ localCurrencyId + "') "
-									+ "WHERE main.transferOutId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+									+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 			if (cursor != null) {
 				cursor.moveToFirst();
 				count += cursor.getDouble(0);

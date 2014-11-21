@@ -559,7 +559,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.transferInId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+								+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			expenseTotal += cursor.getDouble(1);
@@ -621,7 +621,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 								+ localCurrencyId
 								+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
 								+ localCurrencyId + "') "
-								+ "WHERE main.transferOutId IS NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
+								+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND main.ownerUserId = '" + currentUserId + "'", args);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			incomeTotal += cursor.getDouble(1);

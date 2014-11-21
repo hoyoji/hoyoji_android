@@ -7,12 +7,12 @@
     tools:context=".MainActivity" >
     <!-- The main content view -->
 
-	<android.support.v4.view.ViewPager
+	<com.hoyoji.android.hyjframework.view.HyjViewPager
 	    android:id="@+id/pager"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
         android:paddingTop="35dp" >
-	</android.support.v4.view.ViewPager>
+	</com.hoyoji.android.hyjframework.view.HyjViewPager>
     
     
     <!-- The navigation drawer -->

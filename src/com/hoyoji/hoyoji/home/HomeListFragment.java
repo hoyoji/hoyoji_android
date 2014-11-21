@@ -1590,9 +1590,9 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		            	if(v instanceof HyjNumericView){
 		            		HyjNumericView balanceTotalView = (HyjNumericView)v;
 		            		if(v.getId() == R.id.homeListItem_group_expenseTotal){
-		            			balanceTotalView.setPrefix("支出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+		            			balanceTotalView.setPrefix("流出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
 			            	} else if(v.getId() == R.id.homeListItem_group_incomeTotal){
-		            			balanceTotalView.setPrefix("收入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
+		            			balanceTotalView.setPrefix("流入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
 				            }
 		            		balanceTotalView.setNumber(Double.valueOf(data.get(from[i]).toString()));
 		            	} else if(v instanceof TextView){
