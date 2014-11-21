@@ -11,6 +11,9 @@
    <string name="friendFormFragment_textView_userNickName">好友昵称</string>
    <string name="friendFormFragment_editText_hint_userNickName">无好友昵称</string>
    
+   <string name="friendFormFragment_textView_phoneNumber">电话号码</string>
+   <string name="friendFormFragment_editText_hint_phoneNumber">无电话号码</string>
+   
    <string name="friendFormFragment_editText_hint_friendName">请输入好友名称</string>
    
    <string name="friendFormFragment_textView_nickName">备注名称</string>

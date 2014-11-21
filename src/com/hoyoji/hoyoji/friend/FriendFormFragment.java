@@ -49,6 +49,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldFriendCategory = null;
 	private HyjTextField mTextFieldUserNickName = null;
 	private HyjTextField mTextFieldNickName = null;
+	private HyjTextField mTextFieldPhoneNumber = null;
 	private TextView mTextFieldUserName = null;
 
 	private HyjImageView mPicture = null;
@@ -109,6 +110,9 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		mTextFieldNickName = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_nickName);
 		mTextFieldNickName.setText(friend.getNickName());
 		mTextFieldNickName.requestFocus();
+		
+		mTextFieldPhoneNumber = (HyjTextField) getView().findViewById(R.id.friendFormFragment_textField_phoneNumber);
+		mTextFieldPhoneNumber.setText(friend.getPhoneNumber());
 		
 		FriendCategory friendCategory = friend.getFriendCategory();
 		mSelectorFieldFriendCategory = (HyjSelectorField) getView().findViewById(R.id.friendFormFragment_selectorField_friend_category);
@@ -237,6 +241,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	private void fillData(){
 		Friend modelCopy = (Friend) mFriendEditor.getModelCopy();
 		modelCopy.setNickName(mTextFieldNickName.getText().toString().trim());
+		modelCopy.setPhoneNumber(mTextFieldPhoneNumber.getText().toString().trim());
 		modelCopy.setFriendCategoryId(mSelectorFieldFriendCategory.getModelId());
 	}
 	
