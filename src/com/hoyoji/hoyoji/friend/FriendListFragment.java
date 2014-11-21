@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.friend;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,9 +16,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -141,6 +145,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(item.getItemId() == R.id.friendListFragment_action_friend_import){
 //			openActivityWithFragment(ImportFriendListFragment.class, R.string.friendFormFragment_title_create, null);
+			Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);  
+            this.startActivityForResult(intent, 1);  
 			return true;
 		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
 			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
@@ -157,6 +163,74 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {  
+        // TODO Auto-generated method stub  
+        super.onActivityResult(requestCode, resultCode, data);  
+        switch (requestCode) {  
+        case 1:  
+            if (resultCode == Activity.RESULT_OK) {  
+                Uri contactData = data.getData();  
+                Cursor cursor = getActivity().managedQuery(contactData, null, null, null, null);  
+                cursor.moveToFirst();  
+                HashMap<String , String> phoneMap = this.getContactPhone(cursor);  
+                Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneMap.get("phoneNumber").trim()).executeSingle();
+                if(importFiend == null){
+	                importFiend = new Friend();
+                }
+                importFiend.setNickName(phoneMap.get("phoneName").trim());
+                importFiend.setPhoneNumber(phoneMap.get("phoneNumber").trim());
+                importFiend.save();
+            }  
+            break;  
+  
+        default:  
+            break;  
+        }  
+    }  
+	
+	private HashMap<String , String> getContactPhone(Cursor cursor) {  
+        // TODO Auto-generated method stub  
+        int phoneColumn = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);  
+        int phoneNum = cursor.getInt(phoneColumn);  
+//        String result = "";  
+        HashMap<String , String> resultMap = new HashMap<String , String>();
+        if (phoneNum > 0) {  
+            // 获得联系人的ID号  
+            int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);  
+            String contactId = cursor.getString(idColumn);  
+            // 获得联系人电话的cursor  
+            Cursor phone = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="+ contactId, null, null);  
+            if (phone.moveToFirst()) {  
+                for (; !phone.isAfterLast(); phone.moveToNext()) {  
+                    int index = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);  
+                    int typeindex = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);  
+                    int phone_type = phone.getInt(typeindex);  
+                    String phoneNumber = phone.getString(index);  
+                    
+                    int indexName = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                    String phoneName = phone.getString(indexName);  
+//                    result = phoneNumber;  
+                    resultMap.put("phoneNumber", phoneNumber);
+                    resultMap.put("phoneName", phoneName);
+                    switch (phone_type) {//此处请看下方注释  
+	                  case 2:  
+	                	  resultMap.put("phoneNumber", phoneNumber);
+	                	  resultMap.put("phoneName", phoneName);
+	                      break;  
+	  
+	                  default:  
+	                      break;  
+	                  } 
+                }  
+                if (!phone.isClosed()) {  
+                    phone.close();  
+                }  
+            }  
+        }  
+        return resultMap;  
+    }
 	
 	public void inviteFriend(final String way) {
 		((HyjActivity) getActivity()).displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);

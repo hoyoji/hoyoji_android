@@ -172,7 +172,7 @@ public class MoneyTransfer extends HyjModel{
 //			    	rate = exchange;
 //			    }
 //			}
-			return this.getTransferOutAmount0()/this.getTransferOutExchangeRate();
+			return this.getTransferOutAmount0()*this.getTransferOutExchangeRate();
 		}else if(this.getTransferInExchangeRate() != null){
 //			if(!projectCurrency.getId().equals(this.getTransferIn().getCurrencyId())){
 //				Double exchange = Exchange.getExchangeRate(this.getTransferIn().getCurrencyId(),projectCurrency.getId());
