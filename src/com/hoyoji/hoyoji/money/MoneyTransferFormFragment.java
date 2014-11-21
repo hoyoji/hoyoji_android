@@ -339,7 +339,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					int count) {
 				if(s!= null && s.length()>0 && mNumericTransferOutAmount.getNumber() != null){
 					mNumericTransferInAmount.setNumber(Double.valueOf(s.toString()) * mNumericTransferOutAmount.getNumber());
-					projectTransferInExchangeRate.setNumber(Double.valueOf(s.toString()) / transferOutProjectExchangeRate.getNumber());
+					if(transferOutProjectExchangeRate.getNumber()!=null){
+						projectTransferInExchangeRate.setNumber(Double.valueOf(s.toString()) / transferOutProjectExchangeRate.getNumber());
+					}
 				}else{
 					mNumericTransferInAmount.setNumber(null);
 				}
@@ -745,8 +747,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
 					mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
 				}
-				
-				
+				mNumericExchangeRate.setNumber(1.00);
 			}
 			
 			if(mSelectorFieldTransferOut.getModelId() == null && mSelectorFieldTransferIn.getModelId() != null) {
@@ -755,7 +756,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				mNumericTransferOutAmount.setTextViewLabel("转出金额");
 			}
 				SET_EXCHANGE_RATE_FLAG = 0;
-				setTransferInAmount();
+			setTransferInAmount();
 	}
 	
 	private void setTransferInAmount(){

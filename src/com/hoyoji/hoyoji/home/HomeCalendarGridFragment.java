@@ -1332,7 +1332,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			HyjNumericView numericView = (HyjNumericView)view;
 			MoneyTransfer moneyTransfer = (MoneyTransfer)object;
 			numericView.setPrefix(moneyTransfer.getProject().getCurrencySymbol());
-			numericView.setNumber(moneyTransfer.getTransferProjectAmount()/moneyTransfer.getTransferOutExchangeRate());
+			numericView.setNumber(moneyTransfer.getTransferProjectAmount());
 			if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
 				numericView.setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			} else if(moneyTransfer.getTransferOut() != null){
