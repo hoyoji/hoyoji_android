@@ -13,6 +13,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,6 +57,11 @@ public class MessageListFragment extends HyjUserListFragment{
 		return R.menu.message_listfragment_message;
 	}
 
+	@Override
+	public Integer useMultiSelectMenuView() {
+		return R.menu.message_listfragment_message_multi_select;
+	}
+	
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
@@ -117,13 +124,17 @@ public class MessageListFragment extends HyjUserListFragment{
 					mChangeObserver);
 		}
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.messageListFragment_action_sync){
 			HyjUtil.displayToast("正在检查新消息...");
 			Intent startIntent = new Intent(getActivity(), MessageDownloadService.class);
 			HyjApplication.getInstance().getApplicationContext().startService(startIntent);
+			return true;
+		} else if(item.getItemId() == R.id.messageListFragment_action_set_read){
+			HyjUtil.displayToast("设为已读...");
+			this.exitMultiChoiceMode(getListView());
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

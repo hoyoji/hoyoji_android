@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:hoyoji="http://schemas.android.com/apk/res-auto" >
-    	
+
     <item
         android:id="@id/multi_select_menu_more"
         android:icon="@drawable/ic_action_overflow_white"
@@ -8,9 +8,9 @@
         hoyoji:showAsAction="always">
         <menu>
             <item
-		        android:id="@id/multi_select_menu_delete"
-		        android:title="删除选定记录"
-		        android:icon="@drawable/ic_action_discard_white"
+		        android:id="@+id/messageListFragment_action_set_read"
+		        android:title="设为已读"
+		        android:icon="@drawable/ic_action_read"
 		        hoyoji:showAsAction="always"/>
 		
 		    
