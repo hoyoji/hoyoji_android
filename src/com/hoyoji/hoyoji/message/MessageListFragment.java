@@ -61,6 +61,7 @@ public class MessageListFragment extends HyjUserListFragment{
 	public Integer useMultiSelectMenuView() {
 		return R.menu.message_listfragment_message_multi_select;
 	}
+
 	
 	@Override
 	public ListAdapter useListViewAdapter() {
@@ -138,18 +139,6 @@ public class MessageListFragment extends HyjUserListFragment{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onItemLongClick(AdapterView<?> l, View view,
-			int position, long id) {
-		final ListView listView = (ListView)l;
-		if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-			exitMultiChoiceMode(listView);
-		} else {	
-			enterMultiChoiceMode(listView, position);
-		}
-		return true;
 	}
 	
 	@Override  
@@ -253,7 +242,6 @@ public class MessageListFragment extends HyjUserListFragment{
 	}
 	
 	private class ChangeObserver extends ContentObserver {
-//		AsyncTask<String, Void, String> mTask = null;
 		public ChangeObserver() {
 			super(new Handler());
 		}

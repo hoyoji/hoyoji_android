@@ -325,9 +325,10 @@ public abstract class HyjActivity extends ActionBarActivity
 		mChoiceMode  = choiceMode;
 	}
 	
-	public int getChoiceModel(){
+	public int getChoiceMode(){
 		return mChoiceMode;
 	}
+
 	
 
 //	@Override

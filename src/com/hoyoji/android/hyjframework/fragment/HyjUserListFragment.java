@@ -176,16 +176,14 @@ public abstract class HyjUserListFragment extends ListFragment implements
 					inflater.inflate(useMultiSelectMenuView(), menu);
 				}
 			} else {
-				inflater.inflate(R.menu.multi_select_menu_ok, menu);
+				if(useMultiSelectMenuOkView() != null){
+					inflater.inflate(useMultiSelectMenuOkView(), menu);
+				}
 			}
 		} else {
-		    // Inflate the menu items for use in the action bar
 			if(useOptionsMenuView() != null){
 				inflater.inflate(useOptionsMenuView(), menu);
 			} 
-//			else {
-//				inflater.inflate(R.menu.empty_menu, menu);
-//			}
 		}
 	    super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -199,23 +197,6 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 	
-//	@Override
-//	public void onPrepareOptionsMenu(Menu menu) {
-//		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-////			if(mSelectedCount != null){
-////				mSelectedCount.setText(getListView().getCheckedItemIds().length);
-////			}
-//		}
-//		
-////	    MenuItem mItem = menu.findItem(R.id.action_slelect);
-////	    if(mListView.getCheckedItemCount() == mAdapter.getCount()){
-////	      mItem.setTitle(R.string.action_deselect_all);
-////	    }else{
-////	      mItem.setTitle(R.string.action_select_all);
-////	    } 
-////	    super.onPrepareOptionsMenu(menu);
-//	 }
-
 	private void returnSelectedItems() {
 		if(getListView().getCheckedItemIds().length == 0){
 			HyjUtil.displayToast("请选择至少一条记录");
@@ -236,7 +217,13 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 	
 	public Integer useMultiSelectMenuView(){
-		return R.menu.multi_select_menu;
+//		return R.menu.multi_select_menu;
+		return null;
+	}
+
+	public Integer useMultiSelectMenuOkView() {
+//		return R.menu.multi_select_menu_ok;
+		return null;
 	}
 	
 	public abstract Integer useContentView();
@@ -251,7 +238,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return mOptionsMenu;
 	}
 
-	public void enterMultiChoiceMode(ListView listView, int position){
+	public void enterMultiChoiceMode(final ListView listView, int position){
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setItemChecked(position, true);
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -262,25 +249,27 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
 		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_count);
 			  actionBar.setCustomView(mMultiSelectActionBarView);
-			  getListView().setOnItemClickListener(new OnItemClickListener(){
+			  listView.setOnItemClickListener(new OnItemClickListener(){
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+					if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 						mSelectedCount.setText(getListView().getCheckedItemIds().length + "");
 					} else {
-						onListItemClick((ListView) arg0, arg1, arg2, arg3);
+						onListItemClick(listView, arg1, arg2, arg3);
 					}
 				}
 			  });
 		}
-		mSelectedCount.setText(getListView().getCheckedItemIds().length + "");
+		mSelectedCount.setText(listView.getCheckedItemIds().length + "");
 		getActivity().supportInvalidateOptionsMenu();
 	}
 	
 	public void exitMultiChoiceMode(final ListView listView){
 		listView.clearChoices();
-		listView.setItemChecked(0, false);
+		if(listView.getAdapter().getCount() > 0){
+			listView.setItemChecked(0, false);
+		}
 		listView.post(new Runnable(){
 			@Override
 			public void run() {
@@ -302,13 +291,23 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> l, View view,
 			int position, long id) {
-//		final ListView listView = (ListView)l;
-//		if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-//			exitMultiChoiceMode(listView);
-//		} else {	
-//			enterMultiChoiceMode(listView, position);
-//		}
-//		return true;
+		final ListView listView = (ListView)l;
+		if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			exitMultiChoiceMode(listView);
+			return true;
+		} else {	
+			if(getActivity().getCallingActivity() != null){
+				if(this.useMultiSelectMenuOkView() != null){
+					enterMultiChoiceMode(listView, position);
+					return true;
+				}
+			} else {
+				if(this.useMultiSelectMenuView() != null){
+					enterMultiChoiceMode(listView, position);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 		

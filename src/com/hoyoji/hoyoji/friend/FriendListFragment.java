@@ -91,7 +91,16 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public Integer useOptionsMenuView() {
 		return R.menu.friend_listfragment_friend;
 	}
+	
+	public Integer useMultiSelectMenuView(){
+		return R.menu.multi_select_menu;
+//		return null;
+	}
 
+	public Integer useMultiSelectMenuOkView() {
+		return R.menu.multi_select_menu_ok;
+//		return null;
+	}
 
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -418,17 +427,17 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 					openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_edit, bundle);
 				} 
 				break;
-			case EDIT_FRIEND_DETAILS:
-				if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-			        int groupPos = ExpandableListView
-			                .getPackedPositionGroup(info.packedPosition);
-			        int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
-				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
-					Bundle bundle = new Bundle();
-					bundle.putLong("MODEL_ID", itemId);
-					openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title, bundle);
-				} 
-				break;
+//			case EDIT_FRIEND_DETAILS:
+//				if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+//			        int groupPos = ExpandableListView
+//			                .getPackedPositionGroup(info.packedPosition);
+//			        int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
+//				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
+//					Bundle bundle = new Bundle();
+//					bundle.putLong("MODEL_ID", itemId);
+//					openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title, bundle);
+//				} 
+//				break;
 				
 		}
 		return super.onContextItemSelected(item);
@@ -439,10 +448,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
 			menu.add(EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, EDIT_CATEGORY_ITEM, R.string.friendCategoryFormFragment_title_edit);
-			super.onCreateContextMenu(menu, v, menuInfo);
+//			super.onCreateContextMenu(menu, v, menuInfo);
 		} else {
-//			menu.add(0, EDIT_FRIEND_DETAILS, 0, "好友资料");
-//			menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
+			super.onCreateContextMenu(menu, v, menuInfo);
 		}
 	}		
 	
@@ -494,17 +502,17 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 //	    HyjUtil.displayToast("好友删除成功");
 //	}
 
-	@Override 
-	public void onDeleteListGroup(int groupPos, Long id){
-		List<Friend> friends = HyjModel.load(FriendCategory.class, id).getFriends();
-		if(getListView().getExpandableListAdapter().getChildrenCount(groupPos) > 0 || !friends.isEmpty()){
-			HyjUtil.displayToast("该好友分类下包含好友，不能被删除");
-		} else {
-			FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
-			friendCategory.delete();
-		    HyjUtil.displayToast("好友分类删除成功");
-		}
-	}
+//	@Override 
+//	public void onDeleteListGroup(int groupPos, Long id){
+//		List<Friend> friends = HyjModel.load(FriendCategory.class, id).getFriends();
+//		if(getListView().getExpandableListAdapter().getChildrenCount(groupPos) > 0 || !friends.isEmpty()){
+//			HyjUtil.displayToast("该好友分类下包含好友，不能被删除");
+//		} else {
+//			FriendCategory friendCategory = FriendCategory.load(FriendCategory.class, id);
+//			friendCategory.delete();
+//		    HyjUtil.displayToast("好友分类删除成功");
+//		}
+//	}
 
 
 	@Override

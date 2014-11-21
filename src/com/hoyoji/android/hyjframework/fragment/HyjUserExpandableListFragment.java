@@ -1,12 +1,16 @@
 package com.hoyoji.android.hyjframework.fragment;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter.OnGetChildrenCursorListener;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.android.hyjframework.view.HyjExpandableListView;
 import com.hoyoji.android.hyjframework.view.HyjExpandableListView.OnOverScrollByListener;
 import com.hoyoji.hoyoji_android.R;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,6 +18,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -24,9 +30,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -54,6 +64,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 //	protected int mListPageSize = 10;
 	protected DisplayMetrics displayMetrics;
 	protected View mHeaderView;
+	private View mMultiSelectActionBarView;
+	private TextView mSelectedCount;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -223,18 +235,48 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		if(useOptionsMenuView() != null){
+//		if(useOptionsMenuView() != null){
 			setHasOptionsMenu (true);
+//		}
+	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			menu.clear();
+			if(getActivity().getCallingActivity() == null){
+				if(useMultiSelectMenuView() != null){
+					inflater.inflate(useMultiSelectMenuView(), menu);
+				}
+			} else {
+				if(useMultiSelectMenuOkView() != null){
+					inflater.inflate(useMultiSelectMenuOkView(), menu);
+				}
+			}
+		} else {
+			if(useOptionsMenuView() != null){
+				inflater.inflate(useOptionsMenuView(), menu);
+			} 
 		}
+	    super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    // Inflate the menu items for use in the action bar
-		if(useOptionsMenuView() != null){
-			inflater.inflate(useOptionsMenuView(), menu);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.multi_select_menu_ok){
+			returnSelectedItems();
+			return true;
 		}
-	    super.onCreateOptionsMenu(menu, inflater);
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void returnSelectedItems() {
+		if(getListView().getCheckedItemIds().length == 0){
+			HyjUtil.displayToast("请选择至少一条记录");
+			return;
+		}
+		getActivity().setResult(Activity.RESULT_OK, null);
+		getActivity().finish();
+		
 	}
 
 	public Integer useToolbarView(){
@@ -244,6 +286,77 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 
 	public Integer useOptionsMenuView(){
 		return null;
+	}
+	
+	public Integer useMultiSelectMenuView(){
+//		return R.menu.multi_select_menu;
+		return null;
+	}
+
+	public Integer useMultiSelectMenuOkView() {
+//		return R.menu.multi_select_menu_ok;
+		return null;
+	}
+	
+
+	public void enterMultiChoiceMode(final ExpandableListView listView, int position){
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//		listView.setItemChecked(packedPosition, true);
+		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
+		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+		if (mMultiSelectActionBarView == null) {
+		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
+		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_count);
+			  actionBar.setCustomView(mMultiSelectActionBarView);
+			  
+			  listView.setOnChildClickListener(new OnChildClickListener(){
+					@Override
+					public boolean onChildClick(ExpandableListView parent, View v,
+							int groupPosition, int childPosition, long id) {
+						final int position = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+						if(parent.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){  
+							parent.setItemChecked(position, !parent.isItemChecked(position));  
+
+							mSelectedCount.setText(parent.getCheckedItemIds().length + "");
+						} else {
+							if(((HyjActivity)getActivity()).getChoiceMode() != ListView.CHOICE_MODE_NONE){
+								((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
+							} else {
+								HyjUserExpandableListFragment.this.onChildClick(parent, v, groupPosition, childPosition, id);
+							}
+						}
+						return true;
+					} 
+				  });
+		}
+		mSelectedCount.setText(listView.getCheckedItemIds().length + "");
+		getActivity().supportInvalidateOptionsMenu();
+	}
+	
+	public void exitMultiChoiceMode(final ExpandableListView listView){
+		listView.clearChoices();
+		final int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
+		if(position >= 0){
+			getListView().setItemChecked(position, false);
+		}
+		listView.post(new Runnable(){
+			@Override
+			public void run() {
+				listView.setChoiceMode(ListView.CHOICE_MODE_NONE);	
+//				((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
+				getActivity().supportInvalidateOptionsMenu();
+			}
+		});
+
+		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_SHOW_CUSTOM);
+		actionBar.setDisplayShowCustomEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
 	}
 	
 	public abstract Integer useContentView();
@@ -329,54 +442,60 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		}
 	}
 	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if(!getUserVisibleHint()){
-			return super.onContextItemSelected(item);
-		}
-		switch (item.getItemId()) {
-			case DELETE_LIST_ITEM:
-				ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
-				int type = ExpandableListView
-			            .getPackedPositionType(info.packedPosition);
-				   int groupPos = ExpandableListView
-			                .getPackedPositionGroup(info.packedPosition);
-			     
-			    if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-			        int childPos = ExpandableListView
-			                .getPackedPositionChild(info.packedPosition);
-				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
-					onDeleteListItem(itemId);
-					return true;
-			    } else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-			    	 Long itemId = getListView().getExpandableListAdapter().getGroupId(groupPos);
-					onDeleteListGroup(groupPos, itemId);
-					return true;
-			    }
-				break;
-			case CANCEL_LIST_ITEM:
-				break;
-		}
-		return super.onContextItemSelected(item);
-	}
-	
 //	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-//		super.onCreateContextMenu(menu, v, menuInfo);
-//		//ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
-//		//if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
-//		//	menu.add(DELETE_LIST_ITEM, DELETE_LIST_ITEM, DELETE_LIST_ITEM, R.string.app_action_delete_list_item);
-//		//	menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-//			//}
-//	}	
+//	public boolean onContextItemSelected(MenuItem item) {
+//		if(!getUserVisibleHint()){
+//			return super.onContextItemSelected(item);
+//		}
+//		switch (item.getItemId()) {
+//			case DELETE_LIST_ITEM:
+//				ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+//				int type = ExpandableListView
+//			            .getPackedPositionType(info.packedPosition);
+//				   int groupPos = ExpandableListView
+//			                .getPackedPositionGroup(info.packedPosition);
+//			     
+//			    if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+//			        int childPos = ExpandableListView
+//			                .getPackedPositionChild(info.packedPosition);
+//				    Long itemId = getListView().getExpandableListAdapter().getChildId(groupPos, childPos);
+//					onDeleteListItem(itemId);
+//					return true;
+//			    } else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+//			    	 Long itemId = getListView().getExpandableListAdapter().getGroupId(groupPos);
+//					onDeleteListGroup(groupPos, itemId);
+//					return true;
+//			    }
+//				break;
+//			case CANCEL_LIST_ITEM:
+//				break;
+//		}
+//		return super.onContextItemSelected(item);
+//	}
 	
-	public void onDeleteListItem(Long id){
-	}
-	
-	public void onDeleteListGroup(int groupPos, Long id){
-	}
-	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		ExpandableListContextMenuInfo adapterContextMenuInfo = (ExpandableListContextMenuInfo) menuInfo;
 
+		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
+			int position = this.getListView().getFlatListPosition(adapterContextMenuInfo.packedPosition);
+			if(this.getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+				exitMultiChoiceMode(this.getListView());
+			} else {	
+				if(getActivity().getCallingActivity() != null){
+					if(this.useMultiSelectMenuOkView() != null){
+						enterMultiChoiceMode(this.getListView(), position);
+					}
+				} else {
+					if(this.useMultiSelectMenuView() != null){
+						enterMultiChoiceMode(this.getListView(), position);
+					}
+				}
+			}
+		}
+	}	
+	
 	@Override
 	public boolean setViewValue(View arg0, Cursor arg1, int arg2) {
 		return false;
@@ -413,11 +532,11 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		getLoaderManager().restartLoader(-1, bundle,this);
 	}
 	
-	@Override
-	public boolean onChildClick(ExpandableListView parent, View v,
-			int groupPosition, int childPosition, long id) {
-		return false;
-	}  	
+//	@Override
+//	public boolean onChildClick(ExpandableListView parent, View v,
+//			int groupPosition, int childPosition, long id) {
+//		return false;
+//	}  	
 
 	@Override
 	public void onGetChildrenCursor(Cursor groupCursor) {

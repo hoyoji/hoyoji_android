@@ -19,13 +19,13 @@ public class HyjViewPager extends ViewPager {
 	 }
 	 
 	 public void setCurrentItem(int item, boolean smoothScroll) {
-		 if(((HyjActivity)this.getContext()).getChoiceModel() != ListView.CHOICE_MODE_MULTIPLE){
+		 if(((HyjActivity)this.getContext()).getChoiceMode() != ListView.CHOICE_MODE_MULTIPLE){
 			 super.setCurrentItem(item, smoothScroll);
 		 }
 	 }
 	 
 	 public void setCurrentItem(int item) {
-		 if(((HyjActivity)this.getContext()).getChoiceModel() != ListView.CHOICE_MODE_MULTIPLE){
+		 if(((HyjActivity)this.getContext()).getChoiceMode() != ListView.CHOICE_MODE_MULTIPLE){
 			 super.setCurrentItem(item);
 		 }
 	 }
@@ -46,7 +46,7 @@ public class HyjViewPager extends ViewPager {
 
 	 @Override
 	 public boolean onInterceptTouchEvent(MotionEvent ev) {
-		 if(((HyjActivity)this.getContext()).getChoiceModel() == ListView.CHOICE_MODE_MULTIPLE){
+		 if(((HyjActivity)this.getContext()).getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			 return false;
 		 }
 		 return super.onInterceptTouchEvent(ev);

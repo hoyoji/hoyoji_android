@@ -264,17 +264,17 @@ public class MoneyAccountTopupListFragment extends HyjUserExpandableListFragment
     } 
 	
 
-	@Override 
-	public void onDeleteListItem(Long id){
-		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, id);
-		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-		if(userData.getActiveMoneyAccountId().equals(moneyAccount.getId())){
-			HyjUtil.displayToast("默认账户不能删除");
-			return;
-		}
-		moneyAccount.delete();
-	    HyjUtil.displayToast("充值卡账户删除成功");
-	}
+//	@Override 
+//	public void onDeleteListItem(Long id){
+//		MoneyAccount moneyAccount = MoneyAccount.load(MoneyAccount.class, id);
+//		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
+//		if(userData.getActiveMoneyAccountId().equals(moneyAccount.getId())){
+//			HyjUtil.displayToast("默认账户不能删除");
+//			return;
+//		}
+//		moneyAccount.delete();
+//	    HyjUtil.displayToast("充值卡账户删除成功");
+//	}
 	
 	private static class MoneyAccountGroupListAdapter extends HyjSimpleExpandableListAdapter{
 
