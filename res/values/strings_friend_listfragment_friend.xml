@@ -3,6 +3,7 @@
 
     <string name="friendListFragment_action_friend_add">添加网络好友</string>
     <string name="friendListFragment_action_friend_create">创建本地好友</string>
+    <string name="friendListFragment_action_friend_import">导入通讯录好友</string>
     
     <string name="friendListFragment_title_invite_qqFriend">邀请QQ好友</string>
    <string name="friendListFragment_title_invite_wxFriend">邀请微信好友</string>
