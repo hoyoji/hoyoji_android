@@ -7,7 +7,7 @@
     	android:paddingRight="0dp"
     	android:paddingTop="0dp" >
 
-    <android.support.v4.view.ViewPager
+    <com.hoyoji.android.hyjframework.view.HyjViewPager
         android:id="@+id/currencyExchangeViewPagerListFragment_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -21,6 +21,6 @@
             android:paddingTop="2dp"
             android:textColor="@color/hoyoji_red" />
         
-    </android.support.v4.view.ViewPager>
+    </com.hoyoji.android.hyjframework.view.HyjViewPager>
 
 </FrameLayout>
