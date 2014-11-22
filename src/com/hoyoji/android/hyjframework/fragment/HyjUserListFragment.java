@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -247,14 +248,39 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 		if (mMultiSelectActionBarView == null) {
 		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
-		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_count);
+		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_count);
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_close).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+			    		exitMultiChoiceMode(listView);
+					}
+		      });
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_all).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+						for(int g = 0; g < listView.getAdapter().getCount(); g++){
+								listView.setItemChecked(g, true);
+						}
+						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
+					}
+		      });
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_clear).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+			    		listView.clearChoices();
+			    		if(listView.getAdapter().getCount() > 0){
+			    			getListView().setItemChecked(0, false);
+			    		}
+						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
+					}
+		      });
 			  actionBar.setCustomView(mMultiSelectActionBarView);
 			  listView.setOnItemClickListener(new OnItemClickListener(){
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					if(listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-						mSelectedCount.setText(getListView().getCheckedItemIds().length + "");
+						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
 					} else {
 						onListItemClick(listView, arg1, arg2, arg3);
 					}

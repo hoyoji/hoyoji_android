@@ -301,14 +301,43 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 
 	public void enterMultiChoiceMode(final ExpandableListView listView, int position){
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-//		listView.setItemChecked(packedPosition, true);
+//			listView.setItemChecked(position, true);
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
 		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 		if (mMultiSelectActionBarView == null) {
 		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
-		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_count);
+		      mSelectedCount = (TextView)mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_count);
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_close).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+			    		exitMultiChoiceMode(listView, -1);
+					}
+		      });
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_all).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+						for(int g = 0; g < listView.getExpandableListAdapter().getGroupCount(); g++){
+							for(int c = 0; c < listView.getExpandableListAdapter().getChildrenCount(g); c++){
+					    		int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(g, c));
+								listView.setItemChecked(position, true);
+							}
+						}
+						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
+					}
+		      });
+		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_clear).setOnClickListener(new OnClickListener(){
+			    	@Override
+					public void onClick(View v) {
+			    		listView.clearChoices();
+			    		int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
+			    		if(position > -1){
+			    			getListView().setItemChecked(position, false);
+			    		}
+						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
+					}
+		      });
 			  actionBar.setCustomView(mMultiSelectActionBarView);
 			  
 			  listView.setOnChildClickListener(new OnChildClickListener(){
@@ -322,6 +351,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 							mSelectedCount.setText(parent.getCheckedItemIds().length + "");
 						} else {
 							if(((HyjActivity)getActivity()).getChoiceMode() != ListView.CHOICE_MODE_NONE){
+								// 长按触发 onCreateContextMenu 的同时会触发 onChildClick 事件，
+								// 所以我们在 onChildClick 里去设置 Activity 的 ChoiceMode
 								((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
 							} else {
 								HyjUserExpandableListFragment.this.onChildClick(parent, v, groupPosition, childPosition, id);
@@ -335,17 +366,22 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		getActivity().supportInvalidateOptionsMenu();
 	}
 	
-	public void exitMultiChoiceMode(final ExpandableListView listView){
+	public void exitMultiChoiceMode(final ExpandableListView listView, int position){
 		listView.clearChoices();
-		final int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
 		if(position >= 0){
+			listView.setItemChecked(position, false);
+			// 长按触发 onCreateContextMenu 的同时会触发 onChildClick 事件，
+			// 所以我们在 onChildClick 里去设置 Activity 的 ChoiceMode
+//			((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
+		} else {
+			position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
 			getListView().setItemChecked(position, false);
+			((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
 		}
 		listView.post(new Runnable(){
 			@Override
 			public void run() {
 				listView.setChoiceMode(ListView.CHOICE_MODE_NONE);	
-//				((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_NONE);
 				getActivity().supportInvalidateOptionsMenu();
 			}
 		});
@@ -481,7 +517,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		if(ExpandableListView.getPackedPositionType(adapterContextMenuInfo.packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD){
 			int position = this.getListView().getFlatListPosition(adapterContextMenuInfo.packedPosition);
 			if(this.getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-				exitMultiChoiceMode(this.getListView());
+				exitMultiChoiceMode(this.getListView(), position);
 			} else {	
 				if(getActivity().getCallingActivity() != null){
 					if(this.useMultiSelectMenuOkView() != null){

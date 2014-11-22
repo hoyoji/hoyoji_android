@@ -22,6 +22,8 @@
     
     <item name="app_listview_footer_fetch_more" type="id"/>
     
+    <item name="multi_select_menu_count" type="id"/>
+    <item name="multi_select_menu_close" type="id"/>
     <item name="multi_select_menu_more" type="id"/>
     <item name="multi_select_menu_delete" type="id"/>
     <item name="multi_select_menu_ok" type="id"/>
