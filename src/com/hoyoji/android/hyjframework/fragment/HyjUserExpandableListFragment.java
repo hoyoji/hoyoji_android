@@ -586,11 +586,13 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;
 		if(getChildFragmentManager().getFragments() != null){
-			for(Fragment f : getFragmentManager().getFragments()){
+			for(Fragment f : getChildFragmentManager().getFragments()){
 				if(f instanceof HyjFragment){
 					backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
 				} else if(f instanceof HyjUserListFragment){
 					backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
+				}  else if(f instanceof HyjUserExpandableListFragment){
+					backPressedHandled = backPressedHandled || ((HyjUserExpandableListFragment)f).handleBackPressed();
 				} 
 			}
 		} else if(getListView().getChoiceMode() != ListView.CHOICE_MODE_NONE){

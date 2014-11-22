@@ -324,11 +324,13 @@ public abstract class HyjListFragment extends ListFragment implements
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;
 		if(getChildFragmentManager().getFragments() != null){
-			for(Fragment f : getFragmentManager().getFragments()){
+			for(Fragment f : getChildFragmentManager().getFragments()){
 				if(f instanceof HyjFragment){
 					backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
 				} else if(f instanceof HyjListFragment){
 					backPressedHandled = backPressedHandled || ((HyjListFragment)f).handleBackPressed();
+				}  else if(f instanceof HyjUserExpandableListFragment){
+					backPressedHandled = backPressedHandled || ((HyjUserExpandableListFragment)f).handleBackPressed();
 				} 
 			}
 		}

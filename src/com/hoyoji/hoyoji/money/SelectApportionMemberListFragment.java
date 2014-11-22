@@ -18,7 +18,9 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ListView;
 
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
@@ -60,9 +62,14 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 	@Override
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false; //super.handleBackPressed();
-		if(mViewPager.getCurrentItem() > 0){
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-			backPressedHandled = true;
+		if(((HyjActivity)getActivity()).getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			backPressedHandled = super.handleBackPressed();
+		}
+		if(!backPressedHandled){
+			if(mViewPager.getCurrentItem() > 0){
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+				backPressedHandled = true;
+			}
 		}
 		return backPressedHandled;
 	}

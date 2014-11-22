@@ -124,11 +124,13 @@ public abstract class HyjFragment extends Fragment {
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;
 		if(getChildFragmentManager().getFragments() != null){
-			for(Fragment f : getFragmentManager().getFragments()){
+			for(Fragment f : this.getChildFragmentManager().getFragments()){
 				if(f instanceof HyjFragment){
 					backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
 				} else if(f instanceof HyjUserListFragment){
 					backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
+				} else if(f instanceof HyjUserExpandableListFragment){
+					backPressedHandled = backPressedHandled || ((HyjUserExpandableListFragment)f).handleBackPressed();
 				} 
 			}
 		}
