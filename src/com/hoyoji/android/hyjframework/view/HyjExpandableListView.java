@@ -100,7 +100,12 @@ public class HyjExpandableListView extends ExpandableListView {
 //			}
 //		}
 //	}
+
+	public int getCheckedItemCount(){
+		return super.getCheckedItemIds().length;
+	}
 	
+	@Override
 	public long[] getCheckedItemIds() {
 		         if (getChoiceMode() == CHOICE_MODE_NONE || getExpandableListAdapter() == null) {
 		             return new long[0];
@@ -108,8 +113,7 @@ public class HyjExpandableListView extends ExpandableListView {
 		 
 		         SparseBooleanArray checkedItems = this.getCheckedItemPositions();
 		         
-		         final int count = checkedItems.size();
-		         final long[] ids = new long[count];
+		         final long[] ids = new long[this.getCheckedItemIds().length];
 		         
 		         ExpandableListAdapter adapter = this.getExpandableListAdapter();
 		         int checkedCount = 0;
