@@ -55,9 +55,11 @@ import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer.MoneyExpenseContainerEditor;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
+import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyLendContainer;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -867,23 +869,23 @@ public class MainActivity extends HyjUserActivity {
 										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpenseContainer.getApportions().iterator();
 										while (moneyExpenseApportions.hasNext()) {
 											MoneyExpenseApportion moneyExpenseApportion = moneyExpenseApportions.next();
-											if(!moneyExpenseApportion.getId().equals(model.getId())){
-												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
-												if(moneyLend != null){
-													moneyLend.deleteFromServer();
-												}
-												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
-												if(moneyExpense != null){
-													moneyExpense.deleteFromServer();
-												}
-												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
-												if(moneyBorrow != null){
-													moneyBorrow.deleteFromServer();
-												} 
-												moneyExpenseApportion.deleteFromServer();
-											}
+//											if(!moneyExpenseApportion.getId().equals(model.getId())){
+//												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+//												if(moneyLend != null){
+//													moneyLend.deleteFromServer();
+//												}
+//												MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+//												if(moneyExpense != null){
+//													moneyExpense.deleteFromServer();
+//												}
+//												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyExpenseApportionId=?", moneyExpenseApportion.getId()).executeSingle();
+//												if(moneyBorrow != null){
+//													moneyBorrow.deleteFromServer();
+//												} 
+//												moneyExpenseApportion.deleteFromServer();
+//											}
+											MoneyExpenseContainer.deleteApportion(moneyExpenseApportion, new MoneyExpenseContainerEditor(moneyExpenseContainer));
 										}
-										
 										moneyExpenseContainer.deleteFromServer();
 									}
 								}
@@ -903,22 +905,23 @@ public class MainActivity extends HyjUserActivity {
 										Iterator<MoneyIncomeApportion> moneyIncomeApportions = moneyIncomeContainer.getApportions().iterator();
 										while (moneyIncomeApportions.hasNext()) {
 											MoneyIncomeApportion moneyIncomeApportion = moneyIncomeApportions.next();
-											if(!moneyIncomeApportion.getId().equals(model.getId())){
-												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
-												if(moneyBorrow != null){
-													moneyBorrow.deleteFromServer();
-												} 
-												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
-												if(moneyIncome != null){
-													moneyIncome.deleteFromServer();
-												}
-												
-												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
-												if(moneyLend != null){
-													moneyLend.deleteFromServer();
-												} 
-												moneyIncomeApportion.deleteFromServer();
-											}
+//											if(!moneyIncomeApportion.getId().equals(model.getId())){
+//												MoneyBorrow moneyBorrow = new Select().from(MoneyBorrow.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+//												if(moneyBorrow != null){
+//													moneyBorrow.deleteFromServer();
+//												} 
+//												MoneyIncome moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+//												if(moneyIncome != null){
+//													moneyIncome.deleteFromServer();
+//												}
+//												
+//												MoneyLend moneyLend = new Select().from(MoneyLend.class).where("moneyIncomeApportionId=?", moneyIncomeApportion.getId()).executeSingle();
+//												if(moneyLend != null){
+//													moneyLend.deleteFromServer();
+//												} 
+//												moneyIncomeApportion.deleteFromServer();
+//											}
+											MoneyIncomeContainer.deleteApportion(moneyIncomeApportion, new MoneyIncomeContainerEditor(moneyIncomeContainer));
 										}
 										
 										moneyIncomeContainer.deleteFromServer();
