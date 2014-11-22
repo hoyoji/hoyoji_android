@@ -35,4 +35,5 @@ public class HyjSimpleCursorTreeAdapter extends SimpleCursorTreeAdapter {
 		return null;
 	}
 
+	
 }

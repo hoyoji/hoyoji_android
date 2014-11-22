@@ -399,6 +399,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				new String[] { "friendUserId", "nickName" },
 				new int[] { R.id.friendListItem_picture, R.id.friendListItem_nickName });
 		adapter.setGetChildrenCursorListener(this);
+		
 		return adapter;
 	}
 
