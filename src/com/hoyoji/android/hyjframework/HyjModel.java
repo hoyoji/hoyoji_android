@@ -166,6 +166,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 		Model model = null;
 		Class<? extends Model> type = modelTypeMap.get(tableName);
 		if(type == null){
+			// 缓存到 HashMap, 提高下次访问的速度
 			for(TableInfo tableInfo : Cache.getTableInfos()){
 				if(tableInfo.getTableName().endsWith(tableName)){
 					type = tableInfo.getType();
