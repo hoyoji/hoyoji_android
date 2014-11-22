@@ -1,7 +1,5 @@
 package com.hoyoji.hoyoji.money;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,20 +9,21 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -46,6 +45,11 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 				0); 
 	}	
 
+	@Override
+	public Integer useMultiSelectMenuView() {
+		return R.menu.multi_select_menu;
+	}
+	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
@@ -150,4 +154,31 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			return false;
 		}
 	}
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.multi_select_menu_delete){
+			deleteSelectedMessages();
+			this.exitMultiChoiceMode(getListView());
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void deleteSelectedMessages() {
+		long[] ids = this.getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一条快记模版");
+			return;
+		}
+		for(int i=0; i<ids.length; i++){
+			MoneyTemplate template = Model.load(MoneyTemplate.class, ids[i]);
+			if(template != null){
+				template.delete();
+			}
+		}
+		
+	}
+	
 }

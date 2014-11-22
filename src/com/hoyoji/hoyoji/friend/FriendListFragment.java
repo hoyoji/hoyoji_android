@@ -91,14 +91,9 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	public Integer useOptionsMenuView() {
 		return R.menu.friend_listfragment_friend;
 	}
-	
-	public Integer useMultiSelectMenuView(){
-		return R.menu.multi_select_menu;
-//		return null;
-	}
 
-	public Integer useMultiSelectMenuOkView() {
-		return R.menu.multi_select_menu_ok;
+	public Integer useMultiSelectMenuPickerView() {
+		return R.menu.multi_select_menu_picker;
 //		return null;
 	}
 
@@ -636,5 +631,20 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		super.onDestroy();
 	}
 
+	@Override
+	protected void returnSelectedItems() {
+		long[] ids = getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一个好友");
+			return;
+		}
+		
+		Intent intent = new Intent();
+		intent.putExtra("MODEL_IDS", ids);
+		intent.putExtra("MODEL_TYPE", "Friend");
+		getActivity().setResult(Activity.RESULT_OK, intent);
+		getActivity().finish();
+		
+	}
 
 }

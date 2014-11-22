@@ -134,13 +134,30 @@ public class MessageListFragment extends HyjUserListFragment{
 			HyjApplication.getInstance().getApplicationContext().startService(startIntent);
 			return true;
 		} else if(item.getItemId() == R.id.messageListFragment_action_set_read){
-			HyjUtil.displayToast("设为已读...");
+			setSelectedAsRead();
 			this.exitMultiChoiceMode(getListView());
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	private void setSelectedAsRead() {
+		long[] ids = this.getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一条消息");
+			return;
+		}
+		for(int i=0; i<ids.length; i++){
+			Message msg = Model.load(Message.class, ids[i]);
+			if(msg != null 
+				 && ("Unread".equalsIgnoreCase(msg.getMessageState()) 
+					|| "New".equalsIgnoreCase(msg.getMessageState())) ){
+				msg.setMessageState("Read");
+				msg.save();
+			}
+		}
+	}
+
 	@Override  
     public void onListItemClick(ListView l, View v, int position, long id) { 
 		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){

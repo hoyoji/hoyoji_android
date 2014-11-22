@@ -248,8 +248,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 					inflater.inflate(useMultiSelectMenuView(), menu);
 				}
 			} else {
-				if(useMultiSelectMenuOkView() != null){
-					inflater.inflate(useMultiSelectMenuOkView(), menu);
+				if(useMultiSelectMenuPickerView() != null){
+					inflater.inflate(useMultiSelectMenuPickerView(), menu);
 				}
 			}
 		} else {
@@ -269,12 +269,16 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void returnSelectedItems() {
-		if(getListView().getCheckedItemIds().length == 0){
+	protected void returnSelectedItems() {
+		long[] ids = getListView().getCheckedItemIds();
+		if(ids.length == 0){
 			HyjUtil.displayToast("请选择至少一条记录");
 			return;
 		}
-		getActivity().setResult(Activity.RESULT_OK, null);
+		
+		Intent intent = new Intent();
+		intent.putExtra("MODEL_IDS", ids);
+		getActivity().setResult(Activity.RESULT_OK, intent);
 		getActivity().finish();
 		
 	}
@@ -293,7 +297,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		return null;
 	}
 
-	public Integer useMultiSelectMenuOkView() {
+	public Integer useMultiSelectMenuPickerView() {
 //		return R.menu.multi_select_menu_ok;
 		return null;
 	}
@@ -520,7 +524,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				exitMultiChoiceMode(this.getListView(), position);
 			} else {	
 				if(getActivity().getCallingActivity() != null){
-					if(this.useMultiSelectMenuOkView() != null){
+					if(this.useMultiSelectMenuPickerView() != null){
 						enterMultiChoiceMode(this.getListView(), position);
 					}
 				} else {
@@ -577,6 +581,23 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onGetChildrenCursor(Cursor groupCursor) {
 
+	}
+	
+	public boolean handleBackPressed() {
+		boolean backPressedHandled = false;
+		if(getChildFragmentManager().getFragments() != null){
+			for(Fragment f : getFragmentManager().getFragments()){
+				if(f instanceof HyjFragment){
+					backPressedHandled = backPressedHandled || ((HyjFragment)f).handleBackPressed();
+				} else if(f instanceof HyjUserListFragment){
+					backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
+				} 
+			}
+		} else if(getListView().getChoiceMode() != ListView.CHOICE_MODE_NONE){
+			backPressedHandled = true;
+			this.exitMultiChoiceMode(getListView(), -1);
+		}
+		return backPressedHandled;
 	}
 }
 

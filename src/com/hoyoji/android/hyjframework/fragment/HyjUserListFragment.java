@@ -177,8 +177,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 					inflater.inflate(useMultiSelectMenuView(), menu);
 				}
 			} else {
-				if(useMultiSelectMenuOkView() != null){
-					inflater.inflate(useMultiSelectMenuOkView(), menu);
+				if(useMultiSelectMenuPickerView() != null){
+					inflater.inflate(useMultiSelectMenuPickerView(), menu);
 				}
 			}
 		} else {
@@ -198,12 +198,16 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void returnSelectedItems() {
-		if(getListView().getCheckedItemIds().length == 0){
+	protected void returnSelectedItems() {
+		long[] ids = getListView().getCheckedItemIds();
+		if(ids.length == 0){
 			HyjUtil.displayToast("请选择至少一条记录");
 			return;
 		}
-		getActivity().setResult(Activity.RESULT_OK, null);
+
+		Intent intent = new Intent();
+		intent.putExtra("MODEL_IDS", ids);
+		getActivity().setResult(Activity.RESULT_OK, intent);
 		getActivity().finish();
 		
 	}
@@ -222,8 +226,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return null;
 	}
 
-	public Integer useMultiSelectMenuOkView() {
-//		return R.menu.multi_select_menu_ok;
+	public Integer useMultiSelectMenuPickerView() {
+//		return R.menu.multi_select_menu_picker;
 		return null;
 	}
 	
@@ -323,7 +327,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 			return true;
 		} else {	
 			if(getActivity().getCallingActivity() != null){
-				if(this.useMultiSelectMenuOkView() != null){
+				if(this.useMultiSelectMenuPickerView() != null){
 					enterMultiChoiceMode(listView, position);
 					return true;
 				}
@@ -497,6 +501,9 @@ public abstract class HyjUserListFragment extends ListFragment implements
 					backPressedHandled = backPressedHandled || ((HyjUserListFragment)f).handleBackPressed();
 				} 
 			}
+		} else if(getListView().getChoiceMode() != ListView.CHOICE_MODE_NONE){
+			backPressedHandled = true;
+			this.exitMultiChoiceMode(getListView());
 		}
 		return backPressedHandled;
 	}

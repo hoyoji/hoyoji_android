@@ -82,6 +82,11 @@ public class MemberListFragment extends HyjUserListFragment{
 		return R.menu.project_listfragment_member;
 	}
 
+	public Integer useMultiSelectMenuPickerView() {
+		return R.menu.multi_select_menu_picker;
+//		return null;
+	}
+	
 	@Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
@@ -634,5 +639,21 @@ public class MemberListFragment extends HyjUserListFragment{
 					.unregisterContentObserver(mUserDataChangeObserver);
 		}
 		super.onDestroy();
+	}
+	
+	@Override
+	protected void returnSelectedItems() {
+		long[] ids = getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一个好友");
+			return;
+		}
+		
+		Intent intent = new Intent();
+		intent.putExtra("MODEL_IDS", ids);
+		intent.putExtra("MODEL_TYPE", "ProjectShareAuthorization");
+		getActivity().setResult(Activity.RESULT_OK, intent);
+		getActivity().finish();
+		
 	}
 }
