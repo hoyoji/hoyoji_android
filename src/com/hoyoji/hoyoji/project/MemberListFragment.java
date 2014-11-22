@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
@@ -645,13 +646,13 @@ public class MemberListFragment extends HyjUserListFragment{
 	protected void returnSelectedItems() {
 		long[] ids = getListView().getCheckedItemIds();
 		if(ids.length == 0){
-			HyjUtil.displayToast("请选择至少一个好友");
+			HyjUtil.displayToast("请选择至少一个成员");
 			return;
 		}
 		
 		Intent intent = new Intent();
 		intent.putExtra("MODEL_IDS", ids);
-		intent.putExtra("MODEL_TYPE", "ProjectShareAuthorization");
+		intent.putExtra("MODEL_TYPE", Cache.getTableName(ProjectShareAuthorization.class));
 		getActivity().setResult(Activity.RESULT_OK, intent);
 		getActivity().finish();
 		

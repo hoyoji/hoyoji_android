@@ -113,7 +113,7 @@ public class HyjExpandableListView extends ExpandableListView {
 		 
 		         SparseBooleanArray checkedItems = this.getCheckedItemPositions();
 		         
-		         final long[] ids = new long[this.getCheckedItemIds().length];
+		         final long[] ids = new long[super.getCheckedItemIds().length];
 		         
 		         ExpandableListAdapter adapter = this.getExpandableListAdapter();
 		         int checkedCount = 0;
