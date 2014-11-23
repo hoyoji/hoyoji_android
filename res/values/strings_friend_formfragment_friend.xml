@@ -4,6 +4,7 @@
    <string name="friendFormFragment_title">好友资料</string>
    
    <string name="friendFormFragment_title_create">创建好友</string>
+   <string name="friendFormFragment_title_import">导入通讯录好友</string>
    <string name="friendFormFragment_title_delete">删除好友资料</string>
       <!-- 
    <string name="friendFormFragment_textView_userName">用户名称</string> -->

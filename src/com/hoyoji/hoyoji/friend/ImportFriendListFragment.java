@@ -55,10 +55,10 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji_android.R;
 
-public class ImportFriendListFragment extends HyjUserListFragment implements OnQueryTextListener{
+public class ImportFriendListFragment extends HyjUserListFragment {
 	private final static int INVITELINK_CHANGESTATE = 1;
-	protected SearchView mSearchView;
-	protected String mSearchText = "";
+//	protected SearchView mSearchView;
+//	protected String mSearchText = "";
 	
 	Context mContext = null;  
 	 
@@ -93,18 +93,19 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 
 	@Override
 	public void onInitViewData() {
-		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
-		mSearchView.setOnQueryTextListener(this);
-		mSearchView.setSubmitButtonEnabled(true);
+		super.onInitViewData();
+//		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
+//		mSearchView.setOnQueryTextListener(this);
+//		mSearchView.setSubmitButtonEnabled(true);
 		
-		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
-		if(searchImage != null){
-			searchImage.setImageResource(R.drawable.ic_action_search);
-		}
-		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
-		if(magImage != null){
-			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
-		}
+//		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
+//		if(searchImage != null){
+//			searchImage.setImageResource(R.drawable.ic_action_search);
+//		}
+//		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+//		if(magImage != null){
+//			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+//		}
 
 		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
@@ -239,8 +240,8 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.friend_listitem_import,
 				null,
-				new String[] { "pictureId", "name", "phoneNumber" },
-				new int[] {R.id.importFriendListFragment_picture,  R.id.importFriendListFragment_name ,R.id.importFriendListFragment_phoneNumber},
+				new String[] { "PHONES_DISPLAY_NAME_INDEX", "PHONES_NUMBER_INDEX" },
+				new int[] {R.id.importFriendListFragment_name ,R.id.importFriendListFragment_phoneNumber},
 				0); 
 	}	
 
@@ -254,19 +255,19 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		return (Loader<Object>)loader;
 	}
 
-	@Override
-	public void onLoadFinished(Loader<Object> loader, Object data) {
-		super.onLoadFinished(loader, data);
-		// Set the new data in the adapter.
-		((HyjJSONListAdapter) this.getListAdapter()).addData((List<JSONObject>) data);
-	}
+//	@Override
+//	public void onLoadFinished(Loader<Object> loader, Object data) {
+//		super.onLoadFinished(loader, data);
+//		// Set the new data in the adapter.
+//		((HyjJSONListAdapter) this.getListAdapter()).addData((List<JSONObject>) data);
+//	}
 
-	@Override
-	public void onLoaderReset(Loader<Object> loader) {
-		super.onLoaderReset(loader);
-		// Clear the data in the adapter.
-		((HyjJSONListAdapter) this.getListAdapter()).clear();
-	}
+//	@Override
+//	public void onLoaderReset(Loader<Object> loader) {
+//		super.onLoaderReset(loader);
+//		// Clear the data in the adapter.
+//		((HyjJSONListAdapter) this.getListAdapter()).clear();
+//	}
 
 //	@Override
 //	public ListAdapter useListViewAdapter() {
@@ -284,54 +285,54 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		if(id == -1) {
 			 return;
 		}
-		if (id >= 0) {
-			final JSONObject jsonInviteLink = (JSONObject) l.getAdapter().getItem(position);
-			
-			Bundle bundle = new Bundle();
-			bundle.putString("INVITELINK_JSON_OBJECT", jsonInviteLink.toString());
-			bundle.putInt("position", position);
-			openActivityWithFragmentForResult(ImportFriendListFragment.class, R.string.inviteLinkFormFragment_title, bundle, INVITELINK_CHANGESTATE);
-		}
+//		if (id >= 0) {
+//			final JSONObject jsonInviteLink = (JSONObject) l.getAdapter().getItem(position);
+//			
+//			Bundle bundle = new Bundle();
+//			bundle.putString("INVITELINK_JSON_OBJECT", jsonInviteLink.toString());
+//			bundle.putInt("position", position);
+//			openActivityWithFragmentForResult(ImportFriendListFragment.class, R.string.inviteLinkFormFragment_title, bundle, INVITELINK_CHANGESTATE);
+//		}
 	}
 	
-	@Override
-	public boolean onQueryTextChange(String arg0) {
-		return false;
-	}
+//	@Override
+//	public boolean onQueryTextChange(String arg0) {
+//		return false;
+//	}
 
-	@Override
-	public boolean onQueryTextSubmit(String searchText) {
-		mSearchText = searchText.trim();
-		if (searchText.length() == 0) {
-			HyjUtil.displayToast("请输入查询条件");
-			return true;
-		}
-
-	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-   
-		JSONObject data = new JSONObject();
-		try {
-			data.put("title", mSearchText);
-			data.put("description", mSearchText);
-			data.put("__dataType", "InviteLink");
-			data.put("__limit", getListPageSize());
-			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			data.put("__offset", 0);
-			data.put("__orderBy", "date DESC");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		Bundle bundle = new Bundle();
-		bundle.putString("target", "findData");
-		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		if (getLoaderManager().getLoader(0) != null) {
-			getLoaderManager().destroyLoader(0);
-		}
-		getLoaderManager().restartLoader(0, bundle, this);
-		return true;
-	}
+//	@Override
+//	public boolean onQueryTextSubmit(String searchText) {
+//		mSearchText = searchText.trim();
+//		if (searchText.length() == 0) {
+//			HyjUtil.displayToast("请输入查询条件");
+//			return true;
+//		}
+//
+//	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
+//   
+//		JSONObject data = new JSONObject();
+//		try {
+//			data.put("title", mSearchText);
+//			data.put("description", mSearchText);
+//			data.put("__dataType", "InviteLink");
+//			data.put("__limit", getListPageSize());
+//			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			data.put("__offset", 0);
+//			data.put("__orderBy", "date DESC");
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//		Bundle bundle = new Bundle();
+//		bundle.putString("target", "findData");
+//		bundle.putString("postData", (new JSONArray()).put(data).toString());
+//		if (getLoaderManager().getLoader(0) != null) {
+//			getLoaderManager().destroyLoader(0);
+//		}
+//		getLoaderManager().restartLoader(0, bundle, this);
+//		return true;
+//	}
 
 //	public void onQueryLinkList() {
 //		JSONObject data = new JSONObject();
@@ -364,83 +365,45 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 //		getLoaderManager().restartLoader(0, bundle, this);
 //	}
 
-	@Override
-	public void doFetchMore(ListView l, int offset, int pageSize) {
-		Loader loader = getLoaderManager().getLoader(0);
-		if(loader != null && ((HyjHttpPostJSONLoader)loader).isLoading()){
-			return;
-		}
-		this.setFooterLoadStart(l);
-		JSONObject data = new JSONObject();
-		try {
-			data.put("title", mSearchText);
-			data.put("description", mSearchText);
-			data.put("__dataType", "InviteLink");
-			data.put("__limit", pageSize);
-			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			data.put("__offset", offset);
-			data.put("__orderBy", "date DESC");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		Bundle bundle = new Bundle();
-		bundle.putString("target", "findData");
-		bundle.putString("postData", (new JSONArray()).put(data).toString());
-		if(loader == null){
-			getLoaderManager().restartLoader(0, bundle, this);
-			loader = getLoaderManager().getLoader(0);
-		}
-		((HyjHttpPostJSONLoader) loader).changePostQuery(bundle);
-	}
+//	@Override
+//	public void doFetchMore(ListView l, int offset, int pageSize) {
+//		Loader loader = getLoaderManager().getLoader(0);
+//		if(loader != null && ((HyjHttpPostJSONLoader)loader).isLoading()){
+//			return;
+//		}
+//		this.setFooterLoadStart(l);
+//		JSONObject data = new JSONObject();
+//		try {
+//			data.put("title", mSearchText);
+//			data.put("description", mSearchText);
+//			data.put("__dataType", "InviteLink");
+//			data.put("__limit", pageSize);
+//			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			data.put("__offset", offset);
+//			data.put("__orderBy", "date DESC");
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//		Bundle bundle = new Bundle();
+//		bundle.putString("target", "findData");
+//		bundle.putString("postData", (new JSONArray()).put(data).toString());
+//		if(loader == null){
+//			getLoaderManager().restartLoader(0, bundle, this);
+//			loader = getLoaderManager().getLoader(0);
+//		}
+//		((HyjHttpPostJSONLoader) loader).changePostQuery(bundle);
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		String id = cursor.getString(cursor.getColumnIndex("id"));
-		String type = cursor.getString(cursor.getColumnIndex("type")); 
-		String data = cursor.getString(cursor.getColumnIndex("data"));
-		JSONObject jsonObj = null;
-		try {
-			jsonObj = new JSONObject(data);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if(view.getId() == R.id.homeListItem_amount){
-			((HyjNumericView)view).setPrefix(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-			((HyjNumericView)view).setNumber((jsonObj.optDouble("amount")*jsonObj.optDouble("exchangeRate")));
+		if(view.getId() == R.id.importFriendListFragment_name){
+			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
-		}else if(view.getId() == R.id.homeListItem_picture){
-			HyjImageView imageView = (HyjImageView)view;
-			
-			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			if(type.equals("MoneyExpense")){
-				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			} else {
-				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}
-			imageView.setImage((Picture)null);
+		} else if(view.getId() == R.id.importFriendListFragment_phoneNumber){
+			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
-		}else if(view.getId() == R.id.homeListItem_remark){
-			if(jsonObj.optString("remark").equals("") || jsonObj.optString("remark") == null){
-				((TextView)view).setText("无备注");
-			}else{
-				((TextView)view).setText(jsonObj.optString("remark"));
-			}
-			return true;
-		}else if(view.getId() == R.id.homeListItem_subTitle){
-			Project project = HyjModel.getModel(Project.class, jsonObj.optString("projectId"));
-			((TextView)view).setText(project.getDisplayName());
-			return true;
-		}else if(view.getId() == R.id.homeListItem_title){
-			if(type.equals("MoneyExpense")){
-				((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
-				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			}else{
-				((TextView)view).setText(jsonObj.optString("moneyIncomeCategoryMain"));
-				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-			}
-			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -465,29 +428,29 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 //		}
 //	}
 	
-	@Override
-	public void setFooterLoadFinished(ListView l, int count){
-		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
-        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
-	}
+//	@Override
+//	public void setFooterLoadFinished(ListView l, int count){
+//		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
+//        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
+//	}
 	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case INVITELINK_CHANGESTATE:
-			if (resultCode == Activity.RESULT_OK) {
-				String state = data.getStringExtra("state");
-				int position = data.getIntExtra("position", -1);
-				JSONObject object = ((HyjJSONListAdapter) this.getListAdapter()).getItem(position);
-				try {
-					object.put("state", state);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				((HyjJSONListAdapter) this.getListAdapter()).notifyDataSetChanged();
-			}
-			break;
-		}
-	}
+//	@Override
+//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		switch (requestCode) {
+//		case INVITELINK_CHANGESTATE:
+//			if (resultCode == Activity.RESULT_OK) {
+//				String state = data.getStringExtra("state");
+//				int position = data.getIntExtra("position", -1);
+//				JSONObject object = ((HyjJSONListAdapter) this.getListAdapter()).getItem(position);
+//				try {
+//					object.put("state", state);
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				((HyjJSONListAdapter) this.getListAdapter()).notifyDataSetChanged();
+//			}
+//			break;
+//		}
+//	}
 }
