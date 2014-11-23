@@ -1787,45 +1787,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
             	 
              case GET_APPORTION_MEMBER_ID:
      			if (resultCode == Activity.RESULT_OK) {
+     				String type = data.getStringExtra("MODEL_TYPE");
      				long _id = data.getLongExtra("MODEL_ID", -1);
-    				String type = data.getStringExtra("MODEL_TYPE");
-    				ProjectShareAuthorization psa = null;
-    				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
-    					psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-    				} else {
-    					final Friend friend = Friend.load(Friend.class, _id);
-    					if(friend.getFriendUserId() != null){
-    						//看一下该好友是不是账本成员, 如果是，作为账本成员添加
-    						psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
-    					} else {
-    						psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=?", friend.getId(), mSelectorFieldProject.getModelId()).executeSingle();
-        				}
-    					if(psa == null){
-    						((HyjActivity)getActivity()).displayDialog(R.string.moneyApportionField_select_toast_apportion_user_not_member, R.string.moneyApportionField_select_confirm_apportion_add_as_member, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
-    								new DialogCallbackListener() {
-    									@Override
-    									public void doPositiveClick(Object object) {
-    										Bundle bundle = new Bundle();
-    										bundle.putString("PROJECTID", mSelectorFieldProject.getModelId());
-    										if(friend.getFriendUserId() != null){
-    											bundle.putString("FRIEND_USERID", friend.getFriendUserId());
-    										} else {
-    											bundle.putString("LOCAL_FRIENDID", friend.getId());
-    										}
-    										openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
-    									}
-    			
-    									@Override
-    									public void doNegativeClick() {
-    										HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
-    									}
-    								});
-    						
-    	//					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
-    						break;
-    					}
-    				}
-    				addAsProjectMember(psa);
+     				if(_id != -1){
+     					AddApportionMember(type, _id);
+     				} else {
+     					long[] _ids = data.getLongArrayExtra("MODEL_IDS");
+     					if(_ids != null){
+     						for(int i=0; i<_ids.length; i++){
+     							AddApportionMember(type, _ids[i]);
+     						}
+     					}
+     				}
     			}
     			break;
     		case ADD_AS_PROJECT_MEMBER:
@@ -1872,6 +1845,47 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
    	       	 break;
           }
     }
+
+		private void AddApportionMember(String type, long _id) {
+			ProjectShareAuthorization psa = null;
+			if("ProjectShareAuthorization".equalsIgnoreCase(type)){
+				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+			} else {
+				final Friend friend = Friend.load(Friend.class, _id);
+				if(friend.getFriendUserId() != null){
+					//看一下该好友是不是账本成员, 如果是，作为账本成员添加
+					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=?", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+				} else {
+					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=?", friend.getId(), mSelectorFieldProject.getModelId()).executeSingle();
+				}
+				if(psa == null){
+					((HyjActivity)getActivity()).displayDialog(R.string.moneyApportionField_select_toast_apportion_user_not_member, R.string.moneyApportionField_select_confirm_apportion_add_as_member, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+									Bundle bundle = new Bundle();
+									bundle.putString("PROJECTID", mSelectorFieldProject.getModelId());
+									if(friend.getFriendUserId() != null){
+										bundle.putString("FRIEND_USERID", friend.getFriendUserId());
+									} else {
+										bundle.putString("LOCAL_FRIENDID", friend.getId());
+									}
+									openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+								}
+		
+								@Override
+								public void doNegativeClick() {
+									HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+								}
+							});
+					
+//					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+					return;
+				}
+			}
+			addAsProjectMember(psa);
+		
+	}
 
 		private void addAsProjectMember(ProjectShareAuthorization psa){
 			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
