@@ -165,7 +165,7 @@ public class MessageListFragment extends HyjUserListFragment{
 			if(msg != null 
 				 && ("Unread".equalsIgnoreCase(msg.getMessageState()) 
 					|| "New".equalsIgnoreCase(msg.getMessageState())) ){
-				msg.setMessageState("Read");
+				msg.setMessageState("read");
 				msg.save();
 			}
 		}
