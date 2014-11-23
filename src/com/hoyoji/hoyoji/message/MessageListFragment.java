@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -104,19 +105,31 @@ public class MessageListFragment extends HyjUserListFragment{
 	public void onInitViewData() {
 		super.onInitViewData();
 		mAllMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_all_messgae);
+		mUnReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_un_read_message);
+		
 		mAllMessageButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				mIsSelectUnreadMessages = false;
 				getLoaderManager().restartLoader(0, new Bundle(), MessageListFragment.this);
+				mAllMessageButton.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mAllMessageButton.setTextColor(Color.WHITE);
+				mUnReadMessageButton.setBackgroundColor(Color.TRANSPARENT);
+				mUnReadMessageButton.setTextColor(Color.BLACK);
     		}
 		});
-		mUnReadMessageButton = (Button)getView().findViewById(R.id.messageListFragment_action_un_read_message);
+		mAllMessageButton.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+		mAllMessageButton.setTextColor(Color.WHITE);
+		
 		mUnReadMessageButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				mIsSelectUnreadMessages = true;
 				getLoaderManager().restartLoader(0, new Bundle(), MessageListFragment.this);
+				mUnReadMessageButton.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mUnReadMessageButton.setTextColor(Color.WHITE);
+				mAllMessageButton.setBackgroundColor(Color.TRANSPARENT);
+				mAllMessageButton.setTextColor(Color.BLACK);
     		}
 		});
 		if (mChangeObserver == null) {

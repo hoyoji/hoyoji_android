@@ -133,13 +133,16 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 				R.id.moneyTransactionSummaryFragment_week);
 		mButtonMonth = (Button) getView().findViewById(
 				R.id.moneyTransactionSummaryFragment_month);
-		mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
+		mButtonDay.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+		mButtonDay.setTextColor(Color.WHITE);
 		
 		mButtonDay.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonDay.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonDay.setTextColor(Color.WHITE);
+				
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -160,7 +163,8 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonWeek.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonWeek.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonWeek.setTextColor(Color.WHITE);
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -187,7 +191,8 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonMonth.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonMonth.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonMonth.setTextColor(Color.WHITE);
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -210,9 +215,12 @@ public class MoneyTransactionPersonalSummaryFragment extends HyjUserFragment imp
 	}
 
 	private void clearButtonState(){
-		mButtonDay.setTextColor(getResources().getColor(R.color.black));
-		mButtonWeek.setTextColor(getResources().getColor(R.color.black));
-		mButtonMonth.setTextColor(getResources().getColor(R.color.black));
+		mButtonDay.setBackgroundColor(Color.TRANSPARENT);
+		mButtonDay.setTextColor(Color.BLACK);
+		mButtonWeek.setBackgroundColor(Color.TRANSPARENT);
+		mButtonWeek.setTextColor(Color.BLACK);
+		mButtonMonth.setBackgroundColor(Color.TRANSPARENT);
+		mButtonMonth.setTextColor(Color.BLACK);
 	}
 	
 	public void initLoader(int loaderId) {

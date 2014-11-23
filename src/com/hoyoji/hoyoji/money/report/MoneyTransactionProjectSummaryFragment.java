@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -134,13 +135,15 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 				R.id.moneyTransactionSummaryFragment_week);
 		mButtonMonth = (Button) getView().findViewById(
 				R.id.moneyTransactionSummaryFragment_month);
-		mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
+		mButtonDay.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+		mButtonDay.setTextColor(Color.WHITE);
 		
 		mButtonDay.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonDay.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonDay.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonDay.setTextColor(Color.WHITE);
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -161,7 +164,8 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonWeek.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonWeek.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonWeek.setTextColor(Color.WHITE);
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -188,7 +192,8 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 			@Override
 			public void onClick(View v) {
 				clearButtonState();
-				mButtonMonth.setTextColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonMonth.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mButtonMonth.setTextColor(Color.WHITE);
 				Calendar calToday = Calendar.getInstance();
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
 				calToday.clear(Calendar.MINUTE);
@@ -211,9 +216,12 @@ public class MoneyTransactionProjectSummaryFragment extends HyjUserFragment impl
 	}
 
 	private void clearButtonState(){
-		mButtonDay.setTextColor(getResources().getColor(R.color.black));
-		mButtonWeek.setTextColor(getResources().getColor(R.color.black));
-		mButtonMonth.setTextColor(getResources().getColor(R.color.black));
+		mButtonDay.setBackgroundColor(Color.TRANSPARENT);
+		mButtonDay.setTextColor(Color.BLACK);
+		mButtonWeek.setBackgroundColor(Color.TRANSPARENT);
+		mButtonWeek.setTextColor(Color.BLACK);
+		mButtonMonth.setBackgroundColor(Color.TRANSPARENT);
+		mButtonMonth.setTextColor(Color.BLACK);
 	}
 	public void initLoader(int loaderId) {
 		Bundle queryParams = buildQueryParams();

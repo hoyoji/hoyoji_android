@@ -241,11 +241,11 @@
         </FrameLayout>
 	</LinearLayout>
     </ScrollView>
-        	<View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="48dip"
+    <View
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:layout_gravity="bottom"
+	        android:layout_marginBottom="48dip"
             android:background="@color/hoyoji_lightgray" />
 
     <LinearLayout
@@ -255,33 +255,33 @@
 
         <Button
             android:id="@+id/moneyTransactionSummaryFragment_day"
+            android:background="@android:color/transparent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:background="@drawable/abc_tab_indicator_ab_holo"
             android:padding="0dp"
             android:textSize="16sp"
             android:text="日汇总" />
 
         <Button
             android:id="@+id/moneyTransactionSummaryFragment_week"
+            android:background="@android:color/transparent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:background="@drawable/abc_tab_indicator_ab_holo"
             android:padding="0dp"
             android:textSize="16sp"
             android:text="周汇总" />
          
          <Button
             android:id="@+id/moneyTransactionSummaryFragment_month"
+            android:background="@android:color/transparent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:background="@drawable/abc_tab_indicator_ab_holo"
             android:padding="0dp"
             android:textSize="16sp"
             android:text="月汇总" />
