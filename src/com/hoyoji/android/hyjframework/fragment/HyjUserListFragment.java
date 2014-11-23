@@ -262,7 +262,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_all).setOnClickListener(new OnClickListener(){
 			    	@Override
 					public void onClick(View v) {
-						for(int g = 0; g < listView.getAdapter().getCount(); g++){
+						for(int g = listView.getHeaderViewsCount(); g < listView.getAdapter().getCount() - listView.getFooterViewsCount(); g++){
 								listView.setItemChecked(g, true);
 						}
 						mSelectedCount.setText(listView.getCheckedItemIds().length + "");
