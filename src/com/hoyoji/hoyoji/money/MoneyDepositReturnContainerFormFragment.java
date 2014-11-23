@@ -1362,47 +1362,18 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
             	 
              case GET_APPORTION_MEMBER_ID:
      			if (resultCode == Activity.RESULT_OK) {
+     				String type = data.getStringExtra("MODEL_TYPE");
      				long _id = data.getLongExtra("MODEL_ID", -1);
-    				String type = data.getStringExtra("MODEL_TYPE");
-    				MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
-    				if("ProjectShareAuthorization".equalsIgnoreCase(type)){
-    					ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-    					apportion.setFriendUserId(psa.getFriendUserId());
-    					apportion.setLocalFriendId(psa.getLocalFriendId());
-        				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
-        					apportion.setApportionType("Average");
-        				} else {
-        					apportion.setApportionType("Share");
-        				}
-    				} 
-//    				else {
-//    					Friend friend = Friend.load(Friend.class, _id);
-//    					if(friend.getFriendUserId() != null){
-//    						//看一下该好友是不是账本成员, 如果是，作为账本成员添加
-//    						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
-//    						if(psa != null){
-//								apportion.setFriendUserId(psa.getFriendUserId());
-//			    				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
-//			    					apportion.setApportionType("Average");
-//			    				} else {
-//			    					apportion.setApportionType("Share");
-//			    				}
-//    						} else {
-//    							apportion.setLocalFriendId(friend.getId());
-//    							apportion.setApportionType("Average");
-//    						}
-//    					} else {
-//    						apportion.setLocalFriendId(friend.getId());
-//    						apportion.setApportionType("Average");
-//    					}
-//    				}
-    				apportion.setAmount(0.0);
-    				apportion.setMoneyDepositReturnContainerId(mMoneyDepositReturnContainerEditor.getModel().getId());
-    				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
-    					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-    				} else {
-    					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
-    				}
+     				if(_id != -1){
+     					AddApportionMember(type, _id);
+     				} else {
+     					long[] _ids = data.getLongArrayExtra("MODEL_IDS");
+     					if(_ids != null){
+     						for(int i=0; i<_ids.length; i++){
+     							AddApportionMember(type, _ids[i]);
+     						}
+     					}
+     				}
     			}
      			break;
              case GET_FINANCIALOWNER_ID:
@@ -1436,6 +1407,49 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
           }
     }
 		
+		private void AddApportionMember(String type, long _id) {
+			MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+			if("ProjectShareAuthorization".equalsIgnoreCase(type)){
+				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+				apportion.setFriendUserId(psa.getFriendUserId());
+				apportion.setLocalFriendId(psa.getLocalFriendId());
+				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
+					apportion.setApportionType("Average");
+				} else {
+					apportion.setApportionType("Share");
+				}
+			} 
+//			else {
+//				Friend friend = Friend.load(Friend.class, _id);
+//				if(friend.getFriendUserId() != null){
+//					//看一下该好友是不是账本成员, 如果是，作为账本成员添加
+//					ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+//					if(psa != null){
+//						apportion.setFriendUserId(psa.getFriendUserId());
+//	    				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
+//	    					apportion.setApportionType("Average");
+//	    				} else {
+//	    					apportion.setApportionType("Share");
+//	    				}
+//					} else {
+//						apportion.setLocalFriendId(friend.getId());
+//						apportion.setApportionType("Average");
+//					}
+//				} else {
+//					apportion.setLocalFriendId(friend.getId());
+//					apportion.setApportionType("Average");
+//				}
+//			}
+			apportion.setAmount(0.0);
+			apportion.setMoneyDepositReturnContainerId(mMoneyDepositReturnContainerEditor.getModel().getId());
+			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+			} else {
+				HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
+			}
+		
+	}
+
 		@Override
 		public void onDestroy(){
 			super.onDestroy();
