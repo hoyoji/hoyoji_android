@@ -352,7 +352,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 						if(parent.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){  
 							parent.setItemChecked(position, !parent.isItemChecked(position));  
 
-							mSelectedCount.setText(parent.getCheckedItemCount() + "");
+							mSelectedCount.setText(((HyjExpandableListView)parent).getCheckedItemCount() + "");
 						} else {
 							if(((HyjActivity)getActivity()).getChoiceMode() != ListView.CHOICE_MODE_NONE){
 								// 长按触发 onCreateContextMenu 的同时会触发 onChildClick 事件，
