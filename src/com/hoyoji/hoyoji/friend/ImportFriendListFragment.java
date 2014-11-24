@@ -41,6 +41,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -50,15 +51,16 @@ import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji_android.R;
 
-public class ImportFriendListFragment extends HyjUserListFragment {
+public class ImportFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
 	private final static int INVITELINK_CHANGESTATE = 1;
-//	protected SearchView mSearchView;
-//	protected String mSearchText = "";
+	protected SearchView mSearchView;
+	protected String mSearchText = "";
 	
 	Context mContext = null;  
 	 
@@ -94,23 +96,23 @@ public class ImportFriendListFragment extends HyjUserListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-//		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
-//		mSearchView.setOnQueryTextListener(this);
-//		mSearchView.setSubmitButtonEnabled(true);
+		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
+		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setSubmitButtonEnabled(true);
 		
-//		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
-//		if(searchImage != null){
-//			searchImage.setImageResource(R.drawable.ic_action_search);
-//		}
-//		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
-//		if(magImage != null){
-//			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
-//		}
+		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
+		if(searchImage != null){
+			searchImage.setImageResource(R.drawable.ic_action_search);
+		}
+		ImageView magImage = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+		if(magImage != null){
+			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+		}
 
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
 //		onQueryLinkList();
-		importCommunicationList();
+//		importCommunicationList();
 	}
 	
 	public void importCommunicationList(){
@@ -190,57 +192,13 @@ public class ImportFriendListFragment extends HyjUserListFragment {
 	        phoneCursor.close();  
 	    }  
     }  
-      
-//    class MyListAdapter extends BaseAdapter {  
-//	    public MyListAdapter(Context context) {  
-//	        mContext = context;  
-//	    }  
-//	 
-//	    public int getCount() {  
-//	        //设置绘制数量  
-//	        return mContactsName.size();  
-//	    }  
-//	 
-//	    @Override  
-//	    public boolean areAllItemsEnabled() {  
-//	        return false;  
-//	    }  
-//	 
-//	    public Object getItem(int position) {  
-//	        return position;  
-//	    }  
-//	 
-//	    public long getItemId(int position) {  
-//	        return position;  
-//	    }  
-//	 
-//	    public View getView(int position, View convertView, ViewGroup parent) {  
-//	        ImageView iamge = null;  
-//	        TextView title = null;  
-//	        TextView text = null;  
-//	        if (convertView == null) {  
-//	        convertView = LayoutInflater.from(mContext).inflate(R.layout.colorlist, null);  
-//	        iamge = (ImageView) convertView.findViewById(R.id.color_image);  
-//	        title = (TextView) convertView.findViewById(R.id.color_title);  
-//	        text = (TextView) convertView.findViewById(R.id.color_text);  
-//	        }  
-//	        //绘制联系人名称  
-//	        title.setText(mContactsName.get(position));  
-//	        //绘制联系人号码  
-//	        text.setText(mContactsNumber.get(position));  
-//	        //绘制联系人头像  
-//	        iamge.setImageBitmap(mContactsPhonto.get(position));  
-//	        return convertView;  
-//	    }  
-// 
-//    }  
 
     @Override
 	public ListAdapter useListViewAdapter() {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.friend_listitem_import,
 				null,
-				new String[] { "PHONES_DISPLAY_NAME_INDEX", "PHONES_NUMBER_INDEX" },
+				new String[] { Phone.DISPLAY_NAME, Phone.NUMBER },
 				new int[] {R.id.importFriendListFragment_name ,R.id.importFriendListFragment_phoneNumber},
 				0); 
 	}	
@@ -248,9 +206,17 @@ public class ImportFriendListFragment extends HyjUserListFragment {
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
+		String searchText = arg1.getString("searchText");
+		String selection = null;
+		String[] selectionArgs = null;
+		
+		if(searchText != null && searchText.length() > 0){
+			selection = "display_name LIKE ?";
+			selectionArgs = new String[]{"%"+searchText+"%"};
+		}
 		Object loader = new CursorLoader(getActivity(),
-				Phone.CONTENT_URI, new String[] { Phone.DISPLAY_NAME, Phone.NUMBER, Photo.PHOTO_ID, Phone.CONTACT_ID },
-				null, null, Phone.DISPLAY_NAME
+				Phone.CONTENT_URI, null,
+				selection, selectionArgs, "DISPLAY_NAME ASC"
 			);
 		return (Loader<Object>)loader;
 	}
@@ -279,133 +245,81 @@ public class ImportFriendListFragment extends HyjUserListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		if(l.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
-			return;
-		}
+		super.onListItemClick(l, v, position, id);
 		if(id == -1) {
 			 return;
 		}
-//		if (id >= 0) {
-//			final JSONObject jsonInviteLink = (JSONObject) l.getAdapter().getItem(position);
-//			
+		final Cursor jsonPhone = (Cursor) l.getAdapter().getItem(position);
+        
+    	String phoneNumber = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.NUMBER)).toString().trim();
+		Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
+        if(importFiend == null){
+            importFiend = new Friend();
+        }
+		importFiend.setNickName(jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim());
+        importFiend.setPhoneNumber(phoneNumber);
+        importFiend.save();
+		
+        HyjUtil.displayToast("导入成功");
 //			Bundle bundle = new Bundle();
 //			bundle.putString("INVITELINK_JSON_OBJECT", jsonInviteLink.toString());
 //			bundle.putInt("position", position);
 //			openActivityWithFragmentForResult(ImportFriendListFragment.class, R.string.inviteLinkFormFragment_title, bundle, INVITELINK_CHANGESTATE);
-//		}
 	}
-	
-//	@Override
-//	public boolean onQueryTextChange(String arg0) {
-//		return false;
-//	}
 
-//	@Override
-//	public boolean onQueryTextSubmit(String searchText) {
-//		mSearchText = searchText.trim();
-//		if (searchText.length() == 0) {
-//			HyjUtil.displayToast("请输入查询条件");
-//			return true;
-//		}
-//
-//	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-//   
-//		JSONObject data = new JSONObject();
-//		try {
-//			data.put("title", mSearchText);
-//			data.put("description", mSearchText);
-//			data.put("__dataType", "InviteLink");
-//			data.put("__limit", getListPageSize());
-//			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			data.put("__offset", 0);
-//			data.put("__orderBy", "date DESC");
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//
-//		Bundle bundle = new Bundle();
-//		bundle.putString("target", "findData");
-//		bundle.putString("postData", (new JSONArray()).put(data).toString());
-//		if (getLoaderManager().getLoader(0) != null) {
-//			getLoaderManager().destroyLoader(0);
-//		}
-//		getLoaderManager().restartLoader(0, bundle, this);
-//		return true;
-//	}
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		Loader loader = getLoaderManager().getLoader(0);
+		mSearchText = searchText.trim();
+		if (searchText.length() == 0) {
+			HyjUtil.displayToast("请输入查询条件");
+			return true;
+		}
 
-//	public void onQueryLinkList() {
-//		JSONObject data = new JSONObject();
-//		try {
-//			if (mSearchText.length() == 0) {
-//				data.put("__dataType", "InviteLink");
-//				data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//				data.put("__limit", getListPageSize());
-//				data.put("__offset", 0);
-//				data.put("__orderBy", "date DESC");
-//			}else{
-//				data.put("title", mSearchText);
-//				data.put("description", mSearchText);
-//				data.put("__dataType", "InviteLink");
-//				data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//				data.put("__limit", getListPageSize());
-//				data.put("__offset", 0);
-//				data.put("__orderBy", "date ASC");
-//			}
-//		} catch (JSONException e) {
-//			e.printStackTrace();
+	    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
+   
+        Bundle bundle = new Bundle();
+		bundle.putString("searchText", mSearchText);
+//		if(loader == null){
+			getLoaderManager().restartLoader(0, bundle, this);
+			loader = getLoaderManager().getLoader(0);
 //		}
-//
-//		Bundle bundle = new Bundle();
-//		bundle.putString("target", "findData");
-//		bundle.putString("postData", (new JSONArray()).put(data).toString());
-//		if (getLoaderManager().getLoader(0) != null) {
-//			getLoaderManager().destroyLoader(0);
-//		}
-//		getLoaderManager().restartLoader(0, bundle, this);
-//	}
+		return true;
+	}
 
 //	@Override
 //	public void doFetchMore(ListView l, int offset, int pageSize) {
 //		Loader loader = getLoaderManager().getLoader(0);
-//		if(loader != null && ((HyjHttpPostJSONLoader)loader).isLoading()){
+//		if(loader != null){
 //			return;
 //		}
 //		this.setFooterLoadStart(l);
-//		JSONObject data = new JSONObject();
-//		try {
-//			data.put("title", mSearchText);
-//			data.put("description", mSearchText);
-//			data.put("__dataType", "InviteLink");
-//			data.put("__limit", pageSize);
-//			data.put("ownerUserId", HyjApplication.getInstance().getCurrentUser().getId());
-//			data.put("__offset", offset);
-//			data.put("__orderBy", "date DESC");
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//
 //		Bundle bundle = new Bundle();
-//		bundle.putString("target", "findData");
-//		bundle.putString("postData", (new JSONArray()).put(data).toString());
-//		if(loader == null){
-//			getLoaderManager().restartLoader(0, bundle, this);
-//			loader = getLoaderManager().getLoader(0);
-//		}
+//		bundle.putString("searchText", mSearchText);
+////			if(loader == null){
+//		getLoaderManager().restartLoader(0, bundle, this);
+//		loader = getLoaderManager().getLoader(0);
 //		((HyjHttpPostJSONLoader) loader).changePostQuery(bundle);
 //	}
-	
+//	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		if(view.getId() == R.id.importFriendListFragment_name){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			((TextView)view).setText(cursor.getString(columnIndex).trim());
 			return true;
 		} else if(view.getId() == R.id.importFriendListFragment_phoneNumber){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			((TextView)view).setText(cursor.getString(columnIndex).trim());
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public boolean onQueryTextChange(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 //	@Override
