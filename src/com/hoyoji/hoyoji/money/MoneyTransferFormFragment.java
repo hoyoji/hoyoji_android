@@ -1002,26 +1002,25 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              		} else {
              			mSelectorFieldTransferOut.setText(null);
              			mSelectorFieldTransferOut.setModelId(null);
+             			
+             			mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
+                 		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
+                 		mViewSeparatorTransferOut.setVisibility(View.GONE);
+                 		mSelectorFieldTransferOut.setVisibility(View.GONE);
+                 		
+
+        				transferOutProjectExchangeRate.setNumber(null);
+        				transferOutCurrency.setText(null);
+        				transferProjectCurrency.setText(null);
+//        				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
+        				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+        				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
              			if (modelId == -1) {
             				setExchangeRate(false);
             			} else {
             				setExchangeRate(true);
             			}
              		}
-             		
-             		mSelectorFieldTransferOutFriend.setText(friend.getDisplayName());
-             		mSelectorFieldTransferOutFriend.setModelId(friend.getId());
-             		mViewSeparatorTransferOut.setVisibility(View.GONE);
-             		mSelectorFieldTransferOut.setVisibility(View.GONE);
-             		
-
-    				transferOutProjectExchangeRate.setNumber(null);
-    				transferOutCurrency.setText(null);
-    				transferProjectCurrency.setText(null);
-//    				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
-    				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
-    				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
-    				
     				
              	 }
              	 break;
@@ -1085,26 +1084,24 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
              		} else {
              			mSelectorFieldTransferIn.setText(null);
              			mSelectorFieldTransferIn.setModelId(null);
+
+                 		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
+                 		mSelectorFieldTransferInFriend.setModelId(friend.getId());
+                 		mViewSeparatorTransferIn.setVisibility(View.GONE);
+                 		mSelectorFieldTransferIn.setVisibility(View.GONE);
+                 		
+                 		projectTransferInExchangeRate.setNumber(null);
+        				projectTransferInCurrency.setText(null);
+        				transferInCurrency.setText(null);
+        				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
+        				mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
+        				mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
              			if (modelId == -1) {
             				setExchangeRate(false);
             			} else {
             				setExchangeRate(true);
             			}
              		}
-             		
-             		mSelectorFieldTransferInFriend.setText(friend.getDisplayName());
-             		mSelectorFieldTransferInFriend.setModelId(friend.getId());
-             		mViewSeparatorTransferIn.setVisibility(View.GONE);
-             		mSelectorFieldTransferIn.setVisibility(View.GONE);
-             		
-             		projectTransferInExchangeRate.setNumber(null);
-    				projectTransferInCurrency.setText(null);
-    				transferInCurrency.setText(null);
-    				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
-    				mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
-    				mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
-    				
-    				
              	 }
              	 break;
              case GET_TRANSFERIN_ID:
