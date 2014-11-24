@@ -153,7 +153,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 			double exchangeRate = 1.0;
 //			if(temPlateJso != null){
 //				amount = temPlateJso.optDouble("amount", 0.0);
-//				amount = temPlateJso.optDouble("exchangeRate", 1.0);
+//				exchangeRate = temPlateJso.optDouble("exchangeRate", 1.0);
 //			} else {
 				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
 				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
