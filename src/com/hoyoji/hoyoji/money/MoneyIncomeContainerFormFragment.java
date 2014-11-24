@@ -122,6 +122,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		super.onInitViewData();
 		final MoneyIncomeContainer moneyIncomeContainer;
 		JSONObject temPlateJso = null;
+		Double presetAmount = null;
 		
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -141,21 +142,15 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				try {
 					temPlateJso = new JSONObject(temPlateData);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				temPlateJso.remove("id");
 				temPlateJso.remove("date");
-				double amount = temPlateJso.optDouble("amount", 0.0);
+				presetAmount = temPlateJso.optDouble("amount", 0.0);
 				temPlateJso.remove("amount");
 				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
-				
-				try {
-					temPlateJso.putOpt("amount", amount);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				
+				// 从模版中获取预设金额
+				presetAmount = temPlateJso.optDouble("amount", 0.0) * temPlateJso.optDouble("exchangeRate", 1.0);
 			} else{
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
@@ -164,6 +159,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				if(intent.getStringExtra("counterpartId") != null){
 					moneyIncomeContainer.setIsImported(true);
 				}
+				presetAmount = intent.getDoubleExtra("amount", 0.0) * intent.getDoubleExtra("exchangeRate", 1.0);//从分享消息导入的金额
 			}
 		}
 		
@@ -213,18 +209,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		int incomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		mNumericAmount.getEditText().setTextColor(incomeColor);
 		mNumericAmount.getEditText().setHintTextColor(incomeColor);
-		if (modelId == -1) {
-			double amount = 0.0;
-			double exchangeRate = 1.0;
-			if(temPlateJso != null){
-				amount = temPlateJso.optDouble("amount", 0.0);
-				exchangeRate = temPlateJso.optDouble("exchangeRate", 1.0);
-			} else {
-				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
-				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
-			}
-			mNumericAmount.setNumber(amount*exchangeRate);
-			mApportionFieldApportions.setTotalAmount(amount*exchangeRate);
+		if (presetAmount != null) {
+			mNumericAmount.setNumber(presetAmount);
+			mApportionFieldApportions.setTotalAmount(presetAmount);
 		} else {
 			mNumericAmount.setNumber(moneyIncomeContainer.getAmount());
 		}
