@@ -58,7 +58,7 @@ public class MoneyDepositPaybackContainer extends HyjModel{
 	private Double mInterest;
 	
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 	
 //	@Column(name = "moneyLendId")
 //	private String mMoneyLendId;

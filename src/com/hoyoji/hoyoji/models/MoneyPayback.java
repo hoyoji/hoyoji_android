@@ -65,7 +65,7 @@ public class MoneyPayback extends HyjModel{
 	private String mMoneyReturnId;
 	
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 
 	@Column(name = "moneyPaybackApportionId")
 	private String mMoneyPaybackApportionId;

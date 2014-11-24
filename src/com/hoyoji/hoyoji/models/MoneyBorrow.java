@@ -66,7 +66,7 @@ public class MoneyBorrow extends HyjModel{
 	private String mMoneyLendId;
 
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 
 	// 该借入是由 收入分摊（MoneyIncomeApportion） 生成的
 	@Column(name = "moneyIncomeApportionId")
