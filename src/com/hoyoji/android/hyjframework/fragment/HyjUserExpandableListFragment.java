@@ -65,6 +65,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	private View mMultiSelectActionBarView;
 	private TextView mSelectedCount;
 	private Object mOptionsMenu;
+	private boolean mRestoreHomeAsUp = false;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -323,6 +324,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
 		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		mRestoreHomeAsUp  = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) == ActionBar.DISPLAY_HOME_AS_UP;
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 		if (mMultiSelectActionBarView == null) {
 		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
@@ -406,12 +408,12 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		});
 
 		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_SHOW_CUSTOM);
-		actionBar.setDisplayShowCustomEnabled(false);
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		if(mRestoreHomeAsUp){
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayShowCustomEnabled(false);
 	}
 	
 	public abstract Integer useContentView();
