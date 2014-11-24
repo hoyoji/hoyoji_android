@@ -170,12 +170,19 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		setupApportionField(moneyDepositReturnContainer);
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_textField_amount);		
-		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
-		if(amount >= 0.0){
-			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+		if (modelId == -1) {
+			double amount = 0.0;
+			double exchangeRate = 1.0;
+//			if(temPlateJso != null){
+//				amount = temPlateJso.optDouble("amount", 0.0);
+//				amount = temPlateJso.optDouble("exchangeRate", 1.0);
+//			} else {
+				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
+				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+//			}
 			mNumericAmount.setNumber(amount*exchangeRate);
 			mApportionFieldApportions.setTotalAmount(amount*exchangeRate);
-		}else{
+		} else {
 			mNumericAmount.setNumber(moneyDepositReturnContainer.getAmount());
 		}
 //		if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
