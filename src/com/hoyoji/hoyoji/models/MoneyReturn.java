@@ -62,7 +62,7 @@ public class MoneyReturn extends HyjModel{
 //	private String mMoneyBorrowId;
 	
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 	
 //	@Column(name = "returnType")
 //	private String mReturnType;

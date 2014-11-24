@@ -43,7 +43,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 	private Double mExchangeRate;
 
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 	
 	@Column(name = "remark")
 	private String mRemark;

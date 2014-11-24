@@ -503,7 +503,7 @@ public class MainActivity extends HyjUserActivity {
 			});
 		}
 
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 //	@Override

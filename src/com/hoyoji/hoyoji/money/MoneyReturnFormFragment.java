@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -122,6 +124,13 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyReturnFormFragment_textField_date);		
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyReturn.getDate());
+		} else {
+			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
+			if(dateInMillisec != -1){
+				Date date = new Date(dateInMillisec);
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldDate.setTextColor(Color.RED);
+			}
 		}
 		
 		mNumericFieldAmount = (HyjNumericField) getView().findViewById(R.id.moneyReturnFormFragment_textField_amount);		

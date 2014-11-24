@@ -131,9 +131,13 @@ public abstract class HyjListFragment extends ListFragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		if(useOptionsMenuView() != null){
+		if(!disableOptionsMenuView()){
 			setHasOptionsMenu (true);
 		}
+	}
+	
+	protected boolean disableOptionsMenuView() {
+		return false;
 	}
 	
 	@Override

@@ -137,13 +137,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
-			
-			String temPlateID = intent.getStringExtra("MONEYTEMPLATE_ID");
-			if(temPlateID != null){
-				MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
-				moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
-				moneyTemplate.save();
-			}
 			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
 			JSONObject temPlateJso = null;
 			if (temPlateData != null) {
@@ -165,7 +158,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(intent.getStringExtra("counterpartId") != null){
 					moneyExpenseContainer.setIsImported(true);
 				}
-		
 			}
 		}
 				
@@ -179,7 +171,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_date);
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpenseContainer.getDate());
+		} else {
+			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
+			if(dateInMillisec != -1){
+				Date date = new Date(dateInMillisec);
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldDate.setTextColor(Color.RED);
+			}
 		}
+		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyExpenseContainer.get_mId() == null && projectId != null){
@@ -1033,6 +1033,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				
 				
 				mMoneyExpenseContainerEditor.save();
+				
+				Intent intent = getActivity().getIntent();
+				String temPlateID = intent .getStringExtra("MONEYTEMPLATE_ID");
+				if(temPlateID != null){
+					MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
+					moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
+					moneyTemplate.save();
+				}
+				
 				ActiveAndroid.setTransactionSuccessful();
 				if(getActivity().getCallingActivity() != null){
 					getActivity().setResult(Activity.RESULT_OK);

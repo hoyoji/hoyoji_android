@@ -64,6 +64,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	protected View mHeaderView;
 	private View mMultiSelectActionBarView;
 	private TextView mSelectedCount;
+	private Object mOptionsMenu;
+	private boolean mRestoreHomeAsUp = false;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -214,15 +216,19 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				mIsViewInited = true;
 			}
 		}
+
+//		if(mOptionsMenu == null){
+//			getActivity().supportInvalidateOptionsMenu();
+//		}
 	}
 	
-	public void initLoader(int loaderId){
+	public void initLoader(int loaderId) {
 		Loader<Object> loader = getLoaderManager().getLoader(loaderId);
-		if(loader != null && !loader.isReset()){
+		if(loader != null && !loader.isReset()) {
 			getLoaderManager().restartLoader(loaderId, null,this);
 		} else {
 			Bundle bundle = new Bundle();
-			if(loaderId == -1){
+			if(loaderId == -1) {
 				bundle.putInt("OFFSET", 0);
 				bundle.putInt("LIMIT", getListPageSize());
 			}
@@ -233,13 +239,22 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-//		if(useOptionsMenuView() != null){
+		if(!disableOptionsMenuView()){
 			setHasOptionsMenu (true);
-//		}
+		}
 	}
+
+	protected boolean disableOptionsMenuView() {
+		return false;
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+		// will throw ensureList: content view not yet created. so we check if getView() != null
+//		if(getView() != null){
+//			mOptionsMenu = menu;
+
+		if(getView() != null && getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			menu.clear();
 			if(getActivity().getCallingActivity() == null){
 				if(useMultiSelectMenuView() != null){
@@ -255,6 +270,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				inflater.inflate(useOptionsMenuView(), menu);
 			} 
 		}
+
+//		}
 	    super.onCreateOptionsMenu(menu, inflater);
 	}
 	
@@ -307,6 +324,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
 		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		mRestoreHomeAsUp  = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) == ActionBar.DISPLAY_HOME_AS_UP;
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 		if (mMultiSelectActionBarView == null) {
 		      mMultiSelectActionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.multi_select_actionbar, null);
@@ -335,7 +353,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 					public void onClick(View v) {
 			    		listView.clearChoices();
 			    		int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
-			    		if(position > -1){
+			    		if(position > -1) {
 			    			getListView().setItemChecked(position, false);
 			    		}
 						mSelectedCount.setText(listView.getCheckedItemCount() + "");
@@ -351,7 +369,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 						if(parent.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){  
 							parent.setItemChecked(position, !parent.isItemChecked(position));  
 
-							mSelectedCount.setText(parent.getCheckedItemCount() + "");
+							mSelectedCount.setText(((HyjExpandableListView)parent).getCheckedItemCount() + "");
 						} else {
 							if(((HyjActivity)getActivity()).getChoiceMode() != ListView.CHOICE_MODE_NONE){
 								// 长按触发 onCreateContextMenu 的同时会触发 onChildClick 事件，
@@ -390,12 +408,12 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		});
 
 		ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_SHOW_CUSTOM);
-		actionBar.setDisplayShowCustomEnabled(false);
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		if(mRestoreHomeAsUp){
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayShowCustomEnabled(false);
 	}
 	
 	public abstract Integer useContentView();

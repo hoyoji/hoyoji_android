@@ -67,7 +67,7 @@ public class MoneyIncome extends HyjModel {
 //	private String mMoneyExpenseId;
 	
 	@Column(name = "isImported")
-	private Boolean mIsImported;
+	private Boolean mIsImported = false;
 	
 	@Column(name = "moneyIncomeApportionId")
 	private String mMoneyIncomeApportionId;

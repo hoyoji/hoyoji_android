@@ -274,16 +274,24 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-//		mImageBackgroundColorExpense = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor());
-//		mImageBackgroundColorIncome = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		
 		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+				Bundle bundle = new Bundle();
+				Calendar calToday = Calendar.getInstance();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
     		}
 		});
 		
@@ -292,7 +300,18 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		mIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+				Calendar calToday = Calendar.getInstance();
+				Bundle bundle = new Bundle();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
     		}
 		});
 		
@@ -365,14 +384,26 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
+						Bundle bundle = new Bundle();
+						Calendar calToday = Calendar.getInstance();
+						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+	
+							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+						}
+						
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
-							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
-							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
-							openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
 						}
 						return false;
 					}
@@ -390,6 +421,17 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
+
+						final Bundle bundle = new Bundle();
+						Calendar calToday = Calendar.getInstance();
+						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+						}
 						if (item.getItemId() == R.id.homeTopup_action_money_addnew_debt) {
 
 							PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -398,17 +440,18 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 								@Override
 								public boolean onMenuItemClick(MenuItem item) {
+
 									if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
-										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, null);
+										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, bundle);
 									} 
 									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
-										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, null);
+										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, bundle);
 									} 
 									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
-										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, null);
+										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, bundle);
 									} 
 									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
-										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, null);
+										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, bundle);
 									} 
 									return false;
 								}
@@ -416,9 +459,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 							popup.show();
 						
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
-							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, bundle);
 						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
-							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
+							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, bundle);
 						} 
 						return false;
 					}
