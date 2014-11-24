@@ -83,6 +83,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects }, 0); 
 	}
 
+	
+	@Override
+	protected boolean disableOptionsMenuView() {
+		return true;
+	}
+	
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
 		String parentProjectId = getArguments().getString("parentProjectId");

@@ -162,14 +162,19 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-//		if(useOptionsMenuView() != null){
+		if(!disableOptionsMenuView()){
 			setHasOptionsMenu (true);
-//		}
+		}
 	}
 	
+	protected boolean disableOptionsMenuView() {
+		return false;
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;
+		
 		// will throw ensureList: content view not yet created. so we check if getView() != null
 		if(getView() != null && getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			menu.clear();

@@ -64,6 +64,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	protected View mHeaderView;
 	private View mMultiSelectActionBarView;
 	private TextView mSelectedCount;
+	private Object mOptionsMenu;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -214,15 +215,19 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				mIsViewInited = true;
 			}
 		}
+
+//		if(mOptionsMenu == null){
+//			getActivity().supportInvalidateOptionsMenu();
+//		}
 	}
 	
-	public void initLoader(int loaderId){
+	public void initLoader(int loaderId) {
 		Loader<Object> loader = getLoaderManager().getLoader(loaderId);
-		if(loader != null && !loader.isReset()){
+		if(loader != null && !loader.isReset()) {
 			getLoaderManager().restartLoader(loaderId, null,this);
 		} else {
 			Bundle bundle = new Bundle();
-			if(loaderId == -1){
+			if(loaderId == -1) {
 				bundle.putInt("OFFSET", 0);
 				bundle.putInt("LIMIT", getListPageSize());
 			}
@@ -233,13 +238,21 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-//		if(useOptionsMenuView() != null){
+		if(!disableOptionsMenuView()){
 			setHasOptionsMenu (true);
-//		}
+		}
 	}
+
+	protected boolean disableOptionsMenuView() {
+		return false;
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// will throw ensureList: content view not yet created. so we check if getView() != null
+//		if(getView() != null){
+//			mOptionsMenu = menu;
+
 		if(getView() != null && getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			menu.clear();
 			if(getActivity().getCallingActivity() == null){
@@ -256,6 +269,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 				inflater.inflate(useOptionsMenuView(), menu);
 			} 
 		}
+
+//		}
 	    super.onCreateOptionsMenu(menu, inflater);
 	}
 	
@@ -336,7 +351,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 					public void onClick(View v) {
 			    		listView.clearChoices();
 			    		int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
-			    		if(position > -1){
+			    		if(position > -1) {
 			    			getListView().setItemChecked(position, false);
 			    		}
 						mSelectedCount.setText(listView.getCheckedItemCount() + "");
