@@ -137,13 +137,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
-			
-			String temPlateID = intent.getStringExtra("MONEYTEMPLATE_ID");
-			if(temPlateID != null){
-				MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
-				moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
-				moneyTemplate.save();
-			}
 			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
 			JSONObject temPlateJso = null;
 			if (temPlateData != null) {
@@ -1040,6 +1033,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				
 				
 				mMoneyExpenseContainerEditor.save();
+				
+				Intent intent = getActivity().getIntent();
+				String temPlateID = intent .getStringExtra("MONEYTEMPLATE_ID");
+				if(temPlateID != null){
+					MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
+					moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
+					moneyTemplate.save();
+				}
+				
 				ActiveAndroid.setTransactionSuccessful();
 				if(getActivity().getCallingActivity() != null){
 					getActivity().setResult(Activity.RESULT_OK);
