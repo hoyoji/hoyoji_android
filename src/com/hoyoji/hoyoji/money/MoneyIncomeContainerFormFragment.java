@@ -149,7 +149,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				double amount = temPlateJso.optDouble("amount", 0.0);
 				temPlateJso.remove("amount");
 				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
-				temPlateJso.optDouble("amount", amount);
+				
+				try {
+					temPlateJso.putOpt("amount", amount);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				
 			} else{
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
