@@ -151,7 +151,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				presetAmount = temPlateJso.optDouble("amount", 0.0);
 				temPlateJso.remove("amount");
 				moneyExpenseContainer.loadFromJSON(temPlateJso,false);
-				presetAmount = temPlateJso.optDouble("amount", 0.0) * temPlateJso.optDouble("exchangeRate", 1.0);
+				presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
 			} else {
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyAccountId != null){

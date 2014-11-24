@@ -150,7 +150,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				temPlateJso.remove("amount");
 				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
 				// 从模版中获取预设金额
-				presetAmount = temPlateJso.optDouble("amount", 0.0) * temPlateJso.optDouble("exchangeRate", 1.0);
+				presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
 			} else{
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
