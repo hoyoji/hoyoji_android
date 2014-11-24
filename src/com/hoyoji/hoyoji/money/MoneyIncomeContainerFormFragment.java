@@ -121,6 +121,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	public void onInitViewData(){
 		super.onInitViewData();
 		final MoneyIncomeContainer moneyIncomeContainer;
+		JSONObject temPlateJso = null;
 		
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -136,7 +137,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyTemplate.save();
 			}
 			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
-			JSONObject temPlateJso = null;
 			if (temPlateData != null) {
 				try {
 					temPlateJso = new JSONObject(temPlateData);
@@ -146,7 +146,15 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				}
 				temPlateJso.remove("id");
 				temPlateJso.remove("date");
+				double amount = temPlateJso.optDouble("amount", 0.0);
+				temPlateJso.remove("amount");
 				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
+				
+				try {
+					temPlateJso.putOpt("amount", amount);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				
 			} else{
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
@@ -205,12 +213,19 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		int incomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		mNumericAmount.getEditText().setTextColor(incomeColor);
 		mNumericAmount.getEditText().setHintTextColor(incomeColor);
-		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
-		if(amount >= 0.0){
-			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+		if (modelId == -1) {
+			double amount = 0.0;
+			double exchangeRate = 1.0;
+			if(temPlateJso != null){
+				amount = temPlateJso.optDouble("amount", 0.0);
+				exchangeRate = temPlateJso.optDouble("exchangeRate", 1.0);
+			} else {
+				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
+				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+			}
 			mNumericAmount.setNumber(amount*exchangeRate);
 			mApportionFieldApportions.setTotalAmount(amount*exchangeRate);
-		}else{
+		} else {
 			mNumericAmount.setNumber(moneyIncomeContainer.getAmount());
 		}
 		

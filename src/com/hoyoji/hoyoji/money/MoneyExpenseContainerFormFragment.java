@@ -128,6 +128,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		final MoneyExpenseContainer moneyExpenseContainer;
+		JSONObject temPlateJso = null;
 
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -138,17 +139,22 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
 			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
-			JSONObject temPlateJso = null;
 			if (temPlateData != null) {
 				try {
 					temPlateJso = new JSONObject(temPlateData);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				temPlateJso.remove("id");
 				temPlateJso.remove("date");
+				double amount = temPlateJso.optDouble("amount", 0.0);
+				temPlateJso.remove("amount");
 				moneyExpenseContainer.loadFromJSON(temPlateJso,false);
+				try {
+					temPlateJso.putOpt("amount", amount);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				
 			} else {
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
@@ -210,12 +216,19 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_amount);
 		mNumericAmount.getEditText().setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mNumericAmount.getEditText().setHintTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
-		if(amount >= 0.0){
-			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+		if (modelId == -1) {
+			double amount = 0.0;
+			double exchangeRate = 1.0;
+			if(temPlateJso != null){
+				amount = temPlateJso.optDouble("amount", 0.0);
+				exchangeRate = temPlateJso.optDouble("exchangeRate", 1.0);
+			} else {
+				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
+				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+			}
 			mNumericAmount.setNumber(amount*exchangeRate);
 			mApportionFieldApportions.setTotalAmount(amount*exchangeRate);
-		}else{
+		} else {
 			mNumericAmount.setNumber(moneyExpenseContainer.getAmount());
 		}
 		

@@ -148,11 +148,18 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		int incomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
 		mNumericAmount.getEditText().setTextColor(incomeColor);
 		mNumericAmount.getEditText().setHintTextColor(incomeColor);
-		double amount = intent.getDoubleExtra("amount", -1.0);//从分享消息导入的金额
-		if(amount >= 0.0){
-			double exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+		if (modelId == -1) {
+			double amount = 0.0;
+			double exchangeRate = 1.0;
+//			if(temPlateJso != null){
+//				amount = temPlateJso.optDouble("amount", 0.0);
+//				exchangeRate = temPlateJso.optDouble("exchangeRate", 1.0);
+//			} else {
+				amount = intent.getDoubleExtra("amount", 0.0);//从分享消息导入的金额
+				exchangeRate = intent.getDoubleExtra("exchangeRate", 1.0);
+//			}
 			mNumericAmount.setNumber(amount*exchangeRate);
-		}else{
+		} else {
 			mNumericAmount.setNumber(moneyIncome.getAmount());
 		}
 		
