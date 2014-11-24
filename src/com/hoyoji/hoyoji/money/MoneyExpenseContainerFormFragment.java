@@ -554,7 +554,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			setExchangeRate(false);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
-			if(moneyExpenseContainer.getOwnerUserId() != HyjApplication.getInstance().getCurrentUser().getId()) {
+			if(!moneyExpenseContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
 				app_action_save_template.setVisibility(View.GONE);
 			}
 			setExchangeRate(true);

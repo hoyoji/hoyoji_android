@@ -684,6 +684,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 				transferProjectCurrency.setText(null);
 //				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
 				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
 			
 			if(mSelectorFieldTransferIn.getModelId() != null){

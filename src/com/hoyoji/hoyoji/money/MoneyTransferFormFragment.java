@@ -740,6 +740,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					transferProjectCurrency.setText(null);
 //					mViewSeparatorTransferOutProject.setVisibility(View.GONE);
 					mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+					mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 				}
 				
 				if(mSelectorFieldTransferIn.getModelId() != null){
@@ -995,6 +996,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             				setExchangeRate(true);
 //            				mViewSeparatorTransferOutProject.setVisibility(View.VISIBLE);
                 			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+                			mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
             			}
                  		return;
              		} else {
@@ -1018,6 +1020,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
     				transferProjectCurrency.setText(null);
 //    				mViewSeparatorTransferOutProject.setVisibility(View.GONE);
     				mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+    				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
     				
     				
              	 }

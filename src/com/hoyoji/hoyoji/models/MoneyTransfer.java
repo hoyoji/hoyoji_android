@@ -180,7 +180,7 @@ public class MoneyTransfer extends HyjModel{
 //			    	rate = exchange;
 //			    }
 //			}
-			return this.getTransferInAmount0()*this.getTransferInExchangeRate();
+			return this.getTransferInAmount0()/this.getTransferInExchangeRate();
 		}else{
 			return this.getTransferInAmount0()*rate;
 		}
