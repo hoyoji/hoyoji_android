@@ -170,7 +170,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;
-		if(getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+		// will throw ensureList: content view not yet created. so we check if getView() != null
+		if(getView() != null && getListView().getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			menu.clear();
 			if(getActivity().getCallingActivity() == null){
 				if(useMultiSelectMenuView() != null){
