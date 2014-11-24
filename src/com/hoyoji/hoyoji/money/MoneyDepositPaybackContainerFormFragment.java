@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.money;
 
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -130,6 +131,13 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_date);		
 		if(modelId != -1){
 			mDateTimeFieldDate.setText(moneyDepositPaybackContainer.getDate());
+		} else {
+			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
+			if(dateInMillisec != -1){
+				Date date = new Date(dateInMillisec);
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldDate.setTextColor(Color.RED);
+			}
 		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_amount);		

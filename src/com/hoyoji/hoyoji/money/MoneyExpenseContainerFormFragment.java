@@ -165,7 +165,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(intent.getStringExtra("counterpartId") != null){
 					moneyExpenseContainer.setIsImported(true);
 				}
-		
 			}
 		}
 				
@@ -179,7 +178,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_date);
 		if (modelId != -1) {
 			mDateTimeFieldDate.setText(moneyExpenseContainer.getDate());
+		} else {
+			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
+			if(dateInMillisec != -1){
+				Date date = new Date(dateInMillisec);
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldDate.setTextColor(Color.RED);
+			}
 		}
+		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyExpenseContainer.get_mId() == null && projectId != null){

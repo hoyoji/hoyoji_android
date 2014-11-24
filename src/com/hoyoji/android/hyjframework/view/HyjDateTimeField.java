@@ -170,4 +170,8 @@ public class HyjDateTimeField extends LinearLayout {
 		}
 		return null;
 	}
+
+	public void setTextColor(int color) {
+		mEditTextEdit.setTextColor(color);
+	}
 }

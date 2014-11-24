@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -156,7 +157,12 @@ public class MoneyExpenseContainer extends HyjModel{
 	public void setDate(String mDate) {
 		this.mDate = mDate;
 	}
-
+//	
+//	public void setDate(long dateInMillisec) {
+//		Date date = new Date(dateInMillisec);
+//		setDate(HyjUtil.formatDateToIOS(date));
+//	}
+	
 	public Double getAmount() {
 		return mAmount;
 	}
