@@ -42,7 +42,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(1);
+		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setOnPageChangeListener(this);
 		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
 
