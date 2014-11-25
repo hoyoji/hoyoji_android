@@ -59,16 +59,26 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-//		if(this.getSharePercentage() == null){
-//			modelEditor.setValidationError("sharePercentage", R.string.memberFormFragment_editText_hint_sharePercentage);
-//		} else {
-//			modelEditor.removeValidationError("sharePercentage");
-//		}
-//		if(this.getFriendUserId() == null && this.getLocalFriendId() == null){
-//			modelEditor.setValidationError("friendUser", R.string.memberFormFragment_editText_hint_friend);
-//		} else {
-//			modelEditor.removeValidationError("friendUser");
-//		}
+		if(this.getName() == null || "".equals(this.getName())){
+			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
+		} else {
+			modelEditor.removeValidationError("name");
+		}
+		if(this.getDate() == null){
+			modelEditor.setValidationError("date",R.string.projectEventListFragment_hyjDateTimeField_hint_date);
+		}else{
+			modelEditor.removeValidationError("date");
+		}
+		if(this.getStartDate() == null){
+			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_hint_startDate);
+		}else{
+			modelEditor.removeValidationError("startDate");
+		}
+		if(this.getEndDate() == null){
+			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_hint_endDate);
+		}else{
+			modelEditor.removeValidationError("endDate");
+		}
 	}
 
 	public String getId() {

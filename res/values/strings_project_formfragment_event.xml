@@ -16,7 +16,9 @@
     
     <string name="projectEventListFragment_textView_projectName">账本</string>
     
-    <string name="projectEventListFragment_hyjRemarkField_hint_description">活动内容</string>
+    <string name="projectEventListFragment_hyjRemarkField_hint_description">请输入活动内容</string>
     <string name="projectEventListFragment_hyjRemarkField_description">活动内容</string>
+    
+    <string name="projectEventFormFragment_title_edit">修改账本活动</string>
     
 </resources>

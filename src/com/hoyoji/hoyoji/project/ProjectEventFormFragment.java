@@ -4,7 +4,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,16 +16,11 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
-import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
 public class ProjectEventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
@@ -95,6 +89,7 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 
 		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
 		mRemarkFieldDescription.setText(event.getDescription());
+		mRemarkFieldDescription.setEditable(false);
 		mRemarkFieldDescription.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -148,7 +143,11 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 		fillData();
 
 		mEventEditor.validate();
-				
+		if (mEventEditor.hasValidationErrors()) {
+			showValidatioErrors();
+		} else {
+			doSave();
+		}
 //		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
 //			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
 //				mMoneyAccountEditor.setValidationError("friend", R.string.moneyAccountFormFragment_editText_hint_friend);
@@ -161,32 +160,11 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 		
 	}
 
-//	protected void doSave() {
-//		Double changeAmount = mMoneyAccountEditor.getModelCopy().getCurrentBalance0() - mMoneyAccountEditor.getModel().getCurrentBalance0();
-//		if(mMoneyAccountEditor.getModelCopy().get_mId() != null && changeAmount != 0){
-//			MoneyTransfer newMoneyTransfer = new MoneyTransfer();
-//			if(changeAmount > 0){
-//				newMoneyTransfer.setTransferOutAmount(changeAmount);
-//				newMoneyTransfer.setTransferOutId(null);
-//				newMoneyTransfer.setTransferInAmount(changeAmount);
-//				newMoneyTransfer.setTransferInId(mMoneyAccountEditor.getModelCopy().getId());
-//			}else{
-//				newMoneyTransfer.setTransferOutAmount(-changeAmount);
-//				newMoneyTransfer.setTransferOutId(mMoneyAccountEditor.getModelCopy().getId());
-//				newMoneyTransfer.setTransferInAmount(-changeAmount);
-//				newMoneyTransfer.setTransferInId(null);
-//			}
-//			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
-//			newMoneyTransfer.setTransferOutFriendUserId(null);
-//			newMoneyTransfer.setTransferInFriendUserId(null);
-//			newMoneyTransfer.setRemark("修改账户金额");
-//			newMoneyTransfer.save();
-//		}
-//		
-//		mMoneyAccountEditor.save();
-//		HyjUtil.displayToast(R.string.app_save_success);
-//		getActivity().finish();
-//	}
+	protected void doSave() {
+		mEventEditor.save();
+		HyjUtil.displayToast(R.string.app_save_success);
+		getActivity().finish();
+	}
 //	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

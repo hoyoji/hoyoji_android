@@ -1,5 +1,9 @@
 package com.hoyoji.hoyoji.project;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,8 +59,8 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"date", "name", "description", "startDate", "endDate"},
-				new int[] {R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_subTitle},
+				new String[] {"date", "name", "description", "startDate"},
+				new int[] {R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle},
 				0); 
 	}	
 
@@ -100,11 +104,18 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		if(id == -1) {
 			 return;
 		}
+		Bundle bundle = new Bundle();
+		bundle.putLong("MODEL_ID", id);
 		
+		openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
     }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		String date = cursor.getString(cursor.getColumnIndex("date"));
+		String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+		String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
+		DateFormat df = DateFormat.getDateTimeInstance();
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
 			return true;
@@ -112,14 +123,33 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
+				((TextView)view).setText("无备注");
+			} else {
+				((TextView)view).setText(cursor.getString(columnIndex));
+			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			try {
+				Date dt0 = df.parse(HyjUtil.formatDateToIOS(new Date()));
+	            Date dt1 = df.parse(date);
+	            Date dt2 = df.parse(startDate);
+	            Date dt3 = df.parse(endDate);
+				if(dt0.getTime() >= dt1.getTime() && dt0.getTime() <= dt2.getTime()) {
+					((TextView)view).setText("[报名中]");
+				} else if(dt0.getTime() >= dt2.getTime() && dt0.getTime() <= dt3.getTime()) {
+					((TextView)view).setText("[进行中]");
+				} else if(dt0.getTime() >= dt3.getTime()) {
+					((TextView)view).setText("[已结束]");
+				}
+			 } catch (Exception exception) {
+		            exception.printStackTrace();
+		     }
 			return true;
-		}else {
+		} else {
 			return false;
 		}
+	   
 	}
 	
 
