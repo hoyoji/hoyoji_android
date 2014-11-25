@@ -1,32 +1,18 @@
 package com.hoyoji.hoyoji.project;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.PageTransformer;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjViewPager;
+import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
-import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
 public class ProjectViewPagerListFragment extends HyjUserFragment implements OnPageChangeListener {
 	
@@ -36,6 +22,8 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	public ViewPager mViewPager;
+
+	protected boolean isClosingActivity = false;
 
 	
 	@Override
@@ -56,6 +44,21 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(1);
 		mViewPager.setOnPageChangeListener(this);
+		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
+
+			@Override
+			public void onOverScroll(float mOverscroll) {
+//				Log.i("mOverscroll", "" + mOverscroll);
+				if(mOverscroll / getResources().getDisplayMetrics().density < -150){
+					if(!isClosingActivity ){
+						isClosingActivity = true;
+						getActivity().finish();
+					}
+				}
+			}
+			
+		});
+		
 	}
 	
 	
@@ -86,13 +89,15 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 				return new ProjectMoneySearchListFragment();
 			case 1:
 				return new MemberListFragment();
+			case 2:
+				return new ProjectFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -102,6 +107,8 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 				return "账本流水";
 			case 1:
 				return "账本成员";
+			case 2:
+				return "账本资料";
 			}
 			return null;
 		}
