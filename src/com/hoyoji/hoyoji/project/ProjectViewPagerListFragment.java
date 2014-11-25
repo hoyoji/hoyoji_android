@@ -83,8 +83,10 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
+				return new ProjectEventListFragment();
+			case 1 :
 				return new ProjectMoneySearchListFragment();
-			case 1:
+			case 2:
 				return new MemberListFragment();
 			}
 			return null;
@@ -92,15 +94,17 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
+				return "账本活动";
+			case 1 :
 				return "账本流水";
-			case 1:
+			case 2:
 				return "账本成员";
 			}
 			return null;

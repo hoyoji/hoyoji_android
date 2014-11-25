@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "Event", id = BaseColumns._ID)
 public class Event extends HyjModel {
@@ -58,7 +59,16 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-		
+//		if(this.getSharePercentage() == null){
+//			modelEditor.setValidationError("sharePercentage", R.string.memberFormFragment_editText_hint_sharePercentage);
+//		} else {
+//			modelEditor.removeValidationError("sharePercentage");
+//		}
+//		if(this.getFriendUserId() == null && this.getLocalFriendId() == null){
+//			modelEditor.setValidationError("friendUser", R.string.memberFormFragment_editText_hint_friend);
+//		} else {
+//			modelEditor.removeValidationError("friendUser");
+//		}
 	}
 
 	public String getId() {
@@ -91,6 +101,13 @@ public class Event extends HyjModel {
 
 	public void setName(String mName) {
 		this.mName = mName;
+	}
+	
+	public Project getProject(){
+		if(mProjectId == null){
+			return null;
+		}
+		return getModel(Project.class, mProjectId);
 	}
 
 	public String getProjectId() {

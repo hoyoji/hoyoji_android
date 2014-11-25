@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="projectEventListFragment_action_addnew">新增账本活动</string>
+    
+    <string name="projectEventListFragment_editText_hint_name">请输入账本活动名称</string>
+    <string name="projectEventListFragment_textView_name">账本活动名称</string>
+    
+    <string name="projectEventListFragment_hyjDateTimeField_hint_date">请输入活动创建时间</string>
+    <string name="projectEventListFragment_hyjDateTimeField_date">活动创建时间</string>
+    
+    <string name="projectEventListFragment_hyjDateTimeField_hint_startDate">请输入活动开始时间</string>
+    <string name="projectEventListFragment_hyjDateTimeField_startDate">活动开始时间</string>
+    
+    <string name="projectEventListFragment_hyjDateTimeField_hint_endDate">请输入活动结束时间</string>
+    <string name="projectEventListFragment_hyjDateTimeField_endDate">活动结束时间</string>
+    
+    <string name="projectEventListFragment_textView_projectName">账本</string>
+    
+    <string name="projectEventListFragment_hyjRemarkField_hint_description">活动内容</string>
+    <string name="projectEventListFragment_hyjRemarkField_description">活动内容</string>
+    
+</resources>
