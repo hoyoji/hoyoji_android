@@ -109,7 +109,8 @@
             android:background="@color/lightgray" /> -->
 	<LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+            android:background="@color/hoyoji_lightgray">
 	    
         <TextView
             android:layout_width="0.0dip"
@@ -119,7 +120,7 @@
             android:gravity="center"
             android:text="日"
             android:textColor="@color/hoyoji_red"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -129,7 +130,7 @@
             android:gravity="center"
             android:text="一"
             android:textColor="@color/lightgray"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -139,7 +140,7 @@
             android:gravity="center"
             android:text="二"
             android:textColor="@color/lightgray"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -149,7 +150,7 @@
             android:gravity="center"
             android:text="三"
             android:textColor="@color/lightgray"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -159,7 +160,7 @@
             android:gravity="center"
             android:text="四"
             android:textColor="@color/lightgray"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -169,7 +170,7 @@
             android:gravity="center"
             android:text="五"
             android:textColor="@color/lightgray"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
 
         <TextView
             android:layout_width="0.0dip"
@@ -179,7 +180,7 @@
             android:gravity="center"
             android:text="六"
             android:textColor="@color/hoyoji_red"
-            android:textSize="12.0dip" />
+            android:textSize="11.0dip" />
     </LinearLayout>
     <com.hoyoji.android.hyjframework.view.HyjCalendarGrid 
             android:layout_width="match_parent"

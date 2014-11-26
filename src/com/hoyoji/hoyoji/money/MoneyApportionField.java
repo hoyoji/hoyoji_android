@@ -567,7 +567,7 @@ public class MoneyApportionField extends GridView {
 			}
 			if(vh.apportionItem.getApportionType().equalsIgnoreCase("Average")){
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_average_apport);
-			} else if(vh.apportionItem.getApportionType().equalsIgnoreCase("Fixed")){
+			} else if(vh.apportionItem.getApportionType().equalsIgnoreCase("Fix")){
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_fixed_apport);
 			} else {
 				vh.textViewApportionType.setText(R.string.moneyListItem_apportion_share_apport);

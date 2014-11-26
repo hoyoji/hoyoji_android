@@ -159,17 +159,20 @@ public class HyjTabStrip extends LinearLayout {
 	}
 
 	public void setBadgeCount(int position, int count) {
-		BadgeView badgeView = ((TabViewHolder)mListTabs.get(position).getTag()).badgeView;
+		LinearLayout tab = mListTabs.get(position);
+		BadgeView badgeView = ((TabViewHolder)tab.getTag()).badgeView;
 		if(badgeView == null){
 			badgeView = new BadgeView(getContext());
 			badgeView.setHideOnNull(true);
 			badgeView.setBadgeCount(0);
-			badgeView.setMaxLines(1);
+//			badgeView.setMaxLines(1);
 			badgeView.setSingleLine();
 			badgeView.setEllipsize(TruncateAt.END);
-			mListTabs.get(position).removeView(badgeView);
-			mListTabs.get(position).addView(badgeView);
+//			tab.removeView(badgeView);
+			tab.addView(badgeView);
+			((TabViewHolder)tab.getTag()).badgeView = badgeView;
 		}
+
 		badgeView.setBadgeCount(count);
 	}
 	

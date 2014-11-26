@@ -88,30 +88,6 @@ public class MainActivity extends HyjUserActivity {
 	MessageChangeObserver mMessageChangeObserver;
 	ViewPager mViewPager;
 
-//	private LinearLayout mTabAccount;
-//	private LinearLayout mTabProject;
-//	private LinearLayout mTabHome;
-//	private LinearLayout mTabFriend;
-//	private LinearLayout mTabMessage;
-//
-//	private TextView mAccount;
-//	private TextView mProject;
-//	private TextView mHome;
-//	private TextView mFriend;
-//	private TextView mMessage;
-//
-//	private BadgeView mBadgeViewforAccount;
-//	private BadgeView mBadgeViewforProject;
-//	private BadgeView mBadgeViewforHome;
-//	private BadgeView mBadgeViewforFriend;
-//	private BadgeView mBadgeViewforMessage;
-//
-//	private View mTabLine;
-//
-//	private int currentIndex;
-//	private int screenWidth;
-//	private int intTabLineWidth;
-//	private double dblTabLineWidth;
 
 	private HyjTabStrip mTabStrip;
 	
@@ -242,69 +218,6 @@ public class MainActivity extends HyjUserActivity {
 
 	}
 
-//	private void initView() {
-//
-//		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
-//		if(HyjApplication.getIsDebuggable()){
-//			actionBar.setTitle("好友记(测试版)");
-//		}
-//		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
-//		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
-//		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
-//		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
-//		mTabMessage = (LinearLayout) findViewById(R.id.id_tab_message_ly);
-//
-//		mTabAccount.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(0);
-//			}
-//		});
-//		mTabProject.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(1);
-//			}
-//		});
-//		mTabHome.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(2);
-//			}
-//		});
-//		mTabFriend.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(3);
-//			}
-//		});
-//		mTabMessage.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mViewPager.setCurrentItem(4);
-//			}
-//		});
-		
-//		mAccount = (TextView) findViewById(R.id.id_account);
-//		mProject = (TextView) findViewById(R.id.id_project);
-//		mHome = (TextView) findViewById(R.id.id_home);
-//		mFriend = (TextView) findViewById(R.id.id_friend);
-//		mMessage = (TextView) findViewById(R.id.id_message);
-//
-//		mBadgeViewforAccount = new BadgeView(this);
-//		mBadgeViewforProject = new BadgeView(this);
-//		mBadgeViewforHome = new BadgeView(this);
-//		mBadgeViewforFriend = new BadgeView(this);
-//		mBadgeViewforMessage = new BadgeView(this);
-//		
-//		mBadgeViewforMessage.setHideOnNull(true);
-//		mBadgeViewforMessage.setBadgeCount(0);
-//		mBadgeViewforMessage.setMaxLines(1);
-//		mBadgeViewforMessage.setSingleLine();
-////		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
-//		mTabMessage.removeView(mBadgeViewforMessage);
-//		mTabMessage.addView(mBadgeViewforMessage);
-//	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
 	// @Override
@@ -918,9 +831,6 @@ public class MainActivity extends HyjUserActivity {
 			@Override
 			public void finishCallback(final Object object) {
 				int count = (Integer)object;
-				if(count > 99){
-					count = 99;
-				}
 				mTabStrip.setBadgeCount(4, count);
 			}
 	
