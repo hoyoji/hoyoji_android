@@ -171,6 +171,7 @@ public class HyjTabStrip extends LinearLayout {
 			mListTabs.get(position).addView(badgeView);
 			((TabViewHolder)mListTabs.get(position).getTag()).badgeView = badgeView;
 		}
+
 		badgeView.setBadgeCount(count);
 	}
 	

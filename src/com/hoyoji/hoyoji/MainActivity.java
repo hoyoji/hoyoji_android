@@ -918,9 +918,6 @@ public class MainActivity extends HyjUserActivity {
 			@Override
 			public void finishCallback(final Object object) {
 				int count = (Integer)object;
-				if(count > 99){
-					count = 99;
-				}
 				mTabStrip.setBadgeCount(4, count);
 			}
 	
