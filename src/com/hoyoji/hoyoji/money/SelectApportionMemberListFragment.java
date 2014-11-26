@@ -113,6 +113,7 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
+		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(mSectionsPagerAdapter.getPageTitle(0));
 	}
 	
 	
