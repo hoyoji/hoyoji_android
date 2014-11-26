@@ -41,6 +41,8 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.server.HyjServer;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeCalendarGridFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
@@ -86,30 +88,32 @@ public class MainActivity extends HyjUserActivity {
 	MessageChangeObserver mMessageChangeObserver;
 	ViewPager mViewPager;
 
-	private LinearLayout mTabAccount;
-	private LinearLayout mTabProject;
-	private LinearLayout mTabHome;
-	private LinearLayout mTabFriend;
-	private LinearLayout mTabMessage;
+//	private LinearLayout mTabAccount;
+//	private LinearLayout mTabProject;
+//	private LinearLayout mTabHome;
+//	private LinearLayout mTabFriend;
+//	private LinearLayout mTabMessage;
+//
+//	private TextView mAccount;
+//	private TextView mProject;
+//	private TextView mHome;
+//	private TextView mFriend;
+//	private TextView mMessage;
+//
+//	private BadgeView mBadgeViewforAccount;
+//	private BadgeView mBadgeViewforProject;
+//	private BadgeView mBadgeViewforHome;
+//	private BadgeView mBadgeViewforFriend;
+//	private BadgeView mBadgeViewforMessage;
+//
+//	private View mTabLine;
+//
+//	private int currentIndex;
+//	private int screenWidth;
+//	private int intTabLineWidth;
+//	private double dblTabLineWidth;
 
-	private TextView mAccount;
-	private TextView mProject;
-	private TextView mHome;
-	private TextView mFriend;
-	private TextView mMessage;
-
-	private BadgeView mBadgeViewforAccount;
-	private BadgeView mBadgeViewforProject;
-	private BadgeView mBadgeViewforHome;
-	private BadgeView mBadgeViewforFriend;
-	private BadgeView mBadgeViewforMessage;
-
-	private View mTabLine;
-
-	private int currentIndex;
-	private int screenWidth;
-	private int intTabLineWidth;
-	private double dblTabLineWidth;
+	private HyjTabStrip mTabStrip;
 	
 	@Override
 	protected Integer getContentView() {
@@ -190,8 +194,11 @@ public class MainActivity extends HyjUserActivity {
 //		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		initView();
-		initTabLine();
+
+		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+		if(HyjApplication.getIsDebuggable()){
+			actionBar.setTitle("好友记(测试版)");
+		}
 		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -199,186 +206,104 @@ public class MainActivity extends HyjUserActivity {
 				getSupportFragmentManager());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(5);
-
+		
+		mTabStrip = (HyjTabStrip) findViewById(R.id.main_tabstrip);
+		mTabStrip.initTabLine(mSectionsPagerAdapter.getCount());
+		for(int i = 0; i < mSectionsPagerAdapter.getCount(); i ++){
+			CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
+			mTabStrip.addTab(title.toString());
+		}
+		
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
 		{
 			@Override
-			public void onPageSelected(int position)
-			{
-				resetTextView();
-				switch (position)
-				{
-					case 0:
-						mAccount.setTextColor(getResources().getColor(R.color.hoyoji_red));
-						
-	//					mTabAccount.removeView(mBadgeViewforAccount);
-	//					mBadgeViewforAccount.setBadgeCount(5);
-	//					mTabAccount.addView(mBadgeViewforAccount);
-						break;
-					case 1:
-						mProject.setTextColor(getResources().getColor(R.color.hoyoji_red));
-						break;
-					case 2:
-						mHome.setTextColor(getResources().getColor(R.color.hoyoji_red));
-						break;
-					case 3:
-						mFriend.setTextColor(getResources().getColor(R.color.hoyoji_red));
-						break;
-					case 4:
-						mMessage.setTextColor(getResources().getColor(R.color.hoyoji_red));
-						break;
-				}
-
-				currentIndex = position;
+			public void onPageSelected(int position) {
+				mTabStrip.setTabSelected(position);
 			}
 
 			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-			{
-				LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine
-						.getLayoutParams();
-				if (currentIndex == 0 && position == 0)// 0->1
-				{
-					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-				} else if (currentIndex == 1 && position == 0) // 1->0
-				{
-					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-
-				} 
-				
-				else if (currentIndex == 1 && position == 1) // 1->2
-				{
-					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-				} else if (currentIndex == 2 && position == 1) // 2->1
-				{
-					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-
-				} 
-				
-				else if (currentIndex == 2 && position == 2) // 2->3
-				{
-					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-				} else if (currentIndex == 3 && position == 2) // 3->2
-				{
-					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-
-				}
-				
-				else if (currentIndex == 3 && position == 3) // 3->4
-				{
-					lp.leftMargin = (int) (positionOffset * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-				} else if (currentIndex == 4 && position == 3) // 4->3
-				{
-					lp.leftMargin = (int) (-(1-positionOffset) * dblTabLineWidth + currentIndex * intTabLineWidth);
-					mTabLine.setLayoutParams(lp);
-
-				}
-
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				mTabStrip.onPageScrolled(position, positionOffset, positionOffsetPixels);
 			}
 
 			@Override
-			public void onPageScrollStateChanged(int state)
-			{
+			public void onPageScrollStateChanged(int state) {
 			}
 		});
+		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
 
+			@Override
+			public void onTabSelected(int tag) {
+				mViewPager.setCurrentItem(tag);
+			}
+		});
 		mViewPager.setCurrentItem(2, false);
 
 	}
 
-	private void initTabLine()
-	{
-		mTabLine = findViewById(R.id.id_tab_line);
-		DisplayMetrics outMetrics = new DisplayMetrics();
-		getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-		screenWidth = outMetrics.widthPixels;
-		LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mTabLine.getLayoutParams();
-		lp.width = screenWidth / 5;
- 		mTabLine.setLayoutParams(lp);
-		intTabLineWidth = lp.width;
-		dblTabLineWidth = screenWidth * 1.0 / 5;
-	}
-
-	protected void resetTextView()
-	{
-		mAccount.setTextColor(getResources().getColor(R.color.black));
-		mProject.setTextColor(getResources().getColor(R.color.black));
-		mHome.setTextColor(getResources().getColor(R.color.black));
-		mFriend.setTextColor(getResources().getColor(R.color.black));
-		mMessage.setTextColor(getResources().getColor(R.color.black));
-	}
-
-	private void initView()
-	{
-
-		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
-		if(HyjApplication.getIsDebuggable()){
-			actionBar.setTitle("好友记(测试版)");
-		}
-		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
-		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
-		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
-		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
-		mTabMessage = (LinearLayout) findViewById(R.id.id_tab_message_ly);
-
-		mTabAccount.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				mViewPager.setCurrentItem(0);
-			}
-		});
-		mTabProject.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				mViewPager.setCurrentItem(1);
-			}
-		});
-		mTabHome.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				mViewPager.setCurrentItem(2);
-			}
-		});
-		mTabFriend.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				mViewPager.setCurrentItem(3);
-			}
-		});
-		mTabMessage.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				mViewPager.setCurrentItem(4);
-			}
-		});
+//	private void initView() {
+//
+//		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
+//		if(HyjApplication.getIsDebuggable()){
+//			actionBar.setTitle("好友记(测试版)");
+//		}
+//		mTabAccount = (LinearLayout) findViewById(R.id.id_tab_account_ly);
+//		mTabProject = (LinearLayout) findViewById(R.id.id_tab_project_ly);
+//		mTabHome = (LinearLayout) findViewById(R.id.id_tab_home_ly);
+//		mTabFriend = (LinearLayout) findViewById(R.id.id_tab_friend_ly);
+//		mTabMessage = (LinearLayout) findViewById(R.id.id_tab_message_ly);
+//
+//		mTabAccount.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(0);
+//			}
+//		});
+//		mTabProject.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(1);
+//			}
+//		});
+//		mTabHome.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(2);
+//			}
+//		});
+//		mTabFriend.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(3);
+//			}
+//		});
+//		mTabMessage.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				mViewPager.setCurrentItem(4);
+//			}
+//		});
 		
-		mAccount = (TextView) findViewById(R.id.id_account);
-		mProject = (TextView) findViewById(R.id.id_project);
-		mHome = (TextView) findViewById(R.id.id_home);
-		mFriend = (TextView) findViewById(R.id.id_friend);
-		mMessage = (TextView) findViewById(R.id.id_message);
-
-		mBadgeViewforAccount = new BadgeView(this);
-		mBadgeViewforProject = new BadgeView(this);
-		mBadgeViewforHome = new BadgeView(this);
-		mBadgeViewforFriend = new BadgeView(this);
-		mBadgeViewforMessage = new BadgeView(this);
-		
-		mBadgeViewforMessage.setHideOnNull(true);
-		mBadgeViewforMessage.setBadgeCount(0);
-		mBadgeViewforMessage.setMaxLines(1);
-		mBadgeViewforMessage.setSingleLine();
-//		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
-		mTabMessage.removeView(mBadgeViewforMessage);
-		mTabMessage.addView(mBadgeViewforMessage);
-	}
+//		mAccount = (TextView) findViewById(R.id.id_account);
+//		mProject = (TextView) findViewById(R.id.id_project);
+//		mHome = (TextView) findViewById(R.id.id_home);
+//		mFriend = (TextView) findViewById(R.id.id_friend);
+//		mMessage = (TextView) findViewById(R.id.id_message);
+//
+//		mBadgeViewforAccount = new BadgeView(this);
+//		mBadgeViewforProject = new BadgeView(this);
+//		mBadgeViewforHome = new BadgeView(this);
+//		mBadgeViewforFriend = new BadgeView(this);
+//		mBadgeViewforMessage = new BadgeView(this);
+//		
+//		mBadgeViewforMessage.setHideOnNull(true);
+//		mBadgeViewforMessage.setBadgeCount(0);
+//		mBadgeViewforMessage.setMaxLines(1);
+//		mBadgeViewforMessage.setSingleLine();
+////		mBadgeViewforMessage.setEllipsize(TruncateAt.END);
+//		mTabMessage.removeView(mBadgeViewforMessage);
+//		mTabMessage.addView(mBadgeViewforMessage);
+//	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
 	// @Override
@@ -995,7 +920,7 @@ public class MainActivity extends HyjUserActivity {
 				if(count > 99){
 					count = 99;
 				}
-				mBadgeViewforMessage.setBadgeCount(count);
+				mTabStrip.setBadgeCount(4, count);
 			}
 	
 			@Override

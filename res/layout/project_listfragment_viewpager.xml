@@ -10,17 +10,23 @@
     <com.hoyoji.android.hyjframework.view.HyjViewPager
         android:id="@+id/projectViewPagerListFragment_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:paddingTop="35dp" >
 
-        <android.support.v4.view.PagerTabStrip
+       <!--  <android.support.v4.view.PagerTabStrip
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:layout_gravity="top"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:textColor="@color/hoyoji_red" />
+            android:textColor="@color/hoyoji_red" /> -->
         
     </com.hoyoji.android.hyjframework.view.HyjViewPager>
 
+    <com.hoyoji.android.hyjframework.view.HyjTabStrip 
+        android:id="@+id/projectViewPagerListFragment_tabstrip"       
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    />
 </FrameLayout>

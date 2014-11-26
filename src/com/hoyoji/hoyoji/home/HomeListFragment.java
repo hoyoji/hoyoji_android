@@ -105,8 +105,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 	private TextView mIncomeStat;
 	private TextView mExpenseStat;
 
-	private DateFormat mDateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 //	private int mImageBackgroundColor = Color.parseColor("#FF4C32");
 	@Override
 	public Integer useContentView() {
