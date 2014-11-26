@@ -3,12 +3,19 @@ package com.hoyoji.android.hyjframework.view;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.hoyoji_android.R;
 
-import com.nineoldandroids.animation.*;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
+//import com.nineoldandroids.animation.*;
+//import com.nineoldandroids.animation.Animator.AnimatorListener;
 
+//import android.animation.Animator;
+//import android.animation.Animator.AnimatorListener;
+
+//import android.animation.ObjectAnimator;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Camera;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
@@ -43,7 +50,8 @@ public class HyjViewPager extends ViewPager {
 	 */
 	private class OverscrollEffect {
 		private float mOverscroll;
-		private Animator mAnimator;
+		private android.animation.Animator mAnimator;
+		private com.nineoldandroids.animation.Animator mAnimatorOld;
 
 		/**
 		 * @param deltaDistance
@@ -58,42 +66,82 @@ public class HyjViewPager extends ViewPager {
 		 * called when finger is released. starts to animate back to default
 		 * position
 		 */
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void onRelease() {
-			if (mAnimator != null && mAnimator.isRunning()) {
-				mAnimator.addListener(new AnimatorListener() {
-
-					@Override
-					public void onAnimationStart(Animator animation) {
-					}
-
-					@Override
-					public void onAnimationRepeat(Animator animation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animator animation) {
-						startAnimation(0);
-					}
-
-					@Override
-					public void onAnimationCancel(Animator animation) {
-					}
-				});
-				mAnimator.cancel();
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				if (mAnimatorOld != null && mAnimatorOld.isRunning()) {
+					mAnimatorOld.addListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
+	
+						@Override
+						public void onAnimationStart(com.nineoldandroids.animation.Animator animation) {
+						}
+	
+						@Override
+						public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
+						}
+	
+						@Override
+						public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+							startAnimation(0);
+						}
+	
+						@Override
+						public void onAnimationCancel(com.nineoldandroids.animation.Animator animation) {
+						}
+					});
+					mAnimatorOld.cancel();
+				} else {
+					startAnimation(0);
+				}
 			} else {
-				startAnimation(0);
+				if (mAnimator != null && mAnimator.isRunning()) {
+					mAnimator.addListener(new android.animation.Animator.AnimatorListener() {
+	
+						@Override
+						public void onAnimationStart(android.animation.Animator animation) {
+						}
+	
+						@Override
+						public void onAnimationRepeat(android.animation.Animator animation) {
+						}
+	
+						@Override
+						public void onAnimationEnd(android.animation.Animator animation) {
+							startAnimation(0);
+						}
+	
+						@Override
+						public void onAnimationCancel(android.animation.Animator animation) {
+						}
+					});
+					mAnimator.cancel();
+				} else {
+					startAnimation(0);
+				}
+
 			}
 		}
 
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void startAnimation(final float target) {
-			mAnimator = ObjectAnimator.ofFloat(this, "pull", mOverscroll,
-					target);
-			mAnimator.setInterpolator(new DecelerateInterpolator());
-			final float scale = Math.abs(target - mOverscroll);
-			mAnimator
-					.setDuration((long) (mOverscrollAnimationDuration * scale));
-			mAnimator.start();
+			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				mAnimatorOld = com.nineoldandroids.animation.ObjectAnimator.ofFloat(this, "pull", mOverscroll,
+						target);
+				mAnimatorOld.setInterpolator(new DecelerateInterpolator());
+				final float scale = Math.abs(target - mOverscroll);
+				mAnimatorOld
+						.setDuration((long) (mOverscrollAnimationDuration * scale));
+				mAnimatorOld.start();
+			} else {
+				mAnimator = android.animation.ObjectAnimator.ofFloat(this, "pull", mOverscroll,
+						target);
+				mAnimator.setInterpolator(new DecelerateInterpolator());
+				final float scale = Math.abs(target - mOverscroll);
+				mAnimator
+						.setDuration((long) (mOverscrollAnimationDuration * scale));
+				mAnimator.start();
+			}
 		}
 
 		private boolean isOverscrolling() {
