@@ -58,6 +58,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 				if(mOverscroll / mDisplayMetrics.density < -150){
 					if(!isClosingActivity ){
 						isClosingActivity = true;
+						((HyjViewPager)mViewPager).setStopBounceBack(true);
 						getActivity().finish();
 					}
 				}

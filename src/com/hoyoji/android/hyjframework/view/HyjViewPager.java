@@ -42,6 +42,12 @@ public class HyjViewPager extends ViewPager {
 	@SuppressWarnings("unused")
 	private final static String DEBUG_TAG = ViewPager.class.getSimpleName();
 	private final static int INVALID_POINTER_ID = -1;
+	
+	private boolean stopBounceBack = false;
+	
+	public void setStopBounceBack(boolean b){
+		stopBounceBack = b;
+	}
 
 	/**
 	 * 
@@ -68,6 +74,9 @@ public class HyjViewPager extends ViewPager {
 		 */
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void onRelease() {
+			if(stopBounceBack){
+				return;
+			}
 			if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 				if (mAnimatorOld != null && mAnimatorOld.isRunning()) {
 					mAnimatorOld.addListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
