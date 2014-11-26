@@ -79,7 +79,7 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setSubmitButtonEnabled(true);
-		
+		mSearchView.requestFocus();
 		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
 		if(searchImage != null){
 			searchImage.setImageResource(R.drawable.ic_action_search);
@@ -240,11 +240,11 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
         String display_name = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim();
     	String phoneNumber = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.NUMBER)).toString().trim();
 		Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
-        if(importFiend == null){
+		if(importFiend == null){
             importFiend = new Friend();
-        	HyjUtil.displayToast("导入好友" + '"' + display_name + '"' + "成功");
+            HyjUtil.displayToast("导入好友   " + display_name + " 成功");
         } else {
-        	HyjUtil.displayToast("好友" + '"' + display_name + '"' + "已经导入成功");
+        	HyjUtil.displayToast(display_name + "已经导入成功,不能重复导入");
         }
 		importFiend.setNickName(display_name);
 	    importFiend.setPhoneNumber(phoneNumber);
@@ -321,16 +321,7 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		if(item.getItemId() == R.id.importFriendListFragment_action_add){
 			importFriend();
 			this.exitMultiChoiceMode(getListView());
-			this.mSearchView.post(new Runnable(){
-
-				@Override
-				public void run() {		
-					InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-				}
-				
-			});
-
+			
 	        
 			return true;
 		}
@@ -353,9 +344,9 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		        if(importFiend == null){
 		            importFiend = new Friend();
 		            
-		            HyjUtil.displayToast("导入好友" + '"' + display_name + '"' + "成功");
+		            HyjUtil.displayToast("导入好友   " + display_name + " 成功");
 		        } else {
-		        	HyjUtil.displayToast("好友" + '"' + display_name + '"' + "已经导入成功");
+		        	HyjUtil.displayToast(display_name + "已经导入成功,不能重复导入");
 		        }
 				importFiend.setNickName(display_name);
 			    importFiend.setPhoneNumber(phoneNumber);
