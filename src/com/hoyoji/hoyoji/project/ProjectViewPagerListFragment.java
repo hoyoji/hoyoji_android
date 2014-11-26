@@ -91,7 +91,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 				return new ProjectMoneySearchListFragment();
 			case 2:
 				return new MemberListFragment();
-			case 2:
+			case 3:
 				return new ProjectFormFragment();
 			}
 			return null;
@@ -111,7 +111,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 				return "账本流水";
 			case 2:
 				return "账本成员";
-			case 2:
+			case 3:
 				return "账本资料";
 			}
 			return null;
