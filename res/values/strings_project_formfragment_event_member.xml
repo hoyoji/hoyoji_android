@@ -25,6 +25,9 @@
     <string name="projectEventMemberFormFragment_hyjRemarkField_hint_description">请输入活动内容</string>
     <string name="projectEventMemberFormFragment_hyjRemarkField_description">活动内容</string>
     
+    <string name="projectEventMemberFormFragment_selectorField_hint_friend">请选择好友</string>
+    <string name="projectEventMemberFormFragment_selectorField_friend">好友</string>
+    
     <string name="projectEventMemberFormFragment_title_edit">修改账本成员</string>
     
 </resources>

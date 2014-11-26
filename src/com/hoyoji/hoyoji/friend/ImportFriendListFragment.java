@@ -319,6 +319,7 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.importFriendListFragment_action_add){
+			mSearchView.clearFocus();
 			importFriend();
 			this.exitMultiChoiceMode(getListView());
 			

@@ -15,7 +15,7 @@
     android:orientation="vertical">
     
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/projectEventListFragment_hyjDateTimeField_date"
+        android:id="@+id/projectEventMemberFormFragment_hyjDateTimeField_date"
         hyj:style="left_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -23,8 +23,8 @@
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"
         hyj:editTextBorder="none"
-        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_date"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_date" />
+        hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_date"
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_date" />
     
     <View 
         android:id="@id/field_separator"
@@ -36,11 +36,11 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjTextField
-        android:id="@+id/projectEventListFragment_textField_name"
+        android:id="@+id/projectEventMemberFormFragment_textField_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/projectEventListFragment_editText_hint_name"
-        hyj:labelText="@string/projectEventListFragment_textView_name" />
+        hyj:hintText="@string/projectEventMemberFormFragment_editText_hint_name"
+        hyj:labelText="@string/projectEventMemberFormFragment_textView_name" />
 
      <View 
         android:id="@id/field_separator"
@@ -52,10 +52,10 @@
         />
      
      <com.hoyoji.android.hyjframework.view.HyjTextField
-            android:id="@+id/projectEventListFragment_textField_projectName"
+            android:id="@+id/projectEventMemberFormFragment_textField_projectName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            hyj:labelText="@string/projectEventListFragment_textView_projectName" />
+            hyj:labelText="@string/projectEventMemberFormFragment_textView_projectName" />
      
      <View 
         android:id="@id/field_separator"
@@ -67,7 +67,7 @@
         />
      
      <com.hoyoji.android.hyjframework.view.HyjTextField
-            android:id="@+id/projectEventListFragment_textField_eventName"
+            android:id="@+id/projectEventMemberFormFragment_textField_eventName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             hyj:labelText="@string/projectEventMemberFormFragment_textView_eventName" />
@@ -81,24 +81,32 @@
         android:background="@drawable/line_divider" 
         />
     
-    <com.hoyoji.android.hyjframework.view.HyjRemarkField
-        android:id="@+id/projectEventListFragment_HyjRemarkField_description"
+    <!-- <com.hoyoji.android.hyjframework.view.HyjRemarkField
+        android:id="@+id/projectEventMemberFormFragment_HyjRemarkField_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/projectEventListFragment_hyjRemarkField_hint_description"
-        hyj:labelText="@string/projectEventListFragment_hyjRemarkField_description" />
+        hyj:hintText="@string/projectEventMemberFormFragment_hyjRemarkField_hint_description"
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjRemarkField_description" />
 
-    <View 
-        android:id="@id/field_separator"
+    -->
+    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/projectEventMemberFormFragment_selectorField_friend"
         android:layout_width="match_parent"
-        android:layout_height="1dip"
-    	android:layout_marginTop="5dip"
-    	android:layout_marginBottom="5dip"
-        android:background="@drawable/line_divider" 
-        />
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/projectEventMemberFormFragment_selectorField_hint_friend"
+        hyj:labelText="@string/projectEventMemberFormFragment_selectorField_friend" >
+    </com.hoyoji.android.hyjframework.view.HyjSelectorField>
        
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@drawable/line_divider" 
+        />
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/projectEventListFragment_hyjDateTimeField_startDate"
+        android:id="@+id/projectEventMemberFormFragment_hyjDateTimeField_startDate"
         hyj:style="left_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -106,8 +114,8 @@
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"
         hyj:editTextBorder="none"
-        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_startDate"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_startDate" />
+        hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_startDate"
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_startDate" />
     
     <View 
         android:id="@id/field_separator"
@@ -119,7 +127,7 @@
         />
     
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/projectEventListFragment_hyjDateTimeField_endDate"
+        android:id="@+id/projectEventMemberFormFragment_hyjDateTimeField_endDate"
         hyj:style="left_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -127,8 +135,8 @@
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"
         hyj:editTextBorder="none"
-        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_endDate"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_endDate" />
+        hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_endDate"
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_endDate" />
     
     <View 
         android:id="@id/field_separator"
