@@ -171,6 +171,7 @@ public abstract class HyjModel extends Model  implements Cloneable {
 				if(tableInfo.getTableName().endsWith(tableName)){
 					type = tableInfo.getType();
 					modelTypeMap.put(tableName, type);
+					break;
 				}
 			}
 		}

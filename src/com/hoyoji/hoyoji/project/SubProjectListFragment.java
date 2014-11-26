@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -130,6 +132,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			projections = new String[]{ "_id", "name", "id", "id AS _subProjectId" };
 			selection = "NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId) OR EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId AND parentProjectId IS NULL)";
 		}
+		
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Project.class, null),
 				projections, selection, selectionArgs, "name_pinYin ASC LIMIT " + (limit + offset)
