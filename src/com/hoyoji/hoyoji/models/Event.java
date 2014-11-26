@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "Event", id = BaseColumns._ID)
 public class Event extends HyjModel {
@@ -58,7 +59,26 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-		
+		if(this.getName() == null || "".equals(this.getName())){
+			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
+		} else {
+			modelEditor.removeValidationError("name");
+		}
+		if(this.getDate() == null){
+			modelEditor.setValidationError("date",R.string.projectEventListFragment_hyjDateTimeField_hint_date);
+		}else{
+			modelEditor.removeValidationError("date");
+		}
+		if(this.getStartDate() == null){
+			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_hint_startDate);
+		}else{
+			modelEditor.removeValidationError("startDate");
+		}
+		if(this.getEndDate() == null){
+			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_hint_endDate);
+		}else{
+			modelEditor.removeValidationError("endDate");
+		}
 	}
 
 	public String getId() {
@@ -91,6 +111,13 @@ public class Event extends HyjModel {
 
 	public void setName(String mName) {
 		this.mName = mName;
+	}
+	
+	public Project getProject(){
+		if(mProjectId == null){
+			return null;
+		}
+		return getModel(Project.class, mProjectId);
 	}
 
 	public String getProjectId() {
