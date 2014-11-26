@@ -109,6 +109,7 @@ public class AddFriendListFragment extends HyjUserListFragment implements
 		}
 		super.onListItemClick(l, v, position, id);
 		if (id >= 0) {
+			mSearchView.clearFocus();
 			final JSONObject jsonUser = (JSONObject) l.getAdapter().getItem(position);
 			
 			Bundle bundle = new Bundle();
