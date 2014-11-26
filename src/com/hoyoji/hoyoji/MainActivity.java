@@ -230,13 +230,14 @@ public class MainActivity extends HyjUserActivity {
 			public void onPageScrollStateChanged(int state) {
 			}
 		});
+		
 		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
-
 			@Override
 			public void onTabSelected(int tag) {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
+		
 		mViewPager.setCurrentItem(2, false);
 
 	}

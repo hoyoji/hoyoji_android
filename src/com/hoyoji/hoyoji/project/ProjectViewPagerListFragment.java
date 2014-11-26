@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
@@ -29,6 +30,8 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 
 	private HyjTabStrip mTabStrip;
 
+	private DisplayMetrics mDisplayMetrics;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -37,6 +40,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 	
 	@Override
 	public void onInitViewData() {
+		mDisplayMetrics = getResources().getDisplayMetrics();
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -51,7 +55,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 			@Override
 			public void onOverScroll(float mOverscroll) {
 //				Log.i("mOverscroll", "" + mOverscroll);
-				if(mOverscroll / getResources().getDisplayMetrics().density < -150){
+				if(mOverscroll / mDisplayMetrics.density < -150){
 					if(!isClosingActivity ){
 						isClosingActivity = true;
 						getActivity().finish();
@@ -85,13 +89,11 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 			}
 		});
 		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
-
 			@Override
 			public void onTabSelected(int tag) {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
-		mViewPager.setCurrentItem(1, false);
 	}
 	
 	
@@ -119,9 +121,9 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new ProjectEventListFragment();
-			case 1 :
 				return new ProjectMoneySearchListFragment();
+			case 1 :
+				return new ProjectEventListFragment();
 			case 2:
 				return new MemberListFragment();
 			case 3:
@@ -139,9 +141,9 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "活动";
-			case 1 :
 				return "流水";
+			case 1 :
+				return "活动";
 			case 2:
 				return "成员";
 			case 3:

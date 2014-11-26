@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.view.ViewPager.PageTransformer;
+import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +26,10 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip;
+import com.hoyoji.android.hyjframework.view.HyjViewPager;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
+import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
@@ -38,6 +44,12 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 	 */
 	public ViewPager mViewPager;
 
+	protected boolean isClosingActivity = false;
+
+	private HyjTabStrip mTabStrip;
+
+	private DisplayMetrics mDisplayMetrics;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -46,6 +58,7 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 	
 	@Override
 	public void onInitViewData() {
+		mDisplayMetrics = getResources().getDisplayMetrics();
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -55,7 +68,51 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(1);
+		mViewPager.setOffscreenPageLimit(4);
+		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
+
+			@Override
+			public void onOverScroll(float mOverscroll) {
+//				Log.i("mOverscroll", "" + mOverscroll);
+				if(mOverscroll / mDisplayMetrics.density < -150){
+					if(!isClosingActivity ){
+						isClosingActivity  = true;
+						getActivity().finish();
+					}
+				}
+			}
+		});
+		
+		mTabStrip = (HyjTabStrip) getView().findViewById(R.id.selectApportionMemberListFragment_tabstrip);
+		mTabStrip.initTabLine(mSectionsPagerAdapter.getCount());
+		for(int i = 0; i < mSectionsPagerAdapter.getCount(); i ++){
+			CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
+			mTabStrip.addTab(title.toString());
+		}
+		
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
+		{
+			@Override
+			public void onPageSelected(int position) {
+				((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(mSectionsPagerAdapter.getPageTitle(position));
+				mTabStrip.setTabSelected(position);
+			}
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				mTabStrip.onPageScrolled(position, positionOffset, positionOffsetPixels);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
+		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
+			@Override
+			public void onTabSelected(int tag) {
+				mViewPager.setCurrentItem(tag);
+			}
+		});
 	}
 	
 	
@@ -65,12 +122,12 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 		if(((HyjActivity)getActivity()).getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
 			backPressedHandled = super.handleBackPressed();
 		}
-		if(!backPressedHandled){
-			if(mViewPager.getCurrentItem() > 0){
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-				backPressedHandled = true;
-			}
-		}
+//		if(!backPressedHandled){
+//			if(mViewPager.getCurrentItem() > 0){
+//				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+//				backPressedHandled = true;
+//			}
+//		}
 		return backPressedHandled;
 	}
 	

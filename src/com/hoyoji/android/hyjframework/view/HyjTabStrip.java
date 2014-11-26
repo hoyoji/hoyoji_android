@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
+import com.jauker.widget.BadgeView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Editable;
+import android.text.TextUtils.TruncateAt;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -62,6 +64,12 @@ public class HyjTabStrip extends LinearLayout {
 		dblTabLineWidth = mDisplayMetrics.widthPixels * 1.0 / numberOfPages;
 	}
 	
+	private static class TabViewHolder{
+		TextView titleView;
+		BadgeView badgeView;
+		int tagIndex;
+	}
+	
 	public void addTab(String title){
 //		<LinearLayout
 //        android:id="@+id/id_tab_account_ly"
@@ -83,7 +91,7 @@ public class HyjTabStrip extends LinearLayout {
 //            android:textSize="15sp" />
 //    </LinearLayout>
 		
-		LinearLayout newTab = new LinearLayout(this.getContext());
+		final LinearLayout newTab = new LinearLayout(this.getContext());
 		LayoutParams lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
 		lp.weight = 1;
 		newTab.setLayoutParams(lp);
@@ -101,11 +109,19 @@ public class HyjTabStrip extends LinearLayout {
 		newTab.addView(newTextView);
 		
 		mListTabs.add(newTab);
-		newTab.setTag(newTextView);
-		newTextView.setTag(mListTabs.size());
-		if(this.onTabSelectedListener != null){
-			this.onTabSelectedListener.onTabSelected((Integer)((TextView)newTab.getTag()).getTag());
-		}
+		
+		TabViewHolder newTagViewHolder = new TabViewHolder();
+		newTagViewHolder.titleView = newTextView;
+		newTagViewHolder.tagIndex = mListTabs.size() - 1;
+		newTab.setTag(newTagViewHolder);
+		newTab.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(onTabSelectedListener != null){
+					onTabSelectedListener.onTabSelected(((TabViewHolder)v.getTag()).tagIndex);
+				}
+			}
+		});
 		
 		mTabContainer.addView(newTab);
 	}
@@ -116,7 +132,7 @@ public class HyjTabStrip extends LinearLayout {
 	
 	protected void resetTextView() {
 		for(int i=0; i < mListTabs.size(); i++){
-			((TextView)mListTabs.get(i).getTag()).setTextColor(getResources().getColor(R.color.black));
+			((TabViewHolder)mListTabs.get(i).getTag()).titleView.setTextColor(getResources().getColor(R.color.black));
 		}
 	}
 
@@ -124,7 +140,7 @@ public class HyjTabStrip extends LinearLayout {
 	public void setTabSelected(int position)
 	{
 		resetTextView();
-		((TextView)mListTabs.get(position).getTag()).setTextColor(getResources().getColor(R.color.hoyoji_red));
+		((TabViewHolder)mListTabs.get(position).getTag()).titleView.setTextColor(getResources().getColor(R.color.hoyoji_red));
 		currentIndex = position;
 	}
 	
@@ -143,8 +159,18 @@ public class HyjTabStrip extends LinearLayout {
 	}
 
 	public void setBadgeCount(int position, int count) {
-		
-		
+		BadgeView badgeView = ((TabViewHolder)mListTabs.get(position).getTag()).badgeView;
+		if(badgeView == null){
+			badgeView = new BadgeView(getContext());
+			badgeView.setHideOnNull(true);
+			badgeView.setBadgeCount(0);
+			badgeView.setMaxLines(1);
+			badgeView.setSingleLine();
+			badgeView.setEllipsize(TruncateAt.END);
+			mListTabs.get(position).removeView(badgeView);
+			mListTabs.get(position).addView(badgeView);
+		}
+		badgeView.setBadgeCount(count);
 	}
 	
 }
