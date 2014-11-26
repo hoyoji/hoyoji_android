@@ -145,17 +145,11 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 
 		mTextFieldProjectRemarkName = (HyjTextField) getView().findViewById(
 				R.id.projectFormFragment_textField_projectRemarkName);
-		if (modelId != -1
-				&& !project.getOwnerUserId().equals(
-						HyjApplication.getInstance().getCurrentUser().getId())) {
+		if (modelId != -1 && !project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
 			mTextFieldProjectRemarkName.setText(project.getRemarkName());
-		} else {
-			mTextFieldProjectRemarkName.setVisibility(View.GONE);
-			getView()
-					.findViewById(
-							R.id.projectFormFragment_textField_projectRemarkName_field_separator)
-					.setVisibility(View.GONE);
-		}
+			mTextFieldProjectRemarkName.setVisibility(View.VISIBLE);
+			getView().findViewById(R.id.projectFormFragment_textField_projectRemarkName_field_separator).setVisibility(View.VISIBLE);
+		} 
 
 		mListFieldParentProject = (HyjListField) getView().findViewById(
 				R.id.projectFormFragment_listField_parentProject);
