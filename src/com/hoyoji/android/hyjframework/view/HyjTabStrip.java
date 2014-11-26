@@ -165,7 +165,7 @@ public class HyjTabStrip extends LinearLayout {
 			badgeView = new BadgeView(getContext());
 			badgeView.setHideOnNull(true);
 			badgeView.setBadgeCount(0);
-			badgeView.setMaxLines(1);
+//			badgeView.setMaxLines(1);
 			badgeView.setSingleLine();
 			badgeView.setEllipsize(TruncateAt.END);
 //			tab.removeView(badgeView);
