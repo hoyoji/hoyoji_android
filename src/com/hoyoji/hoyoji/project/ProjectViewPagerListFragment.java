@@ -1,34 +1,23 @@
 package com.hoyoji.hoyoji.project;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.PageTransformer;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip;
+import com.hoyoji.android.hyjframework.view.HyjViewPager;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
+import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
-import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
-public class ProjectViewPagerListFragment extends HyjUserFragment implements OnPageChangeListener {
+public class ProjectViewPagerListFragment extends HyjUserFragment {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -36,6 +25,12 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	public ViewPager mViewPager;
+
+	protected boolean isClosingActivity = false;
+
+	private HyjTabStrip mTabStrip;
+
+	private DisplayMetrics mDisplayMetrics;
 
 	
 	@Override
@@ -45,6 +40,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 	
 	@Override
 	public void onInitViewData() {
+		mDisplayMetrics = getResources().getDisplayMetrics();
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -54,20 +50,62 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(1);
-		mViewPager.setOnPageChangeListener(this);
-	}
-	
-	
-	@Override
-	public boolean handleBackPressed() {
-		boolean backPressedHandled = false; //super.handleBackPressed();
-		if(mViewPager.getCurrentItem() > 0){
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-			backPressedHandled = true;
+		mViewPager.setOffscreenPageLimit(3);
+		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
+			@Override
+			public void onOverScroll(float mOverscroll) {
+//				Log.i("mOverscroll", "" + mOverscroll);
+				if(mOverscroll / mDisplayMetrics.density < -150){
+					if(!isClosingActivity ){
+						isClosingActivity = true;
+						getActivity().finish();
+					}
+				}
+			}
+		});
+		
+		mTabStrip = (HyjTabStrip) getView().findViewById(R.id.projectViewPagerListFragment_tabstrip);
+		mTabStrip.initTabLine(mSectionsPagerAdapter.getCount());
+		for(int i = 0; i < mSectionsPagerAdapter.getCount(); i ++){
+			CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
+			mTabStrip.addTab(title.toString());
 		}
-		return backPressedHandled;
+		
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
+		{
+			@Override
+			public void onPageSelected(int position) {
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("账本"+mSectionsPagerAdapter.getPageTitle(position));
+				mTabStrip.setTabSelected(position);
+			}
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				mTabStrip.onPageScrolled(position, positionOffset, positionOffsetPixels);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
+		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
+			@Override
+			public void onTabSelected(int tag) {
+				mViewPager.setCurrentItem(tag);
+			}
+		});
 	}
+	
+	
+//	@Override
+//	public boolean handleBackPressed() {
+//		boolean backPressedHandled = false; //super.handleBackPressed();
+////		if(mViewPager.getCurrentItem() > 0){
+////			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+////			backPressedHandled = true;
+////		}
+//		return backPressedHandled;
+//	}
 	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -83,48 +121,36 @@ public class ProjectViewPagerListFragment extends HyjUserFragment implements OnP
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new ProjectEventListFragment();
-			case 1 :
 				return new ProjectMoneySearchListFragment();
+			case 1 :
+				return new ProjectEventListFragment();
 			case 2:
 				return new MemberListFragment();
+			case 3:
+				return new ProjectFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "账本活动";
+				return "流水";
 			case 1 :
-				return "账本流水";
+				return "活动";
 			case 2:
-				return "账本成员";
+				return "成员";
+			case 3:
+				return "资料";
 			}
 			return null;
 		}
 	}
 
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
-	}
 }

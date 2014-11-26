@@ -26,7 +26,11 @@
         android:background="#111"/> -->
     
     
-    <include layout="@layout/main_pager_tabstrip"/>
+    <com.hoyoji.android.hyjframework.view.HyjTabStrip 
+        android:id="@+id/main_tabstrip"       
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    />
 </FrameLayout>
 
 
