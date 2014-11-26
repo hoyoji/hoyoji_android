@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.money.moneycategory;
+package com.hoyoji.hoyoji.money.currency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.view.ViewPager.PageTransformer;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +24,16 @@ import android.view.animation.AnimationUtils;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip;
+import com.hoyoji.android.hyjframework.view.HyjViewPager;
+import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
+import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
-public class ExpenseIncomeCategoryViewPagerListFragment extends HyjUserFragment implements OnPageChangeListener {
+public class CurrencyExchangeViewPagerFragment extends HyjUserFragment {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -36,38 +41,76 @@ public class ExpenseIncomeCategoryViewPagerListFragment extends HyjUserFragment 
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	public ViewPager mViewPager;
+	protected boolean isClosingActivity = false;
+
+	protected DisplayMetrics mDisplayMetrics;
 
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.expense_income_categroy_listfragment_viewpager;
+		return R.layout.viewpager_tabstrip;
 	}
 	
 	@Override
 	public void onInitViewData() {
+		mDisplayMetrics = getResources().getDisplayMetrics();
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) getView().findViewById(R.id.ecpenseIncomeViewPagerListFragment_pager);
+		mViewPager = (ViewPager) getView().findViewById(R.id.viewpager);
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(1);
-		mViewPager.setOnPageChangeListener(this);
-	}
-	
-	
-	@Override
-	public boolean handleBackPressed() {
-		boolean backPressedHandled = false; //super.handleBackPressed();
-		if(mViewPager.getCurrentItem() > 0){
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-			backPressedHandled = true;
+		mViewPager.setOffscreenPageLimit(3);
+
+		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
+			@Override
+			public void onOverScroll(float mOverscroll) {
+//				Log.i("mOverscroll", "" + mOverscroll);
+				if(mOverscroll / mDisplayMetrics.density < -150){
+					if(!isClosingActivity  ){
+						isClosingActivity = true;
+						((HyjViewPager)mViewPager).setStopBounceBack(true);
+						getActivity().finish();
+					}
+				}
+			}
+		});
+		
+		final HyjTabStrip mTabStrip = (HyjTabStrip) getView().findViewById(R.id.tabstrip);
+		mTabStrip.initTabLine(mSectionsPagerAdapter.getCount());
+		for(int i = 0; i < mSectionsPagerAdapter.getCount(); i ++){
+			CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
+			mTabStrip.addTab(title.toString());
 		}
-		return backPressedHandled;
+		
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
+		{
+			@Override
+			public void onPageSelected(int position) {
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
+				mTabStrip.setTabSelected(position);
+			}
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				mTabStrip.onPageScrolled(position, positionOffset, positionOffsetPixels);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
+		mTabStrip.setOnTabSelectedListener(new OnTabSelectedListener(){
+			@Override
+			public void onTabSelected(int tag) {
+				mViewPager.setCurrentItem(tag);
+			}
+		});
 	}
+	
 	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -83,9 +126,9 @@ public class ExpenseIncomeCategoryViewPagerListFragment extends HyjUserFragment 
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneyExpenseCategoryListFragment();
+				return new CurrencyListFragment();
 			case 1:
-				return new MoneyIncomeCategoryListFragment();
+				return new ExchangeListFragment();
 			}
 			return null;
 		}
@@ -99,28 +142,11 @@ public class ExpenseIncomeCategoryViewPagerListFragment extends HyjUserFragment 
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "支出分类";
+				return "币种";
 			case 1:
-				return "收入分类";
+				return "汇率";
 			}
 			return null;
 		}
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-			((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
 	}
 }

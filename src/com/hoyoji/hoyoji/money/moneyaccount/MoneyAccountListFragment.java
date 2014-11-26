@@ -87,21 +87,22 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if(!getUserVisibleHint()){
-			return super.onContextItemSelected(item);
-		}
-		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
-		Bundle bundle = new Bundle();
-		bundle.putLong("MODEL_ID", info.id);
-		switch (item.getItemId()) {
-			case EDIT_MONEYACCOUNT_DETAILS:
-				openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
-				break;
-		}
-		return super.onContextItemSelected(item);
-	}
+	
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {
+//		if(!getUserVisibleHint()){
+//			return super.onContextItemSelected(item);
+//		}
+//		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+//		Bundle bundle = new Bundle();
+//		bundle.putLong("MODEL_ID", info.id);
+//		switch (item.getItemId()) {
+//			case EDIT_MONEYACCOUNT_DETAILS:
+//				openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
+//				break;
+//		}
+//		return super.onContextItemSelected(item);
+//	}
 
 //	@Override
 //	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -239,11 +240,12 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("moneyAccount_id", id);
+			bundle.putLong("MODEL_ID", id);
 			MoneyAccount moneyAccount = HyjModel.load(MoneyAccount.class, id);
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
-				openActivityWithFragment(MoneyAccountDebtDetailsListFragment.class, R.string.moneyAccountListFragment_title_moneyAccountDebt_transactions, bundle);
+				openActivityWithFragment(MoneyAccountDebtViewPagerFragment.class, R.string.moneyAccountListFragment_title_moneyAccountDebt_transactions, bundle);
 			} else {
-				openActivityWithFragment(MoneyAccountSearchListFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
+				openActivityWithFragment(MoneyAccountViewPagerFragment.class, R.string.moneyAccountListFragment_title_moneyAccount_transactions, bundle);
 			}
 		}
 		return true;

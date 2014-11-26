@@ -486,7 +486,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("friend_id", id);
-			openActivityWithFragment(FriendMoneySearchListFragment.class, R.string.friendListFragment_title_friend_transactions, bundle);
+			bundle.putLong("MODEL_ID", id);
+			openActivityWithFragment(FriendViewPagerFragment.class, R.string.friendListFragment_title_friend_transactions, bundle);
 			return true;
 		}
     }  

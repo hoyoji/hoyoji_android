@@ -203,12 +203,13 @@ public class ProjectMoneySearchListFragment extends HyjUserExpandableListFragmen
 //			bundle.putLong("MODEL_ID", mProject.get_mId());
 //			openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
 //			return true;
-		} else if (item.getItemId() == R.id.searchListFragment_action_edit) {
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", mProject.get_mId());
-			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
-			return true;
 		} 
+//		else if (item.getItemId() == R.id.searchListFragment_action_edit) {
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("MODEL_ID", mProject.get_mId());
+//			openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+//			return true;
+//		} 
 		// Handle your other action bar items...
 		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class,

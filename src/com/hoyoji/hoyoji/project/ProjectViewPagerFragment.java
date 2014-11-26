@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.money.report;
+package com.hoyoji.hoyoji.project;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,18 +7,23 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.project.MemberListFragment;
 
-public class MoneyReportFragment extends HyjUserFragment {
+public class ProjectViewPagerFragment extends HyjUserFragment {
 	
-	private SectionsPagerAdapter mSectionsPagerAdapter;
+	SectionsPagerAdapter mSectionsPagerAdapter;
+
+	/**
+	 * The {@link ViewPager} that will host the section contents.
+	 */
 	public ViewPager mViewPager;
 
 	protected boolean isClosingActivity = false;
@@ -26,6 +31,7 @@ public class MoneyReportFragment extends HyjUserFragment {
 	private HyjTabStrip mTabStrip;
 
 	private DisplayMetrics mDisplayMetrics;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -35,7 +41,8 @@ public class MoneyReportFragment extends HyjUserFragment {
 	@Override
 	public void onInitViewData() {
 		mDisplayMetrics = getResources().getDisplayMetrics();
-		// Create the adapter that will return a fragment for each of the sections in the viewpager.
+		// Create the adapter that will return a fragment for each of the three
+		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
@@ -44,7 +51,6 @@ public class MoneyReportFragment extends HyjUserFragment {
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
-
 		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
 			@Override
 			public void onOverScroll(float mOverscroll) {
@@ -70,7 +76,7 @@ public class MoneyReportFragment extends HyjUserFragment {
 		{
 			@Override
 			public void onPageSelected(int position) {
-				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("账本"+mSectionsPagerAdapter.getPageTitle(position));
 				mTabStrip.setTabSelected(position);
 			}
 
@@ -91,15 +97,16 @@ public class MoneyReportFragment extends HyjUserFragment {
 		});
 	}
 	
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-	    super.setUserVisibleHint(isVisibleToUser);
-	    
-	    if(mViewPager != null && mViewPager.getCurrentItem() >= 0 && mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()) != null){
-	    	mSectionsPagerAdapter.getItem(mViewPager.getCurrentItem()).setUserVisibleHint(isVisibleToUser);
-	    }
-	}
 	
+//	@Override
+//	public boolean handleBackPressed() {
+//		boolean backPressedHandled = false; //super.handleBackPressed();
+////		if(mViewPager.getCurrentItem() > 0){
+////			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+////			backPressedHandled = true;
+////		}
+//		return backPressedHandled;
+//	}
 	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -115,27 +122,36 @@ public class MoneyReportFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneyTransactionPersonalSummaryFragment();
-			case 1:
-				return new MoneyTransactionProjectSummaryFragment();
+				return new ProjectMoneySearchListFragment();
+			case 1 :
+				return new ProjectEventListFragment();
+			case 2:
+				return new MemberListFragment();
+			case 3:
+				return new ProjectFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 4;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return HyjApplication.getInstance().getString(R.string.moneyTransactionSummaryFragment_title_personal);
-			case 1:
-				return HyjApplication.getInstance().getString(R.string.moneyTransactionSummaryFragment_title_project);
+				return "流水";
+			case 1 :
+				return "活动";
+			case 2:
+				return "成员";
+			case 3:
+				return "资料";
 			}
 			return null;
 		}
 	}
+
 }

@@ -93,8 +93,8 @@ import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
-import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerListFragment;
-import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerListFragment;
+import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerFragment;
+import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragment;
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
@@ -712,7 +712,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //			break;
 		
 		case R.id.homeListFragment_action_currency:
-			openActivityWithFragment(CurrencyExchangeViewPagerListFragment.class,
+			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
 					R.string.currency_exchang_eviewpager_listFragment_title, null);
 			return true;
 		
@@ -733,7 +733,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
 //			break;
 		case R.id.homeListFragment_action_category:
-			openActivityWithFragment(ExpenseIncomeCategoryViewPagerListFragment.class,
+			openActivityWithFragment(ExpenseIncomeCategoryViewPagerFragment.class,
 					R.string.expense_income_viewpager_listFragment_title, null);
 			return true;
 

@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.money.moneyaccount;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +17,7 @@ import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 
-public class ProjectViewPagerListFragment extends HyjUserFragment {
+public class MoneyAccountViewPagerFragment extends HyjUserFragment {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -35,7 +35,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_listfragment_viewpager;
+		return R.layout.viewpager_tabstrip;
 	}
 	
 	@Override
@@ -46,7 +46,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) getView().findViewById(R.id.projectViewPagerListFragment_pager);
+		mViewPager = (ViewPager) getView().findViewById(R.id.viewpager);
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -65,7 +65,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 			}
 		});
 		
-		mTabStrip = (HyjTabStrip) getView().findViewById(R.id.projectViewPagerListFragment_tabstrip);
+		mTabStrip = (HyjTabStrip) getView().findViewById(R.id.tabstrip);
 		mTabStrip.initTabLine(mSectionsPagerAdapter.getCount());
 		for(int i = 0; i < mSectionsPagerAdapter.getCount(); i ++){
 			CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
@@ -76,7 +76,7 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		{
 			@Override
 			public void onPageSelected(int position) {
-				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("账本"+mSectionsPagerAdapter.getPageTitle(position));
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("账户"+mSectionsPagerAdapter.getPageTitle(position));
 				mTabStrip.setTabSelected(position);
 			}
 
@@ -97,17 +97,6 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		});
 	}
 	
-	
-//	@Override
-//	public boolean handleBackPressed() {
-//		boolean backPressedHandled = false; //super.handleBackPressed();
-////		if(mViewPager.getCurrentItem() > 0){
-////			mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-////			backPressedHandled = true;
-////		}
-//		return backPressedHandled;
-//	}
-	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -122,20 +111,16 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new ProjectMoneySearchListFragment();
+				return new MoneyAccountSearchListFragment();
 			case 1 :
-				return new ProjectEventListFragment();
-			case 2:
-				return new MemberListFragment();
-			case 3:
-				return new ProjectFormFragment();
+				return new MoneyAccountFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 2;
 		}
 
 		@Override
@@ -144,10 +129,6 @@ public class ProjectViewPagerListFragment extends HyjUserFragment {
 			case 0 :
 				return "流水";
 			case 1 :
-				return "活动";
-			case 2:
-				return "成员";
-			case 3:
 				return "资料";
 			}
 			return null;

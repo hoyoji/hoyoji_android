@@ -183,12 +183,13 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 		if (item.getItemId() == R.id.searchListFragment_action_search) {
 			openActivityWithFragmentForResult(MoneySearchFormFragment.class, R.string.searchDialogFragment_title, queryParams, GET_SEARCH_QUERY);
 			return true;
-		} else if (item.getItemId() == R.id.searchListFragment_action_edit) {
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", mMoneyAccount.get_mId());
-			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
-			return true;
-		}
+		} 
+//		else if (item.getItemId() == R.id.searchListFragment_action_edit) {
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("MODEL_ID", mMoneyAccount.get_mId());
+//			openActivityWithFragment(MoneyAccountFormFragment.class, R.string.moneyAccountFormFragment_title, bundle);
+//			return true;
+//		}
 		
 		// Handle your other action bar items...
 		if (item.getItemId() == R.id.mainActivity_action_money_addnew_expense) {
