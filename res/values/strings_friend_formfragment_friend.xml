@@ -17,6 +17,8 @@
    
    <string name="friendFormFragment_editText_hint_friendName">请输入好友名称</string>
    
+   <string name="friendFormFragment_editText_error_friendPhoneNumber">电话号码已经存在</string>
+   
    <string name="friendFormFragment_textView_nickName">备注名称</string>
    <string name="friendFormFragment_editText_hint_nickName">请输入好友备注名称</string>
    
