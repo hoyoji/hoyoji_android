@@ -43,6 +43,10 @@ public class Project extends HyjModel {
 	@Column(name = "autoApportion")
 	private Boolean mAutoApportion;
 
+	// 公开方式：Private, Public, Friend  
+	@Column(name = "openMode")
+	private String mOpenMode = "Private";
+	
 	@Column(name = "defaultIncomeCategory")
 	private String mDefaultIncomeCategory;
 

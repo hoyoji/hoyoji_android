@@ -493,7 +493,7 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		// 维护缴款人的 ProjectShareAuthorization
 		ProjectShareAuthorization psa = apportion.getProjectShareAuthorization();
 		HyjModelEditor<ProjectShareAuthorization> psaEditor = psa.newModelEditor();
-		psaEditor.getModelCopy().setActualTotalReturn(psa.getActualTotalReturn() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
+		psaEditor.getModelCopy().setActualTotalPayback(psa.getActualTotalPayback() - apportion.getAmount0()*mMoneyDepositReturnContainerEditor.getModel().getExchangeRate());
 		psaEditor.save();
 
 		List<MoneyReturn> moneyReturns = new Select().from(MoneyReturn.class).where("moneyDepositReturnApportionId=?", apportion.getId()).execute();
