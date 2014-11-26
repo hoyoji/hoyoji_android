@@ -230,6 +230,17 @@ public class Friend extends HyjModel {
 				modelEditor.removeValidationError("nickName");
 			}		
 		}
+		
+		if(this.getPhoneNumber() != null){
+			Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",this.getPhoneNumber()).executeSingle();
+	        if(importFiend == null){
+	        	modelEditor.removeValidationError("phoneNumber");
+	        } else {
+	        	modelEditor.setValidationError("phoneNumber", R.string.friendFormFragment_editText_error_friendPhoneNumber);
+	        }		
+		} else {
+			modelEditor.removeValidationError("phoneNumber");
+		}
 	}
 
 	@Override

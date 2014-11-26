@@ -10,9 +10,11 @@
     
     <string name="projectEventListFragment_hyjDateTimeField_hint_startDate">请输入活动开始时间</string>
     <string name="projectEventListFragment_hyjDateTimeField_startDate">活动开始时间</string>
+    <string name="projectEventListFragment_hyjDateTimeField_error_startDate">开始时间需在创建时间之后</string>
     
     <string name="projectEventListFragment_hyjDateTimeField_hint_endDate">请输入活动结束时间</string>
     <string name="projectEventListFragment_hyjDateTimeField_endDate">活动结束时间</string>
+    <string name="projectEventListFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
     
     <string name="projectEventListFragment_textView_projectName">账本</string>
     

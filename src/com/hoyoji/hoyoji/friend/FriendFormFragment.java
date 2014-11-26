@@ -249,6 +249,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_validation_error);
 		mSelectorFieldFriendCategory.setError(mFriendEditor.getValidationError("friendCategory"));
 		mTextFieldNickName.setError(mFriendEditor.getValidationError("nickName"));
+		mTextFieldPhoneNumber.setError(mFriendEditor.getValidationError("phoneNumber"));
 	}
 
 	 @Override

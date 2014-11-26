@@ -2,20 +2,12 @@ package com.hoyoji.hoyoji.friend;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -27,34 +19,22 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.SparseBooleanArray;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
-import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
-import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
-import com.hoyoji.android.hyjframework.view.HyjImageView;
-import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyTemplate;
-import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji_android.R;
 
 public class ImportFriendListFragment extends HyjUserListFragment implements OnQueryTextListener {
@@ -206,6 +186,13 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
+
+		int offset = arg1.getInt("OFFSET");
+		int limit = arg1.getInt("LIMIT");
+		if(limit == 0){
+			limit = getListPageSize();
+		}
+		super.onCreateLoader(arg0, arg1);
 		String searchText = arg1.getString("searchText");
 		String selection = null;
 		String[] selectionArgs = null;
@@ -216,7 +203,7 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		}
 		Object loader = new CursorLoader(getActivity(),
 				Phone.CONTENT_URI, null,
-				selection, selectionArgs, "DISPLAY_NAME ASC"
+				selection, selectionArgs, "DISPLAY_NAME LIMIT " + (limit + offset)
 			);
 		return (Loader<Object>)loader;
 	}
@@ -250,17 +237,19 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 			 return;
 		}
 		final Cursor jsonPhone = (Cursor) l.getAdapter().getItem(position);
-        
+        String display_name = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim();
     	String phoneNumber = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.NUMBER)).toString().trim();
 		Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
         if(importFiend == null){
             importFiend = new Friend();
+        	HyjUtil.displayToast("导入好友" + '"' + display_name + '"' + "成功");
+        } else {
+        	HyjUtil.displayToast("好友" + '"' + display_name + '"' + "已经导入成功");
         }
-		importFiend.setNickName(jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim());
-        importFiend.setPhoneNumber(phoneNumber);
-        importFiend.save();
+		importFiend.setNickName(display_name);
+	    importFiend.setPhoneNumber(phoneNumber);
+	    importFiend.save();
 		
-        HyjUtil.displayToast("导入成功");
 //			Bundle bundle = new Bundle();
 //			bundle.putString("INVITELINK_JSON_OBJECT", jsonInviteLink.toString());
 //			bundle.putInt("position", position);
@@ -321,50 +310,47 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-//	@Override
-//	public boolean setViewValue(View view, Object json, String name) {
-//		JSONObject jsonObject = (JSONObject)json;
-//		if (view.getId() == R.id.inviteFriendLinkListItem_state) {
-//			((TextView) view).setText(jsonObject.optString(name));
-//			return true;
-//		} else if (view.getId() == R.id.inviteFriendLinkListItem_date) {
-//			((HyjDateTimeView) view).setText(jsonObject.optString(name));
-//			return true;
-//		} else if (view.getId() == R.id.inviteFriendLinkListItem_type) {
-//			((TextView) view).setText(jsonObject.optString(name));
-//			return true;
-//		} else if (view.getId() == R.id.inviteFriendLinkListItem_description) {
-//			((TextView) view).setText(jsonObject.optString(name));
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 	
-//	@Override
-//	public void setFooterLoadFinished(ListView l, int count){
-//		int offset = l.getFooterViewsCount() + l.getHeaderViewsCount();
-//        super.setFooterLoadFinished(l, l.getAdapter().getCount() + count - offset);
-//	}
+	@Override
+	public Integer useMultiSelectMenuView() {
+		return R.menu.friend_listfragment_import_multi_select;
+	}
 	
-//	@Override
-//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		switch (requestCode) {
-//		case INVITELINK_CHANGESTATE:
-//			if (resultCode == Activity.RESULT_OK) {
-//				String state = data.getStringExtra("state");
-//				int position = data.getIntExtra("position", -1);
-//				JSONObject object = ((HyjJSONListAdapter) this.getListAdapter()).getItem(position);
-//				try {
-//					object.put("state", state);
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				((HyjJSONListAdapter) this.getListAdapter()).notifyDataSetChanged();
-//			}
-//			break;
-//		}
-//	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.importFriendListFragment_action_add){
+			importFriend();
+			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void importFriend() {
+		SparseBooleanArray sparseBooleanArray = this.getListView().getCheckedItemPositions();
+		if(sparseBooleanArray.size() == 0){
+			HyjUtil.displayToast("请选择至少一条消息");
+			return;
+		}
+		String importSuccessStr = "";
+		for (int i = 0; i < sparseBooleanArray.size(); ++i){
+			if(sparseBooleanArray.valueAt(i)==true){
+				Cursor jsonPhone = (Cursor) this.getListView().getAdapter().getItem(sparseBooleanArray.keyAt(i));
+				
+				String display_name = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim();
+		    	String phoneNumber = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.NUMBER)).toString().trim();
+				Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
+		        if(importFiend == null){
+		            importFiend = new Friend();
+		            importSuccessStr += "导入好友" + '"' + display_name + '"' + "成功\n";
+		        } else {
+		        	importSuccessStr += "好友" + '"' + display_name + '"' + "已经导入成功\n";
+		        }
+				importFiend.setNickName(display_name);
+			    importFiend.setPhoneNumber(phoneNumber);
+			    importFiend.save();
+			}
+		}
+		((HyjActivity) getActivity()).displayDialog("导入成功",importSuccessStr);
+	}
 }
