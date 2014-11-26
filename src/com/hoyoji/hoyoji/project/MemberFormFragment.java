@@ -374,7 +374,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 	private void fillData() {
 		ProjectShareAuthorization modelCopy = mProjectShareAuthorizationEditor.getModelCopy();
 		modelCopy.setSharePercentage(mNumericFieldSharePercentage.getNumber());
-		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fixed");
+		modelCopy.setSharePercentageType(mBooleanFieldSharePercentageType.getBoolean() ? "Average" : "Fix");
 		modelCopy.setShareAllSubProjects(mCheckBoxShareAllSubProjects.isChecked());
 		
 		if(mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) != null && (Boolean)mSelectorFieldFriend.getTag(TAG_MEMBER_IS_LOCAL_FRIEND) == false){
@@ -705,7 +705,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 //			double fixedPercentageTotal = 0.0;
 //			int numOfAverage = 0;
 //			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-//				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
+//				if(psa.getSharePercentageType().equalsIgnoreCase("Fix")){
 //					fixedPercentageTotal += psa.getSharePercentage();
 //				} else {
 //					numOfAverage++;
@@ -752,7 +752,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 			Double fixedPercentageTotal = 0.0;
 			int numOfAverage = 0;
 			for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
-				if(psa.getSharePercentageType().equalsIgnoreCase("Fixed")){
+				if(psa.getSharePercentageType().equalsIgnoreCase("Fix")){
 					fixedPercentageTotal += psa.getSharePercentage();
 				} else {
 					numOfAverage ++;

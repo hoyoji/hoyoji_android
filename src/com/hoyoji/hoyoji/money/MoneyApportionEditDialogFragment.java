@@ -50,20 +50,20 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 //        final HyjSpinnerField spinnerFieldApportionType = (HyjSpinnerField)v.findViewById(R.id.moneyApportionDialogFragment_spinnerField_type);
 //        mSpinnerFieldApportionType = spinnerFieldApportionType;
 //        if(isProjectMember){
-//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Fixed", "Share"});
+//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array, new String[] {"Average", "Fix", "Share"});
 //        } else {
-//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member, new String[] {"Average", "Fixed"});
+//        	spinnerFieldApportionType.setItems(R.array.moneyApportionDialogFragment_spinnerField_apportionType_array_non_project_member, new String[] {"Average", "Fix"});
 //        }
 //        spinnerFieldApportionType.setSelectedValue(apportionType);
 //        
 
-        numericFieldApportionAmount.setEnabled("Fixed".equals(apportionType));
+        numericFieldApportionAmount.setEnabled("Fix".equals(apportionType));
 		
       final RadioGroup radioGroupApportionType = (RadioGroup)v.findViewById(R.id.moneyApportionDialogFragment_radio_type);
       mRadioGroupApportionType = radioGroupApportionType;
       if("Average".equals(apportionType)){
     	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_average);
-      } else if("Fixed".equals(apportionType)){
+      } else if("Fix".equals(apportionType)){
     	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_fixed);
       }      if("Share".equals(apportionType)){
     	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_share);
@@ -148,7 +148,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 			case R.id.moneyApportionDialogFragment_radio_type_average :
 				return "Average";
 			case R.id.moneyApportionDialogFragment_radio_type_fixed :
-				return "Fixed";
+				return "Fix";
 			case R.id.moneyApportionDialogFragment_radio_type_share :
 				return "Share";
 		}
