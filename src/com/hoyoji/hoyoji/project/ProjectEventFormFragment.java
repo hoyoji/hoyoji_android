@@ -66,6 +66,7 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 		mEventEditor = event.newModelEditor();
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_date);
+		mDateTimeFieldDate.setEnabled(false);
 		
 
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_name);

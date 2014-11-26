@@ -320,7 +320,18 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.importFriendListFragment_action_add){
 			importFriend();
-			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+			this.exitMultiChoiceMode(getListView());
+			this.mSearchView.post(new Runnable(){
+
+				@Override
+				public void run() {		
+					InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
+				}
+				
+			});
+
+	        
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -332,7 +343,6 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 			HyjUtil.displayToast("请选择至少一条消息");
 			return;
 		}
-		String importSuccessStr = "";
 		for (int i = 0; i < sparseBooleanArray.size(); ++i){
 			if(sparseBooleanArray.valueAt(i)==true){
 				Cursor jsonPhone = (Cursor) this.getListView().getAdapter().getItem(sparseBooleanArray.keyAt(i));
@@ -342,15 +352,15 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 				Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
 		        if(importFiend == null){
 		            importFiend = new Friend();
-		            importSuccessStr += "导入好友" + '"' + display_name + '"' + "成功\n";
+		            
+		            HyjUtil.displayToast("导入好友" + '"' + display_name + '"' + "成功");
 		        } else {
-		        	importSuccessStr += "好友" + '"' + display_name + '"' + "已经导入成功\n";
+		        	HyjUtil.displayToast("好友" + '"' + display_name + '"' + "已经导入成功");
 		        }
 				importFiend.setNickName(display_name);
 			    importFiend.setPhoneNumber(phoneNumber);
 			    importFiend.save();
 			}
 		}
-		((HyjActivity) getActivity()).displayDialog("导入成功",importSuccessStr);
 	}
 }
