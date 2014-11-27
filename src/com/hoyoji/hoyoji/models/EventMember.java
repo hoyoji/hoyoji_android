@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -24,6 +25,9 @@ public class EventMember extends HyjModel {
 
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
+	
+	@Column(name = "friendUserName")
+	private String mFriendUserName;
 	
 	@Column(name = "state")
 	private String mState;
@@ -79,6 +83,13 @@ public class EventMember extends HyjModel {
 		this.mEventId = mEventId;
 	}
 	
+	public Event getEvent(){
+		if(mEventId == null){
+			return null;
+		}
+		return getModel(Event.class, mEventId);
+	}
+	
 	public String getLocalFriendId() {
 		return mLocalFriendId;
 	}
@@ -93,6 +104,34 @@ public class EventMember extends HyjModel {
 
 	public void setFriendUserId(String mFriendUserId) {
 		this.mFriendUserId = mFriendUserId;
+	}
+	
+	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+
+	public void setFriendUserName(String mFriendUserName) {
+		this.mFriendUserName = mFriendUserName;
+	}
+	
+	public String getFriendDisplayName(){
+		if(mFriendUserId != null){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, mFriendUserId);
+				if(user != null){
+					return user.getDisplayName();
+				}
+			}
+		} else if(mLocalFriendId != null){
+			Friend friend = Friend.getModel(Friend.class, mLocalFriendId);
+			if(friend != null){
+				return friend.getDisplayName();
+			}
+		}
+		return this.getFriendUserName();
 	}
 	
 	public String getState() {

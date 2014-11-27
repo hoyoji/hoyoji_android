@@ -80,13 +80,13 @@ public class Event extends HyjModel {
 			modelEditor.removeValidationError("endDate");
 		}
 		
-		if(this.getStartDate().compareTo(this.getDate()) >= 0) {
+		if(this.getDate().compareTo(this.getStartDate()) < 0) {
 			modelEditor.removeValidationError("startDate");
 		} else {
 			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_error_startDate);
 		}
 		
-		if(this.getStartDate().compareTo(this.getEndDate())<0) {
+		if(this.getStartDate().compareTo(this.getEndDate()) < 0) {
 			modelEditor.removeValidationError("endDate");
 		} else {
 			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);

@@ -2,6 +2,8 @@
 <resources>
     <string name="projectEventListFragment_action_addnew">新增账本活动</string>
     
+    <string name="projectEventListFragment_action_edit">修改账本活动</string>
+    
     <string name="projectEventListFragment_editText_hint_name">请输入账本活动名称</string>
     <string name="projectEventListFragment_textView_name">账本活动名称</string>
     

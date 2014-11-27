@@ -14,7 +14,7 @@
 	    android:layout_height="wrap_content" 
 	    hoyoji:queryHint="请输入名称或电话号码"
         hoyoji:iconifiedByDefault="false">
-        <requestFocus />
+
 	</android.support.v7.widget.SearchView>
 
     <com.hoyoji.android.hyjframework.view.HyjListView android:id="@id/android:list"

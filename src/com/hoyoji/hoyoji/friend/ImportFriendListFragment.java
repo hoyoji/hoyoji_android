@@ -79,7 +79,7 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		mSearchView = (SearchView) getView().findViewById(R.id.linkListFragment_inviteLink_searchView);
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setSubmitButtonEnabled(true);
-		
+		mSearchView.requestFocus();
 		ImageView searchImage = (ImageView) mSearchView.findViewById(R.id.search_go_btn);
 		if(searchImage != null){
 			searchImage.setImageResource(R.drawable.ic_action_search);
@@ -240,11 +240,11 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
         String display_name = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.DISPLAY_NAME)).toString().trim();
     	String phoneNumber = jsonPhone.getString(jsonPhone.getColumnIndex(Phone.NUMBER)).toString().trim();
 		Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
-        if(importFiend == null){
+		if(importFiend == null){
             importFiend = new Friend();
-        	HyjUtil.displayToast("导入好友" + '"' + display_name + '"' + "成功");
+            HyjUtil.displayToast("导入好友   " + display_name + " 成功");
         } else {
-        	HyjUtil.displayToast("好友" + '"' + display_name + '"' + "已经导入成功");
+        	HyjUtil.displayToast(display_name + "已经导入成功,不能重复导入");
         }
 		importFiend.setNickName(display_name);
 	    importFiend.setPhoneNumber(phoneNumber);
@@ -319,8 +319,11 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.importFriendListFragment_action_add){
+			mSearchView.clearFocus();
 			importFriend();
-			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+			this.exitMultiChoiceMode(getListView());
+			
+	        
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -332,7 +335,6 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 			HyjUtil.displayToast("请选择至少一条消息");
 			return;
 		}
-		String importSuccessStr = "";
 		for (int i = 0; i < sparseBooleanArray.size(); ++i){
 			if(sparseBooleanArray.valueAt(i)==true){
 				Cursor jsonPhone = (Cursor) this.getListView().getAdapter().getItem(sparseBooleanArray.keyAt(i));
@@ -342,15 +344,15 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 				Friend importFiend = new Select().from(Friend.class).where("phoneNumber=?",phoneNumber).executeSingle();
 		        if(importFiend == null){
 		            importFiend = new Friend();
-		            importSuccessStr += "导入好友" + '"' + display_name + '"' + "成功\n";
+		            
+		            HyjUtil.displayToast("导入好友   " + display_name + " 成功");
 		        } else {
-		        	importSuccessStr += "好友" + '"' + display_name + '"' + "已经导入成功\n";
+		        	HyjUtil.displayToast(display_name + "已经导入成功,不能重复导入");
 		        }
 				importFiend.setNickName(display_name);
 			    importFiend.setPhoneNumber(phoneNumber);
 			    importFiend.save();
 			}
 		}
-		((HyjActivity) getActivity()).displayDialog("导入成功",importSuccessStr);
 	}
 }

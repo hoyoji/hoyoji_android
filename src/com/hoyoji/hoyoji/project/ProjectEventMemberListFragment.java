@@ -1,7 +1,5 @@
 package com.hoyoji.hoyoji.project;
 
-import java.util.Date;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,17 +15,16 @@ import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
-import com.hoyoji.hoyoji.models.Project;
 
-public class ProjectEventListFragment extends HyjUserListFragment {
+public class ProjectEventMemberListFragment extends HyjUserListFragment {
 
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_listfragment_event;
+		return R.layout.project_listfragment_event_member;
 	}
 	
 	@Override
@@ -37,7 +34,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 	
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.project_listfragment_event;
+		return R.menu.project_listfragment_event_member;
 	}
 
 	@Override
@@ -45,8 +42,8 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"date", "name", "description", "startDate"},
-				new int[] {R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle},
+				new String[] {"friendUserId", "state", "eventId"},
+				new int[] {R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_remark},
 				0); 
 	}	
 
@@ -65,13 +62,13 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		}
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Project project =  Model.load(Project.class, modelId);
+		Event event =  Model.load(Event.class, modelId);
 		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Event.class, null),
+				ContentProvider.createUri(EventMember.class, null),
 				null,
-				"projectId=?", 
-				new String[]{project.getId()}, 
-				"date LIMIT " + (limit + offset) 
+				"eventId=?", 
+				new String[]{event.getId()}, 
+				"state LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
 	}
@@ -93,36 +90,19 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		Bundle bundle = new Bundle();
 		bundle.putLong("MODEL_ID", id);
 		
-		openActivityWithFragment(ProjectEventMemberListFragment.class, R.string.projectEventMemberListFragment_title, bundle);
+		openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
     }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		String date = cursor.getString(cursor.getColumnIndex("date"));
-		String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
-		String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
-		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
-			return true;
-		}else if(view.getId() == R.id.homeListItem_title){
+		if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_remark){
-			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
-				((TextView)view).setText("无备注");
-			} else {
-				((TextView)view).setText(cursor.getString(columnIndex));
-			}
+			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			String dt = HyjUtil.formatDateToIOS(new Date());
-			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
-				((TextView)view).setText("[报名中]");
-			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
-				((TextView)view).setText("[进行中]");
-			} else if(dt.compareTo(endDate)>=0) {
-				((TextView)view).setText("[已结束]");
-			}
+			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		} else {
 			return false;
@@ -135,10 +115,15 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		if(item.getItemId() == R.id.projectEventListFragment_action_add){
+		if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
 			Bundle bundle = new Bundle();
-			bundle.putLong("PROJECT_ID", modelId);
-			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+			bundle.putLong("EVENT_ID", modelId);
+			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+			return true;
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_edit){
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", modelId);
+			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
 			return true;
 		} else if(item.getItemId() == R.id.multi_select_menu_delete){
 			deleteSelectedMessages();
