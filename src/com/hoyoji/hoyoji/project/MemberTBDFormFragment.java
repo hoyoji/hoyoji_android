@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -216,6 +218,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		if(!projectShareAuthorization.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			HyjUtil.displayToast("只有账本拥有人才能进行拆分");
 			return;
 		}
 		if(mApportionFieldApportions.getAdapter().getCount() == 0){
@@ -228,24 +231,62 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 				R.string.memberTBDFormFragment_title_split,
 				R.string.memberTBDFormFragment_progress_splitting);
 	
-		ActiveAndroid.beginTransaction();
-		try {
+//		ActiveAndroid.beginTransaction();
+//		try {
+//			
+//			doSplitExpenseContainers();
+//			doSplitIncomeContainers();
+//			doSplitDepositIncomeContainers();
+//			doSplitDepositReturnContainers();
+//
+//			
+//			ActiveAndroid.setTransactionSuccessful();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		ActiveAndroid.endTransaction();
+		
+		
+		JSONArray jsonArray = new JSONArray();
+		for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
+			ApportionItem<MoneyApportion> api = mApportionFieldApportions.getAdapter().getItem(i);
+			MoneyApportion apiApportion = api.getApportion();
 			
-			doSplitExpenseContainers();
-			doSplitIncomeContainers();
-			doSplitDepositIncomeContainers();
-			doSplitDepositReturnContainers();
+			try {
 
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("apportionType", api.getApportionType());
+				jsonObject.put("friendUserId", apiApportion.getFriendUserId());
+				jsonObject.put("localFriendId", apiApportion.getLocalFriendId());
+				jsonArray.put(jsonObject);
+
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						((HyjActivity) MemberTBDFormFragment.this.getActivity()).dismissProgressDialog();
+						HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						displayError(object);
+					}
+				};
+
+				JSONObject data = new JSONObject();
+				data.put("projectId", projectShareAuthorization.getProjectId());
+				data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
+				data.put("apportions", jsonArray);
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
+				
+			} catch (JSONException e) {
+				HyjUtil.displayToast(e.getMessage());
+			}
 			
-			ActiveAndroid.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		ActiveAndroid.endTransaction();
 		
 		
-		((HyjActivity) MemberTBDFormFragment.this.getActivity()).dismissProgressDialog();
-		HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
 	}	
 	 
 	 private void doSplitDepositReturnContainers() {

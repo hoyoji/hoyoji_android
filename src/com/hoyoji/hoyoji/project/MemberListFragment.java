@@ -402,7 +402,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Project project = Project.load(Project.class, modelId);
-		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.memberListFragment_action_member_add) != null){
 			getOptionsMenu().findItem(R.id.memberListFragment_action_member_add).setVisible(false);
 		}
 	}
