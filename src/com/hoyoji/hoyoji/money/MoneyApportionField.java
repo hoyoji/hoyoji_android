@@ -41,6 +41,7 @@ public class MoneyApportionField extends GridView {
 	private Set<ApportionItem<MoneyApportion>> mHiddenApportionItems = new HashSet<ApportionItem<MoneyApportion>>();
 	private double mTotalAmount = 0.0;
 	private String mMoneyTransactionId = null;
+	private boolean mIsHideMoney = false;
 	
 	public MoneyApportionField(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -452,6 +453,10 @@ public class MoneyApportionField extends GridView {
 				vh.textViewApportionType = (TextView) iv.findViewById(R.id.moneyApportionListItem_apportionType);
 				iv.setTag(vh);
 					
+				if(self.mIsHideMoney){
+					vh.textViewAmount.setVisibility(View.GONE);
+				}
+				
 //				float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, self.r.getDisplayMetrics());
 //				iv.setLayoutParams(new LayoutParams((int)px, (int)px));
 				iv.setOnClickListener(new OnClickListener(){
@@ -497,7 +502,7 @@ public class MoneyApportionField extends GridView {
 								}
 							};
 							
-							activity.mDialogFragment = MoneyApportionEditDialogFragment.newInstance(apportionItem.getAmount(), apportionItem.getApportionType(), apportionItem.getProjectShareAuthorization() != null);
+							activity.mDialogFragment = MoneyApportionEditDialogFragment.newInstance(apportionItem.getAmount(), apportionItem.getApportionType(), apportionItem.getProjectShareAuthorization() != null, self.mIsHideMoney);
 							activity.mDialogFragment.show(activity.getSupportFragmentManager(), "dialog");
 						}
 					}
@@ -709,6 +714,10 @@ public class MoneyApportionField extends GridView {
 			return mProjectId;
 		}
 		
+	}
+
+	public void setHideMoney(boolean b) {
+		mIsHideMoney  = b;
 	}
 
 	
