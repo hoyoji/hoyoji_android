@@ -23,12 +23,13 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
 //	private HyjSpinnerField mSpinnerFieldApportionType;
 	private RadioGroup mRadioGroupApportionType;
 	
-	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType, boolean isProjectMember) {
+	static MoneyApportionEditDialogFragment newInstance(Double apportionAmount, String apportionType, boolean isProjectMember, boolean isHideMoney) {
     	MoneyApportionEditDialogFragment f = new MoneyApportionEditDialogFragment();
         Bundle args = new Bundle();
         args.putDouble("apportionAmount", apportionAmount);
         args.putString("apportionType", apportionType);
 	    args.putBoolean("isProjectMember", isProjectMember);
+	    args.putBoolean("isHideMoney", isHideMoney);
         f.setArguments(args);
         return f;
     }
@@ -37,6 +38,7 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       	final String apportionType = getArguments().getString("apportionType");
     	Double apportionAmount = getArguments().getDouble("apportionAmount");
+    	Boolean isHideMoney = getArguments().getBoolean("isHideMoney");
 //    	boolean isProjectMember = getArguments().getBoolean("isProjectMember");
     	
         // Inflate layout for the view
@@ -67,6 +69,11 @@ public class MoneyApportionEditDialogFragment extends DialogFragment {
     	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_fixed);
       }      if("Share".equals(apportionType)){
     	  mRadioGroupApportionType.check(R.id.moneyApportionDialogFragment_radio_type_share);
+      }
+
+      if(isHideMoney){
+      	numericFieldApportionAmount.setVisibility(View.GONE);
+      	mRadioGroupApportionType.findViewById(R.id.moneyApportionDialogFragment_radio_type_fixed).setVisibility(View.GONE);
       }
       
 //        spinnerFieldApportionType.setOnItemSelectedListener(new OnItemSelectedListener(){

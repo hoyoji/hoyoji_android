@@ -91,6 +91,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 		mTextFieldProjectName.setEnabled(false);
 		
 		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.memberTBDFormFragment_apportionField);
+		mApportionFieldApportions.setHideMoney(true);
 		getView().findViewById(R.id.memberTBDFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -119,15 +120,15 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 							public boolean onMenuItemClick(MenuItem item) {
 								if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_clear) {
 									mApportionFieldApportions.clearAll();
-									mApportionFieldApportions.setTotalAmount(0.0);
+//									mApportionFieldApportions.setTotalAmount(0.0);
 									return true;
 								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_average) {
 									mApportionFieldApportions.setAllApportionAverage();
-									mApportionFieldApportions.setTotalAmount(0.0);
+//									mApportionFieldApportions.setTotalAmount(0.0);
 									return true;
 								} else if (item.getItemId() == R.id.moneyApportionField_menu_moreActions_all_share) {
 									mApportionFieldApportions.setAllApportionShare();
-									mApportionFieldApportions.setTotalAmount(0.0);
+//									mApportionFieldApportions.setTotalAmount(0.0);
 									return true;
 								}
 								return false;
@@ -168,7 +169,9 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 	private void addAllProjectMemberIntoApportionsField(Project project) {
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete")){
+			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+					(projectShareAuthorizations.get(i).getFriend() != null &&
+							projectShareAuthorizations.get(i).getFriend().getToBeDetermined())){
 				continue;
 			}
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
@@ -181,7 +184,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 				apportion.setApportionType("Share");
 			}
 			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
-			mApportionFieldApportions.setTotalAmount(0.0);
+//			mApportionFieldApportions.setTotalAmount(0.0);
 		}
 	}
 	
@@ -506,7 +509,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 			apportion.setApportionType("Share");
 		}
 		if (mApportionFieldApportions.addApportion(apportion,projectShareAuthorization.getProjectId(), ApportionItem.NEW)) {
-			mApportionFieldApportions.setTotalAmount(0.0);
+//			mApportionFieldApportions.setTotalAmount(0.0);
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
 		}

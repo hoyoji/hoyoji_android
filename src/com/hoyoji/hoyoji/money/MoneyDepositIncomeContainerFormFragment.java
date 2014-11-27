@@ -446,7 +446,9 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete")){
+			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+					(projectShareAuthorizations.get(i).getFriend() != null &&
+					projectShareAuthorizations.get(i).getFriend().getToBeDetermined())){
 				continue;
 			}
 			MoneyDepositIncomeApportion apportion = new MoneyDepositIncomeApportion();

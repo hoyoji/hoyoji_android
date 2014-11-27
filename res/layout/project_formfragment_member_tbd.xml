@@ -39,7 +39,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/line_divider"
+            android:background="@drawable/button_rectangle"     
             android:text="查看拆分账务" />
         
        <!--  <CheckBox
