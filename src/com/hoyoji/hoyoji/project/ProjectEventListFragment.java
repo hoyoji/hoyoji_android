@@ -97,7 +97,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		Bundle bundle = new Bundle();
 		bundle.putLong("MODEL_ID", id);
 		
-		openActivityWithFragment(ProjectEventMemberListFragment.class, R.string.projectEventMemberListFragment_title, bundle);
+		openActivityWithFragment(ProjectEventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
     }
 	
 	@Override
