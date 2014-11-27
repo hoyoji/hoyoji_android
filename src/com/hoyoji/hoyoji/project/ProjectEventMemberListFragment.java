@@ -8,17 +8,25 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
+import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.User;
 
 public class ProjectEventMemberListFragment extends HyjUserListFragment {
 
@@ -42,8 +50,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "state", "eventId"},
-				new int[] {R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_remark},
+				new String[] {"friendUserId", "friendUserId", "state"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle},
 				0); 
 	}	
 
@@ -90,19 +98,43 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		Bundle bundle = new Bundle();
 		bundle.putLong("MODEL_ID", id);
 		
-		openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
+		openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
     }
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(cursor.getString(columnIndex));
+		if(view.getId() == R.id.homeListItem_picture){
+			String userId = cursor.getString(columnIndex);
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setDefaultImage(R.drawable.ic_action_person_white);
+			if(cursor.getString(columnIndex) != null){
+				User user = HyjModel.getModel(User.class, userId);
+				if(user != null){
+					imageView.setImage(user.getPictureId());
+				} else {
+					imageView.setImage((Picture)null);
+				}
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(userId)){
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				} else {
+					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
+				}
+			} else {
+				imageView.setImage((Picture)null);
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			}
 			return true;
-		}else if(view.getId() == R.id.homeListItem_remark){
-			((TextView)view).setText(cursor.getString(columnIndex));
+		}else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(cursor.getString(columnIndex));
+			if("signUp".equals(cursor.getString(columnIndex))){
+				((TextView)view).setText("已报名");
+			} else if("signIn".equals(cursor.getString(columnIndex))){
+				((TextView)view).setText("已签到");
+			} else{
+				((TextView)view).setText("未报名");
+			}
 			return true;
 		} else {
 			return false;
@@ -118,14 +150,16 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("EVENT_ID", modelId);
-			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_edit){
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", modelId);
-			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
-			return true;
-		} else if(item.getItemId() == R.id.multi_select_menu_delete){
+		} 
+//		else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_edit){
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("MODEL_ID", modelId);
+//			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
+//			return true;
+//		} 
+		else if(item.getItemId() == R.id.multi_select_menu_delete){
 			deleteSelectedMessages();
 			this.exitMultiChoiceMode(getListView());
 			return true;

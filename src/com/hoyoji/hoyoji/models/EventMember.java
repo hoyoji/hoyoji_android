@@ -10,6 +10,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "EventMember", id = BaseColumns._ID)
 public class EventMember extends HyjModel {
@@ -56,7 +57,11 @@ public class EventMember extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-		
+		if(this.getFriendUserId() == null && this.getLocalFriendId() == null){
+			modelEditor.setValidationError("friendUser", R.string.projectEventMemberFormFragment_selectorField_hint_friend);
+		} else {
+			modelEditor.removeValidationError("friendUser");
+		}
 	}
 
 	public String getId() {
@@ -112,6 +117,15 @@ public class EventMember extends HyjModel {
 
 	public void setFriendUserName(String mFriendUserName) {
 		this.mFriendUserName = mFriendUserName;
+	}
+	
+	public Friend getFriend(){
+		if(mFriendUserId != null){
+			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+		} else if(mLocalFriendId != null){
+			return Friend.getModel(Friend.class, mLocalFriendId);
+		}
+		return null;
 	}
 	
 	public String getFriendDisplayName(){
