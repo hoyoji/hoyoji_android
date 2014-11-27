@@ -1022,7 +1022,7 @@ public class MoneyExpenseContainer extends HyjModel{
 									moneyExpense.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
 									moneyExpense.setOwnerFriendId(null);
 								} else {
-									moneyExpense.setOwnerUserId("");  // 设为"",使他不会自动使用当前的用户id
+									moneyExpense.setOwnerUserId("");  // 设为"",使他在保存时不会自动使用当前的用户id
 									moneyExpense.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
 								}
 								moneyExpense.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());

@@ -54,7 +54,7 @@ import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 
 
-public class MemberTBDFormFragment extends HyjUserFormFragment {
+public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 
 	protected static final int GET_APPORTION_MEMBER_ID = 0;
 	private static final int ADD_AS_PROJECT_MEMBER = 1;
@@ -226,7 +226,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 			return;
 		}
 
-		((HyjActivity) MemberTBDFormFragment.this.getActivity())
+		((HyjActivity) MemberSplitTBDFormFragment.this.getActivity())
 		.displayProgressDialog(
 				R.string.memberTBDFormFragment_title_split,
 				R.string.memberTBDFormFragment_progress_splitting);
@@ -256,6 +256,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("apportionType", api.getApportionType());
+				jsonObject.put("sharePercentage", api.getSharePercentage());
 				jsonObject.put("friendUserId", apiApportion.getFriendUserId());
 				jsonObject.put("localFriendId", apiApportion.getLocalFriendId());
 				jsonArray.put(jsonObject);
@@ -263,7 +264,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
-						((HyjActivity) MemberTBDFormFragment.this.getActivity()).dismissProgressDialog();
+						((HyjActivity) MemberSplitTBDFormFragment.this.getActivity()).dismissProgressDialog();
 						HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
 					}
 
