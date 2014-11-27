@@ -587,6 +587,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+							(projectShareAuthorizations.get(i).getFriend() != null &&
+							projectShareAuthorizations.get(i).getFriend().getToBeDetermined())){
+						continue;
+					}
+					
 					MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 					apportion.setAmount(0.0);
 					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());

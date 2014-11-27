@@ -275,6 +275,7 @@ public class MemberTBDFormFragment extends HyjUserFormFragment {
 
 				JSONObject data = new JSONObject();
 				data.put("projectId", projectShareAuthorization.getProjectId());
+				data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
 				data.put("apportions", jsonArray);
 				
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");

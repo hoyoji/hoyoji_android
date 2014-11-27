@@ -608,6 +608,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			if(moneyExpenseContainer.getProject() != null && moneyExpenseContainer.getProject().getAutoApportion() && !moneyExpenseContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+							(projectShareAuthorizations.get(i).getFriend() != null &&
+							projectShareAuthorizations.get(i).getFriend().getToBeDetermined())){
+						continue;
+					}
 					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 					apportion.setAmount(0.0);
 					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
