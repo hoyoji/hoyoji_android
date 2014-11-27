@@ -154,7 +154,6 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		} else {
 			return true;
 		}
-	   
 	}
 	
 
