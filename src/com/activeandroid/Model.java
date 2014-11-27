@@ -84,7 +84,6 @@ public abstract class Model {
 						null);
 	}
 
-
 	public void setSyncFromServer(boolean b) {
 		mSyncFromServer = b;
 	}

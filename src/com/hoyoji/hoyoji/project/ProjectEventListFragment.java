@@ -10,11 +10,15 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
@@ -45,8 +49,8 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"date", "name", "description", "startDate"},
-				new int[] {R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle},
+				new String[] {"_id", "id", "date", "name", "description", "startDate"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle},
 				0); 
 	}	
 
@@ -98,10 +102,30 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		String date = cursor.getString(cursor.getColumnIndex("date"));
-		String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
-		String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
-		if(view.getId() == R.id.homeListItem_date){
+		if(view.getId() == R.id.homeListItem_picture){
+			ImageView imageView= (ImageView)view;
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
+//			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
+//			} else {
+				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+//			}
+			
+//			if(view.getTag() == null){
+//				view.setOnClickListener(new OnClickListener(){
+//					@Override
+//					public void onClick(View v) {
+//						Bundle bundle = new Bundle();
+//						bundle.putLong("MODEL_ID", (Long) v.getTag());
+//						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+//					}
+//				});
+//			}
+//			view.setTag(cursor.getLong(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
@@ -115,6 +139,9 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
 			String dt = HyjUtil.formatDateToIOS(new Date());
 			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
 				((TextView)view).setText("[报名中]");
@@ -125,7 +152,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			}
 			return true;
 		} else {
-			return false;
+			return true;
 		}
 	   
 	}
