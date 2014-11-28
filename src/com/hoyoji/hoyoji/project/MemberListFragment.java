@@ -473,7 +473,13 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_remark) {
 			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
 			if(friendUserId == null){
-				((TextView)view).setText("");
+				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
+				Friend friend = Friend.getModel(Friend.class, localFriendId);
+				if(friend != null && friend.getToBeDetermined()){
+					((TextView)view).setText("可进行账务拆分");
+				} else {
+					((TextView)view).setText("");
+				}
 			} else {
 				String state = cursor.getString(columnIndex);
 				if(state.equalsIgnoreCase("Wait")){
