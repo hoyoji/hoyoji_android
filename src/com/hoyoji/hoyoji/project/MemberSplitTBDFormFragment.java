@@ -260,32 +260,35 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 				jsonObject.put("friendUserId", apiApportion.getFriendUserId());
 				jsonObject.put("localFriendId", apiApportion.getLocalFriendId());
 				jsonArray.put(jsonObject);
-
-				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-					@Override
-					public void finishCallback(Object object) {
-						((HyjActivity) MemberSplitTBDFormFragment.this.getActivity()).dismissProgressDialog();
-						HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
-					}
-
-					@Override
-					public void errorCallback(Object object) {
-						displayError(object);
-					}
-				};
-
-				JSONObject data = new JSONObject();
-				data.put("projectId", projectShareAuthorization.getProjectId());
-				data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
-				data.put("apportions", jsonArray);
-				
-				HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
 				
 			} catch (JSONException e) {
 				HyjUtil.displayToast(e.getMessage());
 			}
-			
 		}
+
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				((HyjActivity) MemberSplitTBDFormFragment.this.getActivity()).dismissProgressDialog();
+				HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+
+		JSONObject data = new JSONObject();
+		try {
+			data.put("projectId", projectShareAuthorization.getProjectId());
+			data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
+			data.put("apportions", jsonArray);
+		} catch (JSONException e) {
+			HyjUtil.displayToast(e.getMessage());
+		}
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
 		
 		
 	}	
