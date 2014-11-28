@@ -124,7 +124,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 				inviteFriendObject.put("title", "邀请加入账本");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
-				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
+				inviteFriendObject.put("description", sendInviteDetail.getText());
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
