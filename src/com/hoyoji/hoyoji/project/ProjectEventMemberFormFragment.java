@@ -2,6 +2,11 @@ package com.hoyoji.hoyoji.project;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,12 +17,15 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
@@ -26,7 +34,6 @@ import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
@@ -37,14 +44,10 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	private List<EventMember> mEventMembers;
 //	private HyjTextField mTextFieldName = null;
 	private HyjTextField mEventName = null;
-	
-	
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjDateTimeField mDateTimeFieldStartDate = null;
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
-	
 	private HyjSelectorField mSelectorFieldFriend = null;
-	
 	private RadioGroup stateRadioGroup = null;
 	private RadioButton unSignUpRadioButton = null;
 	private RadioButton signUpRadioButton = null;
@@ -174,9 +177,9 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		signUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signUp);
 		signInRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signIn);
 		
-		if("unSignIn".equals(eventMember.getState())) {
+		if("UnSignIn".equals(eventMember.getState())) {
 			signInRadioButton.setChecked(true);
-		} else if("signUp".equals(eventMember.getState())){
+		} else if("SignUp".equals(eventMember.getState())){
 			signUpRadioButton.setChecked(true);
 		} else {
 			unSignUpRadioButton.setChecked(true);
@@ -215,20 +218,16 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		}
 		
 		if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_unSignUp){
-			modelCopy.setState("unSignUp");
+			modelCopy.setState("UnSignUp");
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signUp){
-			modelCopy.setState("signUp");
+			modelCopy.setState("SignUp");
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signIn){
-			modelCopy.setState("signIn");
+			modelCopy.setState("SignIn");
 		}
 	}
 
 	private void showValidatioErrors() {
 		HyjUtil.displayToast(R.string.app_validation_error);
-
-//		mTextFieldName.setError(mEventMemberEditor.getValidationError("name"));
-//		mDateTimeFieldStartDate.setError(mEventMemberEditor.getValidationError("startDate"));
-//		mDateTimeFieldEndDate.setError(mEventMemberEditor.getValidationError("endDate"));
 		mSelectorFieldFriend.setError(mEventMemberEditor.getValidationError("friendUser"));
 	}
 
@@ -241,6 +240,10 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		mEventMemberEditor.validate();
 		if (mEventMemberEditor.hasValidationErrors()) {
 			showValidatioErrors();
+		} else if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+			sendNewEventMemberToServer();
+			doSave();
+			((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 		} else {
 			doSave();
 		}
@@ -252,6 +255,73 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		HyjUtil.displayToast(R.string.app_save_success);
 		getActivity().finish();
 	}
+	
+	private void sendNewEventMemberToServer() {
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_success);
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				JSONObject json = (JSONObject) object;
+				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+			}
+		};
+			String data = "[";
+			
+			JSONObject jsonPSA = mEventMemberEditor.getModelCopy().toJSON();
+			data += jsonPSA.toString();
+			
+			//如果账本也是新建的，一同保存到服务器
+			if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
+				data += "," + mEventMemberEditor.getModelCopy().getEvent().getProject().toJSON().toString();
+			}
+			//如果活动也是新建的，一同保存到服务器
+			if(mEventMemberEditor.getModelCopy().getEvent().isClientNew()){
+				data += "," + mEventMemberEditor.getModelCopy().getEvent().toJSON().toString();
+			}
+			JSONObject msg = getInviteMessage();
+			data += "," + msg.toString() + "]";
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "eventMemberAdd");
+			((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
+	}
+	
+	private JSONObject getInviteMessage() {
+		JSONObject msg = new JSONObject();
+		try {
+			msg.put("__dataType", "Message");
+			msg.put("toUserId", mEventMemberEditor.getModelCopy().getFriendUserId());
+			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			msg.put("type", "Event.Member.AddRequest");
+			msg.put("messageState", "new");
+			msg.put("messageTitle", "邀请活动请求");
+			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+			msg.put("detail", "用户"
+					+ HyjApplication.getInstance().getCurrentUser()
+							.getDisplayName() + "邀请您参加活动: " + mEventMemberEditor.getModelCopy().getEvent().getName());
+			msg.put("ownerUserId", mEventMemberEditor.getModelCopy().getFriendUserId());
+			
+			JSONObject msgData = new JSONObject();
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+			msgData.put("toUserDisplayName", mEventMemberEditor.getModelCopy().getFriend().getFriendUserName());
+			msgData.put("eventMemberId", mEventMemberEditor.getModelCopy().getId());
+			msgData.put("projectName", mEventMemberEditor.getModelCopy().getEvent().getProject().getName());
+			msgData.put("eventName", mEventMemberEditor.getModelCopy().getEvent().getName());
+			
+			msg.put("messageData", msgData.toString());
+			
+			if(mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")){
+					// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
+					msg.put("id", UUID.randomUUID().toString());
+			}
+		} catch (JSONException e) {
+		}
+		return msg;
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
