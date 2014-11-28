@@ -233,7 +233,7 @@ public class Friend extends HyjModel {
 		
 		if(this.getPhoneNumber() != null){
 			Friend importFiend = new Select().from(Friend.class).where("phoneNumber=? and id<>?",this.getPhoneNumber(),this.getId()).executeSingle();
-	        if(importFiend == null){
+	        if(importFiend == null || "".equals(this.getPhoneNumber())){
 	        	modelEditor.removeValidationError("phoneNumber");
 	        } else {
 	        	modelEditor.setValidationError("phoneNumber", R.string.friendFormFragment_editText_error_friendPhoneNumber);
