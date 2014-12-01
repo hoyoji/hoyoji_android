@@ -113,12 +113,9 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyAccountId);
 				
 				if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
-					if(moneyAccount.getFriendId() == null && moneyAccount.getName().equalsIgnoreCase("__ANONYMOUS__")){
-						// 匿名借贷账户
-						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
-					} else if(moneyAccount.getFriendId() == null && moneyAccount.getName() != null){
+					if(moneyAccount.getLocalFriendId() == null && moneyAccount.getFriendUserId() != null){
 						// 网络用户
-						queryStringBuilder.append(" AND ((main.friendUserId = '" + moneyAccount.getName() + "' AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "'))");
+						queryStringBuilder.append(" AND ((main.friendUserId = '" + moneyAccount.getFriendUserId() + "' AND main.localFriendId IS NULL AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "'))");
 //						// 
 //						Friend friend = new Select().from(Friend.class).where("friendUserId = ?", moneyAccount.getName()).executeSingle();
 //						if(friend != null){
@@ -128,7 +125,7 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 //						}
 					} else {
 						// 本地用户
-						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId ='" + moneyAccount.getFriendId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
+						queryStringBuilder.append(" AND (main.friendUserId IS NULL AND main.localFriendId ='" + moneyAccount.getLocalFriendId() + "' AND main.projectCurrencyId = '" + moneyAccount.getCurrencyId() + "')");
 					}
 				}
 			}

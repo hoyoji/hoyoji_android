@@ -701,12 +701,12 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 				    		newDebtAccountEditor.save();
 				    	}else{
 				    		if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
-				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 						   	} else {
 						   		if(newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 								} else {	
-						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 						   		}
 					    	}
 				    	}
@@ -741,12 +741,12 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 								oldDebtAccountEditor.save();
 							}
 							if(newMoneyPaybackModel.getFinancialOwnerUserId() == null){
-				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+				    			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 						   	} else {
 						   		if(newMoneyPaybackModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), newMoneyPaybackModel.getLocalFriendId(), newMoneyPaybackModel.getFriendUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 								} else {	
-						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProjectAmount());
+						   			MoneyAccount.createDebtAccount(newMoneyPaybackModel.getFriendDisplayName(), null, newMoneyPaybackModel.getFinancialOwnerUserId(), newMoneyPaybackModel.getProject().getCurrencyId(), newMoneyPaybackModel.getProject().getOwnerUserId(), newMoneyPaybackModel.getProjectAmount());
 						   		}
 					    	}
 						}

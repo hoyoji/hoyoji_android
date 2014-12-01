@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -28,10 +30,16 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
+import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
@@ -73,9 +81,11 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 				new String[] { "name", "balanceTotal" },
 				new int[] { R.id.moneyAccountListItem_group_name, R.id.moneyAccountListItem_group_balanceTotal }, 
 				mListChildData,
-				R.layout.moneyaccount_listitem_moneyaccount, 
-				new String[] {"id", "currentBalance"}, 
-				new int[] {R.id.moneyAccountListItem_name, R.id.moneyAccountListItem_currentBalance});
+				R.layout.home_listitem_row, 
+				new String[] {"picture", "subTitle", "title", "remark", "date", "currentBalance", "owner"}, 
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_subTitle, R.id.homeListItem_title, 
+							R.id.homeListItem_remark, R.id.homeListItem_date,
+							R.id.homeListItem_amount, R.id.homeListItem_owner});
 		return adapter;
 	}
 
@@ -197,11 +207,25 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	@Override
 	public boolean setViewValue(View view, Object object, String name) {
 		MoneyAccount moneyAccount = (MoneyAccount)object;
-		if(view.getId() == R.id.moneyAccountListItem_name){
+		if(view.getId() == R.id.homeListItem_date){
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
 			TextView nameView = (TextView)view;
 			nameView.setText(moneyAccount.getDisplayName());
 			return true;
-		} else if(view.getId() == R.id.moneyAccountListItem_currentBalance){
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+//			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
+//				if(moneyAccount.getLocalFriendId() == null) {
+//					((TextView)view).setText("");
+//				} else if(moneyAccount.getLocalFriendId() != null && moneyAccount.getLocalFriend() == null){
+////					Friend.getFriendUserDisplayName(friendUserId);
+//					((TextView)view).setText(moneyAccount.getLocalFriendId());
+//				}
+//			} else {
+//				((TextView)view).setText("");
+//			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
 			Double balance = moneyAccount.getCurrentBalance();
 			if(moneyAccount.getAccountType().equalsIgnoreCase("Debt")){
@@ -219,11 +243,22 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 				numericView.setPrefix(moneyAccount.getCurrencySymbol());
 				numericView.setNumber(balance);	
 			}
-			
+			return true;
+		} else if(view.getId() == R.id.homeListItem_picture){
+			HyjImageView imageView = (HyjImageView)view;
+			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
+			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setImage((Picture)null);
+			return true;
+		}  else if(view.getId() == R.id.homeListItem_owner){
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+			((TextView)view).setText(moneyAccount.getRemark());
 			return true;
 		} else {
-			return false;
+			return true;
 		}
+		
 	}
 	
 	@Override  

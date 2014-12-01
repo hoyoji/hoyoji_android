@@ -92,7 +92,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			moneyAccount = new Select().from(MoneyAccount.class).where("_id=?", modelId).executeSingle();
 		} else {
 			moneyAccount = new MoneyAccount();
-			moneyAccount.setFriendId(intent.getStringExtra("friendId"));
+			moneyAccount.setLocalFriendId(intent.getStringExtra("friendId"));
 			if(intentAccountType != null && intentAccountType.equalsIgnoreCase("Topup")){
 				moneyAccount.setAccountType("Topup");
 //				if(moneyAccount.getFriendId() != null){
@@ -209,7 +209,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			}
 		});		
 		
-		Friend friend = moneyAccount.getFriend();
+		Friend friend = moneyAccount.getLocalFriend();
 		setupFriendField(friend);
 		
 		// 当创建的类型就指定为Topup时（从充值卡账户列表打开），商家和类型不让修改
@@ -289,7 +289,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		MoneyAccount modelCopy = (MoneyAccount) mMoneyAccountEditor.getModelCopy();
 		if(!"Debt".equals(modelCopy.getAccountType())){
 			modelCopy.setName(mTextFieldName.getText().toString().trim());
-			modelCopy.setFriendId(mSelectorFieldFriend.getModelId());
+			modelCopy.setLocalFriendId(mSelectorFieldFriend.getModelId());
 			modelCopy.setCurrencyId(mSelectorFieldCurrency.getModelId());
 			modelCopy.setCurrentBalance(mNumericFieldCurrentBalance.getNumber());
 			modelCopy.setAccountType(mSpinnerFieldAccountType.getSelectedValue());
@@ -331,7 +331,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		mMoneyAccountEditor.validate();
 				
 		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
-			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
+			if(mMoneyAccountEditor.getModelCopy().getLocalFriendId() == null){
 				mMoneyAccountEditor.setValidationError("friend", R.string.moneyAccountFormFragment_editText_hint_friend);
 			} else {
 				mMoneyAccountEditor.removeValidationError("friend");

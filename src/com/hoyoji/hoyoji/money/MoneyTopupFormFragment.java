@@ -934,7 +934,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 				if(newTransferIn == null && mSelectorFieldTransferIn.getText() != null){
 					newTransferIn = new MoneyAccount();
 					newTransferIn.setName(mSelectorFieldTransferIn.getText());
-					newTransferIn.setFriendId(mMoneyTransferEditor.getModelCopy().getTransferInFriend().getId());
+					newTransferIn.setLocalFriendId(mMoneyTransferEditor.getModelCopy().getTransferInFriend().getId());
 					newTransferIn.setAccountType("Topup");
 					newTransferIn.setCurrencyId(mMoneyTransferEditor.getModelCopy().getTransferOut().getCurrencyId());
 					newTransferIn.setCurrentBalance(mMoneyTransferEditor.getModelCopy().getTransferInAmount0());
