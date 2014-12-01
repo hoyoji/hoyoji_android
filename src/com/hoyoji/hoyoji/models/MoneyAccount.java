@@ -106,7 +106,7 @@ public class MoneyAccount extends HyjModel {
 				if(friend != null){
 					return friend.getDisplayName();
 				} else {
-					User user = HyjModel.getModel(User.class, this.getName());
+					User user = HyjModel.getModel(User.class, this.getFriendUserId());
 					if(user != null){
 						return user.getDisplayName();
 					}
