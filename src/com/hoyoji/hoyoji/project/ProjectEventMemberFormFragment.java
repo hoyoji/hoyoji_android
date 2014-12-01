@@ -272,6 +272,34 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		getActivity().finish();
 	}
 	
+	private double setAveragePercentage(ProjectShareAuthorization projectShareAuthorization) {
+		//将成员设成平均分摊
+		double fixedPercentageTotal = 0.0;
+//		double averageTotal = 0.0;
+		int numOfAverage = 0;
+		List<ProjectShareAuthorization> mProjectShareAuthorizations;
+		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", projectShareAuthorization.getProject().getId(), "Delete", projectShareAuthorization.getId()).execute();
+		mProjectShareAuthorizations.add(projectShareAuthorization);
+		
+		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+			if(!psa.getSharePercentageType().equalsIgnoreCase("Average") && psa != projectShareAuthorization){
+				fixedPercentageTotal += psa.getSharePercentage();
+			} else {
+				numOfAverage++;
+//				averageTotal += psa.getSharePercentage();
+			}
+		}
+		double averageAmount = HyjUtil.toFixed2((100.0 - Math.min(fixedPercentageTotal, 100.0)) / numOfAverage);
+		double adjsutedAverageAmount = HyjUtil.toFixed2(averageAmount + (100.0 - fixedPercentageTotal - averageAmount * numOfAverage));
+		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
+			if(psa.getSharePercentage().doubleValue() == adjsutedAverageAmount && psa != projectShareAuthorization){
+				return averageAmount;
+			} 
+		}
+		
+		return adjsutedAverageAmount;
+	}
+	
 	private void sendNewEventMemberToServer() {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -287,8 +315,29 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		};
 			String data = "[";
 			
-			JSONObject jsonPSA = mEventMemberEditor.getModelCopy().toJSON();
-			data += jsonPSA.toString();
+			ProjectShareAuthorization jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
+					mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
+			
+			if (jsonPSA != null && jsonPSA.getState().equals("Accept")) {
+				
+			} else if(jsonPSA != null && jsonPSA.getState().equals("Wait")) {
+				if (jsonPSA.isClientNew()) {
+					data += jsonPSA.toString();
+				}
+			} else {
+				jsonPSA = new ProjectShareAuthorization();
+				jsonPSA.setProjectShareMoneyExpenseAddNew(true);
+				jsonPSA.setProjectShareMoneyExpenseDelete(true);
+				jsonPSA.setProjectShareMoneyExpenseEdit(true);
+				jsonPSA.setProjectShareMoneyExpenseOwnerDataOnly(false);
+				jsonPSA.setShareAllSubProjects(false);
+				jsonPSA.setSharePercentageType("Average");
+				jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
+				
+			}
+			
+			JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
+			data += jsonEM.toString();
 			
 			//如果账本也是新建的，一同保存到服务器
 			if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
