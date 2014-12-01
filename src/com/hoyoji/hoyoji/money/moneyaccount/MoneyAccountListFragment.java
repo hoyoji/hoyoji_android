@@ -248,6 +248,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
 			imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+			imageView.setImage((Picture)null);
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			return true;
