@@ -339,7 +339,8 @@ public class Friend extends HyjModel {
 //								return psa.getFriendUserName();
 //							}
 //						}
-						return "";
+					HyjUtil.asyncLoad("User", friendUserId);
+					return "[" + friendUserId.substring(0, 10) + "]";
 //					}
 				}
 			}

@@ -461,31 +461,31 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		}
 	}	
 
-		private void sendInviteMessage() {
-			
-			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-				@Override
-				public void finishCallback(Object object) {
-					loadProjectProjectShareAuthorizations(object);
-					HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
-				}
+	private void sendInviteMessage() {
+		
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				loadProjectProjectShareAuthorizations(object);
+				HyjUtil.displayToast(R.string.memberFormFragment_toast_share_request_sent_success);
+			}
 
-				@Override
-				public void errorCallback(Object object) {
-					displayError(object);
-				}
-			};
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
 
-			mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
-			JSONObject msg = getInviteMessage();
-			String data = "[" + msg.toString() + "]";
-			
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareInvite");
-			((HyjActivity) MemberFormFragment.this.getActivity())
-			.displayProgressDialog(
-					R.string.memberFormFragment_title_edit,
-					R.string.memberFormFragment_progress_inviting);
-		}
+		mProjectShareAuthorizationEditor.getModelCopy().setState("Wait");
+		JSONObject msg = getInviteMessage();
+		String data = "[" + msg.toString() + "]";
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareInvite");
+		((HyjActivity) MemberFormFragment.this.getActivity())
+		.displayProgressDialog(
+				R.string.memberFormFragment_title_edit,
+				R.string.memberFormFragment_progress_inviting);
+	}
 
 	 
 	private void sendNewProjectShareAuthorizationToServer() {

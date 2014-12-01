@@ -16,9 +16,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,12 +56,15 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.ContactLocaleUtils.FullNameStyle;
 import com.hoyoji.android.hyjframework.HanziToPinyin.Token;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.WBLogin;
+import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 public class HyjUtil {
@@ -571,5 +577,39 @@ public class HyjUtil {
 			}
 			
 			return null;
+		}
+
+		private static HashSet<String> asyncLoading = new HashSet<String>();
+		public static void asyncLoad(final String modelName, final String id) {
+			if(!asyncLoading.contains(id)){
+				asyncLoading.add(id);
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						JSONArray array = (JSONArray) object;
+						if(array.length() > 0) {
+							JSONObject json = array.optJSONObject(0);
+							HyjModel model = HyjModel.createModel(modelName, id);
+							model.loadFromJSON(json, true);
+							model.save();
+						}
+						asyncLoading.remove(id);
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						asyncLoading.remove(id);
+					}
+				};
+				
+				JSONObject jsonObj = new JSONObject();
+				try {
+					jsonObj.put("__dataType", modelName);
+					jsonObj.put("id", id);
+				} catch (JSONException e) {
+				}
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + jsonObj.toString() + "]", "getData");
+			}
 		}
 }
