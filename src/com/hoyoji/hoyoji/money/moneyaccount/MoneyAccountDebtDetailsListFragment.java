@@ -142,10 +142,10 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 		} else {
 			if(mMoneyAccount != null){
 				queryParams.putString("moneyAccountId", mMoneyAccount.getId());
-				if(mMoneyAccount.getFriendId() != null){
-					queryParams.putString("localFriendId", mMoneyAccount.getFriendId());
-				} else if(!mMoneyAccount.getName().equals("__ANONYMOUS__")){
-					queryParams.putString("friendUserId", mMoneyAccount.getName());
+				if(mMoneyAccount.getLocalFriendId() != null){
+					queryParams.putString("localFriendId", mMoneyAccount.getLocalFriendId());
+				} else {
+					queryParams.putString("friendUserId", mMoneyAccount.getFriendUserId());
 				}
 			}
 		}

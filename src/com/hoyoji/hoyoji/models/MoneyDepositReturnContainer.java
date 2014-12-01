@@ -518,8 +518,7 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		apportion.delete();
 	}
 
-	public static int saveApportions(List<ApportionItem> apportionItems,
-			MoneyDepositReturnContainerEditor mMoneyDepositReturnContainerEditor) {
+	public static int saveApportions(List<ApportionItem> apportionItems, MoneyDepositReturnContainerEditor mMoneyDepositReturnContainerEditor) {
 		int count = apportionItems.size();
 		int savedCount = 0;
 		for (int i = 0; i < count; i++) {
