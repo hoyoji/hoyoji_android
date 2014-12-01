@@ -8,13 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ProjectMessageFormFragment" >
+    tools:context=".EventMessageFormFragment" >
     
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField 
-            android:id="@+id/projectMessageFormFragment_editText_date"
+            android:id="@+id/eventMessageFormFragment_editText_date"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content" 
-            hyj:labelText="@string/projectMessageFormFragment_textView_date_send"
+            hyj:labelText="@string/eventMessageFormFragment_textView_date_send"
      />    
 
     <View 
@@ -27,11 +27,11 @@
     />
     
      <com.hoyoji.android.hyjframework.view.HyjTextField 
-            android:id="@+id/projectMessageFormFragment_editText_toUser"
+            android:id="@+id/eventMessageFormFragment_editText_toUser"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content" 
-            hyj:labelText="@string/projectMessageFormFragment_textView_toUser"
-            hyj:hintText="@string/projectMessageFormFragment_editText_hint_toUser"
+            hyj:labelText="@string/eventMessageFormFragment_textView_toUser"
+            hyj:hintText="@string/eventMessageFormFragment_editText_hint_toUser"
         />    
 
     <View 
@@ -44,22 +44,22 @@
     />
 
        <com.hoyoji.android.hyjframework.view.HyjTextField
-          android:id="@+id/projectMessageFormFragment_editText_title"
+          android:id="@+id/eventMessageFormFragment_editText_title"
           hyj:style="no_label"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
 		  android:layout_marginBottom="10dip"
-          hyj:labelText="@string/projectMessageFormFragment_textView_title"
-          hyj:hintText="@string/projectMessageFormFragment_editText_hint_title" />
+          hyj:labelText="@string/eventMessageFormFragment_textView_title"
+          hyj:hintText="@string/eventMessageFormFragment_editText_hint_title" />
    
     
       <com.hoyoji.android.hyjframework.view.HyjRemarkField
-          android:id="@+id/projectMessageFormFragment_editText_detail"
+          android:id="@+id/eventMessageFormFragment_editText_detail"
           hyj:style="no_label"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          hyj:hintText="@string/projectMessageFormFragment_editText_hint_detail"
-          hyj:labelText="@string/projectMessageFormFragment_textView_detail" />
+          hyj:hintText="@string/eventMessageFormFragment_editText_hint_detail"
+          hyj:labelText="@string/eventMessageFormFragment_textView_detail" />
 
         <View 
         android:id="@id/field_separator"

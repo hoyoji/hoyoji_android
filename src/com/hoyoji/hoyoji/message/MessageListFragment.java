@@ -204,6 +204,8 @@ public class MessageListFragment extends HyjUserListFragment{
 				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_edit, bundle);
 			} else if(msg.getType().startsWith("Money.Share.Add") ){
 				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
+			} else if(msg.getType().equals("Event.Member.AddRequest") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
 			}
 		}
     }  
