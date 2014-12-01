@@ -34,5 +34,7 @@
     
     <string name="projectEventMemberFormFragment_toast_eventMember_add_success">成功发送邀请</string>
     
+    <string name="projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization">好友不是共享成员，请先添加共享成员</string>
+    
     
 </resources>

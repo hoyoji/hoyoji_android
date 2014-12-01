@@ -125,63 +125,71 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			try {
 				final JSONObject jsonMsgData = new JSONObject(mMessageEditor.getModelCopy().getMessageData());
 
-				EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberd"));
-				if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
-					// 该活动已经存在
-					HyjUtil.displayToast(R.string.eventMessageFormFragment_addShare_already_exists);
+				ProjectShareAuthorization newPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
+						jsonMsgData.optString("projectId"), mMessageEditor.getModelCopy().getFromUserId()).executeSingle();
+				
+				if (newPSA != null && newPSA.getState().equals("Accept")) {
+					//账本存在才允许去接受活动邀请
+					EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberId"));
+					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
+						// 该活动已经存在
+						HyjUtil.displayToast(R.string.eventMessageFormFragment_addShare_already_exists);
+					} else {
+	//					final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
+	//					
+	//					((HyjActivity)EventMessageFormFragment.this.getActivity()).displayProgressDialog(R.string.eventMessageFormFragment_addShare_fetch_exchange, R.string.eventMessageFormFragment_addShare_fetching_exchange);
+	//					if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
+	//						sendAcceptMessageToServer(jsonMsgData);
+	//					} else {
+	//						Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+	//						if(exchange != null){
+								sendAcceptMessageToServer(jsonMsgData);
+								return;
+	//						}
+	//						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+	//							@Override
+	//							public void finishCallback(Object object) {
+	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
+	//								Double exchangeRate = (Double) object;
+	//								Exchange newExchange = new Exchange();
+	//								newExchange.setForeignCurrencyId(projectCurrencyId);
+	//								newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+	//								newExchange.setRate(exchangeRate);
+	//								newExchange.save();
+	//								sendAcceptMessageToServer(jsonMsgData);
+	//							}
+	//
+	//							@Override
+	//							public void errorCallback(Object object) {
+	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
+	//								if (object != null) {
+	//									HyjUtil.displayToast(object.toString());
+	//								} else {
+	//									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+	//								}
+	//								
+	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.eventMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
+	//									@Override
+	//									public void doPositiveClick(Object object){
+	//										Bundle bundle = new Bundle();
+	//										bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+	//										bundle.putString("foreignCurrencyId", projectCurrencyId);
+	//										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
+	//									}
+	//									@Override
+	//									public void doNegativeClick(){
+	//										HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+	//									}
+	//								});
+	//							}
+	//						};
+	//						HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
+	//								projectCurrencyId, 
+	//								serverCallbacks);
+	//					}
+					}
 				} else {
-//					final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
-//					
-//					((HyjActivity)EventMessageFormFragment.this.getActivity()).displayProgressDialog(R.string.eventMessageFormFragment_addShare_fetch_exchange, R.string.eventMessageFormFragment_addShare_fetching_exchange);
-//					if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
-//						sendAcceptMessageToServer(jsonMsgData);
-//					} else {
-//						Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
-//						if(exchange != null){
-							sendAcceptMessageToServer(jsonMsgData);
-							return;
-//						}
-//						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//							@Override
-//							public void finishCallback(Object object) {
-//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-//								Double exchangeRate = (Double) object;
-//								Exchange newExchange = new Exchange();
-//								newExchange.setForeignCurrencyId(projectCurrencyId);
-//								newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
-//								newExchange.setRate(exchangeRate);
-//								newExchange.save();
-//								sendAcceptMessageToServer(jsonMsgData);
-//							}
-//
-//							@Override
-//							public void errorCallback(Object object) {
-//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-//								if (object != null) {
-//									HyjUtil.displayToast(object.toString());
-//								} else {
-//									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-//								}
-//								
-//								((HyjActivity)EventMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.eventMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
-//									@Override
-//									public void doPositiveClick(Object object){
-//										Bundle bundle = new Bundle();
-//										bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
-//										bundle.putString("foreignCurrencyId", projectCurrencyId);
-//										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
-//									}
-//									@Override
-//									public void doNegativeClick(){
-//										HyjUtil.displayToast("未能获取账本币种到本币的汇率");
-//									}
-//								});
-//							}
-//						};
-//						HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
-//								projectCurrencyId, 
-//								serverCallbacks);
-//					}
+					HyjUtil.displayToast("请先接受账本共享再接受活动邀请");
 				}
 			} catch (JSONException e) {
 			}

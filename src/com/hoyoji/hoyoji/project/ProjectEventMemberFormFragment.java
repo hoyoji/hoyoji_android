@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
@@ -241,9 +243,23 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		if (mEventMemberEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
-			sendNewEventMemberToServer();
-			doSave();
-			((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+			ProjectShareAuthorization importFiendPSA = null;
+			importFiendPSA = new Select()
+					.from(ProjectShareAuthorization.class)
+					.where("projectId=? and friendUserId=?",
+							mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId())
+					.executeSingle();
+	        if(importFiendPSA == null){
+	        	HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization);
+	        	Bundle bundle = new Bundle();
+				bundle.putLong("PROJECT_ID", mEventMemberEditor.getModelCopy().getEvent().getProject().get_mId());
+				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
+				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
+	        } else {
+				sendNewEventMemberToServer();
+				doSave();
+				((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+	        }
 		} else {
 			doSave();
 		}
@@ -308,6 +324,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
 			msgData.put("toUserDisplayName", mEventMemberEditor.getModelCopy().getFriend().getFriendUserName());
 			msgData.put("eventMemberId", mEventMemberEditor.getModelCopy().getId());
+			msgData.put("projectId", mEventMemberEditor.getModelCopy().getEvent().getProjectId());
 			msgData.put("projectName", mEventMemberEditor.getModelCopy().getEvent().getProject().getName());
 			msgData.put("eventName", mEventMemberEditor.getModelCopy().getEvent().getName());
 			
