@@ -144,7 +144,7 @@ public class MoneyAccount extends HyjModel {
 //		return new Select().from(MoneyAccount.class).where("accountType=? AND currencyId=? AND name=? AND friendId IS NULL", "Debt", currencyId, friendUserId).executeSingle();
 //	}
 	
-	public static void createDebtAccount(String friendName, String localFriendId, String friendUserId, String currencyId, Double amount){
+	public static void createDebtAccount(String friendName, String localFriendId, String friendUserId, String currencyId, String projectOwnerUserId, Double amount){
 		MoneyAccount createDebtAccount = new MoneyAccount();
 //		String debtAccountName = "__ANONYMOUS__";
 //		if(localFriendId != null && friendUserId == null){
@@ -163,6 +163,14 @@ public class MoneyAccount extends HyjModel {
 		createDebtAccount.setAccountType("Debt");
 		createDebtAccount.setLocalFriendId(localFriendId);
 		createDebtAccount.setFriendUserId(friendUserId);
+		
+		if(createDebtAccount.getLocalFriendId() != null && createDebtAccount.getLocalFriend() == null){
+			// 该本地好友不是我的本地好友，是项目拥有者的本地好友
+			String projectOwnerUserName = Friend.getFriendUserDisplayName(projectOwnerUserId);
+			if(projectOwnerUserName != null){
+				createDebtAccount.setRemark("[" + projectOwnerUserName + "]");
+			}
+		}
 		createDebtAccount.save();
 	}
 	 

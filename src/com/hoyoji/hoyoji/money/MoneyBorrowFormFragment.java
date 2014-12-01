@@ -946,6 +946,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											moneyBorrowModel.getFriendUserId(),
 											moneyBorrowModel.getProject()
 													.getCurrencyId(),
+											moneyBorrowModel.getProject().getOwnerUserId(),
 											-moneyBorrowModel
 													.getProjectAmount());
 						}
@@ -1014,6 +1015,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											moneyBorrowModel.getFriendUserId(),
 											moneyBorrowModel.getProject()
 													.getCurrencyId(),
+													moneyBorrowModel.getProject().getOwnerUserId(),
 											-moneyBorrowModel
 													.getProjectAmount());
 						}

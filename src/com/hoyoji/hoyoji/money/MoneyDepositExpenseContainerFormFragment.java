@@ -741,12 +741,12 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 				    		newDebtAccountEditor.save();
 				    	} else {
 				    		if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
-								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 				    		} else {
 				    			if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				    				MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+				    				MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 						    	} else {
-									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 					    		}
 					    	}
 				    	}
@@ -781,12 +781,12 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 								oldDebtAccountEditor.save();
 							}
 							if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId() == null){
-								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+								MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 							} else {
 								if(newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+									MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), newMoneyDepositExpenseContainerModel.getLocalFriendId(), newMoneyDepositExpenseContainerModel.getFriendUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 								} else {
-						    		MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
+						    		MoneyAccount.createDebtAccount(newMoneyDepositExpenseContainerModel.getFriendDisplayName(), null, newMoneyDepositExpenseContainerModel.getFinancialOwnerUserId(), newMoneyDepositExpenseContainerModel.getProject().getCurrencyId(), newMoneyDepositExpenseContainerModel.getProject().getOwnerUserId(), newMoneyDepositExpenseContainerModel.getProjectAmount());
 								}
 							}
 						}

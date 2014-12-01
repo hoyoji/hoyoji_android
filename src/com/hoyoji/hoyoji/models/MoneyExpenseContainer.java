@@ -666,12 +666,12 @@ public class MoneyExpenseContainer extends HyjModel{
 					                	// 创建新的借贷账户
 					                	if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
 					                		if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-												MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+												MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					                		} else {
-						                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+						                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 							                }
 					                	} else {
-					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 						                }
 							        }
 								} else {
@@ -696,12 +696,12 @@ public class MoneyExpenseContainer extends HyjModel{
 										// 创建新的借贷账户
 					                	if(mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
 					                		if(!mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-												MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+												MoneyAccount.createDebtAccount(null, null, mMoneyExpenseContainerEditor.getModelCopy().getFinancialOwnerUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					                		} else {
-						                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+						                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 						                	}
 					                	} else {
-					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+					                		MoneyAccount.createDebtAccount(projectShareAuthorization.getFriendUserName(), apportionEditor.getModelCopy().getLocalFriendId(), apportionEditor.getModelCopy().getFriendUserId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getCurrencyId(), mMoneyExpenseContainerEditor.getModelCopy().getProject().getOwnerUserId(), apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 					                	}
 									}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
 										// 新老借贷账户一样

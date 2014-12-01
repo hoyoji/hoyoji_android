@@ -759,7 +759,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				    		newDebtAccountEditor.getModelCopy().setCurrentBalance(newDebtAccount.getCurrentBalance() + moneyReturnModel.getProjectAmount());
 				    		newDebtAccountEditor.save();
 				    	}else{
-				    		MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+				    		MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProject().getOwnerUserId(), moneyReturnModel.getProjectAmount());
 				    	}
 					}else{
 						MoneyAccount oldDebtAccount = null;
@@ -783,7 +783,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldMoneyReturnModel.getProjectAmount());
 								oldDebtAccountEditor.save();
 							}
-							MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProjectAmount());
+							MoneyAccount.createDebtAccount(moneyReturnModel.getFriendDisplayName(), moneyReturnModel.getLocalFriendId(), moneyReturnModel.getFriendUserId(), moneyReturnModel.getProject().getCurrencyId(), moneyReturnModel.getProject().getOwnerUserId(), moneyReturnModel.getProjectAmount());
 						}
 					}
 
