@@ -135,58 +135,58 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 						// 该活动已经存在
 						HyjUtil.displayToast(R.string.eventMessageFormFragment_addShare_already_exists);
 					} else {
-	//					final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
-	//					
-	//					((HyjActivity)EventMessageFormFragment.this.getActivity()).displayProgressDialog(R.string.eventMessageFormFragment_addShare_fetch_exchange, R.string.eventMessageFormFragment_addShare_fetching_exchange);
-	//					if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
-	//						sendAcceptMessageToServer(jsonMsgData);
-	//					} else {
-	//						Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
-	//						if(exchange != null){
+						final String projectCurrencyId = jsonMsgData.optJSONArray("projectCurrencyIds").optString(0);
+						
+						((HyjActivity)EventMessageFormFragment.this.getActivity()).displayProgressDialog(R.string.eventMessageFormFragment_addShare_fetch_exchange, R.string.eventMessageFormFragment_addShare_fetching_exchange);
+						if(projectCurrencyId.equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId())){
+							sendAcceptMessageToServer(jsonMsgData);
+						} else {
+							Exchange exchange = new Select().from(Exchange.class).where("foreignCurrencyId=? AND localCurrencyId=?", projectCurrencyId, HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId()).executeSingle();
+							if(exchange != null){
 								sendAcceptMessageToServer(jsonMsgData);
 								return;
-	//						}
-	//						HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-	//							@Override
-	//							public void finishCallback(Object object) {
-	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-	//								Double exchangeRate = (Double) object;
-	//								Exchange newExchange = new Exchange();
-	//								newExchange.setForeignCurrencyId(projectCurrencyId);
-	//								newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
-	//								newExchange.setRate(exchangeRate);
-	//								newExchange.save();
-	//								sendAcceptMessageToServer(jsonMsgData);
-	//							}
-	//
-	//							@Override
-	//							public void errorCallback(Object object) {
-	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-	//								if (object != null) {
-	//									HyjUtil.displayToast(object.toString());
-	//								} else {
-	//									HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
-	//								}
-	//								
-	//								((HyjActivity)EventMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.eventMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
-	//									@Override
-	//									public void doPositiveClick(Object object){
-	//										Bundle bundle = new Bundle();
-	//										bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
-	//										bundle.putString("foreignCurrencyId", projectCurrencyId);
-	//										openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
-	//									}
-	//									@Override
-	//									public void doNegativeClick(){
-	//										HyjUtil.displayToast("未能获取账本币种到本币的汇率");
-	//									}
-	//								});
-	//							}
-	//						};
-	//						HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
-	//								projectCurrencyId, 
-	//								serverCallbacks);
-	//					}
+							}
+							HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+								@Override
+								public void finishCallback(Object object) {
+									((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
+									Double exchangeRate = (Double) object;
+									Exchange newExchange = new Exchange();
+									newExchange.setForeignCurrencyId(projectCurrencyId);
+									newExchange.setLocalCurrencyId(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+									newExchange.setRate(exchangeRate);
+									newExchange.save();
+									sendAcceptMessageToServer(jsonMsgData);
+								}
+	
+								@Override
+								public void errorCallback(Object object) {
+									((HyjActivity)EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
+									if (object != null) {
+										HyjUtil.displayToast(object.toString());
+									} else {
+										HyjUtil.displayToast(R.string.moneyExpenseFormFragment_toast_cannot_refresh_rate);
+									}
+									
+									((HyjActivity)EventMessageFormFragment.this.getActivity()).displayDialog(-1, R.string.eventMessageFormFragment_addShare_cannot_fetch_exchange, R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,  new DialogCallbackListener(){
+										@Override
+										public void doPositiveClick(Object object){
+											Bundle bundle = new Bundle();
+											bundle.putString("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+											bundle.putString("foreignCurrencyId", projectCurrencyId);
+											openActivityWithFragmentForResult(ExchangeFormFragment.class, R.string.exchangeFormFragment_title_addnew, bundle, FETCH_PROJECT_TO_LOCAL_EXCHANGE);
+										}
+										@Override
+										public void doNegativeClick(){
+											HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+										}
+									});
+								}
+							};
+							HyjWebServiceExchangeRateAsyncTask.newInstance(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId(), 
+									projectCurrencyId, 
+									serverCallbacks);
+						}
 					}
 				} else {
 					HyjUtil.displayToast("请先接受账本共享再接受活动邀请");
@@ -230,7 +230,9 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			JSONObject msgData = new JSONObject();
 			msgData.put("projectShareAuthorizationId", jsonMsgData.optString("projectShareAuthorizationId"));
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-	//		msgData.put("projectIds", jsonMsgData.opt("projectIds"));
+			msgData.put("projectIds", jsonMsgData.opt("projectIds"));
+			msgData.put("eventId", jsonMsgData.opt("eventId"));
+			
 			msg.put("messageData", msgData.toString());
 	
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "postData");
@@ -243,153 +245,161 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 		
 	}
 
-//	protected void loadSharedProjectData(JSONObject jsonMsgData) {
-//		// load new ProjectData from server
-//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-//			@Override
-//			public void finishCallback(Object object) {
-//				try {
-//
-//					JSONArray jsonArray = (JSONArray) object;
-//					ActiveAndroid.beginTransaction();
-//					
-//					for(int i = 0; i < jsonArray.length(); i++){
-//						JSONArray jsonObjects = jsonArray.getJSONArray(i);
-//						for(int j = 0; j < jsonObjects.length(); j++){
-//							JSONObject jsonObj = jsonObjects.optJSONObject(j);
-//							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
-//							if(model != null){
-//								model.loadFromJSON(jsonObj, true);
-//								model.save();
-//							}
-//						}	
-//					}
-//
-//					ActiveAndroid.setTransactionSuccessful();
-//					HyjUtil.displayToast(R.string.eventMessageFormFragment_toast_accept_success);
-//					getActivity().finish();
-//					
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				} finally {
-//					ActiveAndroid.endTransaction();
-//				}
-//				((HyjActivity) EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-//			}
-//
-//			@Override
-//			public void errorCallback(Object object) {
-//				displayError(object);
-//			}
-//		};
-//
-//		JSONArray data = new JSONArray();
-//		try {
-//			JSONArray projectIds = jsonMsgData.optJSONArray("projectIds");
-//			for (int i = 0; i < projectIds.length(); i++) {
-//				JSONObject newObj = new JSONObject();
-//				newObj.put("__dataType", "Project");
-//				newObj.put("main.id", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "ProjectShareAuthorization");
-//				newObj.put("main.projectId", projectIds.get(i));
-////				newObj.put("main.state", "Accept");
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpenseContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpense");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyExpenseApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncomeContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositIncomeContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncome");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyIncomeApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositIncomeApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyBorrow");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyBorrowContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyBorrowApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyLend");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyLendContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyLendApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyReturn");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyReturnApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositReturnApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyDepositReturnContainer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyPayback");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyPaybackApportion");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "MoneyTransfer");
-//				newObj.put("main.projectId", projectIds.get(i));
-//				data.put(newObj);
-//				newObj = new JSONObject();
-//				newObj.put("__dataType", "Picture");
-//				newObj.put("pst.projectId", projectIds.get(i));
-//				data.put(newObj);
-//			}
-//			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	protected void loadSharedProjectData(JSONObject jsonMsgData) {
+		// load new ProjectData from server
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+				try {
+
+					JSONArray jsonArray = (JSONArray) object;
+					ActiveAndroid.beginTransaction();
+					
+					for(int i = 0; i < jsonArray.length(); i++){
+						JSONArray jsonObjects = jsonArray.getJSONArray(i);
+						for(int j = 0; j < jsonObjects.length(); j++){
+							JSONObject jsonObj = jsonObjects.optJSONObject(j);
+							HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.getString("id"));
+							if(model != null){
+								model.loadFromJSON(jsonObj, true);
+								model.save();
+							}
+						}	
+					}
+
+					ActiveAndroid.setTransactionSuccessful();
+					HyjUtil.displayToast(R.string.eventMessageFormFragment_toast_accept_success);
+					getActivity().finish();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				((HyjActivity) EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				displayError(object);
+			}
+		};
+
+		JSONArray data = new JSONArray();
+		try {
+			JSONArray projectIds = jsonMsgData.optJSONArray("projectIds");
+			for (int i = 0; i < projectIds.length(); i++) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("__dataType", "Project");
+				newObj.put("main.id", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "ProjectShareAuthorization");
+				newObj.put("main.projectId", projectIds.get(i));
+//				newObj.put("main.state", "Accept");
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpenseContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpense");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyExpenseApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncomeContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositIncomeContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncome");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyIncomeApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositIncomeApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrow");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrowContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyBorrowApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLend");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLendContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyLendApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyReturn");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyReturnApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositReturnApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyDepositReturnContainer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyPayback");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyPaybackApportion");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "MoneyTransfer");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Picture");
+				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Event");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "EventMember");
+				newObj.put("evt.projectId", projectIds.get(i));
+				data.put(newObj);
+			}
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

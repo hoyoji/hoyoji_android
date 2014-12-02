@@ -54,6 +54,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	private RadioButton unSignUpRadioButton = null;
 	private RadioButton signUpRadioButton = null;
 	private RadioButton signInRadioButton = null;
+	private ProjectShareAuthorization jsonPSA = null;
 
 	@Override
 	public Integer useContentView() {
@@ -243,23 +244,23 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		if (mEventMemberEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
-			ProjectShareAuthorization importFiendPSA = null;
-			importFiendPSA = new Select()
-					.from(ProjectShareAuthorization.class)
-					.where("projectId=? and friendUserId=?",
-							mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId())
-					.executeSingle();
-	        if(importFiendPSA == null){
-	        	HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization);
-	        	Bundle bundle = new Bundle();
-				bundle.putLong("PROJECT_ID", mEventMemberEditor.getModelCopy().getEvent().getProject().get_mId());
-				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
-				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
-	        } else {
+//			ProjectShareAuthorization importFiendPSA = null;
+//			importFiendPSA = new Select()
+//					.from(ProjectShareAuthorization.class)
+//					.where("projectId=? and friendUserId=?",
+//							mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId())
+//					.executeSingle();
+//	        if(importFiendPSA == null){
+//	        	HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization);
+//	        	Bundle bundle = new Bundle();
+//				bundle.putLong("PROJECT_ID", mEventMemberEditor.getModelCopy().getEvent().getProject().get_mId());
+//				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
+//				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
+//	        } else {
 				sendNewEventMemberToServer();
 				doSave();
 				((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
-	        }
+//	        }
 		} else {
 			doSave();
 		}
@@ -278,7 +279,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 //		double averageTotal = 0.0;
 		int numOfAverage = 0;
 		List<ProjectShareAuthorization> mProjectShareAuthorizations;
-		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", projectShareAuthorization.getProject().getId(), "Delete", projectShareAuthorization.getId()).execute();
+		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", projectShareAuthorization.getProjectId(), "Delete", projectShareAuthorization.getId()).execute();
 		mProjectShareAuthorizations.add(projectShareAuthorization);
 		
 		for(ProjectShareAuthorization psa : mProjectShareAuthorizations) {
@@ -313,45 +314,52 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
 			}
 		};
-			String data = "[";
+		String data = "[";
+		
+		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
+				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
+		
+		if (jsonPSA != null && jsonPSA.getState().equals("Accept")) {
 			
-			ProjectShareAuthorization jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
-					mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
-			
-			if (jsonPSA != null && jsonPSA.getState().equals("Accept")) {
-				
-			} else if(jsonPSA != null && jsonPSA.getState().equals("Wait")) {
-				if (jsonPSA.isClientNew()) {
-					data += jsonPSA.toString();
-				}
-			} else {
-				jsonPSA = new ProjectShareAuthorization();
-				jsonPSA.setProjectShareMoneyExpenseAddNew(true);
-				jsonPSA.setProjectShareMoneyExpenseDelete(true);
-				jsonPSA.setProjectShareMoneyExpenseEdit(true);
-				jsonPSA.setProjectShareMoneyExpenseOwnerDataOnly(false);
-				jsonPSA.setShareAllSubProjects(false);
-				jsonPSA.setSharePercentageType("Average");
-				jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
-				
+		} else if(jsonPSA != null && jsonPSA.getState().equals("Wait")) {
+			if (jsonPSA.isClientNew()) {
+				data += jsonPSA.toString();
 			}
-			
-			JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
-			data += jsonEM.toString();
-			
-			//如果账本也是新建的，一同保存到服务器
-			if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
-				data += "," + mEventMemberEditor.getModelCopy().getEvent().getProject().toJSON().toString();
+		} else {
+			jsonPSA = new ProjectShareAuthorization();
+			jsonPSA.setProjectShareMoneyExpenseAddNew(true);
+			jsonPSA.setProjectShareMoneyExpenseDelete(true);
+			jsonPSA.setProjectShareMoneyExpenseEdit(true);
+			jsonPSA.setProjectShareMoneyExpenseOwnerDataOnly(false);
+			jsonPSA.setShareAllSubProjects(false);
+			jsonPSA.setSharePercentageType("Average");
+			jsonPSA.setProjectId(mEventMemberEditor.getModelCopy().getEvent().getProjectId());
+			jsonPSA.setState("Wait");
+			jsonPSA.setFriendUserId(mEventMemberEditor.getModelCopy().getFriendUserId());
+			jsonPSA.setFriendUserName(mEventMemberEditor.getModelCopy().getFriendDisplayName());
+			jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
+			jsonPSA.save();
+			if (jsonPSA.isClientNew()) {
+				data += jsonPSA.toJSON();
 			}
-			//如果活动也是新建的，一同保存到服务器
-			if(mEventMemberEditor.getModelCopy().getEvent().isClientNew()){
-				data += "," + mEventMemberEditor.getModelCopy().getEvent().toJSON().toString();
-			}
-			JSONObject msg = getInviteMessage();
-			data += "," + msg.toString() + "]";
-			
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "eventMemberAdd");
-			((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
+		}
+		
+		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
+		data += jsonEM.toString();
+		
+		//如果账本也是新建的，一同保存到服务器
+		if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
+			data += "," + mEventMemberEditor.getModelCopy().getEvent().getProject().toJSON().toString();
+		}
+		//如果活动也是新建的，一同保存到服务器
+		if(mEventMemberEditor.getModelCopy().getEvent().isClientNew()){
+			data += "," + mEventMemberEditor.getModelCopy().getEvent().toJSON().toString();
+		}
+		JSONObject msg = getInviteMessage();
+		data += "," + msg.toString() + "]";
+		
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "eventMemberAdd");
+		((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
 	}
 	
 	private JSONObject getInviteMessage() {
@@ -374,8 +382,16 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msgData.put("toUserDisplayName", mEventMemberEditor.getModelCopy().getFriend().getFriendUserName());
 			msgData.put("eventMemberId", mEventMemberEditor.getModelCopy().getId());
 			msgData.put("projectId", mEventMemberEditor.getModelCopy().getEvent().getProjectId());
+			msgData.put("eventId", mEventMemberEditor.getModelCopy().getEventId());
 			msgData.put("projectName", mEventMemberEditor.getModelCopy().getEvent().getProject().getName());
 			msgData.put("eventName", mEventMemberEditor.getModelCopy().getEvent().getName());
+			
+			if(jsonPSA.getState() == "Wait"){
+				msgData.put("shareAllSubProjects", false);
+				msgData.put("projectShareAuthorizationId", jsonPSA.getId());
+				msgData.put("projectIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProjectId()  + "]"));
+				msgData.put("projectCurrencyIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProject().getCurrencyId()  + "]"));
+			}
 			
 			msg.put("messageData", msgData.toString());
 			
