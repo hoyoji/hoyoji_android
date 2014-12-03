@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -33,6 +35,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.MainActivity;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
@@ -245,7 +248,21 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 //			e.printStackTrace();
 //		}
 //		ActiveAndroid.endTransaction();
-		
+		int count = 0;
+		if (HyjApplication.getInstance().getCurrentUser() != null) {
+			Cursor cursor = Cache.openDatabase().rawQuery(
+					"SELECT COUNT(*) FROM ClientSyncRecord",
+					null);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count = cursor.getInt(0);
+				cursor.close();
+				cursor = null;
+			}
+		}
+		if(count > 0){
+			MainActivity.uploadData(false, getActivity(), null);
+		}
 		
 		JSONArray jsonArray = new JSONArray();
 		for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
@@ -271,6 +288,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			public void finishCallback(Object object) {
 				((HyjActivity) MemberSplitTBDFormFragment.this.getActivity()).dismissProgressDialog();
 				HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
+				MainActivity.uploadData(true, getActivity(), null);
 			}
 
 			@Override
@@ -279,6 +297,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			}
 		};
 
+		
 		JSONObject data = new JSONObject();
 		try {
 			data.put("projectId", projectShareAuthorization.getProjectId());
