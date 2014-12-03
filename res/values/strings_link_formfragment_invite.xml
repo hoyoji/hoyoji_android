@@ -17,6 +17,6 @@
     <string name="inviteLinkFormFragment_button_onSave">保存</string>
     
     <string name="inviteLinkFormFragment_action_change_title">链接</string>
-    <string name="inviteLinkFormFragment_action_change_content">正在修改链接状态...</string>
+    <string name="inviteLinkFormFragment_action_change_content">正在修改链接状态&#8230;</string>
     
 </resources>

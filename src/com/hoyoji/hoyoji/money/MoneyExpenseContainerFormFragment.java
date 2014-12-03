@@ -398,7 +398,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		});
@@ -492,7 +492,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						Bundle bundle = new Bundle();
 						Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 						bundle.putLong("MODEL_ID", project.get_mId());
-						openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+							openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						} else {
+							openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						}
 					}
 				});
 
