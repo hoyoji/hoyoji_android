@@ -229,10 +229,6 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			return;
 		}
 
-		((HyjActivity) getActivity())
-		.displayProgressDialog(
-				R.string.memberTBDFormFragment_title_split,
-				R.string.memberTBDFormFragment_progress_splitting);
 	
 //		ActiveAndroid.beginTransaction();
 //		try {
@@ -259,9 +255,17 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			}
 		}
 		if(count > 0){
+			((HyjActivity) getActivity())
+			.displayProgressDialog(
+					R.string.memberTBDFormFragment_title_split,
+					R.string.memberTBDFormFragment_progress_uploading_data);
 			MainActivity.uploadData(false, getActivity(), null, new HyjAsyncTaskCallbacks(){
 				@Override
 				public void finishCallback(Object object) {
+					((HyjActivity) getActivity())
+					.displayProgressDialog(
+							R.string.memberTBDFormFragment_title_split,
+							R.string.memberTBDFormFragment_progress_splitting);
 					doSplitOnServer();
 				}
 				@Override
@@ -270,6 +274,10 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 				}
 			});
 		} else {
+			((HyjActivity) getActivity())
+			.displayProgressDialog(
+					R.string.memberTBDFormFragment_title_split,
+					R.string.memberTBDFormFragment_progress_splitting);
 			doSplitOnServer();
 		}
 		
