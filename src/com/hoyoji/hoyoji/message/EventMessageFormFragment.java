@@ -129,6 +129,9 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 						jsonMsgData.optString("projectId"), mMessageEditor.getModelCopy().getFromUserId()).executeSingle();
 				
 				if (newPSA != null && newPSA.getState().equals("Accept")) {
+					sendAcceptMessageToServer(jsonMsgData);
+					getActivity().finish();
+				} else {
 					//账本存在才允许去接受活动邀请
 					EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberId"));
 					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
@@ -188,8 +191,6 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 									serverCallbacks);
 						}
 					}
-				} else {
-					HyjUtil.displayToast("请先接受账本共享再接受活动邀请");
 				}
 			} catch (JSONException e) {
 			}
@@ -202,14 +203,11 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
-//					loadSharedProjectData(jsonMsgData);
-					((HyjActivity) EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
-					getActivity().finish();
+					loadSharedProjectData(jsonMsgData);
 				}
 	
 				@Override
 				public void errorCallback(Object object) {
-					((HyjActivity) EventMessageFormFragment.this.getActivity()).dismissProgressDialog();
 					displayError(object);
 				}
 			};

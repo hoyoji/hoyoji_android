@@ -86,6 +86,8 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 			mDateTimeFieldEndDate.setText(event.getEndDate());
 		} else {
 			mDateTimeFieldDate.setDate(new Date());
+			mDateTimeFieldStartDate.setDate(new Date());
+			mDateTimeFieldEndDate.setDate(new Date());
 		}
 
 		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
