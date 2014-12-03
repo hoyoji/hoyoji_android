@@ -18,6 +18,8 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -82,6 +84,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 				event = Event.getModel(Event.class, eventId);
 			}
 			eventMember.setEventId(event.getId());
+			eventMember.setState("UnSignUp");
 		}
 		mEventMemberEditor = eventMember.newModelEditor();
 		
@@ -179,13 +182,19 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		unSignUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_unSignUp);
 		signUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signUp);
 		signInRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signIn);
-		
-		if("UnSignIn".equals(eventMember.getState())) {
+		if("SignIn".equals(eventMember.getState())) {
 			signInRadioButton.setChecked(true);
 		} else if("SignUp".equals(eventMember.getState())){
 			signUpRadioButton.setChecked(true);
-		} else {
+		} else if("UnSignUp".equals(eventMember.getState())){
 			unSignUpRadioButton.setChecked(true);
+		}
+		
+		if(eventMember.getLocalFriendId() == null){
+			stateRadioGroup.setEnabled(false);
+			unSignUpRadioButton.setEnabled(false);
+			signUpRadioButton.setEnabled(false);
+			signInRadioButton.setEnabled(false);
 		}
 		
 		if (modelId == -1){
@@ -257,9 +266,13 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 //				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
 //				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
 //	        } else {
+			if(mEventMemberEditor.getModelCopy().getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				doSave();
+			} else {
 				sendNewEventMemberToServer();
 				doSave();
 				((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+			}
 //	        }
 		} else {
 			doSave();
@@ -305,6 +318,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
+				loadProjectProjectShareAuthorizations(object);
 				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_success);
 			}
 
@@ -345,7 +359,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		}
 		
 		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
-		data += jsonEM.toString();
+		data += "," + jsonEM.toString();
 		
 		//如果账本也是新建的，一同保存到服务器
 		if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
@@ -404,6 +418,37 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		return msg;
 	}
 	
+	protected void loadProjectProjectShareAuthorizations(Object object) {
+		try {
+			JSONArray jsonObjects = (JSONArray) object;
+			ActiveAndroid.beginTransaction();
+				for (int j = 0; j < jsonObjects.length(); j++) {
+					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("ProjectShareAuthorization")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						ProjectShareAuthorization newProjectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, id);
+						if(newProjectShareAuthorization == null){
+							newProjectShareAuthorization = new ProjectShareAuthorization();
+						}
+						newProjectShareAuthorization.loadFromJSON(
+								jsonObjects.optJSONObject(j), true);
+						newProjectShareAuthorization.save();
+					}
+				}
+
+			ActiveAndroid.setTransactionSuccessful();
+//			if(getActivity().getCallingActivity() != null){
+//				Intent data = new Intent();
+//				data.putExtra("MODELID", mProjectShareAuthorizationEditor.getModelCopy().getId());
+//				getActivity().setResult(Activity.RESULT_OK, data);
+//			}
+			getActivity().finish();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+
+		((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -432,10 +477,22 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
 	         				mSelectorFieldFriend.setModelId(friend.getFriendUserId());
 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, false);
+	         				if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	         					signUpRadioButton.setChecked(true);
+	         				} else {
+	         					unSignUpRadioButton.setChecked(true);
+	         				}
+	         				unSignUpRadioButton.setEnabled(false);
+	         				signInRadioButton.setEnabled(false);
+	         				signUpRadioButton.setEnabled(false);
 	         			} else {
 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
 	         				mSelectorFieldFriend.setModelId(friend.getId());
 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
+	         				unSignUpRadioButton.setEnabled(true);
+	         				signInRadioButton.setEnabled(true);
+	         				signUpRadioButton.setEnabled(true);
+	         				signUpRadioButton.setChecked(true);
 	         			}
 					}
 	       	 }

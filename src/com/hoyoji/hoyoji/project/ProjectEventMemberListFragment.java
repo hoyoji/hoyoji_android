@@ -155,9 +155,9 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			if("signUp".equals(cursor.getString(columnIndex))){
+			if("SignUp".equals(cursor.getString(columnIndex))){
 				((TextView)view).setText("已报名");
-			} else if("signIn".equals(cursor.getString(columnIndex))){
+			} else if("SignIn".equals(cursor.getString(columnIndex))){
 				((TextView)view).setText("已签到");
 			} else{
 				((TextView)view).setText("未报名");
