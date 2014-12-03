@@ -464,19 +464,22 @@ public class MainActivity extends HyjUserActivity {
 	}
 
 	public static View updateUploadCount(View view, MenuItem mSyncButton, Integer count) {
+		final View actionView;
 		if (view == null) {
 			if (mSyncButton != null) {
 				view = MenuItemCompat.getActionView(mSyncButton);
 			}
 		}
+		actionView = view;
+		
 		if (view != null) {
-			final TextView tv = (TextView) view
-					.findViewById(R.id.actionbar_sync_uploadCount);
 			if (count == null) {
 				HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
 						Integer count = (Integer) object;
+						final TextView tv = (TextView) actionView
+								.findViewById(R.id.actionbar_sync_uploadCount);
 						if (count > 0) {
 							tv.setText(count.toString());
 						} else {
@@ -514,6 +517,8 @@ public class MainActivity extends HyjUserActivity {
 //					}
 //				}
 			} else {
+				final TextView tv = (TextView) view
+						.findViewById(R.id.actionbar_sync_uploadCount);
 				if (count > 0) {
 					tv.setText(count.toString());
 				} else {
@@ -875,7 +880,9 @@ public class MainActivity extends HyjUserActivity {
 
 		HyjApplication.getInstance().setIsSyncing(true);
 		if(!HyjUtil.hasNetworkConnection()){
-//			updateUploadCount(null, null);
+			if(mSyncButton != null){
+				updateUploadCount(null, mSyncButton, null);
+			}
 			HyjApplication.getInstance().setIsSyncing(false);
 			return;
 		} else if(mSyncButton != null){
