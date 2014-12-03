@@ -53,6 +53,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.ContactLocaleUtils.FullNameStyle;
 import com.hoyoji.android.hyjframework.HanziToPinyin.Token;
@@ -335,12 +336,14 @@ public class HyjUtil {
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
 							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+							clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							if(clientSyncRecord.getUploading()){
 								// 新记录，正在上传时被删除。如果上传失败，我们会回来删除它
 								clientSyncRecord.setOperation(operation);
 								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+								clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 								clientSyncRecord.save();
 							} else {
 								clientSyncRecord.delete();
@@ -351,6 +354,7 @@ public class HyjUtil {
 							}
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+							clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 							clientSyncRecord.save();
 						}
 					
@@ -371,18 +375,21 @@ public class HyjUtil {
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
 							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+							clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							if(clientSyncRecord.getUploading()){
 								// 新记录，正在上传时被更新。如果上传失败，我们会回来将起改回到 "Create"
 								clientSyncRecord.setOperation(operation);
 								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+								clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 								clientSyncRecord.save();
 							}
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
 							if(clientSyncRecord.getUploading()){
 								clientSyncRecord.setUploading(false);
 								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+								clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 								clientSyncRecord.save();
 							}
 						}
@@ -403,6 +410,7 @@ public class HyjUtil {
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
 							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
+							clientSyncRecord.setTransactionId(ActiveAndroid.getTransactionId());
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							//clientSyncRecord.delete();

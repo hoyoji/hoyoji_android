@@ -250,9 +250,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 //		ActiveAndroid.endTransaction();
 		int count = 0;
 		if (HyjApplication.getInstance().getCurrentUser() != null) {
-			Cursor cursor = Cache.openDatabase().rawQuery(
-					"SELECT COUNT(*) FROM ClientSyncRecord",
-					null);
+			Cursor cursor = Cache.openDatabase().rawQuery("SELECT COUNT(*) FROM ClientSyncRecord", null);
 			if (cursor != null) {
 				cursor.moveToFirst();
 				count = cursor.getInt(0);

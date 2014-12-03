@@ -492,7 +492,7 @@ public class MainActivity extends HyjUserActivity {
 						Integer count = 0;
 						if (HyjApplication.getInstance().getCurrentUser() != null) {
 							Cursor cursor = Cache.openDatabase().rawQuery(
-									"SELECT COUNT(*) FROM ClientSyncRecord",
+									"SELECT COUNT(DISTINCT transactionId) FROM ClientSyncRecord",
 									null);
 							if (cursor != null) {
 								cursor.moveToFirst();
