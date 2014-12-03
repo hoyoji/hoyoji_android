@@ -29,6 +29,7 @@ import com.activeandroid.serializer.TypeSerializer;
 import com.activeandroid.util.Log;
 import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 
@@ -75,7 +76,7 @@ public abstract class Model {
 		Cache.openDatabase().delete(mTableInfo.getTableName(), "id=?",
 				new String[] { getId() });
 		Cache.removeEntity(this);
-		HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), getId(), "Delete", mSyncFromServer);
+		HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), getId(), "Delete", ((HyjModel)this).getLastServerUpdateTime(), mSyncFromServer);
 		mSyncFromServer = false;
 		Cache.getContext()
 				.getContentResolver()
@@ -195,14 +196,14 @@ public abstract class Model {
 					cursor = null;
 					db.update(mTableInfo.getTableName(), values, "id=?",
 							new String[] { values.getAsString("id") });
-					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
+					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", ((HyjModel)this).getLastServerUpdateTime(), mSyncFromServer);
 				} else {
 					if(cursor != null){
 						cursor.close();
 						cursor = null;
 					}
 					mId = db.insert(mTableInfo.getTableName(), null, values);
-					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Create", mSyncFromServer);
+					HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Create", ((HyjModel)this).getLastServerUpdateTime(), mSyncFromServer);
 				}
 				if (!alreadyInTrans) {
 					ActiveAndroid.setTransactionSuccessful();
@@ -214,7 +215,7 @@ public abstract class Model {
 			}
 		} else {
 			db.update(mTableInfo.getTableName(), values, idName + "=" + mId, null);
-			HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", mSyncFromServer);
+			HyjUtil.updateClicentSyncRecord(mTableInfo.getTableName(), values.getAsString("id"), "Update", ((HyjModel)this).getLastServerUpdateTime(), mSyncFromServer);
 		}
 		mSyncFromServer = false;
 		Cache.getContext()

@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -323,7 +324,7 @@ public class MainActivity extends HyjUserActivity {
 		mSyncButton = menu.findItem(R.id.mainActivity_action_sync);
 		if (mSyncButton != null) {
 			final View view = MenuItemCompat.getActionView(mSyncButton);
-			updateUploadCount(view, null);
+			updateUploadCount(view, mSyncButton, null);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -336,7 +337,7 @@ public class MainActivity extends HyjUserActivity {
 						Intent startIntent = new Intent(HyjApplication.getInstance().getApplicationContext(), MessageDownloadService.class);
 						startService(startIntent);
 
-						uploadData(true);
+						uploadData(true, MainActivity.this, mSyncButton);
 					}
 				}
 			});
@@ -444,7 +445,7 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
-	public View setRefreshActionButtonState(final boolean refreshing, View view) {
+	public static View setRefreshActionButtonState(final boolean refreshing, View view, MenuItem mSyncButton) {
 		if (view == null) {
 			if (mSyncButton != null) {
 				view = MenuItemCompat.getActionView(mSyncButton);
@@ -462,20 +463,23 @@ public class MainActivity extends HyjUserActivity {
 		return view;
 	}
 
-	public View updateUploadCount(View view, Integer count) {
+	public static View updateUploadCount(View view, MenuItem mSyncButton, Integer count) {
+		final View actionView;
 		if (view == null) {
 			if (mSyncButton != null) {
 				view = MenuItemCompat.getActionView(mSyncButton);
 			}
 		}
+		actionView = view;
+		
 		if (view != null) {
-			final TextView tv = (TextView) view
-					.findViewById(R.id.actionbar_sync_uploadCount);
 			if (count == null) {
 				HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
 						Integer count = (Integer) object;
+						final TextView tv = (TextView) actionView
+								.findViewById(R.id.actionbar_sync_uploadCount);
 						if (count > 0) {
 							tv.setText(count.toString());
 						} else {
@@ -513,6 +517,8 @@ public class MainActivity extends HyjUserActivity {
 //					}
 //				}
 			} else {
+				final TextView tv = (TextView) view
+						.findViewById(R.id.actionbar_sync_uploadCount);
 				if (count > 0) {
 					tv.setText(count.toString());
 				} else {
@@ -542,7 +548,7 @@ public class MainActivity extends HyjUserActivity {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			uploadData(false);
+			uploadData(false, MainActivity.this, mSyncButton);
 		}
 	}
 	
@@ -600,21 +606,23 @@ public class MainActivity extends HyjUserActivity {
 		super.onDestroy();
 	}
 	
-	public void downloadData() {
+	public static void downloadData(final Activity activity, final MenuItem mSyncButton) {
 //		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 //			@Override
 
 		new Thread(new Runnable() {
 			public void finishCallback(final Object object) {
-				MainActivity.this.runOnUiThread(new Runnable() {
+				activity.runOnUiThread(new Runnable() {
 					public void run() {
 					HyjApplication.getInstance().setIsSyncing(false);
 					if (object instanceof Boolean) {
 						Boolean result = (Boolean) object;
 						if (result == true) {
-									((HyjActivity) MainActivity.this)
+									((HyjActivity) activity)
 											.dismissProgressDialog();
-									setRefreshActionButtonState(false, null);
+									if(mSyncButton != null){
+										setRefreshActionButtonState(false, null, mSyncButton);
+									}
 									HyjUtil.displayToast("同步数据成功");
 				                }
                 		}
@@ -624,7 +632,7 @@ public class MainActivity extends HyjUserActivity {
 
 //			@Override
 			public void errorCallback(final Object object) {
-				MainActivity.this.runOnUiThread(new Runnable() {
+				activity.runOnUiThread(new Runnable() {
 	                public void run() {
 				HyjApplication.getInstance().setIsSyncing(false);
 				if (object instanceof Boolean) {
@@ -634,9 +642,9 @@ public class MainActivity extends HyjUserActivity {
 					// }
 				}
 
-						setRefreshActionButtonState(false, null);
+						setRefreshActionButtonState(false, null, mSyncButton);
 						HyjUtil.displayToast(object.toString());
-						((HyjActivity) MainActivity.this).dismissProgressDialog();
+						((HyjActivity) activity).dismissProgressDialog();
 	                }
 	           });
 			}
@@ -678,7 +686,7 @@ public class MainActivity extends HyjUserActivity {
 		}).start();
 	}
 
-	private void saveDataRecursive(JSONArray result) throws JSONException {
+	private static void saveDataRecursive(JSONArray result) throws JSONException {
 		for (int i = 0; i < result.length(); i++) {
 			Object o = result.get(i);
 			if (o instanceof JSONArray) {
@@ -791,7 +799,7 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 
-	private void saveData(JSONArray result, String lastSyncTime) throws JSONException {
+	private static void saveData(JSONArray result, String lastSyncTime) throws JSONException {
 //		try {
 //			for(int a = 0; a < result.length(); a++){
 //				Log.i("Downloaded Data : ", result.get(a).toString());
@@ -865,390 +873,401 @@ public class MainActivity extends HyjUserActivity {
 		
 	}
 	
-	public void uploadData(final boolean downloadData) {
+	public static void uploadData(final boolean downloadData, Activity activity, MenuItem mSyncButton) {
 		if (HyjApplication.getInstance().getIsSyncing()) {
 			return;
 		}
 
 		HyjApplication.getInstance().setIsSyncing(true);
 		if(!HyjUtil.hasNetworkConnection()){
-//			updateUploadCount(null, null);
+			if(mSyncButton != null){
+				updateUploadCount(null, mSyncButton, null);
+			}
 			HyjApplication.getInstance().setIsSyncing(false);
 			return;
-		} else {
-			setRefreshActionButtonState(true, updateUploadCount(null, null));
+		} else if(mSyncButton != null){
+			setRefreshActionButtonState(true, updateUploadCount(null, mSyncButton, null), mSyncButton);
 		}
 		
 		if (downloadData) {
-			((HyjActivity) MainActivity.this).displayProgressDialog("同步数据",
-					"正在同步数据，请稍后...");
+			((HyjActivity) activity).displayProgressDialog("同步数据", "正在同步数据，请稍后...");
 		}
+		doUploadData(downloadData, mSyncButton, activity);
+	}
+
+	private static void doUploadData(final boolean downloadData, final MenuItem mSyncButton, final Activity activity) {
 		new Thread(new Runnable() {
-//		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-//			@Override
-			public void finishCallback(final Object object) {
-				MainActivity.this.runOnUiThread(new Runnable() {
-	                public void run() {
-						if (object instanceof Boolean) {
-							Boolean result = (Boolean) object;
-							if (result == true) {
-								Cache.openDatabase()
-										.execSQL(
-												"DELETE FROM ClientSyncRecord WHERE uploading = 1");
-								
-								// HyjUtil.displayToast("上传数据成功");
-		
-								HyjApplication.getInstance().setIsSyncing(downloadData);
-		
-								if (downloadData) {
-						            updateUploadCount(null, null);
-									downloadData();
-								} else {
-				                	setRefreshActionButtonState(false,
-									updateUploadCount(null, null));
-								}
-								
-								// 上传大图
-								Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
-								startService(startPictureUploadService);
-							}
-						}
-	                }
-				});
-			}
-
-//			@Override
-			public void errorCallback(final Object object) {
-				MainActivity.this.runOnUiThread(new Runnable() {
-	                public void run() {
-						if (object instanceof Boolean) {
-							// Boolean result = (Boolean)object;
-							// if(result == true){
-							return;
-							// }
-						}
-						HyjApplication.getInstance().setIsSyncing(false);
-						setRefreshActionButtonState(false, null);
-						HyjUtil.displayToast(object.toString());
-						if (downloadData) {
-							((HyjActivity) MainActivity.this).dismissProgressDialog();
-						}
-	                }
-				});
-	                
-			}
-
-//			@Override
-//			public Object doInBackground(String... string) {
-	        public void run() {
-				if (!downloadData) {
-					try {
-						// 等待其他一起修改的记录都提交了再上传
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-
-				List<ClientSyncRecord> syncRecords = null;
-				try {
-					ActiveAndroid.beginTransaction();
-//					Cache.openDatabase()
-//							.execSQL(
-//									"Update ClientSyncRecord SET uploading = 1 WHERE uploading = 0");
-					syncRecords = new Select().from(ClientSyncRecord.class)
-							.execute();
-					for (ClientSyncRecord syncRec : syncRecords) {
-						if(!syncRec.getUploading()){
-							syncRec.setUploading(true);
-							syncRec.save();
-						}
-					}
-					ActiveAndroid.setTransactionSuccessful();
-					ActiveAndroid.endTransaction();
-				} catch (Exception e) {
-					ActiveAndroid.endTransaction();
-					rollbackUpload(syncRecords);
-					errorCallback("上传数据失败");
-				}
-
-				if (syncRecords != null && syncRecords.size() == 0) {
-					// 没有记录可上传
-					finishCallback(true);
-					return;
-				}
-
-				try {
-					JSONArray postData = new JSONArray();
-					for (ClientSyncRecord syncRec : syncRecords) {
-						JSONObject jsonObj = new JSONObject();
-						if (syncRec.getOperation().equalsIgnoreCase("Create")) {
-							HyjModel model = HyjModel.createModel(syncRec.getTableName(),
-									syncRec.getId());
-							if(model.get_mId() != null){
-								jsonObj.put("operation", "create");
-								JSONObject recordData = model.toJSON();
-								if(model instanceof MoneyApportion){
-									recordData.put("date", ((MoneyApportion)model).getDate());
-									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
-									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
-									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
-									recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());
-									recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
-									if(model instanceof MoneyDepositIncomeApportion){
-										MoneyDepositIncomeApportion moneyDepositIncomeApportion = (MoneyDepositIncomeApportion)model;
-										if(moneyDepositIncomeApportion != null){
-											recordData.put("isImported", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getIsImported());
+//			HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//				@Override
+				public void finishCallback(final Object object) {
+					activity.runOnUiThread(new Runnable() {
+		                public void run() {
+							if (object instanceof Boolean) {
+								Boolean result = (Boolean) object;
+								if (result == true) {
+									Cache.openDatabase()
+											.execSQL(
+													"DELETE FROM ClientSyncRecord WHERE uploading = 1");
+									
+									// HyjUtil.displayToast("上传数据成功");
+			
+									HyjApplication.getInstance().setIsSyncing(downloadData);
+			
+									if (downloadData) {
+										if(mSyncButton != null){
+											updateUploadCount(null, mSyncButton, null);
 										}
-									} else if(model instanceof MoneyDepositReturnApportion){
-										MoneyDepositReturnApportion moneyDepositReturnApportion = (MoneyDepositReturnApportion)model;
-										if(moneyDepositReturnApportion != null){
-											recordData.put("isImported", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getIsImported());
-										}
-									} else if(model instanceof MoneyExpenseApportion){
-										MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
-										if(moneyExpenseApportion != null){
-											recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
-										}
-									} else if(model instanceof MoneyIncomeApportion){
-										MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
-										if(moneyIncomeApportion != null){
-											recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
-										}
+										downloadData(activity, mSyncButton);
+									} else if(mSyncButton != null){
+					                	setRefreshActionButtonState(false,
+										updateUploadCount(null, mSyncButton, null), mSyncButton);
 									}
-								} else if(model instanceof MoneyExpenseContainer){
-									recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
-									recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());
-									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyIncomeContainer){
-									recordData.put("projectCurrencySymbol", ((MoneyIncomeContainer)model).getProject().getCurrencySymbol());
-									recordData.put("projectCurrencyId", ((MoneyIncomeContainer)model).getProject().getCurrencyId());
-									recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyBorrowContainer){
-									recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyLendContainer){
-									recordData.put("currencyId", ((MoneyLendContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyPaybackContainer){
-									recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyReturnContainer){
-									recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
-								} 
-//								else if(model instanceof MoneyExpense){
-//									if(((MoneyExpense)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
-//									} else {
-//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyIncome){
-//									if(((MoneyIncome)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
-//									}
-//								} 
-								else if(model instanceof MoneyBorrow){
-//									if(((MoneyBorrow)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-//									} else 
-//									if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-//										recordData.put("moneyExpenseApportionFriendUserId", ((MoneyBorrow)model).getMoneyExpenseApportion().getFriendUserId());
-//									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-//										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
-//									}
-									recordData.put("projectCurrencySymbol", ((MoneyBorrow)model).getProject().getCurrencySymbol());
-								} else if(model instanceof MoneyLend){
-//									if(((MoneyLend)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-//									} else 
-//									if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-//										recordData.put("moneyExpenseApportionFriendUserId", ((MoneyLend)model).getMoneyExpenseApportion().getFriendUserId());
-//									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-//										recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
-//									}
-									recordData.put("projectCurrencySymbol", ((MoneyLend)model).getProject().getCurrencySymbol());
-								} else if(model instanceof MoneyPayback){
-//									if(((MoneyPayback)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
-//									}
-									recordData.put("projectCurrencySymbol", ((MoneyPayback)model).getProject().getCurrencySymbol());
-								} else if(model instanceof MoneyReturn){
-//									if(((MoneyReturn)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
-//									}
-									recordData.put("projectCurrencySymbol", ((MoneyReturn)model).getProject().getCurrencySymbol());
+									
+									// 上传大图
+									Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
+									activity.getApplicationContext().startService(startPictureUploadService);
 								}
-								jsonObj.put( "recordData", recordData);
-								postData.put(jsonObj);
 							}
-						} else if (syncRec.getOperation().equalsIgnoreCase(
-								"Update")) {
-							HyjModel model = HyjModel.createModel(syncRec.getTableName(),
-									syncRec.getId());
-							if(model.get_mId() != null){
-								jsonObj.put("operation", "update");
-								JSONObject recordData = model.toJSON();
-								if(model instanceof MoneyApportion){
-									recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
-									recordData.put("moneyAccountId", ((MoneyApportion)model).getMoneyAccountId());
-									recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
-									recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
-								} else if(model instanceof MoneyExpenseContainer){
-									recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyIncomeContainer){
-									recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyBorrowContainer){
-									recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyLendContainer){
-									recordData.put("currencyId", ((MoneyLendContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyPaybackContainer){
-									recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
-								} else if(model instanceof MoneyReturnContainer){
-									recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
-								} 
-//								else if(model instanceof MoneyExpense){
-//									if(((MoneyExpense)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
-//									} else {
-//										recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
+		                }
+					});
+				}
+
+//				@Override
+				public void errorCallback(final Object object) {
+					activity.runOnUiThread(new Runnable() {
+		                public void run() {
+							if (object instanceof Boolean) {
+								// Boolean result = (Boolean)object;
+								// if(result == true){
+								return;
+								// }
+							}
+							HyjApplication.getInstance().setIsSyncing(false);
+							if(mSyncButton != null){
+								setRefreshActionButtonState(false, null, mSyncButton);
+							}
+							HyjUtil.displayToast(object.toString());
+							if (downloadData) {
+								((HyjActivity) activity).dismissProgressDialog();
+							}
+		                }
+					});
+		                
+				}
+
+//				@Override
+//				public Object doInBackground(String... string) {
+		        public void run() {
+					if (!downloadData) {
+						try {
+							// 等待其他一起修改的记录都提交了再上传
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					List<ClientSyncRecord> syncRecords = null;
+					try {
+						ActiveAndroid.beginTransaction();
+//						Cache.openDatabase()
+//								.execSQL(
+//										"Update ClientSyncRecord SET uploading = 1 WHERE uploading = 0");
+						syncRecords = new Select().from(ClientSyncRecord.class)
+								.execute();
+						for (ClientSyncRecord syncRec : syncRecords) {
+							if(!syncRec.getUploading()){
+								syncRec.setUploading(true);
+								syncRec.save();
+							}
+						}
+						ActiveAndroid.setTransactionSuccessful();
+						ActiveAndroid.endTransaction();
+					} catch (Exception e) {
+						ActiveAndroid.endTransaction();
+						rollbackUpload(syncRecords);
+						errorCallback("上传数据失败");
+					}
+
+					if (syncRecords != null && syncRecords.size() == 0) {
+						// 没有记录可上传
+						finishCallback(true);
+						return;
+					}
+
+					try {
+						JSONArray postData = new JSONArray();
+						for (ClientSyncRecord syncRec : syncRecords) {
+							JSONObject jsonObj = new JSONObject();
+							if (syncRec.getOperation().equalsIgnoreCase("Create")) {
+								HyjModel model = HyjModel.createModel(syncRec.getTableName(),
+										syncRec.getId());
+								if(model.get_mId() != null){
+									jsonObj.put("operation", "create");
+									JSONObject recordData = model.toJSON();
+									if(model instanceof MoneyApportion){
+										recordData.put("date", ((MoneyApportion)model).getDate());
+										recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
+										recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
+										recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+										recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());
+										recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
+										if(model instanceof MoneyDepositIncomeApportion){
+											MoneyDepositIncomeApportion moneyDepositIncomeApportion = (MoneyDepositIncomeApportion)model;
+											if(moneyDepositIncomeApportion != null){
+												recordData.put("isImported", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getIsImported());
+											}
+										} else if(model instanceof MoneyDepositReturnApportion){
+											MoneyDepositReturnApportion moneyDepositReturnApportion = (MoneyDepositReturnApportion)model;
+											if(moneyDepositReturnApportion != null){
+												recordData.put("isImported", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getIsImported());
+											}
+										} else if(model instanceof MoneyExpenseApportion){
+											MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
+											if(moneyExpenseApportion != null){
+												recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
+											}
+										} else if(model instanceof MoneyIncomeApportion){
+											MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
+											if(moneyIncomeApportion != null){
+												recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
+											}
+										}
+									} else if(model instanceof MoneyExpenseContainer){
+										recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
+										recordData.put("projectCurrencyId", ((MoneyExpenseContainer)model).getProject().getCurrencyId());
+										recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyIncomeContainer){
+										recordData.put("projectCurrencySymbol", ((MoneyIncomeContainer)model).getProject().getCurrencySymbol());
+										recordData.put("projectCurrencyId", ((MoneyIncomeContainer)model).getProject().getCurrencyId());
+										recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyBorrowContainer){
+										recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyLendContainer){
+										recordData.put("currencyId", ((MoneyLendContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyPaybackContainer){
+										recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyReturnContainer){
+										recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
+									} 
+//									else if(model instanceof MoneyExpense){
+//										if(((MoneyExpense)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+//										} else {
+//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyIncome){
+//										if(((MoneyIncome)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
+//										}
+//									} 
+									else if(model instanceof MoneyBorrow){
+//										if(((MoneyBorrow)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+//										} else 
+//										if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+//											recordData.put("moneyExpenseApportionFriendUserId", ((MoneyBorrow)model).getMoneyExpenseApportion().getFriendUserId());
+//										} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+//											recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
+//										}
+										recordData.put("projectCurrencySymbol", ((MoneyBorrow)model).getProject().getCurrencySymbol());
+									} else if(model instanceof MoneyLend){
+//										if(((MoneyLend)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+//										} else 
+//										if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+//											recordData.put("moneyExpenseApportionFriendUserId", ((MoneyLend)model).getMoneyExpenseApportion().getFriendUserId());
+//										} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+//											recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
+//										}
+										recordData.put("projectCurrencySymbol", ((MoneyLend)model).getProject().getCurrencySymbol());
+									} else if(model instanceof MoneyPayback){
+//										if(((MoneyPayback)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
+//										}
+										recordData.put("projectCurrencySymbol", ((MoneyPayback)model).getProject().getCurrencySymbol());
+									} else if(model instanceof MoneyReturn){
+//										if(((MoneyReturn)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
+//										}
+										recordData.put("projectCurrencySymbol", ((MoneyReturn)model).getProject().getCurrencySymbol());
+									}
+									jsonObj.put( "recordData", recordData);
+									postData.put(jsonObj);
+								}
+							} else if (syncRec.getOperation().equalsIgnoreCase(
+									"Update")) {
+								HyjModel model = HyjModel.createModel(syncRec.getTableName(),
+										syncRec.getId());
+								if(model.get_mId() != null){
+									jsonObj.put("operation", "update");
+									JSONObject recordData = model.toJSON();
+									if(model instanceof MoneyApportion){
+										recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
+										recordData.put("moneyAccountId", ((MoneyApportion)model).getMoneyAccountId());
+										recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
+										recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+									} else if(model instanceof MoneyExpenseContainer){
+										recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyIncomeContainer){
+										recordData.put("currencyId", ((MoneyIncomeContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyBorrowContainer){
+										recordData.put("currencyId", ((MoneyBorrowContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyLendContainer){
+										recordData.put("currencyId", ((MoneyLendContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyPaybackContainer){
+										recordData.put("currencyId", ((MoneyPaybackContainer)model).getMoneyAccount().getCurrencyId());
+									} else if(model instanceof MoneyReturnContainer){
+										recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
+									} 
+//									else if(model instanceof MoneyExpense){
+//										if(((MoneyExpense)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
+//										} else {
+//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyIncome){
+//										if(((MoneyIncome)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyBorrow){
+//										if(((MoneyBorrow)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
+//										} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
+//											recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
+//										} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
+//											recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyLend){
+//										if(((MoneyLend)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
+//										} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
+//											recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
+//										} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
+//											recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyPayback){
+//										if(((MoneyPayback)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
+//										}
+//									} else if(model instanceof MoneyReturn){
+//										if(((MoneyReturn)model).getMoneyAccount() != null){
+//											recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
+//										}
 //									}
-//								} else if(model instanceof MoneyIncome){
-//									if(((MoneyIncome)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyBorrow){
-//									if(((MoneyBorrow)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-//									} else if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyExpenseApportion().getCurrencyId());
-//									} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-//										recordData.put("currencyId", ((MoneyBorrow)model).getMoneyIncomeApportion().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyLend){
-//									if(((MoneyLend)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-//									} else if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyExpenseApportion().getCurrencyId());
-//									} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-//										recordData.put("currencyId", ((MoneyLend)model).getMoneyIncomeApportion().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyPayback){
-//									if(((MoneyPayback)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
-//									}
-//								} else if(model instanceof MoneyReturn){
-//									if(((MoneyReturn)model).getMoneyAccount() != null){
-//										recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
-//									}
-//								}
+									jsonObj.put("recordData", recordData);
+									postData.put(jsonObj);
+								}
+							} else if (syncRec.getOperation().equalsIgnoreCase(
+									"Delete")) {
+								jsonObj.put("operation", "delete");
+								JSONObject recordData = new JSONObject();
+								recordData.put("id", syncRec.getId());
+								recordData.put("__dataType", syncRec.getTableName());
+								recordData.put("lastServerUpdateTime", syncRec.getLastServerUpdateTime());
 								jsonObj.put("recordData", recordData);
 								postData.put(jsonObj);
 							}
-						} else if (syncRec.getOperation().equalsIgnoreCase(
-								"Delete")) {
-							jsonObj.put("operation", "delete");
-							JSONObject recordData = new JSONObject();
-							recordData.put("id", syncRec.getId());
-							recordData.put("__dataType", syncRec.getTableName());
-							jsonObj.put("recordData", recordData);
-							postData.put(jsonObj);
 						}
-					}
-					
-					if(HyjApplication.getIsDebuggable()){
-						for(int a = 0; a < postData.length(); a++){
-							Log.i("Push Data : ", postData.get(a).toString());
+						
+						if(HyjApplication.getIsDebuggable()){
+							for(int a = 0; a < postData.length(); a++){
+								Log.i("Push Data : ", postData.get(a).toString());
+							}
 						}
-					}
-					
-					Object result = HyjServer.doHttpPost(null,
-							HyjApplication.getServerUrl() + "syncPush2.php",
-							postData.toString(), true);
-					if (result == null) {
-						rollbackUpload(syncRecords);
-						errorCallback(HyjApplication.getInstance().getString(
-								R.string.server_dataparse_error));
-						return;
-					}
-					if (result instanceof JSONObject) {
-						JSONObject jsonResult = (JSONObject) result;
-						if (jsonResult.isNull("__summary")) {
-							String lastUploadTime = jsonResult.optString("lastUploadTime");
-							if(lastUploadTime.length() > 0){
-								try {
-									ActiveAndroid.beginTransaction();
-									for (ClientSyncRecord syncRec : syncRecords) {
-										if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
-											HyjModel model = HyjModel.createModel(syncRec.getTableName(),
-													syncRec.getId());
-											model.setSyncFromServer(true);
-											model.setLastServerUpdateTime(lastUploadTime);
-											model.save();
-										} 
+						
+						Object result = HyjServer.doHttpPost(null,
+								HyjApplication.getServerUrl() + "syncPush2.php",
+								postData.toString(), true);
+						if (result == null) {
+							rollbackUpload(syncRecords);
+							errorCallback(HyjApplication.getInstance().getString(
+									R.string.server_dataparse_error));
+							return;
+						}
+						if (result instanceof JSONObject) {
+							JSONObject jsonResult = (JSONObject) result;
+							if (jsonResult.isNull("__summary")) {
+								String lastUploadTime = jsonResult.optString("lastUploadTime");
+								if(lastUploadTime.length() > 0){
+									try {
+										ActiveAndroid.beginTransaction();
+										for (ClientSyncRecord syncRec : syncRecords) {
+											if (!syncRec.getOperation().equalsIgnoreCase("Delete")) {
+												HyjModel model = HyjModel.createModel(syncRec.getTableName(),
+														syncRec.getId());
+												model.setSyncFromServer(true);
+												model.setLastServerUpdateTime(lastUploadTime);
+												model.save();
+											} 
+										}
+										ActiveAndroid.setTransactionSuccessful();
+										ActiveAndroid.endTransaction();
+										finishCallback(true);
+									} catch (Exception e) {
+										ActiveAndroid.endTransaction();
+										rollbackUpload(syncRecords);
+										errorCallback("上传数据失败");
 									}
-									ActiveAndroid.setTransactionSuccessful();
-									ActiveAndroid.endTransaction();
-									finishCallback(true);
-								} catch (Exception e) {
-									ActiveAndroid.endTransaction();
+								} else {
 									rollbackUpload(syncRecords);
 									errorCallback("上传数据失败");
 								}
 							} else {
 								rollbackUpload(syncRecords);
-								errorCallback("上传数据失败");
+								errorCallback(jsonResult.optJSONObject("__summary")
+										.optString("msg"));
 							}
 						} else {
 							rollbackUpload(syncRecords);
-							errorCallback(jsonResult.optJSONObject("__summary")
-									.optString("msg"));
+							errorCallback("上传数据失败");
 						}
-					} else {
+					} catch (JSONException e) {
 						rollbackUpload(syncRecords);
 						errorCallback("上传数据失败");
 					}
-				} catch (JSONException e) {
-					rollbackUpload(syncRecords);
-					errorCallback("上传数据失败");
 				}
-			}
 
-			private void rollbackUpload(List<ClientSyncRecord> syncRecords) {
-				if (syncRecords == null) {
-					return;
-				}
-				try {
-					ActiveAndroid.beginTransaction();
-					for (ClientSyncRecord syncRec : syncRecords) {
-						if (syncRec.getOperation().equalsIgnoreCase("Create")) {
-							// 获取最新的更新记录，不能直接用 HyjModel.getModel，那样拿到的可能是被缓存的记录
-							ClientSyncRecord rec = new Select().from(ClientSyncRecord.class).where("id=?", syncRec.getId()).executeSingle();
-//									HyjModel.getModel(ClientSyncRecord.class, syncRec.getId());
-							if (rec.getUploading() == true) {
-								rec.setUploading(false);
-								if (rec.getOperation().equalsIgnoreCase("Delete")) {
-									//该记录在上传期间已被删除了，所以我们把这条更新记录也删除掉，不用上传了
-									rec.delete();
-								} else if (rec.getOperation().equalsIgnoreCase("Update")) {
-									// 在上传的期间被改变了，但是该记录实际上没上传成功，所以我们还是放回新创建状态
-									rec.setOperation("Create");
-									rec.save();
-								} else {
-									// 保存 uploading 状态
-									rec.save();
+				private void rollbackUpload(List<ClientSyncRecord> syncRecords) {
+					if (syncRecords == null) {
+						return;
+					}
+					try {
+						ActiveAndroid.beginTransaction();
+						for (ClientSyncRecord syncRec : syncRecords) {
+							if (syncRec.getOperation().equalsIgnoreCase("Create")) {
+								// 获取最新的更新记录，不能直接用 HyjModel.getModel，那样拿到的可能是被缓存的记录
+								ClientSyncRecord rec = new Select().from(ClientSyncRecord.class).where("id=?", syncRec.getId()).executeSingle();
+//										HyjModel.getModel(ClientSyncRecord.class, syncRec.getId());
+								if (rec.getUploading() == true) {
+									rec.setUploading(false);
+									if (rec.getOperation().equalsIgnoreCase("Delete")) {
+										//该记录在上传期间已被删除了，所以我们把这条更新记录也删除掉，不用上传了
+										rec.delete();
+									} else if (rec.getOperation().equalsIgnoreCase("Update")) {
+										// 在上传的期间被改变了，但是该记录实际上没上传成功，所以我们还是放回新创建状态
+										rec.setOperation("Create");
+										rec.save();
+									} else {
+										// 保存 uploading 状态
+										rec.save();
+									}
 								}
 							}
 						}
+						ActiveAndroid.setTransactionSuccessful();
+					} catch (Exception e) {
 					}
-					ActiveAndroid.setTransactionSuccessful();
-				} catch (Exception e) {
+					ActiveAndroid.endTransaction();
+					
+					// Cache.openDatabase().execSQL(
+					// "Update ClientSyncRecord SET uploading = 0 WHERE uploading = 1");
 				}
-				ActiveAndroid.endTransaction();
-				
-				// Cache.openDatabase().execSQL(
-				// "Update ClientSyncRecord SET uploading = 0 WHERE uploading = 1");
-			}
 
-		}).start();
+			}).start();
 	}
 
+	
 
 //	private static class HandlerExtension extends Handler {
 //		WeakReference<MainActivity> mActivity;
