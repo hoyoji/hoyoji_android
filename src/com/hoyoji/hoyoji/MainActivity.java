@@ -1147,6 +1147,7 @@ public class MainActivity extends HyjUserActivity {
 							JSONObject recordData = new JSONObject();
 							recordData.put("id", syncRec.getId());
 							recordData.put("__dataType", syncRec.getTableName());
+							recordData.put("lastServerUpdateTime", syncRec.getLastServerUpdateTime());
 							jsonObj.put("recordData", recordData);
 							postData.put(jsonObj);
 						}

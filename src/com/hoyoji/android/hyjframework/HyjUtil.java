@@ -315,7 +315,7 @@ public class HyjUtil {
 			return Math.round(number*10000)/10000.0;
 		}
 		
-		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, boolean syncFromServer){
+		public static void updateClicentSyncRecord(String tableName, String recordId, String operation, String lastSeverUpdateTime, boolean syncFromServer){
 			
 			if(!tableName.equalsIgnoreCase("ClientSyncRecord")){
 				ClientSyncRecord clientSyncRecord = new Select().from(ClientSyncRecord.class).where("id=?", recordId).executeSingle();
@@ -334,11 +334,13 @@ public class HyjUtil {
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							if(clientSyncRecord.getUploading()){
 								// 新记录，正在上传时被删除。如果上传失败，我们会回来删除它
 								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 								clientSyncRecord.save();
 							} else {
 								clientSyncRecord.delete();
@@ -348,6 +350,7 @@ public class HyjUtil {
 								clientSyncRecord.setUploading(false);
 							}
 							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						}
 					
@@ -367,16 +370,19 @@ public class HyjUtil {
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							if(clientSyncRecord.getUploading()){
 								// 新记录，正在上传时被更新。如果上传失败，我们会回来将起改回到 "Create"
 								clientSyncRecord.setOperation(operation);
+								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 								clientSyncRecord.save();
 							}
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
 							if(clientSyncRecord.getUploading()){
 								clientSyncRecord.setUploading(false);
+								clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 								clientSyncRecord.save();
 							}
 						}
@@ -396,14 +402,17 @@ public class HyjUtil {
 							clientSyncRecord.setId(recordId);
 							clientSyncRecord.setOperation(operation);
 							clientSyncRecord.setTableName(tableName);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Create")) {
 							//clientSyncRecord.delete();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Update")) {
 							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						} else if(clientSyncRecord.getOperation().equalsIgnoreCase("Delete")) {
 							clientSyncRecord.setOperation(operation);
+							clientSyncRecord.setLastServerUpdateTime(lastSeverUpdateTime);
 							clientSyncRecord.save();
 						}
 					
