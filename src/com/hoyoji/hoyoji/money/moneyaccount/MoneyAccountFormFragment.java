@@ -45,6 +45,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyListFragment;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
@@ -451,6 +452,9 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				newMoneyTransfer.setTransferInAmount(-changeAmount);
 				newMoneyTransfer.setTransferInId(null);
 			}
+			Project project = new Select("MIN(_id) AS _id, *").from(Project.class).where("ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			newMoneyTransfer.setProjectCurrencyId(project.getCurrencyId());
+			newMoneyTransfer.setProjectId(project.getId());
 			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
 			newMoneyTransfer.setTransferOutFriendUserId(null);
 			newMoneyTransfer.setTransferInFriendUserId(null);

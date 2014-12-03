@@ -103,7 +103,11 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				Project project = projectShareAuthorization.getProject();
 				bundle.putLong("MODEL_ID", project.get_mId());
-				openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+				} else {
+					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+				}
 			}
 		});
 
@@ -229,10 +233,6 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			return;
 		}
 
-		((HyjActivity) MemberSplitTBDFormFragment.this.getActivity())
-		.displayProgressDialog(
-				R.string.memberTBDFormFragment_title_split,
-				R.string.memberTBDFormFragment_progress_splitting);
 	
 //		ActiveAndroid.beginTransaction();
 //		try {
@@ -250,9 +250,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 //		ActiveAndroid.endTransaction();
 		int count = 0;
 		if (HyjApplication.getInstance().getCurrentUser() != null) {
-			Cursor cursor = Cache.openDatabase().rawQuery(
-					"SELECT COUNT(*) FROM ClientSyncRecord",
-					null);
+			Cursor cursor = Cache.openDatabase().rawQuery("SELECT COUNT(*) FROM ClientSyncRecord", null);
 			if (cursor != null) {
 				cursor.moveToFirst();
 				count = cursor.getInt(0);
@@ -261,58 +259,81 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			}
 		}
 		if(count > 0){
-			MainActivity.uploadData(false, getActivity(), null);
+			((HyjActivity) getActivity())
+			.displayProgressDialog(
+					R.string.memberTBDFormFragment_title_split,
+					R.string.memberTBDFormFragment_progress_uploading_data);
+			MainActivity.uploadData(false, getActivity(), null, new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					((HyjActivity) getActivity())
+					.displayProgressDialog(
+							R.string.memberTBDFormFragment_title_split,
+							R.string.memberTBDFormFragment_progress_splitting);
+					doSplitOnServer();
+				}
+				@Override
+				public void errorCallback(Object object) {
+					displayError(object);
+				}
+			});
+		} else {
+			((HyjActivity) getActivity())
+			.displayProgressDialog(
+					R.string.memberTBDFormFragment_title_split,
+					R.string.memberTBDFormFragment_progress_splitting);
+			doSplitOnServer();
 		}
-		
-		JSONArray jsonArray = new JSONArray();
-		for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
-			ApportionItem<MoneyApportion> api = mApportionFieldApportions.getAdapter().getItem(i);
-			MoneyApportion apiApportion = api.getApportion();
-			
-			try {
-
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("apportionType", api.getApportionType());
-				jsonObject.put("sharePercentage", api.getSharePercentage());
-				jsonObject.put("friendUserId", apiApportion.getFriendUserId());
-				jsonObject.put("localFriendId", apiApportion.getLocalFriendId());
-				jsonArray.put(jsonObject);
-				
-			} catch (JSONException e) {
-				HyjUtil.displayToast(e.getMessage());
-			}
-		}
-
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				((HyjActivity) MemberSplitTBDFormFragment.this.getActivity()).dismissProgressDialog();
-				HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
-				MainActivity.uploadData(true, getActivity(), null);
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				displayError(object);
-			}
-		};
-
-		
-		JSONObject data = new JSONObject();
-		try {
-			data.put("projectId", projectShareAuthorization.getProjectId());
-			data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
-			data.put("apportions", jsonArray);
-		} catch (JSONException e) {
-			HyjUtil.displayToast(e.getMessage());
-		}
-		
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
-		
 		
 	}	
 	 
-	 private void doSplitDepositReturnContainers() {
+	 private void doSplitOnServer() {
+		 JSONArray jsonArray = new JSONArray();
+			for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
+				ApportionItem<MoneyApportion> api = mApportionFieldApportions.getAdapter().getItem(i);
+				MoneyApportion apiApportion = api.getApportion();
+				
+				try {
+
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("apportionType", api.getApportionType());
+					jsonObject.put("sharePercentage", api.getSharePercentage());
+					jsonObject.put("friendUserId", apiApportion.getFriendUserId());
+					jsonObject.put("localFriendId", apiApportion.getLocalFriendId());
+					jsonArray.put(jsonObject);
+					
+				} catch (JSONException e) {
+					HyjUtil.displayToast(e.getMessage());
+				}
+			}
+
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
+					MainActivity.uploadData(true, getActivity(), null, null);
+				}
+
+				@Override
+				public void errorCallback(Object object) {
+					displayError(object);
+				}
+			};
+
+			
+			JSONObject data = new JSONObject();
+			try {
+				data.put("projectId", projectShareAuthorization.getProjectId());
+				data.put("tbdFriendId", projectShareAuthorization.getLocalFriendId());
+				data.put("apportions", jsonArray);
+			} catch (JSONException e) {
+				HyjUtil.displayToast(e.getMessage());
+			}
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
+	}
+
+	private void doSplitDepositReturnContainers() {
 			List<MoneyDepositReturnContainer> moneyDepositReturnContainers = new Select("container.*").from(MoneyDepositReturnContainer.class).as("container")
 									.join(MoneyDepositReturnApportion.class).as("apportion").on("container.id = apportion.moneyDepositReturnContainerId").
 									where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
@@ -582,9 +603,11 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 	private void displayError(Object object){
 		((HyjActivity) this.getActivity())
 		.dismissProgressDialog();
-		JSONObject json = (JSONObject) object;
-		HyjUtil.displayToast(json.optJSONObject("__summary").optString(
-				"msg"));
+		if(object != null){
+			JSONObject json = (JSONObject) object;
+			HyjUtil.displayToast(json.optJSONObject("__summary").optString(
+					"msg"));
+		}
 	}
  
 }

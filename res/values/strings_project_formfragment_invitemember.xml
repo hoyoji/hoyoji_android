@@ -13,8 +13,8 @@
    <string name="memberFormFragment_title_edit">修改账本成员</string>
    
    <string name="memberFormFragment_progress_adding">正在添加账本成员</string>
-   <string name="memberFormFragment_progress_saving">正在保存...</string>
-   <string name="memberFormFragment_progress_inviting">正在邀請...</string>
+   <string name="memberFormFragment_progress_saving">正在保存&#8230;</string>
+   <string name="memberFormFragment_progress_inviting">正在邀請&#8230;</string>
    <string name="memberFormFragment_toast_share_request_sent_success">账本共享请求发送成功，请等待回复</string>
    <string name="memberFormFragment_toast_share_edit_success">保存成功</string>
    <string name="memberFormFragment_toast_share_add_success">成功添加账本成员</string>
@@ -31,6 +31,6 @@
    <string name="app_action_send_invite">邀请好友共享账本</string>
    
    <string name="inviteMemberFormFragment_action_invite_title">邀请成员</string>
-   <string name="inviteMemberFormFragment_action_invite_content">正在邀请...</string>
+   <string name="inviteMemberFormFragment_action_invite_content">正在邀请&#8230;</string>
 
 </resources>

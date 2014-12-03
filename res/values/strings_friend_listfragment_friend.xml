@@ -19,6 +19,6 @@
     <string name="friendListFragment_title_friend_transactions">好友流水</string>
     
     <string name="friendListFragment__action_invite_title">邀请好友</string>
-    <string name="friendListFragment__action_invite_content">正在邀请...</string>
+    <string name="friendListFragment__action_invite_content">正在邀请&#8230;</string>
     
 </resources>

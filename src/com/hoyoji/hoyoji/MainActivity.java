@@ -337,7 +337,7 @@ public class MainActivity extends HyjUserActivity {
 						Intent startIntent = new Intent(HyjApplication.getInstance().getApplicationContext(), MessageDownloadService.class);
 						startService(startIntent);
 
-						uploadData(true, MainActivity.this, mSyncButton);
+						uploadData(true, MainActivity.this, mSyncButton, null);
 					}
 				}
 			});
@@ -492,7 +492,7 @@ public class MainActivity extends HyjUserActivity {
 						Integer count = 0;
 						if (HyjApplication.getInstance().getCurrentUser() != null) {
 							Cursor cursor = Cache.openDatabase().rawQuery(
-									"SELECT COUNT(*) FROM ClientSyncRecord",
+									"SELECT COUNT(DISTINCT transactionId) FROM ClientSyncRecord",
 									null);
 							if (cursor != null) {
 								cursor.moveToFirst();
@@ -548,7 +548,7 @@ public class MainActivity extends HyjUserActivity {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			uploadData(false, MainActivity.this, mSyncButton);
+			uploadData(false, MainActivity.this, mSyncButton, null);
 		}
 	}
 	
@@ -606,7 +606,7 @@ public class MainActivity extends HyjUserActivity {
 		super.onDestroy();
 	}
 	
-	public static void downloadData(final Activity activity, final MenuItem mSyncButton) {
+	public static void downloadData(final Activity activity, final MenuItem mSyncButton, final HyjAsyncTaskCallbacks downloadCallback) {
 //		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 //			@Override
 
@@ -614,17 +614,20 @@ public class MainActivity extends HyjUserActivity {
 			public void finishCallback(final Object object) {
 				activity.runOnUiThread(new Runnable() {
 					public void run() {
-					HyjApplication.getInstance().setIsSyncing(false);
-					if (object instanceof Boolean) {
-						Boolean result = (Boolean) object;
-						if (result == true) {
-									((HyjActivity) activity)
-											.dismissProgressDialog();
-									if(mSyncButton != null){
-										setRefreshActionButtonState(false, null, mSyncButton);
-									}
-									HyjUtil.displayToast("同步数据成功");
-				                }
+						HyjApplication.getInstance().setIsSyncing(false);
+						if (object instanceof Boolean) {
+							Boolean result = (Boolean) object;
+							if (result == true) {
+								((HyjActivity) activity)
+										.dismissProgressDialog();
+								if(mSyncButton != null){
+									setRefreshActionButtonState(false, null, mSyncButton);
+								}
+								if(downloadCallback != null){
+									downloadCallback.finishCallback(null);
+								}
+								HyjUtil.displayToast("同步数据成功");
+			                }
                 		}
 					}
 				});
@@ -873,7 +876,7 @@ public class MainActivity extends HyjUserActivity {
 		
 	}
 	
-	public static void uploadData(final boolean downloadData, Activity activity, MenuItem mSyncButton) {
+	public static void uploadData(final boolean downloadData, Activity activity, MenuItem mSyncButton, HyjAsyncTaskCallbacks uploadCallback) {
 		if (HyjApplication.getInstance().getIsSyncing()) {
 			return;
 		}
@@ -892,10 +895,10 @@ public class MainActivity extends HyjUserActivity {
 		if (downloadData) {
 			((HyjActivity) activity).displayProgressDialog("同步数据", "正在同步数据，请稍后...");
 		}
-		doUploadData(downloadData, mSyncButton, activity);
+		doUploadData(downloadData, mSyncButton, activity, uploadCallback);
 	}
 
-	private static void doUploadData(final boolean downloadData, final MenuItem mSyncButton, final Activity activity) {
+	private static void doUploadData(final boolean downloadData, final MenuItem mSyncButton, final Activity activity, final HyjAsyncTaskCallbacks uploadCallback) {
 		new Thread(new Runnable() {
 //			HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 //				@Override
@@ -917,15 +920,24 @@ public class MainActivity extends HyjUserActivity {
 										if(mSyncButton != null){
 											updateUploadCount(null, mSyncButton, null);
 										}
-										downloadData(activity, mSyncButton);
-									} else if(mSyncButton != null){
-					                	setRefreshActionButtonState(false,
-										updateUploadCount(null, mSyncButton, null), mSyncButton);
+										downloadData(activity, mSyncButton, uploadCallback);
+									} else {
+										if(mSyncButton != null){
+											setRefreshActionButtonState(false,
+											updateUploadCount(null, mSyncButton, null), mSyncButton);
+								        }
+					                	if(uploadCallback != null){
+											uploadCallback.finishCallback(null);
+										}
 									}
 									
 									// 上传大图
 									Intent startPictureUploadService = new Intent(HyjApplication.getInstance().getApplicationContext(), PictureUploadService.class);
 									activity.getApplicationContext().startService(startPictureUploadService);
+								} else {
+				                	if(uploadCallback != null){
+										uploadCallback.errorCallback(null);
+									}
 								}
 							}
 		                }
@@ -949,6 +961,9 @@ public class MainActivity extends HyjUserActivity {
 							HyjUtil.displayToast(object.toString());
 							if (downloadData) {
 								((HyjActivity) activity).dismissProgressDialog();
+							}
+		                	if(uploadCallback != null){
+								uploadCallback.errorCallback(null);
 							}
 		                }
 					});

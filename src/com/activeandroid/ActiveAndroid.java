@@ -16,6 +16,8 @@ package com.activeandroid;
  * limitations under the License.
  */
 
+import java.util.UUID;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -25,6 +27,8 @@ public final class ActiveAndroid {
 	//////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////////////////
+
+	private static String mTransactionId;
 
 	public static void initialize(Context context) {
 		initialize(new Configuration.Builder(context).create());
@@ -62,10 +66,12 @@ public final class ActiveAndroid {
 
 	public static void beginTransaction() {
 		Cache.openDatabase().beginTransaction();
+		mTransactionId = UUID.randomUUID().toString();
 	}
 
 	public static void endTransaction() {
 		Cache.openDatabase().endTransaction();
+		mTransactionId = null;
 	}
 
 	public static void setTransactionSuccessful() {
@@ -82,5 +88,13 @@ public final class ActiveAndroid {
 
 	public static void execSQL(String sql, Object[] bindArgs) {
 		Cache.openDatabase().execSQL(sql, bindArgs);
+	}
+	
+	public static String getTransactionId(){
+		if(mTransactionId != null){
+			return mTransactionId;
+		} else {
+			return UUID.randomUUID().toString();
+		}
 	}
 }

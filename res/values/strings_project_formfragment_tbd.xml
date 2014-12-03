@@ -6,7 +6,8 @@
    
    <string name="memberTBDFormFragment_title_transactions">拆分账务</string>
    
-   <string name="memberTBDFormFragment_progress_splitting">正在拆分待定成员</string>
+   <string name="memberTBDFormFragment_progress_splitting">正在拆分待定成员&#8230;</string>
+   <string name="memberTBDFormFragment_progress_uploading_data">正在上传新数据到服务器&#8230;</string>
    <string name="memberTBDFormFragment_toast_split_success">成功拆分待定成员</string>
    
    <string name="memberTBDFormFragment_textView_projectName">账本名称</string>

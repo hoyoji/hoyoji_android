@@ -107,7 +107,8 @@ public class MoneyTransfer extends HyjModel{
 		mUUID = UUID.randomUUID().toString();
 		mTransferOutId = userData.getActiveMoneyAccountId();
 		mTransferInId = userData.getActiveMoneyAccountId();
-		this.mProjectId = userData.getActiveProjectId();
+		this.setProjectId(userData.getActiveProjectId());
+		this.setProjectCurrencyId(userData.getActiveProject().getCurrencyId());
 		mExchangeRate = 1.00;
 		mTransferType = "Transfer";
 	}

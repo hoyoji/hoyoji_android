@@ -475,7 +475,11 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					} else {
+						openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					}
 				}
 			});
 			
