@@ -79,13 +79,13 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
 		
 		mCheckBoxShareAuthExpenseSelf = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_self);
-		mCheckBoxShareAuthExpenseSelf.setChecked(true);
+		mCheckBoxShareAuthExpenseSelf.setChecked(false);
 		mCheckBoxShareAuthExpenseAdd = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_add);
-		mCheckBoxShareAuthExpenseAdd.setChecked(false);
+		mCheckBoxShareAuthExpenseAdd.setChecked(true);
 		mCheckBoxShareAuthExpenseEdit = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_edit);
-		mCheckBoxShareAuthExpenseEdit.setChecked(false);
+		mCheckBoxShareAuthExpenseEdit.setChecked(true);
 		mCheckBoxShareAuthExpenseDelete = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_delete);
-		mCheckBoxShareAuthExpenseDelete.setChecked(false);
+		mCheckBoxShareAuthExpenseDelete.setChecked(true);
 
 		mButtonSendInvite = (Button)getView().findViewById(R.id.button_send_invite);
 		mButtonSendInvite.setOnClickListener(new OnClickListener(){

@@ -55,7 +55,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
-	    		mFriendId = queryParams.getString("friendId");
+	    		mFriendId = queryParams.getString("localFriendId");
 	    	}
 //	    	mChangeObserver = new ChangeObserver();
 //	    	context.getContentResolver().registerContentObserver(
@@ -71,7 +71,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    		mLoadLimit = queryParams.getInt("LIMIT");
 	    		mAccountType = queryParams.getString("accountType");
 	    		mExcludeType = queryParams.getString("excludeType");
-	    		mFriendId = queryParams.getString("friendId");
+	    		mFriendId = queryParams.getString("localFriendId");
 	    	}
 	    	this.onContentChanged();
 	    }
@@ -90,7 +90,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 					if(mFriendId == null){
 						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)", "Debt").orderBy("name_pinYin ASC").execute();
 					} else {
-						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ? AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
+						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND localFriendId = ? AND (autoHide = 'Hide' OR autoHide = 'Auto' AND currentBalance = 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
 					}
 				}
 	    	} else if(mAccountType.equals("Debt")){
@@ -98,7 +98,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 					if(mFriendId == null){
 						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)", "Debt").orderBy("name_pinYin ASC").execute();
 					} else {
-						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ? AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
+						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND localFriendId = ? AND (autoHide = 'Show' OR autoHide = 'Auto' AND currentBalance <> 0)", "Debt", mFriendId).orderBy("name_pinYin ASC").execute();
 					}
 				}
 	    	} else {
@@ -106,7 +106,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 					if(mFriendId == null){
 						mChildList = new Select().from(MoneyAccount.class).where("accountType=?", mAccountType).orderBy("name_pinYin ASC").execute();
 					} else {
-						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND friendId = ?", mAccountType, mFriendId).orderBy("name_pinYin ASC").execute();
+						mChildList = new Select().from(MoneyAccount.class).where("accountType=? AND localFriendId = ?", mAccountType, mFriendId).orderBy("name_pinYin ASC").execute();
 					}
 				}
 	    	}

@@ -84,7 +84,7 @@ public class MoneyAccountGroupListLoader extends
 				Cursor cursor = null;
 
 				if(mFriendId != null){
-					query += " AND friendId = ?";
+					query += " AND localFriendId = ?";
 				}
 				if(mAccountType == null || mAccountType.equalsIgnoreCase("Cash")){
 					if(mFriendId == null){

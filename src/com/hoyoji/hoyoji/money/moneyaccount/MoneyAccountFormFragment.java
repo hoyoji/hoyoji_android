@@ -262,7 +262,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				mSelectorFieldFriend.setModelId(friend.getId());
 				mSelectorFieldFriend.setText(friend.getDisplayName());
 				if(mTextFieldName.getText().trim().length() == 0){
-					List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND friendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
+					List<MoneyAccount> topupAccounts = new Select().from(MoneyAccount.class).where("accountType = ? AND localFriendId = ? AND ownerUserId = ?", "Topup", friend.getId(), HyjApplication.getInstance().getCurrentUser().getId()).execute();
 					int numberOfCards = topupAccounts.size() + 1;
 					mTextFieldName.setText(friend.getDisplayName() + "充值卡" + numberOfCards);
 				}
