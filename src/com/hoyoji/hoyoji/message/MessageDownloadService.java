@@ -314,7 +314,7 @@ public class MessageDownloadService extends Service {
 				eventMemberId = msgData.optString("eventMemberId");
 				pem = HyjModel.getModel(EventMember.class, eventMemberId);
 				if(pem == null){
-					loadAllEventMembers(msgData.optJSONArray("eventId").get(0).toString());
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Accept")) {
 					pem.setState("Accept");
 					pem.setSyncFromServer(true);
