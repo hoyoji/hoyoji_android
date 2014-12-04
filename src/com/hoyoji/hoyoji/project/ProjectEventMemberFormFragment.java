@@ -334,7 +334,9 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			}
 		};
 		String data = "[";
-		data +="";
+		
+		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
+		data += jsonEM.toString();
 		
 		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
 				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
@@ -361,9 +363,6 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 				data += "," + jsonPSA.toJSON();
 			}
 		}
-		
-		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
-		data += "," + jsonEM.toString();
 		
 		//如果账本也是新建的，一同保存到服务器
 		if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
