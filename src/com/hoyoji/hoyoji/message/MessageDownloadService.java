@@ -26,6 +26,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.AddFriendListFragment;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -126,6 +127,7 @@ public class MessageDownloadService extends Service {
 										.optJSONArray(0);
 								List<Message> friendMessages = new ArrayList<Message>();
 								List<Message> projectShareMessages = new ArrayList<Message>();
+								List<Message> projectEventMemberMessages = new ArrayList<Message>();
 								try {
 									ActiveAndroid.beginTransaction();
 									for (int i = 0; i < jsonArray.length(); i++) {
@@ -144,6 +146,12 @@ public class MessageDownloadService extends Service {
 												.startsWith(
 														"Project.Share.")) {
 											projectShareMessages
+													.add(newMessage);
+										} else if (newMessage
+												.getType()
+												.startsWith(
+														"Event.Member.")) {
+											projectEventMemberMessages
 													.add(newMessage);
 										}
 										if (lastMessagesDownloadTime == null || lastMessagesDownloadTime.length() == 0
@@ -215,6 +223,8 @@ public class MessageDownloadService extends Service {
 										currentUser);
 								processProjectShareMessages(
 										projectShareMessages, currentUser);
+								processEventMemberMessages(
+										projectEventMemberMessages, currentUser);
 
 							}
 
@@ -260,6 +270,7 @@ public class MessageDownloadService extends Service {
 		}
 
 	}
+	
 	private void loadAllProjectShareAuthorizations(String projectId) {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
@@ -285,6 +296,63 @@ public class MessageDownloadService extends Service {
 			newObj = new JSONObject();
 			newObj.put("__dataType", "ProjectShareAuthorization");
 			newObj.put("main.projectId", projectId);
+			data.put(newObj);
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void processEventMemberMessages(List<Message> newMessages,
+			User currentUser) {
+		for (Message newMessage : newMessages) {
+			try {
+				String eventMemberId;
+				EventMember pem;
+				JSONObject msgData = new JSONObject(newMessage.getMessageData());
+				eventMemberId = msgData.optString("eventMemberId");
+				pem = HyjModel.getModel(EventMember.class, eventMemberId);
+				if(pem == null){
+					loadAllEventMembers(msgData.optJSONArray("eventId").get(0).toString());
+				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Accept")) {
+					pem.setState("Accept");
+					pem.setSyncFromServer(true);
+					pem.save();
+					
+				}
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+	
+	private void loadAllEventMembers(String eventId) {
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+					JSONArray jsonArray = ((JSONArray) object).optJSONArray(0);
+
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObj = jsonArray.optJSONObject(i);
+
+						HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.optString("id"));
+						model.loadFromJSON(jsonObj, true);
+						model.save();
+					}
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+			}
+		};
+		try{
+			JSONArray data = new JSONArray();
+			JSONObject newObj = new JSONObject();
+			newObj = new JSONObject();
+			newObj.put("__dataType", "EventMember");
+			newObj.put("main.eventId", eventId);
 			data.put(newObj);
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
@@ -523,6 +591,14 @@ public class MessageDownloadService extends Service {
 				newObj = new JSONObject();
 				newObj.put("__dataType", "Picture");
 				newObj.put("pst.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Event");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "EventMember");
+				newObj.put("evt.projectId", projectIds.get(i));
 				data.put(newObj);
 			}
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");

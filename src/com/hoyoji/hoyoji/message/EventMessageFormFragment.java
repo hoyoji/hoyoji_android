@@ -125,13 +125,12 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			try {
 				final JSONObject jsonMsgData = new JSONObject(mMessageEditor.getModelCopy().getMessageData());
 
-				ProjectShareAuthorization newPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
-						jsonMsgData.optString("projectId"), mMessageEditor.getModelCopy().getFromUserId()).executeSingle();
-				
-				if (newPSA != null && newPSA.getState().equals("Accept")) {
-					sendAcceptMessageToServer(jsonMsgData);
-					getActivity().finish();
-				} else {
+//				ProjectShareAuthorization newPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
+//						jsonMsgData.optString("projectId"), mMessageEditor.getModelCopy().getFromUserId()).executeSingle();
+//				
+//				if (newPSA != null && newPSA.getState().equals("Accept")) {
+//					sendAcceptMessageToServer(jsonMsgData);
+//				} else {
 					//账本存在才允许去接受活动邀请
 					EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberId"));
 					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
@@ -191,7 +190,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 									serverCallbacks);
 						}
 					}
-				}
+//				}
 			} catch (JSONException e) {
 			}
 
@@ -230,6 +229,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
 			msgData.put("projectIds", jsonMsgData.opt("projectIds"));
 			msgData.put("eventId", jsonMsgData.opt("eventId"));
+			msgData.put("eventMemberId", jsonMsgData.opt("eventMemberId"));
 			
 			msg.put("messageData", msgData.toString());
 	

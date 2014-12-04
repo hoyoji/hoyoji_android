@@ -335,14 +335,15 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		};
 		String data = "[";
 		
+		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
+		data += jsonEM.toString();
+		
 		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
 				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
 		
-		if (jsonPSA != null && jsonPSA.getState().equals("Accept")) {
-			
-		} else if(jsonPSA != null && jsonPSA.getState().equals("Wait")) {
+		if(jsonPSA != null) {
 			if (jsonPSA.isClientNew()) {
-				data += jsonPSA.toString();
+				data += "," + jsonPSA.toString();
 			}
 		} else {
 			jsonPSA = new ProjectShareAuthorization();
@@ -359,12 +360,9 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
 			jsonPSA.save();
 			if (jsonPSA.isClientNew()) {
-				data += jsonPSA.toJSON();
+				data += "," + jsonPSA.toJSON();
 			}
 		}
-		
-		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
-		data += "," + jsonEM.toString();
 		
 		//如果账本也是新建的，一同保存到服务器
 		if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
@@ -405,12 +403,12 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msgData.put("projectName", mEventMemberEditor.getModelCopy().getEvent().getProject().getName());
 			msgData.put("eventName", mEventMemberEditor.getModelCopy().getEvent().getName());
 			
-			if(jsonPSA.getState() == "Wait"){
+//			if(jsonPSA.getState() == "Wait"){
 				msgData.put("shareAllSubProjects", false);
 				msgData.put("projectShareAuthorizationId", jsonPSA.getId());
 				msgData.put("projectIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProjectId()  + "]"));
 				msgData.put("projectCurrencyIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProject().getCurrencyId()  + "]"));
-			}
+//			}
 			
 			msg.put("messageData", msgData.toString());
 			
