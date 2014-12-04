@@ -403,12 +403,12 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msgData.put("projectName", mEventMemberEditor.getModelCopy().getEvent().getProject().getName());
 			msgData.put("eventName", mEventMemberEditor.getModelCopy().getEvent().getName());
 			
-			if(jsonPSA.getState() == "Wait"){
+//			if(jsonPSA.getState() == "Wait"){
 				msgData.put("shareAllSubProjects", false);
 				msgData.put("projectShareAuthorizationId", jsonPSA.getId());
 				msgData.put("projectIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProjectId()  + "]"));
 				msgData.put("projectCurrencyIds", new JSONArray("[" + mEventMemberEditor.getModelCopy().getEvent().getProject().getCurrencyId()  + "]"));
-			}
+//			}
 			
 			msg.put("messageData", msgData.toString());
 			
