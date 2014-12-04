@@ -229,6 +229,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
 			msgData.put("projectIds", jsonMsgData.opt("projectIds"));
 			msgData.put("eventId", jsonMsgData.opt("eventId"));
+			msgData.put("eventMemberId", jsonMsgData.opt("eventMemberId"));
 			
 			msg.put("messageData", msgData.toString());
 	
