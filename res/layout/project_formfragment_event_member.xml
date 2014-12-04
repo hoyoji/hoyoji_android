@@ -120,8 +120,7 @@
         <RadioGroup
             android:id="@+id/projectEventMemberFormFragment_radioGroup_autoHide"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_height="wrap_content">
             <RadioButton
                 android:id="@+id/projectEventMemberFormFragment_radioButton_unSignUp"
                 android:layout_width="wrap_content"

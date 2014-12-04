@@ -338,9 +338,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
 				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
 		
-		if (jsonPSA != null && jsonPSA.getState().equals("Accept")) {
-			
-		} else if(jsonPSA != null && jsonPSA.getState().equals("Wait")) {
+		if(jsonPSA != null) {
 			if (jsonPSA.isClientNew()) {
 				data += jsonPSA.toString();
 			}
