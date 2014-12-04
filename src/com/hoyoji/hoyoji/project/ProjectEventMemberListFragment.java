@@ -38,6 +38,7 @@ import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
@@ -175,6 +176,10 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Event event = Event.load(Event.class, modelId);
+		if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
+			return true;
+		}
 		if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("EVENT_ID", modelId);
@@ -215,7 +220,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			inviteFriendObject.put("data", event.toJSON().toString());
 			inviteFriendObject.put("__dataType", "InviteLink");
 			inviteFriendObject.put("title", "邀请参加活动");
-			inviteFriendObject.put("type", "Event");
+			inviteFriendObject.put("type", "EventMember");
 			inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
 			inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name);
 			inviteFriendObject.put("state", "Open");

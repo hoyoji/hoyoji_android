@@ -2,7 +2,7 @@
 <resources>
    
    <string name="eventMessageFormFragment_title_addrequest">活动邀请请求</string>
-   <string name="eventMessageFormFragment_title_accept">活动邀请回复</string>
+   <string name="eventMessageFormFragment_title_accept">接受活动邀请</string>
    <string name="eventMessageFormFragment_title_edit">修改活动邀请</string>
    <string name="eventMessageFormFragment_title_delete">删除活动邀请</string>
    
