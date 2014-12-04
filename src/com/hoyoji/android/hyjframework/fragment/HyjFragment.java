@@ -100,9 +100,17 @@ public abstract class HyjFragment extends Fragment {
 			intent.putExtras(bundle);
 		}
 		if(forResult){
-			this.startActivityForResult(intent, requestCode);
+			if(getParentFragment() != null){
+				getParentFragment().startActivityForResult(intent, requestCode);
+			} else {
+				startActivityForResult(intent, requestCode);
+			}
 		} else {
-			this.startActivity(intent);
+			if(getParentFragment() != null){
+				getParentFragment().startActivity(intent);
+			} else {
+				startActivity(intent);
+			}
 		}
 	}
 	
@@ -115,9 +123,17 @@ public abstract class HyjFragment extends Fragment {
 			intent.putExtras(bundle);
 		}
 		if(forResult){
-			this.startActivityForResult(intent, requestCode);
+			if(getParentFragment() != null){
+				getParentFragment().startActivityForResult(intent, requestCode);
+			} else {
+				startActivityForResult(intent, requestCode);
+			}
 		} else {
-			this.startActivity(intent);
+			if(getParentFragment() != null){
+				getParentFragment().startActivity(intent);
+			} else {
+				startActivity(intent);
+			}
 		}
 	}
 	

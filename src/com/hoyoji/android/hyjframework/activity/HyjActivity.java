@@ -234,6 +234,28 @@ public abstract class HyjActivity extends ActionBarActivity
 		}
 	}
 
+// @Override
+// protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//     int index = requestCode>>16;
+//     if (index != 0) {
+//         index--;
+////         if (mFragments.mActive == null || index < 0 || index >= mFragments.mActive.size()) {
+////             Log.w(TAG, "Activity result fragment index out of range: 0x"
+////                     + Integer.toHexString(requestCode));
+////             return;
+////         }
+////         Fragment frag = mFragments.mActive.get(index);
+////         if (frag == null) {
+////             Log.w(TAG, "Activity result no fragment exists for index: 0x"
+////                     + Integer.toHexString(requestCode));
+////         }
+////         frag.onActivityResult(requestCode&0xffff, resultCode, data);
+////         return;
+//     }
+//     
+//     super.onActivityResult(requestCode, resultCode, data);
+// }
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == REQUEST_TAKE_PHOTO) {
