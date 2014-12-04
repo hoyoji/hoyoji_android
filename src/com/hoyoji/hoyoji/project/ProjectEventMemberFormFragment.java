@@ -334,13 +334,14 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			}
 		};
 		String data = "[";
+		data +="";
 		
 		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
 				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
 		
 		if(jsonPSA != null) {
 			if (jsonPSA.isClientNew()) {
-				data += jsonPSA.toString();
+				data += "," + jsonPSA.toString();
 			}
 		} else {
 			jsonPSA = new ProjectShareAuthorization();
@@ -357,7 +358,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
 			jsonPSA.save();
 			if (jsonPSA.isClientNew()) {
-				data += jsonPSA.toJSON();
+				data += "," + jsonPSA.toJSON();
 			}
 		}
 		
