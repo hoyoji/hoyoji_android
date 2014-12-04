@@ -605,7 +605,7 @@ public class HyjUtil {
 					public void finishCallback(Object object) {
 						JSONArray array = (JSONArray) object;
 						if(array.length() > 0) {
-							JSONObject json = array.optJSONObject(0);
+							JSONObject json = array.optJSONArray(0).optJSONObject(0);
 							HyjModel model = HyjModel.createModel(modelName, id);
 							model.loadFromJSON(json, true);
 							model.save();
