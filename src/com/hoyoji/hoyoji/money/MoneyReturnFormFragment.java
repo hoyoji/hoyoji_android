@@ -232,7 +232,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				bundle.putLong("MODEL_ID", project.get_mId());
 //				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
 				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_FRIEND_ID);
+					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FRIEND_ID);
 				} else {
 					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FRIEND_ID);
 				}
