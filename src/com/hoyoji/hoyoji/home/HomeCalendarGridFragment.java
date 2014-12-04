@@ -149,7 +149,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		mCalendarGridView.getAdapter().setData(mListGroupData);
 		mCurrentMonth = (TextView) view.findViewById(R.id.home_stat_month);
 		mCurrentYear = (TextView) view.findViewById(R.id.home_stat_year);
-		
+
+		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 
 //		mGroupHeaderIncome = (HyjNumericView) view.findViewById(R.id.home_stat_group_incomeTotal);
 //		mGroupHeaderExpense = (HyjNumericView) view.findViewById(R.id.home_stat_group_expenseTotal);

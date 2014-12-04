@@ -77,7 +77,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 	private final static int GET_PARENT_PROJECT_ID = 1;
 	private final static int GET_CURRENCY_ID = 2;
 	private final static int FETCH_PROJECT_TO_LOCAL_EXCHANGE = 3;
-	protected static final int GET_FINANCIALOWNER_ID = 0;
+	private static final int GET_FINANCIALOWNER_ID = 4;
 
 	private HyjModelEditor<Project> mProjectEditor = null;
 	private HyjTextField mTextFieldProjectName = null;
@@ -287,10 +287,6 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 				// 币种是一样的，不用新增汇率
 				doSave();
 			} else {
-				((HyjActivity) ProjectFormFragment.this.getActivity())
-						.displayProgressDialog(
-								R.string.projectMessageFormFragment_addShare_fetch_exchange,
-								R.string.projectMessageFormFragment_addShare_fetching_exchange);
 				Double rate = Exchange.getExchangeRate(projectCurrencyId,
 						HyjApplication.getInstance().getCurrentUser()
 								.getUserData().getActiveCurrencyId());
@@ -299,6 +295,11 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					doSave();
 					return;
 				}
+
+				((HyjActivity) ProjectFormFragment.this.getActivity())
+						.displayProgressDialog(
+								R.string.projectMessageFormFragment_addShare_fetch_exchange,
+								R.string.projectMessageFormFragment_addShare_fetching_exchange);
 				// 尝试到网上获取汇率
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override

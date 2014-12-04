@@ -91,8 +91,12 @@ public class FriendFormFragment extends HyjUserFormFragment {
 				mTextFieldUserNickName.setText(friend.getFriendUser().getNickName());
 			} else {
 				mPicture.setImage((Picture)null);
-				mTextFieldUserName.setText("无用户名");
-				mTextFieldUserNickName.setText("无好友昵称");
+				if(friend.getFriendUserName() != null && friend.getFriendUserName().length() > 0){
+					mTextFieldUserName.setText(friend.getFriendUserName());
+				} else {
+					mTextFieldUserName.setText("[无用户名]");
+				}
+				mTextFieldUserNickName.setText("[无好友昵称]");
 			}
 			if(friend.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				mPicture.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
