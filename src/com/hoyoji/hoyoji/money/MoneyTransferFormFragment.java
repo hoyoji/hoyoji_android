@@ -714,6 +714,8 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 				
 				if (mNumericExchangeRate.getNumber() != null){
 					projectTransferInExchangeRate.setNumber(mNumericExchangeRate.getNumber() / transferOutProjectExchangeRate.getNumber());
+				} else {
+					projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 				}
 				
 				
