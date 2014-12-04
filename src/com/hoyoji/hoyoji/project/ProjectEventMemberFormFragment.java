@@ -252,30 +252,35 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		mEventMemberEditor.validate();
 		if (mEventMemberEditor.hasValidationErrors()) {
 			showValidatioErrors();
-		} else if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
-//			ProjectShareAuthorization importFiendPSA = null;
-//			importFiendPSA = new Select()
-//					.from(ProjectShareAuthorization.class)
-//					.where("projectId=? and friendUserId=?",
-//							mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId())
-//					.executeSingle();
-//	        if(importFiendPSA == null){
-//	        	HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization);
-//	        	Bundle bundle = new Bundle();
-//				bundle.putLong("PROJECT_ID", mEventMemberEditor.getModelCopy().getEvent().getProject().get_mId());
-//				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
-//				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
-//	        } else {
-			if(mEventMemberEditor.getModelCopy().getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				doSave();
+		} else{
+			Intent intent = getActivity().getIntent();
+			Long modelId = intent.getLongExtra("MODEL_ID", -1);
+			if(modelId == -1 && mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+	//			ProjectShareAuthorization importFiendPSA = null;
+	//			importFiendPSA = new Select()
+	//					.from(ProjectShareAuthorization.class)
+	//					.where("projectId=? and friendUserId=?",
+	//							mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId())
+	//					.executeSingle();
+	//	        if(importFiendPSA == null){
+	//	        	HyjUtil.displayToast(R.string.projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization);
+	//	        	Bundle bundle = new Bundle();
+	//				bundle.putLong("PROJECT_ID", mEventMemberEditor.getModelCopy().getEvent().getProject().get_mId());
+	//				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
+	//				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
+	//	        } else {
+				if(mEventMemberEditor.getModelCopy().getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					doSave();
+				} else {
+					sendNewEventMemberToServer();
+					
+	//				((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+				}
+	//	        }
 			} else {
-				sendNewEventMemberToServer();
 				doSave();
-				((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 			}
-//	        }
-		} else {
-			doSave();
+			
 		}
 		
 	}
@@ -441,11 +446,11 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 //				data.putExtra("MODELID", mProjectShareAuthorizationEditor.getModelCopy().getId());
 //				getActivity().setResult(Activity.RESULT_OK, data);
 //			}
-			getActivity().finish();
+//			getActivity().finish();
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
-
+		doSave();
 		((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 	
