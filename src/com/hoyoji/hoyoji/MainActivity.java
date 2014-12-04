@@ -1029,24 +1029,28 @@ public class MainActivity extends HyjUserActivity {
 										recordData.put("projectCurrencyId", ((MoneyApportion)model).getProject().getCurrencyId());
 										if(model instanceof MoneyDepositIncomeApportion){
 											MoneyDepositIncomeApportion moneyDepositIncomeApportion = (MoneyDepositIncomeApportion)model;
-											if(moneyDepositIncomeApportion != null){
-												recordData.put("isImported", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getIsImported());
-											}
+											recordData.put("isImported", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getIsImported());
+											recordData.put("__addIfUnchangedType", "MoneyDepositIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyDepositIncomeApportion.getMoneyDepositIncomeContainer().getLastServerUpdateTime());
 										} else if(model instanceof MoneyDepositReturnApportion){
 											MoneyDepositReturnApportion moneyDepositReturnApportion = (MoneyDepositReturnApportion)model;
-											if(moneyDepositReturnApportion != null){
-												recordData.put("isImported", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getIsImported());
-											}
+											recordData.put("isImported", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getIsImported());
+											recordData.put("__addIfUnchangedType", "MoneyDepositReturnContainer");
+											recordData.put("__addIfUnchangedId", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getLastServerUpdateTime());
 										} else if(model instanceof MoneyExpenseApportion){
 											MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
-											if(moneyExpenseApportion != null){
-												recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
-											}
+											recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
+											recordData.put("__addIfUnchangedType", "MoneyExpenseContainer");
+											recordData.put("__addIfUnchangedId", moneyExpenseApportion.getMoneyExpenseContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyExpenseApportion.getMoneyExpenseContainer().getLastServerUpdateTime());
 										} else if(model instanceof MoneyIncomeApportion){
 											MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
-											if(moneyIncomeApportion != null){
-												recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
-											}
+											recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
+											recordData.put("__addIfUnchangedType", "MoneyIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyIncomeApportion.getMoneyIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyIncomeApportion.getMoneyIncomeContainer().getLastServerUpdateTime());
 										}
 									} else if(model instanceof MoneyExpenseContainer){
 										recordData.put("projectCurrencySymbol", ((MoneyExpenseContainer)model).getProject().getCurrencySymbol());
@@ -1065,47 +1069,77 @@ public class MainActivity extends HyjUserActivity {
 									} else if(model instanceof MoneyReturnContainer){
 										recordData.put("currencyId", ((MoneyReturnContainer)model).getMoneyAccount().getCurrencyId());
 									} 
-//									else if(model instanceof MoneyExpense){
-//										if(((MoneyExpense)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyAccount().getCurrencyId());
-//										} else {
-//											recordData.put("currencyId", ((MoneyExpense)model).getMoneyExpenseApportion().getCurrencyId());
-//										}
-//									} else if(model instanceof MoneyIncome){
-//										if(((MoneyIncome)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyIncome)model).getMoneyAccount().getCurrencyId());
-//										}
-//									} 
+									else if(model instanceof MoneyExpense){
+										MoneyExpense moneyExpense = (MoneyExpense) model;
+										if(moneyExpense.getMoneyExpenseApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyExpenseContainer");
+											recordData.put("__addIfUnchangedId", moneyExpense.getMoneyExpenseApportion().getMoneyExpenseContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyExpense.getMoneyExpenseApportion().getMoneyExpenseContainer().getLastServerUpdateTime());
+										}
+									} else if(model instanceof MoneyIncome){
+										MoneyIncome moneyIncome = (MoneyIncome) model;
+										if(moneyIncome.getMoneyIncomeApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyIncome.getMoneyIncomeApportion().getMoneyIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyIncome.getMoneyIncomeApportion().getMoneyIncomeContainer().getLastServerUpdateTime());
+										}
+									} 
 									else if(model instanceof MoneyBorrow){
-//										if(((MoneyBorrow)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyBorrow)model).getMoneyAccount().getCurrencyId());
-//										} else 
-//										if(((MoneyBorrow)model).getMoneyExpenseApportion() != null){
-//											recordData.put("moneyExpenseApportionFriendUserId", ((MoneyBorrow)model).getMoneyExpenseApportion().getFriendUserId());
-//										} else if(((MoneyBorrow)model).getMoneyIncomeApportion() != null){
-//											recordData.put("moneyIncomeApportionFriendUserId", ((MoneyBorrow)model).getMoneyIncomeApportion().getFriendUserId());
-//										}
-										recordData.put("projectCurrencySymbol", ((MoneyBorrow)model).getProject().getCurrencySymbol());
+										MoneyBorrow moneyBorrow = (MoneyBorrow)model;
+										if(moneyBorrow.getMoneyExpenseApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyExpenseContainer");
+											recordData.put("__addIfUnchangedId", moneyBorrow.getMoneyExpenseApportion().getMoneyExpenseContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyBorrow.getMoneyExpenseApportion().getMoneyExpenseContainer().getLastServerUpdateTime());
+										} else if(moneyBorrow.getMoneyIncomeApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyBorrow.getMoneyIncomeApportion().getMoneyIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyBorrow.getMoneyIncomeApportion().getMoneyIncomeContainer().getLastServerUpdateTime());
+										} else if(moneyBorrow.getMoneyDepositIncomeApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().getLastServerUpdateTime());
+										}
+										recordData.put("projectCurrencySymbol", moneyBorrow.getProject().getCurrencySymbol());
 									} else if(model instanceof MoneyLend){
-//										if(((MoneyLend)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyLend)model).getMoneyAccount().getCurrencyId());
-//										} else 
-//										if(((MoneyLend)model).getMoneyExpenseApportion() != null){
-//											recordData.put("moneyExpenseApportionFriendUserId", ((MoneyLend)model).getMoneyExpenseApportion().getFriendUserId());
-//										} else if(((MoneyLend)model).getMoneyIncomeApportion() != null){
-//											recordData.put("moneyIncomeApportionFriendUserId", ((MoneyLend)model).getMoneyIncomeApportion().getFriendUserId());
-//										}
-										recordData.put("projectCurrencySymbol", ((MoneyLend)model).getProject().getCurrencySymbol());
+										MoneyLend moneyLend = (MoneyLend)model;
+										if(moneyLend.getMoneyExpenseApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyExpenseContainer");
+											recordData.put("__addIfUnchangedId", moneyLend.getMoneyExpenseApportion().getMoneyExpenseContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyLend.getMoneyExpenseApportion().getMoneyExpenseContainer().getLastServerUpdateTime());
+										} else if(moneyLend.getMoneyIncomeApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyLend.getMoneyIncomeApportion().getMoneyIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyLend.getMoneyIncomeApportion().getMoneyIncomeContainer().getLastServerUpdateTime());
+										} else if(moneyLend.getMoneyDepositIncomeApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositIncomeContainer");
+											recordData.put("__addIfUnchangedId", moneyLend.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyLend.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().getLastServerUpdateTime());
+										} else if(moneyLend.getMoneyDepositExpenseContainer() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositExpenseContainer");
+											recordData.put("__addIfUnchangedId", moneyLend.getMoneyDepositExpenseContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyLend.getMoneyDepositExpenseContainer().getLastServerUpdateTime());
+										}
+										recordData.put("projectCurrencySymbol", moneyLend.getProject().getCurrencySymbol());
 									} else if(model instanceof MoneyPayback){
-//										if(((MoneyPayback)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyPayback)model).getMoneyAccount().getCurrencyId());
-//										}
-										recordData.put("projectCurrencySymbol", ((MoneyPayback)model).getProject().getCurrencySymbol());
+										MoneyPayback moneyPayback = (MoneyPayback) model;
+										if(moneyPayback.getMoneyDepositReturnApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositReturnContainer");
+											recordData.put("__addIfUnchangedId", moneyPayback.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyPayback.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().getLastServerUpdateTime());
+										} else if(moneyPayback.getMoneyDepositPaybackContainer() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositPaybackContainer");
+											recordData.put("__addIfUnchangedId", moneyPayback.getMoneyDepositPaybackContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyPayback.getMoneyDepositPaybackContainer().getLastServerUpdateTime());
+										}
+										recordData.put("projectCurrencySymbol", moneyPayback.getProject().getCurrencySymbol());
 									} else if(model instanceof MoneyReturn){
-//										if(((MoneyReturn)model).getMoneyAccount() != null){
-//											recordData.put("currencyId", ((MoneyReturn)model).getMoneyAccount().getCurrencyId());
-//										}
-										recordData.put("projectCurrencySymbol", ((MoneyReturn)model).getProject().getCurrencySymbol());
+										MoneyReturn moneyReturn = (MoneyReturn) model;
+										if(moneyReturn.getMoneyDepositReturnApportion() != null){
+											recordData.put("__addIfUnchangedType", "MoneyDepositReturnContainer");
+											recordData.put("__addIfUnchangedId", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().getId());
+											recordData.put("__addIfUnchangedUpdateTime", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().getLastServerUpdateTime());
+										}
+										recordData.put("projectCurrencySymbol", moneyReturn.getProject().getCurrencySymbol());
 									}
 									jsonObj.put( "recordData", recordData);
 									postData.put(jsonObj);

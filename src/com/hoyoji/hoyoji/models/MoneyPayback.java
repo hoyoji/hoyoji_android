@@ -657,7 +657,7 @@ public class MoneyPayback extends HyjModel{
 		
 	}
 
-	public Model getMoneyDepositPaybackContainer() {
+	public MoneyDepositPaybackContainer getMoneyDepositPaybackContainer() {
 		return HyjModel.getModel(MoneyDepositPaybackContainer.class, this.getMoneyDepositPaybackContainerId());
 	}
 
