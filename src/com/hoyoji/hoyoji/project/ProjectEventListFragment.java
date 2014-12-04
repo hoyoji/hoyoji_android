@@ -161,6 +161,11 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		Project project = Project.load(Project.class, modelId);
+		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			HyjUtil.displayToast("您不能在共享来的账本添加活动");
+			return true;
+		}
 		if(item.getItemId() == R.id.projectEventListFragment_action_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("PROJECT_ID", modelId);
