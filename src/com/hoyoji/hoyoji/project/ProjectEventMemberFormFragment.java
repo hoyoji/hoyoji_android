@@ -212,8 +212,10 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
+	    if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	    	hideSaveAction();
+	    }
 	}
-	
 	
 	private void fillData() {
 		EventMember modelCopy = (EventMember) mEventMemberEditor.getModelCopy();
