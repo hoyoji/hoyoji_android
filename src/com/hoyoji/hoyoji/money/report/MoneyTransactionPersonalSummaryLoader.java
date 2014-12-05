@@ -252,11 +252,12 @@ public class MoneyTransactionPersonalSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(main.transferInAmount / main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+						"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
 								+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
 								+ localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
 								+ "WHERE transferInId IS NOT NULL AND date > ? AND date <= ?  AND main.ownerUserId = '" + currentUserId + "' AND "
 								+ buildTransferSearchQuery(), args);
+		
 		if (cursor != null) {
 			cursor.moveToFirst();
 			transferInTotal = cursor.getDouble(1);

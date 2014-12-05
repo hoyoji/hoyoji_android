@@ -252,7 +252,10 @@ public class MoneyTransactionProjectSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(transferInAmount) as total FROM MoneyTransfer main WHERE transferInId IS NOT NULL AND date > ? AND date <= ? AND "
+						"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
+								+ "WHERE transferInId IS NOT NULL AND date > ? AND date <= ? AND "
 								+ buildTransferSearchQuery(), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -263,7 +266,10 @@ public class MoneyTransactionProjectSummaryLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT COUNT(*) AS count, SUM(transferOutAmount) as total FROM MoneyTransfer main WHERE transferOutId IS NOT NULL AND date > ? AND date <= ? AND "
+						"SELECT  COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+								+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+								+ localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " 
+								+ "WHERE transferOutId IS NOT NULL AND date > ? AND date <= ? AND "
 								+ buildTransferSearchQuery(), args);
 		if (cursor != null) {
 			cursor.moveToFirst();
