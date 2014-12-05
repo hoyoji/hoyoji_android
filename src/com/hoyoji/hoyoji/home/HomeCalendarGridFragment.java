@@ -44,6 +44,8 @@ import android.widget.SimpleAdapter.ViewBinder;
 
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -643,6 +645,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			cursor.close();
 			cursor = null;
 		}
+		
+		List<MoneyBorrow> list = new Select().from(MoneyBorrow.class).where("ownerUserId = '" + currentUserId + "'").execute();
+		
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
