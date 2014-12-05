@@ -646,7 +646,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			cursor = null;
 		}
 		
-		List<MoneyBorrow> list = new Select().from(MoneyBorrow.class).where("ownerUserId = '" + currentUserId + "'").execute();
+//		List<MoneyBorrow> list = new Select().from(MoneyBorrow.class).where("ownerUserId = '" + currentUserId + "'").execute();
 		
 		cursor = Cache
 				.openDatabase()

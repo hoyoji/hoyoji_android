@@ -9,12 +9,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 
 public class ProjectEventViewPagerFragment extends HyjUserFragment {
@@ -95,6 +97,18 @@ public class ProjectEventViewPagerFragment extends HyjUserFragment {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
+		
+		String subTitle = null;
+		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+		if(model_id != -1){
+			Event event = HyjModel.load(Event.class, model_id);
+			if(event != null){
+				subTitle = event.getName();
+			}
+			if(subTitle != null){
+				((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
+			}
+		}
 	}
 	
 	
