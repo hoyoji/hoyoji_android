@@ -120,6 +120,9 @@ public class Friend extends HyjModel {
 			this.mNickName_pinYin = "";
 		} else if(this.mNickName == null || !this.mNickName.equals(nickName) || this.mNickName_pinYin == null){
 			this.mNickName_pinYin = HyjUtil.convertToPinYin(nickName);
+			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
+				this.mNickName_pinYin = " " + this.mNickName_pinYin;
+			}
 		}
 
 		this.mNickName = nickName;
