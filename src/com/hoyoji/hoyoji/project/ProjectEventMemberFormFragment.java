@@ -190,18 +190,22 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			unSignUpRadioButton.setChecked(true);
 		}
 		
-		if(eventMember.getLocalFriendId() == null){
-			stateRadioGroup.setEnabled(false);
-			unSignUpRadioButton.setEnabled(false);
-			signUpRadioButton.setEnabled(false);
-			signInRadioButton.setEnabled(false);
-		}
+//		if(eventMember.getLocalFriendId() == null){
+//			stateRadioGroup.setEnabled(false);
+//			unSignUpRadioButton.setEnabled(false);
+//			signUpRadioButton.setEnabled(false);
+//			signInRadioButton.setEnabled(false);
+//		}
 		
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
 			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				stateRadioGroup.setEnabled(false);
+				unSignUpRadioButton.setEnabled(false);
+				signUpRadioButton.setEnabled(false);
+				signInRadioButton.setEnabled(false);
 				if(this.mOptionsMenu != null){
 					hideSaveAction();
 				}
@@ -420,10 +424,10 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			
 			msg.put("messageData", msgData.toString());
 			
-			if(mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")){
+//			if(mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")){
 					// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
 					msg.put("id", UUID.randomUUID().toString());
-			}
+//			}
 		} catch (JSONException e) {
 		}
 		return msg;
@@ -493,16 +497,16 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	         				} else {
 	         					unSignUpRadioButton.setChecked(true);
 	         				}
-	         				unSignUpRadioButton.setEnabled(false);
-	         				signInRadioButton.setEnabled(false);
-	         				signUpRadioButton.setEnabled(false);
+//	         				unSignUpRadioButton.setEnabled(false);
+//	         				signInRadioButton.setEnabled(false);
+//	         				signUpRadioButton.setEnabled(false);
 	         			} else {
 	         				mSelectorFieldFriend.setText(friend.getDisplayName());
 	         				mSelectorFieldFriend.setModelId(friend.getId());
 	         				mSelectorFieldFriend.setTag(TAG_MEMBER_IS_LOCAL_FRIEND, true);
-	         				unSignUpRadioButton.setEnabled(true);
-	         				signInRadioButton.setEnabled(true);
-	         				signUpRadioButton.setEnabled(true);
+//	         				unSignUpRadioButton.setEnabled(true);
+//	         				signInRadioButton.setEnabled(true);
+//	         				signUpRadioButton.setEnabled(true);
 	         				signUpRadioButton.setChecked(true);
 	         			}
 					}

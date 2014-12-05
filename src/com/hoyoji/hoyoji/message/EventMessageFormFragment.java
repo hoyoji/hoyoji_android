@@ -133,7 +133,8 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 //				} else {
 					//账本存在才允许去接受活动邀请
 					EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberId"));
-					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
+//					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
+					if (newEM != null) {
 						// 该活动已经存在
 						HyjUtil.displayToast(R.string.eventMessageFormFragment_addShare_already_exists);
 					} else {
