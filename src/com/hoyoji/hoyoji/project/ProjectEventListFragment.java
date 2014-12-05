@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
 import java.util.Date;
+import java.util.List;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -24,8 +28,12 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.User;
 
 public class ProjectEventListFragment extends HyjUserListFragment {
 
@@ -49,8 +57,8 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"_id", "id", "date", "name", "description", "startDate"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle},
+				new String[] {"_id", "id", "startDate", "name", "id", "ownerUserId" ,"id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_owner},
 				0); 
 	}	
 
@@ -132,23 +140,51 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
 		}else if(view.getId() == R.id.homeListItem_remark){
-			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
-				((TextView)view).setText("无备注");
-			} else {
-				((TextView)view).setText(cursor.getString(columnIndex));
-			}
-			return true;
-		}else if(view.getId() == R.id.homeListItem_subTitle){
+//			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
+//				((TextView)view).setText("无备注");
+//			} else {
+//				((TextView)view).setText(cursor.getString(columnIndex));
+//			}
 			String date = cursor.getString(cursor.getColumnIndex("date"));
 			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
 			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
 			String dt = HyjUtil.formatDateToIOS(new Date());
+			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
 			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
-				((TextView)view).setText("[报名中]");
+				((TextView)view).setText("[报名中]" + ems.size() + "人");
 			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
-				((TextView)view).setText("[进行中]");
+				((TextView)view).setText("[进行中]" + ems.size() + "人");
 			} else if(dt.compareTo(endDate)>=0) {
-				((TextView)view).setText("[已结束]");
+				((TextView)view).setText("[已结束]" + ems.size() + "人");
+			}
+			return true;
+		}else if(view.getId() == R.id.homeListItem_subTitle){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", cursor.getString(columnIndex)).executeSingle();
+			((TextView)view).setText(friend.getFriendUserDisplayName(cursor.getString(columnIndex)));
+//			String date = cursor.getString(cursor.getColumnIndex("date"));
+//			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+//			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
+//			String dt = HyjUtil.formatDateToIOS(new Date());
+//			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
+//				((TextView)view).setText("[报名中]");
+//			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
+//				((TextView)view).setText("[进行中]");
+//			} else if(dt.compareTo(endDate)>=0) {
+//				((TextView)view).setText("[已结束]");
+//			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+			EventMember em = new Select().from(EventMember.class).where("eventId=?", cursor.getString(columnIndex)).executeSingle();
+			if(em != null){
+				if("UnSignUp".equals(em.getState())){
+					((TextView)view).setText("[未报名]");
+				} else if("SignUp".equals(em.getState())){
+					((TextView)view).setText("[已报名]");
+				} else if("SignIn".equals(em.getState())){
+					((TextView)view).setText("[已签到]");
+				} 
+			} else {
+				((TextView)view).setText("未报名");
 			}
 			return true;
 		} else {
@@ -156,6 +192,16 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		}
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		Project project = Project.load(Project.class, modelId);
+		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventListFragment_action_add) != null){
+			getOptionsMenu().findItem(R.id.projectEventListFragment_action_add).setVisible(false);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

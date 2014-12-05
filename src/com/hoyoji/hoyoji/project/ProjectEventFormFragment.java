@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
@@ -23,6 +24,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 
 public class ProjectEventFormFragment extends HyjUserFormFragment {
@@ -126,20 +128,28 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		if (modelId == -1){
+		if(modelId != -1){
+			if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				mDateTimeFieldEndDate.setEnabled(false);
+				mDateTimeFieldStartDate.setEnabled(false);
+				mTextFieldName.setEnabled(false);
+				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				if(this.mOptionsMenu != null){
+					hideSaveAction();
+				}
+			}
+		} else {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		}else{
 		}
 	}
-
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-//	    if(mMoneyAccountEditor!= null && mMoneyAccountEditor.getModel().get_mId() != null && mMoneyAccountEditor.getModel().getAccountType().equalsIgnoreCase("Debt")){
-//	    	setSaveActionEnable(false);
-//	    }
+	    if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	    	hideSaveAction();
+	    }
 	}
-	
 	
 	private void fillData() {
 		Event modelCopy = (Event) mEventEditor.getModelCopy();

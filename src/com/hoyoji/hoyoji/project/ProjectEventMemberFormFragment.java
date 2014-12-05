@@ -200,14 +200,22 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
+			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				if(this.mOptionsMenu != null){
+					hideSaveAction();
+				}
+			}
 		}
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
+	    if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+	    	hideSaveAction();
+	    }
 	}
-	
 	
 	private void fillData() {
 		EventMember modelCopy = (EventMember) mEventMemberEditor.getModelCopy();
