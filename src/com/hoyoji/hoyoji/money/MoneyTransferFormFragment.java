@@ -90,7 +90,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	
 //	private View mViewSeparatorTransferOutProject = null;
 	private View mViewSeparatorProjectTransferIn = null;
-	private View mViewSeparatorProjectTransferIn1 = null;
+//	private View mViewSeparatorProjectTransferIn1 = null;
 	
 	private Project project = null;
 	
@@ -130,7 +130,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 
 //		mViewSeparatorTransferOutProject = (View) getView().findViewById(R.id.field_separator_transferOutProject);
 		mViewSeparatorProjectTransferIn = (View) getView().findViewById(R.id.field_separator_projectTransferIn);
-		mViewSeparatorProjectTransferIn1 = (View) getView().findViewById(R.id.field_separator_projectTransferIn1);
+//		mViewSeparatorProjectTransferIn1 = (View) getView().findViewById(R.id.field_separator_projectTransferIn1);
 		mLinearLayoutTransferOutProject = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_transferOutProject);
 		mLinearLayoutProjectTransferIn = (LinearLayout) getView().findViewById(R.id.moneyTransferFormFragment_LinerLayout_projectTransferIn);
 		if(modelId != -1){
@@ -557,13 +557,13 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			if(moneyTransfer.getTransferIn() != null){
 				transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
 				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
-				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
+//				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
 				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
 			}
 			if(moneyTransfer.getTransferOut() != null){
 				transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
 				mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
-			} else if(moneyTransfer.getTransferIn() != null){
+			} else{
 				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
 		}
@@ -757,7 +757,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					projectTransferInCurrency.setText(null);
 					transferInCurrency.setText(null);
 					mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
-					mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
+//					mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
 					mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
 				}
 				mNumericExchangeRate.setNumber(null);
@@ -1087,7 +1087,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             			} else {
             				setExchangeRate(true);
             				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
-            				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
+//            				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
             				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
             			}
                  		return;
@@ -1108,7 +1108,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
             			} else {
             				setExchangeRate(true);
 	        				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
-	        				mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
+//	        				mViewSeparatorProjectTransferIn1.setVisibility(View.GONE);
 	        				mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
             			}
              		}

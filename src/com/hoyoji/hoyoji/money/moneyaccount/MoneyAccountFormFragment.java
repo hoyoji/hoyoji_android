@@ -446,9 +446,11 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 				newMoneyTransfer.setTransferOutId(null);
 				newMoneyTransfer.setTransferInAmount(changeAmount);
 				newMoneyTransfer.setTransferInId(mMoneyAccountEditor.getModelCopy().getId());
+				newMoneyTransfer.setTransferInExchangeRate(1/transferExchangeRate(newMoneyTransfer.getProject().getCurrencyId(),mMoneyAccountEditor.getModelCopy().getCurrencyId()));
 			}else{
 				newMoneyTransfer.setTransferOutAmount(-changeAmount);
 				newMoneyTransfer.setTransferOutId(mMoneyAccountEditor.getModelCopy().getId());
+				newMoneyTransfer.setTransferOutExchangeRate(transferExchangeRate(mMoneyAccountEditor.getModelCopy().getCurrencyId(),newMoneyTransfer.getProject().getCurrencyId()));
 				newMoneyTransfer.setTransferInAmount(-changeAmount);
 				newMoneyTransfer.setTransferInId(null);
 			}
@@ -513,5 +515,23 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			break;
 
 		}
+	}
+	
+	public Double transferExchangeRate (String transferInCurrencyId , String transferOutCurrencyId) {
+		String activityCurrencyId = HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId();
+		Double transferInActivityRate; 
+		if (transferInCurrencyId.equals(activityCurrencyId)) {
+			transferInActivityRate = 1.00;
+		} else {
+			transferInActivityRate = Exchange.getExchangeRate(transferInCurrencyId, activityCurrencyId);
+		}
+		Double activityTransferOutRate;
+		
+		if (activityCurrencyId.equals(transferOutCurrencyId)) {
+			activityTransferOutRate = 1.00;
+		} else {
+			activityTransferOutRate = Exchange.getExchangeRate(activityCurrencyId, transferOutCurrencyId);
+		}
+		return transferInActivityRate * activityTransferOutRate;
 	}
 }
