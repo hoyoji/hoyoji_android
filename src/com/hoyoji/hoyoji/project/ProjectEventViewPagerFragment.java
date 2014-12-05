@@ -52,7 +52,7 @@ public class ProjectEventViewPagerFragment extends HyjUserFragment {
 		//.setBackgroundColor(Color.LTGRAY);
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(3);
+		mViewPager.setOffscreenPageLimit(2);
 		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
 			@Override
 			public void onOverScroll(float mOverscroll) {

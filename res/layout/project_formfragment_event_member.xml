@@ -24,7 +24,8 @@
         android:layout_gravity="right"
         hyj:editTextBorder="none"
         hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_date"
-        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_date" />
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_date" 
+        android:visibility="gone"/>
     
     <View 
         android:id="@id/field_separator"
@@ -33,6 +34,7 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@drawable/line_divider" 
+        android:visibility="gone"
         />
     
     <!--<com.hoyoji.android.hyjframework.view.HyjTextField
@@ -164,7 +166,8 @@
         android:layout_gravity="right"
         hyj:editTextBorder="none"
         hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_startDate"
-        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_startDate" />
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_startDate" 
+        android:visibility="gone"/>
     
     <View 
         android:id="@id/field_separator"
@@ -173,6 +176,7 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@drawable/line_divider" 
+        android:visibility="gone"
         />
     
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
@@ -185,7 +189,8 @@
         android:layout_gravity="right"
         hyj:editTextBorder="none"
         hyj:hintText="@string/projectEventMemberFormFragment_hyjDateTimeField_hint_endDate"
-        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_endDate" />
+        hyj:labelText="@string/projectEventMemberFormFragment_hyjDateTimeField_endDate" 
+        android:visibility="gone"/>
     
     <View 
         android:id="@id/field_separator"
@@ -194,6 +199,7 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@drawable/line_divider" 
+        android:visibility="gone"
         />
     
 	<Button
