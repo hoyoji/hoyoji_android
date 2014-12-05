@@ -10,6 +10,9 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -35,7 +38,9 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldStartDate = null;
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
 	
-
+	private ImageButton mButtonExpandMore;
+	private LinearLayout mLinearLayoutExpandMore;
+	
 	@Override
 	public Integer useContentView() {
 		return R.layout.project_formfragment_event;
@@ -103,6 +108,21 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 								HyjTextInputFormFragment.class,
 								R.string.projectEventListFragment_hyjRemarkField_hint_description,
 								bundle, GET_REMARK);
+			}
+		});
+		
+		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseContainerFormFragment_expandMore);
+		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
+		mButtonExpandMore.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+				} else {
+					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
+					mLinearLayoutExpandMore.setVisibility(View.GONE);
+				}
 			}
 		});
 		

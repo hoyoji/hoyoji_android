@@ -24,7 +24,8 @@
         android:layout_gravity="right"
         hyj:editTextBorder="none"
         hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_date"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_date" />
+        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_date" 
+        android:visibility="gone"/>
     
     <View 
         android:id="@id/field_separator"
@@ -33,16 +34,22 @@
     	android:layout_marginTop="5dip"
     	android:layout_marginBottom="5dip"
         android:background="@drawable/line_divider" 
+        android:visibility="gone"
         />
     
-    <com.hoyoji.android.hyjframework.view.HyjTextField
-        android:id="@+id/projectEventListFragment_textField_name"
+    <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+        android:id="@+id/projectEventListFragment_hyjDateTimeField_startDate"
+        hyj:style="left_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        hyj:hintText="@string/projectEventListFragment_editText_hint_name"
-        hyj:labelText="@string/projectEventListFragment_textView_name" />
-
-     <View 
+        android:gravity="right"
+        layout_gravity="center_horizonta" 
+        android:layout_gravity="right"
+        hyj:editTextBorder="none"
+        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_startDate"
+        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_startDate" />
+    
+    <View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
@@ -57,6 +64,22 @@
             android:layout_height="wrap_content"
             hyj:labelText="@string/projectEventListFragment_textView_projectName" />
      
+     <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@drawable/line_divider" 
+        />
+     
+    <com.hoyoji.android.hyjframework.view.HyjTextField
+        android:id="@+id/projectEventListFragment_textField_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        hyj:hintText="@string/projectEventListFragment_editText_hint_name"
+        hyj:labelText="@string/projectEventListFragment_textView_name" />
+
      <View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"
@@ -81,48 +104,50 @@
     	android:layout_marginBottom="5dip"
         android:background="@drawable/line_divider" 
         />
-       
-    <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/projectEventListFragment_hyjDateTimeField_startDate"
-        hyj:style="left_label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        layout_gravity="center_horizonta" 
-        android:layout_gravity="right"
-        hyj:editTextBorder="none"
-        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_startDate"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_startDate" />
     
-    <View 
-        android:id="@id/field_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-    	android:layout_marginTop="5dip"
-    	android:layout_marginBottom="5dip"
-        android:background="@drawable/line_divider" 
-        />
+    <ImageButton
+            android:id="@id/expand_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_expand" />
+
+     <View
+         android:id="@id/field_separator"
+         android:layout_width="match_parent"
+         android:layout_height="1dip"
+         android:layout_marginBottom="5dip"
+         android:layout_marginTop="5dip"
+         android:background="@drawable/line_divider" />
+     
+     <LinearLayout 
+         android:id="@+id/moneyExpenseContainerFormFragment_expandMore"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         android:visibility="gone">
     
-    <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-        android:id="@+id/projectEventListFragment_hyjDateTimeField_endDate"
-        hyj:style="left_label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        layout_gravity="center_horizonta" 
-        android:layout_gravity="right"
-        hyj:editTextBorder="none"
-        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_endDate"
-        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_endDate" />
-    
-    <View 
-        android:id="@id/field_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-    	android:layout_marginTop="5dip"
-    	android:layout_marginBottom="5dip"
-        android:background="@drawable/line_divider" 
-        />
+	    <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+	        android:id="@+id/projectEventListFragment_hyjDateTimeField_endDate"
+	        hyj:style="left_label"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        layout_gravity="center_horizonta" 
+	        android:layout_gravity="right"
+	        hyj:editTextBorder="none"
+	        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_endDate"
+	        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_endDate" />
+	    
+	    <View 
+	        android:id="@id/field_separator"
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	    	android:layout_marginTop="5dip"
+	    	android:layout_marginBottom="5dip"
+	        android:background="@drawable/line_divider" 
+	        />
+	 </LinearLayout>
     
 	<Button
 	    android:id="@id/button_save"
