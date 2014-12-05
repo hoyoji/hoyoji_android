@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -335,6 +337,17 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
             }
 
         });
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		Event event = Event.load(Event.class, modelId);
+		if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add) != null){
+			getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add).setVisible(false);
+		}
 	}
 
 	private void deleteSelectedMessages() {

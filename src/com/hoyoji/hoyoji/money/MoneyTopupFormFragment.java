@@ -486,7 +486,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 						MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class, mSelectorFieldTransferIn.getModelId());
 						
-						projectTransferInExchangeRate.setNumber(1/transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
+						projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 						HyjUtil.stopRoateView(mImageViewRefreshRate);
 					}else{
 						HyjUtil.displayToast(R.string.moneyTopupFormFragment_toast_select_currency);
@@ -674,7 +674,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			
 			transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
 			
-			projectTransferInExchangeRate.setNumber(1/transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
+			projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 
 			mNumericExchangeRate.setNumber(transferOutProjectExchangeRate.getNumber() * projectTransferInExchangeRate.getNumber());
 			
@@ -706,7 +706,7 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			
 			if(mSelectorFieldTransferIn.getModelId() != null){
 				MoneyAccount transferIn = HyjModel.getModel(MoneyAccount.class,mSelectorFieldTransferIn.getModelId());
-				projectTransferInExchangeRate.setNumber(1/transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
+				projectTransferInExchangeRate.setNumber(transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 				
 				projectTransferInCurrency.setText(project.getCurrency().getName() + "(" + project.getCurrencyId() + ")");
 				transferInCurrency.setText(transferIn.getCurrency().getName() + "(" + transferIn.getCurrencyId() + ")");
