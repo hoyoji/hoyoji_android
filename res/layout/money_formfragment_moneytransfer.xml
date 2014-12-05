@@ -458,13 +458,12 @@
 	        
 	
 	        <View
-	            android:id="@+id/field_separator_projectTransferIn1"
+	            android:id="@id/field_separator"
 	            android:layout_width="match_parent"
 	            android:layout_height="1dip"
 	            android:layout_marginBottom="5dip"
 	            android:layout_marginTop="5dip"
-	            android:background="@drawable/line_divider"
-	            android:visibility="gone" />
+	            android:background="@drawable/line_divider"/>
 	
 	        <com.hoyoji.android.hyjframework.view.HyjRemarkField
 	            android:id="@+id/moneyTransferFormFragment_textField_remark"
