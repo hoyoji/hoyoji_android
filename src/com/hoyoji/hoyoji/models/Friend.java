@@ -121,7 +121,7 @@ public class Friend extends HyjModel {
 	public void setNickName(String nickName) {
 		
 		if(nickName == null || nickName.length() == 0){
-			this.mNickName = nickName;
+			this.mNickName = "";
 			String displayName = this.getDisplayName();
 			if(displayName != null){
 				this.mNickName_pinYin = HyjUtil.convertToPinYin(displayName);
@@ -143,8 +143,6 @@ public class Friend extends HyjModel {
 			} else {
 				this.mNickName_pinYin = "1" + this.mNickName_pinYin;
 			}
-		} else {
-			this.mNickName = nickName;
 		}
 		
 	}
@@ -378,7 +376,21 @@ public class Friend extends HyjModel {
 	@Override 
 	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
 		super.loadFromJSON(json, syncFromServer);
-		setNickName(json.optString("nickName"));
+		
+		if(json.isNull("nickName_pinYin")){
+			String displayName = this.getDisplayName();
+			if(displayName != null){
+				this.mNickName_pinYin = HyjUtil.convertToPinYin(displayName);
+			} else {
+				this.mNickName_pinYin = "";
+			}
+
+			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
+				this.mNickName_pinYin = " " + this.mNickName_pinYin;
+			} else {
+				this.mNickName_pinYin = "1" + this.mNickName_pinYin;
+			}
+		}
 	}
 
 	

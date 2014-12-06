@@ -723,10 +723,16 @@ public class MoneyLend extends HyjModel{
 	}
 
 	public MoneyDepositIncomeApportion getMoneyDepositIncomeApportion() {
+		if(this.getMoneyDepositIncomeApportionId() == null){
+			return null;
+		}
 		return HyjModel.getModel(MoneyDepositIncomeApportion.class, this.getMoneyDepositIncomeApportionId());
 	}
 
 	public MoneyDepositExpenseContainer getMoneyDepositExpenseContainer() {
+		if(this.getMoneyDepositExpenseContainerId() == null){
+			return null;
+		}
 		return HyjModel.getModel(MoneyDepositExpenseContainer.class, this.getMoneyDepositExpenseContainerId());
 	}
 

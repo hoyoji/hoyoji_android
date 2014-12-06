@@ -416,16 +416,11 @@ public class MoneyAccount extends HyjModel {
 	
 	@Override 
 	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
-		String namePinYin = json.optString("name_pinYin");
-		if(namePinYin == null || namePinYin.length() == 0){
-			try {
-				json.putOpt("name_pinYin", HyjUtil.convertToPinYin(json.optString("name")));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		super.loadFromJSON(json, syncFromServer);
+			if(this.mName_pinYin == null){
+				this.mName_pinYin = HyjUtil.convertToPinYin(this.getDisplayName());
+			}
+	
 	}
 
 }

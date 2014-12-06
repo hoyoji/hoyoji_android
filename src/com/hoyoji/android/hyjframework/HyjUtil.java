@@ -522,7 +522,11 @@ public class HyjUtil {
 	                }
 	            }
 	        }
-			return sb.toString().toUpperCase();
+	        if(sb.length() > 0){
+	        	return sb.toString().toUpperCase();
+	        } else {
+	        	return mName.toUpperCase();
+	        }
 //			return ContactLocaleUtils.getIntance().getSortKey(mName.toString(), FullNameStyle.CHINESE);
 		}
 		

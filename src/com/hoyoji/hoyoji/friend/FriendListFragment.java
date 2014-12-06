@@ -531,13 +531,15 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
 			if(cursor.getString(columnIndex) != null && cursor.getString(columnIndex).length() > 0){
 				((TextView)view).setText(cursor.getString(columnIndex));
-			} else {
+			} else if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user != null){
 					((TextView)view).setText(user.getDisplayName());
 				} else {
 					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 				}
+			} else {
+				((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
 			}
 
 			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
