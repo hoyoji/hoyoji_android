@@ -2,6 +2,7 @@ package com.hoyoji.hoyoji.models;
 
 import java.util.UUID;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.provider.BaseColumns;
@@ -405,12 +406,26 @@ public class MoneyAccount extends HyjModel {
 		jsonObj.remove("currentBalance");
 		return jsonObj;
 	}
-
+	
 	public Friend getLocalFriend() {
 		if(mLocalFriendId == null || mLocalFriendId.length() == 0){
 			return null;
 		}
 		return HyjModel.getModel(Friend.class, mLocalFriendId);
 	}	
+	
+	@Override 
+	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
+		String namePinYin = json.optString("name_pinYin");
+		if(namePinYin == null || namePinYin.length() == 0){
+			try {
+				json.putOpt("name_pinYin", HyjUtil.convertToPinYin(json.optString("name")));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		super.loadFromJSON(json, syncFromServer);
+	}
 
 }
