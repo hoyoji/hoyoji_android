@@ -88,6 +88,8 @@ public class Project extends HyjModel {
 
 	@Column(name = "lastClientUpdateTime")
 	private Long mLastClientUpdateTime;
+
+	private ProjectRemark mProjectRemark;
 	
 	public Project() {
 		super();
@@ -124,8 +126,15 @@ public class Project extends HyjModel {
 		return mName;
 	}
 
+	public ProjectRemark getProjectRemark(){
+		if(mProjectRemark == null){
+			mProjectRemark = new Select().from(ProjectRemark.class).where("projectId=?", this.getId()).executeSingle();
+		}
+		return  mProjectRemark;
+	}
+	
 	public String getDisplayName() {
-		ProjectRemark projectRemark = new Select().from(ProjectRemark.class).where("projectId=?", this.getId()).executeSingle();
+		ProjectRemark projectRemark = this.getProjectRemark();
 		if(projectRemark != null){
 			return projectRemark.getRemark();
 		}
@@ -440,5 +449,9 @@ public class Project extends HyjModel {
 	public void setLastSyncTime(String lastSyncTime) {
 		// TODO Auto-generated method stub
 		this.mLastSyncTime = lastSyncTime;
+	}
+
+	public String getName_pinYin() {
+		return mName_pinYin;
 	}	
 }

@@ -1,29 +1,38 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.activeandroid.content.ContentProvider;
@@ -35,20 +44,18 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.ParentProject;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.UserData;
 
 public class SubProjectListFragment extends HyjUserListFragment {
-//	public final static int ADD_SUB_PROJECT = 0;
+	
 	private static final int EDIT_PROJECT_DETAILS = 0;
 	private static final int VIEW_PROJECT_MEMBERS = 1;
-	private ContentObserver mChangeObserver = null;
+//	private ContentObserver mChangeObserver = null;
 	
 	private OnSelectSubProjectsListener mOnSelectSubProjectsListener;
 	private ViewGroup mHeaderViewSharedProject;
-//	private int mImageBackgroundColor = R.color.hoyoji_yellow;
+	private List<Project> mProjectList = new ArrayList<Project>();
 	
 	public interface OnSelectSubProjectsListener {
 		public void onSelectSubProjectsListener(String parentProject, String title);
@@ -78,13 +85,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 
 	@Override
 	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
+		return new ProjectListAdapter(getActivity(),
+				mProjectList,
 				R.layout.project_listitem_project,
-				null,
 				new String[] {"_id", "id","id", "id", "id"},
-				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects }, 0); 
+				new int[] {R.id.projectListItem_picture, R.id.projectListItem_name, R.id.projectListItem_owner, R.id.projectListItem_depositTotal, R.id.projectListItem_action_viewSubProjects }); 
 	}
-
 	
 	@Override
 	protected boolean disableOptionsMenuView() {
@@ -115,70 +121,77 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
 		super.onCreateLoader(arg0, arg1);
-		String[] projections = null;
-		String selection = null;
-		String[] selectionArgs = null;
+//		String[] projections = null;
+//		String selection = null;
+//		String[] selectionArgs = null;
 
 		int offset = arg1.getInt("OFFSET");
 		int limit = arg1.getInt("LIMIT");
 		if(limit == 0){
 			limit = getListPageSize();
 		}
+		arg1.putInt("LIMIT", limit + offset);
+		
 		String parentProjectId = getArguments().getString("parentProjectId");
 		if(parentProjectId != null){
-			selection = "id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)";
-			selectionArgs = new String[]{ parentProjectId };
-		} else {
-			projections = new String[]{ "_id", "name", "id", "id AS _subProjectId" };
-			selection = "NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId) OR EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId AND parentProjectId IS NULL)";
+//			selection = "id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)";
+//			selectionArgs = new String[]{ parentProjectId };
+			arg1.putString("PARENT_PROJECTID", parentProjectId);
 		}
+//		else {
+//			projections = new String[]{ "_id", "name", "id", "id AS _subProjectId" };
+//			selection = "NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId) OR EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId AND parentProjectId IS NULL)";
+//		}
+
+		Object loader = new SubProjectListLoader(getActivity(), arg1);
 		
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Project.class, null),
-				projections, selection, selectionArgs, "name_pinYin ASC LIMIT " + (limit + offset)
-			);
+//		Object loader = new CursorLoader(getActivity(),
+//				ContentProvider.createUri(Project.class, null),
+//				projections, selection, selectionArgs, "name_pinYin ASC LIMIT " + (limit + offset)
+//			);
 		return (Loader<Object>)loader;
 	}
 
-//	public void requery1(String parentProjectId, String title){
-//		Bundle bundle = new Bundle();
-//		bundle.putString("parentProjectId", parentProjectId);
-//		bundle.putInt("OFFSET", getListView().getAdapter().getCount());
-//		bundle.putInt("LIMIT", getListPageSize());
-//		
-//		getArguments().putString("title", title);
-//		
-//		Loader<Object> loader = getLoaderManager().getLoader(0);
-//	    if (loader != null && !loader.isReset() ) { 
-//	    	getLoaderManager().restartLoader(0, bundle, this);
-//	    } else {
-//	    	getLoaderManager().initLoader(0, bundle, this);
-//	    }
-//	}
-	
 	@Override
-	public void onInitViewData() {
-		super.onInitViewData();
+	public void onLoadFinished(Loader loader, Object list) {
+			Collection<Project> childList = (ArrayList<Project>) list;
+			mProjectList.clear();
+			mProjectList.addAll(childList);
+
+			((SimpleAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
 		
-		if (mChangeObserver == null) {
-			mChangeObserver = new ChangeObserver();
-//			this.getActivity().getContentResolver()
-//					.registerContentObserver(
-//							ContentProvider.createUri(
-//									ProjectShareAuthorization.class, null), true,
-//							mChangeObserver);
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
+	}
+	
+//	@Override
+//	public void onInitViewData() {
+//		super.onInitViewData();
+//		
+//		if (mChangeObserver == null) {
+//			mChangeObserver = new ChangeObserver();
+////			this.getActivity().getContentResolver()
+////					.registerContentObserver(
+////							ContentProvider.createUri(
+////									ProjectShareAuthorization.class, null), true,
+////							mChangeObserver);
+////			this.getActivity().getContentResolver()
+////			.registerContentObserver(
+////					ContentProvider.createUri(
+////							ParentProject.class, null), true,
+////							mChangeObserver);
 //			this.getActivity().getContentResolver()
 //			.registerContentObserver(
 //					ContentProvider.createUri(
-//							ParentProject.class, null), true,
+//							UserData.class, null), true,
 //							mChangeObserver);
-			this.getActivity().getContentResolver()
-			.registerContentObserver(
-					ContentProvider.createUri(
-							UserData.class, null), true,
-							mChangeObserver);
-		}
-	}
+//		}
+//	}
 
 	
 	@Override  
@@ -202,18 +215,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			openActivityWithFragment(ProjectViewPagerFragment.class, R.string.projectListFragment_view_transactions, bundle);
 		}
     }  
-
-//	@Override 
-//	public void onDeleteListItem(Long id){
-//		Project project = Project.load(Project.class, id);
-//		UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
-//		if(userData.getActiveProjectId().equals(project.getId())){
-//			HyjUtil.displayToast("默认账本不能删除");
-//			return;
-//		}
-//		project.delete();
-//	    HyjUtil.displayToast("账本删除成功");
-//	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -270,13 +271,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	}
 	
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object model, String field) {
+		Project project = (Project)model;
 		if(view.getId() == R.id.projectListItem_name){
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			((TextView)view).setText(project.getDisplayName());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_owner){
-				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 				if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					((TextView)view).setText("");
 				} else {
@@ -308,7 +308,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //			return true;
 		} else if(view.getId() == R.id.projectListItem_depositTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			String projectId = cursor.getString(columnIndex);
+			String projectId = project.getId();
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 				numericView.setSuffix(null);
@@ -318,7 +318,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				return true;
 			}
 			
-			Project project = HyjModel.getModel(Project.class, projectId);
 //			numericView.setPrefix(project.getCurrencySymbol());
 			numericView.setSuffix(null);
 			
@@ -337,7 +336,6 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			numericView.setNumber(Math.abs(depositBalance));
 			return true;
 		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
-			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
 			if(!project.getSubProjects().isEmpty()){
 				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
 				((ImageButton)view).setEnabled(true);
@@ -355,11 +353,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 					}
 				});
 			}
-			view.setTag(cursor.getString(columnIndex));
+			view.setTag(project.getId());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_picture){
 			ImageView imageView= (ImageView)view;
-			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
@@ -378,65 +375,181 @@ public class SubProjectListFragment extends HyjUserListFragment {
 					}
 				});
 			}
-			view.setTag(cursor.getLong(columnIndex));
+			view.setTag(project.get_mId());
 			return true;
 		} else {
 			return false;
 		}
 	}	
 	
-	private class ChangeObserver extends ContentObserver {
-		AsyncTask<String, Void, String> mTask = null;
-		public ChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
-
-//		@Override
-//		public void onChange(boolean selfChange, Uri uri) {
-//			super.onChange(selfChange, uri);
+//	@Override
+//	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+//		if(view.getId() == R.id.projectListItem_name){
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+//			((TextView)view).setText(project.getDisplayName());
+//			return true;
+//		} else if(view.getId() == R.id.projectListItem_owner){
+//				Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+//				if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//					((TextView)view).setText("");
+//				} else {
+//					String ownerUserName = Friend.getFriendUserDisplayName(project.getOwnerUserId());
+//					((TextView)view).setText(ownerUserName);
+//				}
+//				return true;
+////		} 
+////else if(view.getId() == R.id.projectListItem_inOutTotal) {
+////			HyjNumericView numericView = (HyjNumericView)view;
+////			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+////			
+//////			numericView.setPrefix(project.getCurrencySymbol());
+////			numericView.setSuffix(null);
+////			
+////			Double projectBalance = project.getBalance();
+////			if(projectBalance == 0){
+////				numericView.setTextColor(Color.BLACK);
+////				numericView.setPrefix(project.getCurrencySymbol());
+////			} else if(projectBalance < 0){
+////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+////				numericView.setPrefix("支出"+project.getCurrencySymbol());
+////			}else{
+////				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+////				numericView.setPrefix("收入"+project.getCurrencySymbol());
+////			}
+////			
+////			numericView.setNumber(Math.abs(projectBalance));
+////			return true;
+//		} else if(view.getId() == R.id.projectListItem_depositTotal) {
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			String projectId = cursor.getString(columnIndex);
+//			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+//				numericView.setSuffix(null);
+//				numericView.setTextColor(Color.BLACK);
+//				numericView.setPrefix("-");
+//				numericView.setText(null);
+//				return true;
+//			}
+//			
+//			Project project = HyjModel.getModel(Project.class, projectId);
+////			numericView.setPrefix(project.getCurrencySymbol());
+//			numericView.setSuffix(null);
+//			
+//			Double depositBalance = project.getDepositBalance();
+//			if(depositBalance == 0){
+//				numericView.setTextColor(Color.BLACK);
+//				numericView.setPrefix(project.getCurrencySymbol());
+//			} else if(depositBalance < 0){
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				numericView.setPrefix("支出"+project.getCurrencySymbol());
+//			}else{
+//				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//				numericView.setPrefix("收入"+project.getCurrencySymbol());
+//			}
+//			
+//			numericView.setNumber(Math.abs(depositBalance));
+//			return true;
+//		} else if(view.getId() == R.id.projectListItem_action_viewSubProjects){
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(columnIndex));
+//			if(!project.getSubProjects().isEmpty()){
+//				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item_blue);
+//				((ImageButton)view).setEnabled(true);
+//			} else {
+//				((ImageButton)view).setImageResource(R.drawable.ic_action_next_item);
+//				((ImageButton)view).setEnabled(false);
+//			}
+//			if(view.getTag() == null){
+//				view.setOnClickListener(new OnClickListener(){
+//					@Override
+//					public void onClick(View v) {
+//						String parentProjectId = v.getTag().toString();
+//						Project project = HyjModel.getModel(Project.class, parentProjectId);
+//						mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
+//					}
+//				});
+//			}
+//			view.setTag(cursor.getString(columnIndex));
+//			return true;
+//		} else if(view.getId() == R.id.projectListItem_picture){
+//			ImageView imageView= (ImageView)view;
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
+//			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
+//			} else {
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
+//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
+//			}
+//			
+//			if(view.getTag() == null){
+//				view.setOnClickListener(new OnClickListener(){
+//					@Override
+//					public void onClick(View v) {
+//						Bundle bundle = new Bundle();
+//						bundle.putLong("MODEL_ID", (Long) v.getTag());
+//						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+//					}
+//				});
+//			}
+//			view.setTag(cursor.getLong(columnIndex));
+//			return true;
+//		} else {
+//			return false;
 //		}
+//	}	
+//	
+//	private class ChangeObserver extends ContentObserver {
+//		AsyncTask<String, Void, String> mTask = null;
+//		public ChangeObserver() {
+//			super(new Handler());
+//		}
+//
+//		@Override
+//		public boolean deliverSelfNotifications() {
+//			return true;
+//		}
+//
+////		@Override
+////		public void onChange(boolean selfChange, Uri uri) {
+////			super.onChange(selfChange, uri);
+////		}
+//
+//		@Override
+//		public void onChange(boolean selfChange) {
+//			super.onChange(selfChange);
+//			if(mTask == null){
+//				mTask = new AsyncTask<String, Void, String>() {
+//			        @Override
+//			        protected String doInBackground(String... params) {
+//						try {
+//							//等待其他的更新都到齐后再更新界面
+//							Thread.sleep(200);
+//						} catch (InterruptedException e) {}
+//						return null;
+//			        }
+//			        @Override
+//			        protected void onPostExecute(String result) {
+//						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+//
+////				    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
+//						mTask = null;
+//			        }
+//			    };
+//			    mTask.execute();
+//			}
+//		}
+//	}
 
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if(mTask == null){
-				mTask = new AsyncTask<String, Void, String>() {
-			        @Override
-			        protected String doInBackground(String... params) {
-						try {
-							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(200);
-						} catch (InterruptedException e) {}
-						return null;
-			        }
-			        @Override
-			        protected void onPostExecute(String result) {
-						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
-
-//				    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
-						mTask = null;
-			        }
-			    };
-			    mTask.execute();
-			}
-		}
-	}
-
-
-	@Override
-	public void onDestroy() {
-		if (mChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mChangeObserver);
-		}
-		
-		super.onDestroy();
-	}
+//
+//	@Override
+//	public void onDestroy() {
+//		if (mChangeObserver != null) {
+//			this.getActivity().getContentResolver()
+//					.unregisterContentObserver(mChangeObserver);
+//		}
+//		
+//		super.onDestroy();
+//	}
 
 
 	public void setOnSelectSubProjectsListener(
@@ -477,4 +590,56 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //	        return view;
 //		}
 //	}
+	
+	private static class ProjectListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+//	    private ViewBinder mViewBinder;
+	    
+		public ProjectListAdapter(Context context,
+	                    List<Project> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
+		}
+	    
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
+	    }
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
+
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
+	}
 }
