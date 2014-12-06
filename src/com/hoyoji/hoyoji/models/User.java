@@ -116,8 +116,8 @@ public class User extends HyjModel {
 	}
 
 	public void setNickName(String mNickName) {
-		if(mNickName == null){
-			this.mNickName_pinYin = "";
+		if(mNickName == null || mNickName.length() == 0){
+			this.mNickName_pinYin = HyjUtil.convertToPinYin(this.getUserName());
 		} else if(this.mNickName == null || !this.mNickName.equals(mNickName) || this.mNickName_pinYin == null){
 			this.mNickName_pinYin = HyjUtil.convertToPinYin(mNickName);
 		}

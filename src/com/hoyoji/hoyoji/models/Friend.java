@@ -116,16 +116,25 @@ public class Friend extends HyjModel {
 	}
 
 	public void setNickName(String nickName) {
-		if(nickName == null){
-			this.mNickName_pinYin = "";
-		} else if(this.mNickName == null || !this.mNickName.equals(nickName) || this.mNickName_pinYin == null){
-			this.mNickName_pinYin = HyjUtil.convertToPinYin(nickName);
-			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
-				this.mNickName_pinYin = " " + this.mNickName_pinYin;
+		
+		if(nickName == null || nickName.length() == 0){
+			this.mNickName = nickName;
+			String displayName = this.getDisplayName();
+			if(displayName != null){
+				this.mNickName_pinYin = HyjUtil.convertToPinYin(displayName);
+			} else {
+				this.mNickName_pinYin = "";
 			}
+		} else if(this.mNickName == null || !this.mNickName.equals(nickName) || this.mNickName_pinYin == null){
+			this.mNickName = nickName;
+			this.mNickName_pinYin = HyjUtil.convertToPinYin(nickName);
 		}
-
-		this.mNickName = nickName;
+		
+		if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
+			this.mNickName_pinYin = " " + this.mNickName_pinYin;
+		} else {
+			this.mNickName_pinYin = "1" + this.mNickName_pinYin;
+		}
 	}
 	
 	public String getFriendUserId() {

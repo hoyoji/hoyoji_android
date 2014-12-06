@@ -85,12 +85,13 @@ public class MemberListFragment extends HyjUserListFragment{
 	
 	@Override
 	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
 				R.layout.project_listitem_member,
 				null,
 				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "id"},
 				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement},
-				0); 
+				0);
+		return adapter;
 	}	
 
 
