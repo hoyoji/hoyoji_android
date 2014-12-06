@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 
 @Table(name = "ProjectRemark", id = BaseColumns._ID)
 public class ProjectRemark extends HyjModel {
@@ -18,6 +19,9 @@ public class ProjectRemark extends HyjModel {
 
 	@Column(name = "remark")
 	private String mRemark;
+
+	@Column(name = "remark_pinYin")
+	private String mRemark_pinYin;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -73,8 +77,14 @@ public class ProjectRemark extends HyjModel {
 		return mRemark;
 	}
 
-	public void setRemark(String name) {
-		this.mRemark = name;
+	public void setRemark(String remark) {
+		if(remark == null){
+			this.mRemark_pinYin = "";
+		} else if(this.mRemark == null || !this.mRemark.equals(remark) || this.mRemark_pinYin == null || this.mRemark_pinYin == null){
+			this.mRemark_pinYin = HyjUtil.convertToPinYin(remark);
+		}
+		
+		this.mRemark = remark;
 	}
 
 	public String getProjectId() {
@@ -131,6 +141,11 @@ public class ProjectRemark extends HyjModel {
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
+	}
+
+
+	public String getRemark_pinYin() {
+		return mRemark_pinYin;
 	}	
 	
 }

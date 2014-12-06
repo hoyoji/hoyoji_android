@@ -442,16 +442,34 @@ public class Project extends HyjModel {
 //	}
 
 	public String getLastSyncTime() {
-		// TODO Auto-generated method stub
 		return this.mLastSyncTime;
 	}	
 
 	public void setLastSyncTime(String lastSyncTime) {
-		// TODO Auto-generated method stub
 		this.mLastSyncTime = lastSyncTime;
 	}
 
 	public String getName_pinYin() {
 		return mName_pinYin;
+	}
+
+	public String getDisplayName_pinYin() {
+		
+		ProjectRemark projectRemark = this.getProjectRemark();
+		if(projectRemark != null){
+			return projectRemark.getRemark_pinYin();
+		} else {
+			return this.mName_pinYin; 
+		}
+		
 	}	
+	
+	@Override 
+	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
+		super.loadFromJSON(json, syncFromServer);
+		if(this.mName_pinYin == null){
+			this.mName_pinYin = HyjUtil.convertToPinYin(this.getName());
+		}
+	
+	}
 }

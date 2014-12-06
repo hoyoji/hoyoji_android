@@ -57,7 +57,6 @@ public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 
-	    	
 	    	List<HyjModel> list;
 	    	if(mParentProjectId != null){
 	    		list = new Select("main.*").from(Project.class).as("main").where("id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)", mParentProjectId).orderBy("name_pinYin").execute();
@@ -73,21 +72,14 @@ public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    static class DateComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = "";
-				String rhsStr = "";
-				Project lhsProject = (Project) lhs;
-				Project rhsProject = (Project) rhs;
-				ProjectRemark lhsProjectRemark = lhsProject.getProjectRemark();
-				if(lhsProjectRemark != null){
-					lhsStr = HyjUtil.convertToPinYin(lhsProjectRemark.getRemark());
-				} else if(lhsProject.getName_pinYin() != null){
-					lhsStr = lhsProject.getName_pinYin();
+				String lhsStr = ((Project) lhs).getDisplayName_pinYin();
+				String rhsStr = ((Project) rhs).getDisplayName_pinYin();
+
+				if(lhsStr == null){
+					lhsStr = "";
 				}
-				ProjectRemark rhsProjectRemark = rhsProject.getProjectRemark();
-				if(rhsProjectRemark != null){
-					rhsStr = HyjUtil.convertToPinYin(rhsProjectRemark.getRemark());
-				} else if(rhsProject.getName_pinYin() != null){
-					rhsStr = rhsProject.getName_pinYin();
+				if(rhsStr == null){
+					rhsStr = "";
 				}
 								
 				return lhsStr.compareTo(rhsStr);
