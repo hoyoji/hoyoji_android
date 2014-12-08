@@ -220,7 +220,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 			msg.put("type", "Event.Member.Accept");
 			msg.put("messageState", "new");
 			msg.put("messageTitle", "接受活动邀请");
-			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+			msg.put("date", (new Date()).getTime());
 			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "接受了您的活动: "+ jsonMsgData.optString("eventName"));
 			msg.put("messageBoxId",jsonMsgData.optString("fromMessageBoxId"));
 			msg.put("ownerUserId", mMessageEditor.getModelCopy().getFromUserId());

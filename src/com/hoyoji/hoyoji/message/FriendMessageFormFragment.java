@@ -308,7 +308,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 			data.put("type", "System.Friend.AddResponse");
 			data.put("messageState", "unread");
 			data.put("messageTitle", "好友请求");
-			data.put("date", HyjUtil.formatDateToIOS(new Date()));
+			data.put("date", (new Date()).getTime());
 			data.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
 							.getDisplayName() + "成功添加您为好友");

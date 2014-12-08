@@ -270,7 +270,7 @@ public class MemberMoneyTBDGroupListLoader extends
 				mDateFormat.format(fromDateInMillis),
 				mProjectId,
 				mLocalFriendId};
-		Long dateString = null;
+		String dateString = null;
 		Cursor cursor = null;
 		
 		cursor = Cache
@@ -280,7 +280,7 @@ public class MemberMoneyTBDGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getLong(0);
+			dateString = cursor.getString(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -294,8 +294,8 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -311,8 +311,8 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -327,15 +327,15 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
 			cursor = null;
 		}
 		if(dateString != null){
-				Long dateInMillis = dateString;
+			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -349,7 +349,7 @@ public class MemberMoneyTBDGroupListLoader extends
 	}
 	private long getMaxDateInMillis(){
 		String[] args = new String[] { mProjectId, mLocalFriendId };
-		Long dateString = null;
+		String dateString = null;
 		Cursor cursor = null;
 
 		cursor = Cache
@@ -359,7 +359,7 @@ public class MemberMoneyTBDGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getLong(0);
+			dateString = cursor.getString(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -372,8 +372,8 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -388,8 +388,8 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -404,15 +404,15 @@ public class MemberMoneyTBDGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
 			cursor = null;
 		}
 		if(dateString != null){
-				Long dateInMillis = dateString;
+			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);

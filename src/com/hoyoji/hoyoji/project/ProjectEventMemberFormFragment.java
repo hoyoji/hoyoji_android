@@ -400,7 +400,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msg.put("type", "Event.Member.AddRequest");
 			msg.put("messageState", "new");
 			msg.put("messageTitle", "邀请活动请求");
-			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+			msg.put("date", (new Date()).getTime());
 			msg.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
 							.getDisplayName() + "邀请您参加活动: " + mEventMemberEditor.getModelCopy().getEvent().getName());

@@ -416,7 +416,7 @@ public class MoneyAccountSearchGroupListLoader extends
 	private long getHasMoreDataDateInMillis(long fromDateInMillis){
 		String[] args = new String[] {
 				String.valueOf(fromDateInMillis) };
-		Long dateString = null;
+		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -424,7 +424,7 @@ public class MoneyAccountSearchGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getLong(0);
+			dateString = cursor.getString(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -437,8 +437,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -453,8 +453,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -469,8 +469,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -485,8 +485,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -501,8 +501,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -517,8 +517,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -533,8 +533,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -549,8 +549,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -565,8 +565,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -581,15 +581,15 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
 			cursor = null;
 		}
 		if(dateString != null){
-				Long dateInMillis = dateString;
+			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -604,7 +604,7 @@ public class MoneyAccountSearchGroupListLoader extends
 	
 	private long getMaxDateInMillis(){
 		String[] args = new String[] { };
-		Long dateString = null;
+		String dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -612,7 +612,7 @@ public class MoneyAccountSearchGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getLong(0);
+			dateString = cursor.getString(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -625,8 +625,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -641,8 +641,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -657,8 +657,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -673,8 +673,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -689,8 +689,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -705,8 +705,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -721,8 +721,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -738,8 +738,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -754,8 +754,8 @@ public class MoneyAccountSearchGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getLong(0)) < 0){
-					dateString = cursor.getLong(0);
+						|| dateString.compareTo(cursor.getString(0)) < 0){
+					dateString = cursor.getString(0);
 				}
 			}
 			cursor.close();
@@ -770,15 +770,15 @@ public class MoneyAccountSearchGroupListLoader extends
 //			cursor.moveToFirst();
 //			if(cursor.getString(0) != null){
 //				if(dateString == null
-//						|| dateString.compareTo(cursor.getLong(0)) > 0){
-//					dateString = cursor.getLong(0);
+//						|| dateString.compareTo(cursor.getString(0)) > 0){
+//					dateString = cursor.getString(0);
 //				}
 //			}
 //			cursor.close();
 //			cursor = null;
 //		}
 		if(dateString != null){
-				Long dateInMillis = dateString;
+			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);

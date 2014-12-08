@@ -555,7 +555,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 				msg.put("type", "Project.Share.Edit");
 				msg.put("messageState", "new");
 				msg.put("messageTitle", "修改账本共享");
-				msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+				msg.put("date", (new Date()).getTime());
 				msg.put("detail", "用户"
 						+ HyjApplication.getInstance().getCurrentUser()
 								.getDisplayName() + "修改了账本共享权限: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
@@ -600,7 +600,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 			msg.put("type", "Project.Share.AddRequest");
 			msg.put("messageState", "new");
 			msg.put("messageTitle", "账本共享请求");
-			msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+			msg.put("date", (new Date()).getTime());
 			msg.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
 							.getDisplayName() + "给您共享账本: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());

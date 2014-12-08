@@ -225,7 +225,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			inviteFriendObject.put("__dataType", "InviteLink");
 			inviteFriendObject.put("title", "邀请参加活动");
 			inviteFriendObject.put("type", "EventMember");
-			inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
+			inviteFriendObject.put("date", (new Date()).getTime());
 			inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name);
 			inviteFriendObject.put("state", "Open");
 		} catch (JSONException e1) {

@@ -290,20 +290,20 @@ public class HyjUtil {
 				}
 			}
 		}
-		static SimpleDateFormat mIsoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		public static Date parseDateFromISO(String dateString){
-			try {
-				mIsoDateFormat.setTimeZone(TimeZone.getDefault());
-				return mIsoDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-		public static String formatDateToIOS(Date date){
-			mIsoDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-			return mIsoDateFormat.format(date).replaceAll("\\+0000$", "Z");
-		}
+//		static SimpleDateFormat mIsoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//		public static Date parseDateFromISO(String dateString){
+//			try {
+//				mIsoDateFormat.setTimeZone(TimeZone.getDefault());
+//				return mIsoDateFormat.parse(dateString.replaceAll("Z$", "+0000"));
+//			} catch (ParseException e) {
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		public static String formatDateToIOS(Date date){
+//			mIsoDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//			return mIsoDateFormat.format(date).replaceAll("\\+0000$", "Z");
+//		}
 		
 		public static double toFixed2(Double number){
 			return Math.round(number*100)/100.0;

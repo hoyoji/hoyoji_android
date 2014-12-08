@@ -166,16 +166,16 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 //			} else {
 //				((TextView)view).setText(cursor.getString(columnIndex));
 //			}
-			String date = cursor.getString(cursor.getColumnIndex("date"));
-			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
-			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
-			String dt = HyjUtil.formatDateToIOS(new Date());
+			long date = cursor.getLong(cursor.getColumnIndex("date"));
+			long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
+			long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 
+			long dt = (new Date()).getTime();
 			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
-			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
+			if(dt >= date && dt < startDate) {
 				((TextView)view).setText("[报名中]" + ems.size() + "人");
-			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
+			} else if(dt >= startDate && dt < endDate) {
 				((TextView)view).setText("[进行中]" + ems.size() + "人");
-			} else if(dt.compareTo(endDate)>=0) {
+			} else if(dt >= endDate) {
 				((TextView)view).setText("[已结束]" + ems.size() + "人");
 			}
 			return true;

@@ -123,7 +123,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 				inviteFriendObject.put("__dataType", "InviteLink");
 				inviteFriendObject.put("title", "邀请加入账本");
 				inviteFriendObject.put("type", "ProjectShare");
-				inviteFriendObject.put("date", HyjUtil.formatDateToIOS(new Date()));
+				inviteFriendObject.put("date", (new Date()).getTime());
 				inviteFriendObject.put("description", sendInviteDetail.getText());
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {

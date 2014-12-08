@@ -233,7 +233,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 		msg.put("type", "Project.Share.Accept");
 		msg.put("messageState", "new");
 		msg.put("messageTitle", "接受账本共享");
-		msg.put("date", HyjUtil.formatDateToIOS(new Date()));
+		msg.put("date", (new Date()).getTime());
 		msg.put("detail", "用户"
 				+ HyjApplication.getInstance().getCurrentUser()
 						.getDisplayName() + "接受了您共享的账本: "
