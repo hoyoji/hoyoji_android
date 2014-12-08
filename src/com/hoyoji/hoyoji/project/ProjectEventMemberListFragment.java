@@ -38,6 +38,7 @@ import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -78,7 +79,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "friendUserId", "state"},
+				new String[] {"friendUserId", "id", "state"},
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle},
 				0); 
 	}	
@@ -155,7 +156,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+			EventMember em = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+			((TextView)view).setText(em.getFriendDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
 			if("SignUp".equals(cursor.getString(columnIndex))){
