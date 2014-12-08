@@ -1,8 +1,10 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -26,9 +29,11 @@ import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.CursorTreeAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorTreeAdapter;
@@ -41,17 +46,21 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter;
+import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountChildListLoader;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountGroupListLoader;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -65,7 +74,8 @@ import com.tencent.tauth.UiError;
 
 public class FriendListFragment extends HyjUserExpandableListFragment {
 	public final static int EDIT_CATEGORY_ITEM = 1;
-	private static final int EDIT_FRIEND_DETAILS = 0;
+	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
+	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 	private ContentObserver mUserChangeObserver = null;
 	private IWXAPI api;
 	private QQShare mQQShare = null;
@@ -363,43 +373,54 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 	}
 
 
-	@Override
-	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-		super.onCreateLoader(groupPos, arg1);
-		Object loader;
-		if(groupPos < 0){ // 这个是分类
-			int offset = arg1.getInt("OFFSET");
-			int limit = arg1.getInt("LIMIT");
-			if(limit == 0){
-				limit = getListPageSize();
-			}
-			loader = new CursorLoader(getActivity(),
-					ContentProvider.createUri(FriendCategory.class, null),
-					null, null, null, "name_pinYin ASC LIMIT " + (limit + offset)
-				);
-		} else {
-			loader = new CursorLoader(getActivity(),
-					ContentProvider.createUri(Friend.class, null),
-					null, "friendCategoryId=?", new String[]{arg1.getString("friendCategoryId")}, "nickName_pinYin"
-				);
-		}
-		return (Loader<Object>)loader;
-	}
+//	@Override
+//	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
+//		super.onCreateLoader(groupPos, arg1);
+//		Object loader;
+//		if(groupPos < 0){ // 这个是分类
+//			int offset = arg1.getInt("OFFSET");
+//			int limit = arg1.getInt("LIMIT");
+//			if(limit == 0){
+//				limit = getListPageSize();
+//			}
+//			loader = new CursorLoader(getActivity(),
+//					ContentProvider.createUri(FriendCategory.class, null),
+//					null, null, null, "name_pinYin ASC LIMIT " + (limit + offset)
+//				);
+//		} else {
+//			loader = new CursorLoader(getActivity(),
+//					ContentProvider.createUri(Friend.class, null),
+//					null, "friendCategoryId=?", new String[]{arg1.getString("friendCategoryId")}, "nickName_pinYin"
+//				);
+//		}
+//		return (Loader<Object>)loader;
+//	}
 
 
 
 	@Override
-	public SimpleCursorTreeAdapter useListViewAdapter() {
-		HyjSimpleCursorTreeAdapter adapter =  new HyjSimpleCursorTreeAdapter(getActivity(),
-				null, 
+	public ExpandableListAdapter useListViewAdapter() {
+//		HyjSimpleExpandableListAdapter adapter = new FriendGroupListAdapter(
+//				getActivity(), mListGroupData, R.layout.moneyaccount_listitem_group,
+//				new String[] { "name", "balanceTotal" },
+//				new int[] { R.id.moneyAccountListItem_group_name, R.id.moneyAccountListItem_group_balanceTotal }, 
+//				mListChildData,
+//				R.layout.home_listitem_row, 
+//				new String[] {"picture", "subTitle", "title", "remark", "date", "currentBalance", "owner"}, 
+//				new int[] {R.id.homeListItem_picture, R.id.homeListItem_subTitle, R.id.homeListItem_title, 
+//							R.id.homeListItem_remark, R.id.homeListItem_date,
+//							R.id.homeListItem_amount, R.id.homeListItem_owner});
+		
+		HyjSimpleExpandableListAdapter adapter =  new FriendGroupListAdapter(getActivity(),
+				mListGroupData, 
 				R.layout.friend_listitem_friend_group, 
-				new String[] { "name" },
-				new int[] { R.id.friendListItem_category_name }, 
+				new String[] { "friendCategoryName", "count" },
+				new int[] { R.id.friendListItem_category_name, R.id.friendListItem_category_count }, 
+				mListChildData, 
 				R.layout.friend_listitem_friend,
 				new String[] { "friendUserId", "nickName" },
 				new int[] { R.id.friendListItem_picture, R.id.friendListItem_nickName });
-		adapter.setGetChildrenCursorListener(this);
-		
+//		
 		return adapter;
 	}
 
@@ -512,35 +533,106 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 //	}
 
 
+//	@Override
+//	public void onGetChildrenCursor(Cursor groupCursor) {
+//		Bundle bundle = new Bundle();
+//		bundle.putString("friendCategoryId", groupCursor.getString(groupCursor.getColumnIndex("id")));
+//		int groupPos = groupCursor.getPosition();
+//		Loader<Object> loader = getLoaderManager().getLoader(groupPos);
+//	    if (loader != null && !loader.isReset() ) { 
+//	    	getLoaderManager().restartLoader(groupPos, bundle, this);
+//	    } else {
+//	    	getLoaderManager().initLoader(groupPos, bundle, this);
+//	    }
+//	}
+	
 	@Override
-	public void onGetChildrenCursor(Cursor groupCursor) {
+	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
+		super.onCreateLoader(groupPos, arg1);
+		Object loader;
+
+		if (groupPos < 0) { // 这个是分类
+			loader = new FriendCategoryGroupListLoader(getActivity(), arg1);
+		} else {
+			loader = new FriendChildListLoader(getActivity(), arg1);
+		}
+		return (Loader<Object>) loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader loader, Object list) {
+		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter) getListView()
+				.getExpandableListAdapter();
+		if (loader.getId() < 0) {
+			ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) list;
+			mListGroupData.clear();
+			mListGroupData.addAll(groupList);
+			for(int i = 0; i < groupList.size(); i++){
+				if(mListChildData.size() <= i){
+					mListChildData.add(null);
+					getListView().expandGroup(i);
+				} else if(getListView().collapseGroup(i)){
+//					if(!groupList.get(i).get("accountType").toString().equals("AutoHide")){
+						getListView().expandGroup(i);
+//					}
+				}
+			}
+			adapter.notifyDataSetChanged();
+			this.setFooterLoadFinished(((FriendCategoryGroupListLoader)loader).hasMoreData());
+		} else {
+				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
+				mListChildData.set(loader.getId(), childList);
+				adapter.notifyDataSetChanged();
+		}
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Object> loader) {
+		HyjSimpleExpandableListAdapter adapter = (HyjSimpleExpandableListAdapter)
+		 getListView().getExpandableListAdapter();
+		 if(loader.getId() < 0){
+				this.mListGroupData.clear();
+		 } else {
+			 if(adapter.getGroupCount() > loader.getId()){
+					this.mListChildData.set(loader.getId(), null);
+			 } else {
+				 getLoaderManager().destroyLoader(loader.getId());
+			 }
+		 }
+		
+	}
+
+	@Override
+	public void onGroupExpand(int groupPosition) {
+		String friendCategoryId = mListGroupData.get(groupPosition).get("friendCategoryId").toString();
 		Bundle bundle = new Bundle();
-		bundle.putString("friendCategoryId", groupCursor.getString(groupCursor.getColumnIndex("id")));
-		int groupPos = groupCursor.getPosition();
-		Loader<Object> loader = getLoaderManager().getLoader(groupPos);
-	    if (loader != null && !loader.isReset() ) { 
-	    	getLoaderManager().restartLoader(groupPos, bundle, this);
-	    } else {
-	    	getLoaderManager().initLoader(groupPos, bundle, this);
-	    }
+		bundle.putString("friendCategoryId", friendCategoryId);
+		getLoaderManager().restartLoader(groupPosition, bundle, this);
 	}
 	
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object model, String field) {
+		Friend friend = (Friend)model;
 		if(view.getId() == R.id.friendListItem_nickName){
-			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
-			if(cursor.getString(columnIndex) != null && cursor.getString(columnIndex).length() > 0){
-				((TextView)view).setText(cursor.getString(columnIndex));
-			} else if(friendUserId != null){
-				User user = HyjModel.getModel(User.class, friendUserId);
-				if(user != null){
-					((TextView)view).setText(user.getDisplayName());
-				} else {
-					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-				}
-			} else {
-				((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-			}
+			String friendUserId = friend.getFriendUserId();
+//			if(cursor.getString(columnIndex) != null && cursor.getString(columnIndex).length() > 0){
+				((TextView)view).setText(friend.getDisplayName());
+//			} else if(friendUserId != null){
+//				User user = HyjModel.getModel(User.class, friendUserId);
+//				if(user != null){
+//					((TextView)view).setText(user.getDisplayName());
+//				} else {
+//					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//				}
+//			} else {
+//				((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//			}
 
 			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
 				((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_red));
@@ -549,10 +641,10 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 			return true;
 		} else if(view.getId() == R.id.friendListItem_picture){
-			String userId = cursor.getString(columnIndex);
+			String userId = friend.getFriendUserId();
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_person_white);
-			if(cursor.getString(columnIndex) != null){
+			if(userId != null){
 				User user = HyjModel.getModel(User.class, userId);
 				if(user != null){
 					imageView.setImage(user.getPictureId());
@@ -580,7 +672,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 					}
 				});
 			}
-			view.setTag(cursor.getLong(cursor.getColumnIndex("_id")));
+			view.setTag(friend.get_mId());
 			return true;
 		} else {
 			return false;
@@ -651,4 +743,50 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		
 	}
 
+
+	private static class FriendGroupListAdapter extends HyjSimpleExpandableListAdapter{
+
+		public FriendGroupListAdapter(Context context,
+	            List<Map<String, Object>> groupData, int expandedGroupLayout,
+	                    String[] groupFrom, int[] groupTo,
+	                    List<? extends List<? extends HyjModel>> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super( context, groupData, expandedGroupLayout, groupFrom, groupTo,childData, childLayout, 
+					childFrom, childTo) ;
+		}
+		
+		@Override
+		public long getGroupId(int pos){
+			Map<String, Object> data = (Map<String, Object>) this.getGroup(pos);
+			return (Long)data.get("_id");
+		}
+		
+		@Override
+		 public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+		            ViewGroup parent) {
+		        View v;
+		        if (convertView == null) {
+		            v = newGroupView(isExpanded, parent);
+		        } else {
+		            v = convertView;
+		        }
+		        bindGroupView(v, (Map<String, ?>) this.getGroup(groupPosition), mGroupFrom, mGroupTo);
+		        
+		        return v;
+		    }
+		 
+		 private void bindGroupView(View view, Map<String, ?> data, String[] from, int[] to) {
+		        int len = to.length;
+
+		        for (int i = 0; i < len; i++) {
+		            View v = view.findViewById(to[i]);
+		            if (v != null) {
+		            	if(v instanceof TextView){
+		            		((TextView)v).setText(data.get(from[i]).toString());
+		            	}
+		            }
+		        }
+		    }
+	}
 }

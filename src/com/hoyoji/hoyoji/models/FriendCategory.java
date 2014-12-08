@@ -62,6 +62,11 @@ public class FriendCategory extends HyjModel {
 		return mName;
 	}
 
+
+	public String getName_pinYin() {
+		return mName;
+	}
+
 	public void setName(String name) {
 		if(name == null){
 			this.mName_pinYin = "";
