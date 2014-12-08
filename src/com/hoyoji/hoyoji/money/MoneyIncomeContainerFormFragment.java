@@ -862,6 +862,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
+		if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
+			modelCopy.setEvent(HyjModel.getModel(Event.class, mSelectorFieldEvent.getModelId()));
+		}
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
@@ -1025,6 +1028,21 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						oldProjectEditor.save();
 					}
 					newProjectEditor.save();
+					
+					Event oldEvent = oldMoneyIncomeContainerModel.getEvent();
+					Event newEvent = moneyIncomeContainerModel.getEvent();
+					HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
+					
+					//更新活动余额
+					if(moneyIncomeContainerModel.get_mId() == null || oldEvent.getId().equals(newEvent.getId())){
+						newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+					} else {
+						HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
+						oldEventEditor.getModelCopy().setIncomeTotal(oldEvent.getIncomeTotal() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate());
+						newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
+						oldEventEditor.save();
+					}
+					newEventEditor.save();
 					
 					/*
 					//更新支出所有者的实际收入

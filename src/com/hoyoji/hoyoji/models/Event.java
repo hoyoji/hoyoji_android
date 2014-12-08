@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.models;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 import android.provider.BaseColumns;
@@ -9,6 +10,7 @@ import com.activeandroid.annotation.Table;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "Event", id = BaseColumns._ID)
@@ -84,12 +86,6 @@ public class Event extends HyjModel {
 			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_hint_endDate);
 		}else{
 			modelEditor.removeValidationError("endDate");
-		}
-		
-		if(this.getDate() < this.getStartDate()) {
-			modelEditor.removeValidationError("startDate");
-		} else {
-			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_error_startDate);
 		}
 		
 		if(this.getStartDate() < this.getEndDate()) {
@@ -189,6 +185,11 @@ public class Event extends HyjModel {
 
 	public Double getIncomeTotal(){
 		return this.mIncomeTotal;
+	}
+	
+	public Double getBalance(){
+        Double eventBalance = this.mIncomeTotal - this.mExpenseTotal;
+		return HyjUtil.toFixed2(eventBalance);
 	}
 
 	@Override
