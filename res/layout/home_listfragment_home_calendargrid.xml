@@ -45,7 +45,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_expense" />
 
         <Button
@@ -57,7 +57,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_income" />
 
  <!--        <Button
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:background="@drawable/round_button"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_transfer" /> -->
 
         <!-- <Button
@@ -79,7 +79,7 @@
             android:layout_weight="1"
             android:background="@drawable/round_button"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_debt" /> -->
         <Button
             android:id="@+id/homeListFragment_action_money_template"
@@ -90,7 +90,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_template" />
         
         <Button
@@ -102,7 +102,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:text="@string/app_action_money_topup" />
         
         <Button
