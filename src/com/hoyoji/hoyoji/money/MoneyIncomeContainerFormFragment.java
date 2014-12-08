@@ -47,6 +47,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
@@ -67,12 +68,14 @@ import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectEventListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
+	private final static int GET_EVENT_ID = 9;
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private final static int GET_CATEGORY_ID = 5;
@@ -91,6 +94,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
+	private HyjSelectorField mSelectorFieldEvent = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyIncomeCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
@@ -202,6 +206,40 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
+		
+		Event event;
+		String eventId = intent.getStringExtra("eventId");//从消息导入
+		if(moneyIncomeContainer.get_mId() == null && eventId != null){
+			moneyIncomeContainer.setEventId(eventId);
+			event = HyjModel.getModel(Event.class, eventId);
+		}else{
+			event = moneyIncomeContainer.getEvent();
+		}
+		
+		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_selectorField_event);
+
+		if (event != null) {
+			mSelectorFieldEvent.setModelId(event.getId());
+			mSelectorFieldEvent.setText(event.getName());
+		}
+		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mSelectorFieldProject.getModelId() != null) {
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", project.get_mId());
+					
+					MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(ProjectEventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
+				
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+//								ProjectEventListFragment.class,
+//								R.string.projectListFragment_title_select_project,
+//								null, GET_PROJECT_ID);
+				}
+			}
+		});
 		
 		setupApportionField(moneyIncomeContainer);
 		
@@ -1754,7 +1792,32 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	         	 }
 	        	 break;
-	        	 
+             case GET_EVENT_ID:
+     			if (resultCode == Activity.RESULT_OK) {
+     				long _id = data.getLongExtra("MODEL_ID", -1);
+     				Event event = Event.load(Event.class, _id);
+     				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", event.getProject().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+     				
+     				if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
+     					HyjUtil.displayToast(R.string.app_permission_no_addnew);
+     					return;
+     				}else if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
+     					HyjUtil.displayToast(R.string.app_permission_no_edit);
+     					return;
+     				}
+
+     				if( event.getProject().getFinancialOwnerUserId() != null){
+     					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+     					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+     				} else {
+     					mSelectorFieldFinancialOwner.setModelId(null);
+     					mSelectorFieldFinancialOwner.setText(null);
+     				}
+     					
+     				mSelectorFieldEvent.setText(event.getName());
+     				mSelectorFieldEvent.setModelId(event.getId());
+     			}
+     			break;
              case GET_FRIEND_ID:
             	 if(resultCode == Activity.RESULT_OK){
             		long _id = data.getLongExtra("MODEL_ID", -1);
