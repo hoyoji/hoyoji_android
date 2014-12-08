@@ -52,6 +52,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.LoginActivity;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
@@ -74,12 +75,15 @@ import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectEventListFragment;
+import com.hoyoji.hoyoji.project.ProjectEventViewPagerFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_MONEYACCOUNT_ID = 1;
 	private final static int GET_PROJECT_ID = 2;
+	private final static int GET_EVENT_ID = 9;
 	private final static int GET_FRIEND_ID = 3;
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private final static int GET_CATEGORY_ID = 5;
@@ -98,6 +102,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
+	private HyjSelectorField mSelectorFieldEvent = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyExpenseCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
@@ -205,6 +210,36 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								ProjectListFragment.class,
 								R.string.projectListFragment_title_select_project,
 								null, GET_PROJECT_ID);
+			}
+		});
+		
+		final Event event;
+		String eventId = intent.getStringExtra("eventId");//从消息导入
+		if(moneyExpenseContainer.get_mId() == null && eventId != null){
+			moneyExpenseContainer.setEventId(eventId);
+			event = HyjModel.getModel(Event.class, eventId);
+		}else{
+			event = moneyExpenseContainer.getEvent();
+		}
+		
+		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_event);
+
+		if (event != null) {
+			mSelectorFieldEvent.setModelId(event.getId());
+			mSelectorFieldEvent.setText(event.getName());
+		}
+		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putLong("MODEL_ID", event.get_mId());
+				
+				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(ProjectEventListFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle, GET_EVENT_ID);
+				
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+//								ProjectEventListFragment.class,
+//								R.string.projectListFragment_title_select_project,
+//								null, GET_PROJECT_ID);
 			}
 		});
 		
@@ -770,6 +805,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			getView().findViewById(R.id.moneyExpenseContainerFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
+			mSelectorFieldEvent.setEnabled(false);
 			
 			mNumericExchangeRate.setEnabled(false);
 			
@@ -837,6 +873,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
+		modelCopy.setEvent(HyjModel.getModel(Event.class, mSelectorFieldEvent.getModelId()));
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
@@ -866,6 +903,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyExpenseContainerEditor
 				.getValidationError("project"));
+		mSelectorFieldEvent.setError(mMoneyExpenseContainerEditor
+				.getValidationError("Event"));
 		mNumericExchangeRate.setError(mMoneyExpenseContainerEditor
 				.getValidationError("exchangeRate"));
 		mSelectorFieldMoneyExpenseCategory.setError(mMoneyExpenseContainerEditor
@@ -1200,9 +1239,37 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				setExchangeRate(false);
 				mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+				
+				mSelectorFieldEvent.setText(null);
+				mSelectorFieldEvent.setModelId(null);
 			}
 			break;
+		case GET_EVENT_ID:
+			if (resultCode == Activity.RESULT_OK) {
+				long _id = data.getLongExtra("MODEL_ID", -1);
+				Event event = Event.load(Event.class, _id);
+				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", event.getProject().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				
+				if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
+					HyjUtil.displayToast(R.string.app_permission_no_addnew);
+					return;
+				}else if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
+					HyjUtil.displayToast(R.string.app_permission_no_edit);
+					return;
+				}
 
+				if( event.getProject().getFinancialOwnerUserId() != null){
+					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+				} else {
+					mSelectorFieldFinancialOwner.setModelId(null);
+					mSelectorFieldFinancialOwner.setText(null);
+				}
+					
+				mSelectorFieldEvent.setText(event.getName());
+				mSelectorFieldEvent.setModelId(event.getId());
+			}
+			break;
 		case GET_FRIEND_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);

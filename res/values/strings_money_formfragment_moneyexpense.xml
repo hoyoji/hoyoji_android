@@ -22,6 +22,9 @@
    <string name="moneyExpenseFormFragment_textView_project">账本</string>
    <string name="moneyExpenseFormFragment_editText_hint_project">请选择账本</string>
    
+   <string name="moneyExpenseFormFragment_textView_event">活动</string>
+   <string name="moneyExpenseFormFragment_editText_hint_event">请选择活动</string>
+   
    <string name="moneyExpenseFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyExpenseFormFragment_editText_hint_exchangeRate">请输入汇率</string>
    <string name="moneyExpenseFormFragment_editText_validationError_zero_exchangeRate">汇率不能为0</string>

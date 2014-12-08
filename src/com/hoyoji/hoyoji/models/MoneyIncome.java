@@ -46,6 +46,9 @@ public class MoneyIncome extends HyjModel {
 
 	@Column(name = "projectId")
 	private String mProjectId;
+	
+	@Column(name = "eventId")
+	private String mEventId;
 
 	@Column(name = "moneyIncomeCategory")
 	private String mMoneyIncomeCategory;
@@ -345,6 +348,29 @@ public class MoneyIncome extends HyjModel {
 	public void setProjectId(String mProjectId, String projectCurrencyId) {
 		this.mProjectId = mProjectId;
 		this.mProjectCurrencyId = projectCurrencyId;
+	}
+	
+	public Event getEvent(){
+		if(mEventId == null){
+			return null;
+		}
+		return getModel(Event.class, mEventId);
+	}
+	
+	public void setEvent(Event mEvent) {
+		if(mEvent == null){
+			this.mEventId = null;
+		} else {
+			this.mEventId = mEvent.getId();
+		}
+	}
+
+	public String getEventId() {
+		return mEventId;
+	}
+
+	public void setEventId(String mEventId) {
+		this.mEventId = mEventId;
 	}
 
 	public String getMoneyIncomeCategory() {
