@@ -74,7 +74,7 @@ public class MemberListFragment extends HyjUserListFragment{
 //	private ContentObserver mUserDataChangeObserver = null;
 	private IWXAPI api;
 	private QQShare mQQShare = null;
-	private List<ProjectShareAuthorization> mMemberList;
+	private List<ProjectShareAuthorization> mMemberList = new ArrayList<ProjectShareAuthorization>();
 	public static QQAuth mQQAuth;
 	
 	@Override
@@ -433,36 +433,39 @@ public class MemberListFragment extends HyjUserListFragment{
 	}
 	
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object model, String field) {
+		ProjectShareAuthorization psa = (ProjectShareAuthorization)model;
 		if(view.getId() == R.id.memberListItem_name) {
-			String friendUserId = cursor.getString(columnIndex);
-			Friend friend = null;
-			if(friendUserId != null){
-				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-				if(friend != null){
-					((TextView)view).setText(friend.getDisplayName());
-				} else {
-					User user = HyjModel.getModel(User.class, friendUserId);
-					if(user != null){
-						((TextView)view).setText(user.getDisplayName());
-					} else {
-						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-					}
-				}
-			} else {
-				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
-				if(localFriendId != null){
-					friend = HyjModel.getModel(Friend.class, localFriendId);
-					if(friend != null){
-						((TextView)view).setText(friend.getDisplayName());
-					} else {
-						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-					}
-				} else {
-					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-				}
-			}
-			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
+//			String friendUserId = psa.getFriendUserId();
+//			Friend friend = null;
+//			if(friendUserId != null){
+//				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+//				if(friend != null){
+//					((TextView)view).setText(friend.getDisplayName());
+//				} else {
+//					User user = HyjModel.getModel(User.class, friendUserId);
+//					if(user != null){
+//						((TextView)view).setText(user.getDisplayName());
+//					} else {
+//						((TextView)view).setText(psa.getFriendUserName());
+//					}
+//				}
+//			} else {
+//				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
+//				if(localFriendId != null){
+//					friend = HyjModel.getModel(Friend.class, localFriendId);
+//					if(friend != null){
+//						((TextView)view).setText(friend.getDisplayName());
+//					} else {
+//						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//					}
+//				} else {
+//					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//				}
+//			}
+
+			((TextView)view).setText(psa.getFriendDisplayName());
+			if(HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
 				((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_red));
 			} else {
 				((TextView)view).setTextColor(Color.BLACK);
@@ -471,7 +474,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_picture) {
 			HyjImageView imageView = (HyjImageView)view;
 			imageView .setDefaultImage(R.drawable.ic_action_person_white);
-			String friendUserId = cursor.getString(columnIndex);
+			String friendUserId = psa.getFriendUserId();
 			if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user == null){
@@ -490,15 +493,15 @@ public class MemberListFragment extends HyjUserListFragment{
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
-			double percentage = cursor.getDouble(columnIndex);
+			double percentage = psa.getSharePercentage();
 			((HyjNumericView)view).setPrefix(null);
 			((HyjNumericView)view).setSuffix("%");
 			((HyjNumericView)view).setNumber(percentage);
 			return true;
 		} else if(view.getId() == R.id.memberListItem_remark) {
-			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
+			String friendUserId = psa.getFriendUserId();
 			if(friendUserId == null){
-				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
+				String localFriendId = psa.getLocalFriendId();
 				Friend friend = Friend.getModel(Friend.class, localFriendId);
 				if(friend != null && friend.getToBeDetermined()){
 					((TextView)view).setText("可进行账务拆分");
@@ -506,7 +509,7 @@ public class MemberListFragment extends HyjUserListFragment{
 					((TextView)view).setText("");
 				}
 			} else {
-				String state = cursor.getString(columnIndex);
+				String state = psa.getState();
 				if(state.equalsIgnoreCase("Wait")){
 					((TextView)view).setText(R.string.memberListFragment_state_wait);
 				} else if(state.equalsIgnoreCase("NotInvite")){
@@ -518,10 +521,9 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_actualTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -530,8 +532,8 @@ public class MemberListFragment extends HyjUserListFragment{
 				}
 			}
 			
-			Double actualTotal = projectShareAuthorization.getActualTotal();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double actualTotal = psa.getActualTotal();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 			if(actualTotal < 0){
 				actualTotal = -actualTotal;
 				numericView.setPrefix("已经收入:" + currencySymbol);
@@ -549,10 +551,9 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_apportionTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -560,8 +561,8 @@ public class MemberListFragment extends HyjUserListFragment{
 					return true;
 				}
 			}
-			Double apportionTotal = projectShareAuthorization.getApportionTotal();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double apportionTotal = psa.getApportionTotal();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 			if(apportionTotal < 0){
 				apportionTotal = -apportionTotal;
 				numericView.setPrefix("分摊收入:" + currencySymbol);
@@ -580,10 +581,9 @@ public class MemberListFragment extends HyjUserListFragment{
 		}
 		else if(view.getId() == R.id.memberListItem_settlement) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -591,8 +591,8 @@ public class MemberListFragment extends HyjUserListFragment{
 					return true;
 				}
 			}
-			Double settlement = projectShareAuthorization.getSettlement();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double settlement = psa.getSettlement();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 //			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
 
 //			numericView.setPrefix(currencySymbol);
@@ -623,55 +623,55 @@ public class MemberListFragment extends HyjUserListFragment{
 			return false;
 		}
 	}	
-	private class ChangeObserver extends ContentObserver {
-		AsyncTask<String, Void, String> mTask = null;
-		public ChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
+//	private class ChangeObserver extends ContentObserver {
+//		AsyncTask<String, Void, String> mTask = null;
+//		public ChangeObserver() {
+//			super(new Handler());
+//		}
 //
 //		@Override
-//		public void onChange(boolean selfChange, Uri uri) {
-//			super.onChange(selfChange, uri);
+//		public boolean deliverSelfNotifications() {
+//			return true;
 //		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if(mTask == null){
-				mTask = new AsyncTask<String, Void, String>() {
-			        @Override
-			        protected String doInBackground(String... params) {
-						try {
-							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(200);
-						} catch (InterruptedException e) {}
-						return null;
-			        }
-			        @Override
-			        protected void onPostExecute(String result) {
-						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
-						mTask = null;
-			        }
-			    };
-			    mTask.execute();
-			}
-		}
-	}
-
-
-	@Override
-	public void onDestroy() {
-//		if (mUserDataChangeObserver != null) {
-//			this.getActivity().getContentResolver()
-//					.unregisterContentObserver(mUserDataChangeObserver);
+////
+////		@Override
+////		public void onChange(boolean selfChange, Uri uri) {
+////			super.onChange(selfChange, uri);
+////		}
+//
+//		@Override
+//		public void onChange(boolean selfChange) {
+//			super.onChange(selfChange);
+//			if(mTask == null){
+//				mTask = new AsyncTask<String, Void, String>() {
+//			        @Override
+//			        protected String doInBackground(String... params) {
+//						try {
+//							//等待其他的更新都到齐后再更新界面
+//							Thread.sleep(200);
+//						} catch (InterruptedException e) {}
+//						return null;
+//			        }
+//			        @Override
+//			        protected void onPostExecute(String result) {
+//						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+//						mTask = null;
+//			        }
+//			    };
+//			    mTask.execute();
+//			}
 //		}
-		super.onDestroy();
-	}
+//	}
+
+
+//	@Override
+//	public void onDestroy() {
+////		if (mUserDataChangeObserver != null) {
+////			this.getActivity().getContentResolver()
+////					.unregisterContentObserver(mUserDataChangeObserver);
+////		}
+//		super.onDestroy();
+//	}
 	
 	@Override
 	protected void returnSelectedItems() {

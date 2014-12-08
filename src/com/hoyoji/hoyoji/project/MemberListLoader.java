@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Project;
@@ -59,7 +60,7 @@ public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    public List<HyjModel> loadInBackground() {
 
 	    	List<HyjModel> list;
-    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("projectId=? AND state <> 'Delete'", mProjectId).orderBy("name_pinYin").limit(this.mLoadLimit).execute();
+    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("projectId=? AND state <> 'Delete'", mProjectId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
 	    	Collections.sort(list, mProjectShareAuthorizationComparator);
 	    	return list;
 		}
@@ -67,8 +68,23 @@ public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    static class ProjectShareAuthorizationComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = ((ProjectShareAuthorization) lhs).getFriendDisplayName_pinYin();
-				String rhsStr = ((ProjectShareAuthorization) rhs).getFriendDisplayName_pinYin();
+				ProjectShareAuthorization lhsProjectShareAuthorization = ((ProjectShareAuthorization) lhs);
+				ProjectShareAuthorization rhsProjectShareAuthorization = ((ProjectShareAuthorization) rhs);
+				
+				if(lhsProjectShareAuthorization.getLocalFriend() != null && lhsProjectShareAuthorization.getLocalFriend().getToBeDetermined()){
+					return -1;
+				} else if(rhsProjectShareAuthorization.getLocalFriend() != null && rhsProjectShareAuthorization.getLocalFriend().getToBeDetermined()){
+					return 1;
+				}
+				
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(lhsProjectShareAuthorization.getFriendUserId())){
+					return -1;
+				} else if(HyjApplication.getInstance().getCurrentUser().getId().equals(rhsProjectShareAuthorization.getFriendUserId())){
+					return 1;
+				}
+				
+				String lhsStr = lhsProjectShareAuthorization.getFriendDisplayName_pinYin();
+				String rhsStr = rhsProjectShareAuthorization.getFriendDisplayName_pinYin();
 
 				if(lhsStr == null){
 					lhsStr = "";

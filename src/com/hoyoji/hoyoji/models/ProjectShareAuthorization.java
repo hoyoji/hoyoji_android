@@ -432,20 +432,20 @@ public class ProjectShareAuthorization extends HyjModel {
 		if(mFriendUserId != null){
 			Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
 			if(friend != null){
-				return friend.getDisplayName();
+				return friend.getDisplayName_pinYin();
 			} else {
 				User user = HyjModel.getModel(User.class, mFriendUserId);
 				if(user != null){
-					return user.getDisplayName();
+					return user.getDisplayName_pinYin();
 				}
 			}
 		} else if(mLocalFriendId != null){
 			Friend friend = Friend.getModel(Friend.class, mLocalFriendId);
 			if(friend != null){
-				return friend.getDisplayName();
+				return friend.getDisplayName_pinYin();
 			}
 		}
-		return this.getFriendUserName();
+		return this.getFriendUserName_pinYin();
 	}
 	
 	
@@ -466,6 +466,13 @@ public class ProjectShareAuthorization extends HyjModel {
 	}
 	
 	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+	
+	public String getFriendUserName_pinYin() {
+		if(mFriendUserName != null){
+			return HyjUtil.convertToPinYin(mFriendUserName);
+		}
 		return mFriendUserName;
 	}
 
@@ -1074,13 +1081,20 @@ public class ProjectShareAuthorization extends HyjModel {
 		return jsonObj;
 	}
 
+	public Friend getLocalFriend() {
+		if(mLocalFriendId == null){
+			return null;
+		} 
+		
+		return Friend.getModel(Friend.class, mLocalFriendId);
+	}
+	
 	public String getLocalFriendId() {
 		return mLocalFriendId;
 	}
 
 	public void setLocalFriendId(String id) {
 		mLocalFriendId = id;
-		
 	}	
 	
 

@@ -106,6 +106,10 @@ public class User extends HyjModel {
 	public String getUserName() {
 		return mUserName;
 	}
+	
+	public String getUserName_pinYin() {
+		return HyjUtil.convertToPinYin(mUserName);
+	}
 
 	public void setUserName(String mUserName) {
 		this.mUserName = mUserName.trim();
@@ -134,6 +138,13 @@ public class User extends HyjModel {
 			return this.getNickName();
 		}
 		return this.getUserName();
+	}
+	
+	public String getDisplayName_pinYin() {
+		if(this.mNickName_pinYin != null && this.mNickName_pinYin.length() != 0){
+			return this.mNickName_pinYin;
+		}
+		return this.getUserName_pinYin();
 	}
 	
 	public boolean ismIsMerchant() {
