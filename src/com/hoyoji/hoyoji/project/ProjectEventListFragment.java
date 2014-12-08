@@ -25,6 +25,7 @@ import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
@@ -58,8 +59,8 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"_id", "id", "startDate", "name", "id", "ownerUserId" ,"id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_owner},
+				new String[] {"_id", "id", "startDate", "name", "id", "ownerUserId" ,"id", "id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_owner, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -149,13 +150,17 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 //			}
 //			view.setTag(cursor.getLong(columnIndex));
 			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
+			((TextView)view).setText("" + event.getBalance());
+			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
 			return true;
-		}else if(view.getId() == R.id.homeListItem_title){
+		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(cursor.getString(columnIndex));
 			return true;
-		}else if(view.getId() == R.id.homeListItem_remark){
+		} else if(view.getId() == R.id.homeListItem_remark){
 //			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
 //				((TextView)view).setText("无备注");
 //			} else {
@@ -174,7 +179,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 				((TextView)view).setText("[已结束]" + ems.size() + "人");
 			}
 			return true;
-		}else if(view.getId() == R.id.homeListItem_subTitle){
+		} else if(view.getId() == R.id.homeListItem_subTitle){
 			Friend friend = new Select().from(Friend.class).where("friendUserId=?", cursor.getString(columnIndex)).executeSingle();
 			((TextView)view).setText(friend.getFriendUserDisplayName(cursor.getString(columnIndex)));
 //			String date = cursor.getString(cursor.getColumnIndex("date"));

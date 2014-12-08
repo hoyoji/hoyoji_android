@@ -153,7 +153,7 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 	
 	private void fillData() {
 		Event modelCopy = (Event) mEventEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+//		modelCopy.setDate(mDateTimeFieldDate.getText());
 		modelCopy.setStartDate(mDateTimeFieldStartDate.getText());
 		modelCopy.setEndDate(mDateTimeFieldEndDate.getText());
 		modelCopy.setName(mTextFieldName.getText().toString().trim());

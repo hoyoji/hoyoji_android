@@ -878,7 +878,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
-		if(mSelectorFieldEvent.getText() != null){
+		if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
 			modelCopy.setEvent(HyjModel.getModel(Event.class, mSelectorFieldEvent.getModelId()));
 		}
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
@@ -1058,6 +1058,21 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					oldProjectEditor.save();
 				}
 				newProjectEditor.save();
+				
+				Event oldEvent = oldMoneyExpenseContainerModel.getEvent();
+				Event newEvent = moneyExpenseContainerModel.getEvent();
+				HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
+				
+				//更新活动余额
+				if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+				} else {
+					HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
+					oldEventEditor.getModelCopy().setExpenseTotal(oldEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
+					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+					oldEventEditor.save();
+				}
+				newEventEditor.save();
 				
 				/*
 				//更新支出所有者的实际支出
