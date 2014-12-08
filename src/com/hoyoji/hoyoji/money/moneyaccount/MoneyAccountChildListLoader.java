@@ -1,41 +1,12 @@
 package com.hoyoji.hoyoji.money.moneyaccount;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyAccount;
-import com.hoyoji.hoyoji.models.MoneyBorrow;
-import com.hoyoji.hoyoji.models.MoneyExpense;
-import com.hoyoji.hoyoji.models.MoneyIncome;
-import com.hoyoji.hoyoji.models.MoneyLend;
-import com.hoyoji.hoyoji.models.MoneyPayback;
-import com.hoyoji.hoyoji.models.MoneyReturn;
-import com.hoyoji.hoyoji.models.MoneyTransfer;
-
 import android.content.Context;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
@@ -48,6 +19,7 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 	    private String mExcludeType = null;
 //	    private ChangeObserver mChangeObserver;
 		private String mFriendId;
+	    private MoneyAccountComparator mMoneyAccountComparator = new MoneyAccountComparator();
 	    
 	    public MoneyAccountChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
@@ -110,10 +82,35 @@ public class MoneyAccountChildListLoader extends AsyncTaskLoader<List<HyjModel>>
 					}
 				}
 	    	}
+	    	Collections.sort(mChildList, mMoneyAccountComparator);
 	    	return mChildList;
-	    	
 		}
+	    
+	    static class MoneyAccountComparator implements Comparator<HyjModel> {
+			@Override
+			public int compare(HyjModel lhs, HyjModel rhs) {
+				MoneyAccount lhsMoneyAccount = ((MoneyAccount) lhs);
+				MoneyAccount rhsMoneyAccount = ((MoneyAccount) rhs);
+				
+				if(lhsMoneyAccount.getLocalFriend() != null && lhsMoneyAccount.getLocalFriend().getToBeDetermined()){
+					return -1;
+				} else if(rhsMoneyAccount.getLocalFriend() != null && rhsMoneyAccount.getLocalFriend().getToBeDetermined()){
+					return 1;
+				}
+				
+				String lhsStr = lhsMoneyAccount.getDisplayName_pinYin();
+				String rhsStr = rhsMoneyAccount.getDisplayName_pinYin();
 
+				if(lhsStr == null){
+					lhsStr = "";
+				}
+				if(rhsStr == null){
+					rhsStr = "";
+				}
+								
+				return lhsStr.compareTo(rhsStr);
+			}
+	    } 
 	    
 		  @Override
 		  protected void onAbandon (){
