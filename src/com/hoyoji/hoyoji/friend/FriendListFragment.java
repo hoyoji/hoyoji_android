@@ -710,7 +710,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			        }
 			        @Override
 			        protected void onPostExecute(String result) {
-						((CursorTreeAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
+						((FriendGroupListAdapter) getListView().getExpandableListAdapter()).notifyDataSetChanged();
 						mTask = null;
 			        }
 			    };
