@@ -95,6 +95,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
 	private HyjSelectorField mSelectorFieldEvent = null;
+	private View mViewSeparatorEvent = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldMoneyIncomeCategory = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
@@ -207,6 +208,18 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
+		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_selectorField_event);
+		mViewSeparatorEvent = (View) getView().findViewById(R.id.field_separator_event);
+		
+		List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+		if(events.size() > 0) {
+			mSelectorFieldEvent.setVisibility(View.VISIBLE);
+			mViewSeparatorEvent.setVisibility(View.VISIBLE);
+		} else {
+			mSelectorFieldEvent.setVisibility(View.GONE);
+			mViewSeparatorEvent.setVisibility(View.GONE);
+		}
+		
 		Event event;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
 		if(moneyIncomeContainer.get_mId() == null && eventId != null){
@@ -215,8 +228,6 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		}else{
 			event = moneyIncomeContainer.getEvent();
 		}
-		
-		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_selectorField_event);
 
 		if (event != null) {
 			mSelectorFieldEvent.setModelId(event.getId());
@@ -1790,6 +1801,17 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	         		setExchangeRate(false);
 	         		mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+					
+					List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+					if(events.size() > 0) {
+						mSelectorFieldEvent.setVisibility(View.VISIBLE);
+						mViewSeparatorEvent.setVisibility(View.VISIBLE);
+					} else {
+						mSelectorFieldEvent.setVisibility(View.GONE);
+						mViewSeparatorEvent.setVisibility(View.GONE);
+					}
+					mSelectorFieldEvent.setText(null);
+					mSelectorFieldEvent.setModelId(null);
 	         	 }
 	        	 break;
              case GET_EVENT_ID:

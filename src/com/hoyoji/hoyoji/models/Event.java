@@ -34,6 +34,12 @@ public class Event extends HyjModel {
 	
 	@Column(name = "endDate")
 	private String mEndDate;
+	
+	@Column(name = "incomeTotal")
+	private Double mIncomeTotal = 0.0;
+	
+	@Column(name = "expenseTotal")
+	private Double mExpenseTotal = 0.0;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -169,6 +175,21 @@ public class Event extends HyjModel {
 		this.mEndDate = mEndDate;
 	}
 
+	public void setExpenseTotal(double expenseTotal){
+		this.mExpenseTotal = expenseTotal;
+	}
+	
+	public Double getExpenseTotal(){
+		return this.mExpenseTotal;
+	}
+
+	public void setIncomeTotal(double incomeTotal){
+		this.mIncomeTotal = incomeTotal;
+	}
+
+	public Double getIncomeTotal(){
+		return this.mIncomeTotal;
+	}
 
 	@Override
 	public void save(){
