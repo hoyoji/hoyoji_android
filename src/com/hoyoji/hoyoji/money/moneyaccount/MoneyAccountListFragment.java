@@ -262,8 +262,7 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 	}
 	
 	@Override  
-	public boolean onChildClick(ExpandableListView parent, View v,
-			int groupPosition, int childPosition, long id) {
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 		if(id == -1) {
 			 return false;
 		}

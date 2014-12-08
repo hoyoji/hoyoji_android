@@ -118,6 +118,36 @@ public class MoneyAccount extends HyjModel {
 		return this.getName();
 	}
 	
+	public String getDisplayName_pinYin(){
+		if(this.get_mId() == null){
+			return null;
+		}
+		if(this.getAccountType().equalsIgnoreCase("Debt")){
+			if(this.getLocalFriendId() != null){
+				Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
+				if(friend != null){
+					return friend.getDisplayName_pinYin();
+				}
+			} else if(this.getFriendUserId() != null){
+				Friend friend = new Select().from(Friend.class).where("friendUserId=?", this.getFriendUserId()).executeSingle();
+				if(friend != null){
+					return friend.getDisplayName_pinYin();
+				} else {
+					User user = HyjModel.getModel(User.class, this.getFriendUserId());
+					if(user != null){
+						return user.getDisplayName_pinYin();
+					}
+				}
+			}
+		}
+		
+		return this.getName_pinYin();
+	}
+	
+	private String getName_pinYin() {
+		return this.mName_pinYin;
+	}
+
 	public String getFriendUserId() {
 		return this.mFriendUserId;
 	}
