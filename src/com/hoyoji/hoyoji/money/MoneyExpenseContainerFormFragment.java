@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,13 +35,10 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjImageField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
@@ -51,19 +46,16 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
-import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyExpense;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer.MoneyExpenseContainerEditor;
-import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -76,7 +68,6 @@ import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectEventListFragment;
-import com.hoyoji.hoyoji.project.ProjectEventViewPagerFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -213,7 +204,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		final Event event;
+		Event event;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
 		if(moneyExpenseContainer.get_mId() == null && eventId != null){
 			moneyExpenseContainer.setEventId(eventId);
@@ -231,15 +222,19 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putLong("MODEL_ID", event.get_mId());
-				
-				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(ProjectEventListFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle, GET_EVENT_ID);
+				if (mSelectorFieldProject.getModelId() != null) {
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", project.get_mId());
+					
+					MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(ProjectEventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
 				
 //				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
 //								ProjectEventListFragment.class,
 //								R.string.projectListFragment_title_select_project,
 //								null, GET_PROJECT_ID);
+				}
 			}
 		});
 		

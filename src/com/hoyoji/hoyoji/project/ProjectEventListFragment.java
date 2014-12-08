@@ -3,9 +3,13 @@ package com.hoyoji.hoyoji.project;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -13,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,7 +25,6 @@ import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
@@ -32,10 +34,9 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.models.User;
 
 public class ProjectEventListFragment extends HyjUserListFragment {
+	private ContentObserver mChangeObserver = null;
 
 	@Override
 	public Integer useContentView() {
@@ -83,7 +84,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 				null,
 				"projectId=?", 
 				new String[]{project.getId()}, 
-				"date LIMIT " + (limit + offset) 
+				"startDate DESC LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
 	}
@@ -92,6 +93,14 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
+		
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(
+					ContentProvider.createUri(
+							EventMember.class, null), true,
+							mChangeObserver);
+		}
 	}
 	
 	@Override  
@@ -102,10 +111,17 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		if(id == -1) {
 			 return;
 		}
-		Bundle bundle = new Bundle();
-		bundle.putLong("MODEL_ID", id);
-		
-		openActivityWithFragment(ProjectEventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
+		if(getActivity().getCallingActivity() != null){
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_ID", id);
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+		} else {
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", id);
+			
+			openActivityWithFragment(ProjectEventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
+		}
     }
 	
 	@Override
@@ -184,7 +200,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 					((TextView)view).setText("[已签到]");
 				} 
 			} else {
-				((TextView)view).setText("未报名");
+				((TextView)view).setText("[未报名]");
 			}
 			return true;
 		} else {
@@ -238,6 +254,58 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			}
 		}
 		
+	}
+	
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+	
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+	
+	//	@Override
+	//	public void onChange(boolean selfChange, Uri uri) {
+	//		super.onChange(selfChange, uri);
+	//	}
+	
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(200);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+	
+	//			    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		
+		super.onDestroy();
 	}
 	
 }

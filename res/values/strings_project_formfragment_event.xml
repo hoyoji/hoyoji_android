@@ -4,6 +4,8 @@
     
     <string name="projectEventListFragment_action_edit">修改账本活动</string>
     
+    <string name="projectEventListFragment_action_select">选择活动</string>
+    
     <string name="projectEventListFragment_editText_hint_name">请输入活动名称</string>
     <string name="projectEventListFragment_textView_name">活动名称</string>
     
