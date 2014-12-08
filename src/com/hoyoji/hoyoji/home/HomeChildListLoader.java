@@ -146,8 +146,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    static class DateComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = "";
-				String rhsStr = "";
+				Long lhsStr = 0l;
+				Long rhsStr = 0l;
 				if(lhs instanceof MoneyExpense){
 					lhsStr = ((MoneyExpense) lhs).getDate();
 				}

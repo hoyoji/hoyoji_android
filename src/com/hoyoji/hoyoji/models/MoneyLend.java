@@ -24,7 +24,7 @@ public class MoneyLend extends HyjModel{
 	private String mPictureId;
 	
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -48,7 +48,7 @@ public class MoneyLend extends HyjModel{
 	private Double mExchangeRate;
 	
 	@Column(name = "paybackDate")
-	private String mPaybackDate;
+	private Long mPaybackDate;
 	
 	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
 	@Column(name = "currencyId")
@@ -173,11 +173,11 @@ public class MoneyLend extends HyjModel{
 		return getMany(MoneyLendApportion.class, "moneyLendId");
 	}
 	
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 
@@ -349,11 +349,11 @@ public class MoneyLend extends HyjModel{
 		this.mExchangeRate = mExchangeRate;
 	}
 
-	public String getPaybackDate() {
+	public Long getPaybackDate() {
 		return mPaybackDate;
 	}
 
-	public void setPaybackDate(String mPaybackDate) {
+	public void setPaybackDate(Long mPaybackDate) {
 		this.mPaybackDate = mPaybackDate;
 	}
 
@@ -477,7 +477,7 @@ public class MoneyLend extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
-		if(this.getPaybackDate() != null && HyjUtil.parseDateFromISO(this.getPaybackDate()).before(HyjUtil.parseDateFromISO(this.getDate()))){
+		if(this.getPaybackDate() != null && this.getPaybackDate() < this.getDate()){
 		    modelEditor.setValidationError("paybackDate", R.string.moneyLendFormFragment_editText_validationError_paybackDate_before_date);
 		}else{
 			modelEditor.removeValidationError("paybackDate");

@@ -175,8 +175,8 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    static class DateComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = "";
-				String rhsStr = "";
+				Long lhsStr = 0l;
+				Long rhsStr = 0l;
 				if(lhs instanceof MoneyBorrow){
 					lhsStr = ((MoneyBorrow) lhs).getDate();
 				}

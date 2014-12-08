@@ -133,8 +133,8 @@ public class MemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel
 	    static class DateComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = "";
-				String rhsStr = "";
+				Long lhsStr = 0l;
+				Long rhsStr = 0l;
 				if(lhs instanceof MoneyExpenseContainer){
 					lhsStr = ((MoneyExpenseContainer) lhs).getDate();
 				}

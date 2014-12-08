@@ -415,6 +415,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					newProjectShareAuthorization2.setOwnerUserId(HyjApplication
 							.getInstance().getCurrentUser().getId());
 					newProjectShareAuthorization2.setFriendUserName("待定成员");
+					newProjectShareAuthorization2.setToBeDetermined(true);
 					newProjectShareAuthorization2.save();
 				}
 			}

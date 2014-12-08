@@ -88,9 +88,9 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_endDate);
 		
 		if (modelId != -1) {
-			mDateTimeFieldDate.setText(event.getDate());
-			mDateTimeFieldStartDate.setText(event.getStartDate());
-			mDateTimeFieldEndDate.setText(event.getEndDate());
+			mDateTimeFieldDate.setTime(event.getDate());
+			mDateTimeFieldStartDate.setTime(event.getStartDate());
+			mDateTimeFieldEndDate.setTime(event.getEndDate());
 		} else {
 			mDateTimeFieldDate.setDate(new Date());
 			mDateTimeFieldStartDate.setDate(new Date());
@@ -153,9 +153,9 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 	
 	private void fillData() {
 		Event modelCopy = (Event) mEventEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
-		modelCopy.setStartDate(mDateTimeFieldStartDate.getText());
-		modelCopy.setEndDate(mDateTimeFieldEndDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
+		modelCopy.setStartDate(mDateTimeFieldStartDate.getTime());
+		modelCopy.setEndDate(mDateTimeFieldEndDate.getTime());
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setDescription(mRemarkFieldDescription.getText().toString().trim());
 	}

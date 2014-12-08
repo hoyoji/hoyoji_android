@@ -122,7 +122,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyPayback.getDate());
+			mDateTimeFieldDate.setTime(moneyPayback.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -579,7 +579,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyPayback modelCopy = (MoneyPayback) mMoneyPaybackEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setInterest(mNumericFieldInterest.getNumber());
 //		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());

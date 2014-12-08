@@ -24,7 +24,7 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 	private String mPictureId;
 
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -48,7 +48,7 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 	private Double mExchangeRate;
 
 	@Column(name = "paybackDate")
-	private String mPaybackDate;
+	private Long mPaybackDate;
 
 	// 记录amount对应的币种，应该和 moneyAccount 的币种一致
 	@Column(name = "currencyId")
@@ -163,11 +163,11 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 		return getMany(MoneyDepositIncomeApportion.class, "moneyDepositIncomeContainerId");
 	}
 
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 
@@ -549,7 +549,7 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 		return this.mCurrencyId;
 	}
 
-	public String getPaybackDate() {
+	public Long getPaybackDate() {
 		return this.mPaybackDate;
 	}
 

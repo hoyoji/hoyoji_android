@@ -266,7 +266,7 @@ public class MoneyReturnApportion extends HyjModel implements MoneyApportion{
 		return this.getMoneyReturnContainer().getExchangeRate();
 	}
 	@Override
-	public String getDate() {
+	public Long getDate() {
 		return this.getMoneyReturnContainer().getDate();
 	}
 }

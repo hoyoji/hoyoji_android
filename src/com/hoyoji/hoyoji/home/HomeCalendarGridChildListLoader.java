@@ -148,8 +148,8 @@ public class HomeCalendarGridChildListLoader extends AsyncTaskLoader<List<HyjMod
 	    static class DateComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = "";
-				String rhsStr = "";
+				Long lhsStr = (long) 0;
+				Long rhsStr = (long) 0;
 				if(lhs instanceof MoneyExpense){
 					lhsStr = ((MoneyExpense) lhs).getDate();
 				}

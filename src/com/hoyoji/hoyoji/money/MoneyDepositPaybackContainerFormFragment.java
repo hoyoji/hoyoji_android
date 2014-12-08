@@ -130,7 +130,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyDepositPaybackContainer.getDate());
+			mDateTimeFieldDate.setTime(moneyDepositPaybackContainer.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -539,7 +539,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 	
 	private void fillData(){
 		MoneyDepositPaybackContainer modelCopy = (MoneyDepositPaybackContainer) mMoneyDepositPaybackContainerEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 //		modelCopy.setPaybackDate(mDateTimeFieldPaybackDate.getText());
 		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());

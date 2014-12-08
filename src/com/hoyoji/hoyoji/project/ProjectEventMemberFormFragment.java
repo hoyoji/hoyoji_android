@@ -102,9 +102,9 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventMemberFormFragment_hyjDateTimeField_endDate);
 		
-		mDateTimeFieldDate.setText(event.getDate());
-		mDateTimeFieldStartDate.setText(event.getStartDate());
-		mDateTimeFieldEndDate.setText(event.getEndDate());
+		mDateTimeFieldDate.setTime(event.getDate());
+		mDateTimeFieldStartDate.setTime(event.getStartDate());
+		mDateTimeFieldEndDate.setTime(event.getEndDate());
 		mDateTimeFieldDate.setEnabled(false);
 		mDateTimeFieldStartDate.setEnabled(false);
 		mDateTimeFieldEndDate.setEnabled(false);

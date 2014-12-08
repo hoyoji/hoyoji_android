@@ -139,7 +139,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			String temPlateID = intent.getStringExtra("MONEYTEMPLATE_ID");
 			if(temPlateID != null){
 				MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
-				moneyTemplate.setDate(HyjUtil.formatDateToIOS(new Date()));
+				moneyTemplate.setDate((new Date()).getTime());
 				moneyTemplate.save();
 			}
 			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
@@ -177,7 +177,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_textField_date);	
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyIncomeContainer.getDate());
+			mDateTimeFieldDate.setTime(moneyIncomeContainer.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -858,7 +858,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyIncomeContainer modelCopy =  mMoneyIncomeContainerEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));

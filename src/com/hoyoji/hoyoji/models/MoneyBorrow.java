@@ -24,7 +24,7 @@ public class MoneyBorrow extends HyjModel{
 	private String mPictureId;
 	
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -56,7 +56,7 @@ public class MoneyBorrow extends HyjModel{
 	private String mProjectCurrencyId;
 	
 	@Column(name = "returnDate")
-	private String mReturnDate;
+	private Long mReturnDate;
 	
 	@Column(name = "returnedAmount")
 	private Double mReturnedAmount;
@@ -175,11 +175,11 @@ public class MoneyBorrow extends HyjModel{
 		return getMany(MoneyReturn.class, "moneyBorrowId");
 	}
 	
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 
@@ -343,11 +343,11 @@ public class MoneyBorrow extends HyjModel{
 		this.mExchangeRate = mExchangeRate;
 	}
 
-	public String getReturnDate() {
+	public Long getReturnDate() {
 		return mReturnDate;
 	}
 
-	public void setReturnDate(String mReturnDate) {
+	public void setReturnDate(Long mReturnDate) {
 		this.mReturnDate = mReturnDate;
 	}
 
@@ -460,7 +460,7 @@ public class MoneyBorrow extends HyjModel{
 			modelEditor.removeValidationError("amount");
 		}
 		
-		if(this.getReturnDate() != null && HyjUtil.parseDateFromISO(this.getReturnDate()).before(HyjUtil.parseDateFromISO(this.getDate()))){
+		if(this.getReturnDate() != null && this.getReturnDate() < this.getDate()){
 		    modelEditor.setValidationError("returnDate", R.string.moneyBorrowFormFragment_editText_validationError_returnDate_before_date);
 		}else{
 			modelEditor.removeValidationError("returnDate");

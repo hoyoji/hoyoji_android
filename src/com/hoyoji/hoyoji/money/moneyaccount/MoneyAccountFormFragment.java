@@ -457,7 +457,7 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 			Project project = new Select("MIN(_id) AS _id, *").from(Project.class).where("ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 			newMoneyTransfer.setProjectCurrencyId(project.getCurrencyId());
 			newMoneyTransfer.setProjectId(project.getId());
-			newMoneyTransfer.setDate(HyjUtil.formatDateToIOS(new Date()));
+			newMoneyTransfer.setDate((new Date()).getTime());
 			newMoneyTransfer.setTransferOutFriendUserId(null);
 			newMoneyTransfer.setTransferInFriendUserId(null);
 			newMoneyTransfer.setRemark("修改账户金额");

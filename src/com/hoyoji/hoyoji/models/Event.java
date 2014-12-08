@@ -18,7 +18,7 @@ public class Event extends HyjModel {
 	private String mUUID;
 
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 
 	@Column(name = "name")
 	private String mName;
@@ -30,10 +30,10 @@ public class Event extends HyjModel {
 	private String mDescription;
 	
 	@Column(name = "startDate")
-	private String mStartDate;
+	private Long mStartDate;
 	
 	@Column(name = "endDate")
-	private String mEndDate;
+	private Long mEndDate;
 	
 	@Column(name = "incomeTotal")
 	private Double mIncomeTotal = 0.0;
@@ -86,13 +86,13 @@ public class Event extends HyjModel {
 			modelEditor.removeValidationError("endDate");
 		}
 		
-		if(this.getDate().compareTo(this.getStartDate()) < 0) {
+		if(this.getDate() < this.getStartDate()) {
 			modelEditor.removeValidationError("startDate");
 		} else {
 			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_error_startDate);
 		}
 		
-		if(this.getStartDate().compareTo(this.getEndDate()) < 0) {
+		if(this.getStartDate() < this.getEndDate()) {
 			modelEditor.removeValidationError("endDate");
 		} else {
 			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);
@@ -115,11 +115,11 @@ public class Event extends HyjModel {
 		this.mOwnerUserId = mOwnerUserId;
 	}
 
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 	
@@ -156,22 +156,22 @@ public class Event extends HyjModel {
 	}
 
 
-	public String getStartDate() {
+	public Long getStartDate() {
 		return mStartDate;
 	}
 
 
-	public void setStartDate(String mStartDate) {
+	public void setStartDate(Long mStartDate) {
 		this.mStartDate = mStartDate;
 	}
 
 
-	public String getEndDate() {
+	public Long getEndDate() {
 		return mEndDate;
 	}
 
 
-	public void setEndDate(String mEndDate) {
+	public void setEndDate(Long mEndDate) {
 		this.mEndDate = mEndDate;
 	}
 

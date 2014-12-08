@@ -76,7 +76,7 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
 				R.id.projectMessageFormFragment_editText_date);
-		mDateTimeFieldDate.setText(shareAddMessage.getDate());
+		mDateTimeFieldDate.setTime(shareAddMessage.getDate());
 		mDateTimeFieldDate.setEnabled(false);
 
 		mEditTextToUser = (HyjTextField) getView().findViewById(

@@ -80,7 +80,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
 				R.id.friendAddRequestMessageFormFragment_editText_date);
-		mDateTimeFieldDate.setText(friendAddMessage.getDate());
+		mDateTimeFieldDate.setTime(friendAddMessage.getDate());
 		mDateTimeFieldDate.setEnabled(false);
 
 		mEditTextToUser = (HyjTextField) getView().findViewById(
@@ -426,7 +426,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 
 	private void sendAddFriendRequestMessage(JSONObject jsonUser) {
 		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setDate((new Date()).getTime());
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddRequest");
 		msg.setOwnerUserId(jsonUser.optString("id"));
@@ -469,7 +469,7 @@ public class FriendMessageFormFragment extends HyjUserFormFragment {
 
 	private void sendAddFriendResponseMessage(final JSONObject jsonUser) {
 		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setDate((new Date()).getTime());
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddResponse");
 		msg.setOwnerUserId(jsonUser.optString("id"));

@@ -269,7 +269,7 @@ public class MoneyBorrowApportion extends HyjModel implements MoneyApportion {
 	}
 
 	@Override
-	public String getDate() {
+	public Long getDate() {
 		return this.getMoneyBorrowContainer().getDate();
 	}
 }

@@ -133,7 +133,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 				
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyExpenseFormFragment_textField_date);
 		if (modelId != -1) {
-			mDateTimeFieldDate.setText(moneyExpense.getDate());
+			mDateTimeFieldDate.setTime(moneyExpense.getDate());
 		}
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
@@ -630,7 +630,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 
 	private void fillData() {
 		MoneyExpense modelCopy = (MoneyExpense) mMoneyExpenseEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setMoneyAccount(moneyAccount);

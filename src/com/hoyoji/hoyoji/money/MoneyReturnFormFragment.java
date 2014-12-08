@@ -123,7 +123,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyReturnFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyReturn.getDate());
+			mDateTimeFieldDate.setTime(moneyReturn.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -554,7 +554,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyReturn modelCopy = (MoneyReturn) mMoneyReturnEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericFieldAmount.getNumber());
 		modelCopy.setInterest(mNumericFieldInterest.getNumber());
 //		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());

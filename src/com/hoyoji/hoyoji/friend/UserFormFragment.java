@@ -199,7 +199,7 @@ public class UserFormFragment extends HyjUserFormFragment {
 
 	private void sendAddFriendResponseMessage(final JSONObject jsonUser) {
 		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setDate((new Date()).getTime());
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddResponse");
 		msg.setOwnerUserId(jsonUser.optString("id"));
@@ -375,7 +375,7 @@ public class UserFormFragment extends HyjUserFormFragment {
 
 	private void sendAddFriendRequestMessage(JSONObject jsonUser) {
 		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setDate((new Date()).getTime());
 		msg.setMessageState("new");
 		msg.setType("System.Friend.AddRequest");
 		msg.setOwnerUserId(jsonUser.optString("id"));

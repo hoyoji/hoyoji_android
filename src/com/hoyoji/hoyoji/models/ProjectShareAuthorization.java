@@ -1102,6 +1102,10 @@ public class ProjectShareAuthorization extends HyjModel {
 
 	public Boolean getToBeDetermined() {
 		return this.mToBeDetermined;
+	}
+
+	public void setToBeDetermined(boolean b) {
+		this.mToBeDetermined = b;
 	}	
 	
 

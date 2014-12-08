@@ -311,7 +311,7 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 		return this.getMoneyExpenseContainer().getExchangeRate();
 	}
 	@Override
-	public String getDate() {
+	public Long getDate() {
 		return this.getMoneyExpenseContainer().getDate();
 	}
 

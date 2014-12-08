@@ -127,7 +127,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyLendFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyLend.getDate());
+			mDateTimeFieldDate.setTime(moneyLend.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -154,7 +154,7 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		}
 		
 		mDateTimeFieldPaybackDate = (HyjDateTimeField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackDate);
-		mDateTimeFieldPaybackDate.setText(moneyLend.getPaybackDate());
+		mDateTimeFieldPaybackDate.setTime(moneyLend.getPaybackDate());
 	
 		mNumericFieldPaybackedAmount = (HyjNumericField) getView().findViewById(R.id.moneyLendFormFragment_textField_paybackedAmount);	
 		mNumericFieldPaybackedAmount.setNumber(moneyLend.getPaybackedAmount());
@@ -566,9 +566,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyLend modelCopy = (MoneyLend) mMoneyLendEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
-		modelCopy.setPaybackDate(mDateTimeFieldPaybackDate.getText());
+		modelCopy.setPaybackDate(mDateTimeFieldPaybackDate.getTime());
 //		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if(mSelectorFieldMoneyAccount.getModelId() != null){
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());

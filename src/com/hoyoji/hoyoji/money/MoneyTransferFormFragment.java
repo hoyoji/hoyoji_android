@@ -166,7 +166,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyTransferFormFragment_textField_date);	
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyTransfer.getDate());
+			mDateTimeFieldDate.setTime(moneyTransfer.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -782,7 +782,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyTransfer modelCopy = (MoneyTransfer) mMoneyTransferEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setTransferOutAmount(mNumericTransferOutAmount.getNumber());
 		
 		modelCopy.setTransferOutId(mSelectorFieldTransferOut.getModelId());

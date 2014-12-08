@@ -117,7 +117,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyIncomeFormFragment_textField_date);	
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyIncome.getDate());
+			mDateTimeFieldDate.setTime(moneyIncome.getDate());
 		}
 		
 		Project project;
@@ -594,7 +594,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 	
 	private void fillData(){
 		MoneyIncome modelCopy =  mMoneyIncomeEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setMoneyAccount(moneyAccount);

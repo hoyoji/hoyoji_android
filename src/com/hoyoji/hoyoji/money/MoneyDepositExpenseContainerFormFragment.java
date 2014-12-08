@@ -128,7 +128,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 		
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.moneyDepositExpenseFormFragment_textField_date);		
 		if(modelId != -1){
-			mDateTimeFieldDate.setText(moneyLend.getDate());
+			mDateTimeFieldDate.setTime(moneyLend.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -577,7 +577,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 	
 	private void fillData(){
 		MoneyDepositExpenseContainer modelCopy = (MoneyDepositExpenseContainer) mMoneyDepositExpenseContainerEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
 //		modelCopy.setPaybackDate(mDateTimeFieldPaybackDate.getText());
 		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());

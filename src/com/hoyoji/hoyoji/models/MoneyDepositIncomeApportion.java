@@ -321,7 +321,7 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 	}
 
 	@Override
-	public String getDate() {
+	public Long getDate() {
 		return this.getMoneyDepositIncomeContainer().getDate();
 	}
 	

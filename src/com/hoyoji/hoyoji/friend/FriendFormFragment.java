@@ -184,7 +184,7 @@ public class FriendFormFragment extends HyjUserFormFragment {
 	
 	private void sendDeleteFriendMessage() {
 		final Message msg = new Message();
-		msg.setDate(HyjUtil.formatDateToIOS(new Date()));
+		msg.setDate((new Date()).getTime());
 		msg.setMessageState("new");
 		msg.setType("System.Friend.Delete");
 		msg.setOwnerUserId(mFriendEditor.getModelCopy().getFriendUserId());

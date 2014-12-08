@@ -74,7 +74,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 		mMessageEditor = memberAddMessage.newModelEditor();
 
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.eventMessageFormFragment_editText_date);
-		mDateTimeFieldDate.setText(memberAddMessage.getDate());
+		mDateTimeFieldDate.setTime(memberAddMessage.getDate());
 		mDateTimeFieldDate.setEnabled(false);
 
 		mEditTextToUser = (HyjTextField) getView().findViewById(R.id.eventMessageFormFragment_editText_toUser);

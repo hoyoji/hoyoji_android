@@ -94,7 +94,7 @@ public class HyjDateTimeField extends LinearLayout {
 		}
 		mEditTextEdit.setHint(mHintText);
 		if(mEditText != null){
-			setText(mEditText);
+			setTime(Long.valueOf(mEditText));
 		} else {
 			setDate(new Date());
 		}
@@ -126,11 +126,11 @@ public class HyjDateTimeField extends LinearLayout {
 		mEditTextEdit.setError(error);
 	}
 	
-	public void setText(String dateString){
-		if(dateString == null){
+	public void setTime(Long timeInMillisec){
+		if(timeInMillisec == null){
 			setDate(null);
 		}else{
-			setDate(HyjUtil.parseDateFromISO(dateString));
+			setDate(new Date(timeInMillisec));
 		}
 	}
 	
@@ -149,11 +149,11 @@ public class HyjDateTimeField extends LinearLayout {
 	}
 	
 	
-	public String getText(){
+	public Long getTime(){
 		if(mDate == null){
 			return null;
 		} 
-		return HyjUtil.formatDateToIOS(mDate);
+		return mDate.getTime();
 	}
 
 	public void setEnabled(boolean enabled){

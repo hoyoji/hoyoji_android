@@ -47,7 +47,7 @@ public class InviteLinkFormFragment extends HyjUserFormFragment{
 		}
 		
 		mHyjDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.inviteLinkFormFragment_editText_date);
-		mHyjDateTimeFieldDate.setText(jsonObj.optString("date"));
+		mHyjDateTimeFieldDate.setTime(jsonObj.optLong("date"));
 		mHyjDateTimeFieldDate.setEnabled(false);
 		mEditTextDescription = (HyjRemarkField) getView().findViewById(R.id.inviteLinkFormFragment_hyjRemarkField_description);
 		mEditTextDescription.setText(jsonObj.optString("description"));

@@ -24,7 +24,7 @@ public class Message extends HyjModel {
 	private String mUUID;
 
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 	
 	@Column(name = "messageState")
 	private String mMessageState;
@@ -87,11 +87,11 @@ public class Message extends HyjModel {
 		this.mUUID = mUUID;
 	}
 
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 

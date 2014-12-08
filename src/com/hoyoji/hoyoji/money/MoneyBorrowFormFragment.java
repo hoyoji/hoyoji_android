@@ -136,7 +136,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(
 				R.id.moneyBorrowFormFragment_textField_date);
 		if (modelId != -1) {
-			mDateTimeFieldDate.setText(moneyBorrow.getDate());
+			mDateTimeFieldDate.setTime(moneyBorrow.getDate());
 		} else {
 			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
 			if(dateInMillisec != -1){
@@ -165,7 +165,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 		mDateTimeFieldReturnDate = (HyjDateTimeField) getView().findViewById(
 				R.id.moneyBorrowFormFragment_textField_returnDate);
-		mDateTimeFieldReturnDate.setText(moneyBorrow.getReturnDate());
+		mDateTimeFieldReturnDate.setTime(moneyBorrow.getReturnDate());
 
 		mNumericFieldReturnedAmount = (HyjNumericField) getView().findViewById(
 				R.id.moneyBorrowFormFragment_textField_returnedAmount);
@@ -674,9 +674,9 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 
 	private void fillData() {
 		MoneyBorrow modelCopy = (MoneyBorrow) mMoneyBorrowEditor.getModelCopy();
-		modelCopy.setDate(mDateTimeFieldDate.getText());
+		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setAmount(mNumericAmount.getNumber());
-		modelCopy.setReturnDate(mDateTimeFieldReturnDate.getText());
+		modelCopy.setReturnDate(mDateTimeFieldReturnDate.getTime());
 //		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if (mSelectorFieldMoneyAccount.getModelId() != null) {
 			MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class,

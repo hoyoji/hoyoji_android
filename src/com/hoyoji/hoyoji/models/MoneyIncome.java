@@ -24,7 +24,7 @@ public class MoneyIncome extends HyjModel {
 	private String mPictureId;
 
 	@Column(name = "date")
-	private String mDate;
+	private Long mDate;
 
 	@Column(name = "amount")
 	private Double mAmount;
@@ -165,11 +165,11 @@ public class MoneyIncome extends HyjModel {
 		return getMany(MoneyIncomeApportion.class, "moneyIncomeId");
 	}
 
-	public String getDate() {
+	public Long getDate() {
 		return mDate;
 	}
 
-	public void setDate(String mDate) {
+	public void setDate(Long mDate) {
 		this.mDate = mDate;
 	}
 
