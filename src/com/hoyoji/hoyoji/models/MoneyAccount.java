@@ -417,7 +417,7 @@ public class MoneyAccount extends HyjModel {
 	@Override 
 	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
 		super.loadFromJSON(json, syncFromServer);
-		if(this.mName_pinYin == null){
+		if(this.mName_pinYin == null && this.getName() != null){
 			this.mName_pinYin = HyjUtil.convertToPinYin(this.getName());
 		}
 	

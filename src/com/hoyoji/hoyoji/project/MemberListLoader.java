@@ -5,10 +5,12 @@ import java.util.Comparator;
 import java.util.List;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectRemark;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 
 import android.content.Context;
@@ -18,7 +20,7 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
+public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -26,15 +28,15 @@ public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	    private List<HyjModel> mChildList;
 	    private Integer mLoadLimit = null;
-	    private ProjectComparator mProjectComparator = new ProjectComparator();
-		private String mParentProjectId;
+	    private ProjectShareAuthorizationComparator mProjectShareAuthorizationComparator = new ProjectShareAuthorizationComparator();
+		private String mProjectId;
 		private ChangeObserver mChangeObserver;
-		public SubProjectListLoader(Context context, Bundle queryParams) {
+		public MemberListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 	    	
 			if (queryParams != null) {
 				mLoadLimit = queryParams.getInt("LIMIT", 10);
-				mParentProjectId = queryParams.getString("PARENT_PROJECTID");
+				mProjectId = queryParams.getString("PROJECTID");
 			} else {
 				mLoadLimit += 10;
 			}
@@ -43,7 +45,7 @@ public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	context.getContentResolver().registerContentObserver(
 	    			ContentProvider.createUri(UserData.class, null), true, mChangeObserver);
 	    	context.getContentResolver().registerContentObserver(
-	    			ContentProvider.createUri(Project.class, null), true, mChangeObserver);
+	    			ContentProvider.createUri(ProjectShareAuthorization.class, null), true, mChangeObserver);
 
 	    }
 	    
@@ -58,22 +60,31 @@ public class SubProjectListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    public List<HyjModel> loadInBackground() {
 
 	    	List<HyjModel> list;
-	    	if(mParentProjectId != null){
-	    		list = new Select("main.*").from(Project.class).as("main").where("id IN (SELECT subProjectId FROM ParentProject WHERE parentProjectId = ?)", mParentProjectId).orderBy("name_pinYin").limit(this.mLoadLimit).execute();
-	    	} else {
-	    		list = new Select("main.*, id AS _subProjectId").from(Project.class).as("main").where("NOT EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId) OR EXISTS (SELECT id FROM ParentProject WHERE subProjectId = _subProjectId AND parentProjectId IS NULL)").orderBy("name_pinYin").limit(this.mLoadLimit).execute();
-		    		
-	    	}
-	    	
-	    	Collections.sort(list, mProjectComparator);
+    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("projectId=? AND state <> 'Delete'", mProjectId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    	Collections.sort(list, mProjectShareAuthorizationComparator);
 	    	return list;
 		}
 
-	    static class ProjectComparator implements Comparator<HyjModel> {
+	    static class ProjectShareAuthorizationComparator implements Comparator<HyjModel> {
 			@Override
 			public int compare(HyjModel lhs, HyjModel rhs) {
-				String lhsStr = ((Project) lhs).getDisplayName_pinYin();
-				String rhsStr = ((Project) rhs).getDisplayName_pinYin();
+				ProjectShareAuthorization lhsProjectShareAuthorization = ((ProjectShareAuthorization) lhs);
+				ProjectShareAuthorization rhsProjectShareAuthorization = ((ProjectShareAuthorization) rhs);
+				
+				if(lhsProjectShareAuthorization.getToBeDetermined()){
+					return -1;
+				} else if(rhsProjectShareAuthorization.getToBeDetermined()){
+					return 1;
+				}
+				
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(lhsProjectShareAuthorization.getFriendUserId())){
+					return -1;
+				} else if(HyjApplication.getInstance().getCurrentUser().getId().equals(rhsProjectShareAuthorization.getFriendUserId())){
+					return 1;
+				}
+				
+				String lhsStr = lhsProjectShareAuthorization.getFriendDisplayName_pinYin();
+				String rhsStr = rhsProjectShareAuthorization.getFriendDisplayName_pinYin();
 
 				if(lhsStr == null){
 					lhsStr = "";

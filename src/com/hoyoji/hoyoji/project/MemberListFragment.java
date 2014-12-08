@@ -1,11 +1,16 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -18,14 +23,17 @@ import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.activeandroid.Cache;
@@ -63,9 +71,10 @@ import com.tencent.tauth.UiError;
 public class MemberListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
-	private ContentObserver mUserDataChangeObserver = null;
+//	private ContentObserver mUserDataChangeObserver = null;
 	private IWXAPI api;
 	private QQShare mQQShare = null;
+	private List<ProjectShareAuthorization> mMemberList = new ArrayList<ProjectShareAuthorization>();
 	public static QQAuth mQQAuth;
 	
 	@Override
@@ -85,12 +94,11 @@ public class MemberListFragment extends HyjUserListFragment{
 	
 	@Override
 	public ListAdapter useListViewAdapter() {
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
+				mMemberList,
 				R.layout.project_listitem_member,
-				null,
 				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "id"},
-				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement},
-				0);
+				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement});
 		return adapter;
 	}	
 
@@ -104,19 +112,40 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(limit == 0){
 			limit = getListPageSize();
 		}
+		arg1.putInt("LIMIT", limit + offset);
+		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Project project =  Model.load(Project.class, modelId);
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(ProjectShareAuthorization.class, null),
-				null,
-				"projectId=? AND state <> ?", 
-				new String[]{project.getId(), "Delete"}, 
-				"friendUserId LIMIT " + (limit + offset) 
-			);
+		arg1.putString("PROJECTID", project.getId());
+		
+		Object loader = new MemberListLoader(getActivity(), arg1);
+//		
+//				ContentProvider.createUri(ProjectShareAuthorization.class, null),
+//				null,
+//				"projectId=? AND state <> ?", 
+//				new String[]{project.getId(), "Delete"}, 
+//				"friendUserId LIMIT " + (limit + offset) 
+//			);
 		return (Loader<Object>)loader;
 	}
 
+	@Override
+	public void onLoadFinished(Loader loader, Object list) {
+			Collection<ProjectShareAuthorization> childList = (ArrayList<ProjectShareAuthorization>) list;
+			mMemberList.clear();
+			mMemberList.addAll(childList);
+
+			((SimpleAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
+		
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
+	}
 
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -153,14 +182,14 @@ public class MemberListFragment extends HyjUserListFragment{
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		if (mUserDataChangeObserver == null) {
-			mUserDataChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									UserData.class, null), true,
-									mUserDataChangeObserver);
-		}
+//		if (mUserDataChangeObserver == null) {
+//			mUserDataChangeObserver = new ChangeObserver();
+//			this.getActivity().getContentResolver()
+//					.registerContentObserver(
+//							ContentProvider.createUri(
+//									UserData.class, null), true,
+//									mUserDataChangeObserver);
+//		}
 		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
 		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
 	}
@@ -351,7 +380,7 @@ public class MemberListFragment extends HyjUserListFragment{
 //			if(memberToBeDetermined.getFriend() == null){
 //				HyjUtil.displayToast("只有账本所有者才允许编辑待定成员");
 //			} else 
-			if(memberToBeDetermined.getFriend() != null && memberToBeDetermined.getFriend().getToBeDetermined()){
+			if(memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(MemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
@@ -404,36 +433,39 @@ public class MemberListFragment extends HyjUserListFragment{
 	}
 	
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object model, String field) {
+		ProjectShareAuthorization psa = (ProjectShareAuthorization)model;
 		if(view.getId() == R.id.memberListItem_name) {
-			String friendUserId = cursor.getString(columnIndex);
-			Friend friend = null;
-			if(friendUserId != null){
-				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-				if(friend != null){
-					((TextView)view).setText(friend.getDisplayName());
-				} else {
-					User user = HyjModel.getModel(User.class, friendUserId);
-					if(user != null){
-						((TextView)view).setText(user.getDisplayName());
-					} else {
-						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-					}
-				}
-			} else {
-				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
-				if(localFriendId != null){
-					friend = HyjModel.getModel(Friend.class, localFriendId);
-					if(friend != null){
-						((TextView)view).setText(friend.getDisplayName());
-					} else {
-						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-					}
-				} else {
-					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
-				}
-			}
-			if(HyjApplication.getInstance().getCurrentUser().getId().equals(friendUserId)){
+//			String friendUserId = psa.getFriendUserId();
+//			Friend friend = null;
+//			if(friendUserId != null){
+//				friend = new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+//				if(friend != null){
+//					((TextView)view).setText(friend.getDisplayName());
+//				} else {
+//					User user = HyjModel.getModel(User.class, friendUserId);
+//					if(user != null){
+//						((TextView)view).setText(user.getDisplayName());
+//					} else {
+//						((TextView)view).setText(psa.getFriendUserName());
+//					}
+//				}
+//			} else {
+//				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
+//				if(localFriendId != null){
+//					friend = HyjModel.getModel(Friend.class, localFriendId);
+//					if(friend != null){
+//						((TextView)view).setText(friend.getDisplayName());
+//					} else {
+//						((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//					}
+//				} else {
+//					((TextView)view).setText(cursor.getString(cursor.getColumnIndex("friendUserName")));
+//				}
+//			}
+
+			((TextView)view).setText(psa.getFriendDisplayName());
+			if(HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
 				((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_red));
 			} else {
 				((TextView)view).setTextColor(Color.BLACK);
@@ -442,7 +474,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_picture) {
 			HyjImageView imageView = (HyjImageView)view;
 			imageView .setDefaultImage(R.drawable.ic_action_person_white);
-			String friendUserId = cursor.getString(columnIndex);
+			String friendUserId = psa.getFriendUserId();
 			if(friendUserId != null){
 				User user = HyjModel.getModel(User.class, friendUserId);
 				if(user == null){
@@ -461,23 +493,21 @@ public class MemberListFragment extends HyjUserListFragment{
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_percentage) {
-			double percentage = cursor.getDouble(columnIndex);
+			double percentage = psa.getSharePercentage();
 			((HyjNumericView)view).setPrefix(null);
 			((HyjNumericView)view).setSuffix("%");
 			((HyjNumericView)view).setNumber(percentage);
 			return true;
 		} else if(view.getId() == R.id.memberListItem_remark) {
-			String friendUserId = cursor.getString(cursor.getColumnIndex("friendUserId"));
+			String friendUserId = psa.getFriendUserId();
 			if(friendUserId == null){
-				String localFriendId = cursor.getString(cursor.getColumnIndex("localFriendId"));
-				Friend friend = Friend.getModel(Friend.class, localFriendId);
-				if(friend != null && friend.getToBeDetermined()){
+				if(psa.getToBeDetermined()){
 					((TextView)view).setText("可进行账务拆分");
 				} else {
 					((TextView)view).setText("");
 				}
 			} else {
-				String state = cursor.getString(columnIndex);
+				String state = psa.getState();
 				if(state.equalsIgnoreCase("Wait")){
 					((TextView)view).setText(R.string.memberListFragment_state_wait);
 				} else if(state.equalsIgnoreCase("NotInvite")){
@@ -489,10 +519,9 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_actualTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -501,8 +530,8 @@ public class MemberListFragment extends HyjUserListFragment{
 				}
 			}
 			
-			Double actualTotal = projectShareAuthorization.getActualTotal();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double actualTotal = psa.getActualTotal();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 			if(actualTotal < 0){
 				actualTotal = -actualTotal;
 				numericView.setPrefix("已经收入:" + currencySymbol);
@@ -520,10 +549,9 @@ public class MemberListFragment extends HyjUserListFragment{
 			return true;
 		} else if(view.getId() == R.id.memberListItem_apportionTotal) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -531,8 +559,8 @@ public class MemberListFragment extends HyjUserListFragment{
 					return true;
 				}
 			}
-			Double apportionTotal = projectShareAuthorization.getApportionTotal();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double apportionTotal = psa.getApportionTotal();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 			if(apportionTotal < 0){
 				apportionTotal = -apportionTotal;
 				numericView.setPrefix("分摊收入:" + currencySymbol);
@@ -551,10 +579,9 @@ public class MemberListFragment extends HyjUserListFragment{
 		}
 		else if(view.getId() == R.id.memberListItem_settlement) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			ProjectShareAuthorization projectShareAuthorization = HyjModel.getModel(ProjectShareAuthorization.class, cursor.getString(columnIndex));
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(projectShareAuthorization.getFriendUserId())){
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectShareAuthorization.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
@@ -562,8 +589,8 @@ public class MemberListFragment extends HyjUserListFragment{
 					return true;
 				}
 			}
-			Double settlement = projectShareAuthorization.getSettlement();
-			String currencySymbol = projectShareAuthorization.getProject().getCurrencySymbol();
+			Double settlement = psa.getSettlement();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
 //			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
 
 //			numericView.setPrefix(currencySymbol);
@@ -594,55 +621,55 @@ public class MemberListFragment extends HyjUserListFragment{
 			return false;
 		}
 	}	
-	private class ChangeObserver extends ContentObserver {
-		AsyncTask<String, Void, String> mTask = null;
-		public ChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
+//	private class ChangeObserver extends ContentObserver {
+//		AsyncTask<String, Void, String> mTask = null;
+//		public ChangeObserver() {
+//			super(new Handler());
+//		}
 //
 //		@Override
-//		public void onChange(boolean selfChange, Uri uri) {
-//			super.onChange(selfChange, uri);
+//		public boolean deliverSelfNotifications() {
+//			return true;
 //		}
+////
+////		@Override
+////		public void onChange(boolean selfChange, Uri uri) {
+////			super.onChange(selfChange, uri);
+////		}
+//
+//		@Override
+//		public void onChange(boolean selfChange) {
+//			super.onChange(selfChange);
+//			if(mTask == null){
+//				mTask = new AsyncTask<String, Void, String>() {
+//			        @Override
+//			        protected String doInBackground(String... params) {
+//						try {
+//							//等待其他的更新都到齐后再更新界面
+//							Thread.sleep(200);
+//						} catch (InterruptedException e) {}
+//						return null;
+//			        }
+//			        @Override
+//			        protected void onPostExecute(String result) {
+//						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
+//						mTask = null;
+//			        }
+//			    };
+//			    mTask.execute();
+//			}
+//		}
+//	}
 
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if(mTask == null){
-				mTask = new AsyncTask<String, Void, String>() {
-			        @Override
-			        protected String doInBackground(String... params) {
-						try {
-							//等待其他的更新都到齐后再更新界面
-							Thread.sleep(200);
-						} catch (InterruptedException e) {}
-						return null;
-			        }
-			        @Override
-			        protected void onPostExecute(String result) {
-						((SimpleCursorAdapter) getListAdapter()).notifyDataSetChanged();
-						mTask = null;
-			        }
-			    };
-			    mTask.execute();
-			}
-		}
-	}
 
-
-	@Override
-	public void onDestroy() {
-		if (mUserDataChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mUserDataChangeObserver);
-		}
-		super.onDestroy();
-	}
+//	@Override
+//	public void onDestroy() {
+////		if (mUserDataChangeObserver != null) {
+////			this.getActivity().getContentResolver()
+////					.unregisterContentObserver(mUserDataChangeObserver);
+////		}
+//		super.onDestroy();
+//	}
 	
 	@Override
 	protected void returnSelectedItems() {
@@ -658,5 +685,57 @@ public class MemberListFragment extends HyjUserListFragment{
 		getActivity().setResult(Activity.RESULT_OK, intent);
 		getActivity().finish();
 		
+	}
+	
+	private static class MemberListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+//	    private ViewBinder mViewBinder;
+	    
+		public MemberListAdapter(Context context,
+	                    List<ProjectShareAuthorization> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
+		}
+	    
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
+	    }
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
+
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
 	}
 }

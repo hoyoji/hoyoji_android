@@ -114,6 +114,19 @@ public class Friend extends HyjModel {
 		}
 	}
 	
+	public String getDisplayName_pinYin(){
+		if(this.mNickName_pinYin != null && this.mNickName_pinYin.length() > 0){
+			return this.mNickName_pinYin;
+		} else {
+			User friendUser = this.getFriendUser();
+			if(friendUser != null){
+				return friendUser.getDisplayName_pinYin();
+			} else {
+				return this.getFriendUserName_pinYin();
+			}
+		}
+	}
+	
 	public String getNickName() {
 		return mNickName;
 	}
@@ -151,6 +164,14 @@ public class Friend extends HyjModel {
 	}
 
 	public String getFriendUserName() {
+		return mFriendUserName;
+	}
+	
+
+	public String getFriendUserName_pinYin() {
+		if(mFriendUserName != null){
+			return HyjUtil.convertToPinYin(mFriendUserName);
+		}
 		return mFriendUserName;
 	}
 
@@ -374,7 +395,7 @@ public class Friend extends HyjModel {
 		if(this.mNickName_pinYin == null){
 			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
 				this.mNickName_pinYin = " ";
-			} else {
+			} else if(this.getNickName() != null){
 				this.mNickName_pinYin = HyjUtil.convertToPinYin(this.getNickName());
 			}
 		}
