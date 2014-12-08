@@ -127,9 +127,7 @@ public class HomeCalendarGridGroupListLoader extends
 		int loadCount = 0;
 		while (calToday.getTimeInMillis() <= mEndDateInMillis) {
 			int count = 0;
-			String[] args = new String[] {
-					mDateFormat.format(calToday.getTime()),
-					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24 * 3600000)) };
+			String[] args = new String[] {String.valueOf(calToday.getTimeInMillis()), String.valueOf(calToday.getTimeInMillis() + 24 * 3600000) };
 			double expenseTotal = 0.00;
 			double incomeTotal = 0.00;
 			

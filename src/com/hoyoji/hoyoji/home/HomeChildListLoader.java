@@ -92,8 +92,8 @@ public class HomeChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
-	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	long dateFrom = mDateFrom;
+	    	long dateTo = mDateTo;
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 	    	
 	    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();

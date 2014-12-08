@@ -140,8 +140,8 @@ public class MoneyAccountDebtDetailsChildListLoader extends AsyncTaskLoader<List
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
-	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	long dateFrom = mDateFrom;
+	    	long dateTo = mDateTo;
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 	    	String searchQuery = buildSearchQuery();
 

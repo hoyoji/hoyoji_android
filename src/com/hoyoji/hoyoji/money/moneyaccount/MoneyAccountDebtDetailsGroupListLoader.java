@@ -187,8 +187,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 		while (loadCount < mLoadLimit) {
 			int count = 0;
 			String[] args = new String[] {
-					mDateFormat.format(calDateFrom.getTime()),
-					mDateFormat.format(new Date(dateTo)) };
+					String.valueOf(calDateFrom.getTimeInMillis()),
+					String.valueOf(dateTo) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
 			Cursor cursor = Cache
@@ -352,8 +352,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 	private long getHasMoreDataDateInMillis(long fromDateInMillis, String searchQuery){
 		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 		String[] args = new String[] {
-				mDateFormat.format(fromDateInMillis) };
-		String dateString = null;
+				String.valueOf(fromDateInMillis) };
+		Long dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -363,8 +363,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -379,8 +379,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -395,8 +395,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -411,17 +411,15 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
 			cursor = null;
 		}
 		if(dateString != null){
-			try {
-				dateString = dateString.replaceAll("Z$", "+0000");
-				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Long dateInMillis = dateString;
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -429,10 +427,6 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 				calToday.clear(Calendar.SECOND);
 				calToday.clear(Calendar.MILLISECOND);
 				return calToday.getTimeInMillis();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return -1;
-			}
 		} else {
 			return -1;
 		}
@@ -441,7 +435,7 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 	private long getMaxDateInMillis(){
 		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 		String[] args = new String[] { };
-		String dateString = null;
+		Long dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -451,8 +445,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -467,8 +461,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -483,8 +477,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -499,8 +493,8 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -515,17 +509,15 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 //			cursor.moveToFirst();
 //			if(cursor.getString(0) != null){
 //				if(dateString == null
-//						|| dateString.compareTo(cursor.getString(0)) > 0){
-//					dateString = cursor.getString(0);
+//						|| dateString.compareTo(cursor.getLong(0)) > 0){
+//					dateString = cursor.getLong(0);
 //				}
 //			}
 //			cursor.close();
 //			cursor = null;
 //		}
 		if(dateString != null){
-			try {
-				dateString = dateString.replaceAll("Z$", "+0000");
-				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Long dateInMillis = dateString;
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -533,10 +525,6 @@ public class MoneyAccountDebtDetailsGroupListLoader extends
 				calToday.clear(Calendar.SECOND);
 				calToday.clear(Calendar.MILLISECOND);
 				return calToday.getTimeInMillis();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return -1;
-			}
 		} else {
 			return -1;
 		}

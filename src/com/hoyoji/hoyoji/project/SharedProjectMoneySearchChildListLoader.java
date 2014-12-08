@@ -124,8 +124,8 @@ public class SharedProjectMoneySearchChildListLoader extends AsyncTaskLoader<Lis
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
-	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	long dateFrom = mDateFrom;
+	    	long dateTo = mDateTo;
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
 	    	String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();

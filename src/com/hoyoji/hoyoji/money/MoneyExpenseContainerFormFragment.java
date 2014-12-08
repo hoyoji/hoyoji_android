@@ -1059,20 +1059,20 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				}
 				newProjectEditor.save();
 				
-				Event oldEvent = oldMoneyExpenseContainerModel.getEvent();
-				Event newEvent = moneyExpenseContainerModel.getEvent();
-				HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
-				
-				//更新活动余额
-				if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-				} else {
-					HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
-					oldEventEditor.getModelCopy().setExpenseTotal(oldEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
-					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-					oldEventEditor.save();
-				}
-				newEventEditor.save();
+//				Event oldEvent = oldMoneyExpenseContainerModel.getEvent();
+//				Event newEvent = moneyExpenseContainerModel.getEvent();
+//				HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
+//				
+//				//更新活动余额
+//				if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+//					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+//				} else {
+//					HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
+//					oldEventEditor.getModelCopy().setExpenseTotal(oldEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate());
+//					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
+//					oldEventEditor.save();
+//				}
+//				newEventEditor.save();
 				
 				/*
 				//更新支出所有者的实际支出

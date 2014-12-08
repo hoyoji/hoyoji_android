@@ -198,8 +198,8 @@ public class MoneyTransactionPersonalSummaryLoader extends
 //		}
 
 		String[] args = new String[] {
-				mDateFormat.format(calDateFrom.getTime()),
-				mDateFormat.format(new Date(dateTo)) };
+				String.valueOf(calDateFrom.getTimeInMillis()),
+				String.valueOf(dateTo) };
 		double expenseTotal = 0.0;
 		double incomeTotal = 0.0;
 		double transferInTotal = 0.0;

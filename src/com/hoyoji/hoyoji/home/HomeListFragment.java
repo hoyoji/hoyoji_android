@@ -306,7 +306,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		calToday.add(Calendar.DATE, -1);// 减去一天，变为当月最后一天  
 		long dateTo = calToday.getTimeInMillis() + 1000*60*60*24;
 
-		String[] args = new String[] {mDateFormat.format(new Date(dateFrom)), mDateFormat.format(new Date(dateTo))};
+		String[] args = new String[] {String.valueOf(dateFrom), String.valueOf(dateTo)};
 		double expenseTotal = 0.0;
 		double incomeTotal = 0.0;
 		Cursor cursor = Cache

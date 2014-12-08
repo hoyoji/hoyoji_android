@@ -549,7 +549,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		
 //		long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
 //		long dateTo = mCalendarGridView.getAdapter().getDateTo();
-		String[] args = new String[] {mDateFormat.format(new Date(dateFrom)), mDateFormat.format(new Date(dateTo))};
+		String[] args = new String[] {String.valueOf(dateFrom), String.valueOf(dateTo)};
 		DecimalFormat df=new DecimalFormat("#0.00"); 
 		double expenseTotal = 0.0;
 		double incomeTotal = 0.0;

@@ -110,8 +110,8 @@ public class MemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
-	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	long dateFrom = mDateFrom;
+	    	long dateTo = mDateTo;
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 
 	    	List<HyjModel> moneyExpenseContainers = new Select("main.*").from(MoneyExpenseContainer.class).as("main").join(MoneyExpenseApportion.class).as("apr").on("main.id = apr.moneyExpenseContainerId").where("date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?", dateFrom, dateTo, mProjectId, mLocalFriendId).orderBy("date DESC").execute();

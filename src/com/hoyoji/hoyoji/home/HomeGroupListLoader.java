@@ -140,8 +140,8 @@ public class HomeGroupListLoader extends
 		while (loadCount < mLoadLimit) {
 			int count = 0;
 			String[] args = new String[] {
-					mDateFormat.format(calToday.getTime()),
-					mDateFormat.format(new Date(calToday.getTimeInMillis() + 24 * 3600000)) };
+					String.valueOf(calToday.getTimeInMillis()),
+					String.valueOf(calToday.getTimeInMillis() + 24 * 3600000) };
 			double expenseTotal = 0;
 			double incomeTotal = 0;
 			Cursor cursor = Cache
@@ -362,8 +362,8 @@ public class HomeGroupListLoader extends
 	
 	private long getHasMoreDataDateInMillis(long fromDateInMillis){
 		String[] args = new String[] {
-				mDateFormat.format(fromDateInMillis) };
-		String dateString = null;
+				String.valueOf(fromDateInMillis) };
+		Long dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -371,7 +371,7 @@ public class HomeGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getString(0);
+			dateString = cursor.getLong(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -384,8 +384,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -400,8 +400,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -416,8 +416,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -432,8 +432,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -448,8 +448,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -464,8 +464,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -480,8 +480,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -496,8 +496,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -512,8 +512,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -528,8 +528,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -544,8 +544,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -560,8 +560,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -584,9 +584,7 @@ public class HomeGroupListLoader extends
 //			cursor = null;
 //		}
 		if(dateString != null){
-			try {
-				dateString = dateString.replaceAll("Z$", "+0000");
-				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Long dateInMillis = dateString;
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -594,10 +592,6 @@ public class HomeGroupListLoader extends
 				calToday.clear(Calendar.SECOND);
 				calToday.clear(Calendar.MILLISECOND);
 				return calToday.getTimeInMillis();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return -1;
-			}
 		} else {
 			return -1;
 		}
@@ -605,7 +599,7 @@ public class HomeGroupListLoader extends
 	
 	private long getMaxDateInMillis(){
 		String[] args = new String[] { };
-		String dateString = null;
+		Long dateString = null;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -613,7 +607,7 @@ public class HomeGroupListLoader extends
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			dateString = cursor.getString(0);
+			dateString = cursor.getLong(0);
 			cursor.close();
 			cursor = null;
 		}
@@ -626,8 +620,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -642,8 +636,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -658,8 +652,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -674,8 +668,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -690,8 +684,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -706,8 +700,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -722,8 +716,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -738,8 +732,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -754,8 +748,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -770,8 +764,8 @@ public class HomeGroupListLoader extends
 			cursor.moveToFirst();
 			if(cursor.getString(0) != null){
 				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+						|| dateString.compareTo(cursor.getLong(0)) < 0){
+					dateString = cursor.getLong(0);
 				}
 			}
 			cursor.close();
@@ -794,9 +788,7 @@ public class HomeGroupListLoader extends
 //			cursor = null;
 //		}
 		if(dateString != null){
-			try {
-				dateString = dateString.replaceAll("Z$", "+0000");
-				Long dateInMillis = mDateFormat.parse(dateString).getTime();
+				Long dateInMillis = dateString;
 				Calendar calToday = Calendar.getInstance();
 				calToday.setTimeInMillis(dateInMillis);
 				calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -804,10 +796,6 @@ public class HomeGroupListLoader extends
 				calToday.clear(Calendar.SECOND);
 				calToday.clear(Calendar.MILLISECOND);
 				return calToday.getTimeInMillis();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return -1;
-			}
 		} else {
 			return -1;
 		}

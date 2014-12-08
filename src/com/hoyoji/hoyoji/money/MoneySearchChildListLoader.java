@@ -175,8 +175,8 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    @Override 
 	    public List<HyjModel> loadInBackground() {
 	    	
-	    	String dateFrom = mDateFormat.format(new Date(mDateFrom));
-	    	String dateTo = mDateFormat.format(new Date(mDateTo));
+	    	long dateFrom = mDateFrom;
+	    	long dateTo = mDateTo;
 	    	ArrayList<HyjModel> list = new ArrayList<HyjModel>();
 //	    	if(mProjectId == null){
 		    	List<HyjModel> moneyExpenses = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where(" mea.id IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("SharedProjectExpense"), dateFrom, dateTo).orderBy("date DESC").execute();
