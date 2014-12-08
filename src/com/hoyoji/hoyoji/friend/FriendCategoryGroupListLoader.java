@@ -21,7 +21,6 @@ public class FriendCategoryGroupListLoader extends
 
 	private List<Map<String, Object>> mGroupList;
 	private Integer mLoadLimit = 10;
-	private Integer mLoadOffset = 0;
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
 
@@ -43,7 +42,6 @@ public class FriendCategoryGroupListLoader extends
 
 	public void fetchMore(Bundle queryParams) {
 		if (queryParams != null) {
-			mLoadOffset = queryParams.getInt("OFFSET", 10);
 			mLoadLimit = queryParams.getInt("LIMIT", 10);
 		}
 		this.onContentChanged();
@@ -58,15 +56,13 @@ public class FriendCategoryGroupListLoader extends
 	public List<Map<String, Object>> loadInBackground() {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
-		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
 
 		int loadCount = 0;
 		Cursor cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT C.name, COUNT(F.id) as count FROM FriendCategory C LEFT JOIN Friend F ON F.friendCategoryId = C.id " +
-						"WHERE ownerUserId = '" + currentUserId + "' " +
-						"GROUP BY C.id OFFSET " + mLoadOffset + " LIMIT " + mLoadLimit,
+						"SELECT C._id, C.id, C.name, COUNT(F.id) as count FROM FriendCategory C LEFT JOIN Friend F ON F.friendCategoryId = C.id " +
+						"GROUP BY C.id ORDER BY name_pinYin",
 						null);
 		
 		
@@ -74,8 +70,10 @@ public class FriendCategoryGroupListLoader extends
 			cursor.moveToFirst();
 			do{
 				HashMap<String, Object> groupObject = new HashMap<String, Object>();
-				groupObject.put("name", cursor.getString(0));
-				groupObject.put("count", cursor.getInt(1));
+				groupObject.put("_id", cursor.getLong(0));
+				groupObject.put("friendCategoryId", cursor.getString(1));
+				groupObject.put("friendCategoryName", cursor.getString(2));
+				groupObject.put("count", cursor.getInt(3));
 				list.add(groupObject);
 				loadCount ++;
 			} while(cursor.moveToNext());
@@ -83,7 +81,7 @@ public class FriendCategoryGroupListLoader extends
 			cursor = null;
 		}
 
-		mHasMoreData = loadCount >= mLoadLimit;
+		mHasMoreData = false;
 		
 //		Collections.sort(list,new Comparator<Map<String, Object>>(){
 //			@Override

@@ -341,6 +341,8 @@ public class MoneyAccountListFragment extends HyjUserExpandableListFragment {
 		        }
 		    }
 	}
+	
+	
 	private class ChangeObserver extends ContentObserver {
 		AsyncTask<String, Void, String> mTask = null;
 		public ChangeObserver() {

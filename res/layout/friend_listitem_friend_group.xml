@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="43dp"
     android:background="@color/hoyoji_lightgray"
-    android:descendantFocusability="blocksDescendants"
-    android:gravity="center_vertical" >
+    android:descendantFocusability="blocksDescendants" >
 
     <TextView
         android:id="@+id/friendListItem_category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:paddingLeft="40dp" />
 
     <TextView
         android:id="@+id/friendListItem_category_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="40dp" />
+        android:layout_gravity="right|center_vertical"
+        android:textColor="@color/gray"
+        android:layout_marginRight="20dp" />
 
-</LinearLayout>
+</FrameLayout>
