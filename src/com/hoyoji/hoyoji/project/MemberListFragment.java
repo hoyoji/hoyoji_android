@@ -380,7 +380,7 @@ public class MemberListFragment extends HyjUserListFragment{
 //			if(memberToBeDetermined.getFriend() == null){
 //				HyjUtil.displayToast("只有账本所有者才允许编辑待定成员");
 //			} else 
-			if(memberToBeDetermined.getFriend() != null && memberToBeDetermined.getFriend().getToBeDetermined()){
+			if(memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(MemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
@@ -501,9 +501,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		} else if(view.getId() == R.id.memberListItem_remark) {
 			String friendUserId = psa.getFriendUserId();
 			if(friendUserId == null){
-				String localFriendId = psa.getLocalFriendId();
-				Friend friend = Friend.getModel(Friend.class, localFriendId);
-				if(friend != null && friend.getToBeDetermined()){
+				if(psa.getToBeDetermined()){
 					((TextView)view).setText("可进行账务拆分");
 				} else {
 					((TextView)view).setText("");

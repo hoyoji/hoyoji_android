@@ -55,6 +55,9 @@ public class ProjectShareAuthorization extends HyjModel {
 	@Column(name = "shareAllSubProjects")
 	private Boolean mShareAllSubProjects = false;
 	
+	@Column(name = "toBeDetermined")
+	private Boolean mToBeDetermined = false;
+	
 //	actualTotalIncome : "REAL NOT NULL",
 	@Column(name = "actualTotalIncome")
 	private Double mActualTotalIncome = 0.0;
@@ -1095,6 +1098,10 @@ public class ProjectShareAuthorization extends HyjModel {
 
 	public void setLocalFriendId(String id) {
 		mLocalFriendId = id;
+	}	
+
+	public Boolean getToBeDetermined() {
+		return this.mToBeDetermined;
 	}	
 	
 

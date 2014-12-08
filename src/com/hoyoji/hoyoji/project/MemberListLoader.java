@@ -71,9 +71,9 @@ public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				ProjectShareAuthorization lhsProjectShareAuthorization = ((ProjectShareAuthorization) lhs);
 				ProjectShareAuthorization rhsProjectShareAuthorization = ((ProjectShareAuthorization) rhs);
 				
-				if(lhsProjectShareAuthorization.getLocalFriend() != null && lhsProjectShareAuthorization.getLocalFriend().getToBeDetermined()){
+				if(lhsProjectShareAuthorization.getToBeDetermined()){
 					return -1;
-				} else if(rhsProjectShareAuthorization.getLocalFriend() != null && rhsProjectShareAuthorization.getLocalFriend().getToBeDetermined()){
+				} else if(rhsProjectShareAuthorization.getToBeDetermined()){
 					return 1;
 				}
 				

@@ -252,11 +252,8 @@ public class MemberFormFragment extends HyjUserFormFragment {
 				canNotEdit = true;
 			} else {
 				// 如果是待定成员也不能修改
-				 if(projectShareAuthorization.getLocalFriendId() != null){
-					 Friend f = Friend.getModel(Friend.class, projectShareAuthorization.getLocalFriendId());
-					 if(f != null && f.getToBeDetermined()){
+				 if(projectShareAuthorization.getToBeDetermined()){
 						 canNotEdit = true;
-					 }
 				 }
 			}
 			if(canNotEdit){
@@ -332,11 +329,8 @@ public class MemberFormFragment extends HyjUserFormFragment {
 					canNotEdit = true;
 				} else {
 					// 如果是待定成员也不能修改
-					 if(mProjectShareAuthorizationEditor.getModel().getLocalFriendId() != null){
-						 Friend f = Friend.getModel(Friend.class, mProjectShareAuthorizationEditor.getModel().getLocalFriendId());
-						 if(f != null && f.getToBeDetermined()){
+					 if(mProjectShareAuthorizationEditor.getModel().getToBeDetermined()){
 							 canNotEdit = true;
-						 }
 					 }
 				}
 				if(canNotEdit){
