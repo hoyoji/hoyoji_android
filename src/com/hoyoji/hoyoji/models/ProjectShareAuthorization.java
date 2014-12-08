@@ -428,6 +428,26 @@ public class ProjectShareAuthorization extends HyjModel {
 		return this.getFriendUserName();
 	}
 	
+	public String getFriendDisplayName_pinYin(){
+		if(mFriendUserId != null){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();
+			if(friend != null){
+				return friend.getDisplayName();
+			} else {
+				User user = HyjModel.getModel(User.class, mFriendUserId);
+				if(user != null){
+					return user.getDisplayName();
+				}
+			}
+		} else if(mLocalFriendId != null){
+			Friend friend = Friend.getModel(Friend.class, mLocalFriendId);
+			if(friend != null){
+				return friend.getDisplayName();
+			}
+		}
+		return this.getFriendUserName();
+	}
+	
 	
 	public String getProjectId() {
 		return mProjectId;

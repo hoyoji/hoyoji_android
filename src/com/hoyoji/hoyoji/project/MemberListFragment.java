@@ -1,11 +1,16 @@
 package com.hoyoji.hoyoji.project;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -18,14 +23,17 @@ import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.activeandroid.Cache;
@@ -63,9 +71,10 @@ import com.tencent.tauth.UiError;
 public class MemberListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
-	private ContentObserver mUserDataChangeObserver = null;
+//	private ContentObserver mUserDataChangeObserver = null;
 	private IWXAPI api;
 	private QQShare mQQShare = null;
+	private List<ProjectShareAuthorization> mMemberList;
 	public static QQAuth mQQAuth;
 	
 	@Override
@@ -85,12 +94,11 @@ public class MemberListFragment extends HyjUserListFragment{
 	
 	@Override
 	public ListAdapter useListViewAdapter() {
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
+				mMemberList,
 				R.layout.project_listitem_member,
-				null,
 				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "id"},
-				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement},
-				0);
+				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement});
 		return adapter;
 	}	
 
@@ -104,19 +112,40 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(limit == 0){
 			limit = getListPageSize();
 		}
+		arg1.putInt("LIMIT", limit + offset);
+		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Project project =  Model.load(Project.class, modelId);
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(ProjectShareAuthorization.class, null),
-				null,
-				"projectId=? AND state <> ?", 
-				new String[]{project.getId(), "Delete"}, 
-				"friendUserId LIMIT " + (limit + offset) 
-			);
+		arg1.putString("PROJECTID", project.getId());
+		
+		Object loader = new MemberListLoader(getActivity(), arg1);
+//		
+//				ContentProvider.createUri(ProjectShareAuthorization.class, null),
+//				null,
+//				"projectId=? AND state <> ?", 
+//				new String[]{project.getId(), "Delete"}, 
+//				"friendUserId LIMIT " + (limit + offset) 
+//			);
 		return (Loader<Object>)loader;
 	}
 
+	@Override
+	public void onLoadFinished(Loader loader, Object list) {
+			Collection<ProjectShareAuthorization> childList = (ArrayList<ProjectShareAuthorization>) list;
+			mMemberList.clear();
+			mMemberList.addAll(childList);
+
+			((SimpleAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
+		
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
+	}
 
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -153,14 +182,14 @@ public class MemberListFragment extends HyjUserListFragment{
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		if (mUserDataChangeObserver == null) {
-			mUserDataChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver()
-					.registerContentObserver(
-							ContentProvider.createUri(
-									UserData.class, null), true,
-									mUserDataChangeObserver);
-		}
+//		if (mUserDataChangeObserver == null) {
+//			mUserDataChangeObserver = new ChangeObserver();
+//			this.getActivity().getContentResolver()
+//					.registerContentObserver(
+//							ContentProvider.createUri(
+//									UserData.class, null), true,
+//									mUserDataChangeObserver);
+//		}
 		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
 		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
 	}
@@ -637,10 +666,10 @@ public class MemberListFragment extends HyjUserListFragment{
 
 	@Override
 	public void onDestroy() {
-		if (mUserDataChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mUserDataChangeObserver);
-		}
+//		if (mUserDataChangeObserver != null) {
+//			this.getActivity().getContentResolver()
+//					.unregisterContentObserver(mUserDataChangeObserver);
+//		}
 		super.onDestroy();
 	}
 	
@@ -658,5 +687,57 @@ public class MemberListFragment extends HyjUserListFragment{
 		getActivity().setResult(Activity.RESULT_OK, intent);
 		getActivity().finish();
 		
+	}
+	
+	private static class MemberListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+//	    private ViewBinder mViewBinder;
+	    
+		public MemberListAdapter(Context context,
+	                    List<ProjectShareAuthorization> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
+		}
+	    
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
+	    }
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
+
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
 	}
 }
