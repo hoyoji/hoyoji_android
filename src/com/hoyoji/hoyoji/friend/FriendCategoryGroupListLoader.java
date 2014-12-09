@@ -106,13 +106,23 @@ public class FriendCategoryGroupListLoader extends
 	 * will take care of delivering it; the implementation here just adds a
 	 * little more logic.
 	 */
+//	@Override
+//	public void deliverResult(List<Map<String, Object>> objects) {
+//		if(mGroupList == null){
+//			mGroupList = objects;
+//		} else {
+//			mGroupList.addAll(objects);
+//		}
+//
+//		if (isStarted() && mGroupList != null) {
+//			// If the Loader is currently started, we can immediately
+//			// deliver its results.
+//			super.deliverResult(objects);
+//		}
+//	}
 	@Override
 	public void deliverResult(List<Map<String, Object>> objects) {
-		if(mGroupList == null){
-			mGroupList = objects;
-		} else {
-			mGroupList.addAll(objects);
-		}
+		mGroupList = objects;
 
 		if (isStarted() && mGroupList != null) {
 			// If the Loader is currently started, we can immediately
