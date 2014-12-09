@@ -414,8 +414,8 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		HyjSimpleExpandableListAdapter adapter =  new FriendGroupListAdapter(getActivity(),
 				mListGroupData, 
 				R.layout.friend_listitem_friend_group, 
-				new String[] { "friendCategoryName", "count" },
-				new int[] { R.id.friendListItem_category_name, R.id.friendListItem_category_count }, 
+				new String[] { "friendCategoryName"},
+				new int[] { R.id.friendListItem_category_name }, 
 				mListChildData, 
 				R.layout.friend_listitem_friend,
 				new String[] { "friendUserId", "nickName" },
@@ -783,7 +783,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		            View v = view.findViewById(to[i]);
 		            if (v != null) {
 		            	if(v instanceof TextView){
-		            		((TextView)v).setText(data.get(from[i]).toString());
+		            		((TextView)v).setText(data.get(from[i]).toString()+" ("+data.get("count").toString()+")");
 		            	}
 		            }
 		        }

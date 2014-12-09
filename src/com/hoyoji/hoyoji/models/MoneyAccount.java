@@ -51,9 +51,9 @@ public class MoneyAccount extends HyjModel {
 	
 	@Column(name = "bankAddress")
 	private String mBankAddress;
-	
-	@Column(name = "ownerFriendId")
-	private String mOwnerFriendId;
+
+//	@Column(name = "ownerFriendId")
+//	private String mOwnerFriendId;
 	
 	@Column(name = "friendUserId")
 	private String mFriendUserId;
