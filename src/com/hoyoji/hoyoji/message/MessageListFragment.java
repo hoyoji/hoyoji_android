@@ -216,7 +216,7 @@ public class MessageListFragment extends HyjUserListFragment{
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		Message message = HyjModel.getModel(Message.class, cursor.getString(cursor.getColumnIndex("id")));
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(message.getDate());
+			((HyjDateTimeView)view).setTime(message.getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(message.getMessageTitle());

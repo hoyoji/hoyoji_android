@@ -331,7 +331,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	
 	private boolean setMoneyBorrowItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyBorrow)object).getMoneyIncomeApportionId() != null){
@@ -408,7 +408,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 
 	private boolean setMoneyDepositExpenseContainerItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyDepositExpenseContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyDepositExpenseContainer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("预缴会费");
@@ -462,7 +462,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	}
 	private boolean setMoneyLendItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyLend)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyLend)object).getMoneyExpenseApportionId() != null){
@@ -541,7 +541,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	
 	private boolean setMoneyReturnItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyReturn)object).getMoneyDepositReturnApportionId() != null){
@@ -654,7 +654,7 @@ public class MoneyAccountDebtDetailsListFragment extends HyjUserExpandableListFr
 	
 	private boolean setMoneyPaybackItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){

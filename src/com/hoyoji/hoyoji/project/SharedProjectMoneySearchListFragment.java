@@ -254,7 +254,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 	}
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyExpense)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
@@ -326,7 +326,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 	
 	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyIncome)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());

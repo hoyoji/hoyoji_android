@@ -925,7 +925,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMessageItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((Message)object).getDate());
+			((HyjDateTimeView)view).setTime(((Message)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((Message)object).getMessageTitle());
@@ -983,7 +983,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyExpense)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyExpense)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyExpense)object).getMoneyExpenseCategory());
@@ -1055,7 +1055,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyIncomeItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyIncome)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyIncome)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyIncome)object).getMoneyIncomeCategory());
@@ -1127,7 +1127,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMoneyExpenseContainerItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyExpenseContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyExpenseContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyExpenseContainer)object).getMoneyExpenseCategory());
@@ -1184,7 +1184,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyIncomeContainerItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyIncomeContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyIncomeContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(((MoneyIncomeContainer)object).getMoneyIncomeCategory());
@@ -1239,7 +1239,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMoneyDepositIncomeItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyDepositIncomeContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyDepositIncomeContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("预收会费");
@@ -1295,7 +1295,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyDepositReturnItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyDepositReturnContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyDepositReturnContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("会费还款");
@@ -1352,7 +1352,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyTransferItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyTransfer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyTransfer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
@@ -1443,7 +1443,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyBorrowItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyBorrow)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyBorrow)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyBorrow)object).getMoneyDepositIncomeApportionId() != null){
@@ -1501,7 +1501,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMoneyDepositExpenseContainerItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyDepositExpenseContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyDepositExpenseContainer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("预缴会费");
@@ -1555,7 +1555,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	private boolean setMoneyLendItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyLend)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyLend)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyLend)object).getMoneyDepositExpenseContainerId() != null){
@@ -1614,7 +1614,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyReturnItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyReturn)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyReturn)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("还款给" + ((MoneyReturn)object).getFriendDisplayName());
@@ -1669,7 +1669,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyDepositPaybackContainerItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyDepositPaybackContainer)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyDepositPaybackContainer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText("会费退回");
@@ -1724,7 +1724,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	
 	private boolean setMoneyPaybackItemValue(View view, Object object, String name) {
 		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(((MoneyPayback)object).getDate());
+			((HyjDateTimeView)view).setTime(((MoneyPayback)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
