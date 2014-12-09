@@ -508,6 +508,15 @@ public class MessageDownloadService extends Service {
 //				newObj.put("main.state", "Accept");
 				data.put(newObj);
 				newObj = new JSONObject();
+				newObj.put("__dataType", "Event");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "EventMember");
+				newObj.put("evt.projectId", projectIds.get(i));
+//				newObj.put("main.state", "Accept");
+				data.put(newObj);
+				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyExpenseContainer");
 				newObj.put("main.projectId", projectIds.get(i));
 				data.put(newObj);
