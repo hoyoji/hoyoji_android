@@ -265,9 +265,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		if (mEventMemberEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else{
-			Intent intent = getActivity().getIntent();
-			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			if(modelId == -1 && (mEventMemberEditor.getModelCopy().getFriendUserId() != null || mEventMemberEditor.getModelCopy().getLocalFriendId() != null)){
+			if(mEventMemberEditor.getModelCopy().get_mId()== null){
 	//			ProjectShareAuthorization importFiendPSA = null;
 	//			importFiendPSA = new Select()
 	//					.from(ProjectShareAuthorization.class)
@@ -378,7 +376,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 				jsonPSA.setLocalFriendId(mEventMemberEditor.getModelCopy().getLocalFriendId());
 			}
 			jsonPSA.setFriendUserName(mEventMemberEditor.getModelCopy().getFriendDisplayName());
-			jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
+			jsonPSA.setSharePercentage(0.0);
 			jsonPSA.save();
 			if (jsonPSA.isClientNew()) {
 				data += "," + jsonPSA.toJSON();

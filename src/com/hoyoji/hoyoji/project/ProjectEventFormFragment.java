@@ -24,8 +24,10 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
 public class ProjectEventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
@@ -179,6 +181,17 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 		if (mEventEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
+			Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(toBeDeterminedFriend != null){
+				EventMember em = new EventMember();
+				em.setEventId(mEventEditor.getModelCopy().getId());
+				em.setState("SignUp");
+				em.setFriendUserId(null);
+				em.setLocalFriendId(toBeDeterminedFriend.getId());
+				em.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				em.setFriendUserName("待定成员");
+				em.save();
+			}
 			doSave();
 		}
 //		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
