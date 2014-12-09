@@ -41,7 +41,11 @@ public class HyjDateTimeView extends TextView {
 //	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
 	public void setTime(Long timeInMillisec){
-		setDate(new Date(timeInMillisec));
+		if(timeInMillisec == null){
+			setDate(null);
+		} else {
+			setDate(new Date(timeInMillisec));
+		}
 	}
 	
 	public void setDate(Date date){
