@@ -752,9 +752,8 @@ public class MoneyExpenseContainer extends HyjModel{
 								}
 						    }
 							
-							
 							createMoneyExpenseForApportion(mMoneyExpenseContainerEditor, apportion, apportionEditor);
-								
+							
 								MoneyBorrow moneyBorrow = null;
 								MoneyLend moneyLendOfFinancialOwner = null;
 								
