@@ -22,6 +22,9 @@ public class MoneyBorrow extends HyjModel{
 	
 	@Column(name = "pictureId")
 	private String mPictureId;
+
+	@Column(name = "pictures")
+	private String mPictures;
 	
 	@Column(name = "date")
 	private Long mDate;
@@ -94,9 +97,9 @@ public class MoneyBorrow extends HyjModel{
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
-
-//	@Column(name = "financialOwnerUserId")
-//	private String mFinancialOwnerUserId;
+	
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
 	
 	@Column(name = "ownerFriendId")
 	private String mOwnerFriendId;

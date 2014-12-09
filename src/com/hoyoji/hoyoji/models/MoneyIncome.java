@@ -23,6 +23,9 @@ public class MoneyIncome extends HyjModel {
 	@Column(name = "pictureId")
 	private String mPictureId;
 
+	@Column(name = "pictures")
+	private String mPictures;
+
 	@Column(name = "date")
 	private Long mDate;
 

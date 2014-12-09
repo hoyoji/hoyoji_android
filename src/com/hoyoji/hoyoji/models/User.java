@@ -42,6 +42,9 @@ public class User extends HyjModel {
 	@Column(name = "pictureId")
 	private String mPictureId;
 
+	@Column(name = "pictures")
+	private String mPictures;
+
 	@Column(name = "location")
 	private String mLocation;
 	
