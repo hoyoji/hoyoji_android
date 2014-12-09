@@ -161,6 +161,27 @@ public abstract class HyjModel extends Model  implements Cloneable {
 	public abstract void validate(HyjModelEditor<? extends HyjModel> hyjModelEditor);
 	
 	private static HashMap<String, Class<? extends Model>> modelTypeMap = new HashMap<String, Class<? extends Model>>();
+
+	public static HyjModel createModel(String tableName) {
+		Model model = null;
+		Class<? extends Model> type = modelTypeMap.get(tableName);
+		if(type == null){
+			// 缓存到 HashMap, 提高下次访问的速度
+			for(TableInfo tableInfo : Cache.getTableInfos()){
+				if(tableInfo.getTableName().equals(tableName)){
+					type = tableInfo.getType();
+					modelTypeMap.put(tableName, type);
+					break;
+				}
+			}
+		}
+		try {
+			model = type.newInstance();
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		}
+		return (HyjModel) model;
+	}
 	
 	public static HyjModel createModel(String tableName, String id) {
 		Model model = null;

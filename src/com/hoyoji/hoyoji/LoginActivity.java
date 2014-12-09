@@ -952,6 +952,18 @@ public class LoginActivity extends HyjActivity {
 			// jsonObj.put("id", userData.getActiveProjectId());
 			belongsToes.put(jsonObj);
 
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "Event");
+			jsonObj.put("pst.friendUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			belongsToes.put(jsonObj);
+			
+			jsonObj = new JSONObject();
+			jsonObj.put("__dataType", "EventMember");
+			jsonObj.put("pst.friendUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
+			belongsToes.put(jsonObj);
+			
 			// jsonObj = new JSONObject();
 			// jsonObj.put("__dataType", "ProjectShareAuthorization");
 			// jsonObj.put("state", "Accept");
@@ -1044,96 +1056,100 @@ public class LoginActivity extends HyjActivity {
 									if(HyjApplication.getIsDebuggable()){
 										Log.i("Login Download Data : ",  obj.optString("__dataType"));
 									}
-									if (obj.optString("__dataType").equals(
-											"MoneyAccount")) {
-										MoneyAccount moneyAccount = new MoneyAccount();
-										moneyAccount.loadFromJSON(obj, true);
-										moneyAccount.save();
-									} else if (obj
-											.optString("__dataType")
-											.equals("ProjectShareAuthorization")) {
-										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
-										newProjectShareAuthorization
-												.loadFromJSON(obj, true);
-										newProjectShareAuthorization.save();
-									} else if (obj.optString("__dataType")
-											.equals("Currency")) {
-										Currency newCurrency = new Currency();
-										newCurrency.loadFromJSON(obj, true);
-										newCurrency.save();
-									} else if (obj.optString("__dataType")
-											.equals("ParentProject")) {
-										ParentProject parentProject = new ParentProject();
-										parentProject.loadFromJSON(obj, true);
-										parentProject.save();
-									} else if (obj.optString("__dataType")
-											.equals("FriendCategory")) {
-										FriendCategory friendCategory = new FriendCategory();
-										friendCategory.loadFromJSON(obj, true);
-										friendCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("Project")) {
-										Project project = new Project();
-										project.loadFromJSON(obj, true);
-										project.save();
-									} else if (obj.optString("__dataType")
-											.equals("MessageBox")) {
-										MessageBox messageBox = new MessageBox();
-										messageBox.loadFromJSON(obj, true);
-										messageBox.save();
-									} else if (obj.optString("__dataType")
-											.equals("QQLogin")) {
-										QQLogin qqLogin = new QQLogin();
-										qqLogin.loadFromJSON(obj, true);
-//										if(!obj.isNull("figureUrl")){
-//											figureUrl = obj.getString("figureUrl");
-//										}
-										qqLogin.save();
-									}  else if (obj.optString("__dataType")
-											.equals("WBLogin")) {
-										WBLogin wbLogin = new WBLogin();
-										wbLogin.loadFromJSON(obj, true);
-//										if(!obj.isNull("profile_image_url")){
-//											figureUrl = obj.getString("profile_image_url");
-//										}
-										wbLogin.save();
-									} else if (obj.optString("__dataType")
-											.equals("WXLogin")) {
-										WXLogin wxLogin = new WXLogin();
-										wxLogin.loadFromJSON(obj, true);
-//										if(!obj.isNull("headimgurl")){
-//											figureUrl = obj.getString("headimgurl");
-//										}
-										wxLogin.save();
-									} else if (obj.optString("__dataType")
-											.equals("Friend")) {
-										Friend friend = new Friend();
-										friend.loadFromJSON(obj, true);
-										friend.save();
-									} else if (obj.optString("__dataType")
-											.equals("Exchange")) {
-										Exchange exchange = new Exchange();
-										exchange.loadFromJSON(obj, true);
-										exchange.save();
-									} else if (obj.optString("__dataType")
-											.equals("MoneyExpenseCategory")) {
-										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
-										moneyExpenseCategory.loadFromJSON(obj,
-												true);
-										moneyExpenseCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("MoneyIncomeCategory")) {
-										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
-										moneyIncomeCategory.loadFromJSON(obj,
-												true);
-										moneyIncomeCategory.save();
-									} else if (obj.optString("__dataType")
-											.equals("ProjectRemark")) {
-										ProjectRemark projectRemark = new ProjectRemark();
-										projectRemark.loadFromJSON(obj,
-												true);
-										projectRemark.save();
-									}
+									HyjModel model = HyjModel.createModel(obj.optString("__dataType"));
+									model.loadFromJSON(obj, true);
+									model.save();
+									
+//									if (obj.optString("__dataType").equals(
+//											"MoneyAccount")) {
+//										MoneyAccount moneyAccount = new MoneyAccount();
+//										moneyAccount.loadFromJSON(obj, true);
+//										moneyAccount.save();
+//									} else if (obj
+//											.optString("__dataType")
+//											.equals("ProjectShareAuthorization")) {
+//										ProjectShareAuthorization newProjectShareAuthorization = new ProjectShareAuthorization();
+//										newProjectShareAuthorization
+//												.loadFromJSON(obj, true);
+//										newProjectShareAuthorization.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Currency")) {
+//										Currency newCurrency = new Currency();
+//										newCurrency.loadFromJSON(obj, true);
+//										newCurrency.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("ParentProject")) {
+//										ParentProject parentProject = new ParentProject();
+//										parentProject.loadFromJSON(obj, true);
+//										parentProject.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("FriendCategory")) {
+//										FriendCategory friendCategory = new FriendCategory();
+//										friendCategory.loadFromJSON(obj, true);
+//										friendCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Project")) {
+//										Project project = new Project();
+//										project.loadFromJSON(obj, true);
+//										project.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MessageBox")) {
+//										MessageBox messageBox = new MessageBox();
+//										messageBox.loadFromJSON(obj, true);
+//										messageBox.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("QQLogin")) {
+//										QQLogin qqLogin = new QQLogin();
+//										qqLogin.loadFromJSON(obj, true);
+////										if(!obj.isNull("figureUrl")){
+////											figureUrl = obj.getString("figureUrl");
+////										}
+//										qqLogin.save();
+//									}  else if (obj.optString("__dataType")
+//											.equals("WBLogin")) {
+//										WBLogin wbLogin = new WBLogin();
+//										wbLogin.loadFromJSON(obj, true);
+////										if(!obj.isNull("profile_image_url")){
+////											figureUrl = obj.getString("profile_image_url");
+////										}
+//										wbLogin.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("WXLogin")) {
+//										WXLogin wxLogin = new WXLogin();
+//										wxLogin.loadFromJSON(obj, true);
+////										if(!obj.isNull("headimgurl")){
+////											figureUrl = obj.getString("headimgurl");
+////										}
+//										wxLogin.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Friend")) {
+//										Friend friend = new Friend();
+//										friend.loadFromJSON(obj, true);
+//										friend.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("Exchange")) {
+//										Exchange exchange = new Exchange();
+//										exchange.loadFromJSON(obj, true);
+//										exchange.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MoneyExpenseCategory")) {
+//										MoneyExpenseCategory moneyExpenseCategory = new MoneyExpenseCategory();
+//										moneyExpenseCategory.loadFromJSON(obj,
+//												true);
+//										moneyExpenseCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("MoneyIncomeCategory")) {
+//										MoneyIncomeCategory moneyIncomeCategory = new MoneyIncomeCategory();
+//										moneyIncomeCategory.loadFromJSON(obj,
+//												true);
+//										moneyIncomeCategory.save();
+//									} else if (obj.optString("__dataType")
+//											.equals("ProjectRemark")) {
+//										ProjectRemark projectRemark = new ProjectRemark();
+//										projectRemark.loadFromJSON(obj,
+//												true);
+//										projectRemark.save();
+//									}
 								}
 							}
 						}

@@ -249,7 +249,10 @@ public class MessageDownloadService extends Service {
 				JSONObject msgData = new JSONObject(newMessage.getMessageData());
 				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-				if(psa == null){
+				
+				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
+					loadSharedProjectData(msgData);
+				} else if(psa == null){
 					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					psa.setState("Accept");
@@ -503,6 +506,14 @@ public class MessageDownloadService extends Service {
 				newObj.put("__dataType", "ProjectShareAuthorization");
 				newObj.put("main.projectId", projectIds.get(i));
 //				newObj.put("main.state", "Accept");
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Event");
+				newObj.put("main.projectId", projectIds.get(i));
+				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "EventMember");
+				newObj.put("evt.projectId", projectIds.get(i));
 				data.put(newObj);
 				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyExpenseContainer");
