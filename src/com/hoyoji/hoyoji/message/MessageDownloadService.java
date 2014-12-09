@@ -249,9 +249,11 @@ public class MessageDownloadService extends Service {
 				JSONObject msgData = new JSONObject(newMessage.getMessageData());
 				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
-				if(psa == null){
+				
+				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
 					loadSharedProjectData(msgData);
-//					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
+				} else if(psa == null){
+					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
