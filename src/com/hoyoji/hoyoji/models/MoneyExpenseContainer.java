@@ -842,7 +842,7 @@ public class MoneyExpenseContainer extends HyjModel{
 								moneyLend.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
 								if(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId() != null){
 									MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId());
-									moneyLend.setMoneyAccountId(mMoneyExpenseContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+									moneyLend.setMoneyAccountId(moneyAccount.getId(), moneyAccount.getCurrencyId());
 								} else {
 									moneyLend.setMoneyAccountId(null, null);
 								}
