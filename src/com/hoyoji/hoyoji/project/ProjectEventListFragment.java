@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,12 +30,14 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
 public class ProjectEventListFragment extends HyjUserListFragment {
 	private ContentObserver mChangeObserver = null;
@@ -152,10 +155,35 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
-			((TextView)view).setText("" + event.getBalance());
+			TextView textView = (TextView)view;
+			Project project = event.getProject();
+			String projectId = event.getProjectId();
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+				textView.setTextColor(Color.BLACK);
+				textView.setText("-");
+				return true;
+			}
+			String balanceStr = "";
+			Double depositBalance = event.getBalance();
+			if(depositBalance == 0){
+				textView.setTextColor(Color.BLACK);
+//				textView.setPrefix(project.getCurrencySymbol());
+				balanceStr += project.getCurrencySymbol();
+			} else if(depositBalance < 0){
+				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				textView.setPrefix("支出"+project.getCurrencySymbol());
+				balanceStr = "支出"+project.getCurrencySymbol();
+			}else{
+				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//				textView.setPrefix("收入"+project.getCurrencySymbol());
+				balanceStr = "收入"+project.getCurrencySymbol();
+			}
+			
+			textView.setText(balanceStr+Math.abs(depositBalance));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setText(cursor.getString(columnIndex));
+			((HyjDateTimeView)view).setTime(cursor.getLong(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(cursor.getString(columnIndex));
