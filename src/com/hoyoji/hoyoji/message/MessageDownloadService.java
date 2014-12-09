@@ -250,7 +250,8 @@ public class MessageDownloadService extends Service {
 				projectShareAuthorizationId = msgData.optString("projectShareAuthorizationId");
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				if(psa == null){
-					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
+					loadSharedProjectData(msgData);
+//					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
