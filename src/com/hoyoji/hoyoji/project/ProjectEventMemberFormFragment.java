@@ -267,7 +267,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		} else{
 			Intent intent = getActivity().getIntent();
 			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			if(modelId == -1 && mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+			if(modelId == -1 && (mEventMemberEditor.getModelCopy().getFriendUserId() != null || mEventMemberEditor.getModelCopy().getLocalFriendId() != null)){
 	//			ProjectShareAuthorization importFiendPSA = null;
 	//			importFiendPSA = new Select()
 	//					.from(ProjectShareAuthorization.class)
@@ -281,7 +281,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 	//				bundle.putString("FRIEND_USERID", mEventMemberEditor.getModelCopy().getFriendUserId());
 	//				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
 	//	        } else {
-				if(mEventMemberEditor.getModelCopy().getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				if(HyjApplication.getInstance().getCurrentUser().getId().equals(mEventMemberEditor.getModelCopy().getFriendUserId())){
 					doSave();
 				} else {
 					sendNewEventMemberToServer();
@@ -349,9 +349,14 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		
 		JSONObject jsonEM = mEventMemberEditor.getModelCopy().toJSON();
 		data += jsonEM.toString();
-		
-		jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
+		if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+			jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and friendUserId=?",
 				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getFriendUserId()).executeSingle();
+			
+		} else if(mEventMemberEditor.getModelCopy().getLocalFriendId() != null){
+			jsonPSA = new Select().from(ProjectShareAuthorization.class).where("projectId=? and localFriendId=?",
+				mEventMemberEditor.getModelCopy().getEvent().getProjectId(), mEventMemberEditor.getModelCopy().getLocalFriendId()).executeSingle();
+		}
 		
 		if(jsonPSA != null) {
 			if (jsonPSA.isClientNew()) {
@@ -367,7 +372,11 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			jsonPSA.setSharePercentageType("Average");
 			jsonPSA.setProjectId(mEventMemberEditor.getModelCopy().getEvent().getProjectId());
 			jsonPSA.setState("Wait");
-			jsonPSA.setFriendUserId(mEventMemberEditor.getModelCopy().getFriendUserId());
+			if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+				jsonPSA.setFriendUserId(mEventMemberEditor.getModelCopy().getFriendUserId());
+			} else if(mEventMemberEditor.getModelCopy().getLocalFriendId() != null){
+				jsonPSA.setLocalFriendId(mEventMemberEditor.getModelCopy().getLocalFriendId());
+			}
 			jsonPSA.setFriendUserName(mEventMemberEditor.getModelCopy().getFriendDisplayName());
 			jsonPSA.setSharePercentage(setAveragePercentage(jsonPSA));
 			jsonPSA.save();
@@ -425,9 +434,10 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			msg.put("messageData", msgData.toString());
 			
 //			if(mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")){
-					// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
-					msg.put("id", UUID.randomUUID().toString());
-//			}
+			if(mEventMemberEditor.getModelCopy().getFriendUserId() != null){
+				// 该消息不会发给用户，只在服务器上做处理，所以没有id。在服务器上，没有id的消息是不会被保存的。
+				msg.put("id", UUID.randomUUID().toString());
+			}
 		} catch (JSONException e) {
 		}
 		return msg;

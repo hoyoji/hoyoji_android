@@ -18,8 +18,9 @@ import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectEventMemberListFragment;
 
-public class SelectApportionMemberListFragment extends HyjUserFragment {
+public class SelectApportionEventMemberListFragment extends HyjUserFragment {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -131,8 +132,10 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
+				return new ProjectEventMemberListFragment();
+			case 1 :
 				return new MemberListFragment();
-			case 1:
+			case 2:
 				return new FriendListFragment();
 			}
 			return null;
@@ -140,15 +143,17 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
+				return "活动成员";
+			case 1 :
 				return "账本成员";
-			case 1:
+			case 2:
 				return "非账本成员";
 			}
 			return null;

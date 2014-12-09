@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -39,6 +41,7 @@ import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -99,7 +102,13 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		}
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Event event =  Model.load(Event.class, modelId);
+		Event event;
+		if(getActivity().getCallingActivity() != null){
+			Project project =  Model.load(Project.class, modelId);
+			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
+		} else {
+			event =  Model.load(Event.class, modelId);
+		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(EventMember.class, null),
 				null,
@@ -126,11 +135,20 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		if(id == -1) {
 			 return;
 		}
-		Bundle bundle = new Bundle();
-		bundle.putLong("MODEL_ID", id);
-		
-		openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
-    }
+		if(getActivity().getCallingActivity() != null){
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_ID", id);
+			intent.putExtra("MODEL_TYPE", "EventMember");
+			
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+		} else {
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", id);
+			
+			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
+		}
+	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

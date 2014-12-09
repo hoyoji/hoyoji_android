@@ -47,6 +47,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
@@ -537,7 +538,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 							openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
-							openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
+								openActivityWithFragmentForResult(SelectApportionEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							} else {
+								openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							}
 						}
 					}
 				});
@@ -1423,6 +1428,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		ProjectShareAuthorization psa = null;
 		if("ProjectShareAuthorization".equalsIgnoreCase(type)){
 			psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+		} else if("EventMember".equalsIgnoreCase(type)){
+			EventMember em = EventMember.load(EventMember.class, _id);
+			if(em.getFriendUserId() != null){
+				psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", em.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+			} else {
+				psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", em.getLocalFriendId(), mSelectorFieldProject.getModelId()).executeSingle();
+			}
+//			psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 		} else {
 			final Friend friend = Friend.load(Friend.class, _id);
 			//看一下该好友是不是账本成员
