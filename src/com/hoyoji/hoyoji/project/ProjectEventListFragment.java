@@ -67,10 +67,10 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 				0); 
 	}	
 
-	@Override
-	public Integer useMultiSelectMenuView() {
-		return R.menu.multi_select_menu;
-	}
+//	@Override
+//	public Integer useMultiSelectMenuView() {
+//		return R.menu.multi_select_menu;
+//	}
 	
 	@Override
 	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
@@ -266,28 +266,29 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			bundle.putLong("PROJECT_ID", modelId);
 			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
 			return true;
-		} else if(item.getItemId() == R.id.multi_select_menu_delete){
-			deleteSelectedMessages();
-			this.exitMultiChoiceMode(getListView());
-			return true;
-		}
+		} 
+//		else if(item.getItemId() == R.id.multi_select_menu_delete){
+//			deleteSelectedMessages();
+//			this.exitMultiChoiceMode(getListView());
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void deleteSelectedMessages() {
-		long[] ids = this.getListView().getCheckedItemIds();
-		if(ids.length == 0){
-			HyjUtil.displayToast("请选择至少一条快记模版");
-			return;
-		}
-		for(int i=0; i<ids.length; i++){
-			MoneyTemplate template = Model.load(MoneyTemplate.class, ids[i]);
-			if(template != null){
-				template.delete();
-			}
-		}
-		
-	}
+//	private void deleteSelectedMessages() {
+//		long[] ids = this.getListView().getCheckedItemIds();
+//		if(ids.length == 0){
+//			HyjUtil.displayToast("请选择至少一条快记模版");
+//			return;
+//		}
+//		for(int i=0; i<ids.length; i++){
+//			MoneyTemplate template = Model.load(MoneyTemplate.class, ids[i]);
+//			if(template != null){
+//				template.delete();
+//			}
+//		}
+//		
+//	}
 	
 	private class ChangeObserver extends ContentObserver {
 		AsyncTask<String, Void, String> mTask = null;

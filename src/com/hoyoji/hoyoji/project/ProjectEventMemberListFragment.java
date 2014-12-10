@@ -89,7 +89,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 
 	@Override
 	public Integer useMultiSelectMenuView() {
-		return R.menu.multi_select_menu;
+		return R.menu.project_listfragment_eventmember_multi_select;
 	}
 	
 	@Override
@@ -223,8 +223,16 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 //			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventFormFragment_title_edit, bundle);
 //			return true;
 //		} 
-		else if(item.getItemId() == R.id.multi_select_menu_delete){
-			deleteSelectedMessages();
+		else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setUnSignUp){
+			setUnSignUpEventMembers();
+			this.exitMultiChoiceMode(getListView());
+			return true;
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setSignUp){
+			setSignUpEventMembers();
+			this.exitMultiChoiceMode(getListView());
+			return true;
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setSignIn){
+			setSignInEventMembers();
 			this.exitMultiChoiceMode(getListView());
 			return true;
 		}
@@ -370,16 +378,49 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		}
 	}
 
-	private void deleteSelectedMessages() {
+	private void setUnSignUpEventMembers() {
 		long[] ids = this.getListView().getCheckedItemIds();
 		if(ids.length == 0){
-			HyjUtil.displayToast("请选择至少一条快记模版");
+			HyjUtil.displayToast("请选择至少一个活动成员");
 			return;
 		}
 		for(int i=0; i<ids.length; i++){
-			MoneyTemplate template = Model.load(MoneyTemplate.class, ids[i]);
-			if(template != null){
-				template.delete();
+			EventMember em = Model.load(EventMember.class, ids[i]);
+			if(em != null){
+				em.setState("UnSignUp");
+				em.save();
+			}
+		}
+		
+	}
+	
+	private void setSignUpEventMembers() {
+		long[] ids = this.getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一个活动成员");
+			return;
+		}
+		for(int i=0; i<ids.length; i++){
+			EventMember em = Model.load(EventMember.class, ids[i]);
+			if(em != null){
+				em.setState("SignUp");
+				em.save();
+			}
+		}
+		
+	}
+	
+	private void setSignInEventMembers() {
+		long[] ids = this.getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一个活动成员");
+			return;
+		}
+		for(int i=0; i<ids.length; i++){
+			EventMember em = Model.load(EventMember.class, ids[i]);
+			if(em != null){
+				em.setState("SignIn");
+				em.save();
 			}
 		}
 		
