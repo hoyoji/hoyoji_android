@@ -2,6 +2,8 @@ package com.hoyoji.android.hyjframework;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -45,6 +47,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Base64;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -64,6 +67,7 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.project.MemberFormFragment;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -631,6 +635,131 @@ public class HyjUtil {
 				}
 				
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + jsonObj.toString() + "]", "getData");
+			}
+		}
+		
+		private static HashSet<String> asyncLoadingRecordPictures = new HashSet<String>();
+		public static void asyncLoadRecordPictures(final String recordType, final String recordId) {
+			if(!asyncLoadingRecordPictures.contains(recordId)){
+				asyncLoadingRecordPictures.add(recordId);
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						JSONArray pictureArray = (JSONArray)object;
+						for(int i=0; i < pictureArray.length(); i++){
+
+							try {
+								JSONObject jsonPic = pictureArray.getJSONObject(i);
+								String base64PictureIcon = jsonPic.optString("base64PictureIcon");
+								if(base64PictureIcon.length() > 0){
+									 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
+								    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+								    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
+								    icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
+								    out.close();
+								    out = null;
+								    jsonPic.remove("base64PictureIcon");
+								}
+								HyjModel newPicture = HyjModel.createModel("Picture", jsonPic.optString("id"));
+								newPicture.loadFromJSON(jsonPic, true);
+								newPicture.save();
+								
+							} catch (JSONException e) {
+								e.printStackTrace();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							
+							
+						}
+						if(pictureArray.length() > 0){	
+							// 触发更新图片显示
+							HyjModel record = HyjModel.createModel(recordType, recordId);
+							record.setSyncFromServer(true);
+							record.save();
+						}
+						asyncLoadingRecordPictures.remove(recordId);
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						asyncLoadingRecordPictures.remove(recordId);
+					}
+				};
+				
+				JSONObject jsonObj = new JSONObject();
+				try {
+					jsonObj.put("recordType", recordType);
+					jsonObj.put("recordId", recordId);
+				} catch (JSONException e) {
+				}
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonObj.toString(), "fetchRecordPictures");
+			}
+		}
+		public static void asyncLoadPicture(final String id, final String recordType, final String recordId) {
+			if(!asyncLoading.contains(id)){
+				asyncLoading.add(id);
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						JSONArray pictureArray = (JSONArray)object;
+						for(int i=0; i < pictureArray.length(); i++){
+
+							try {
+								JSONObject jsonPic = pictureArray.getJSONObject(i);
+								String base64PictureIcon = jsonPic.optString("base64PictureIcon");
+								if(base64PictureIcon.length() > 0){
+									 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
+								    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+								    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
+								    icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
+								    out.close();
+								    out = null;
+								    jsonPic.remove("base64PictureIcon");
+								}
+								HyjModel newPicture = HyjModel.createModel("Picture", jsonPic.optString("id"));
+								newPicture.loadFromJSON(jsonPic, true);
+								newPicture.save();
+								
+							} catch (JSONException e) {
+								e.printStackTrace();
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+						}
+						if(pictureArray.length() > 0){	
+							// 触发更新图片显示
+							HyjModel record = HyjModel.createModel(recordType, recordId);
+							record.setSyncFromServer(true);
+							record.save();
+						}
+						asyncLoading.remove(id);
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+						asyncLoading.remove(id);
+					}
+				};
+				
+				JSONObject jsonObj = new JSONObject();
+				try {
+					jsonObj.put("id", id);
+					jsonObj.put("recordType", recordType);
+					jsonObj.put("recordId", recordId);
+				} catch (JSONException e) {
+				}
+				
+				HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonObj.toString(), "getPicture");
 			}
 		}
 }

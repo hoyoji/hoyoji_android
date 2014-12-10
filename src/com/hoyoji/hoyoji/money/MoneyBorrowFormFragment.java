@@ -777,6 +777,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 							newPic.setRecordId(mMoneyBorrowEditor.getModel()
 									.getId());
 							newPic.setRecordType("MoneyBorrow");
+							newPic.setProjectId(mMoneyBorrowEditor.getModelCopy().getProjectId());
 							newPic.setDisplayOrder(i);
 							newPic.save();
 						} else if (pi.getState() == PictureItem.DELETED) {

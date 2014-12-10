@@ -638,6 +638,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyReturnEditor.getModel().getId());
 						newPic.setRecordType("MoneyReturn");
+						newPic.setProjectId(mMoneyReturnEditor.getModelCopy().getProjectId());
 						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){

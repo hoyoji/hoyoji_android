@@ -646,6 +646,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyDepositExpenseContainerEditor.getModel().getId());
 						newPic.setRecordType("MoneyLend");
+						newPic.setProjectId(mMoneyDepositExpenseContainerEditor.getModelCopy().getProjectId());
 						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){

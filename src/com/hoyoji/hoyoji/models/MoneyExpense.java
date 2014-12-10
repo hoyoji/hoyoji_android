@@ -152,7 +152,13 @@ public class MoneyExpense extends HyjModel{
 		if(mPictureId == null){
 			return null;
 		}
-		return getModel(Picture.class, mPictureId);
+		
+		Picture pic = getModel(Picture.class, mPictureId);
+		if(pic == null && this.get_mId() != null && !this.isClientNew()){
+			HyjUtil.asyncLoadPicture(mPictureId, this.getClass().getSimpleName(), this.getId());
+		}
+		
+		return pic;
 	}
 
 	public void setPicture(Picture picture){

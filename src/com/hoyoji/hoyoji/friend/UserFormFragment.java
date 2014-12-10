@@ -333,8 +333,14 @@ public class UserFormFragment extends HyjUserFormFragment {
 				displayError(object);
 			}
 		};
-		
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonUser.optString("id"), "fetchRecordPictures");
+
+		JSONObject jsonObj = new JSONObject();
+		try {
+			jsonObj.put("recordType", "User");
+			jsonObj.put("recordId", jsonUser.optString("id"));
+		} catch (JSONException e) {
+		}
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonObj.toString(), "fetchRecordPictures");
 	}
 	
 	private void loadNewlyAddedFriend(final JSONObject jsonUser) {
