@@ -252,6 +252,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 		} 
 		return false;
 	}
+	
 	private boolean setMoneyExpenseItemValue(View view, Object object, String name){
 		if(view.getId() == R.id.homeListItem_date){
 			((HyjDateTimeView)view).setTime(((MoneyExpense)object).getDate());
@@ -282,13 +283,14 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 			numericView.setNumber(((MoneyExpense)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
+			MoneyExpense moneyExpense = (MoneyExpense)object;
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
 			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			imageView.setImage(((MoneyExpense)object).getPicture());
+			imageView.setImage(moneyExpense.getPicture());
 			
 			if(view.getTag() == null){
-				view.setOnClickListener(new OnClickListener(){
+				view.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Picture pic = (Picture)v.getTag();
@@ -302,7 +304,7 @@ public class SharedProjectMoneySearchListFragment extends HyjUserExpandableListF
 					}
 				});
 			}
-			view.setTag(((MoneyExpense)object).getPicture());
+			view.setTag(moneyExpense.getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpense)object).getProjectCurrencyId())){

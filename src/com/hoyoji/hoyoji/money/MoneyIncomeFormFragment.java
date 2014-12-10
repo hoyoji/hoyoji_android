@@ -793,6 +793,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					Picture newPic = pi.getPicture();
 					newPic.setRecordId(mMoneyIncomeEditor.getModel().getId());
 					newPic.setRecordType("MoneyIncome");
+					newPic.setProjectId(mMoneyIncomeEditor.getModelCopy().getProjectId());
 					newPic.setDisplayOrder(i);
 					newPic.save();
 				} else if(pi.getState() == PictureItem.DELETED){

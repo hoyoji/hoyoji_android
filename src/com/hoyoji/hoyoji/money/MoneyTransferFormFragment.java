@@ -851,6 +851,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyTransferEditor.getModel().getId());
 						newPic.setRecordType("MoneyTransfer");
+						newPic.setProjectId(mMoneyTransferEditor.getModelCopy().getProjectId());
 						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){

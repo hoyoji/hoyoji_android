@@ -1011,10 +1011,11 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			numericView.setNumber(((MoneyExpense)object).getProjectAmount());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_picture){
+			MoneyExpense moneyExpense = (MoneyExpense)object;
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
 			imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			imageView.setImage(((MoneyExpense)object).getPicture());
+			imageView.setImage(moneyExpense .getPicture());
 			
 			if(view.getTag() == null){
 				view.setOnClickListener(new OnClickListener(){
@@ -1031,7 +1032,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 					}
 				});
 			}
-			view.setTag(((MoneyExpense)object).getPicture());
+			view.setTag(moneyExpense .getPicture());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_owner){
 			if(HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId().equalsIgnoreCase(((MoneyExpense)object).getProjectCurrencyId())){

@@ -733,8 +733,14 @@ public class MessageDownloadService extends Service {
 			}
 		};
 
+		JSONObject jsonObj = new JSONObject();
+		try {
+			jsonObj.put("recordType", "User");
+			jsonObj.put("recordId", jsonUser.optString("id"));
+		} catch (JSONException e) {
+		}
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks,
-				jsonUser.optString("id"), "fetchRecordPictures");
+				jsonObj.optString("id"), "fetchRecordPictures");
 	}
 
 	private void saveUserPictures(Object object) {

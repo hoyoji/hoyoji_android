@@ -608,6 +608,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 						Picture newPic = pi.getPicture();
 						newPic.setRecordId(mMoneyDepositPaybackContainerEditor.getModel().getId());
 						newPic.setRecordType("MoneyPayback");
+						newPic.setProjectId(mMoneyDepositPaybackContainerEditor.getModelCopy().getProjectId());
 						newPic.setDisplayOrder(i);
 						newPic.save();
 					} else if(pi.getState() == PictureItem.DELETED){
