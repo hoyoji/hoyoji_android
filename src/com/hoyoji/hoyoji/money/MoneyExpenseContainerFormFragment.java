@@ -727,6 +727,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										newProjectEditor.getModelCopy().setExpenseTotal(newProject.getExpenseTotal() - moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate());
 										newProjectEditor.save();
 										
+										//更新账本余额
+										Event newEvent = moneyExpenseContainer.getEvent();
+										if(newEvent != null) {
+											HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
+											newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate() + moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate());
+											newEventEditor.save();
+										}
+										
 										//删除支出的同时删除分摊
 										Iterator<MoneyExpenseApportion> moneyExpenseApportions = moneyExpenseContainer.getApportions().iterator();
 										while (moneyExpenseApportions.hasNext()) {
@@ -1070,7 +1078,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(oldEvent != null && newEvent != null) {
 					HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
 					//更新活动余额
-					if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
+					if(oldProject.getId().equals(newProject.getId())){
 						newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
@@ -1085,9 +1093,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					oldEventEditor.save();
 				} else if(newEvent != null) {
 					HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
-					if(moneyExpenseContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
-						newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
-					}
+					newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 					newEventEditor.save();
 				}
 				

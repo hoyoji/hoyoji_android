@@ -715,6 +715,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										newProjectEditor.getModelCopy().setIncomeTotal(newProject.getIncomeTotal() - moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate());
 										newProjectEditor.save();
 										
+										//更新活动余额
+										Event newEvent = moneyIncomeContainer.getEvent();
+										if(newEvent != null) {
+											HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
+											newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate() + moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate());
+											newEventEditor.save();
+										}
+										
 										//删除收入的同时删除分摊
 										Iterator<MoneyIncomeApportion> moneyIncomeApportions = moneyIncomeContainer.getApportions().iterator();
 										while (moneyIncomeApportions.hasNext()) {
@@ -1041,7 +1049,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
 						
 						//更新活动余额
-						if(moneyIncomeContainerModel.get_mId() == null || oldEvent.getId().equals(newEvent.getId())){
+						if(oldEvent.getId().equals(newEvent.getId())){
 							newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
 						} else {
 							HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
@@ -1056,9 +1064,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						oldEventEditor.save();
 					} else if(newEvent != null) {
 						HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
-						if(moneyIncomeContainerModel.get_mId() == null || oldEvent.getId().equals(newEvent.getId())){
-							newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - oldMoneyIncomeContainerModel.getAmount0()*oldMoneyIncomeContainerModel.getExchangeRate() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
-						}
+						newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() + moneyIncomeContainerModel.getAmount0()*moneyIncomeContainerModel.getExchangeRate());
 						newEventEditor.save();
 					}
 					

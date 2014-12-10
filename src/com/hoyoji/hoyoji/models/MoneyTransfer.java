@@ -521,19 +521,20 @@ public class MoneyTransfer extends HyjModel{
 			modelEditor.removeValidationError("transferInFriend");
 		}
 		
-		if(this.getExchangeRate() == null){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_hint_exchangeRate);
-		}else if(this.getExchangeRate() == 0){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_zero_exchangeRate);
-		}else if(this.getExchangeRate() < 0){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_negative_exchangeRate);
-		}else if(this.getExchangeRate() > 99999999){
-			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_beyondMAX_exchangeRate);
+		if(this.getExchangeRate() != null){
+//			modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_hint_exchangeRate);
+//		}else 
+			if(this.getExchangeRate() == 0){
+				modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_zero_exchangeRate);
+			}else if(this.getExchangeRate() < 0){
+				modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_negative_exchangeRate);
+			}else if(this.getExchangeRate() > 99999999){
+				modelEditor.setValidationError("exchangeRate",R.string.moneyTransferFormFragment_editText_validationError_beyondMAX_exchangeRate);
+			}
+			else{
+				modelEditor.removeValidationError("exchangeRate");
+			}
 		}
-		else{
-			modelEditor.removeValidationError("exchangeRate");
-		}
-		
 		if(this.getTransferOutId() == null && this.getTransferOutFriend() == null){
 			modelEditor.setValidationError("transferOut",R.string.moneyTransferFormFragment_editText_hint_transferOut);
 		}else if(this.getTransferInId() == null && this.getTransferInFriend() == null){
