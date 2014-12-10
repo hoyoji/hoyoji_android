@@ -667,6 +667,9 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public MoneyDepositPaybackContainer getMoneyDepositPaybackContainer() {
+		if(this.getMoneyDepositPaybackContainerId() == null){
+			return null;
+		}
 		return HyjModel.getModel(MoneyDepositPaybackContainer.class, this.getMoneyDepositPaybackContainerId());
 	}
 
@@ -675,6 +678,9 @@ public class MoneyPayback extends HyjModel{
 	}
 
 	public MoneyDepositReturnApportion getMoneyDepositReturnApportion() {
+		if(this.getMoneyDepositReturnApportionId() == null){
+			return null;
+		}
 		return HyjModel.getModel(MoneyDepositReturnApportion.class, this.getMoneyDepositReturnApportionId());
 	}
 
