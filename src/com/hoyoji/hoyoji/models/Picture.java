@@ -2,29 +2,18 @@ package com.hoyoji.hoyoji.models;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.provider.BaseColumns;
 import android.util.Base64;
 
-import com.activeandroid.Cache;
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
-import com.activeandroid.serializer.TypeSerializer;
-import com.activeandroid.util.Log;
-import com.activeandroid.util.ReflectionUtils;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -54,6 +43,9 @@ public class Picture extends HyjModel {
 
 	@Column(name = "recordType")
 	private String mRecordType;
+	
+	@Column(name = "projectId")
+	private String mProjectId;
 
 	@Column(name = "toBeUploaded")
 	private Boolean mToBeUploaded;
@@ -147,6 +139,14 @@ public class Picture extends HyjModel {
 
 	public void setRecordType(String recordType) {
 		this.mRecordType = recordType;
+	}
+
+	public String getProjectId() {
+		return mProjectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.mProjectId = projectId;
 	}
 
 	public Boolean getToBeUploaded() {
