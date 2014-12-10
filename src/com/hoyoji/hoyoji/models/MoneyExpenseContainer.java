@@ -903,7 +903,6 @@ public class MoneyExpenseContainer extends HyjModel{
 
 								moneyBorrow.setMoneyExpenseApportionId(apportionEditor.getModelCopy().getId());
 								moneyBorrow.setAmount(apportionEditor.getModelCopy().getAmount0());
-
 								moneyBorrow.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
 								moneyBorrow.setRemark(mMoneyExpenseContainerEditor.getModelCopy().getRemark());
 								moneyBorrow.setFriendAccountId(mMoneyExpenseContainerEditor.getModelCopy().getFriendAccountId());
