@@ -529,6 +529,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 						openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 					} else {
 						if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
+							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
 							openActivityWithFragmentForResult(SelectApportionEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
 							openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);

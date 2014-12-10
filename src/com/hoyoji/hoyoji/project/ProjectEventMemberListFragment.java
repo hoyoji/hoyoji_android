@@ -103,17 +103,20 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Event event;
+		String eventId = null;
 		if(getActivity().getCallingActivity() != null){
-			Project project =  Model.load(Project.class, modelId);
-			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
+//			Project project =  Model.load(Project.class, modelId);
+//			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
+			eventId = intent.getStringExtra("EVENTID");
 		} else {
 			event =  Model.load(Event.class, modelId);
+			eventId = event.getId();
 		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(EventMember.class, null),
 				null,
 				"eventId=?", 
-				new String[]{event.getId()}, 
+				new String[]{eventId}, 
 				"state LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;

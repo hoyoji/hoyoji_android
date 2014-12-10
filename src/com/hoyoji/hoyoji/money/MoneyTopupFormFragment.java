@@ -826,18 +826,18 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			mMoneyTransferEditor.removeValidationError("project");
 		}
 				
-		if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == null){
-			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_hint_exchangeRate);
-		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == 0){
-			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_zero_exchangeRate);
-		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() < 0){
-			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_negative_exchangeRate);
-		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() > 99999999){
-			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_beyondMAX_exchangeRate);
-		}
-		else{
-			mMoneyTransferEditor.removeValidationError("exchangeRate");
-		}
+//		if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == null){
+//			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_hint_exchangeRate);
+//		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() == 0){
+//			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_zero_exchangeRate);
+//		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() < 0){
+//			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_negative_exchangeRate);
+//		}else if(mMoneyTransferEditor.getModelCopy().getExchangeRate() > 99999999){
+//			mMoneyTransferEditor.setValidationError("exchangeRate",R.string.moneyTopupFormFragment_editText_validationError_beyondMAX_exchangeRate);
+//		}
+//		else{
+//			mMoneyTransferEditor.removeValidationError("exchangeRate");
+//		}
 		
 		
 		if(mMoneyTransferEditor.hasValidationErrors()){
