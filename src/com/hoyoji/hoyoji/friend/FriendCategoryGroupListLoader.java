@@ -68,15 +68,17 @@ public class FriendCategoryGroupListLoader extends
 		
 		if (cursor != null) {
 			cursor.moveToFirst();
-			do{
-				HashMap<String, Object> groupObject = new HashMap<String, Object>();
-				groupObject.put("_id", cursor.getLong(0));
-				groupObject.put("friendCategoryId", cursor.getString(1));
-				groupObject.put("friendCategoryName", cursor.getString(2));
-				groupObject.put("count", cursor.getInt(3));
-				list.add(groupObject);
-				loadCount ++;
-			} while(cursor.moveToNext());
+			if(!cursor.isAfterLast()){
+				do{
+					HashMap<String, Object> groupObject = new HashMap<String, Object>();
+					groupObject.put("_id", cursor.getLong(0));
+					groupObject.put("friendCategoryId", cursor.getString(1));
+					groupObject.put("friendCategoryName", cursor.getString(2));
+					groupObject.put("count", cursor.getInt(3));
+					list.add(groupObject);
+					loadCount ++;
+				} while(cursor.moveToNext());
+			}
 			cursor.close();
 			cursor = null;
 		}

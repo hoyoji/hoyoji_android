@@ -867,6 +867,8 @@ public class MoneyIncomeContainer extends HyjModel {
 							}
 					    }
 						
+//						createMoneyIncomeApportion(mMoneyIncomeContainerEditor, apportion, apportionEditor);
+						
 						if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 							MoneyIncome moneyIncome = null;
 							if(apportion.get_mId() == null) {
@@ -1212,5 +1214,65 @@ public class MoneyIncomeContainer extends HyjModel {
 				}
 		}
 		return savedCount;
+	}
+
+	private static void createMoneyIncomeApportion(
+			MoneyIncomeContainerEditor mMoneyIncomeContainerEditor,
+			MoneyIncomeApportion apportion,
+			HyjModelEditor<MoneyIncomeApportion> apportionEditor) {
+
+		MoneyIncome moneyIncome = null;
+		if(apportion.get_mId() == null){
+			moneyIncome = new MoneyIncome();
+		} else {
+			moneyIncome = new Select().from(MoneyIncome.class).where("moneyIncomeApportionId=?", apportion.getId()).executeSingle();
+		}
+		moneyIncome.setMoneyIncomeApportionId(apportionEditor.getModelCopy().getId());
+		moneyIncome.setAmount(apportionEditor.getModelCopy().getAmount0());		
+		moneyIncome.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
+		moneyIncome.setRemark(mMoneyIncomeContainerEditor.getModelCopy().getRemark());
+		moneyIncome.setFriendAccountId(mMoneyIncomeContainerEditor.getModelCopy().getFriendAccountId());
+		moneyIncome.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFriendUserId());
+		moneyIncome.setLocalFriendId(mMoneyIncomeContainerEditor.getModelCopy().getLocalFriendId());
+		moneyIncome.setExchangeRate(mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
+		moneyIncome.setGeoLat(mMoneyIncomeContainerEditor.getModelCopy().getGeoLat());
+		moneyIncome.setGeoLon(mMoneyIncomeContainerEditor.getModelCopy().getGeoLon());
+		moneyIncome.setMoneyIncomeCategory(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategory());
+		moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
+		moneyIncome.setLocation(mMoneyIncomeContainerEditor.getModelCopy().getLocation());
+		moneyIncome.setAddress(mMoneyIncomeContainerEditor.getModelCopy().getAddress());
+		moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
+		moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
+		
+		if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
+			// 帮自己生成支出，我们知道自己的支出账户
+			if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+				moneyIncome.setMoneyAccountId(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId(), moneyAccount.getCurrencyId());
+			} else {
+				moneyIncome.setMoneyAccountId(null, null);
+			}
+		} else {
+			moneyIncome.setLocalFriendId(null);
+			
+			if(apportionEditor.getModelCopy().getFriendUserId() != null){
+				moneyIncome.setOwnerUserId(apportionEditor.getModelCopy().getFriendUserId());
+				moneyIncome.setOwnerFriendId(null);
+			} else {
+				moneyIncome.setOwnerUserId("");  // 设为"",使他在保存时不会自动使用当前的用户id
+				moneyIncome.setOwnerFriendId(apportionEditor.getModelCopy().getLocalFriendId());
+			}
+
+			// 帮别人生成支出，指出的账户为null, 因为我们不能帮别人选择支出账户
+			if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
+				MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
+				moneyIncome.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+			} else {
+				moneyIncome.setMoneyAccountId(null, null);
+			}
+		}
+		
+		moneyIncome.save();
+		
 	}
 }

@@ -13,6 +13,7 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -158,7 +160,7 @@ public class HyjImageField extends GridView {
 			super(context, resource);
 		}
 
-		@SuppressWarnings("deprecation")
+		@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			HyjImageView iv;
@@ -375,13 +377,13 @@ public class HyjImageField extends GridView {
 						scaled.compress(Bitmap.CompressFormat.JPEG, 60, out);
 						out.close();
 						out = null;
-						
-						out = new FileOutputStream(
-								HyjUtil.createImageFile(mPicture.getId()
-										+ "_icon"));
-						thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
-						out.close();
-						out = null;
+						File imageFile = HyjUtil.createImageFile(mPicture.getId() + "_icon");
+					    if(imageFile != null){
+							out = new FileOutputStream(imageFile);
+							thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+							out.close();
+							out = null;
+					    }
 						thumbnail.recycle();
 					} catch (Exception e) {
 						e.printStackTrace();

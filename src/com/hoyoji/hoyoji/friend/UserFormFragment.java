@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.friend;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -431,11 +432,14 @@ public class UserFormFragment extends HyjUserFormFragment {
 				String base64PictureIcon = jsonPic.optString("base64PictureIcon");
 				if(base64PictureIcon.length() > 0){
 					 byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
-				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
-				    FileOutputStream out = new FileOutputStream(HyjUtil.createImageFile(jsonPic.optString("id")+"_icon"));
+				    Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+				    File imageFile = HyjUtil.createImageFile(jsonPic.optString("id")+"_icon");
+				    if(imageFile != null){
+				    FileOutputStream out = new FileOutputStream(imageFile);
 				    icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
 				    out.close();
 				    out = null;
+				    }
 				    jsonPic.remove("base64PictureIcon");
 				}
 				Picture newPicture = new Picture();

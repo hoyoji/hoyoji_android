@@ -73,7 +73,7 @@ public class HyjImageView extends ImageView {
 			File f;
 				try {
 					f = HyjUtil.createImageFile(mPictureId+"_icon", picture.getPictureType());
-					if(f.exists()){
+					if(f != null && f.exists()){
 						HyjBitmapWorkerAsyncTask.loadBitmap(f.getAbsolutePath(), this);
 					} else {
 						// 如果能在cache里找到这张图片，我们直接拿来用，并保存起来

@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.message;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -754,12 +755,15 @@ public class MessageDownloadService extends Service {
 					byte[] decodedByte = Base64.decode(base64PictureIcon, 0);
 					Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0,
 							decodedByte.length);
-					FileOutputStream out = new FileOutputStream(
+					File imageFile = 
 							HyjUtil.createImageFile(jsonPic.optString("id")
-									+ "_icon"));
-					icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
-					out.close();
-					out = null;
+									+ "_icon");
+					if(imageFile != null){
+						FileOutputStream out = new FileOutputStream(imageFile);
+						icon.compress(Bitmap.CompressFormat.JPEG, 100, out);
+						out.close();
+						out = null;
+					}
 					jsonPic.remove("base64PictureIcon");
 				}
 				Picture newPicture = new Picture();
