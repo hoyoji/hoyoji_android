@@ -112,6 +112,12 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		if (mPictureId == null) {
 			return null;
 		}
+		
+		Picture pic = getModel(Picture.class, mPictureId);
+		if(pic == null && this.get_mId() != null && !this.isClientNew()){
+			HyjUtil.asyncLoadPicture(mPictureId, this.getClass().getSimpleName(), this.getId());
+		}
+		
 		return (Picture) getModel(Picture.class, mPictureId);
 	}
 
