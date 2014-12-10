@@ -393,24 +393,6 @@
 	                android:layout_height="wrap_content"
 	                android:layout_weight="2"
 	                android:orientation="vertical" >
-	
-	                <com.hoyoji.android.hyjframework.view.HyjTextField
-	                    android:id="@+id/moneyTransferFormFragment_textField_projectTransferInCurrency"
-	                    hyj:style="top_label"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="wrap_content"
-	                    hyj:editTextBold="true"
-	                    hyj:editTextBorder="none"
-	                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferProjectCurrency"
-	                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferProjectCurrency" />
-	
-	                <View
-	                    android:id="@+id/moneyTransferFormFragment_separatorField_transferInCurrency"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="1dip"
-	                    android:layout_marginBottom="5dip"
-	                    android:layout_marginTop="5dip"
-	                    android:background="@drawable/line_divider" />
 	                
 	                <com.hoyoji.android.hyjframework.view.HyjTextField
 	                    android:id="@+id/moneyTransferFormFragment_textField_transferInCurrency"
@@ -421,6 +403,24 @@
 	                    hyj:editTextBorder="none"
 	                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferInCurrency"
 	                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferInCurrency" />
+	
+	                <View
+	                    android:id="@+id/moneyTransferFormFragment_separatorField_transferInCurrency"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="1dip"
+	                    android:layout_marginBottom="5dip"
+	                    android:layout_marginTop="5dip"
+	                    android:background="@drawable/line_divider" />
+	
+	                <com.hoyoji.android.hyjframework.view.HyjTextField
+	                    android:id="@+id/moneyTransferFormFragment_textField_projectTransferInCurrency"
+	                    hyj:style="top_label"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    hyj:editTextBold="true"
+	                    hyj:editTextBorder="none"
+	                    hyj:hintText="@string/moneyTransferFormFragment_editText_hint_transferProjectCurrency"
+	                    hyj:labelText="@string/moneyTransferFormFragment_textView_transferProjectCurrency" />
 	
 	            </LinearLayout>
 	
