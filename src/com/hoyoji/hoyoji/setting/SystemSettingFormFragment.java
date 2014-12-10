@@ -462,11 +462,14 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 								scaled, px, px);
 						
 						try {
-							out = new FileOutputStream(
-									HyjUtil.createImageFile(mPicture.getId() + "_icon"));
-							thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
-							out.close();
-							out = null;
+							File imageFile = 
+									HyjUtil.createImageFile(mPicture.getId() + "_icon");
+							if(imageFile != null){
+								out = new FileOutputStream(imageFile);
+								thumbnail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+								out.close();
+								out = null;
+							}
 							thumbnail.recycle();
 						} catch (Exception e) {
 							e.printStackTrace();

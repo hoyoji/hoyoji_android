@@ -220,16 +220,18 @@ public class Picture extends HyjModel {
 			if(this.getLastServerUpdateTime() == null){
 				File f;
 				f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
-				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-				bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
-				jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-				
-				f = null;
-				bmp.recycle();
-				bmp = null;
-				baos.close();
-				baos = null;
+				if(f != null){
+					Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), null, null);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+					bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+					jsonObj.put("base64PictureIcon", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+					
+					f = null;
+					bmp.recycle();
+					bmp = null;
+					baos.close();
+					baos = null;
+				}
 			}
 //			
 //			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
@@ -259,11 +261,11 @@ public class Picture extends HyjModel {
 		File f;
 		try {
 			f = HyjUtil.createImageFile(this.getId()+"_icon", this.getPictureType());
-			if(f.exists()){
+			if(f != null && f.exists()){
 				f.delete();
 			}
 			f = HyjUtil.createImageFile(this.getId(), this.getPictureType());
-			if(f.exists()){
+			if(f != null && f.exists()){
 				f.delete();
 			}
 		} catch (IOException e) {

@@ -404,7 +404,7 @@ public class LoginActivity extends HyjActivity {
 
  			@Override
  			public Object doInBackground(String... string) {
- 				File file = new File("/data/data/" + HyjApplication.getInstance().getPackageName() + "/databases/");
+ 				File file = new File(getApplicationContext().getFilesDir() + HyjApplication.getInstance().getPackageName() + "/databases/");
  			      if(file.isDirectory()){
  			           File [] fileArray = file.listFiles();
  			           if(null != fileArray && 0 != fileArray.length){
@@ -682,7 +682,7 @@ public class LoginActivity extends HyjActivity {
 
 			@Override
 			public Object doInBackground(String... string) {
-				File file = new File("/data/data/" + HyjApplication.getInstance().getPackageName() + "/databases/");
+				File file = new File(getApplicationContext().getFilesDir() + HyjApplication.getInstance().getPackageName() + "/databases/");
 			      if(file.isDirectory()){
 			           File [] fileArray = file.listFiles();
 			           if(null != fileArray && 0 != fileArray.length){

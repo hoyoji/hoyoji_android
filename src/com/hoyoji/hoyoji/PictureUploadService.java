@@ -84,7 +84,7 @@ public class PictureUploadService extends Service {
 									for(int i = 0; i < pics.size(); i++){
 										final Picture picToUpload = pics.get(i);
 										File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
-										if(!f.exists()){
+										if(f != null && !f.exists()){
 					        				HyjModelEditor<Picture> picEditor = picToUpload.newModelEditor();
 					        				picEditor.getModelCopy().setToBeUploaded(false);
 					        				picEditor.save();
@@ -131,7 +131,7 @@ public class PictureUploadService extends Service {
 	protected static void uploadSingleBigPicture(final Picture picToUpload) throws IOException {
 
 			File f = HyjUtil.createImageFile(picToUpload.getId(), picToUpload.getPictureType());
-			if(f.exists()){
+			if(f != null && f.exists()){
 				// send to cloud storage ...
 				final FrontiaFile mFile = new FrontiaFile();
 				mFile.setNativePath(f.getAbsolutePath());

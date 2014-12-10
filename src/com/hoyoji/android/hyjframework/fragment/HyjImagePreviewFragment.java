@@ -48,7 +48,7 @@ public class HyjImagePreviewFragment extends HyjUserFragment {
 			
 
 			final File f = HyjUtil.createImageFile(pictureName, pictureType);
-			if(f.exists()){
+			if(f != null && f.exists()){
 				Bitmap bmp = HyjUtil.decodeSampledBitmapFromFile(f.getAbsolutePath(), 400, 600);
 		        img.setMaxZoom(4f);
 				img.setImageBitmap(bmp);
