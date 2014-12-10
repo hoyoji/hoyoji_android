@@ -616,27 +616,30 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyExpenseContainer moneyExpenseContainer) {
-		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
-					projectShareAuthorizations.get(i).getToBeDetermined()){
-				continue;
+		if(mSelectorFieldEvent.getText() == null || "".equals(mSelectorFieldEvent.getText())){
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+				apportion.setAmount(0.0);
+				apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+				apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+				apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
+				if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+					apportion.setApportionType("Average");
+				} else {
+					apportion.setApportionType("Share");
+				}
+				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 			}
-			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-			apportion.setAmount(0.0);
-			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
-			apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
-			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
-				apportion.setApportionType("Average");
-			} else {
-				apportion.setApportionType("Share");
-			}
-			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+		} else {
+			
 		}
-		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-		
 	}
 	
 	private void setupApportionField(MoneyExpenseContainer moneyExpenseContainer) {
@@ -731,7 +734,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										Event newEvent = moneyExpenseContainer.getEvent();
 										if(newEvent != null) {
 											HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
-											newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate() + moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate());
+											newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - moneyExpenseContainer.getAmount0()*moneyExpenseContainer.getExchangeRate());
 											newEventEditor.save();
 										}
 										

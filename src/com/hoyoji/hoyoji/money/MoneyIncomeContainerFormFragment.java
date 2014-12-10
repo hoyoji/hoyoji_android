@@ -719,7 +719,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 										Event newEvent = moneyIncomeContainer.getEvent();
 										if(newEvent != null) {
 											HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
-											newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate() + moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate());
+											newEventEditor.getModelCopy().setIncomeTotal(newEvent.getIncomeTotal() - moneyIncomeContainer.getAmount0()*moneyIncomeContainer.getExchangeRate());
 											newEventEditor.save();
 										}
 										

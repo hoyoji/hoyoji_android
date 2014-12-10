@@ -78,7 +78,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         hyj:hintText="@string/projectEventListFragment_editText_hint_name"
-        hyj:labelText="@string/projectEventListFragment_textView_name" />
+        hyj:labelText="@string/projectEventListFragment_textView_name" >
+    	<requestFocus />
+     </com.hoyoji.android.hyjframework.view.HyjTextField>
 
      <View 
         android:id="@id/field_separator"
