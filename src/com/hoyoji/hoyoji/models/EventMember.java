@@ -10,6 +10,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji_android.R;
 
 @Table(name = "EventMember", id = BaseColumns._ID)
@@ -32,6 +33,12 @@ public class EventMember extends HyjModel {
 	
 	@Column(name = "state")
 	private String mState;
+
+	@Column(name = "apportionedTotalIncome")
+	private Double mApportionedTotalIncome = 0.0;
+	
+	@Column(name = "apportionedTotalExpense")
+	private Double mApportionedTotalExpense = 0.0;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -156,7 +163,22 @@ public class EventMember extends HyjModel {
 		this.mState = mState;
 	}
 
+	public Double getApportionedTotalIncome() {
+		return mApportionedTotalIncome;
+	}
 
+	public void setApportionedTotalIncome(Double mApportionedTotalIncome) {
+		this.mApportionedTotalIncome = HyjUtil.toFixed2(mApportionedTotalIncome);
+	}
+
+	public Double getApportionedTotalExpense() {
+		return mApportionedTotalExpense;
+	}
+
+	public void setApportionedTotalExpense(Double mApportionedTotalExpense) {
+		this.mApportionedTotalExpense = HyjUtil.toFixed2(mApportionedTotalExpense);
+	}
+	
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){
