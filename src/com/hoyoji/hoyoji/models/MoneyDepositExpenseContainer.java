@@ -250,6 +250,11 @@ public class MoneyDepositExpenseContainer extends HyjModel {
 	}
 
 	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+			this.mProjectCurrencyId = null;
+			return;
+		}
 		this.mProjectId = mProject.getId();
 		this.mProjectCurrencyId = mProject.getCurrencyId();
 	}
