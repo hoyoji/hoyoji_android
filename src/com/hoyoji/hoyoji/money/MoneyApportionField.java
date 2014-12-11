@@ -13,6 +13,8 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.Picture;
@@ -408,6 +410,106 @@ public class MoneyApportionField extends GridView {
 			} catch (IllegalAccessException e) {
 			}
 	    }
+	}
+	
+	public void changeEvent(Project project, Event event, Class<? extends MoneyApportion> type){
+		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+		Set<String> gridUserSet = new HashSet<String>();
+		// 把不属于当前账本用户分摊隐藏掉
+		int i = 0; 
+		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			mHiddenApportionItems.add(api);
+			mImageGridAdapter.remove(api);
+		}
+
+		// 把隐藏掉的分摊添加回去
+	    Iterator<ApportionItem<MoneyApportion>> it = mHiddenApportionItems.iterator();
+	    while (it.hasNext()) {
+	        // Get element
+	        ApportionItem<MoneyApportion> item = it.next();
+	        if(item.getProjectId().equals(project.getId())){
+	        	EventMember em = null;
+	        	if(item.getApportion().getFriendUserId() != null){
+					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
+					if(em != null) {
+						gridUserSet.add(item.getApportion().getFriendUserId());
+						mImageGridAdapter.add(item);
+					}
+				} else {
+					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), item.getApportion().getLocalFriendId()).executeSingle();
+					if(em != null) {
+						gridUserSet.add(item.getApportion().getLocalFriendId());
+						mImageGridAdapter.add(item);
+					}
+				}
+		        it.remove();
+//	        	if(item.getApportion().getFriendUserId() != null){
+//	        		gridUserSet.add(item.getApportion().getFriendUserId());
+//	        	} else {
+//	        		gridUserSet.add(item.getApportion().getLocalFriendId());
+//	        	}
+//				item.changeProject(project.getId());
+	        }
+	    }
+	    
+	    if(project.getAutoApportion()){
+		    int count = projectShareAuthorizations.size();
+			for(i = 0; i < count; i++){
+				if(projectShareAuthorizations.get(i).getState().equals("Delete")) {
+					continue;
+				}
+				if(!gridUserSet.contains(HyjUtil.ifNull(projectShareAuthorizations.get(i).getFriendUserId(), projectShareAuthorizations.get(i).getLocalFriendId()))){
+					try {
+						EventMember em = null;
+						if(projectShareAuthorizations.get(i).getFriendUserId() != null){
+							em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), projectShareAuthorizations.get(i).getFriendUserId()).executeSingle();
+						} else {
+							em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), projectShareAuthorizations.get(i).getLocalFriendId()).executeSingle();
+						}
+						if(em != null) {
+							MoneyApportion apportion;
+							apportion = type.newInstance();
+							apportion.setAmount(0.0);
+							if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+								apportion.setApportionType("Average");
+							} else {
+								apportion.setApportionType("Share");
+							}
+							apportion.setMoneyId(mMoneyTransactionId);
+							apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+							apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+							//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
+							ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+							mImageGridAdapter.add(pi);
+						}
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+	    }
+//	    if(mImageGridAdapter.getCount() == 0){
+//	    	MoneyApportion apportion;
+//			try {
+//				apportion = type.newInstance();
+//				apportion.setAmount(0.0);
+//				apportion.setMoneyId(mMoneyTransactionId);
+//				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+//				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", project.getId(), apportion.getFriendUserId()).executeSingle();
+//				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
+//					apportion.setApportionType("Average");
+//				} else {
+//					apportion.setApportionType("Share");
+//				}
+//				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+//				mImageGridAdapter.add(pi);
+//			} catch (InstantiationException e) {
+//			} catch (IllegalAccessException e) {
+//			}
+//	    }
 	}
 	
 	public void setError(String errMsg){
