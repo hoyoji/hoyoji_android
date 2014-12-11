@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -35,6 +36,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
@@ -45,6 +47,7 @@ import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
@@ -82,8 +85,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "id", "state"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle},
+				new String[] {"friendUserId", "id", "state", "id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -189,10 +192,29 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 				((TextView)view).setText("未报名");
 			}
 			return true;
-		} else {
-			return false;
-		}
-	   
+		} else if(view.getId() == R.id.homeListItem_amount) {
+			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+			HyjNumericView numericView = (HyjNumericView)view;
+			Double apportionTotal = evtMember.getApportionTotal();
+			String currencySymbol = evtMember.getEvent().getProject().getCurrencySymbol();
+			if(apportionTotal < 0){
+				apportionTotal = -apportionTotal;
+				numericView.setPrefix("分摊收入:" + currencySymbol);
+//				numericView.setTextColor(Color.parseColor("#339900"));
+			}else{
+				if(apportionTotal.equals(0.0)){
+					numericView.setTextColor(Color.BLACK);
+					numericView.setPrefix(currencySymbol);
+				}else{
+					numericView.setTextColor(Color.parseColor("hoyoji_red"));
+					numericView.setPrefix("分摊支出:" + currencySymbol);
+				}
+			} 
+			numericView.setSuffix(null);
+			numericView.setNumber(apportionTotal);
+			return true;
+		} 
+		return true;
 	}
 	
 

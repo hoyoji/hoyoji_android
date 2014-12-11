@@ -600,7 +600,7 @@ public class MoneyExpenseContainer extends HyjModel{
 							Double rate = mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate();
 							Double oldApportionAmount = apportionEditor.getModel().getAmount0();
 							
-							ProjectShareAuthorization projectShareAuthorization;
+							ProjectShareAuthorization projectShareAuthorization = null;
 							//维护账本成员金额
 							if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 								projectShareAuthorization = mMoneyExpenseContainerEditor.getNewSelfProjectShareAuthorization();
@@ -610,10 +610,8 @@ public class MoneyExpenseContainer extends HyjModel{
 							} else if(apportion.getLocalFriendId() != null){
 								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", 
 										mMoneyExpenseContainerEditor.getModelCopy().getProjectId(), apportion.getLocalFriendId()).executeSingle();
-							} else {
-								projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId IS NULL AND friendUserId IS NULL", 
-										mMoneyExpenseContainerEditor.getModelCopy().getProjectId()).executeSingle();
-							}
+							} 
+//							
 							HyjModelEditor<ProjectShareAuthorization> projectShareAuthorizationEditor = projectShareAuthorization.newModelEditor();
 							
 							if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
@@ -673,6 +671,45 @@ public class MoneyExpenseContainer extends HyjModel{
 										oldProjectAuthorizationEditor.save();
 									} else {
 										oldProjectAuthorizationEditor.save();
+									}
+								}
+							}
+							
+							if(mMoneyExpenseContainerEditor.getModelCopy().getEventId() != null){
+								// 维护活动成员余额
+								EventMember eventMember = null;
+								if(apportion.getFriendUserId() != null){
+									eventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
+											mMoneyExpenseContainerEditor.getModelCopy().getEventId(), apportion.getFriendUserId()).executeSingle();
+								} else if(apportion.getLocalFriendId() != null){
+									eventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
+											mMoneyExpenseContainerEditor.getModelCopy().getEventId(), apportion.getLocalFriendId()).executeSingle();
+								}
+								HyjModelEditor<EventMember> eventMemberEditor = eventMember.newModelEditor();
+								
+								if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
+										mMoneyExpenseContainerEditor.getModel().getEventId().equals(mMoneyExpenseContainerEditor.getModelCopy().getEventId())){
+									 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
+									eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+									eventMemberEditor.save();
+								} else {
+									//更新新账本分摊支出
+									eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
+									eventMemberEditor.save();
+									
+									//更新老账本分摊支出
+									EventMember oldEventMember;
+									if(apportion.getFriendUserId() != null){
+										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND friendUserId=?", 
+												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
+									} else {
+										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND localFriendId=?", 
+												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
+									}
+									if(oldEventMember != null){
+										HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
+										oldEventMemberEditor.getModelCopy().setApportionedTotalExpense(oldEventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate));
+										oldEventMemberEditor.save();
 									}
 								}
 							}

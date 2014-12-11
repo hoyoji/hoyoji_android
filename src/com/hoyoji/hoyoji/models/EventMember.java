@@ -178,6 +178,10 @@ public class EventMember extends HyjModel {
 	public void setApportionedTotalExpense(Double mApportionedTotalExpense) {
 		this.mApportionedTotalExpense = HyjUtil.toFixed2(mApportionedTotalExpense);
 	}
+
+	public Double getApportionTotal() {
+		return this.mApportionedTotalExpense - this.mApportionedTotalIncome;
+	}	
 	
 	@Override
 	public void save(){
@@ -217,6 +221,8 @@ public class EventMember extends HyjModel {
 
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
-	}	
+	}
+
+
 	
 }
