@@ -491,25 +491,28 @@ public class MoneyApportionField extends GridView {
 				}
 			}
 	    }
-//	    if(mImageGridAdapter.getCount() == 0){
-//	    	MoneyApportion apportion;
-//			try {
-//				apportion = type.newInstance();
-//				apportion.setAmount(0.0);
-//				apportion.setMoneyId(mMoneyTransactionId);
-//				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-//				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", project.getId(), apportion.getFriendUserId()).executeSingle();
-//				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
-//					apportion.setApportionType("Average");
-//				} else {
-//					apportion.setApportionType("Share");
-//				}
-//				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
-//				mImageGridAdapter.add(pi);
-//			} catch (InstantiationException e) {
-//			} catch (IllegalAccessException e) {
-//			}
-//	    }
+	    if(mImageGridAdapter.getCount() == 0){
+	    	MoneyApportion apportion;
+			try {
+				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(toBeDeterminedFriend != null){
+					apportion = type.newInstance();
+					apportion.setAmount(0.0);
+					apportion.setMoneyId(mMoneyTransactionId);
+					apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", project.getId(), toBeDeterminedFriend.getId()).executeSingle();
+					if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
+						apportion.setApportionType("Average");
+					} else {
+						apportion.setApportionType("Share");
+					}
+					ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+					mImageGridAdapter.add(pi);
+				}
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
+	    }
 	}
 	
 	public void setError(String errMsg){

@@ -610,7 +610,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyIncomeContainer moneyIncomeContainer) {
-		if(mSelectorFieldEvent.getModelId() != null){
+		if(mSelectorFieldEvent.getModelId() == null){
 			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
