@@ -459,11 +459,11 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 				}
 
 			ActiveAndroid.setTransactionSuccessful();
-//			if(getActivity().getCallingActivity() != null){
-//				Intent data = new Intent();
-//				data.putExtra("MODELID", mProjectShareAuthorizationEditor.getModelCopy().getId());
-//				getActivity().setResult(Activity.RESULT_OK, data);
-//			}
+			if(getActivity().getCallingActivity() != null){
+				Intent data = new Intent();
+				data.putExtra("MODELID", jsonPSA.getId());
+				getActivity().setResult(Activity.RESULT_OK, data);
+			}
 //			getActivity().finish();
 		} finally {
 			ActiveAndroid.endTransaction();
