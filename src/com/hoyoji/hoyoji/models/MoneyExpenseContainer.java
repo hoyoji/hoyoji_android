@@ -700,10 +700,10 @@ public class MoneyExpenseContainer extends HyjModel{
 									//更新老账本分摊支出
 									EventMember oldEventMember;
 									if(apportion.getFriendUserId() != null){
-										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND friendUserId=?", 
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
 												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
 									} else {
-										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND localFriendId=?", 
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
 												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
 									}
 									if(oldEventMember != null){
@@ -1108,10 +1108,10 @@ public class MoneyExpenseContainer extends HyjModel{
 			//更新老账本分摊支出
 			EventMember oldEventMember;
 			if(apportion.getFriendUserId() != null){
-				oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND friendUserId=?", 
+				oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
 						mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
 			} else {
-				oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND localFriendId=?", 
+				oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
 						mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
 			}
 			if(oldEventMember != null){

@@ -566,13 +566,12 @@ public class MemberListFragment extends HyjUserListFragment{
 				numericView.setPrefix("分摊收入:" + currencySymbol);
 //				numericView.setTextColor(Color.parseColor("#339900"));
 			}else{
-				if(apportionTotal.equals(0.0)){
-					numericView.setTextColor(Color.BLACK);
-					numericView.setPrefix(currencySymbol);
-				}else{
-					numericView.setTextColor(Color.parseColor("hoyoji_red"));
-					numericView.setPrefix("分摊支出:" + currencySymbol);
-				}
+				numericView.setPrefix("分摊支出:" + currencySymbol);
+//				if(apportionTotal.equals(0.0)){
+//					numericView.setTextColor(Color.parseColor("#000000"));
+//				}else{
+//				numericView.setTextColor(Color.parseColor("hoyoji_red"));
+//				}
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(apportionTotal);

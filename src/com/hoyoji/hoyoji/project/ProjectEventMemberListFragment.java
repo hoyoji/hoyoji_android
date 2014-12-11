@@ -203,10 +203,10 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 //				numericView.setTextColor(Color.parseColor("#339900"));
 			}else{
 				if(apportionTotal.equals(0.0)){
-					numericView.setTextColor(Color.BLACK);
+//					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix(currencySymbol);
 				}else{
-					numericView.setTextColor(Color.parseColor("hoyoji_red"));
+//					numericView.setTextColor(Color.parseColor(R.color.));
 					numericView.setPrefix("分摊支出:" + currencySymbol);
 				}
 			} 
