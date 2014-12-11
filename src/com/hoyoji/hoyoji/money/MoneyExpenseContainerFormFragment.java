@@ -638,7 +638,35 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
-			
+//			Event event = HyjModel.getModel(Event.class,mSelectorFieldEvent.getModelId());
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				EventMember em = null;
+				if(projectShareAuthorizations.get(i).getFriendUserId() != null){
+					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getFriendUserId()).executeSingle();
+				} else {
+					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getLocalFriendId()).executeSingle();
+				}
+				if(em != null) {
+					MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+					apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
+					if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+						apportion.setApportionType("Average");
+					} else {
+						apportion.setApportionType("Share");
+					}
+					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				}
+			}
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		}
 	}
 	
