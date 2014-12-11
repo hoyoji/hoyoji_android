@@ -1081,7 +1081,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(oldEvent != null && newEvent != null) {
 					HyjModelEditor<Event> newEventEditor = newEvent.newModelEditor();
 					//更新活动余额
-					if(oldProject.getId().equals(newProject.getId())){
+					if(oldEvent.getId().equals(newEvent.getId())){
 						newEventEditor.getModelCopy().setExpenseTotal(newEvent.getExpenseTotal() - oldMoneyExpenseContainerModel.getAmount0()*oldMoneyExpenseContainerModel.getExchangeRate() + moneyExpenseContainerModel.getAmount0()*moneyExpenseContainerModel.getExchangeRate());
 					} else {
 						HyjModelEditor<Event> oldEventEditor = oldEvent.newModelEditor();
