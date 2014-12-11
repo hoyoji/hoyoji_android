@@ -195,7 +195,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			} else {
 				apportion.setApportionType("Share");
 			}
-			mApportionFieldApportions.addApportion(apportion, event.getId(), ApportionItem.NEW);
+			mApportionFieldApportions.addApportion(apportion, projectShareAuthorization.getProjectId(), ApportionItem.NEW);
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		}
 	}
