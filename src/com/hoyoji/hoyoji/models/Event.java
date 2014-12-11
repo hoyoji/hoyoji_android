@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.models;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
@@ -241,5 +243,12 @@ public class Event extends HyjModel {
 		jsonObj.remove("expenseTotal");
 		
 		return jsonObj;
+	}
+
+
+	public List<EventMember> getEventMembers() {
+		return new Select().from(EventMember.class)
+				.where("eventId = ?", getId())
+				.execute();
 	}
 }

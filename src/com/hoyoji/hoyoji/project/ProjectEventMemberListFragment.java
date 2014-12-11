@@ -85,8 +85,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "id", "state", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount},
+				new String[] {"friendUserId", "id", "state", "id", "id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark},
 				0); 
 	}	
 
@@ -152,7 +152,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			EventMember memberToBeDetermined = EventMember.load(EventMember.class, id);
-			if(memberToBeDetermined.getToBeDetermined()){
+			if(memberToBeDetermined.getOwnerUserId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId()) 
+					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
@@ -410,8 +411,14 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Event event = Event.load(Event.class, modelId);
-		if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add) != null){
+		String eventId = intent.getStringExtra("EVENTID");
+		Event event = null;
+		if(eventId != null){
+			event = Event.getModel(Event.class, eventId);
+		} else {
+			event = Event.load(Event.class, modelId);
+		}
+		if(!event.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add) != null){
 			getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add).setVisible(false);
 		}
 	}

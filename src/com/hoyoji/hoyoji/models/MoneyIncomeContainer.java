@@ -696,7 +696,7 @@ public class MoneyIncomeContainer extends HyjModel {
 			}
 			if(oldEventMember != null){
 				HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
-				oldEventMemberEditor.getModelCopy().setApportionedTotalIncome(oldEventMember.getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
+				oldEventMemberEditor.getModelCopy().setApportionedTotalIncome(oldEventMember.getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
 				oldEventMemberEditor.save();
 			}
 		}
