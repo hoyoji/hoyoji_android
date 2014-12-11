@@ -570,7 +570,7 @@ public class MemberListFragment extends HyjUserListFragment{
 					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix(currencySymbol);
 				}else{
-					numericView.setTextColor(Color.parseColor("hoyoji_red"));
+//					numericView.setTextColor(Color.parseColor("hoyoji_red"));
 					numericView.setPrefix("分摊支出:" + currencySymbol);
 				}
 			}

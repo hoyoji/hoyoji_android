@@ -53,6 +53,7 @@ import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -602,26 +603,57 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	}
 	
 	private void addAllProjectMemberIntoApportionsField(MoneyIncomeContainer moneyIncomeContainer) {
-		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
-					projectShareAuthorizations.get(i).getToBeDetermined()){
-				continue;
+		if(mSelectorFieldEvent.getText() == null || "".equals(mSelectorFieldEvent.getText())){
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+				apportion.setAmount(0.0);
+				apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+				apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+				apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
+				if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+					apportion.setApportionType("Average");
+				} else {
+					apportion.setApportionType("Share");
+				}
+				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 			}
-			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
-			apportion.setAmount(0.0);
-			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
-			apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
-			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
-				apportion.setApportionType("Average");
-			} else {
-				apportion.setApportionType("Share");
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+		} else {
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				EventMember em = null;
+				if(projectShareAuthorizations.get(i).getFriendUserId() != null){
+					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getFriendUserId()).executeSingle();
+				} else {
+					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getLocalFriendId()).executeSingle();
+				}
+				if(em != null) {
+					MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+					apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
+					if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+						apportion.setApportionType("Average");
+					} else {
+						apportion.setApportionType("Share");
+					}
+					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				}
 			}
-			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		}
-		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		
 	}
 	
