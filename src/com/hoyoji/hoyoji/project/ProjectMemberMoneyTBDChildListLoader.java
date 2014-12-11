@@ -49,7 +49,7 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class MemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
+public class ProjectMemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -70,7 +70,7 @@ public class MemberMoneyTBDChildListLoader extends AsyncTaskLoader<List<HyjModel
 	    private DateComparator mDateComparator = new DateComparator();
 		private String mProjectId;
 		private String mLocalFriendId;
-		public MemberMoneyTBDChildListLoader(Context context, Bundle queryParams) {
+		public ProjectMemberMoneyTBDChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 			copyQueryParams(queryParams);

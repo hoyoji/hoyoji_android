@@ -17,7 +17,7 @@ import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
 public class SelectApportionMemberListFragment extends HyjUserFragment {
 	
@@ -131,7 +131,7 @@ public class SelectApportionMemberListFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MemberListFragment();
+				return new ProjectMemberListFragment();
 			case 1:
 				return new FriendListFragment();
 			}

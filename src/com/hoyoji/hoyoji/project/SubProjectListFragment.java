@@ -229,7 +229,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
 				break;
 			case VIEW_PROJECT_MEMBERS:
-				openActivityWithFragment(MemberListFragment.class, R.string.memberListFragment_title, bundle);
+				openActivityWithFragment(ProjectMemberListFragment.class, R.string.memberListFragment_title, bundle);
 				break;
 		}
 		return super.onContextItemSelected(item);

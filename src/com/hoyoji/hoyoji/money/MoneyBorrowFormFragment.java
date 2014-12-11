@@ -53,8 +53,8 @@ import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
-import com.hoyoji.hoyoji.project.MemberFormFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
@@ -273,7 +273,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 //				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
 
 				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FRIEND_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FRIEND_ID);
 				} else {
 					openActivityWithFragmentForResult(
 						SelectApportionMemberListFragment.class,
@@ -1321,7 +1321,7 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 											} else {
 												bundle.putString("LOCAL_FRIENDID", friend.getId());
 											}
-											openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+											openActivityWithFragmentForResult(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
 										}
 				
 										@Override

@@ -69,7 +69,7 @@ import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.WBLogin;
-import com.hoyoji.hoyoji.project.MemberFormFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 public class HyjUtil {

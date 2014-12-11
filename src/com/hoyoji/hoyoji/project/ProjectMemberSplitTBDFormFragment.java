@@ -57,7 +57,7 @@ import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 
 
-public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
+public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
 
 	protected static final int GET_APPORTION_MEMBER_ID = 0;
 	private static final int ADD_AS_PROJECT_MEMBER = 1;
@@ -104,7 +104,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 				Project project = projectShareAuthorization.getProject();
 				bundle.putLong("MODEL_ID", project.get_mId());
 				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 				} else {
 					openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 				}
@@ -332,177 +332,6 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "projectSplitTBDTransactions");
 	}
 
-	private void doSplitDepositReturnContainers() {
-			List<MoneyDepositReturnContainer> moneyDepositReturnContainers = new Select("container.*").from(MoneyDepositReturnContainer.class).as("container")
-									.join(MoneyDepositReturnApportion.class).as("apportion").on("container.id = apportion.moneyDepositReturnContainerId").
-									where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
-			
-			for(MoneyDepositReturnContainer moneyDepositReturnContainer : moneyDepositReturnContainers){
-				List apportions = moneyDepositReturnContainer.getApportions();
-				List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyDepositReturnApportion.class, apportions, moneyDepositReturnContainer.getId());
-				MoneyDepositReturnContainer.saveApportions(apportionItems, new MoneyDepositReturnContainerEditor(moneyDepositReturnContainer));
-			}
-		}
-	 
-	 private void doSplitDepositIncomeContainers() {
-			List<MoneyDepositIncomeContainer> moneyDepositIncomeContainers = new Select("container.*").from(MoneyDepositIncomeContainer.class).as("container")
-									.join(MoneyDepositIncomeApportion.class).as("apportion").on("container.id = apportion.moneyDepositIncomeContainerId").
-									where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
-			
-			for(MoneyDepositIncomeContainer moneyDepositIncomeContainer : moneyDepositIncomeContainers){
-				List apportions = moneyDepositIncomeContainer.getApportions();
-				List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyDepositIncomeApportion.class, apportions, moneyDepositIncomeContainer.getId());
-				MoneyDepositIncomeContainer.saveApportions(apportionItems, new MoneyDepositIncomeContainerEditor(moneyDepositIncomeContainer));
-			}
-		}
-	 
-	 private void doSplitIncomeContainers() {
-		List<MoneyIncomeContainer> moneyIncomeContainers = new Select("container.*").from(MoneyIncomeContainer.class).as("container")
-								.join(MoneyIncomeApportion.class).as("apportion").on("container.id = apportion.moneyIncomeContainerId").
-								where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
-		
-		for(MoneyIncomeContainer moneyIncomeContainer : moneyIncomeContainers){
-			List apportions = moneyIncomeContainer.getApportions();
-			List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyIncomeApportion.class, apportions, moneyIncomeContainer.getId());
-			MoneyIncomeContainer.saveApportions(apportionItems, new MoneyIncomeContainerEditor(moneyIncomeContainer));
-		}
-	}
-	 
-	private void doSplitExpenseContainers() {
-		List<MoneyExpenseContainer> moneyExpenseContainers = new Select("container.*").from(MoneyExpenseContainer.class).as("container")
-								.join(MoneyExpenseApportion.class).as("apportion").on("container.id = apportion.moneyExpenseContainerId").
-								where("apportion.localFriendId=?", projectShareAuthorization.getLocalFriendId()).execute();
-		
-		for(MoneyExpenseContainer moneyExpenseContainer : moneyExpenseContainers){
-			List apportions = moneyExpenseContainer.getApportions();//new Select().from(MoneyExpenseApportion.class).where("moneyExpenseContainerId=?", moneyExpenseContainer.getId()).execute(); 
-			List<ApportionItem> apportionItems = makeMoneyApportionItems(MoneyExpenseApportion.class, apportions, moneyExpenseContainer.getId());
-			
-			MoneyExpenseContainer.saveApportions(apportionItems, new MoneyExpenseContainerEditor(moneyExpenseContainer));
-		}
-	}
-	
-	private List<ApportionItem> makeMoneyApportionItems(Class<? extends MoneyApportion> modelClass, List<MoneyApportion> apportions, String apportionContainerId){
-		Set<String> apportionsSet = new HashSet<String>();
-		List<ApportionItem> apportionItems = new ArrayList<ApportionItem>();
-		MoneyApportion apportionTBD = null;
-		double amountTBD = 0.0;
-		ApportionItem apiTBD = null;
-		
-		for(int i = 0; i < apportions.size(); i++){
-			MoneyApportion apportion = apportions.get(i);
-			if(!projectShareAuthorization.getLocalFriendId().equals(apportion.getLocalFriendId())){
-				apportionsSet.add(HyjUtil.ifNull(apportion.getFriendUserId(), apportion.getLocalFriendId()));
-			} else {
-				apportionTBD = apportion;
-				amountTBD = apportionTBD.getAmount();
-			}
-		}
-		
-		for(int i = 0; i < mApportionFieldApportions.getAdapter().getCount(); i++){
-			ApportionItem<MoneyApportion> api = mApportionFieldApportions.getAdapter().getItem(i);
-			MoneyApportion apiApportion = api.getApportion();
-			
-			if(!apportionsSet.contains(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()))){
-				MoneyApportion apportion;
-				try {
-					if(projectShareAuthorization.getLocalFriendId().equals(apiApportion.getLocalFriendId())){
-						apiTBD = api;
-						apportion = apportionTBD;
-					} else {
-						apportion = (MoneyApportion) modelClass.newInstance();
-						apportion.setFriendUserId(apiApportion.getFriendUserId());
-						apportion.setLocalFriendId(apiApportion.getLocalFriendId());
-						apportion.setMoneyId(apportionContainerId);
-					}
-					
-					apportion.setApportionType(api.getApportionType());
-					
-					ApportionItem apportionItem = new ApportionItem(apportion, projectShareAuthorization.getProject().getId(), ApportionItem.NEW);
-					apportionItems.add(apportionItem);
-					
-//					apportionsSet.add(HyjUtil.ifNull(apiApportion.getFriendUserId(), apiApportion.getLocalFriendId()));
-					
-					
-				} catch (java.lang.InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		// 如果拆分里没有待定成员，我们把原来的待定成员移除
-		if(apiTBD == null && (amountTBD == 0.0 || apportionItems.size() > 0)){
-			ApportionItem apportionItemTBD = new ApportionItem(apportionTBD, projectShareAuthorization.getProject().getId(), ApportionItem.DELETED);
-			apportionItems.add(apportionItemTBD);
-		}
-		
-		if(apportionItems.size() > 0){
-			setApportionsAmount(apportionItems, amountTBD);
-		}
-		return apportionItems;
-	}
-	
-	private void setApportionsAmount(List<ApportionItem> mergedApportions, Double totalAmount){
-		double fixedTotal = 0.0;
-		double sharePercentageTotal = 0.0;
-		
-		double averageAmount = 0.0;
-		double shareTotal = 0.0;
-		int numOfAverage = 0;
-		
-		for(int i = 0; i < mergedApportions.size(); i++){
-			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
-			if(api.getState() != ApportionItem.DELETED) {
-				if(api.getApportionType().equalsIgnoreCase("Average")){
-					numOfAverage++;
-					sharePercentageTotal += api.getSharePercentage();
-				} else if(api.getApportionType().equalsIgnoreCase("Share")){
-//					api.setAmount(api.getAmount());
-					sharePercentageTotal += api.getSharePercentage();
-				} else {
-					fixedTotal += api.getAmount();
-				}
-			}
-		}
-		
-		
-		// 占股分摊=（总金额-定额分摊）*占股/（分摊人所占股数）
-		shareTotal = totalAmount - fixedTotal;
-		for(int i = 0; i < mergedApportions.size(); i++){
-			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
-			if(api.getState() != ApportionItem.DELETED) {
-				if(api.getApportionType().equalsIgnoreCase("Share")){
-					Double shareAmount = shareTotal * api.getSharePercentage() / sharePercentageTotal;
-					api.setAmount(shareAmount);
-					fixedTotal += api.getAmount();
-				}
-			}
-		}
-		
-		// 平均分摊 = （总金额-定额分摊-占股分摊） / 平均分摊人数
-		averageAmount = (totalAmount - fixedTotal) / numOfAverage;
-		ApportionItem firstNonDeletedItem = null;
-		for(int i = 0; i < mergedApportions.size(); i++){
-			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mergedApportions.get(i);
-			if(api.getState() != ApportionItem.DELETED) {
-				if(api.getApportionType().equalsIgnoreCase("Average")){
-					api.setAmount(averageAmount);
-					fixedTotal += api.getAmount();
-				}
-				if(firstNonDeletedItem == null){
-					firstNonDeletedItem = api;
-				}
-			}
-		}
-		if(mergedApportions.size() > 0){
-			if(fixedTotal != totalAmount && firstNonDeletedItem != null){
-				double adjustedAmount = firstNonDeletedItem.getAmount() + (totalAmount - fixedTotal);
-				firstNonDeletedItem.setAmount(adjustedAmount);
-			}
-		}
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
          switch(requestCode){
@@ -565,7 +394,7 @@ public class MemberSplitTBDFormFragment extends HyjUserFormFragment {
 									} else {
 										bundle.putString("LOCAL_FRIENDID", friend.getId());
 									}
-									openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+									openActivityWithFragmentForResult(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
 								}
 		
 								@Override
