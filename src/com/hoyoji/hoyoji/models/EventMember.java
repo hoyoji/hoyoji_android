@@ -255,5 +255,14 @@ public class EventMember extends HyjModel {
 
 	public String getProjectId() {
 		return this.getEvent().getProjectId();
+	}
+
+
+	public ProjectShareAuthorization getProjectShareAuthorization() {
+		if(this.mFriendUserId != null){
+			return new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId = ? AND state <> 'Delete'", this.getProjectId(), this.mFriendUserId).executeSingle();
+		} else {
+			return new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND localFriendId = ? AND state <> 'Delete'", this.getProjectId(), this.mLocalFriendId).executeSingle();
+		}
 	}	
 }

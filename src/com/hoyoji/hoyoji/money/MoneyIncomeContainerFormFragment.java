@@ -2031,11 +2031,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 			} else if("EventMember".equalsIgnoreCase(type)){
 				EventMember em = EventMember.load(EventMember.class, _id);
-				if(em.getFriendUserId() != null){
-					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", em.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
-				} else {
-					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", em.getLocalFriendId(), mSelectorFieldProject.getModelId()).executeSingle();
-				}
+//				if(em.getFriendUserId() != null){
+//					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", em.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+//				} else {
+//					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", em.getLocalFriendId(), mSelectorFieldProject.getModelId()).executeSingle();
+//				}
+				psa = em.getProjectShareAuthorization();
 //				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 			} else {
 				final Friend friend = Friend.load(Friend.class, _id);

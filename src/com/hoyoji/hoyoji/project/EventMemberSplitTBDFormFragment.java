@@ -118,7 +118,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		getView().findViewById(R.id.memberTBDFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addAllProjectMemberIntoApportionsField(eventMember.getProject());
+				addAllEventMemberIntoApportionsField(eventMember.getEvent());
 			}
 		});
 		
@@ -179,23 +179,23 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		}
 	}
 	
-	private void addAllProjectMemberIntoApportionsField(Project project) {
-		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
-							projectShareAuthorizations.get(i).getToBeDetermined()){
+	private void addAllEventMemberIntoApportionsField(Event event) {
+		List<EventMember> eventMembers = event.getEventMembers();
+		for (int i = 0; i < eventMembers.size(); i++) {
+			if(eventMembers.get(i).getToBeDetermined()){
 				continue;
 			}
 			MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 			apportion.setAmount(0.0);
-			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
-			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+			apportion.setFriendUserId(eventMembers.get(i).getFriendUserId());
+			apportion.setLocalFriendId(eventMembers.get(i).getLocalFriendId());
+			ProjectShareAuthorization projectShareAuthorization = eventMembers.get(i).getProjectShareAuthorization();
+			if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
 				apportion.setApportionType("Average");
 			} else {
 				apportion.setApportionType("Share");
 			}
-			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+			mApportionFieldApportions.addApportion(apportion, event.getId(), ApportionItem.NEW);
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		}
 	}
@@ -326,7 +326,6 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			
 			JSONObject data = new JSONObject();
 			try {
-				data.put("projectId", eventMember.getProjectId());
 				data.put("eventId", eventMember.getEventId());
 				data.put("tbdFriendId", eventMember.getLocalFriendId());
 				data.put("apportions", jsonArray);
@@ -377,7 +376,10 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 
 	private void AddApportionMember(String type, long _id) {
 			ProjectShareAuthorization psa = null;
-			if("ProjectShareAuthorization".equalsIgnoreCase(type)){
+			if("EventMember".equalsIgnoreCase(type)){
+				EventMember eventMember = HyjModel.load(EventMember.class, _id);
+				psa = eventMember.getProjectShareAuthorization();
+			} else if("ProjectShareAuthorization".equalsIgnoreCase(type)){
 				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 			} else {
 				final Friend friend = Friend.load(Friend.class, _id);

@@ -410,8 +410,14 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Event event = Event.load(Event.class, modelId);
-		if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add) != null){
+		String eventId = intent.getStringExtra("EVENTID");
+		Event event = null;
+		if(eventId != null){
+			event = Event.getModel(Event.class, eventId);
+		} else {
+			event = Event.load(Event.class, modelId);
+		}
+		if(!event.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add) != null){
 			getOptionsMenu().findItem(R.id.projectEventMemberListFragment_action_member_add).setVisible(false);
 		}
 	}
