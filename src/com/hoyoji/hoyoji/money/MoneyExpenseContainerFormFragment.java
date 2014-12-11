@@ -1341,6 +1341,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					HyjUtil.displayToast(R.string.app_permission_no_edit);
 					return;
 				}
+				
+				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyExpenseApportion.class);
+				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 
 				if( event.getProject().getFinancialOwnerUserId() != null){
 					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
