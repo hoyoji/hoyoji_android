@@ -1108,7 +1108,11 @@ public class MoneyIncomeContainer extends HyjModel {
 							}
 							if(mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId() != null){
 								MoneyAccount moneyAccount = HyjModel.getModel(MoneyAccount.class, mMoneyIncomeContainerEditor.getModelCopy().getMoneyAccountId());
-								moneyLend.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+								if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportionEditor.getModelCopy().getFriendUserId())){
+									moneyLend.setMoneyAccountId(moneyAccount.getId(), moneyAccount.getCurrencyId());
+								} else {
+									moneyLend.setMoneyAccountId(null, moneyAccount.getCurrencyId());
+								}
 							} else {
 								moneyLend.setMoneyAccountId(null, null);
 							}
