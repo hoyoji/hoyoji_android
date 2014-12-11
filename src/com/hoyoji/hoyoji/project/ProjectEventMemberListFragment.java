@@ -85,8 +85,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "id", "state", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount},
+				new String[] {"friendUserId", "id", "state", "id", "id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark},
 				0); 
 	}	
 
