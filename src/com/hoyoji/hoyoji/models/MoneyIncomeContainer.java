@@ -1124,7 +1124,7 @@ public class MoneyIncomeContainer extends HyjModel {
 								}
 							} else{
 								if(!mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId().equals(apportionEditor.getModelCopy().getFriendUserId())){
-									moneyLend.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+									moneyLend.setFriendUserId(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId());
 									moneyLend.save();
 								}
 
