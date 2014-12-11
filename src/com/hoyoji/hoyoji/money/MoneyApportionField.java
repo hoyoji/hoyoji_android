@@ -430,14 +430,14 @@ public class MoneyApportionField extends GridView {
 	        ApportionItem<MoneyApportion> item = it.next();
 	        if(item.getProjectId().equals(project.getId())){
 	        	EventMember em = null;
-	        	if(projectShareAuthorizations.get(i).getFriendUserId() != null){
-					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), projectShareAuthorizations.get(i).getFriendUserId()).executeSingle();
+	        	if(item.getApportion().getFriendUserId() != null){
+					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
 					if(em != null) {
 						gridUserSet.add(item.getApportion().getFriendUserId());
 						mImageGridAdapter.add(item);
 					}
 				} else {
-					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), projectShareAuthorizations.get(i).getLocalFriendId()).executeSingle();
+					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), item.getApportion().getLocalFriendId()).executeSingle();
 					if(em != null) {
 						gridUserSet.add(item.getApportion().getLocalFriendId());
 						mImageGridAdapter.add(item);
