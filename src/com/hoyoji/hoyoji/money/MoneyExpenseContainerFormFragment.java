@@ -66,8 +66,8 @@ import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyExpenseCategoryListFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
-import com.hoyoji.hoyoji.project.MemberFormFragment;
-import com.hoyoji.hoyoji.project.MemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectEventListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
@@ -441,7 +441,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
-					openActivityWithFragmentForResult(MemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		});
@@ -536,7 +536,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 						bundle.putLong("MODEL_ID", project.get_mId());
 						if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-							openActivityWithFragmentForResult(MemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
 							if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
 								bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
@@ -1496,7 +1496,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 								} else {
 									bundle.putString("LOCAL_FRIENDID", friend.getId());
 								}
-								openActivityWithFragmentForResult(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+								openActivityWithFragmentForResult(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
 							}
 	
 							@Override

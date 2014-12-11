@@ -151,8 +151,12 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		} else {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			
-			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
+			EventMember memberToBeDetermined = EventMember.load(EventMember.class, id);
+			if(memberToBeDetermined.getToBeDetermined()){
+				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
+			} else {
+				openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
+			}
 		}
 	}
 	
@@ -199,7 +203,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			String currencySymbol = evtMember.getEvent().getProject().getCurrencySymbol();
 			if(apportionTotal < 0){
 				apportionTotal = -apportionTotal;
-				numericView.setPrefix("分摊收入:" + currencySymbol);
+				numericView.setPrefix("活动收入:" + currencySymbol);
 //				numericView.setTextColor(Color.parseColor("#339900"));
 			}else{
 				if(apportionTotal.equals(0.0)){
@@ -207,13 +211,22 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 					numericView.setPrefix(currencySymbol);
 				}else{
 //					numericView.setTextColor(Color.parseColor(R.color.));
-					numericView.setPrefix("分摊支出:" + currencySymbol);
+					numericView.setPrefix("活动支出:" + currencySymbol);
 				}
 			} 
 			numericView.setSuffix(null);
 			numericView.setNumber(apportionTotal);
 			return true;
-		} 
+		} else if(view.getId() == R.id.homeListItem_remark){
+			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+			if(evtMember.getToBeDetermined()){
+				((TextView)view).setText("可进行账务拆分");
+			} else {
+				((TextView)view).setText("");
+			}
+					
+			
+		}
 		return true;
 	}
 	

@@ -41,7 +41,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 
-public class MemberFormFragment extends HyjUserFormFragment {
+public class ProjectMemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 2;
 
 	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.memberFormFragment_selectorField_friend;
@@ -213,7 +213,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_FRIEND_ID);
+				ProjectMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.memberFormFragment_editText_hint_friend, null, GET_FRIEND_ID);
 			}
 		});	
 		
@@ -475,7 +475,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 		String data = "[" + msg.toString() + "]";
 		
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareInvite");
-		((HyjActivity) MemberFormFragment.this.getActivity())
+		((HyjActivity) ProjectMemberFormFragment.this.getActivity())
 		.displayProgressDialog(
 				R.string.memberFormFragment_title_edit,
 				R.string.memberFormFragment_progress_inviting);
@@ -512,7 +512,7 @@ public class MemberFormFragment extends HyjUserFormFragment {
 			data += "," + msg.toString() + "]";
 			
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareAdd");
-			((HyjActivity) MemberFormFragment.this.getActivity())
+			((HyjActivity) ProjectMemberFormFragment.this.getActivity())
 			.displayProgressDialog(
 					R.string.memberFormFragment_title_addnew,
 					R.string.memberFormFragment_progress_adding);
@@ -584,7 +584,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 			data += "," + msg.toString() + "]";
 			
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "projectShareEdit");
-			((HyjActivity) MemberFormFragment.this.getActivity())
+			((HyjActivity) ProjectMemberFormFragment.this.getActivity())
 			.displayProgressDialog(
 					R.string.memberFormFragment_title_edit,
 					R.string.memberFormFragment_progress_saving);
@@ -669,7 +669,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 					ActiveAndroid.endTransaction();
 				}
 
-				((HyjActivity) MemberFormFragment.this.getActivity())
+				((HyjActivity) ProjectMemberFormFragment.this.getActivity())
 				.dismissProgressDialog();
 //			}
 //

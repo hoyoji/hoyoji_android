@@ -41,6 +41,9 @@ public class EventMember extends HyjModel {
 	
 	@Column(name = "apportionedTotalExpense")
 	private Double mApportionedTotalExpense = 0.0;
+	
+	@Column(name = "toBeDetermined")
+	private Boolean mToBeDetermined = false;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -234,4 +237,23 @@ public class EventMember extends HyjModel {
 		
 		return jsonObj;
 	}
+
+
+	public Boolean getToBeDetermined() {
+		return this.mToBeDetermined;
+	}
+
+	public void setToBeDetermined(boolean b) {
+		this.mToBeDetermined = b;
+	}
+
+
+	public Project getProject() {
+		return HyjModel.getModel(Project.class, this.getEvent().getProjectId());
+	}
+
+
+	public String getProjectId() {
+		return this.getEvent().getProjectId();
+	}	
 }

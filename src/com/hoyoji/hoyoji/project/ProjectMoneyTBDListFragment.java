@@ -247,9 +247,9 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 //		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if (groupPos < 0) { // 这个是分类
-			loader = new MemberMoneyTBDGroupListLoader(getActivity(), arg1);
+			loader = new ProjectMemberMoneyTBDGroupListLoader(getActivity(), arg1);
 		} else {
-			loader = new MemberMoneyTBDChildListLoader(getActivity(), arg1);
+			loader = new ProjectMemberMoneyTBDChildListLoader(getActivity(), arg1);
 		}
 		return (Loader<Object>) loader;
 	}
@@ -271,7 +271,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 				}
 			}
 			adapter.notifyDataSetChanged();
-			this.setFooterLoadFinished(((MemberMoneyTBDGroupListLoader)loader).hasMoreData());
+			this.setFooterLoadFinished(((ProjectMemberMoneyTBDGroupListLoader)loader).hasMoreData());
 		} else {
 				ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
 				mListChildData.set(loader.getId(), childList);
@@ -1154,7 +1154,7 @@ public class ProjectMoneyTBDListFragment extends HyjUserExpandableListFragment {
 //		}
 		setFooterLoadStart();
 		Loader loader = getLoaderManager().getLoader(-1);
-		((MemberMoneyTBDGroupListLoader)loader).fetchMore(null);	
+		((ProjectMemberMoneyTBDGroupListLoader)loader).fetchMore(null);	
 	}
 	
 	@Override  

@@ -194,6 +194,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 //			} else {
 //				((TextView)view).setText(cursor.getString(columnIndex));
 //			}
+			
 			long date = cursor.getLong(cursor.getColumnIndex("date"));
 			long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
 			long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 

@@ -68,7 +68,7 @@ import com.tencent.sample.BaseUIListener;
 import com.tencent.sample.Util;
 import com.tencent.tauth.UiError;
 
-public class MemberListFragment extends HyjUserListFragment{
+public class ProjectMemberListFragment extends HyjUserListFragment{
 	public final static int ADD_SUB_PROJECT = 0;
 	public final static int VIEW_PROJECT_MEMBERS = 1;
 //	private ContentObserver mUserDataChangeObserver = null;
@@ -119,7 +119,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		Project project =  Model.load(Project.class, modelId);
 		arg1.putString("PROJECTID", project.getId());
 		
-		Object loader = new MemberListLoader(getActivity(), arg1);
+		Object loader = new ProjectMemberListLoader(getActivity(), arg1);
 //		
 //				ContentProvider.createUri(ProjectShareAuthorization.class, null),
 //				null,
@@ -207,7 +207,7 @@ public class MemberListFragment extends HyjUserListFragment{
 		if(item.getItemId() == R.id.memberListFragment_action_member_addnew){
 				Bundle bundle = new Bundle();
 				bundle.putLong("PROJECT_ID", modelId);
-				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
+				openActivityWithFragment(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle);
 				return true;
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite){
 			Bundle bundle = new Bundle();
@@ -381,9 +381,9 @@ public class MemberListFragment extends HyjUserListFragment{
 //				HyjUtil.displayToast("只有账本所有者才允许编辑待定成员");
 //			} else 
 			if(memberToBeDetermined.getToBeDetermined()){
-				openActivityWithFragment(MemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
+				openActivityWithFragment(ProjectMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				openActivityWithFragment(MemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
+				openActivityWithFragment(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
 			}
 		}
     }  

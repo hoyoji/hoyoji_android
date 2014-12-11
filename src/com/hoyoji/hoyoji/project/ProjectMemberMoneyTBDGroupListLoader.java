@@ -47,7 +47,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
-public class MemberMoneyTBDGroupListLoader extends
+public class ProjectMemberMoneyTBDGroupListLoader extends
 		AsyncTaskLoader<List<Map<String, Object>>> {
 
 	private DateFormat mDateFormat = new SimpleDateFormat(
@@ -60,7 +60,7 @@ public class MemberMoneyTBDGroupListLoader extends
 	private String mLocalFriendId;
 	private long mDateFrom = 0;
 	private long mDateTo = 0;
-	public MemberMoneyTBDGroupListLoader(Context context, Bundle queryParams) {
+	public ProjectMemberMoneyTBDGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		copyQueryParams(queryParams);

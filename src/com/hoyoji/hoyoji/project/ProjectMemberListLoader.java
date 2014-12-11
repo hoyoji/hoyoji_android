@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
+public class ProjectMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	/**
 	 * Perform alphabetical comparison of application entry objects.
@@ -31,7 +31,7 @@ public class MemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    private ProjectShareAuthorizationComparator mProjectShareAuthorizationComparator = new ProjectShareAuthorizationComparator();
 		private String mProjectId;
 		private ChangeObserver mChangeObserver;
-		public MemberListLoader(Context context, Bundle queryParams) {
+		public ProjectMemberListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 	    	
 			if (queryParams != null) {

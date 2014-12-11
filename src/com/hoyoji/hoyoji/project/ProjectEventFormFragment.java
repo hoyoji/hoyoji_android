@@ -192,6 +192,7 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 				em.setLocalFriendId(toBeDeterminedFriend.getId());
 				em.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				em.setFriendUserName("待定成员");
+				em.setToBeDetermined(true);
 				em.save();
 			}
 			doSave();
