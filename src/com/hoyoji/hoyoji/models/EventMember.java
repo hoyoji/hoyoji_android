@@ -229,8 +229,8 @@ public class EventMember extends HyjModel {
 	public JSONObject toJSON() {
 		final JSONObject jsonObj = super.toJSON();
 		
-		jsonObj.remove("actualTotalIncome");
-		jsonObj.remove("actualTotalExpense");
+		jsonObj.remove("apportionedTotalIncome");
+		jsonObj.remove("apportionedTotalExpense");
 		
 		return jsonObj;
 	}
