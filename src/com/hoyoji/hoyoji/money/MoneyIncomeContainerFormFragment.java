@@ -68,6 +68,7 @@ import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
+import com.hoyoji.hoyoji.project.ProjectEventMemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectEventListFragment;
@@ -527,7 +528,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-						openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
+							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
+							openActivityWithFragmentForResult(ProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						} else {
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						}
 					} else {
 						if(mSelectorFieldEvent.getText() != null && !"".equals(mSelectorFieldEvent.getText())){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
