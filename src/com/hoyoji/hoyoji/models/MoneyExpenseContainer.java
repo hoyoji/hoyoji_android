@@ -700,10 +700,10 @@ public class MoneyExpenseContainer extends HyjModel{
 									//更新老账本分摊支出
 									EventMember oldEventMember;
 									if(apportion.getFriendUserId() != null){
-										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND friendUserId=?", 
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
 												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
 									} else {
-										oldEventMember = new Select().from(ProjectShareAuthorization.class).where("eventId=? AND localFriendId=?", 
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
 												mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
 									}
 									if(oldEventMember != null){
@@ -1079,8 +1079,8 @@ public class MoneyExpenseContainer extends HyjModel{
 			// 更新旧账本的分摊支出
 			oldProjectShareAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
-			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorization.getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(oldProjectShareAuthorization.getActualTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 			oldProjectShareAuthorizationEditor.save();
 		} else {
 			// 把别人从分摊成员中移除：
@@ -1092,16 +1092,33 @@ public class MoneyExpenseContainer extends HyjModel{
 			oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 			
-			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
-			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalExpense(oldProjectShareAuthorization.getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalExpense(oldProjectShareAuthorization.getActualTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 		
-			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalBorrow(oldProjectShareAuthorization.getActualTotalBorrow() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 			oldProjectShareAuthorizationEditor.save();
 			
 			oldProjectShareAuthorization = mMoneyExpenseContainerEditor.getOldSelfProjectShareAuthorization();
 			oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
-			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+			oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalLend(oldProjectShareAuthorization.getActualTotalLend() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
 			oldProjectShareAuthorizationEditor.save();
+		}
+		
+		if(mMoneyExpenseContainerEditor.getModel().getEventId() != null){
+			//更新老账本分摊支出
+			EventMember oldEventMember;
+			if(apportion.getFriendUserId() != null){
+				oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
+						mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
+			} else {
+				oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
+						mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
+			}
+			if(oldEventMember != null){
+				HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
+				oldEventMemberEditor.getModelCopy().setApportionedTotalExpense(oldEventMember.getApportionedTotalExpense() - (apportion.getAmount0() * apportion.getMoneyExpenseContainer().getExchangeRate()));
+				oldEventMemberEditor.save();
+			}
 		}
 		
 		MoneyExpense moneyExpense = new Select().from(MoneyExpense.class).where("moneyExpenseApportionId=?", apportion.getId()).executeSingle();
