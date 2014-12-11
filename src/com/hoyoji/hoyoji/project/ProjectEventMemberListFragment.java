@@ -152,7 +152,8 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			EventMember memberToBeDetermined = EventMember.load(EventMember.class, id);
-			if(memberToBeDetermined.getToBeDetermined()){
+			if(memberToBeDetermined.getOwnerUserId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId()) 
+					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
