@@ -320,7 +320,7 @@ public class MessageDownloadService extends Service {
 				if(pem == null){
 					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Accept")) {
-					pem.setState("Accept");
+					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
 					

@@ -141,6 +141,8 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 				}
 			}
 		} else {
+			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
 	}
