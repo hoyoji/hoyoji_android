@@ -1041,12 +1041,14 @@ public class MainActivity extends HyjUserActivity {
 											recordData.put("__addIfUnchangedUpdateTime", moneyDepositReturnApportion.getMoneyDepositReturnContainer().getLastServerUpdateTime());
 										} else if(model instanceof MoneyExpenseApportion){
 											MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
+											recordData.put("eventId", moneyExpenseApportion.getMoneyExpenseContainer().getEventId());
 											recordData.put("isImported", moneyExpenseApportion.getMoneyExpenseContainer().getIsImported());
 											recordData.put("__addIfUnchangedType", "MoneyExpenseContainer");
 											recordData.put("__addIfUnchangedId", moneyExpenseApportion.getMoneyExpenseContainer().getId());
 											recordData.put("__addIfUnchangedUpdateTime", moneyExpenseApportion.getMoneyExpenseContainer().getLastServerUpdateTime());
 										} else if(model instanceof MoneyIncomeApportion){
 											MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
+											recordData.put("eventId", moneyIncomeApportion.getMoneyIncomeContainer().getEventId());
 											recordData.put("isImported", moneyIncomeApportion.getMoneyIncomeContainer().getIsImported());
 											recordData.put("__addIfUnchangedType", "MoneyIncomeContainer");
 											recordData.put("__addIfUnchangedId", moneyIncomeApportion.getMoneyIncomeContainer().getId());
@@ -1156,6 +1158,13 @@ public class MainActivity extends HyjUserActivity {
 										recordData.put("moneyAccountId", ((MoneyApportion)model).getMoneyAccountId());
 										recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 										recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
+										if(model instanceof MoneyExpenseApportion){
+											MoneyExpenseApportion moneyExpenseApportion = (MoneyExpenseApportion)model;
+											recordData.put("eventId", moneyExpenseApportion.getMoneyExpenseContainer().getEventId());
+										} else if(model instanceof MoneyIncomeApportion){
+											MoneyIncomeApportion moneyIncomeApportion = (MoneyIncomeApportion)model;
+											recordData.put("eventId", moneyIncomeApportion.getMoneyIncomeContainer().getEventId());
+										}
 									} else if(model instanceof MoneyExpenseContainer){
 										recordData.put("currencyId", ((MoneyExpenseContainer)model).getMoneyAccount().getCurrencyId());
 									} else if(model instanceof MoneyIncomeContainer){

@@ -3,6 +3,8 @@ package com.hoyoji.hoyoji.models;
 import java.util.Iterator;
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
@@ -231,5 +233,13 @@ public class Event extends HyjModel {
 	public void setLastClientUpdateTime(Long mLastClientUpdateTime){
 		this.mLastClientUpdateTime = mLastClientUpdateTime;
 	}	
-	
+
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+		
+		jsonObj.remove("incomeTotal");
+		jsonObj.remove("expenseTotal");
+		
+		return jsonObj;
+	}
 }

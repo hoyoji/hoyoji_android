@@ -2,6 +2,8 @@ package com.hoyoji.hoyoji.models;
 
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 import android.provider.BaseColumns;
 
 import com.activeandroid.annotation.Column;
@@ -224,5 +226,12 @@ public class EventMember extends HyjModel {
 	}
 
 
-	
+	public JSONObject toJSON() {
+		final JSONObject jsonObj = super.toJSON();
+		
+		jsonObj.remove("apportionedTotalIncome");
+		jsonObj.remove("apportionedTotalExpense");
+		
+		return jsonObj;
+	}
 }
