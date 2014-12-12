@@ -24,98 +24,56 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/app_listview_no_content" /> -->
 
-   <!--  <View
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_gravity="bottom"
         android:layout_marginBottom="48dip"
-        android:background="@drawable/line_divider" /> -->
-
+        android:background="@color/hoyoji_lightgray" />
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:layout_gravity="bottom|center_horizontal">
+        android:layout_gravity="bottom">
 
         <Button
-            android:id="@+id/homeListFragment_action_money_expense"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_circle_20"
-            android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_expense" />
-
-        <Button
-            android:id="@+id/homeListFragment_action_money_income"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_circle_20"
-            android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_income" />
-
- <!--        <Button
-            android:id="@+id/homeListFragment_action_money_transfer"
+            android:id="@+id/homeListFragment_action_money_account"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="0dp"
             android:layout_weight="1"
-            android:background="@drawable/round_button"
             android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_transfer" /> -->
-
-        <!-- <Button
-            android:id="@+id/homeListFragment_action_money_debt"
+            android:textSize="16sp"
+    		android:background="?attr/actionBarItemBackground"
+            android:text="@string/homeListFragment_action_money_account" />
+        
+        <Button
+            android:id="@+id/homeListFragment_action_money_transaction"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="0dp"
             android:layout_weight="1"
-            android:background="@drawable/round_button"
             android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_debt" /> -->
-        <Button
-            android:id="@+id/homeListFragment_action_money_template"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_circle_20"
-            android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_template" />
+            android:textSize="16sp"
+    		android:background="?attr/actionBarItemBackground"
+            android:text="@string/homeListFragment_action_money_transaction" />
         
         <Button
-            android:id="@+id/homeListFragment_action_money_topup"
-            android:layout_width="45dp"
+            android:id="@+id/homeListFragment_action_friend"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
             android:layout_weight="1"
-            android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="14sp"
-            android:text="@string/app_action_money_topup" />
+            android:textSize="16sp"
+    		android:background="?attr/actionBarItemBackground"
+            android:text="@string/homeListFragment_action_friend" />
         
         <Button
-            android:id="@+id/homeListFragment_action_more"
-            android:layout_width="45dp"
+            android:id="@+id/homeListFragment_action_message"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
             android:layout_weight="1"
-            android:background="@drawable/button_circle_20"
             android:padding="0dp"
-            android:textSize="25sp"
-            android:text="\u2505" />
+            android:textSize="16sp"
+    		android:background="?attr/actionBarItemBackground"
+            android:text="@string/homeListFragment_action_message" />
 
     </LinearLayout>
 

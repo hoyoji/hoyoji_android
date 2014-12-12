@@ -83,7 +83,7 @@ public class MainActivity extends HyjUserActivity {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ChangeObserver mChangeObserver;
-	MessageChangeObserver mMessageChangeObserver;
+//	MessageChangeObserver mMessageChangeObserver;
 	ViewPager mViewPager;
 
 
@@ -112,15 +112,15 @@ public class MainActivity extends HyjUserActivity {
 										ClientSyncRecord.class, null), true,
 								mChangeObserver);
 			}
-			if (mMessageChangeObserver == null) {
-				mMessageChangeObserver = new MessageChangeObserver();
-				this.getContentResolver()
-						.registerContentObserver(
-								ContentProvider.createUri(
-										Message.class, null), true,
-								mMessageChangeObserver);
-			}
-			updateMessageCount();
+//			if (mMessageChangeObserver == null) {
+//				mMessageChangeObserver = new MessageChangeObserver();
+//				this.getContentResolver()
+//						.registerContentObserver(
+//								ContentProvider.createUri(
+//										Message.class, null), true,
+//								mMessageChangeObserver);
+//			}
+//			updateMessageCount();
 		}
 	}
 
@@ -212,7 +212,7 @@ public class MainActivity extends HyjUserActivity {
 			}
 		});
 		
-		mViewPager.setCurrentItem(2, false);
+		mViewPager.setCurrentItem(1, false);
 
 	}
 
@@ -393,50 +393,50 @@ public class MainActivity extends HyjUserActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			Fragment fragment = null;
 			switch (position) {
+//			case 0:
+//				fragment = new MoneyAccountListFragment();
+//				break;
 			case 0:
-				fragment = new MoneyAccountListFragment();
-				break;
-			case 1:
 				fragment = new ProjectListFragment();
 				break;
-			case 2:
+			case 1:
 				fragment = new HomeCalendarGridFragment();
 				break;
-			case 3:
+			case 2:
 				fragment = new HomeEventListFragment();
 				break;
-			case 4:
-				fragment = new MessageListFragment();
-				break;
+//			case 4:
+//				fragment = new MessageListFragment();
+//				break;
 			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			return 5;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
 			switch (position) {
+//			case 0:
+//				return getString(
+//						R.string.mainActivity_section_title_moneyaccount)
+//						.toUpperCase(l);
 			case 0:
-				return getString(
-						R.string.mainActivity_section_title_moneyaccount)
-						.toUpperCase(l);
-			case 1:
 				return getString(R.string.mainActivity_section_title_project)
 						.toUpperCase(l);
-			case 2:
+			case 1:
 				return getString(R.string.mainActivity_section_title_home)
 						.toUpperCase(l);
-			case 3:
+			case 2:
 				return getString(R.string.mainActivity_section_title_event)
 						.toUpperCase(l);
-			case 4:
-				return getString(R.string.mainActivity_section_title_message)
-						.toUpperCase(l);
+//			case 4:
+//				return getString(R.string.mainActivity_section_title_message)
+//						.toUpperCase(l);
 			}
 			return null;
 		}
@@ -549,27 +549,27 @@ public class MainActivity extends HyjUserActivity {
 		}
 	}
 	
-	private class MessageChangeObserver extends ContentObserver {
-		public MessageChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
-
-//		@Override
-//		public void onChange(boolean selfChange, Uri uri) {
-//			super.onChange(selfChange, uri);
+//	private class MessageChangeObserver extends ContentObserver {
+//		public MessageChangeObserver() {
+//			super(new Handler());
 //		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			updateMessageCount();
-		}
-	}
+//
+//		@Override
+//		public boolean deliverSelfNotifications() {
+//			return true;
+//		}
+//
+////		@Override
+////		public void onChange(boolean selfChange, Uri uri) {
+////			super.onChange(selfChange, uri);
+////		}
+//
+//		@Override
+//		public void onChange(boolean selfChange) {
+//			super.onChange(selfChange);
+//			updateMessageCount();
+//		}
+//	}
 
 //	@Override
 //	protected void onNewIntent(Intent intent) {
@@ -596,10 +596,10 @@ public class MainActivity extends HyjUserActivity {
 			this.getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
 		}
-		if (mMessageChangeObserver != null) {
-			this.getContentResolver()
-			.unregisterContentObserver(mMessageChangeObserver);
-		}
+//		if (mMessageChangeObserver != null) {
+//			this.getContentResolver()
+//			.unregisterContentObserver(mMessageChangeObserver);
+//		}
 		super.onDestroy();
 	}
 	
@@ -833,45 +833,45 @@ public class MainActivity extends HyjUserActivity {
 //		}
 	}
 
-	public void updateMessageCount() {
-		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-			
-			@Override
-			public void finishCallback(final Object object) {
-				int count = (Integer)object;
-				mTabStrip.setBadgeCount(4, count);
-			}
-	
-			@Override
-			public void errorCallback(final Object object) {
-			}
-	
-			@Override
-			public Object doInBackground(String... string) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				int count = 0;
-				if (HyjApplication.getInstance().getCurrentUser() != null) {
-					Cursor cursor = Cache.openDatabase().rawQuery(
-							"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
-							null);
-					if (cursor != null) {
-						cursor.moveToFirst();
-						count = cursor.getInt(0);
-						cursor.close();
-						cursor = null;
-					}
-				}
-				return count;
-				
-			}
-		});
-		
-	}
+//	public void updateMessageCount() {
+//		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//			
+//			@Override
+//			public void finishCallback(final Object object) {
+//				int count = (Integer)object;
+//				mTabStrip.setBadgeCount(4, count);
+//			}
+//	
+//			@Override
+//			public void errorCallback(final Object object) {
+//			}
+//	
+//			@Override
+//			public Object doInBackground(String... string) {
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				
+//				int count = 0;
+//				if (HyjApplication.getInstance().getCurrentUser() != null) {
+//					Cursor cursor = Cache.openDatabase().rawQuery(
+//							"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
+//							null);
+//					if (cursor != null) {
+//						cursor.moveToFirst();
+//						count = cursor.getInt(0);
+//						cursor.close();
+//						cursor = null;
+//					}
+//				}
+//				return count;
+//				
+//			}
+//		});
+//		
+//	}
 	
 	public static void uploadData(final boolean downloadData, Activity activity, MenuItem mSyncButton, HyjAsyncTaskCallbacks uploadCallback) {
 		if (HyjApplication.getInstance().getIsSyncing()) {

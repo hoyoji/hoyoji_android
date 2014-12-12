@@ -26,11 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="48dip"
+        android:layout_marginBottom="40dip"
         android:background="@color/hoyoji_lightgray" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
         android:layout_gravity="bottom" >
 
         <Button
@@ -41,6 +41,7 @@
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:padding="0dp"
+            android:textSize="16sp"
             android:text="@string/all_message" />
 
         <Button
@@ -51,6 +52,7 @@
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:padding="0dp"
+            android:textSize="16sp"
             android:text="@string/un_read_message" />
      </LinearLayout>
 </FrameLayout>

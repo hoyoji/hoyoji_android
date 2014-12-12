@@ -43,7 +43,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
 	
 	private ImageButton mButtonExpandMore;
-	private LinearLayout mLinearLayoutExpandMore;
+	private LinearLayout mLinearLayoutExpandMore;   
 	
 	@Override
 	public Integer useContentView() {

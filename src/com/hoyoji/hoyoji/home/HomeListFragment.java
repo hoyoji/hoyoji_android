@@ -200,30 +200,30 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
     		}
 		});
 		
-		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				PopupMenu popup = new PopupMenu(getActivity(), v);
-				MenuInflater inflater = popup.getMenuInflater();
-				inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
-				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
-							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
-							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
-							openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, null);
-						}
-						return false;
-					}
-				});
-				popup.show();
-			}
-		});
+//		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				PopupMenu popup = new PopupMenu(getActivity(), v);
+//				MenuInflater inflater = popup.getMenuInflater();
+//				inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
+//				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//					@Override
+//					public boolean onMenuItemClick(MenuItem item) {
+//						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
+//							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, null);
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
+//							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, null);
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
+//							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, null);
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
+//							openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, null);
+//						}
+//						return false;
+//					}
+//				});
+//				popup.show();
+//			}
+//		});
 		
 		getView().findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
 			@Override

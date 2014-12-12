@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="vertical"
-     android:descendantFocusability="blocksDescendants">
-     
- <RelativeLayout
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:padding="10dp">
-     
-		<!-- <TextView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <!--
+             <TextView
 		    android:id="@+id/home_stat_previous_month"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
@@ -19,53 +20,60 @@
 		    android:background="@android:color/transparent"
 		    android:textColor="@color/gainsboro"
 		    android:textSize="25sp"
-		    android:text="\u25C0" /> -->
-     
-		<LinearLayout 
-		    android:id="@+id/home_stat_center"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:orientation="vertical"
-		    android:gravity="center"
-		    android:paddingLeft="10dp"
-		    android:paddingRight="10dp"
-	 		android:layout_centerInParent="true">
-		    <TextView android:id="@+id/home_stat_month"
-				    android:layout_width="wrap_content"
-				    android:layout_height="0dp"
-				    android:layout_weight="2"
-				    android:textSize="15sp"
-		        />
-		    <TextView android:id="@+id/home_stat_year"
-				    android:layout_width="wrap_content"
-				    android:layout_height="0dp"
-				    android:layout_weight="1"
-				    android:textSize="14sp"
-		        />		
-		</LinearLayout>
-		
-		<LinearLayout 
-		    android:id="@+id/home_stat_layout_income"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentLeft="true"
-		    android:layout_toLeftOf="@id/home_stat_center"
-		    android:orientation="vertical"
-		    android:layout_centerVertical="true"
-	 		android:gravity="center_horizontal">
-		    <TextView 
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		        android:text="个人流入"
-            	android:textColor="@android:color/darker_gray"
-		        android:textSize="11sp"/>
-		    <TextView android:id="@+id/home_stat_incomeStat"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="¥0.00"/>
-		</LinearLayout>
-		
-		<!-- <TextView
+		    android:text="\u25C0" />
+        -->
+
+        <LinearLayout
+            android:id="@+id/home_stat_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/home_stat_month"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/home_stat_year"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/home_stat_layout_income"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/home_stat_center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人流入"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/home_stat_incomeStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥0.00" />
+        </LinearLayout>
+
+        <!--
+             <TextView
 		    android:id="@+id/home_stat_next_month"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
@@ -74,42 +82,48 @@
 		    android:background="@android:color/transparent"
 		    android:textColor="@color/gainsboro"
 		    android:textSize="25sp"
-		    android:text="\u25B6" /> -->
+		    android:text="\u25B6" />
+        -->
 
-		<LinearLayout 
-		    android:id="@+id/home_stat_layout_expense"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/home_stat_center"
-		    android:layout_alignParentRight="true"
-		    android:orientation="vertical"
-			android:layout_centerVertical="true"
-	 		android:gravity="center_horizontal">
-		    <TextView 
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		        android:text="个人流出"
-            	android:textColor="@android:color/darker_gray"
-		        android:textSize="11sp"/>
-		    <TextView  android:id="@+id/home_stat_expenseStat"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="¥0.00"/>
-		</LinearLayout>
-		
-	</RelativeLayout>
-       <!--  <TextView
+        <LinearLayout
+            android:id="@+id/home_stat_layout_expense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/home_stat_center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人流出"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/home_stat_expenseStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥0.00" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!--
+             <TextView
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="3dp"
-            android:background="@color/lightgray" /> -->
-	<LinearLayout
+            android:background="@color/lightgray" />
+    -->
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-            android:background="@color/hoyoji_lightgray">
-	    
+        android:background="@color/hoyoji_lightgray" >
+
         <TextView
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
@@ -180,59 +194,75 @@
             android:textColor="@color/hoyoji_red"
             android:textSize="11.0dip" />
     </LinearLayout>
-    <com.hoyoji.android.hyjframework.view.HyjCalendarGrid 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        android:id="@+id/home_calendar_grid"/>
-    <RelativeLayout 
-     android:layout_width="match_parent"
-     android:layout_height="48dp"
-     android:paddingLeft="5dip"
-     android:paddingTop="5dip"
-     android:paddingBottom="5dip"
-     android:descendantFocusability="blocksDescendants"
-     android:background="@color/hoyoji_lightgray">
 
-		<com.hoyoji.android.hyjframework.view.HyjDateTimeView 
-		    android:id="@+id/home_stat_group_date"  
-		    android:layout_width="wrap_content"  
-		    android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-     		android:layout_centerVertical="true"
-			/>
-		
-		<ImageButton
-		    android:id="@+id/home_stat_group_calendarMode"
-		    android:layout_width="45dp"  
-		    android:layout_height="fill_parent"
-			android:layout_alignParentRight="true"
-     		android:layout_centerVertical="true"
-			android:src="@drawable/ic_action_go_to_today"
-			android:background="@android:color/transparent"
-		     />
-		
-		<!-- <com.hoyoji.android.hyjframework.view.HyjNumericView 
-		    android:id="@+id/home_stat_group_expenseTotal"  
-		    android:layout_width="wrap_content"  
-		    android:layout_height="wrap_content"
-     		android:layout_centerVertical="true"
-		    android:paddingRight="5dp"
-		    android:paddingLeft="5dp"
-			android:layout_toLeftOf="@id/home_stat_group_calendarMode"
-	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"
-	    	android:gravity="right" />	
-	    	
-		<com.hoyoji.android.hyjframework.view.HyjNumericView 
-		    android:id="@+id/home_stat_group_incomeTotal"  
-		    android:layout_width="wrap_content"  
-		    android:layout_height="wrap_content"
-     		android:layout_centerVertical="true"
-			android:layout_toLeftOf="@id/home_stat_group_expenseTotal"
-			android:layout_toRightOf="@id/home_stat_group_date"
-	    	android:textSize="12sp"
-	    	android:textColor="@android:color/darker_gray"
-	    	android:gravity="right" />	 -->
-		
- </RelativeLayout>
+    <com.hoyoji.android.hyjframework.view.HyjCalendarGrid
+        android:id="@+id/home_calendar_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/hoyoji_lightgray"
+        android:descendantFocusability="blocksDescendants" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="20dp"
+            android:background="@color/hoyoji_lightgray" >
+
+            <Button
+                android:id="@+id/homeListFragment_action_money_expense"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_circle_17"
+                android:padding="0dp"
+                android:text="@string/app_action_money_expense"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/homeListFragment_action_money_income"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_circle_17"
+                android:padding="0dp"
+                android:text="@string/app_action_money_income"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/homeListFragment_action_money_template"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_circle_17"
+                android:padding="0dp"
+                android:text="@string/app_action_money_template"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/homeListFragment_action_more"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_circle_17"
+                android:padding="0dp"
+                android:text="\u2505"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/home_stat_group_calendarMode"
+            android:layout_width="45dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_go_to_today" />
+    </RelativeLayout>
+
 </LinearLayout>
