@@ -93,14 +93,15 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		Intent intent = getActivity().getIntent();
 		String subTitle = null;
 		final Long project_id = intent.getLongExtra("project_id", -1);
-		if(project_id != -1){
-			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
-			subTitle = mProject.getDisplayName();
-		}
+		
 		final Long event_id = intent.getLongExtra("event_id", -1);
 		if(event_id != -1){
 			mEvent =  new Select().from(Event.class).where("_id=?", event_id).executeSingle();
+			mProject = mEvent.getProject();
 			subTitle = mEvent.getName();
+		}else if(project_id != -1){
+			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
+			subTitle = mProject.getDisplayName();
 		}
 		final Long moneyAccount_id = intent.getLongExtra("moneyAccount_id", -1);
 		if(moneyAccount_id != -1){
