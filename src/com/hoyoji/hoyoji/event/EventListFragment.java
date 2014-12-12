@@ -71,7 +71,7 @@ public class EventListFragment extends HyjUserListFragment {
 		nameView.setText(nullItemName);
 		HyjImageView imageView = (HyjImageView)view.findViewById(R.id.homeListItem_picture);
 		imageView.setBackgroundColor(getResources().getColor(R.color.lightgray));
-		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_person_white));
+		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
 		view.setOnClickListener(new OnClickListener(){
 
 			@Override
