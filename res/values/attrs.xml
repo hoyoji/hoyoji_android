@@ -15,6 +15,7 @@
 	</declare-styleable>  
 	
      <declare-styleable name="HyjTextField">
+       <attr name="minLines" format="integer" />
        <attr name="labelText" format="string" />
        <attr name="editText" format="string" />
        <attr name="hintText" format="string" />

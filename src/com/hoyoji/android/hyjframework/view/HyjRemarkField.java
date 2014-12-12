@@ -20,6 +20,8 @@ public class HyjRemarkField extends LinearLayout {
 	private String mLabelText;
 	private String mEditText;
 	private String mHintText;
+
+	private int mMinLines;
 	
 	private TextView mTextViewLabel;
 	private EditText mEditTextEdit;
@@ -35,6 +37,7 @@ public class HyjRemarkField extends LinearLayout {
 			mLabelText = a.getString(R.styleable.HyjTextField_labelText);
 			mEditText = a.getString(R.styleable.HyjTextField_editText);
 			mHintText = a.getString(R.styleable.HyjTextField_hintText);
+			mMinLines = a.getInt(R.styleable.HyjTextField_minLines, 1);
 			style  = a.getString(R.styleable.HyjTextField_style);
 			if(style == null){
 				style = "";
@@ -52,6 +55,7 @@ public class HyjRemarkField extends LinearLayout {
 			inflater.inflate(R.layout.remark_field, this);
 		mTextViewLabel = (TextView)findViewById(R.id.text_field_label);
 		mEditTextEdit = (EditText)findViewById(R.id.text_field_edit);
+		mEditTextEdit.setMinLines(mMinLines);
 		if(style.equals("no_label")){
 			mTextViewLabel.setVisibility(GONE);
 //			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);

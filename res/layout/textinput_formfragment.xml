@@ -30,7 +30,8 @@
 	        android:hint="请输入内容"
 	        android:minLines="5"
 	        android:singleLine="false"
-	        android:background="#E0E0E0"
+	        android:padding="5dp"
+	        android:background="@color/hoyoji_lightgray"
 	        android:textSize="17sp" >
 
 	    </EditText>

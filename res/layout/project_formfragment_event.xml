@@ -102,6 +102,8 @@
         android:id="@+id/projectEventListFragment_HyjRemarkField_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        hyj:style="top_label"
+        hyj:minLines="3"
         hyj:hintText="@string/projectEventListFragment_hyjRemarkField_hint_description"
         hyj:labelText="@string/projectEventListFragment_hyjRemarkField_description" />
 
