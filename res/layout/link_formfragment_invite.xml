@@ -14,7 +14,7 @@
         android:id="@+id/inviteLinkFormFragment_editText_date"
         hyj:style="left_label"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:gravity="right"
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"

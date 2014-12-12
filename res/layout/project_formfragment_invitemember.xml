@@ -17,17 +17,23 @@
           android:id="@+id/inviteMemberMessageFormFragment_editText_title"
           hyj:style="no_label"
           android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-		  android:layout_marginBottom="10dip"
+          android:layout_height="43dp"
           hyj:labelText="@string/inviteMemberMessageFormFragment_textView_title"
           hyj:hintText="@string/inviteMemberMessageFormFragment_editText_hint_title" />
    
-    
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/line_divider" />
+        
       <com.hoyoji.android.hyjframework.view.HyjRemarkField
           android:id="@+id/inviteMemberMessageFormFragment_editText_detail"
           hyj:style="no_label"
           android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="43dp"
           hyj:hintText="@string/inviteMemberMessageFormFragment_editText_hint_detail"
           hyj:labelText="@string/inviteMemberMessageFormFragment_textView_detail" />
         

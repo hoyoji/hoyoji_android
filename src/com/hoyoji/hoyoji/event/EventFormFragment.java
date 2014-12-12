@@ -43,8 +43,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldStartDate = null;
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
 	
-	private ImageButton mButtonExpandMore;
-	private LinearLayout mLinearLayoutExpandMore;   
+//	private ImageButton mButtonExpandMore;
+//	private LinearLayout mLinearLayoutExpandMore;   
 	
 	@Override
 	public Integer useContentView() {
@@ -119,7 +119,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		} else {
 			mDateTimeFieldDate.setDate(new Date());
 			mDateTimeFieldStartDate.setDate(new Date());
-			mDateTimeFieldEndDate.setDate(new Date());
+			mDateTimeFieldEndDate.setDate(null);
 		}
 
 		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
@@ -138,20 +138,20 @@ public class EventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseContainerFormFragment_expandMore);
-		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
-		mButtonExpandMore.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
-					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
-					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
-				} else {
-					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
-					mLinearLayoutExpandMore.setVisibility(View.GONE);
-				}
-			}
-		});
+//		mLinearLayoutExpandMore = (LinearLayout)getView().findViewById(R.id.moneyExpenseContainerFormFragment_expandMore);
+//		mButtonExpandMore = (ImageButton)getView().findViewById(R.id.expand_more);
+//		mButtonExpandMore.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				if(mLinearLayoutExpandMore.getVisibility() == View.GONE){
+//					mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+//					mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+//				} else {
+//					mButtonExpandMore.setImageResource(R.drawable.ic_action_expand);
+//					mLinearLayoutExpandMore.setVisibility(View.GONE);
+//				}
+//			}
+//		});
 		
 		if(modelId != -1){
 			mSelectorFieldProject.setEnabled(false);
@@ -165,8 +165,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 				}
 			}
 		} else {
-			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
-			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
+//			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
+//			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
 	}
@@ -258,8 +258,12 @@ public class EventFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				long _id = data.getLongExtra("MODEL_ID", -1);
 				Project project = Project.load(Project.class, _id);
-				mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
-				mSelectorFieldProject.setModelId(project.getId());
+				if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+					mSelectorFieldProject.setModelId(project.getId());
+				} else {
+					HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+				}
 			}
 			break;
 

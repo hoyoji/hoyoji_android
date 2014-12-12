@@ -13,7 +13,7 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/currencyFormFragment_textField_name"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/currencyFormFragment_editText_hint_name"
         hyj:labelText="@string/currencyFormFragment_textView_name" />
 
@@ -29,7 +29,7 @@
    <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/currencyFormFragment_textField_symbol"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/currencyFormFragment_editText_hint_symbol"
         hyj:labelText="@string/currencyFormFragment_textView_symbol" />
     
@@ -44,7 +44,7 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/currencyFormFragment_textField_code"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/currencyFormFragment_editText_hint_code"
         hyj:labelText="@string/currencyFormFragment_textView_code" />
 

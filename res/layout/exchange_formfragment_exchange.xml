@@ -13,7 +13,7 @@
    	<com.hoyoji.android.hyjframework.view.HyjSelectorField 
            android:id="@+id/exchangeFormFragment_editText_localCurrency"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" 
+	    android:layout_height="43dp" 
            hyj:labelText="@string/exchangeFormFragment_textView_localCurrency"
            hyj:hintText="@string/exchangeFormFragment_editText_hint_localCurrency"
        />
@@ -30,7 +30,7 @@
    	<com.hoyoji.android.hyjframework.view.HyjSelectorField 
            android:id="@+id/exchangeFormFragment_editText_foreignCurrency"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" 
+	    android:layout_height="43dp" 
            hyj:labelText="@string/exchangeFormFragment_textView_foreignCurrency"
            hyj:hintText="@string/exchangeFormFragment_editText_hint_foreignCurrency"
        />
@@ -50,7 +50,7 @@
    	   	<com.hoyoji.android.hyjframework.view.HyjNumericField
            android:id="@+id/exchangeFormFragment_editText_rate"
 	       android:layout_width="match_parent"
-	       android:layout_height="wrap_content" 
+	       android:layout_height="43dp" 
            hyj:labelText="@string/exchangeFormFragment_textView_rate"
            hyj:hintText="@string/exchangeFormFragment_editText_hint_rate">
        
@@ -60,7 +60,7 @@
    	   	<ImageView
            	android:id="@+id/exchangeFormFragment_imageView_refresh_rate"
    	   	    android:layout_width="wrap_content"
-   	   	    android:layout_height="wrap_content" 
+   	   	    android:layout_height="43dp" 
    	   	    android:src="@drawable/ic_action_refresh_rotate"
    	   	    android:layout_gravity="right"/>
      	   	</FrameLayout>

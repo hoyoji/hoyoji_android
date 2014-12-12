@@ -16,7 +16,7 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField 
             android:id="@+id/projectFormFragment_textField_projectName"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
+		    android:layout_height="43dp" 
             hyj:labelText="@string/projectFormFragment_textView_projectName"
             hyj:hintText="@string/projectFormFragment_editText_hint_projectName"
         >

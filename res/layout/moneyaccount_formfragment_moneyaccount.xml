@@ -17,7 +17,7 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/moneyAccountFormFragment_textField_name"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_name"
         hyj:labelText="@string/moneyAccountFormFragment_textView_name" />
 
@@ -33,7 +33,7 @@
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
         android:id="@+id/moneyAccountFormFragment_selectorField_currency"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currency"
         hyj:labelText="@string/moneyAccountFormFragment_textView_currency" />
     
@@ -49,7 +49,7 @@
     <com.hoyoji.android.hyjframework.view.HyjNumericField
         android:id="@+id/moneyAccountFormFragment_textField_currentBalance"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_currentBalance"
         hyj:labelText="@string/moneyAccountFormFragment_textView_currentBalance" />
 
@@ -72,7 +72,7 @@
     <com.hoyoji.android.hyjframework.view.HyjSpinnerField
         android:id="@+id/moneyAccountFormFragment_textField_accountType"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountType"
         hyj:labelText="@string/moneyAccountFormFragment_textView_accountType" >
     </com.hoyoji.android.hyjframework.view.HyjSpinnerField>
@@ -90,7 +90,7 @@
     <LinearLayout
         android:id="@+id/moneyAccountFormFragment_linearLayout_autoHide"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:visibility="gone" >
 
         <TextView
@@ -142,7 +142,7 @@
     <com.hoyoji.android.hyjframework.view.HyjSelectorField
         android:id="@+id/moneyAccountFormFragment_selectorField_friend"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:visibility="gone"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_friend"
         hyj:labelText="@string/moneyAccountFormFragment_textView_friend" />
@@ -159,7 +159,7 @@
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_accountNumber"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_accountNumber"
         hyj:labelText="@string/moneyAccountFormFragment_textView_accountNumber"
         android:visibility="gone" />
@@ -177,7 +177,7 @@
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_bankAddress"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_bankAddress"
         hyj:labelText="@string/moneyAccountFormFragment_textView_bankAddress"
         android:visibility="gone" />
@@ -195,7 +195,7 @@
     <com.hoyoji.android.hyjframework.view.HyjRemarkField
         android:id="@+id/moneyAccountFormFragment_textField_remark"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/moneyAccountFormFragment_editText_hint_remark"
         hyj:labelText="@string/moneyAccountFormFragment_textView_remark" />
 

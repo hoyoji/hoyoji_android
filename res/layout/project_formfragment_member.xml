@@ -17,7 +17,7 @@
         <com.hoyoji.android.hyjframework.view.HyjTextField
             android:id="@+id/memberFormFragment_textField_projectName"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="43dp"
             hyj:labelText="@string/memberFormFragment_textView_projectName" />
 
         <View
@@ -31,7 +31,7 @@
         <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/memberFormFragment_selectorField_friend"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="43dp"
             hyj:hintText="@string/memberFormFragment_editText_hint_friend"
             hyj:labelText="@string/memberFormFragment_textView_friend" />
 
