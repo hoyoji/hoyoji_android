@@ -81,6 +81,11 @@ public class Event extends HyjModel {
 		}else{
 			modelEditor.removeValidationError("date");
 		}
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
 		if(this.getStartDate() == null){
 			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_hint_startDate);
 		}else{
@@ -136,6 +141,14 @@ public class Event extends HyjModel {
 			return null;
 		}
 		return getModel(Project.class, mProjectId);
+	}
+	
+	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+		} else {
+			this.mProjectId = mProject.getId();
+		}
 	}
 
 	public String getProjectId() {
