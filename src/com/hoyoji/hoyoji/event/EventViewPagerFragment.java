@@ -7,7 +7,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
@@ -15,6 +22,7 @@ import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class EventViewPagerFragment extends HyjUserFragment {
@@ -35,7 +43,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.viewpager_tabstrip;
+		return R.layout.event_viewpager_tabstrip;
 	}
 	
 	@Override
@@ -95,6 +103,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
+		mViewPager.setCurrentItem(1);
 		
 		String subTitle = null;
 		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
@@ -102,6 +111,24 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			Event event = HyjModel.load(Event.class, model_id);
 			if(event != null){
 				subTitle = event.getName();
+				EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(eventMember != null && eventMember.getState().equalsIgnoreCase("UnSignUp")){
+					final Button btnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
+					btnSignUpEvent.setVisibility(View.VISIBLE);
+					btnSignUpEvent.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v) {
+
+							btnSignUpEvent.setVisibility(View.GONE);
+//							mTabStrip.setPadding(mTabStrip.getPaddingLeft(), 0, mTabStrip.getPaddingRight(), mTabStrip.getPaddingBottom());
+							mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+							HyjUtil.displayToast("报名成功");
+						}
+					});
+//					mTabStrip.setPadding(mTabStrip.getPaddingLeft(), (int) (70*mDisplayMetrics.density), mTabStrip.getPaddingRight(), mTabStrip.getPaddingBottom());
+					mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+				}
+				
 			}
 			if(subTitle != null){
 				((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
@@ -134,9 +161,9 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneySearchListFragment();
-			case 1 :
 				return new EventMemberListFragment();
+			case 1 :
+				return new MoneySearchListFragment();
 			case 2:
 				return new EventFormFragment();
 			}
@@ -152,9 +179,9 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "流水";
-			case 1 :
 				return "成员";
+			case 1 :
+				return "流水";
 			case 2:
 				return "资料";
 			}

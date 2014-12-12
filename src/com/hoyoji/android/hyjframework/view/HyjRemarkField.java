@@ -67,11 +67,11 @@ public class HyjRemarkField extends LinearLayout {
 			
 			mTextViewLabel.setLayoutParams(layoutParams);
 			mEditTextEdit.setLayoutParams(layoutParams);
-			
+			mEditTextEdit.setPadding(5, 5, 5, 5);
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
 			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
-			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
+//			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);
