@@ -18,9 +18,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
@@ -30,12 +33,11 @@ import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
-import com.hoyoji.android.hyjframework.view.HyjNumericView;
+import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
@@ -55,6 +57,36 @@ public class EventListFragment extends HyjUserListFragment {
 	@Override
 	public Integer useOptionsMenuView() {
 		return R.menu.project_listfragment_event;
+	}
+	
+	@Override
+	protected View useHeaderView(Bundle savedInstanceState){
+		Intent intent = getActivity().getIntent();
+		String nullItemName = intent.getStringExtra("NULL_ITEM");
+		if(nullItemName == null){
+			return null;
+		}
+		RelativeLayout view =  (RelativeLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_listitem_row, null);
+		TextView nameView = (TextView)view.findViewById(R.id.homeListItem_title);
+		nameView.setText(nullItemName);
+		HyjImageView imageView = (HyjImageView)view.findViewById(R.id.homeListItem_picture);
+		imageView.setBackgroundColor(getResources().getColor(R.color.lightgray));
+		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+		view.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(getActivity().getCallingActivity() != null){
+					Intent intent = new Intent();
+					intent.putExtra("MODEL_ID", -1);
+					intent.putExtra("MODEL_TYPE", "Event");
+					getActivity().setResult(Activity.RESULT_OK, intent);
+					getActivity().finish();
+				}
+			}
+			
+		});
+		return view;
 	}
 
 	@Override

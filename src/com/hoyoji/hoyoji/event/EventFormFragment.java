@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.event;
 
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,27 +16,33 @@ import android.widget.LinearLayout;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
+import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class EventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
+	private final static int GET_PROJECT_ID = 0;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
-	private HyjTextField mProjectName = null;
-	
+//	private HyjTextField mProjectName = null;
+	private HyjSelectorField mSelectorFieldProject;
 	private HyjRemarkField mRemarkFieldDescription = null;
 	
 	private HyjDateTimeField mDateTimeFieldDate = null;
@@ -54,7 +61,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		Event event;
-		Project project;
+		Project project = null;
 
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -68,9 +75,13 @@ public class EventFormFragment extends HyjUserFormFragment {
 				project = Project.load(Project.class, project_id);
 			} else {
 				String projectId = intent.getStringExtra("PROJECTID");
-				project = Project.getModel(Project.class, projectId);
+				if(projectId != null) {
+					project = Project.getModel(Project.class, projectId);
+				}
 			}
-			event.setProjectId(project.getId());
+			if (project != null) {
+				event.setProjectId(project.getId());
+			}
 		}
 		mEventEditor = event.newModelEditor();
 		
@@ -81,9 +92,27 @@ public class EventFormFragment extends HyjUserFormFragment {
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_name);
 		mTextFieldName.setText(event.getName());
 		
-		mProjectName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_projectName);
-		mProjectName.setText(project.getDisplayName());
-		mProjectName.setEnabled(false);
+//		mProjectName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_projectName);
+//		if (project != null) {
+//			mProjectName.setText(project.getDisplayName());
+//		}
+//		mProjectName.setEnabled(false);
+		
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.projectEventListFragment_hyjSelectorField_projectName);
+
+		if (project != null) {
+			mSelectorFieldProject.setModelId(project.getId());
+			mSelectorFieldProject.setText(project.getDisplayName() + "("+ project.getCurrencyId() + ")");
+		}
+		mSelectorFieldProject.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventFormFragment.this.openActivityWithFragmentForResult(
+								ProjectListFragment.class,
+								R.string.projectListFragment_title_select_project,
+								null, GET_PROJECT_ID);
+			}
+		});
 		
 		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_startDate);
 		
@@ -131,6 +160,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		});
 		
 		if(modelId != -1){
+			mSelectorFieldProject.setEnabled(false);
 			if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				mDateTimeFieldEndDate.setEnabled(false);
 				mDateTimeFieldStartDate.setEnabled(false);
@@ -150,13 +180,18 @@ public class EventFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    if(mEventEditor != null && !mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-	    	hideSaveAction();
-	    }
+	    Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		if (modelId != -1) {
+		    if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		    	hideSaveAction();
+		    }
+		}
 	}
 	
 	private void fillData() {
 		Event modelCopy = (Event) mEventEditor.getModelCopy();
+		modelCopy.setProjectId(mSelectorFieldProject.getModelId());
 		modelCopy.setDate(mDateTimeFieldDate.getTime());
 		modelCopy.setStartDate(mDateTimeFieldStartDate.getTime());
 		modelCopy.setEndDate(mDateTimeFieldEndDate.getTime());
@@ -167,6 +202,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private void showValidatioErrors() {
 		HyjUtil.displayToast(R.string.app_validation_error);
 
+		mSelectorFieldProject.setError(mEventEditor.getValidationError("project"));
 		mTextFieldName.setError(mEventEditor.getValidationError("name"));
 		mDateTimeFieldStartDate.setError(mEventEditor.getValidationError("startDate"));
 		mDateTimeFieldEndDate.setError(mEventEditor.getValidationError("endDate"));
@@ -222,6 +258,14 @@ public class EventFormFragment extends HyjUserFormFragment {
 			if (resultCode == Activity.RESULT_OK) {
 				String text = data.getStringExtra("TEXT");
 				mRemarkFieldDescription.setText(text);
+			}
+			break;
+		case GET_PROJECT_ID:
+			if (resultCode == Activity.RESULT_OK) {
+				long _id = data.getLongExtra("MODEL_ID", -1);
+				Project project = Project.load(Project.class, _id);
+				mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+				mSelectorFieldProject.setModelId(project.getId());
 			}
 			break;
 

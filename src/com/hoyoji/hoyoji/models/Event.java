@@ -71,6 +71,11 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
 		if(this.getName() == null || "".equals(this.getName())){
 			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
 		} else {
@@ -136,6 +141,14 @@ public class Event extends HyjModel {
 			return null;
 		}
 		return getModel(Project.class, mProjectId);
+	}
+	
+	public void setProject(Project mProject) {
+		if(mProject == null){
+			this.mProjectId = null;
+		} else {
+			this.mProjectId = mProject.getId();
+		}
 	}
 
 	public String getProjectId() {

@@ -58,11 +58,18 @@
         android:background="@drawable/line_divider" 
         />
      
-     <com.hoyoji.android.hyjframework.view.HyjTextField
+     <!-- <com.hoyoji.android.hyjframework.view.HyjTextField
             android:id="@+id/projectEventListFragment_textField_projectName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             hyj:labelText="@string/projectEventListFragment_textView_projectName" />
+      -->
+     <com.hoyoji.android.hyjframework.view.HyjSelectorField
+            android:id="@+id/projectEventListFragment_hyjSelectorField_projectName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            hyj:hintText="@string/projectEventListFragment_hyjSelectorField_hint_projectName"
+            hyj:labelText="@string/projectEventListFragment_hyjSelectorField_projectName" />
      
      <View 
         android:id="@id/field_separator"

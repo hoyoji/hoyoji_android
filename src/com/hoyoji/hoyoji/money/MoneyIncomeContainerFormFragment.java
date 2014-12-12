@@ -245,6 +245,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					
 					Bundle bundle = new Bundle();
 					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
 					
 					MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
 				
@@ -1899,30 +1900,38 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
              case GET_EVENT_ID:
      			if (resultCode == Activity.RESULT_OK) {
      				long _id = data.getLongExtra("MODEL_ID", -1);
-     				Event event = Event.load(Event.class, _id);
-     				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", event.getProject().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-     				
-     				if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
-     					HyjUtil.displayToast(R.string.app_permission_no_addnew);
-     					return;
-     				}else if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
-     					HyjUtil.displayToast(R.string.app_permission_no_edit);
-     					return;
-     				}
-     				
-     				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyExpenseApportion.class);
-    				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-
-     				if( event.getProject().getFinancialOwnerUserId() != null){
-     					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
-     					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
-     				} else {
-     					mSelectorFieldFinancialOwner.setModelId(null);
-     					mSelectorFieldFinancialOwner.setText(null);
-     				}
-     					
-     				mSelectorFieldEvent.setText(event.getName());
-     				mSelectorFieldEvent.setModelId(event.getId());
+     				if(_id == -1){
+    					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+    					mSelectorFieldEvent.setText(null);
+    					mSelectorFieldEvent.setModelId(null);
+    					mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
+    					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+    				} else {
+	     				Event event = Event.load(Event.class, _id);
+	     				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", event.getProject().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	     				
+	     				if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
+	     					HyjUtil.displayToast(R.string.app_permission_no_addnew);
+	     					return;
+	     				}else if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
+	     					HyjUtil.displayToast(R.string.app_permission_no_edit);
+	     					return;
+	     				}
+	     				
+	     				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyExpenseApportion.class);
+	    				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+	
+	     				if( event.getProject().getFinancialOwnerUserId() != null){
+	     					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+	     					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+	     				} else {
+	     					mSelectorFieldFinancialOwner.setModelId(null);
+	     					mSelectorFieldFinancialOwner.setText(null);
+	     				}
+	     					
+	     				mSelectorFieldEvent.setText(event.getName());
+	     				mSelectorFieldEvent.setModelId(event.getId());
+    				}
      			}
      			break;
              case GET_FRIEND_ID:

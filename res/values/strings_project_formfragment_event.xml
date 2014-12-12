@@ -20,7 +20,8 @@
     <string name="projectEventListFragment_hyjDateTimeField_endDate">结束时间</string>
     <string name="projectEventListFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
     
-    <string name="projectEventListFragment_textView_projectName">活动账本</string>
+    <string name="projectEventListFragment_hyjSelectorField_projectName">活动账本</string>
+    <string name="projectEventListFragment_hyjSelectorField_hint_projectName">请选择活动账本</string>
     
     <string name="projectEventListFragment_hyjRemarkField_hint_description">请输入活动内容</string>
     <string name="projectEventListFragment_hyjRemarkField_description">活动内容</string>
