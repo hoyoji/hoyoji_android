@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.event;
 
 import java.util.Date;
 
@@ -29,7 +29,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
-public class ProjectEventFormFragment extends HyjUserFormFragment {
+public class EventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
 
 	private HyjModelEditor<Event> mEventEditor = null;
@@ -108,7 +108,7 @@ public class ProjectEventFormFragment extends HyjUserFormFragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("TEXT", mRemarkFieldDescription.getText());
 				bundle.putString("HINT", "请输入" + mRemarkFieldDescription.getLabelText());
-				ProjectEventFormFragment.this.openActivityWithFragmentForResult(
+				EventFormFragment.this.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
 								R.string.projectEventListFragment_hyjRemarkField_hint_description,
 								bundle, GET_REMARK);

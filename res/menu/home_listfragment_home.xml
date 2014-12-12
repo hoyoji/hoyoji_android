@@ -115,6 +115,10 @@
                 android:title="账务报表"
                 hoyoji:showAsAction="never"/>
             <item
+		        android:id="@+id/friendListFragment_action_friend_management"
+		        android:title="好友管理"
+		        hoyoji:showAsAction="never"/>
+            <item
                 android:id="@+id/homeListFragment_action_currency"
                 android:title="币种汇率"
                 hoyoji:showAsAction="never"/>
@@ -123,7 +127,7 @@
                 android:title="收支分类"
                 hoyoji:showAsAction="never"/>
             <item
-		        android:id="@+id/friendListFragment_action_friend_invite_linksmanage"
+		        android:id="@+id/inviteLinkListFragment_action_invitelinks_management"
 		        android:title="链接管理"
 		        hoyoji:showAsAction="never"/>
             <item

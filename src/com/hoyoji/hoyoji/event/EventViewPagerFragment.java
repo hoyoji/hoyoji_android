@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.event;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,8 +18,9 @@ import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectMoneySearchListFragment;
 
-public class ProjectEventViewPagerFragment extends HyjUserFragment {
+public class EventViewPagerFragment extends HyjUserFragment {
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -138,9 +139,9 @@ public class ProjectEventViewPagerFragment extends HyjUserFragment {
 			case 0 :
 				return new ProjectMoneySearchListFragment();
 			case 1 :
-				return new ProjectEventMemberListFragment();
+				return new EventMemberListFragment();
 			case 2:
-				return new ProjectEventFormFragment();
+				return new EventFormFragment();
 			}
 			return null;
 		}

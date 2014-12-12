@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.event;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
-public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
+public class EventMemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 1;
 	private static final int TAG_MEMBER_IS_LOCAL_FRIEND = R.id.projectEventMemberFormFragment_selectorField_friend;
 	
@@ -174,7 +174,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				ProjectEventMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.projectEventMemberFormFragment_selectorField_hint_friend, null, GET_FRIEND_ID);
+				EventMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.projectEventMemberFormFragment_selectorField_hint_friend, null, GET_FRIEND_ID);
 			}
 		});	
 		
@@ -395,7 +395,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 		data += "," + msg.toString() + "]";
 		
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "eventMemberAdd");
-		((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
 	}
 	
 	private JSONObject getInviteMessage() {
@@ -469,7 +469,7 @@ public class ProjectEventMemberFormFragment extends HyjUserFormFragment {
 			ActiveAndroid.endTransaction();
 		}
 		doSave();
-		((HyjActivity) ProjectEventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 	
 	@Override

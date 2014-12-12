@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.home;
 
 import java.util.Date;
 import java.util.List;
@@ -32,6 +32,8 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.event.EventFormFragment;
+import com.hoyoji.hoyoji.event.EventViewPagerFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
@@ -39,7 +41,7 @@ import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 
-public class ProjectEventListFragment extends HyjUserListFragment {
+public class HomeEventListFragment extends HyjUserListFragment {
 	private ContentObserver mChangeObserver = null;
 
 	@Override
@@ -80,14 +82,11 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		if(limit == 0){
 			limit = getListPageSize();
 		}
-		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Project project =  Model.load(Project.class, modelId);
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Event.class, null),
 				null,
-				"projectId=?", 
-				new String[]{project.getId()}, 
+				null,
+				null, 
 				"startDate DESC LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
@@ -124,7 +123,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			
-			openActivityWithFragment(ProjectEventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
+			openActivityWithFragment(EventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
 		}
     }
 	
@@ -242,16 +241,16 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		}
 	}
 	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Project project = Project.load(Project.class, modelId);
-		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventListFragment_action_add) != null){
-			getOptionsMenu().findItem(R.id.projectEventListFragment_action_add).setVisible(false);
-		}
-	}
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//		super.onCreateOptionsMenu(menu, inflater);
+//		Intent intent = getActivity().getIntent();
+//		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+//		Project project = Project.load(Project.class, modelId);
+//		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventListFragment_action_add) != null){
+//			getOptionsMenu().findItem(R.id.projectEventListFragment_action_add).setVisible(false);
+//		}
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -265,7 +264,7 @@ public class ProjectEventListFragment extends HyjUserListFragment {
 		if(item.getItemId() == R.id.projectEventListFragment_action_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("PROJECT_ID", modelId);
-			openActivityWithFragment(ProjectEventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+			openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
 			return true;
 		} 
 //		else if(item.getItemId() == R.id.multi_select_menu_delete){

@@ -57,6 +57,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
@@ -713,48 +714,27 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				 openActivityWithFragment(MoneyReportFragment.class,
 				 R.string.moneyReportFragment_title, null);
 					return true;
-//		case 2:
-//			openActivityWithFragment(MessageListFragment.class,
-//					R.string.friendListFragment_title_manage_message, null);
-//			break;
-		
 		case R.id.homeListFragment_action_currency:
 			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
 					R.string.currency_exchang_eviewpager_listFragment_title, null);
 			return true;
-		
-//		case 3:
-//			openActivityWithFragment(ExchangeListFragment.class,
-//					R.string.exchangeListFragment_title_manage_exchange, null);
-//			break;
-//		case 4:
-//			openActivityWithFragment(CurrencyListFragment.class,
-//					R.string.currencyListFragment_title_manage_currency, null);
-//			break;
-//		case 4:
-//			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
-//			break;
-//		case 5:
-//			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
-//			break;
 		case R.id.homeListFragment_action_category:
 			openActivityWithFragment(ExpenseIncomeCategoryViewPagerFragment.class,
 					R.string.expense_income_viewpager_listFragment_title, null);
 			return true;
 
-		case R.id.friendListFragment_action_friend_invite_linksmanage:
-			openActivityWithFragment(InviteLinkListFragment.class, R.string.systemSettingFormFragment_invite_linksmanage, null);
+		case R.id.inviteLinkListFragment_action_invitelinks_management:
+			openActivityWithFragment(InviteLinkListFragment.class, R.string.inviteLinkListFragment_title, null);
+			return true;
+			
+		case R.id.friendListFragment_action_friend_management:
+			openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
 			return true;
 			
 		case R.id.homeListFragment_action_setting:
 			openActivityWithFragment(SystemSettingFormFragment.class,
 					R.string.systemSettingFormFragment_title, null);
 			return true;
-//		case 5:
-//			HyjApplication.getInstance().switchUser();
-//			break;
 		}
 		
 		

@@ -68,12 +68,12 @@ import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.MoneyIncomeCategoryListFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
-import com.hoyoji.hoyoji.project.ProjectEventMemberFormFragment;
-import com.hoyoji.hoyoji.project.ProjectEventMemberListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
-import com.hoyoji.hoyoji.project.ProjectEventListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
+import com.hoyoji.hoyoji.event.EventListFragment;
+import com.hoyoji.hoyoji.event.EventMemberFormFragment;
+import com.hoyoji.hoyoji.event.EventMemberListFragment;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 
 public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
@@ -246,7 +246,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Bundle bundle = new Bundle();
 					bundle.putLong("MODEL_ID", project.get_mId());
 					
-					MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(ProjectEventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
+					MoneyIncomeContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
 				
 //				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
 //								ProjectEventListFragment.class,
@@ -531,7 +531,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 						if(mSelectorFieldEvent.getModelId() != null){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
-							openActivityWithFragmentForResult(ProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
 							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						}
@@ -2110,7 +2110,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									} else {
 										bundle.putString("LOCAL_FRIENDID", psaCopy.getLocalFriendId());
 									}
-									openActivityWithFragmentForResult(ProjectEventMemberFormFragment.class, R.string.moneyApportionField_moreActions_event_member_add, bundle, ADD_AS_PROJECT_MEMBER);
+									openActivityWithFragmentForResult(EventMemberFormFragment.class, R.string.moneyApportionField_moreActions_event_member_add, bundle, ADD_AS_PROJECT_MEMBER);
 								}
 		
 								@Override
@@ -2154,7 +2154,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 									} else {
 										bundle.putString("LOCAL_FRIENDID", friend.getId());
 									}
-									openActivityWithFragmentForResult(ProjectEventMemberFormFragment.class, R.string.moneyApportionField_moreActions_event_member_add, bundle, ADD_AS_PROJECT_MEMBER);
+									openActivityWithFragmentForResult(EventMemberFormFragment.class, R.string.moneyApportionField_moreActions_event_member_add, bundle, ADD_AS_PROJECT_MEMBER);
 								}
 		
 								@Override

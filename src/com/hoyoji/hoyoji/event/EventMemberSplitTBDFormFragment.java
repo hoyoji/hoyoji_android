@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.event;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,6 +58,8 @@ import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.SelectApportionEventMemberListFragment;
 import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
+import com.hoyoji.hoyoji.project.ProjectMemberFormFragment;
+import com.hoyoji.hoyoji.project.ProjectMoneyTBDListFragment;
 
 
 public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
@@ -107,7 +109,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 				Event event = eventMember.getEvent();
 				bundle.putLong("MODEL_ID", event.getProject().get_mId());
 				if(!event.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					openActivityWithFragmentForResult(ProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 				} else {
 					bundle.putString("EVENTID", event.getId());
 					openActivityWithFragmentForResult(SelectApportionEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);

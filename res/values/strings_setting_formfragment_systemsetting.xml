@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="systemSettingFormFragment_title">用户资料</string>
+    <string name="systemSettingFormFragment_title">系统设置</string>
     
-    <string name="systemSettingFormFragment_invite_linksmanage">链接管理</string>
     <string name="systemSettingFormFragment_textView_userName">用户名</string>
     
     <string name="systemSettingFormFragment_textView_nickName">昵称</string>

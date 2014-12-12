@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.project;
+package com.hoyoji.hoyoji.event;
 
 import java.util.Date;
 import java.util.UUID;
@@ -60,7 +60,7 @@ import com.tencent.sample.BaseUIListener;
 import com.tencent.sample.Util;
 import com.tencent.tauth.UiError;
 
-public class ProjectEventMemberListFragment extends HyjUserListFragment {
+public class EventMemberListFragment extends HyjUserListFragment {
 	private IWXAPI api;
 	private QQShare mQQShare = null;
 	public static QQAuth mQQAuth;
@@ -156,7 +156,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
+				openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ public class ProjectEventMemberListFragment extends HyjUserListFragment {
 		if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("EVENT_ID", modelId);
-			openActivityWithFragment(ProjectEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+			openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 			return true;
 		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite){
 			inviteFriend("Other", event, event.getName());

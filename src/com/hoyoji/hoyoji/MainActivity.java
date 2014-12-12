@@ -22,12 +22,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
@@ -44,8 +42,8 @@ import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeCalendarGridFragment;
+import com.hoyoji.hoyoji.home.HomeEventListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -73,7 +71,6 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji_android.R;
-import com.jauker.widget.BadgeView;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -406,7 +403,7 @@ public class MainActivity extends HyjUserActivity {
 				fragment = new HomeCalendarGridFragment();
 				break;
 			case 3:
-				fragment = new FriendListFragment();
+				fragment = new HomeEventListFragment();
 				break;
 			case 4:
 				fragment = new MessageListFragment();
@@ -435,7 +432,7 @@ public class MainActivity extends HyjUserActivity {
 				return getString(R.string.mainActivity_section_title_home)
 						.toUpperCase(l);
 			case 3:
-				return getString(R.string.mainActivity_section_title_friend)
+				return getString(R.string.mainActivity_section_title_event)
 						.toUpperCase(l);
 			case 4:
 				return getString(R.string.mainActivity_section_title_message)
