@@ -71,6 +71,11 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
 		if(this.getName() == null || "".equals(this.getName())){
 			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
 		} else {
@@ -80,11 +85,6 @@ public class Event extends HyjModel {
 			modelEditor.setValidationError("date",R.string.projectEventListFragment_hyjDateTimeField_hint_date);
 		}else{
 			modelEditor.removeValidationError("date");
-		}
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
-		}else{
-			modelEditor.removeValidationError("project");
 		}
 		if(this.getStartDate() == null){
 			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_hint_startDate);
