@@ -40,6 +40,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 	private DisplayMetrics mDisplayMetrics;
 
+	private Button mBtnSignUpEvent;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -105,27 +107,35 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		});
 		mViewPager.setCurrentItem(1);
 		
+		mBtnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
+		
 		String subTitle = null;
 		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
 		if(model_id != -1){
 			Event event = HyjModel.load(Event.class, model_id);
 			if(event != null){
 				subTitle = event.getName();
-				EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(eventMember != null && eventMember.getState().equalsIgnoreCase("UnSignUp")){
-					final Button btnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
-					btnSignUpEvent.setVisibility(View.VISIBLE);
-					btnSignUpEvent.setOnClickListener(new OnClickListener(){
+				
+				final EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(eventMember != null || eventMember.getState().equalsIgnoreCase("UnSignUp")){
+					mBtnSignUpEvent.setVisibility(View.VISIBLE);
+					mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 						@Override
 						public void onClick(View v) {
 
-							btnSignUpEvent.setVisibility(View.GONE);
-//							mTabStrip.setPadding(mTabStrip.getPaddingLeft(), 0, mTabStrip.getPaddingRight(), mTabStrip.getPaddingBottom());
+							if(eventMember == null){
+								
+							} else {
+								
+							}
+							
+							
+							
+							mBtnSignUpEvent.setVisibility(View.GONE);
 							mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 							HyjUtil.displayToast("报名成功");
 						}
 					});
-//					mTabStrip.setPadding(mTabStrip.getPaddingLeft(), (int) (70*mDisplayMetrics.density), mTabStrip.getPaddingRight(), mTabStrip.getPaddingBottom());
 					mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 				}
 				
