@@ -117,7 +117,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				subTitle = event.getName();
 				
 				final EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(eventMember != null || eventMember.getState().equalsIgnoreCase("UnSignUp")){
+				if(eventMember == null || eventMember.getState().equalsIgnoreCase("UnSignUp")){
 					mBtnSignUpEvent.setVisibility(View.VISIBLE);
 					mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 						@Override
