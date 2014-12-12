@@ -33,6 +33,7 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -64,6 +65,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	private ArrayList<List<HyjModel>> mListChildData = new ArrayList<List<HyjModel>>();
 
 	private Project mProject;
+	private Event mEvent;
 	private MoneyAccount mMoneyAccount;
 	private Friend mFriend;
 	private Long mDateFrom;
@@ -95,6 +97,11 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			mProject =  new Select().from(Project.class).where("_id=?", project_id).executeSingle();
 			subTitle = mProject.getDisplayName();
 		}
+		final Long event_id = intent.getLongExtra("event_id", -1);
+		if(event_id != -1){
+			mEvent =  new Select().from(Event.class).where("_id=?", event_id).executeSingle();
+			subTitle = mEvent.getName();
+		}
 		final Long moneyAccount_id = intent.getLongExtra("moneyAccount_id", -1);
 		if(moneyAccount_id != -1){
 			mMoneyAccount =  new Select().from(MoneyAccount.class).where("_id=?", moneyAccount_id).executeSingle();
@@ -116,20 +123,23 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 	
 	public void initLoader(int loaderId){
 		Bundle queryParams = buildQueryParams();
-		if(!queryParams.isEmpty()){
+//		if(!queryParams.isEmpty()){
 			Loader<Object> loader = getLoaderManager().getLoader(loaderId);
 			if(loader != null && !loader.isReset()){
 				getLoaderManager().restartLoader(loaderId, queryParams, this);
 			} else {
 				getLoaderManager().initLoader(loaderId, queryParams, this);
 			}
-		}
+//		}
 	}
 	
 	private Bundle buildQueryParams() {
 		Bundle queryParams = new Bundle();
 		if(mProject != null){
 			queryParams.putString("projectId", mProject.getId());
+		}
+		if(mEvent != null){
+			queryParams.putString("eventId", mEvent.getId());
 		}
 		if(mMoneyAccount != null){
 			queryParams.putString("moneyAccountId", mMoneyAccount.getId());
@@ -1273,6 +1283,10 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				String friendId = data.getStringExtra("friendId");
 				if(friendId != null){
 					mFriend = HyjModel.getModel(Friend.class, friendId);
+				}
+				String eventId = data.getStringExtra("eventId");
+				if(eventId != null){
+					mEvent = HyjModel.getModel(Event.class, eventId);
 				}
 				String projectId = data.getStringExtra("projectId");
 				if(projectId != null){

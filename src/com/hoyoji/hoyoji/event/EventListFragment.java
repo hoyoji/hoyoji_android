@@ -154,8 +154,8 @@ public class EventListFragment extends HyjUserListFragment {
 			getActivity().finish();
 		} else {
 			Bundle bundle = new Bundle();
+			bundle.putLong("event_id", id);
 			bundle.putLong("MODEL_ID", id);
-			
 			openActivityWithFragment(EventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
 		}
     }

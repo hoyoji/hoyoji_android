@@ -378,7 +378,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
-	        ((TextView)mFooterView).setText(R.string.app_listview_no_content);
+	        ((TextView)mFooterView).setText(getNoContentText());
 	        ((TextView)mFooterView).setBackgroundColor(Color.TRANSPARENT);
 	        ((TextView)mFooterView).setHeight(getListView().getHeight()-getHeaderHeight());
 //	        if(mEmptyView != null){
@@ -389,6 +389,10 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	        ((TextView)mFooterView).setBackgroundColor(getResources().getColor(R.color.hoyoji_lightgray));
 	        ((TextView)mFooterView).setHeight(48);
 		}
+	}
+
+	protected CharSequence getNoContentText() {
+		return getResources().getString(R.string.app_listview_no_content);
 	}
 
 	@Override

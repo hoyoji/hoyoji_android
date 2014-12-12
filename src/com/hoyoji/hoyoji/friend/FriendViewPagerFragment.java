@@ -1,37 +1,19 @@
 package com.hoyoji.hoyoji.friend;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.PageTransformer;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
-import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
-import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
-import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class FriendViewPagerFragment extends HyjUserFragment {
 	
@@ -126,7 +108,7 @@ public class FriendViewPagerFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new FriendMoneySearchListFragment();
+				return new MoneySearchListFragment();
 			case 1:
 				return new FriendFormFragment();
 			}

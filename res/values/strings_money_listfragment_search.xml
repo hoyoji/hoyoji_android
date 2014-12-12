@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="moneySearchListFragment_title">查找流水</string>
+    <string name="moneySearchListFragment_title">账务流水</string>
 </resources>

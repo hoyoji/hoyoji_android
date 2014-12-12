@@ -16,6 +16,7 @@ import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.event.EventListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
 public class ProjectViewPagerFragment extends HyjUserFragment {
@@ -123,7 +124,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new ProjectMoneySearchListFragment();
+				return new MoneySearchListFragment();
 			case 1 :
 				return new EventListFragment();
 			case 2:

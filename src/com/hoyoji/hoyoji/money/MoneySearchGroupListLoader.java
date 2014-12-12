@@ -57,6 +57,7 @@ public class MoneySearchGroupListLoader extends
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
 	private String mProjectId;
+	private String mEventId;
 	private String mMoneyAccountId;
 	private String mFriendUserId;
 	private String mLocalFriendId;
@@ -117,6 +118,7 @@ public class MoneySearchGroupListLoader extends
 			mDateTo = queryParams.getLong("dateTo", 0);
 			mLoadLimit = queryParams.getInt("LIMIT", 10);
 			mProjectId = queryParams.getString("projectId");
+			mEventId = queryParams.getString("eventId");
 			mMoneyAccountId = queryParams.getString("moneyAccountId");
 			mFriendUserId = queryParams.getString("friendUserId");
 			mLocalFriendId = queryParams.getString("localFriendId");
@@ -142,6 +144,9 @@ public class MoneySearchGroupListLoader extends
 		StringBuilder queryStringBuilder = new StringBuilder(" 1 = 1 ");
 		if(mProjectId != null){
 			queryStringBuilder.append(" AND projectId = '" + mProjectId + "' ");
+		}
+		if(mEventId != null){
+			queryStringBuilder.append(" AND eventId = '" + mEventId + "' ");
 		}
 		if(mMoneyAccountId != null){
 			queryStringBuilder.append(" AND moneyAccountId = '" + mMoneyAccountId + "' ");
@@ -286,84 +291,80 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
-								args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getInt(0);
-					expenseTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
+				if(mEventId == null){ // 只有收入和支出才有活动
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositExpenseContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+									"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
+									args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getInt(0);
+						expenseTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+	
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+									"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositReturn"),
+									args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getInt(0);
+						expenseTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+	
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+											+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+											+ localCurrencyId
+											+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+											+ localCurrencyId + "') "
+											+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getDouble(0);
+						expenseTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+	
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+									"WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND  moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
+									args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getInt(0);
+						expenseTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
+	
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+									"WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Return"),
+									args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getInt(0);
+						expenseTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
 				}
-
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositReturn"),
-								args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getInt(0);
-					expenseTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
-				}
-
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-										+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
-										+ localCurrencyId
-										+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
-										+ localCurrencyId + "') "
-										+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getDouble(0);
-					expenseTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
-				}
-
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyLend main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND  moneyDepositIncomeApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Lend"),
-								args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getInt(0);
-					expenseTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
-				}
-
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyReturn main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-								"WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Return"),
-								args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getInt(0);
-					expenseTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
-				}
-				
-				
-				
-				
-				
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -391,73 +392,75 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositPaybackContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-									+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
-									+ localCurrencyId
-									+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
-									+ localCurrencyId + "') "
-									+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getDouble(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
-			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count += cursor.getInt(0);
-				incomeTotal += cursor.getDouble(1);
-				cursor.close();
-				cursor = null;
+			if(mEventId == null){ // 只有收入和支出才有活动
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositPaybackContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositIncomeContainer main JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE date > ? AND date <= ? AND " + buildSearchQuery("DepositIncome"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+										+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+										+ localCurrencyId
+										+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+										+ localCurrencyId + "') "
+										+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getDouble(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyBorrow main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyPayback main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
+								"WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Payback"),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					count += cursor.getInt(0);
+					incomeTotal += cursor.getDouble(1);
+					cursor.close();
+					cursor = null;
+				}
 			}
 			if (count > 0) {
 				String ds = df.format(calDateFrom.getTime());
@@ -570,149 +573,151 @@ public class MoneySearchGroupListLoader extends
 			cursor.close();
 			cursor = null;
 		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositExpenseContainer main WHERE date <= ? AND " + buildSearchQuery("Lend"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+		if(mEventId == null){ // 只有收入和支出才有活动
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositExpenseContainer main WHERE date <= ? AND " + buildSearchQuery("Lend"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer main WHERE date <= ? AND " + buildSearchQuery("DepositIncome"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositIncomeContainer main WHERE date <= ? AND " + buildSearchQuery("DepositIncome"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer main WHERE date <= ? AND " + buildSearchQuery("DepositReturn"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositReturnContainer main WHERE date <= ? AND " + buildSearchQuery("DepositReturn"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow main WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Borrow"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyBorrow main WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Borrow"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend main WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND  moneyDepositIncomeApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Lend"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyLend main WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND moneyDepositExpenseContainerId IS NULL AND  moneyDepositIncomeApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Lend"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + buildTransferSearchQuery(),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + buildTransferSearchQuery(),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn main WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Return"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyReturn main WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Return"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Payback"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyPayback main WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date <= ? AND " + buildSearchQuery("Payback"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositPaybackContainer main WHERE date <= ? AND " + buildSearchQuery("Payback"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositPaybackContainer main WHERE date <= ? AND " + buildSearchQuery("Payback"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
 		}
 		if(dateString != null){
 			Long dateInMillis = Long.valueOf(dateString);
@@ -731,7 +736,7 @@ public class MoneySearchGroupListLoader extends
 		String[] args = new String[] { };
 		String dateString = null;
 		Cursor cursor = null;
-		if(mProjectId == null){
+//		if(mProjectId == null){
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -759,7 +764,7 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-		}
+//		}
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
@@ -792,150 +797,137 @@ public class MoneySearchGroupListLoader extends
 			cursor.close();
 			cursor = null;
 		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer  main WHERE " + buildSearchQuery("DepositIncome"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+
+		if(mEventId == null){ // 只有收入和支出才有活动
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositIncomeContainer  main WHERE " + buildSearchQuery("DepositIncome"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer  main WHERE " + buildSearchQuery("DepositReturn"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositReturnContainer  main WHERE " + buildSearchQuery("DepositReturn"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyBorrow  main WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Borrow"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyBorrow  main WHERE ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Borrow"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyLend  main WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Lend"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyLend  main WHERE ownerFriendId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND " + buildSearchQuery("Lend"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyTransfer  main WHERE " + buildTransferSearchQuery(),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyTransfer  main WHERE " + buildTransferSearchQuery(),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyReturn  main WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND " + buildSearchQuery("Return"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyReturn  main WHERE ownerFriendId IS NULL AND moneyDepositReturnApportionId IS NULL AND " + buildSearchQuery("Return"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyPayback main WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND " + buildSearchQuery("Payback"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyPayback main WHERE ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND " + buildSearchQuery("Payback"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
-		}
-		cursor = Cache
-				.openDatabase()
-				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositPaybackContainer  main WHERE " + buildSearchQuery("Payback"),
-						args);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			if(cursor.getString(0) != null){
-				if(dateString == null
-						|| dateString.compareTo(cursor.getString(0)) < 0){
-					dateString = cursor.getString(0);
+			cursor = Cache
+					.openDatabase()
+					.rawQuery(
+							"SELECT MAX(date) FROM MoneyDepositPaybackContainer  main WHERE " + buildSearchQuery("Payback"),
+							args);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				if(cursor.getString(0) != null){
+					if(dateString == null
+							|| dateString.compareTo(cursor.getString(0)) < 0){
+						dateString = cursor.getString(0);
+					}
 				}
+				cursor.close();
+				cursor = null;
 			}
-			cursor.close();
-			cursor = null;
 		}
-//		cursor = Cache
-//				.openDatabase()
-//				.rawQuery(
-//						"SELECT MAX(date) FROM Message  main WHERE (messageState='new' OR messageState='unread') ",
-//						args);
-//		if (cursor != null) {
-//			cursor.moveToFirst();
-//			if(cursor.getString(0) != null){
-//				if(dateString == null
-//						|| dateString.compareTo(cursor.getString(0)) > 0){
-//					dateString = cursor.getString(0);
-//				}
-//			}
-//			cursor.close();
-//			cursor = null;
-//		}
 		if(dateString != null){
 			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
