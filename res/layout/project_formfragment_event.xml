@@ -18,7 +18,7 @@
         android:id="@+id/projectEventListFragment_hyjDateTimeField_date"
         hyj:style="left_label"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:gravity="right"
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"
@@ -41,7 +41,7 @@
         android:id="@+id/projectEventListFragment_hyjDateTimeField_startDate"
         hyj:style="left_label"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:gravity="right"
         layout_gravity="center_horizonta" 
         android:layout_gravity="right"
@@ -58,6 +58,26 @@
         android:background="@drawable/line_divider" 
         />
      
+     <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+        android:id="@+id/projectEventListFragment_hyjDateTimeField_endDate"
+        hyj:style="left_label"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:gravity="right"
+        layout_gravity="center_horizonta" 
+        android:layout_gravity="right"
+        hyj:editTextBorder="none"
+        hyj:hintText="@string/projectEventListFragment_hyjDateTimeField_hint_endDate"
+        hyj:labelText="@string/projectEventListFragment_hyjDateTimeField_endDate" />
+    
+    <View 
+        android:id="@id/field_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+    	android:layout_marginTop="5dip"
+    	android:layout_marginBottom="5dip"
+        android:background="@drawable/line_divider" 
+        />
      <!-- <com.hoyoji.android.hyjframework.view.HyjTextField
             android:id="@+id/projectEventListFragment_textField_projectName"
             android:layout_width="fill_parent"
@@ -67,7 +87,7 @@
      <com.hoyoji.android.hyjframework.view.HyjSelectorField
             android:id="@+id/projectEventListFragment_hyjSelectorField_projectName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="43dp"
             hyj:hintText="@string/projectEventListFragment_hyjSelectorField_hint_projectName"
             hyj:labelText="@string/projectEventListFragment_hyjSelectorField_projectName" />
      
@@ -83,7 +103,7 @@
     <com.hoyoji.android.hyjframework.view.HyjTextField
         android:id="@+id/projectEventListFragment_textField_name"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         hyj:hintText="@string/projectEventListFragment_editText_hint_name"
         hyj:labelText="@string/projectEventListFragment_textView_name" >
     	<requestFocus />
@@ -116,7 +136,7 @@
         android:background="@drawable/line_divider" 
         />
     
-    <ImageButton
+   <!--  <ImageButton
             android:id="@id/expand_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,7 +179,7 @@
 	        android:background="@drawable/line_divider" 
 	        />
 	 </LinearLayout>
-    
+     -->
 	<Button
 	    android:id="@id/button_save"
 	    android:layout_width="fill_parent"

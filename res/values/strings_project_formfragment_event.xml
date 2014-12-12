@@ -28,4 +28,7 @@
     
     <string name="projectEventFormFragment_title_edit">修改账本活动</string>
     
+    
+    <string name="projectEventListFragment_validate_project">不能在共享的账本新增活动</string>
+    
 </resources>

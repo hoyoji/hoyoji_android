@@ -71,16 +71,6 @@ public class Event extends HyjModel {
 	
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
-		}else{
-			modelEditor.removeValidationError("project");
-		}
-		if(this.getName() == null || "".equals(this.getName())){
-			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
-		} else {
-			modelEditor.removeValidationError("name");
-		}
 		if(this.getDate() == null){
 			modelEditor.setValidationError("date",R.string.projectEventListFragment_hyjDateTimeField_hint_date);
 		}else{
@@ -96,11 +86,22 @@ public class Event extends HyjModel {
 		}else{
 			modelEditor.removeValidationError("endDate");
 		}
-		
-		if(this.getStartDate() < this.getEndDate()) {
-			modelEditor.removeValidationError("endDate");
+		if(this.getDate() != null && this.getEndDate() != null) {
+			if(this.getStartDate() < this.getEndDate()) {
+				modelEditor.removeValidationError("endDate");
+			} else {
+				modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);
+			}
+		}
+		if(this.getProjectId() == null){
+			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+		}else{
+			modelEditor.removeValidationError("project");
+		}
+		if(this.getName() == null || "".equals(this.getName())){
+			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
 		} else {
-			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);
+			modelEditor.removeValidationError("name");
 		}
 	}
 

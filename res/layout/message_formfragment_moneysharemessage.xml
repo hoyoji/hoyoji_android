@@ -13,7 +13,7 @@
     <com.hoyoji.android.hyjframework.view.HyjDateTimeField 
             android:id="@+id/moneyShareMessageFormFragment_editText_date"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
+		    android:layout_height="43dp" 
             hyj:labelText="@string/moneyShareMessageFormFragment_textView_date_send"
      />    
 
@@ -29,7 +29,7 @@
      <com.hoyoji.android.hyjframework.view.HyjTextField 
             android:id="@+id/moneyShareMessageFormFragment_editText_toUser"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
+		    android:layout_height="43dp" 
             hyj:labelText="@string/moneyShareMessageFormFragment_textView_toUser"
             hyj:hintText="@string/moneyShareMessageFormFragment_editText_hint_toUser"
         />    
