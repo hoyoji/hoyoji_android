@@ -119,7 +119,8 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.home_listfragment_home;
+//		return R.menu.home_listfragment_home;
+		return null;
 	}
 
 	@Override
@@ -369,53 +370,53 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 //		}
 		// Handle your other action bar items...
 		
-		switch (item.getItemId()) {
-		 case R.id.homeListFragment_action_transactions :
-				 openActivityWithFragment(MoneySearchListFragment.class,
-				 R.string.moneySearchListFragment_title, null);
-				return true;
-		 case R.id.homeListFragment_action_report :
-				 openActivityWithFragment(MoneyReportFragment.class,
-				 R.string.moneyReportFragment_title, null);
-					return true;
-//		case 2:
-//			openActivityWithFragment(MessageListFragment.class,
-//					R.string.friendListFragment_title_manage_message, null);
-//			break;
-		
-		case R.id.homeListFragment_action_currency:
-			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
-					R.string.currency_exchang_eviewpager_listFragment_title, null);
-			return true;
-		
-//		case 3:
-//			openActivityWithFragment(ExchangeListFragment.class,
-//					R.string.exchangeListFragment_title_manage_exchange, null);
-//			break;
-//		case 4:
-//			openActivityWithFragment(CurrencyListFragment.class,
-//					R.string.currencyListFragment_title_manage_currency, null);
-//			break;
-//		case 4:
-//			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
-//			break;
-//		case 5:
-//			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
-//					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
-//			break;
-		case R.id.homeListFragment_action_category:
-			openActivityWithFragment(ExpenseIncomeCategoryViewPagerFragment.class,
-					R.string.expense_income_viewpager_listFragment_title, null);
-			return true;
-		case R.id.homeListFragment_action_setting:
-			openActivityWithFragment(SystemSettingFormFragment.class,
-					R.string.systemSettingFormFragment_title, null);
-			return true;
-//		case 5:
-//			HyjApplication.getInstance().switchUser();
-//			break;
-		}
+//		switch (item.getItemId()) {
+//		 case R.id.homeListFragment_action_transactions :
+//				 openActivityWithFragment(MoneySearchListFragment.class,
+//				 R.string.moneySearchListFragment_title, null);
+//				return true;
+//		 case R.id.homeListFragment_action_report :
+//				 openActivityWithFragment(MoneyReportFragment.class,
+//				 R.string.moneyReportFragment_title, null);
+//					return true;
+////		case 2:
+////			openActivityWithFragment(MessageListFragment.class,
+////					R.string.friendListFragment_title_manage_message, null);
+////			break;
+//		
+//		case R.id.homeListFragment_action_currency:
+//			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
+//					R.string.currency_exchang_eviewpager_listFragment_title, null);
+//			return true;
+//		
+////		case 3:
+////			openActivityWithFragment(ExchangeListFragment.class,
+////					R.string.exchangeListFragment_title_manage_exchange, null);
+////			break;
+////		case 4:
+////			openActivityWithFragment(CurrencyListFragment.class,
+////					R.string.currencyListFragment_title_manage_currency, null);
+////			break;
+////		case 4:
+////			openActivityWithFragment(MoneyExpenseCategoryListFragment.class,
+////					R.string.moneyCategoryFormDialogFragment_title_manage_expense, null);
+////			break;
+////		case 5:
+////			openActivityWithFragment(MoneyIncomeCategoryListFragment.class,
+////					R.string.moneyCategoryFormDialogFragment_title_manage_income, null);
+////			break;
+//		case R.id.homeListFragment_action_category:
+//			openActivityWithFragment(ExpenseIncomeCategoryViewPagerFragment.class,
+//					R.string.expense_income_viewpager_listFragment_title, null);
+//			return true;
+//		case R.id.homeListFragment_action_setting:
+//			openActivityWithFragment(SystemSettingFormFragment.class,
+//					R.string.systemSettingFormFragment_title, null);
+//			return true;
+////		case 5:
+////			HyjApplication.getInstance().switchUser();
+////			break;
+//		}
 		
 		
 		
