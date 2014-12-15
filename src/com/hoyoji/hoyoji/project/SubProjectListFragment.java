@@ -100,7 +100,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
 		String parentProjectId = getArguments().getString("parentProjectId");
-		if(parentProjectId == null && getActivity().getCallingActivity() == null){
+		if(parentProjectId == null){
 			ViewGroup view = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listfragment_header, null);
 			
 			// 添加 "共享来的收支" 到 headerView
@@ -109,7 +109,9 @@ public class SubProjectListFragment extends HyjUserListFragment {
 			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
-					openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
+					if(getActivity().getCallingActivity() == null){
+						openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
+					}
 				}
 		    });
 			setSharedProjectHeaderView(mHeaderViewSharedProject);

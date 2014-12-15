@@ -190,13 +190,11 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		updateNearestEvent();
-		if (mChangeObserver == null) {
-			mChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Event.class, null), true,
-					mChangeObserver);
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(EventMember.class, null), true,
-					mChangeObserver);
-		}
+//		if (mChangeObserver == null) {
+//			mChangeObserver = new ChangeObserver();
+//			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(EventMember.class, null), true,
+//					mChangeObserver);
+//		}
 		// 加载日历
 		initLoader(-1);
 	}
@@ -274,6 +272,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			mCalendarGridView.getAdapter().notifyDataSetChanged();
 			getLoaderManager().restartLoader(0, null, this);
 		} else {
+			updateNearestEvent();
 	        super.onLoadFinished(loader, list);
 //			((CursorAdapter)getListAdapter()).notifyDataSetChanged();
 		}
@@ -545,12 +544,11 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			updateNearestEvent();
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
 				public void run() {
 					((CursorAdapter) getListAdapter()).notifyDataSetChanged();
-					mCalendarGridView.getAdapter().notifyDataSetChanged();
+//					mCalendarGridView.getAdapter().notifyDataSetChanged();
 				}
 			}, 50);
 		}

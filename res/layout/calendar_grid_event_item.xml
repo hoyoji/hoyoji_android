@@ -7,7 +7,6 @@
     android:orientation="vertical"
      android:descendantFocusability="blocksDescendants">
 
-
     <TextView
         android:id="@+id/tvcount"
         android:layout_width="wrap_content"
@@ -16,7 +15,8 @@
         android:fadingEdge="horizontal"
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
-        android:textSize="9sp" />
+        android:textColor="@color/hoyoji_red"
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/tvtext"

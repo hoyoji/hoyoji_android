@@ -113,7 +113,15 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			mFriend =  new Select().from(Friend.class).where("_id=?", friend_id).executeSingle();
 			subTitle = mFriend.getDisplayName();
 		}
-		
+
+		mDateFrom = intent.getLongExtra("dateFrom", 0);
+		if(mDateFrom == 0){
+			mDateFrom = null;
+		}
+		mDateTo= intent.getLongExtra("dateTo", 0);
+		if(mDateTo == 0){
+			mDateTo = null;
+		}
 		if(subTitle != null){
 			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
 		}
@@ -1241,27 +1249,6 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			} else if(object instanceof MoneyDepositPaybackContainer){
 				openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 				return true;
-			}  else if(object instanceof Message){
-				Message msg = (Message)object;
-				if(msg.getType().equals("System.Friend.AddRequest") ){
-					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
-					return true;
-				} else if(msg.getType().equals("System.Friend.AddResponse") ){
-					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
-					return true;
-				} else if(msg.getType().equals("System.Friend.Delete") ){
-					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
-					return true;
-				} else if(msg.getType().equals("Project.Share.AddRequest") ){
-					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
-					return true;
-				} else if(msg.getType().equals("Project.Share.Accept") ){
-					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
-					return true;
-				} else if(msg.getType().equals("Project.Share.Delete") ){
-					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
-					return true;
-				}
 			}
 		}
 		return false;
