@@ -1,5 +1,14 @@
 package com.hoyoji.hoyoji.event;
 
+import java.util.Date;
+import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,18 +20,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.message.EventMessageFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class EventViewPagerFragment extends HyjUserFragment {
@@ -112,7 +127,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		String subTitle = null;
 		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
 		if(model_id != -1){
-			Event event = HyjModel.load(Event.class, model_id);
+			final Event event = HyjModel.load(Event.class, model_id);
 			if(event != null){
 				subTitle = event.getName();
 				
@@ -122,18 +137,21 @@ public class EventViewPagerFragment extends HyjUserFragment {
 					mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 						@Override
 						public void onClick(View v) {
-
-							if(eventMember == null){
-								
-							} else {
-								
-							}
+							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
 							
+							sendAcceptMessageToServer(event, eventMember, psa);
 							
-							
-							mBtnSignUpEvent.setVisibility(View.GONE);
-							mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-							HyjUtil.displayToast("报名成功");
+//							if(eventMember == null){
+//								
+//							} else {
+//								
+//							}
+//							
+//							
+//							
+//							mBtnSignUpEvent.setVisibility(View.GONE);
+//							mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//							HyjUtil.displayToast("报名成功");
 						}
 					});
 					mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
@@ -144,6 +162,83 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
 			}
 		}
+	}
+	
+	private void sendAcceptMessageToServer(final Event event, EventMember em, ProjectShareAuthorization psa) {
+		try {
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					loadEventMembers(object);
+				}
+	
+				@Override
+				public void errorCallback(Object object) {
+					((HyjActivity) EventViewPagerFragment.this.getActivity()).dismissProgressDialog();
+					JSONObject json = (JSONObject) object;
+					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				}
+			};
+	
+			JSONObject msg = new JSONObject();
+			msg.put("__dataType", "Message");
+			msg.put("id", UUID.randomUUID().toString());
+			msg.put("toUserId", event.getOwnerUserId());
+			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
+			msg.put("type", "Event.Member.SignUp");
+			msg.put("messageState", "new");
+			msg.put("messageTitle", "活动报名");
+			msg.put("date", (new Date()).getTime());
+			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "报名参加活动: "+ event.getName());
+			msg.put("messageBoxId", event.getOwnerUser().getMessageBoxId1());
+			msg.put("ownerUserId", event.getOwnerUserId());
+	
+			JSONObject msgData = new JSONObject();
+			if(psa != null) {
+				msgData.put("projectShareAuthorizationId", psa.getId());
+			}
+			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
+			msgData.put("eventId", event.getId());
+			if(em == null){
+				msgData.put("eventMemberId", null);
+			} else {
+				msgData.put("eventMemberId", em.getId());
+			}
+			msg.put("messageData", msgData.toString());
+	
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "eventMemberSignUp");
+			((HyjActivity) this.getActivity()).displayProgressDialog(
+							R.string.eventListFragment_title_acceptShare,
+							R.string.eventListFragment_acceptShare_progress_adding);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void loadEventMembers(Object object) {
+		try {
+			JSONArray jsonObjects = (JSONArray) object;
+			ActiveAndroid.beginTransaction();
+				for (int j = 0; j < jsonObjects.length(); j++) {
+					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
+						if(newEventMember == null){
+							newEventMember = new EventMember();
+						}
+						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEventMember.save();
+					}
+				}
+
+			ActiveAndroid.setTransactionSuccessful();
+//			getActivity().finish();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+		((HyjActivity) EventViewPagerFragment.this.getActivity()).dismissProgressDialog();
 	}
 	
 	

@@ -113,6 +113,13 @@ public class Event extends HyjModel {
 		this.mUUID = mUUID;
 	}
 	
+	public User getOwnerUser(){
+		if(mOwnerUserId == null){
+			return null;
+		}
+		return getModel(User.class, mOwnerUserId);
+	}
+	
 	public String getOwnerUserId() {
 		return mOwnerUserId;
 	}
