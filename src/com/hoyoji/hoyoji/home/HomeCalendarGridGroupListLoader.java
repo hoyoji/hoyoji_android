@@ -92,11 +92,8 @@ public class HomeCalendarGridGroupListLoader extends
 		context.getContentResolver().registerContentObserver(
 				ContentProvider.createUri(MoneyPayback.class, null), true,
 				mChangeObserver);
-//		context.getContentResolver().registerContentObserver(
-//				ContentProvider.createUri(Message.class, null), true,
+//		context.getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 //				mChangeObserver);
-		context.getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
-				mChangeObserver);
 	}
 
 	/**
