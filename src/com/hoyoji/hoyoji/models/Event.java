@@ -35,6 +35,9 @@ public class Event extends HyjModel {
 	@Column(name = "description")
 	private String mDescription;
 	
+	@Column(name = "alreadySignUpCount")
+	private int mAlreadySignUpCount = 0;
+	
 	@Column(name = "startDate")
 	private Long mStartDate;
 	
@@ -176,6 +179,13 @@ public class Event extends HyjModel {
 		this.mDescription = mDescription;
 	}
 
+	public int getAlreadySignUpCount() {
+		return mAlreadySignUpCount;
+	}
+	
+	public void setAlreadySignUpCount(int mAlreadySignUpCount) {
+		this.mAlreadySignUpCount = mAlreadySignUpCount;
+	}
 
 	public Long getStartDate() {
 		return mStartDate;
