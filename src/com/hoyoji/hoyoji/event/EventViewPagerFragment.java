@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
@@ -235,7 +236,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 			ActiveAndroid.setTransactionSuccessful();
 //			getActivity().finish();
-			mBtnSignUpEvent.setVisibility(View.VISIBLE);
+			mBtnSignUpEvent.setVisibility(View.GONE);
+			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 			HyjUtil.displayToast("加入成功");
 		} finally {
 			ActiveAndroid.endTransaction();

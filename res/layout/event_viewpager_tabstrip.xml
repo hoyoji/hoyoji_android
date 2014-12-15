@@ -31,7 +31,6 @@
     	android:layout_height="wrap_content"
     />
     
-    
     <Button android:id="@+id/eventviewpager_signup_event"
     	android:layout_width="match_parent"
     	android:layout_height="50dp"
@@ -44,6 +43,5 @@
     	android:textColor="@android:color/white"
     	android:visibility="gone"
     	>
-        
-    </Button>
+   	</Button>
 </FrameLayout>
