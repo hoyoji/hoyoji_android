@@ -174,13 +174,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    super.onCreateOptionsMenu(menu, inflater);
-	    Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		if (modelId != -1) {
-		    if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-		    	hideSaveAction();
-		    }
-		}
+	    
 	}
 	
 	private void fillData() {
@@ -213,17 +207,21 @@ public class EventFormFragment extends HyjUserFormFragment {
 		if (mEventEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
-			Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-			if(toBeDeterminedFriend != null){
-				EventMember em = new EventMember();
-				em.setEventId(mEventEditor.getModelCopy().getId());
-				em.setState("SignUp");
-				em.setFriendUserId(null);
-				em.setLocalFriendId(toBeDeterminedFriend.getId());
-				em.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				em.setFriendUserName("待定成员");
-				em.setToBeDetermined(true);
-				em.save();
+			 Intent intent = getActivity().getIntent();
+			Long modelId = intent.getLongExtra("MODEL_ID", -1);
+			if (modelId != -1) {
+				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(toBeDeterminedFriend != null){
+					EventMember em = new EventMember();
+					em.setEventId(mEventEditor.getModelCopy().getId());
+					em.setState("SignUp");
+					em.setFriendUserId(null);
+					em.setLocalFriendId(toBeDeterminedFriend.getId());
+					em.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					em.setFriendUserName("待定成员");
+					em.setToBeDetermined(true);
+					em.save();
+				}
 			}
 			doSave();
 		}
