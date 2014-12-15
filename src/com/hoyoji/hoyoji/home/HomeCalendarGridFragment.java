@@ -1760,6 +1760,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
 			} else if(msg.getType().equals("Event.Member.Accept") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("Event.Member.SignUp") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
 			}
     }  
 	

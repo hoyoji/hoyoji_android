@@ -235,6 +235,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 			ActiveAndroid.setTransactionSuccessful();
 //			getActivity().finish();
+			mBtnSignUpEvent.setVisibility(View.VISIBLE);
+			HyjUtil.displayToast("加入成功");
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
