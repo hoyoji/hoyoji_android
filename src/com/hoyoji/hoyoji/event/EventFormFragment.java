@@ -209,7 +209,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		} else {
 			 Intent intent = getActivity().getIntent();
 			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			if (modelId != -1) {
+			if (modelId == -1) {
 				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(toBeDeterminedFriend != null){
 					EventMember em = new EventMember();
