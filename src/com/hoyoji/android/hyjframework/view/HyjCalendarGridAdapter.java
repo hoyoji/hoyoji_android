@@ -33,39 +33,39 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	private int daysOfMonth = 0; // 某月的天数
 	private int dayOfWeek = 0; // 具体某一天是星期几
 	private int lastDaysOfMonth = 0; // 上一个月的总天数
-	private Context context;
-	private int[] dayNumber; // 一个gridview中的日期存入此数组中
-	private int[] monthNumber; // 一个gridview中的日期存入此数组中
-	private int[] yearNumber; // 一个gridview中的日期存入此数组中
+	protected Context context;
+	protected int[] dayNumber; // 一个gridview中的日期存入此数组中
+	protected int[] monthNumber; // 一个gridview中的日期存入此数组中
+	protected int[] yearNumber; // 一个gridview中的日期存入此数组中
 	// private static String week[] = {"周日","周一","周二","周三","周四","周五","周六"};
 
 	private Resources res = null;
 	// private Drawable drawable = null;
 
-	private int currentYear = -1;
-	private int currentMonth = -1;
+	protected int currentYear = -1;
+	protected int currentMonth = -1;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
 	// private int currentFlag = -1; //用于标记当天
 
-	private int selectedYear = -1; // 用于在头部显示的年份
-	private int selectedMonth = -1; // 用于在头部显示的月份
-	private int selectedDay = -1;
+	protected int selectedYear = -1; // 用于在头部显示的年份
+	protected int selectedMonth = -1; // 用于在头部显示的月份
+	protected int selectedDay = -1;
 	// private String animalsYear = "";
 	private String leapMonth = ""; // 闰哪一个月
 	// private String cyclical = ""; //天干地支
 	// 系统当前时间
 	private String sysDate = "";
-	private int sys_year = -1;
-	private int sys_month = -1;
-	private int sys_day = -1;
+	protected int sys_year = -1;
+	protected int sys_month = -1;
+	protected int sys_day = -1;
 	private SpecialCalendar sc;
-	private List<Map<String, Object>> mListGroupData;
+	protected List<Map<String, Object>> mListGroupData;
 	private int mCalendarMode;
 //	private long mDateFrom;
 //	private long mDateTo;
 	private int mNumberOfDaysInGrid = 7;
-	private static Drawable drawableSelectedBackground;
+	protected static Drawable drawableSelectedBackground;
 
 	public HyjCalendarGridAdapter(Context context, Resources rs) {
 		this.context = context;

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+		<include layout="@layout/home_listitem_row"
+	        android:id="@+id/home_listfragment_event_nearestevent"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginRight="56dp"
+	        android:layout_gravity="center_vertical|left"
+		    />
+        <ImageButton 
+            android:id="@+id/home_listfragment_event_addnew"
+	        android:layout_width="56dp"
+	        android:layout_height="56dp"
+	        android:layout_gravity="center_vertical|right"
+	        android:background="@drawable/hoyoji_addnew"
+        />
+    </FrameLayout>
+    <!--
+             <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/lightgray" />
+    -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="日"
+            android:textColor="@color/hoyoji_red"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="一"
+            android:textColor="@color/lightgray"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="二"
+            android:textColor="@color/lightgray"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="三"
+            android:textColor="@color/lightgray"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="四"
+            android:textColor="@color/lightgray"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="五"
+            android:textColor="@color/lightgray"
+            android:textSize="11.0dip" />
+
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="六"
+            android:textColor="@color/hoyoji_red"
+            android:textSize="11.0dip" />
+    </LinearLayout>
+
+    <com.hoyoji.android.hyjframework.view.HyjCalendarGrid
+        android:id="@+id/home_calendar_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/hoyoji_lightgray"
+        android:descendantFocusability="blocksDescendants" >
+
+        <LinearLayout
+            android:id="@+id/home_stat_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/home_stat_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/home_stat_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/home_stat_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+        <ImageButton
+            android:id="@+id/home_stat_group_calendarMode"
+            android:layout_width="45dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_go_to_today" />
+    </RelativeLayout>
+
+</LinearLayout>

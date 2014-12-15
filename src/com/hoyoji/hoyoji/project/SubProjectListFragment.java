@@ -100,10 +100,12 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
 		String parentProjectId = getArguments().getString("parentProjectId");
-		if(parentProjectId == null){
-			mHeaderViewSharedProject = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listitem_project, null);
+		if(parentProjectId == null && getActivity().getCallingActivity() == null){
+			ViewGroup view = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listfragment_header, null);
 			
 			// 添加 "共享来的收支" 到 headerView
+			mHeaderViewSharedProject = (ViewGroup) view.findViewById(R.id.project_listitem_shared_project);
+			mHeaderViewSharedProject.findViewById(R.id.projectListItem_action_viewSubProjects).setVisibility(View.GONE);
 			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
@@ -111,8 +113,15 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				}
 		    });
 			setSharedProjectHeaderView(mHeaderViewSharedProject);
-		
-			return mHeaderViewSharedProject;
+			view.findViewById(R.id.project_listfragment_project_addnew).setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, null);
+				}
+				
+			});
+			return view;
 		} else {
 			return null;
 		}

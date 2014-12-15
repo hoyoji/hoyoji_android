@@ -146,7 +146,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 
 	@Override
 	public Integer useOptionsMenuView() {
-		return R.menu.home_listfragment_home;
+//		return R.menu.home_listfragment_home;
+		return null;
 	}
 
 	@Override
@@ -155,28 +156,17 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	}
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
-		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendar_grid_header, null);
+		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendargrid_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
 		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
+		mCalendarGridView.setAdapter(new HyjCalendarGridAdapter(getActivity(), getResources()));
 		mCalendarGridView.getAdapter().setData(mListGroupData);
 		mCurrentMonth = (TextView) view.findViewById(R.id.home_stat_month);
 		mCurrentYear = (TextView) view.findViewById(R.id.home_stat_year);
 
 		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
-
-//		mGroupHeaderIncome = (HyjNumericView) view.findViewById(R.id.home_stat_group_incomeTotal);
-//		mGroupHeaderExpense = (HyjNumericView) view.findViewById(R.id.home_stat_group_expenseTotal);
-//		mGroupHeaderDate = (TextView) view.findViewById(R.id.home_stat_group_date);
-//		updateGroupHeader();
-//		Calendar calToday = Calendar.getInstance();
-//		calToday.set(Calendar.HOUR_OF_DAY, 0);
-//		calToday.clear(Calendar.MINUTE);
-//		calToday.clear(Calendar.SECOND);
-//		calToday.clear(Calendar.MILLISECOND);
-//		mGroupHeaderDate.setTag(calToday.getTimeInMillis());
-//		mGroupHeaderDate.setText(df.format(calToday.getTime()));
 		
 		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -186,10 +176,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getMonthAtPosition(arg2));
 				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition(arg2));
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
-				
-//				updateGroupHeader();
-				getLoaderManager().restartLoader(0, null, HomeCalendarGridFragment.this);
-				
 			}
 		});
 		view.findViewById(R.id.home_stat_group_calendarMode).setOnClickListener(new OnClickListener(){
@@ -203,8 +189,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCalendarGridView.getAdapter().getDayNumber();
 
 				mListGroupData.clear();
-//				updateHeaderStat();
-//				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
 			}
@@ -237,7 +221,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
 				mListGroupData.clear();
-//				updateHeaderStat();
+//				GStat();
 //				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
@@ -284,7 +268,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		});
 		
 		mExpenseButton = (Button)view.findViewById(R.id.homeListFragment_action_money_expense);
-		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -304,7 +287,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		});
 		
 		mIncomeButton = (Button)view.findViewById(R.id.homeListFragment_action_money_income);
-		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		mIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -322,9 +304,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
     		}
 		});
-		
-		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+
 		
 //		Calendar calToday = Calendar.getInstance();
 //		calToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -517,6 +497,10 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				
 		getView().findViewById(R.id.homeListFragment_action_money_account).setOnClickListener(new OnClickListener(){
 			@Override
@@ -555,8 +539,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 					mChangeObserver);
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
 					mChangeObserver);
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
-					mChangeObserver);
 		}
 		
 		
@@ -564,38 +546,6 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		initLoader(-1);
 	}
 	
-//	private void updateGroupHeader(){
-//		mGroupHeaderDate.setText(mCalendarGridView.getAdapter().getSelectedYear()+"年"+mCalendarGridView.getAdapter().getSelectedMonth()+"月"+mCalendarGridView.getAdapter().getSelectedDay()+"日");
-//		
-////		Calendar calToday = Calendar.getInstance();
-////		calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-////		calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-////		calToday.set(Calendar.DATE, mCalendarGridView.getAdapter().getSelectedDay());
-////		calToday.set(Calendar.HOUR_OF_DAY, 0);
-////		calToday.clear(Calendar.MINUTE);
-////		calToday.clear(Calendar.SECOND);
-////		calToday.clear(Calendar.MILLISECOND);
-////		mGroupHeaderDate.setTag(calToday.getTimeInMillis());
-////		mGroupHeaderDate.setText(df.format(calToday.getTime()));
-//		
-////		if(mCalendarGridView.getAdapter().getCurrentMonth() == mCalendarGridView.getAdapter().getSelectedMonth() 
-////				&& mCalendarGridView.getAdapter().getCurrentYear() == mCalendarGridView.getAdapter().getSelectedYear()){
-////			for(int i = 0; i < groupList.size(); i++){
-////				Map<String, Object> groupData = mCalendarGridView.getAdapter().getSelectedDayData();
-////				if(groupData != null){
-////					if(groupData.get("dateInMilliSeconds").toString().equals(mGroupHeaderDate.getTag().toString())){
-//
-////						mGroupHeaderDate.setText(groupData.get("date").toString());
-////						mGroupHeaderExpense.setPrefix("支出"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-////		            	mGroupHeaderExpense.setNumber(Double.valueOf(groupData.get("expenseTotal").toString()));
-////						
-////		            	mGroupHeaderIncome.setPrefix("收入"+HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencySymbol());
-////		            	mGroupHeaderIncome.setNumber(Double.valueOf(groupData.get("incomeTotal").toString()));
-//////					}
-////				}
-////			}
-////		}
-//	}
 
 	private void updateHeaderStat() {
 		String currentUserId = HyjApplication.getInstance().getCurrentUser().getId();
@@ -873,102 +823,66 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //		
 //	}
 	@Override
-	public Loader<Object> onCreateLoader(int arg0, Bundle arg1) {
-		super.onCreateLoader(arg0, arg1);
+	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
 		if(arg1 == null){
 			arg1 = new Bundle();
 		}
+		Object loader;
+		if(arg1 == null){
+			arg1 = new Bundle();
+		}
+
 		int offset = arg1.getInt("OFFSET");
 		int limit = arg1.getInt("LIMIT");
 		if(limit == 0){
 			limit = getListPageSize();
 		}
-		String selection = null;
-		String[] selectionArgs = null;
 		
-		selection = "messageState <> ? and messageState <> ?";
-		selectionArgs = new String[]{"read","closed"};
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(Message.class, null),
-				new String[]{"_id", "id"}, selection, selectionArgs, "date DESC LIMIT " + (limit + offset)
-			);
-		
+		if (groupPos < 0) { 
+			long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
+			long dateTo = mCalendarGridView.getAdapter().getDateTo();
+			
+			arg1.putLong("startDateInMillis", dateFrom);
+			arg1.putLong("endDateInMillis", dateTo);
+			
+			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
+		} else {
+			super.onCreateLoader(groupPos, arg1);
+			String selection = null;
+			String[] selectionArgs = null;
+			
+			selection = "messageState <> ? and messageState <> ?";
+			selectionArgs = new String[]{"read","closed"};
+			loader = new CursorLoader(getActivity(),
+					ContentProvider.createUri(Message.class, null),
+					new String[]{"_id", "id"}, selection, selectionArgs, "date DESC LIMIT " + (limit + offset)
+				);
+		}
 		return (Loader<Object>)loader;
 	}
-	
-//	@Override
-//	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-//		super.onCreateLoader(groupPos, arg1);
-//		Object loader;
-//		if(arg1 == null){
-//			arg1 = new Bundle();
-//		}
-//
-//		if (groupPos < 0) { 
-//			long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
-//			long dateTo = mCalendarGridView.getAdapter().getDateTo();
-//			
-//			arg1.putLong("startDateInMillis", dateFrom);
-//			arg1.putLong("endDateInMillis", dateTo);
-//			
-//			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
-//		} else {
-//			Calendar calToday = Calendar.getInstance();
-//			calToday.set(Calendar.HOUR_OF_DAY, 0);
-//			calToday.clear(Calendar.MINUTE);
-//			calToday.clear(Calendar.SECOND);
-//			calToday.clear(Calendar.MILLISECOND);
-//			int year = mCalendarGridView.getAdapter().getSelectedYear();
-//			int month = mCalendarGridView.getAdapter().getSelectedMonth()-1;
-//			int day = mCalendarGridView.getAdapter().getSelectedDay();
-//			calToday.set(Calendar.YEAR, year);
-//			calToday.set(Calendar.MONTH, month);
-//			calToday.set(Calendar.DATE, day);
-//			arg1.putLong("dateFrom", calToday.getTimeInMillis());
-//			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
-//			
-//
-//			loader = new HomeCalendarGridChildListLoader(getActivity(), arg1);
-//		}
-//		return (Loader<Object>) loader;
-//	}
-//
-//	@Override
-//	public void onLoadFinished(Loader loader, Object list) {
-//		if (loader.getId() < 0) {
-//			
-//			ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) list;
-//			mListGroupData.clear();
-//			mListGroupData.addAll(groupList);
-//			mCalendarGridView.getAdapter().notifyDataSetChanged();
-////			adapter.notifyDataSetChanged();
-////			updateGroupHeader();
-//			updateHeaderStat();
-//			getLoaderManager().restartLoader(0, null, this);
-//		} else {
-//			ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
-//			mListChildData.clear();
-//			mListChildData.addAll(childList);
-//
-//			((HomeListAdapter)getListAdapter()).notifyDataSetChanged();
-//	        setFooterLoadFinished(getListView(), childList.size());
-//		}
-//		// The list should now be shown.
-//		if (isResumed()) {
-//			// setListShown(true);
-//		} else {
-//			// setListShownNoAnimation(true);
-//		}
-//	}
-//
-//	@Override
-//	public void onLoaderReset(Loader<Object> loader) {
-//		 if(loader.getId() < 0){
-//				this.mListGroupData.clear();
-//		 } else {
-//				this.mListChildData.clear();
-//		 }
-//	}
+
+	@Override
+	public void onLoadFinished(Loader loader, Object list) {
+		if (loader.getId() < 0) {
+			
+			ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) list;
+			mListGroupData.clear();
+			mListGroupData.addAll(groupList);
+			mCalendarGridView.getAdapter().notifyDataSetChanged();
+			updateHeaderStat();
+		} else {
+			super.onLoadFinished(loader, list);
+	    }
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Object> loader) {
+		 if(loader.getId() < 0){
+				this.mListGroupData.clear();
+		 } else {
+				super.onLoaderReset(loader);
+		 }
+	}
 
 	
 //	@Override

@@ -42,12 +42,12 @@ import com.hoyoji.android.hyjframework.activity.HyjUserActivity;
 import com.hoyoji.android.hyjframework.server.HyjServer;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
+import com.hoyoji.hoyoji.friend.FriendListFragment;
+import com.hoyoji.hoyoji.home.HomeCalendarGridEventListFragment;
 import com.hoyoji.hoyoji.home.HomeCalendarGridFragment;
-import com.hoyoji.hoyoji.home.HomeEventListFragment;
+import com.hoyoji.hoyoji.home.InviteLinkListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
-import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
-import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyBorrowContainer;
@@ -68,8 +68,12 @@ import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
+import com.hoyoji.hoyoji.money.MoneySearchListFragment;
+import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerFragment;
+import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragment;
+import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
+import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
@@ -377,7 +381,44 @@ public class MainActivity extends HyjUserActivity {
 //		
 //		return super.onOptionsItemSelected(item);
 //	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		 case R.id.homeListFragment_action_transactions :
+				 openActivityWithFragment(MoneySearchListFragment.class,
+				 R.string.moneySearchListFragment_title, null);
+				return true;
+		 case R.id.homeListFragment_action_report :
+				 openActivityWithFragment(MoneyReportFragment.class,
+				 R.string.moneyReportFragment_title, null);
+					return true;
+		case R.id.homeListFragment_action_currency:
+			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
+					R.string.currency_exchang_eviewpager_listFragment_title, null);
+			return true;
+		case R.id.homeListFragment_action_category:
+			openActivityWithFragment(ExpenseIncomeCategoryViewPagerFragment.class,
+					R.string.expense_income_viewpager_listFragment_title, null);
+			return true;
 
+		case R.id.inviteLinkListFragment_action_invitelinks_management:
+			openActivityWithFragment(InviteLinkListFragment.class, R.string.inviteLinkListFragment_title, null);
+			return true;
+			
+		case R.id.friendListFragment_action_friend_management:
+			openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
+			return true;
+			
+		case R.id.homeListFragment_action_setting:
+			openActivityWithFragment(SystemSettingFormFragment.class,
+					R.string.systemSettingFormFragment_title, null);
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -403,7 +444,7 @@ public class MainActivity extends HyjUserActivity {
 				fragment = new HomeCalendarGridFragment();
 				break;
 			case 2:
-				fragment = new HomeEventListFragment();
+				fragment = new HomeCalendarGridEventListFragment();
 				break;
 //			case 4:
 //				fragment = new MessageListFragment();
