@@ -212,16 +212,26 @@ public class EventFormFragment extends HyjUserFormFragment {
 			if (modelId == -1) {
 				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(toBeDeterminedFriend != null){
-					EventMember em = new EventMember();
-					em.setEventId(mEventEditor.getModelCopy().getId());
-					em.setState("SignUp");
-					em.setFriendUserId(null);
-					em.setLocalFriendId(toBeDeterminedFriend.getId());
-					em.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-					em.setFriendUserName("待定成员");
-					em.setToBeDetermined(true);
-					em.save();
+					EventMember toBeDeterminedFriendEM = new EventMember();
+					toBeDeterminedFriendEM.setEventId(mEventEditor.getModelCopy().getId());
+					toBeDeterminedFriendEM.setState("SignUp");
+					toBeDeterminedFriendEM.setFriendUserId(null);
+					toBeDeterminedFriendEM.setLocalFriendId(toBeDeterminedFriend.getId());
+					toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					toBeDeterminedFriendEM.setFriendUserName("待定成员");
+					toBeDeterminedFriendEM.setToBeDetermined(true);
+					toBeDeterminedFriendEM.save();
 				}
+				
+				EventMember currentUserEM= new EventMember();
+				currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
+				currentUserEM.setState("UpSignUp");
+				currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				currentUserEM.setLocalFriendId(null);
+				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				currentUserEM.setToBeDetermined(false);
+				currentUserEM.save();
 			}
 			doSave();
 		}
