@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.event;
 import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,7 +83,6 @@ public class EventFormFragment extends HyjUserFormFragment {
 		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_date);
 		mDateTimeFieldDate.setEnabled(false);
 		
-
 		mTextFieldName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_name);
 		mTextFieldName.setText(event.getName());
 		
@@ -109,7 +109,6 @@ public class EventFormFragment extends HyjUserFormFragment {
 		});
 		
 		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_startDate);
-		
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_endDate);
 		
 		if (modelId != -1) {
@@ -117,8 +116,14 @@ public class EventFormFragment extends HyjUserFormFragment {
 			mDateTimeFieldStartDate.setTime(event.getStartDate());
 			mDateTimeFieldEndDate.setTime(event.getEndDate());
 		} else {
-			mDateTimeFieldDate.setDate(new Date());
-			mDateTimeFieldStartDate.setDate(new Date());
+			long dateInMillisec = intent.getLongExtra("DATE_IN_MILLISEC", -1);
+			if(dateInMillisec != -1){
+				Date date = new Date(dateInMillisec);
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldDate.setTextColor(Color.RED);
+				mDateTimeFieldStartDate.setDate(date);
+				mDateTimeFieldStartDate.setTextColor(Color.RED);
+			} 
 			mDateTimeFieldEndDate.setDate(null);
 		}
 

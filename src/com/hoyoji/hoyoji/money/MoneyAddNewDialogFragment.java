@@ -30,10 +30,7 @@ public class MoneyAddNewDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
 
-		final Bundle bundle = new Bundle();
-		if(getArguments().containsKey("DATE_IN_MILLISEC")){
-			bundle.putLong("DATE_IN_MILLISEC", getArguments().getLong(("DATE_IN_MILLISEC")));
-		}
+		final Bundle bundle = getArguments();
     	View v = inflater.inflate(R.layout.money_dialogfragment_addnew, null);
     	v.findViewById(R.id.moneyDialogFragment_addnew_expense).setOnClickListener(new OnClickListener(){
 			@Override
