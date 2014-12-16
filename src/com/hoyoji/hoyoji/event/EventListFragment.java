@@ -34,6 +34,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
@@ -187,7 +188,7 @@ public class EventListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
-			TextView textView = (TextView)view;
+			HyjNumericView textView = (HyjNumericView)view;
 			Project project = event.getProject();
 			String projectId = event.getProjectId();
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
@@ -196,27 +197,23 @@ public class EventListFragment extends HyjUserListFragment {
 				textView.setText("-");
 				return true;
 			}
-			String balanceStr = "";
 			Double depositBalance = event.getBalance();
 			if(depositBalance == 0){
 				textView.setTextColor(Color.BLACK);
-//				textView.setPrefix(project.getCurrencySymbol());
-				balanceStr += project.getCurrencySymbol();
+				textView.setPrefix(project.getCurrencySymbol());
 			} else if(depositBalance < 0){
 				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-//				textView.setPrefix("支出"+project.getCurrencySymbol());
-				balanceStr = "支出"+project.getCurrencySymbol();
+				textView.setPrefix("支出"+project.getCurrencySymbol());
 			}else{
 				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-//				textView.setPrefix("收入"+project.getCurrencySymbol());
-				balanceStr = "收入"+project.getCurrencySymbol();
+				textView.setPrefix("收入"+project.getCurrencySymbol());
 			}
 			
-			textView.setText(balanceStr+Math.abs(depositBalance));
+			textView.setNumber(Math.abs(depositBalance));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
 			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
-			dateTimeView.setDateFormat("yy-MM-dd HH:mm:ss");
+			dateTimeView.setDateFormat("yy-MM-dd HH:mm");
 			dateTimeView.setTime(cursor.getLong(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
