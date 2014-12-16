@@ -38,8 +38,7 @@ public class HyjDateTimeView extends TextView {
 	}
 
 	private Date mDate;
-//	private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	
+	private DateFormat mDateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 	public void setTime(Long timeInMillisec){
 		if(timeInMillisec == null){
 			setDate(null);
@@ -53,9 +52,13 @@ public class HyjDateTimeView extends TextView {
 		if(date == null){
 			super.setText("");
 		} else {
-			DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-			super.setText(df.format(date));
+//			DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+			super.setText(mDateFormat.format(date));
 		}
+	}
+	
+	public void setDateFormat(DateFormat dateFormat){
+		mDateFormat = dateFormat;
 	}
 	
 	public Long getDate(){

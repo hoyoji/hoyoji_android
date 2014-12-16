@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.home;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -179,7 +181,19 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		view.findViewById(R.id.home_listfragment_event_addnew).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, null);
+
+				Bundle bundle = new Bundle();
+				Calendar calToday = Calendar.getInstance();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
 			}
 		});
 		return view;
@@ -342,7 +356,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 					textView.setNumber(Math.abs(depositBalance));
 				}
 				
-				((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date)).setTime(event.getStartDate());
+				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
+				dateTimeView.setDateFormat(new SimpleDateFormat("yy-MM-dd HH:mm"));
+				dateTimeView.setTime(event.getStartDate());
 				
 				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());
 				
@@ -471,18 +487,18 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //			} else {
 //				((TextView)view).setText(cursor.getString(columnIndex));
 //			}
+			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
 			
 			long date = cursor.getLong(cursor.getColumnIndex("date"));
 			long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
 			long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 
 			long dt = (new Date()).getTime();
-			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
 			if(dt >= date && dt < startDate) {
-				((TextView)view).setText("[报名中]" + ems.size() + "人");
+				((TextView)view).setText("[报名中]" + event.getSignUpCount() + "人");
 			} else if(dt >= startDate && dt < endDate) {
-				((TextView)view).setText("[进行中]" + ems.size() + "人");
+				((TextView)view).setText("[进行中]" + event.getSignUpCount() + "人");
 			} else if(dt >= endDate) {
-				((TextView)view).setText("[已结束]" + ems.size() + "人");
+				((TextView)view).setText("[已结束]" + event.getSignUpCount() + "人");
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
