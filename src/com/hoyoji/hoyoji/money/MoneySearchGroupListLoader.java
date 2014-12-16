@@ -50,8 +50,8 @@ import android.support.v4.content.AsyncTaskLoader;
 public class MoneySearchGroupListLoader extends
 		AsyncTaskLoader<List<Map<String, Object>>> {
 
-	private DateFormat mDateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//	private DateFormat mDateFormat = new SimpleDateFormat(
+//			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private List<Map<String, Object>> mGroupList;
 	private Integer mLoadLimit = 10;
 	private boolean mHasMoreData = true;
@@ -67,7 +67,7 @@ public class MoneySearchGroupListLoader extends
 
 	public MoneySearchGroupListLoader(Context context, Bundle queryParams) {
 		super(context);
-		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		copyQueryParams(queryParams);
 
 		mChangeObserver = new ChangeObserver();

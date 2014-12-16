@@ -112,6 +112,16 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		if(friend_id != -1){
 			mFriend =  new Select().from(Friend.class).where("_id=?", friend_id).executeSingle();
 			subTitle = mFriend.getDisplayName();
+		} else {
+			final String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				subTitle = Friend.getFriendUserDisplayName(friendUserId);
+			} else{
+				final String localFriendId = intent.getStringExtra("localFriendId");
+				 if(localFriendId != null && mProject != null){
+					 subTitle = Friend.getFriendUserDisplayName(localFriendId,friendUserId, mProject.getId());
+				 }
+			}
 		}
 
 		mDateFrom = intent.getLongExtra("dateFrom", 0);
@@ -158,6 +168,17 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				queryParams.putString("friendUserId", mFriend.getFriendUserId());
 			} else {
 				queryParams.putString("localFriendId", mFriend.getId());
+			}
+		} else {
+			Intent intent = getActivity().getIntent();
+			final String friendUserId = intent.getStringExtra("friendUserId");
+			if(friendUserId != null){
+				queryParams.putString("friendUserId", friendUserId);
+			} else{
+				final String localFriendId = intent.getStringExtra("localFriendId");
+				 if(localFriendId != null){
+						queryParams.putString("localFriendId", localFriendId);
+				 }
 			}
 		}
 
