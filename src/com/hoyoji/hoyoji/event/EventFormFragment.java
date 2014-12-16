@@ -123,7 +123,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		}
 
 		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
-		mRemarkFieldDescription.setText(event.getDescription());
+		
 		mRemarkFieldDescription.setEditable(false);
 		mRemarkFieldDescription.setOnClickListener(new OnClickListener(){
 			@Override
@@ -154,6 +154,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 //		});
 		
 		if(modelId != -1){
+			mRemarkFieldDescription.setText(event.getDescription());
 			mSelectorFieldProject.setEnabled(false);
 			if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				mDateTimeFieldEndDate.setEnabled(false);
@@ -165,6 +166,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				}
 			}
 		} else {
+			mRemarkFieldDescription.setText("小伙伴们，又好久不见了，一起聚聚吧！\n\n地点：老地方\n费用：AA\n其他：可以带家属\n\n温馨提示：喝酒的就别开车了");
 //			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
 //			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -225,7 +227,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				
 				EventMember currentUserEM= new EventMember();
 				currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
-				currentUserEM.setState("UpSignUp");
+				currentUserEM.setState("UnSignUp");
 				currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				currentUserEM.setLocalFriendId(null);
 				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
