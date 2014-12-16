@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -22,39 +22,29 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.SimpleAdapter.ViewBinder;
-
 import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
-import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
@@ -70,8 +60,6 @@ import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
 import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
 import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
-import com.hoyoji.hoyoji.models.Event;
-import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
@@ -79,10 +67,8 @@ import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyExpense;
-import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
-import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer;
 import com.hoyoji.hoyoji.models.MoneyLend;
 import com.hoyoji.hoyoji.models.MoneyPayback;
@@ -91,7 +77,6 @@ import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
@@ -106,15 +91,10 @@ import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
-import com.hoyoji.hoyoji.money.MoneySearchListFragment;
-import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTransferFormFragment;
-import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
-import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragment;
-import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
-import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
+import com.jauker.widget.BadgeView;
 
 public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -134,6 +114,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	
 	private HyjCalendarGrid mCalendarGridView;
 	private TextView mTextViewLatestNewMessage;
+	private FrameLayout mLayoutActionMessage;
 	
 	DateFormat df = SimpleDateFormat.getDateInstance();
 	
@@ -298,6 +279,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
     		}
 		});
 		mTextViewLatestNewMessage = (TextView)view.findViewById(R.id.homeListFragment_new_message);
+		mLayoutActionMessage = (FrameLayout)view.findViewById(R.id.homeListFragment_action_message_layout);
 		mTextViewLatestNewMessage.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -532,6 +514,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 		
 		// 加载日历
 		initLoader(-1);
+		updateLatestModifiedModel();
 	}
 	
 
@@ -688,9 +671,6 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 			cursor = null;
 		}
 		this.mIncomeStat.setText(localCurrencySymbol + df.format(incomeTotal));
-		
-
-		updateLatestModifiedModel();
 	}
 
 	@Override
@@ -1895,11 +1875,13 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	Message mLatestNewMessage;
 	HyjAsyncTask mLatestNewMessageLoader = null;
 	HyjAsyncTaskCallbacks mLatestNewMessageLoaderCallback = new HyjAsyncTaskCallbacks(){
+
 		@Override
 		public void finishCallback(Object object) {
-			if(object != null){
+			HashMap<String, Object> map = (HashMap<String, Object>)object;
+			if(map.get("message") != null){
 				mTextViewLatestNewMessage.setVisibility(View.VISIBLE);
-				mLatestNewMessage = (Message)object;
+				mLatestNewMessage = (Message)map.get("message");
 				try {
 					JSONObject messageData = null;
 					messageData = new JSONObject(mLatestNewMessage.getMessageData());
@@ -1926,13 +1908,43 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				mTextViewLatestNewMessage.setVisibility(View.GONE);
 			}
 			mLatestNewMessageLoader = null;
+			
+			BadgeView badgeView = (BadgeView)(mLayoutActionMessage.getTag());
+			if(badgeView == null){
+				badgeView = new BadgeView(getActivity());
+				badgeView.setHideOnNull(true);
+				badgeView.setBadgeCount(0);
+//				badgeView.setMaxLines(1);
+				badgeView.setSingleLine();
+				badgeView.setEllipsize(TruncateAt.END);
+//				tab.removeView(badgeView);
+				mLayoutActionMessage.addView(badgeView);
+				mLayoutActionMessage.setTag(badgeView);
+			}
+
+			badgeView.setBadgeCount((Integer) map.get("count"));
 		}
 
 		@Override
 		public Object doInBackground(String... string) {
 			HyjModel message;
-			message = new Select().from(Message.class).where("messageState <> 'read' AND messageState <> 'closed'").orderBy("date DESC").limit(1).executeSingle();
-	    	return message;
+			message = new Select().from(Message.class).where("messageState = 'new' OR messageState = 'unread'").orderBy("date DESC").limit(1).executeSingle();
+			
+			int count = 0;
+			Cursor cursor = Cache.openDatabase().rawQuery(
+					"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
+					null);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count = cursor.getInt(0);
+				cursor.close();
+				cursor = null;
+			}
+
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("count", count);
+			map.put("message", message);
+	    	return map;
 		}
 	};
 	
