@@ -97,6 +97,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
+		mViewPager.setCurrentItem(1);
 	}
 	
 	
@@ -124,9 +125,9 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneySearchListFragment();
-			case 1 :
 				return new EventListFragment();
+			case 1 :
+				return new MoneySearchListFragment();
 			case 2:
 				return new ProjectMemberListFragment();
 			case 3:
@@ -144,9 +145,9 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "流水";
-			case 1 :
 				return "活动";
+			case 1 :
+				return "流水";
 			case 2:
 				return "成员";
 			case 3:
