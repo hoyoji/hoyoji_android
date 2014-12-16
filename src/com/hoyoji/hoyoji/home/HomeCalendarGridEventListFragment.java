@@ -394,8 +394,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 						// 我报了名，刚结束的活动
 						event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("endDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
 						if(event == null){
-							// 我没报名，刚结束的活动
-							event = new Select().from(Event.class).where("endDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
+							// 我没报名，刚开始的活动
+							event = new Select().from(Event.class).where("startDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
 						}
 					}
 				}
