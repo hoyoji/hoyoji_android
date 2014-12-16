@@ -227,7 +227,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				
 				EventMember currentUserEM= new EventMember();
 				currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
-				currentUserEM.setState("UpSignUp");
+				currentUserEM.setState("UnSignUp");
 				currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				currentUserEM.setLocalFriendId(null);
 				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
