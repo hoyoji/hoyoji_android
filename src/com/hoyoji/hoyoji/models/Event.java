@@ -283,6 +283,7 @@ public class Event extends HyjModel {
 		
 		jsonObj.remove("incomeTotal");
 		jsonObj.remove("expenseTotal");
+		jsonObj.remove("signUpCount");
 		
 		return jsonObj;
 	}
