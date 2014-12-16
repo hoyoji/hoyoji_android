@@ -71,7 +71,7 @@ public class HyjRemarkField extends LinearLayout {
 			mTextViewLabel.setTextSize(10);
 			mTextViewLabel.setTextColor(Color.GRAY);
 			mTextViewLabel.setGravity(Gravity.CENTER_HORIZONTAL);
-//			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		mEditTextEdit.setHint(mHintText);
 		mEditTextEdit.setText(mEditText);
@@ -83,6 +83,11 @@ public class HyjRemarkField extends LinearLayout {
 	}
 	
 	public void setText(String text){
+		if(text == null || "".equals(text)){
+			mEditTextEdit.setGravity(Gravity.CENTER_HORIZONTAL);
+		} else {
+			mEditTextEdit.setGravity(Gravity.LEFT);
+		}
 		mEditTextEdit.setText(text);
 	}
 	
