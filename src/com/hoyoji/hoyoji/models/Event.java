@@ -28,6 +28,9 @@ public class Event extends HyjModel {
 
 	@Column(name = "name")
 	private String mName;
+	
+	@Column(name = "state")
+	private String mState;
 
 	@Column(name = "projectId")
 	private String mProjectId;
@@ -35,8 +38,8 @@ public class Event extends HyjModel {
 	@Column(name = "description")
 	private String mDescription;
 	
-	@Column(name = "alreadySignUpCount")
-	private int mAlreadySignUpCount = 0;
+	@Column(name = "signUpCount")
+	private int mSignUpCount = 0;
 	
 	@Column(name = "startDate")
 	private Long mStartDate;
@@ -147,6 +150,14 @@ public class Event extends HyjModel {
 		this.mName = mName;
 	}
 	
+	public String getState() {
+		return mState;
+	}
+
+	public void setState(String mState) {
+		this.mState = mState;
+	}
+
 	public Project getProject(){
 		if(mProjectId == null){
 			return null;
@@ -179,12 +190,12 @@ public class Event extends HyjModel {
 		this.mDescription = mDescription;
 	}
 
-	public int getAlreadySignUpCount() {
-		return mAlreadySignUpCount;
+	public int getSignUpCount() {
+		return mSignUpCount;
 	}
 	
-	public void setAlreadySignUpCount(int mAlreadySignUpCount) {
-		this.mAlreadySignUpCount = mAlreadySignUpCount;
+	public void setSignUpCount(int mSignUpCount) {
+		this.mSignUpCount = mSignUpCount;
 	}
 
 	public Long getStartDate() {
