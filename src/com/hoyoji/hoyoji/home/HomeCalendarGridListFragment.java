@@ -1787,7 +1787,6 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				} catch (Exception e){
 					mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
 				}
-				mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
 			} else {
 				mTextViewLatestNewMessage.setVisibility(View.GONE);
 			}
