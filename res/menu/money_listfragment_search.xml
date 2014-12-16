@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_action_new_white"
         android:title="@string/mainActivity_action_money_addnew"
         hoyoji:showAsAction="always">
-        <menu>
+       <!--  <menu>
             <item
                 android:id="@+id/mainActivity_action_money_addnew_expense"
                 android:title="支出"
@@ -71,7 +71,7 @@
                         hoyoji:showAsAction="never"/>
                 </menu>
             </item>
-        </menu>
+        </menu> -->
     </item>
     	
     
