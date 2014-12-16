@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -40,6 +41,7 @@ import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
+import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
@@ -64,6 +66,11 @@ public class EventMemberListFragment extends HyjUserListFragment {
 	private IWXAPI api;
 	private QQShare mQQShare = null;
 	public static QQAuth mQQAuth;
+	private Button mAllEventMember;
+	private Button mSignUpEventMember;
+	private Button mSignInEventMember;
+	private boolean mIsSelectSignUpEventMembers = false;
+	private boolean mIsSelectSignInEventMembers = false;
 
 	@Override
 	public Integer useContentView() {
@@ -115,11 +122,23 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			event =  Model.load(Event.class, modelId);
 			eventId = event.getId();
 		}
+		String selection = "eventId = ?";
+		String[] selectionArgs = new String[]{eventId};
+		
+		if(mIsSelectSignUpEventMembers == true){
+			selection = selection + " and state = ?";
+			selectionArgs = new String[]{eventId,"SignUp"};
+		}
+		
+		if(mIsSelectSignInEventMembers == true){
+			selection = selection + " and state = ?";
+			selectionArgs = new String[]{eventId,"SignIn"};
+		}
 		Object loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(EventMember.class, null),
 				null,
-				"eventId=?", 
-				new String[]{eventId}, 
+				selection, 
+				selectionArgs, 
 				"state LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
@@ -131,6 +150,57 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		super.onInitViewData();
 		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
 		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
+		
+		mAllEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_all_event_member);
+		mSignUpEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_sign_up_member);
+		mSignInEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_sign_in_member);
+		
+		mAllEventMember.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mIsSelectSignUpEventMembers = false;
+				mIsSelectSignInEventMembers = false;
+				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
+				mAllEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mAllEventMember.setTextColor(Color.WHITE);
+				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignUpEventMember.setTextColor(Color.BLACK);
+				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignInEventMember.setTextColor(Color.BLACK);
+    		}
+		});
+		mAllEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+		mAllEventMember.setTextColor(Color.WHITE);
+		
+		mSignUpEventMember.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mIsSelectSignUpEventMembers = true;
+				mIsSelectSignInEventMembers = false;
+				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
+				mSignUpEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mSignUpEventMember.setTextColor(Color.WHITE);
+				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mAllEventMember.setTextColor(Color.BLACK);
+				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignInEventMember.setTextColor(Color.BLACK);
+    		}
+		});
+		
+		mSignInEventMember.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mIsSelectSignUpEventMembers = false;
+				mIsSelectSignInEventMembers = true;
+				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
+				mSignInEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mSignInEventMember.setTextColor(Color.WHITE);
+				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignUpEventMember.setTextColor(Color.BLACK);
+				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mAllEventMember.setTextColor(Color.BLACK);
+    		}
+		});
 	}
 	
 	@Override  
