@@ -256,14 +256,15 @@
             android:orientation="vertical"
             android:visibility="gone">
 	
-	        <com.hoyoji.android.hyjframework.view.HyjRemarkField
-	            android:id="@+id/moneyLendFormFragment_textField_remark"
-	            hyj:style="no_label"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            hyj:editTextBorder="none"
-	            hyj:hintText="@string/moneyLendFormFragment_editText_hint_remark"
-	            hyj:labelText="@string/moneyLendFormFragment_textView_remark" />
+	        <com.hoyoji.android.hyjframework.view.HyjDateTimeField
+	             android:id="@+id/moneyLendFormFragment_textField_paybackDate"
+	             android:layout_width="match_parent"
+	             android:layout_height="wrap_content"
+	             hyj:style="top_label"
+	             android:layout_weight="2"
+	             hyj:editTextBorder="none"
+	             hyj:hintText="@string/moneyLendFormFragment_editText_hint_paybackDate"
+	             hyj:labelText="@string/moneyLendFormFragment_textView_paybackDate" />
 	        
 	        <View
 	            android:id="@id/field_separator"
@@ -273,15 +274,15 @@
 	            android:layout_marginTop="5dip"
 	            android:background="@drawable/line_divider" />
 	        
-	        <com.hoyoji.android.hyjframework.view.HyjDateTimeField
-	             android:id="@+id/moneyLendFormFragment_textField_paybackDate"
-	             android:layout_width="match_parent"
-	             android:layout_height="wrap_content"
-	             android:layout_weight="2"
-	             hyj:editTextBorder="none"
-	             hyj:hintText="@string/moneyLendFormFragment_editText_hint_paybackDate"
-	             hyj:labelText="@string/moneyLendFormFragment_textView_paybackDate" />
-	
+	        <com.hoyoji.android.hyjframework.view.HyjRemarkField
+	            android:id="@+id/moneyLendFormFragment_textField_remark"
+	            hyj:style="top_label"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            hyj:editTextBorder="none"
+	            hyj:hintText="@string/moneyLendFormFragment_editText_hint_remark"
+	            hyj:labelText="@string/moneyLendFormFragment_textView_remark" />
+	        
 	        <View
 	            android:id="@id/field_separator"
 	            android:layout_width="match_parent"

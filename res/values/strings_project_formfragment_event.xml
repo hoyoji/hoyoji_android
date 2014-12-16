@@ -25,6 +25,13 @@
     
     <string name="projectEventListFragment_hyjRemarkField_hint_description">请输入活动内容</string>
     <string name="projectEventListFragment_hyjRemarkField_description">活动内容</string>
+    <string name="projectEventListFragment_hyjRemarkField_description_default">
+		小伙伴们，又好久不见了，一起聚聚吧！\n\n
+		地点：老地方\n
+		费用：AA\n
+		其他：可以带家属\n\n
+		温馨提示：喝酒的就别开车了
+	</string>
     
     <string name="projectEventFormFragment_title_edit">修改账本活动</string>
     

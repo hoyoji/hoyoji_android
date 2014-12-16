@@ -250,7 +250,7 @@
 
 	        <com.hoyoji.android.hyjframework.view.HyjRemarkField
 	            android:id="@+id/moneyReturnFormFragment_textField_remark"
-	            hyj:style="no_label"
+	            hyj:style="top_label"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            hyj:editTextBorder="none"

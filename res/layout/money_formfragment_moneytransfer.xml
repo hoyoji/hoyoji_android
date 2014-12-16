@@ -456,7 +456,6 @@
 	            </LinearLayout>
 	        </LinearLayout>
 	        
-	
 	        <View
 	            android:id="@id/field_separator"
 	            android:layout_width="match_parent"
@@ -467,7 +466,7 @@
 	
 	        <com.hoyoji.android.hyjframework.view.HyjRemarkField
 	            android:id="@+id/moneyTransferFormFragment_textField_remark"
-	            hyj:style="no_label"
+	            hyj:style="top_label"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            hyj:editTextBorder="none"
