@@ -115,16 +115,17 @@
         android:layout_height="wrap_content" />
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@color/hoyoji_lightgray"
         android:descendantFocusability="blocksDescendants" >
 
         <LinearLayout
             android:id="@+id/home_stat_center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" >
