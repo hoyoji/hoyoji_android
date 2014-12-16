@@ -215,7 +215,9 @@ public class EventListFragment extends HyjUserListFragment {
 			textView.setText(balanceStr+Math.abs(depositBalance));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setTime(cursor.getLong(columnIndex));
+			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
+			dateTimeView.setDateFormat("yy-MM-dd HH:mm:ss");
+			dateTimeView.setTime(cursor.getLong(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
 			((TextView)view).setText(cursor.getString(columnIndex));
