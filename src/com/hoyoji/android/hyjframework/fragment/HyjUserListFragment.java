@@ -380,8 +380,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		} else if(count == 0 && l.getAdapter().getCount() == offset){
 	        ((TextView)mFooterView).setText(getNoContentText());
 	        ((TextView)mFooterView).setBackgroundColor(Color.TRANSPARENT);
-	        int height = Math.max(getListView().getHeight()-getHeaderHeight(), 48);
-	        ((TextView)mFooterView).setHeight(height);
+	        ((TextView)mFooterView).setHeight(getListView().getHeight()-getHeaderHeight());
 //	        if(mEmptyView != null){
 //				mEmptyView.setText(R.string.app_listview_no_content);
 //	        }

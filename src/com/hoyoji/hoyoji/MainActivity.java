@@ -44,7 +44,7 @@ import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.home.HomeCalendarGridEventListFragment;
-import com.hoyoji.hoyoji.home.HomeCalendarGridFragment;
+import com.hoyoji.hoyoji.home.HomeCalendarGridListFragment;
 import com.hoyoji.hoyoji.home.InviteLinkListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
@@ -441,7 +441,7 @@ public class MainActivity extends HyjUserActivity {
 				fragment = new ProjectListFragment();
 				break;
 			case 1:
-				fragment = new HomeCalendarGridFragment();
+				fragment = new HomeCalendarGridListFragment();
 				break;
 			case 2:
 				fragment = new HomeCalendarGridEventListFragment();
