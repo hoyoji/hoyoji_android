@@ -138,9 +138,18 @@ public class EventViewPagerFragment extends HyjUserFragment {
 					mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 						@Override
 						public void onClick(View v) {
-							ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
-							
-							sendAcceptMessageToServer(event, eventMember, psa);
+							if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+								eventMember.setState("SignUp");
+								eventMember.save();
+								mBtnSignUpEvent.setVisibility(View.GONE);
+								mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+								HyjUtil.displayToast("报名成功");
+							} else {
+								ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
+								
+								sendAcceptMessageToServer(event, eventMember, psa);
+								
+							}
 							
 //							if(eventMember == null){
 //								
@@ -238,7 +247,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 //			getActivity().finish();
 			mBtnSignUpEvent.setVisibility(View.GONE);
 			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-			HyjUtil.displayToast("加入成功");
+			HyjUtil.displayToast("报名成功");
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
