@@ -381,7 +381,15 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(ProjectMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				openActivityWithFragment(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_edit, bundle);
+				bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
+				if(memberToBeDetermined.getFriend() != null){
+					bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
+				} else if(memberToBeDetermined.getFriendUserId() != null){
+					bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
+				}  else if(memberToBeDetermined.getLocalFriendId() != null){
+					bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
+				} 
+				openActivityWithFragment(ProjectMemberViewPagerFragment.class, R.string.memberFormFragment_title_edit, bundle);
 			}
 		}
     }  

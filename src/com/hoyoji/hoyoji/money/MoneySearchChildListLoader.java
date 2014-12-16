@@ -60,7 +60,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 //	    }
 //	};
 
-		private DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//		private DateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	    private List<HyjModel> mChildList;
 	    private Integer mLoadLimit = null;
 	    private long mDateFrom = 0;
@@ -77,7 +77,7 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    
 	    public MoneySearchChildListLoader(Context context, Bundle queryParams) {
 	    	super(context);
-			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//			mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 			copyQueryParams(queryParams);
 			
 //	    	mChangeObserver = new ChangeObserver();

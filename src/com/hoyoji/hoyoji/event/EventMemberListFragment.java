@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -20,14 +19,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
-import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -39,15 +35,9 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
-import com.hoyoji.hoyoji.friend.FriendFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
-import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
-import com.hoyoji.hoyoji.models.MoneyTemplate;
 import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
@@ -156,7 +146,19 @@ public class EventMemberListFragment extends HyjUserListFragment {
 					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
+				bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
+				if(memberToBeDetermined.getFriend() != null){
+					bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
+				} else if(memberToBeDetermined.getFriendUserId() != null){
+					bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
+				}  else if(memberToBeDetermined.getLocalFriendId() != null){
+					bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
+				} 
+				Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+				if(modelId != -1){
+					bundle.putLong("event_id", modelId);
+				}
+				openActivityWithFragment(EventMemberViewPagerFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
 			}
 		}
 	}
