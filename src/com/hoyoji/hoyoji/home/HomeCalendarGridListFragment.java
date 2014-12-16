@@ -79,6 +79,8 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.hoyoji.hoyoji.money.MoneyAddNewDialogFragment;
+import com.hoyoji.hoyoji.money.MoneyApportionEditDialogFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
@@ -335,140 +337,6 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
     		}
 		});
 
-//		getView().findViewById(R.id.homeListFragment_action_money_template).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
-//    		}
-//		});
-//		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				PopupMenu popup = new PopupMenu(getActivity(), v);
-//				MenuInflater inflater = popup.getMenuInflater();
-//				inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
-//				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//					@Override
-//					public boolean onMenuItemClick(MenuItem item) {
-//						Bundle bundle = new Bundle();
-//						Calendar calToday = Calendar.getInstance();
-//						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-//								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-//								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-//							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-//							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-//							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-//	
-//							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-//						}
-//						
-//						if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-//							openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
-//							openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
-//							openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
-//							openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
-//						}
-//						return false;
-//					}
-//				});
-//				popup.show();
-//			}
-//		});
-		
-//		getView().findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(final View v) {
-//				PopupMenu popup = new PopupMenu(getActivity(), v);
-//				MenuInflater inflater = popup.getMenuInflater();
-//				inflater.inflate(R.menu.home_more_actions, popup.getMenu());
-//				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//					@Override
-//					public boolean onMenuItemClick(MenuItem item) {
-//
-//						final Bundle bundle = new Bundle();
-//						Calendar calToday = Calendar.getInstance();
-//						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-//								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-//								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-//							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-//							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-//							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-//							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-//						}
-//						
-//						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposit) {
-//							PopupMenu popup = new PopupMenu(getActivity(), v);
-//							MenuInflater inflater = popup.getMenuInflater();
-//							inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
-//							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//								@Override
-//								public boolean onMenuItemClick(MenuItem item) {
-//									Bundle bundle = new Bundle();
-//									Calendar calToday = Calendar.getInstance();
-//									if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-//											|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-//											|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-//										calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-//										calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-//										calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-//				
-//										bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-//									}
-//									
-//									if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-//										openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
-//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
-//										openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
-//										openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
-//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
-//										openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
-//									}
-//									return false;
-//								}
-//							});
-//							popup.show();
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_debt) {
-//
-//							PopupMenu popup = new PopupMenu(getActivity(), v);
-//							MenuInflater inflater = popup.getMenuInflater();
-//							inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
-//							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//								@Override
-//								public boolean onMenuItemClick(MenuItem item) {
-//
-//									if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
-//										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, bundle);
-//									} 
-//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
-//										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, bundle);
-//									} 
-//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
-//										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, bundle);
-//									} 
-//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
-//										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, bundle);
-//									} 
-//									return false;
-//								}
-//							});
-//							popup.show();
-//						
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
-//							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, bundle);
-//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
-//							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, bundle);
-//						} 
-//						return false;
-//					}
-//				});
-//				popup.show();
-//			}
-//		});
-
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
@@ -492,7 +360,23 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
     		}
 		});
-		
+		getView().findViewById(R.id.homelistfragment_money_addnew).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				Calendar calToday = Calendar.getInstance();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				MoneyAddNewDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "MoneyAddNewDialogFragment");
+    		}
+		});
 		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
