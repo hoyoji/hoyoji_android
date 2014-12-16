@@ -916,9 +916,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
-		if(mSelectorFieldEvent.getModelId() != null){
-			modelCopy.setEvent(HyjModel.getModel(Event.class, mSelectorFieldEvent.getModelId()));
-		}
+		modelCopy.setEventId(mSelectorFieldEvent.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyIncomeCategory(mSelectorFieldMoneyIncomeCategory.getText());
 		modelCopy.setMoneyIncomeCategoryMain(mSelectorFieldMoneyIncomeCategory.getLabel());
@@ -1904,7 +1902,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
     					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
     					mSelectorFieldEvent.setText(null);
     					mSelectorFieldEvent.setModelId(null);
-    					mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
+    					mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);
     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
     				} else {
 	     				Event event = Event.load(Event.class, _id);
@@ -1918,7 +1916,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	     					return;
 	     				}
 	     				
-	     				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyExpenseApportion.class);
+	     				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyIncomeApportion.class);
 	    				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	
 	     				if( event.getProject().getFinancialOwnerUserId() != null){
