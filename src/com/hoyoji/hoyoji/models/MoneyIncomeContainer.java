@@ -832,7 +832,7 @@ public class MoneyIncomeContainer extends HyjModel {
 							HyjModelEditor<EventMember> eventMemberEditor = eventMember.newModelEditor();
 							
 							if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
-									mMoneyIncomeContainerEditor.getModel().getEventId().equals(mMoneyIncomeContainerEditor.getModelCopy().getEventId())){
+									mMoneyIncomeContainerEditor.getModelCopy().getEventId().equals(mMoneyIncomeContainerEditor.getModel().getEventId())){
 								 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
 								eventMemberEditor.getModelCopy().setApportionedTotalIncome(eventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 								eventMemberEditor.save();
@@ -840,7 +840,29 @@ public class MoneyIncomeContainer extends HyjModel {
 								//更新新账本分摊支出
 								eventMemberEditor.getModelCopy().setApportionedTotalIncome(eventMember.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
 								eventMemberEditor.save();
-								
+								if(mMoneyIncomeContainerEditor.getModel().getEventId() != null){
+									//更新老账本分摊支出
+									EventMember oldEventMember;
+									if(apportion.getFriendUserId() != null){
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
+												mMoneyIncomeContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
+									} else {
+										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
+												mMoneyIncomeContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
+									}
+									if(oldEventMember != null){
+										HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
+										oldEventMemberEditor.getModelCopy().setApportionedTotalIncome(oldEventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate));
+										oldEventMemberEditor.save();
+									}
+								}
+							}
+						} else {
+							// 新的没有选择活动
+							if(mMoneyIncomeContainerEditor.getModel().get_mId() == null){
+								// 新增的收入，又没有活动，什么都不用做
+							} else {
+								// 不是新增的收入，当前没有活动，看老的收入记录有没有活动
 								//更新老账本分摊支出
 								EventMember oldEventMember;
 								if(apportion.getFriendUserId() != null){

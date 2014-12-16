@@ -932,9 +932,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
-		if(mSelectorFieldEvent.getModelId() != null){
-			modelCopy.setEvent(HyjModel.getModel(Event.class, mSelectorFieldEvent.getModelId()));
-		}
+		modelCopy.setEventId(mSelectorFieldEvent.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setMoneyExpenseCategory(mSelectorFieldMoneyExpenseCategory.getText());
 		modelCopy.setMoneyExpenseCategoryMain(mSelectorFieldMoneyExpenseCategory.getLabel());
