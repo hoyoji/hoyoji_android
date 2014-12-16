@@ -352,11 +352,11 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 					long endDate = event.getEndDate(); 
 					long dt = (new Date()).getTime();
 					if(dt >= date && dt < startDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getAlreadySignUpCount() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getSignUpCount() + "人");
 					} else if(dt >= startDate && dt < endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getAlreadySignUpCount() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getSignUpCount() + "人");
 					} else if(dt >= endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getAlreadySignUpCount() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getSignUpCount() + "人");
 					}
 
 					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));
