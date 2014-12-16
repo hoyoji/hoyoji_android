@@ -65,7 +65,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.home_listfragment_home_calendargrid;
+		return R.layout.home_listfragment_event_calendargrid;
 	}
 
 	@Override
@@ -351,13 +351,12 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 					long startDate = event.getStartDate();
 					long endDate = event.getEndDate(); 
 					long dt = (new Date()).getTime();
-					List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", event.getId(), "UnSignUp").execute();
 					if(dt >= date && dt < startDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + ems.size() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getAlreadySignUpCount() + "人");
 					} else if(dt >= startDate && dt < endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + ems.size() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getAlreadySignUpCount() + "人");
 					} else if(dt >= endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + ems.size() + "人");
+						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getAlreadySignUpCount() + "人");
 					}
 
 					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));

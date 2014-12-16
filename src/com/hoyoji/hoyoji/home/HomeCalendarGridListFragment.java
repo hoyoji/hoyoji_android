@@ -116,9 +116,9 @@ import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragm
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
 
-public class HomeCalendarGridFragment extends HyjUserListFragment {
+public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
-//	private List<Map<String, Object>> mListChildTitleData = new ArrayList<Map<String, Object>>();
+	private List<HyjModel> mListChildData = new ArrayList<HyjModel>();
 	private ContentObserver mChangeObserver = null;
 	private ContentObserver mMessageChangeObserver;
 	private Button mExpenseButton;
@@ -133,13 +133,9 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //	private TextView mGroupHeaderDate;
 	
 	private HyjCalendarGrid mCalendarGridView;
-	private View mLatestModifiedModelLayout;
+	private TextView mTextViewLatestNewMessage;
 	
 	DateFormat df = SimpleDateFormat.getDateInstance();
-//	private int mImageBackgroundColorExpense = Color.parseColor("#FF4C32");
-//	private int mImageBackgroundColorIncome = Color.parseColor("#FF4C32");
-	
-//	private int mImageBackgroundColor = R.color.hoyoji_red;
 	
 	private DateFormat mDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -162,7 +158,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 
 	@Override
 	protected CharSequence getNoContentText() {
-		return "无未读消息";
+		return "无账务流水";
 	}
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -186,24 +182,25 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getMonthAtPosition(arg2));
 				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition(arg2));
 
-				Calendar calToday = Calendar.getInstance();
-				calToday.set(Calendar.HOUR_OF_DAY, 0);
-				calToday.clear(Calendar.MINUTE);
-				calToday.clear(Calendar.SECOND);
-				calToday.clear(Calendar.MILLISECOND);
-				int year = mCalendarGridView.getAdapter().getSelectedYear();
-				int month = mCalendarGridView.getAdapter().getSelectedMonth()-1;
-				int day = mCalendarGridView.getAdapter().getSelectedDay();
-				calToday.set(Calendar.YEAR, year);
-				calToday.set(Calendar.MONTH, month);
-				calToday.set(Calendar.DATE, day);
-				long dateFrom = calToday.getTimeInMillis();
-				long dateTo = dateFrom + 24 * 3600000;
-				Bundle bundle = new Bundle();
-				bundle.putLong("dateFrom", dateFrom);
-				bundle.putLong("dateTo", dateTo);
-				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, bundle);
+//				Calendar calToday = Calendar.getInstance();
+//				calToday.set(Calendar.HOUR_OF_DAY, 0);
+//				calToday.clear(Calendar.MINUTE);
+//				calToday.clear(Calendar.SECOND);
+//				calToday.clear(Calendar.MILLISECOND);
+//				int year = mCalendarGridView.getAdapter().getSelectedYear();
+//				int month = mCalendarGridView.getAdapter().getSelectedMonth()-1;
+//				int day = mCalendarGridView.getAdapter().getSelectedDay();
+//				calToday.set(Calendar.YEAR, year);
+//				calToday.set(Calendar.MONTH, month);
+//				calToday.set(Calendar.DATE, day);
+//				long dateFrom = calToday.getTimeInMillis();
+//				long dateTo = dateFrom + 24 * 3600000;
+//				Bundle bundle = new Bundle();
+//				bundle.putLong("dateFrom", dateFrom);
+//				bundle.putLong("dateTo", dateTo);
+//				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, bundle);
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(0, null, HomeCalendarGridListFragment.this);
 			}
 		});
 
@@ -219,7 +216,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 
 				mListGroupData.clear();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
-				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 			}
 		});
 		view.findViewById(R.id.home_stat_layout_income).setOnClickListener(new OnClickListener(){
@@ -233,10 +230,8 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
 				
 				mListGroupData.clear();
-//				updateHeaderStat();
-//				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
-				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 			}
 		});
 		view.findViewById(R.id.home_stat_layout_expense).setOnClickListener(new OnClickListener(){
@@ -253,7 +248,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //				GStat();
 //				updateGroupHeader();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
-				getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 			}
 		});
 		view.findViewById(R.id.home_stat_center).setOnClickListener(new OnClickListener(){
@@ -282,7 +277,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //							updateHeaderStat();
 //							updateGroupHeader();
 							mCalendarGridView.getAdapter().notifyDataSetChanged();
-							getLoaderManager().restartLoader(-1, null, HomeCalendarGridFragment.this);
+							getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 				    	}
 				    }  
 				};  
@@ -295,8 +290,32 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				dialog.show();
 			}
 		});
+
+		view.findViewById(R.id.homeListFragment_action_message).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
+    		}
+		});
+		mTextViewLatestNewMessage = (TextView)view.findViewById(R.id.homeListFragment_new_message);
+		mTextViewLatestNewMessage.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mLatestNewMessage != null){
+					onLatestModifiedModelClick();
+				}
+			}
+		});
 		
-		mExpenseButton = (Button)view.findViewById(R.id.homeListFragment_action_money_expense);
+		return view;
+	}
+
+
+	@Override
+	public void onInitViewData() {
+		super.onInitViewData();
+		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		mExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_expense);
 		mExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -315,7 +334,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
     		}
 		});
 		
-		mIncomeButton = (Button)view.findViewById(R.id.homeListFragment_action_money_income);
+		mIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_action_money_income);
 		mIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -334,15 +353,13 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
     		}
 		});
 
-		
-		view.findViewById(R.id.homeListFragment_action_money_template).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
-    		}
-		});
-		
-//		view.findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
+//		getView().findViewById(R.id.homeListFragment_action_money_template).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
+//    		}
+//		});
+//		getView().findViewById(R.id.homeListFragment_action_money_topup).setOnClickListener(new OnClickListener(){
 //			@Override
 //			public void onClick(View v) {
 //				PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -379,114 +396,97 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 //			}
 //		});
 		
-		view.findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(final View v) {
-				PopupMenu popup = new PopupMenu(getActivity(), v);
-				MenuInflater inflater = popup.getMenuInflater();
-				inflater.inflate(R.menu.home_more_actions, popup.getMenu());
-				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
+//		getView().findViewById(R.id.homeListFragment_action_more).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(final View v) {
+//				PopupMenu popup = new PopupMenu(getActivity(), v);
+//				MenuInflater inflater = popup.getMenuInflater();
+//				inflater.inflate(R.menu.home_more_actions, popup.getMenu());
+//				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//					@Override
+//					public boolean onMenuItemClick(MenuItem item) {
+//
+//						final Bundle bundle = new Bundle();
+//						Calendar calToday = Calendar.getInstance();
+//						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+//								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+//								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+//							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+//							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+//							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+//							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+//						}
+//						
+//						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposit) {
+//							PopupMenu popup = new PopupMenu(getActivity(), v);
+//							MenuInflater inflater = popup.getMenuInflater();
+//							inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
+//							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//								@Override
+//								public boolean onMenuItemClick(MenuItem item) {
+//									Bundle bundle = new Bundle();
+//									Calendar calToday = Calendar.getInstance();
+//									if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+//											|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+//											|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+//										calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+//										calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+//										calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+//				
+//										bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+//									}
+//									
+//									if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
+//										openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
+//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
+//										openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
+//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
+//										openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
+//									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
+//										openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
+//									}
+//									return false;
+//								}
+//							});
+//							popup.show();
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_debt) {
+//
+//							PopupMenu popup = new PopupMenu(getActivity(), v);
+//							MenuInflater inflater = popup.getMenuInflater();
+//							inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
+//							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//								@Override
+//								public boolean onMenuItemClick(MenuItem item) {
+//
+//									if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
+//										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, bundle);
+//									} 
+//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
+//										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, bundle);
+//									} 
+//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
+//										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, bundle);
+//									} 
+//									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
+//										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, bundle);
+//									} 
+//									return false;
+//								}
+//							});
+//							popup.show();
+//						
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
+//							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, bundle);
+//						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
+//							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, bundle);
+//						} 
+//						return false;
+//					}
+//				});
+//				popup.show();
+//			}
+//		});
 
-						final Bundle bundle = new Bundle();
-						Calendar calToday = Calendar.getInstance();
-						if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-								|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-								|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-							calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-							calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-							calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-							bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-						}
-						
-						if (item.getItemId() == R.id.homeTopup_action_money_addnew_deposit) {
-							PopupMenu popup = new PopupMenu(getActivity(), v);
-							MenuInflater inflater = popup.getMenuInflater();
-							inflater.inflate(R.menu.home_topup_actions, popup.getMenu());
-							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-								@Override
-								public boolean onMenuItemClick(MenuItem item) {
-									Bundle bundle = new Bundle();
-									Calendar calToday = Calendar.getInstance();
-									if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-											|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-											|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-										calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-										calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-										calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-				
-										bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-									}
-									
-									if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositExpense) {
-										openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
-									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositIncome) {
-										openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositReturn) {
-										openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
-									} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_depositPayback) {
-										openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
-									}
-									return false;
-								}
-							});
-							popup.show();
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_debt) {
-
-							PopupMenu popup = new PopupMenu(getActivity(), v);
-							MenuInflater inflater = popup.getMenuInflater();
-							inflater.inflate(R.menu.home_debt_actions, popup.getMenu());
-							popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-								@Override
-								public boolean onMenuItemClick(MenuItem item) {
-
-									if (item.getItemId() == R.id.homeDebt_action_money_addnew_borrow) {
-										openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_addnew, bundle);
-									} 
-									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_lend) {
-										openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_addnew, bundle);
-									} 
-									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_return) {
-										openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_addnew, bundle);
-									} 
-									else if (item.getItemId() == R.id.homeDebt_action_money_addnew_payback) {
-										openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_addnew, bundle);
-									} 
-									return false;
-								}
-							});
-							popup.show();
-						
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_transfer) {
-							openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_addnew, bundle);
-						} else if (item.getItemId() == R.id.homeTopup_action_money_addnew_topup) {
-							openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, bundle);
-						} 
-						return false;
-					}
-				});
-				popup.show();
-			}
-		});
-		mLatestModifiedModelLayout = view.findViewById(R.id.home_stat_latestmodifiedmodel);
-		mLatestModifiedModelLayout.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if(mLatestModifiedModel != null){
-					onLatestModifiedModelClick();
-				}
-			}
-		});
-		
-		return view;
-	}
-
-
-	@Override
-	public void onInitViewData() {
-		super.onInitViewData();
-		mDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		mExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
@@ -498,24 +498,19 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
     		}
 		});
-		getView().findViewById(R.id.homeListFragment_action_money_transaction).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, null);
-    		}
-		});
+//		getView().findViewById(R.id.homeListFragment_action_money_transaction).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, null);
+//    		}
+//		});
 		getView().findViewById(R.id.homeListFragment_action_friend).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
     		}
 		});
-		getView().findViewById(R.id.homeListFragment_action_message).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
-    		}
-		});
+		
 		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
@@ -700,32 +695,25 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 
 	@Override
 	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
-				R.layout.home_listitem_row,
-				null,
-				new String[] {"id", "id", "id", "id", "id", "id", "id"}, 
+		HomeListAdapter adapter = new HomeListAdapter(
+				getActivity(), 
+				mListChildData,
+				R.layout.home_listitem_row, 
+				new String[] {"picture", "subTitle", "title", "remark", "date", "amount", "owner"}, 
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_subTitle, R.id.homeListItem_title, 
 							R.id.homeListItem_remark, R.id.homeListItem_date,
-							R.id.homeListItem_amount, R.id.homeListItem_owner},
-				0); 
-	}	
+							R.id.homeListItem_amount, R.id.homeListItem_owner});
+		return adapter;
+	}
 
 	@Override
 	public Loader<Object> onCreateLoader(int groupPos, Bundle arg1) {
-		if(arg1 == null){
-			arg1 = new Bundle();
-		}
+		super.onCreateLoader(groupPos, arg1);
 		Object loader;
 		if(arg1 == null){
 			arg1 = new Bundle();
 		}
 
-		int offset = arg1.getInt("OFFSET");
-		int limit = arg1.getInt("LIMIT");
-		if(limit == 0){
-			limit = getListPageSize();
-		}
-		
 		if (groupPos < 0) { 
 			long dateFrom = mCalendarGridView.getAdapter().getDateFrom();
 			long dateTo = mCalendarGridView.getAdapter().getDateTo();
@@ -735,18 +723,24 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			
 			loader = new HomeCalendarGridGroupListLoader(getActivity(), arg1);
 		} else {
-			super.onCreateLoader(groupPos, arg1);
-			String selection = null;
-			String[] selectionArgs = null;
+			Calendar calToday = Calendar.getInstance();
+			calToday.set(Calendar.HOUR_OF_DAY, 0);
+			calToday.clear(Calendar.MINUTE);
+			calToday.clear(Calendar.SECOND);
+			calToday.clear(Calendar.MILLISECOND);
+			int year = mCalendarGridView.getAdapter().getSelectedYear();
+			int month = mCalendarGridView.getAdapter().getSelectedMonth()-1;
+			int day = mCalendarGridView.getAdapter().getSelectedDay();
+			calToday.set(Calendar.YEAR, year);
+			calToday.set(Calendar.MONTH, month);
+			calToday.set(Calendar.DATE, day);
+			arg1.putLong("dateFrom", calToday.getTimeInMillis());
+			arg1.putLong("dateTo", calToday.getTimeInMillis() + 24 * 3600000);
 			
-			selection = "messageState <> ? and messageState <> ?";
-			selectionArgs = new String[]{"read","closed"};
-			loader = new CursorLoader(getActivity(),
-					ContentProvider.createUri(Message.class, null),
-					new String[]{"_id", "id"}, selection, selectionArgs, "date DESC LIMIT " + (limit + offset)
-				);
+
+			loader = new HomeCalendarGridChildListLoader(getActivity(), arg1);
 		}
-		return (Loader<Object>)loader;
+		return (Loader<Object>) loader;
 	}
 
 	@Override
@@ -757,10 +751,24 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			mListGroupData.clear();
 			mListGroupData.addAll(groupList);
 			mCalendarGridView.getAdapter().notifyDataSetChanged();
+//			adapter.notifyDataSetChanged();
+//			updateGroupHeader();
 			updateHeaderStat();
+			getLoaderManager().restartLoader(0, null, this);
 		} else {
-			super.onLoadFinished(loader, list);
-	    }
+			ArrayList<HyjModel> childList = (ArrayList<HyjModel>) list;
+			mListChildData.clear();
+			mListChildData.addAll(childList);
+
+			((HomeListAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
+		}
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
 	}
 
 	@Override
@@ -768,7 +776,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		 if(loader.getId() < 0){
 				this.mListGroupData.clear();
 		 } else {
-				super.onLoaderReset(loader);
+				this.mListChildData.clear();
 		 }
 	}
 	
@@ -1665,81 +1673,131 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			return false;
 		}
 	}
-
-	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		Message message = HyjModel.getModel(Message.class, cursor.getString(cursor.getColumnIndex("id")));
-		if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setTime(message.getDate());
-			return true;
-		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(message.getMessageTitle());
-			return true;
-		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(message.getFromUserDisplayName());
-			return true;
-		} else if(view.getId() == R.id.homeListItem_amount){
-			HyjNumericView numericView = (HyjNumericView)view;
-			numericView.setPrefix(null);
-			numericView.setSuffix(null);
-			numericView.setNumber(null);
-			return true;
-		} else if(view.getId() == R.id.homeListItem_picture){
-			HyjImageView imageView = (HyjImageView)view;
-			if(message.getMessageState().equalsIgnoreCase("new") 
-					|| message.getMessageState().equalsIgnoreCase("unread")){
-				imageView.setBackgroundResource(R.drawable.ic_action_unread);
-			} else {
-				imageView.setBackgroundResource(R.drawable.ic_action_read);
-			}
-			imageView.setImage(message.getFromUserId());
-			return true;
-		}  else if(view.getId() == R.id.homeListItem_owner){
-			if(message.getToUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				((TextView)view).setText("");
-			} else {
-				((TextView)view).setText(message.getToUserDisplayName());
-			}
-			return true;
-		} else if(view.getId() == R.id.homeListItem_remark){
-			try {
-				JSONObject messageData = null;
-				messageData = new JSONObject(message.getMessageData());
-				double amount = 0;
-				try{
-					amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
-				} catch(Exception e) {
-					amount = messageData.optDouble("amount");
-				}
-				java.util.Currency localeCurrency = java.util.Currency
-						.getInstance(messageData.optString("currencyCode"));
-				String currencySymbol = "";
-				currencySymbol = localeCurrency.getSymbol();
-				if(currencySymbol.length() == 0){
-					currencySymbol = messageData.optString("currencyCode");
-				}
-						
-				((TextView)view).setText(String.format(message.getMessageDetail(), message.getFromUserDisplayName(), currencySymbol, amount));
-			} catch (Exception e){
-				((TextView)view).setText(message.getMessageDetail());
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-
-
-	
 	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) { 
+	public void onListItemClick(ListView parent, View v,
+			int position, long id) {
+		if(parent.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE){
+			return;
+		}
 		if(id == -1) {
 			 return;
 		}
+		if(getActivity().getCallingActivity() != null){
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_ID", id);
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+			return;
+		} else {
+			HyjModel object = (HyjModel) getListAdapter().getItem(position-1);
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
-			Message msg = Message.load(Message.class, id);
+			if(object instanceof MoneyExpense){
+					openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyIncome){
+					openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyExpenseContainer){
+					openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyIncomeContainer){
+					openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyDepositIncomeContainer){
+				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyDepositReturnContainer){
+				openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyTransfer){
+				MoneyTransfer moneyTransfer = (MoneyTransfer) object;
+				if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
+					openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
+				}
+				return ;
+			} else if(object instanceof MoneyBorrow){
+				MoneyBorrow moneyBorrow = (MoneyBorrow) object;
+				if(moneyBorrow.getMoneyDepositIncomeApportionId() != null){
+					bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
+					openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
+				}
+				return ;
+			} else if(object instanceof MoneyLend){
+				MoneyLend moneyLend = (MoneyLend) object;
+				if(moneyLend.getMoneyDepositExpenseContainerId() != null){
+					MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
+					bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
+					openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
+				}
+				return ;
+			}  else if(object instanceof MoneyDepositExpenseContainer){
+				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof MoneyReturn){
+				MoneyReturn moneyReturn = (MoneyReturn) object;
+				if(moneyReturn.getMoneyDepositReturnApportionId() != null){
+					bundle.putLong("MODEL_ID", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
+					openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
+				}else{
+					openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
+				}
+				return ;
+			} else if(object instanceof MoneyPayback){
+				MoneyPayback moneyPayback = (MoneyPayback) object;
+				if(moneyPayback.getMoneyDepositPaybackContainerId() != null){
+					MoneyDepositPaybackContainer moneyDepositPaybackContainer = HyjModel.getModel(MoneyDepositPaybackContainer.class, moneyPayback.getMoneyDepositPaybackContainerId());
+					bundle.putLong("MODEL_ID", moneyDepositPaybackContainer.get_mId());
+					openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				} else {
+					openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
+				}
+				return ;
+			} else if(object instanceof MoneyDepositPaybackContainer){
+				openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+				return ;
+			} else if(object instanceof Message){
+				Message msg = (Message)object;
+				if(msg.getType().equals("System.Friend.AddRequest") ){
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+					return ;
+				} else if(msg.getType().equals("System.Friend.AddResponse") ){
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+					return ;
+				} else if(msg.getType().equals("System.Friend.Delete") ){
+					openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+					return ;
+				} else if(msg.getType().equals("Project.Share.AddRequest") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
+					return ;
+				} else if(msg.getType().equals("Project.Share.Accept") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
+					return ;
+				} else if(msg.getType().equals("Project.Share.Delete") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
+					return ;
+				} else if(msg.getType().startsWith("Money.Share.Add") ){
+					openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
+					return ;
+				}
+			}
+		}
+		return ;
+    } 
+
+    public void onLatestModifiedModelClick() { 
+		if(mLatestNewMessage == null) {
+			 return;
+		}
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", mLatestNewMessage.get_mId());
+			Message msg = mLatestNewMessage;
 			if(msg.getType().equals("System.Friend.AddRequest") ){
 				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
 			} else if(msg.getType().equals("System.Friend.AddResponse") ){
@@ -1815,7 +1873,7 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.postDelayed(new Runnable() {
 				public void run() {
-					((CursorAdapter) getListAdapter()).notifyDataSetChanged();
+					updateLatestModifiedModel();
 				}
 			}, 50);
 		}
@@ -1834,171 +1892,107 @@ public class HomeCalendarGridFragment extends HyjUserListFragment {
 		super.onDestroy();
 	}
 	
-	HyjModel mLatestModifiedModel;
-	HyjAsyncTask mLatestModifiedModelLoader = null;
-	HyjAsyncTaskCallbacks mLatestModifiedModelLoaderCallback = new HyjAsyncTaskCallbacks(){
+	Message mLatestNewMessage;
+	HyjAsyncTask mLatestNewMessageLoader = null;
+	HyjAsyncTaskCallbacks mLatestNewMessageLoaderCallback = new HyjAsyncTaskCallbacks(){
 		@Override
 		public void finishCallback(Object object) {
 			if(object != null){
-				mLatestModifiedModelLayout.setVisibility(View.VISIBLE);
-				HyjModel model = (HyjModel)object;
-				mLatestModifiedModel = model;
-				ImageView imageView= (ImageView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_picture);
-				setViewValue(imageView, model, "homeListItem_amount");
-				
-				HyjNumericView textView = (HyjNumericView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_amount);
-				setViewValue(textView, model, "picture");
-				
-				setViewValue(((HyjDateTimeView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_date)), model, "date");
-				
-				setViewValue(((TextView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_title)), model, "title");
-					
-				setViewValue(((TextView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_remark)), model, "remark");
-									
-				setViewValue(((TextView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_subTitle)), model, "subTitle");
-				
-				setViewValue(imageView, ((TextView)mLatestModifiedModelLayout.findViewById(R.id.homeListItem_owner)), "owner");
+				mTextViewLatestNewMessage.setVisibility(View.VISIBLE);
+				mLatestNewMessage = (Message)object;
+				try {
+					JSONObject messageData = null;
+					messageData = new JSONObject(mLatestNewMessage.getMessageData());
+					double amount = 0;
+					try{
+						amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+					} catch(Exception e) {
+						amount = messageData.optDouble("amount");
+					}
+					java.util.Currency localeCurrency = java.util.Currency
+							.getInstance(messageData.optString("currencyCode"));
+					String currencySymbol = "";
+					currencySymbol = localeCurrency.getSymbol();
+					if(currencySymbol.length() == 0){
+						currencySymbol = messageData.optString("currencyCode");
+					}
+							
+					mTextViewLatestNewMessage.setText(String.format(mLatestNewMessage.getMessageDetail(), mLatestNewMessage.getFromUserDisplayName(), currencySymbol, amount));
+				} catch (Exception e){
+					mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
+				}
+				mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
 			} else {
-				mLatestModifiedModelLayout.setVisibility(View.GONE);
+				mTextViewLatestNewMessage.setVisibility(View.GONE);
 			}
-			mLatestModifiedModelLoader = null;
+			mLatestNewMessageLoader = null;
 		}
 
 		@Override
 		public Object doInBackground(String... string) {
-			HyjModel model, latestModifiedModel = null;
-			long latestUpdateTime = 0;
-			model = new Select().from(MoneyExpenseContainer.class).where("ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyIncomeContainer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyDepositExpenseContainer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyDepositIncomeContainer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyDepositPaybackContainer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyDepositReturnContainer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyReturn.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyPayback.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyBorrow.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyLend.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			model = new Select().from(MoneyTransfer.class).where("lastClientUpdateTime > ? AND ownerUserId = ?", latestUpdateTime, HyjApplication.getInstance().getCurrentUser().getId()).limit(1).orderBy("lastClientUpdateTime DESC").executeSingle();
-			if(model != null){
-				latestUpdateTime = model.getLastClientUpdateTime();
-				latestModifiedModel = model;
-			}
-			
-//			model = new Select("main.*").from(MoneyExpense.class).as("main").leftJoin(MoneyExpenseApportion.class).as("mea").on("main.moneyExpenseApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
-//			model = new Select("main.*").from(MoneyIncome.class).as("main").leftJoin(MoneyIncomeApportion.class).as("mea").on("main.moneyIncomeApportionId = mea.id").where("mea.id IS NULL AND date > ? AND date <= ?", dateFrom, dateTo).orderBy("date DESC").execute();
-	    	
-	    	return latestModifiedModel;
+			HyjModel message;
+			message = new Select().from(Message.class).where("messageState <> 'read' AND messageState <> 'closed'").orderBy("date DESC").limit(1).executeSingle();
+	    	return message;
 		}
 	};
+	
 	public void updateLatestModifiedModel(){
-		if(mLatestModifiedModelLoader == null){
-			mLatestModifiedModelLoader = HyjAsyncTask.newInstance(mLatestModifiedModelLoaderCallback);
+		if(mLatestNewMessageLoader == null){
+			mLatestNewMessageLoader = HyjAsyncTask.newInstance(mLatestNewMessageLoaderCallback);
 		}
 	}
 	
 	
-	protected void onLatestModifiedModelClick() {
-		HyjModel object = mLatestModifiedModel;
-		Bundle bundle = new Bundle();
-		bundle.putLong("MODEL_ID", object.get_mId());
-		if(object instanceof MoneyExpense){
-			openActivityWithFragment(MoneyExpenseFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyIncome){
-			openActivityWithFragment(MoneyIncomeFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyExpenseContainer){
-			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyIncomeContainer){
-			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyDepositIncomeContainer){
-			openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyDepositReturnContainer){
-			openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
-		} else if(object instanceof MoneyTransfer){
-			MoneyTransfer moneyTransfer = (MoneyTransfer) object;
-			if(moneyTransfer.getTransferType().equalsIgnoreCase("Topup")){
-				openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_edit, bundle);
-			} else {
-				openActivityWithFragment(MoneyTransferFormFragment.class, R.string.moneyTransferFormFragment_title_edit, bundle);
-			}
-		} else if(object instanceof MoneyBorrow){
-			MoneyBorrow moneyBorrow = (MoneyBorrow) object;
-			if(moneyBorrow.getMoneyDepositIncomeApportionId() != null){
-				bundle.putLong("MODEL_ID", moneyBorrow.getMoneyDepositIncomeApportion().getMoneyDepositIncomeContainer().get_mId());
-				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_edit, bundle);
-			} else {
-				openActivityWithFragment(MoneyBorrowFormFragment.class, R.string.moneyBorrowFormFragment_title_edit, bundle);
-			}
-		} else if(object instanceof MoneyLend){
-			MoneyLend moneyLend = (MoneyLend) object;
-			if(moneyLend.getMoneyDepositExpenseContainerId() != null){
-				MoneyDepositExpenseContainer moneyDepositExpenseContainer = HyjModel.getModel(MoneyDepositExpenseContainer.class, moneyLend.getMoneyDepositExpenseContainerId());
-				bundle.putLong("MODEL_ID", moneyDepositExpenseContainer.get_mId());
-				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
-			} else {
-				openActivityWithFragment(MoneyLendFormFragment.class, R.string.moneyLendFormFragment_title_edit, bundle);
-			}
-		}  else if(object instanceof MoneyDepositExpenseContainer){
-			openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_edit, bundle);
-		}  else if(object instanceof MoneyReturn){
-			MoneyReturn moneyReturn = (MoneyReturn) object;
-			if(moneyReturn.getMoneyDepositReturnApportionId() != null){
-				bundle.putLong("MODEL_ID", moneyReturn.getMoneyDepositReturnApportion().getMoneyDepositReturnContainer().get_mId());
-				openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
-			} else {
-				openActivityWithFragment(MoneyReturnFormFragment.class, R.string.moneyReturnFormFragment_title_edit, bundle);
-			}
-		} else if(object instanceof MoneyPayback){
-			MoneyPayback moneyPayback = (MoneyPayback) object;
-			if(moneyPayback.getMoneyDepositPaybackContainerId() != null){
-				MoneyDepositPaybackContainer moneyDepositPaybackContainer = HyjModel.getModel(MoneyDepositPaybackContainer.class, moneyPayback.getMoneyDepositPaybackContainerId());
-				bundle.putLong("MODEL_ID", moneyDepositPaybackContainer.get_mId());
-				openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
-			} else {
-				openActivityWithFragment(MoneyPaybackFormFragment.class, R.string.moneyPaybackFormFragment_title_edit, bundle);
-			}
-		} else if(object instanceof MoneyDepositPaybackContainer){
-			openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
+	
+	private static class HomeListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+//	    private ViewBinder mViewBinder;
+	    
+		public HomeListAdapter(Context context,
+	                    List<? extends HyjModel> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
 		}
-		
+	    
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
+	    }
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
+
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
 	}
 }
