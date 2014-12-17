@@ -10,7 +10,6 @@
     <com.hoyoji.android.hyjframework.view.HyjListView android:id="@id/android:list"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingBottom="48dp"
               android:divider="@drawable/line_divider"
               android:dividerHeight="1dp"
               android:drawSelectorOnTop="false"/>
@@ -22,10 +21,18 @@
               android:background="@drawable/line_divider"
               android:text="@string/app_listview_no_content"/> -->
               
+   <!--  <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="#88FFFFFF"
+        android:layout_gravity="bottom">
+
+    </LinearLayout> -->
+              
         <ImageButton 
             android:id="@+id/project_listfragment_project_addnew"
-	        android:layout_width="48dp"
-	        android:layout_height="48dp"
+	        android:layout_width="55dp"
+	        android:layout_height="55dp"
 	        android:layout_gravity="center_horizontal|bottom"
 	        android:background="@drawable/hoyoji_addnew"
         />

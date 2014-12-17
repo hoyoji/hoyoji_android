@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="48dip"
+        android:layout_marginBottom="0dip"
         android:background="@color/hoyoji_lightgray" />
     
     <LinearLayout
@@ -103,8 +103,8 @@
 
         <ImageButton 
             android:id="@+id/homelistfragment_money_addnew"
-	        android:layout_width="48dp"
-	        android:layout_height="48dp"
+	        android:layout_width="55dp"
+	        android:layout_height="55dp"
 	        android:layout_gravity="center_horizontal|bottom"
 	        android:background="@drawable/hoyoji_addnew"
         />

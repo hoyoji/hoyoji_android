@@ -96,7 +96,8 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		}
 		getListView().setFooterDividersEnabled(false);
 		
-	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		View footerLayout = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+	    mFooterView = footerLayout.findViewById(android.R.id.text1);
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -123,7 +124,7 @@ public abstract class HyjUserListFragment extends ListFragment implements
 				}
 		    });
 	    }
-		getListView().addFooterView(mFooterView, null, false);
+		getListView().addFooterView(footerLayout, null, false);
 //		getListView().setEmptyView(getView().findViewById(android.R.id.empty));
 //		this.registerForContextMenu(getListView());
 		if(this.getListAdapter() == null){

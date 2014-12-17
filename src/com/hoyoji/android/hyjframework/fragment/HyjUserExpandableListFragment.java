@@ -107,8 +107,9 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 		if(mHeaderView != null){
 			getListView().addHeaderView(mHeaderView);
 		}
-		mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
-		getListView().addFooterView(mFooterView);
+		View footerLayout = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		mFooterView = footerLayout.findViewById(android.R.id.text1);
+		getListView().addFooterView(footerLayout);
 		mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -318,6 +319,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 	}
 	
 
+	@SuppressLint("NewApi")
 	public void enterMultiChoiceMode(final HyjExpandableListView listView, int position){
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 //			listView.setItemChecked(position, true);
@@ -349,7 +351,8 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 					}
 		      });
 		      mMultiSelectActionBarView.findViewById(R.id.multi_select_menu_select_clear).setOnClickListener(new OnClickListener(){
-			    	@Override
+			    	@SuppressLint("NewApi")
+					@Override
 					public void onClick(View v) {
 			    		listView.clearChoices();
 			    		int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(0, 0));
@@ -362,6 +365,7 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 			  actionBar.setCustomView(mMultiSelectActionBarView);
 			  
 			  listView.setOnChildClickListener(new OnChildClickListener(){
+					@SuppressLint("NewApi")
 					@Override
 					public boolean onChildClick(ExpandableListView parent, View v,
 							int groupPosition, int childPosition, long id) {

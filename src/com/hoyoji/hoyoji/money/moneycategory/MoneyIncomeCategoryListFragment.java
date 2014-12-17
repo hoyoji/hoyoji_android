@@ -118,7 +118,8 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 		
 		childrenList = (ListView)getView().findViewById(R.id.moneyIncomeCategory_list_children);
 		childrenList.setFooterDividersEnabled(false);
-	    mFooterView = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		View footerLayout = getLayoutInflater(savedInstanceState).inflate(R.layout.list_view_footer_fetch_more, null);
+		mFooterView = footerLayout.findViewById(android.R.id.text1);
 	    mFooterView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -140,7 +141,7 @@ public class MoneyIncomeCategoryListFragment extends HyjUserListFragment impleme
 				}
 		    });
 	    }
-	    childrenList.addFooterView(mFooterView, null, false);
+	    childrenList.addFooterView(footerLayout, null, false);
 		this.registerForContextMenu(childrenList);
 		childrenListAdapter = (SimpleCursorAdapter) useListViewAdapter();
 		childrenListAdapter.setViewBinder(this);

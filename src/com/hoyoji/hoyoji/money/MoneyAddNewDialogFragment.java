@@ -131,8 +131,7 @@ public class MoneyAddNewDialogFragment extends DialogFragment {
         builder.setView(v);
 
         // Set title of dialog
-        builder
-//        .setTitle("记一笔")
+        builder.setTitle("记一笔")
 //                // Set Ok button
 //                .setPositiveButton(R.string.alert_dialog_ok,
 //                        new DialogInterface.OnClickListener() {

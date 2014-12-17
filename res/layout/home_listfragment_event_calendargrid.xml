@@ -64,8 +64,8 @@
 
         <ImageButton 
             android:id="@+id/homelistfragment_event_addnew"
-	        android:layout_width="48dp"
-	        android:layout_height="48dp"
+	        android:layout_width="55dp"
+	        android:layout_height="55dp"
 	        android:layout_gravity="center_horizontal|bottom"
 	        android:background="@drawable/hoyoji_addnew"
         />
