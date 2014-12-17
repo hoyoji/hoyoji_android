@@ -108,9 +108,9 @@ public class EventMemberTBDViewPagerFragment extends HyjUserFragment {
 		public Fragment getItem(int position) {
 			switch(position){
 			case 0 :
-				return new MoneySearchListFragment();
-			case 1:
 				return new EventMemberSplitTBDFormFragment();
+			case 1:
+				return new MoneySearchListFragment();
 			}
 			return null;
 		}
@@ -124,9 +124,9 @@ public class EventMemberTBDViewPagerFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "流水";
-			case 1:
 				return "资料";
+			case 1:
+				return "流水";
 			}
 			return null;
 		}
