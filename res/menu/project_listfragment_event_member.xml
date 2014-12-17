@@ -33,6 +33,21 @@
 		        android:title="@string/projectEventMemberListFragment_action_member_invite"
 		        android:icon="@drawable/ic_action_cc_bcc"
 		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/projectEventMemberListFragment_action_member_signIn_qqFriend"
+		        android:title="@string/projectEventMemberListFragment_action_member_signIn_qqFriend"
+		        android:icon="@drawable/ic_action_cc_bcc"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/projectEventMemberListFragment_action_member_signIn_wxFriend"
+		        android:title="@string/projectEventMemberListFragment_action_member_signIn_wxFriend"
+		        android:icon="@drawable/ic_action_cc_bcc"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/projectEventMemberListFragment_action_member_signIn"
+		        android:title="@string/projectEventMemberListFragment_action_member_signIn"
+		        android:icon="@drawable/ic_action_cc_bcc"
+		        hoyoji:showAsAction="always"/>
         </menu>
 	</item>
 

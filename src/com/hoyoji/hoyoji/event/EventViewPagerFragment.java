@@ -165,6 +165,10 @@ public class EventViewPagerFragment extends HyjUserFragment {
 						}
 					});
 					mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+				} else if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
+					mBtnSignUpEvent.setVisibility(View.VISIBLE);
+					mBtnSignUpEvent.setText("我要签到");
+					mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 				}
 				
 			}
