@@ -213,22 +213,23 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			EventMember memberToBeDetermined = EventMember.load(EventMember.class, id);
+
+			bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
+			if(memberToBeDetermined.getFriend() != null){
+				bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
+			} else if(memberToBeDetermined.getFriendUserId() != null){
+				bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
+			}  else if(memberToBeDetermined.getLocalFriendId() != null){
+				bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
+			} 
+			Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+			if(modelId != -1){
+				bundle.putLong("event_id", modelId);
+			}
 			if(memberToBeDetermined.getOwnerUserId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId()) 
 					&& memberToBeDetermined.getToBeDetermined()){
-				openActivityWithFragment(EventMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
+				openActivityWithFragment(EventMemberTBDViewPagerFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
-				if(memberToBeDetermined.getFriend() != null){
-					bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
-				} else if(memberToBeDetermined.getFriendUserId() != null){
-					bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
-				}  else if(memberToBeDetermined.getLocalFriendId() != null){
-					bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
-				} 
-				Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
-				if(modelId != -1){
-					bundle.putLong("event_id", modelId);
-				}
 				openActivityWithFragment(EventMemberViewPagerFragment.class, R.string.projectEventMemberFormFragment_title_edit, bundle);
 			}
 		}

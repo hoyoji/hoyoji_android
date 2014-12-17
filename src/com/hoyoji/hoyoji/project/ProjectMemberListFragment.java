@@ -377,18 +377,18 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", id);
 			ProjectShareAuthorization memberToBeDetermined = ProjectShareAuthorization.load(ProjectShareAuthorization.class, id);
+			bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
+			if(memberToBeDetermined.getFriend() != null){
+				bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
+			} else if(memberToBeDetermined.getFriendUserId() != null){
+				bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
+			}  else if(memberToBeDetermined.getLocalFriendId() != null){
+				bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
+			} 
 			if(memberToBeDetermined.getOwnerUserId().equalsIgnoreCase(HyjApplication.getInstance().getCurrentUser().getId())
 					&& memberToBeDetermined.getToBeDetermined()){
-				openActivityWithFragment(ProjectMemberSplitTBDFormFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
+				openActivityWithFragment(ProjectMemberTBDViewPagerFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				bundle.putLong("project_id", memberToBeDetermined.getProject().get_mId());
-				if(memberToBeDetermined.getFriend() != null){
-					bundle.putLong("friend_id", memberToBeDetermined.getFriend().get_mId());
-				} else if(memberToBeDetermined.getFriendUserId() != null){
-					bundle.putString("friendUserId", memberToBeDetermined.getFriendUserId());
-				}  else if(memberToBeDetermined.getLocalFriendId() != null){
-					bundle.putString("localFriendId", memberToBeDetermined.getLocalFriendId());
-				} 
 				openActivityWithFragment(ProjectMemberViewPagerFragment.class, R.string.memberFormFragment_title_edit, bundle);
 			}
 		}
