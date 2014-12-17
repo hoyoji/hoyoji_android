@@ -861,7 +861,7 @@ public class MoneyIncomeContainer extends HyjModel {
 							// 新的没有选择活动
 							if(mMoneyIncomeContainerEditor.getModel().get_mId() == null){
 								// 新增的收入，又没有活动，什么都不用做
-							} else {
+							} else if(mMoneyIncomeContainerEditor.getModel().getEventId() != null){
 								// 不是新增的收入，当前没有活动，看老的收入记录有没有活动
 								//更新老账本分摊支出
 								EventMember oldEventMember;

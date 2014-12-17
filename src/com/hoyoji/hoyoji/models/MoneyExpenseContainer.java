@@ -718,7 +718,7 @@ public class MoneyExpenseContainer extends HyjModel{
 								// 新的没有选择活动
 								if(mMoneyExpenseContainerEditor.getModel().get_mId() == null){
 									// 新增的支出，又没有活动，什么都不用做
-								} else {
+								} else if(mMoneyExpenseContainerEditor.getModel().getEventId() != null){
 									// 不是新增的支出，当前没有活动，看老的支出记录有没有活动
 									//更新老账本分摊支出
 									EventMember oldEventMember;
