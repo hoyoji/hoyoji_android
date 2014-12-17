@@ -124,7 +124,7 @@ public class ProjectMemberTBDViewPagerFragment extends HyjUserFragment {
 		public CharSequence getPageTitle(int position) {
 			switch(position){
 			case 0 :
-				return "资料";
+				return "拆分待定成员";
 			case 1:
 				return "流水";
 			}
