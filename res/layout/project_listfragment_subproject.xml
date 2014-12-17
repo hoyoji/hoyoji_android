@@ -20,4 +20,12 @@
               android:layout_height="43dp"
               android:background="@drawable/line_divider"
               android:text="@string/app_listview_no_content"/> -->
+              
+        <ImageButton 
+            android:id="@+id/project_listfragment_project_addnew"
+	        android:layout_width="48dp"
+	        android:layout_height="48dp"
+	        android:layout_gravity="center_horizontal|bottom"
+	        android:background="@drawable/hoyoji_addnew"
+        />
 </FrameLayout>

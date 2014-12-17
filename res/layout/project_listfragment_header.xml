@@ -6,14 +6,12 @@
 	        android:id="@+id/project_listitem_shared_project"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginRight="56dp"
-	        android:layout_gravity="center_vertical|left"
 		    />
-        <ImageButton 
+       <!--  <ImageButton 
             android:id="@+id/project_listfragment_project_addnew"
 	        android:layout_width="56dp"
 	        android:layout_height="56dp"
 	        android:layout_gravity="center_vertical|right"
 	        android:background="@drawable/hoyoji_addnew"
-        />
+        /> -->
     </FrameLayout>

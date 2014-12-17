@@ -1,7 +1,5 @@
 package com.hoyoji.hoyoji.home;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,7 +18,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -39,6 +36,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGrid;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
@@ -52,6 +50,8 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 
 public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -178,7 +178,15 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			}
 		});
 		
-		view.findViewById(R.id.home_listfragment_event_addnew).setOnClickListener(new OnClickListener(){
+		return view;
+	}
+	
+	
+	@Override
+	public void onInitViewData() {
+		super.onInitViewData();
+
+		getView().findViewById(R.id.homelistfragment_event_addnew).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 
@@ -196,13 +204,43 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
 			}
 		});
-		return view;
-	}
-	
-	
-	@Override
-	public void onInitViewData() {
-		super.onInitViewData();
+		getView().findViewById(R.id.homeListFragment_event_action_money_deposit_expense).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+
+				Bundle bundle = new Bundle();
+				Calendar calToday = Calendar.getInstance();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
+			}
+		});
+		getView().findViewById(R.id.homeListFragment_event_action_money_deposit_income).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+
+				Bundle bundle = new Bundle();
+				Calendar calToday = Calendar.getInstance();
+				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+					
+					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+				}
+				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
+			}
+		});
+				
 		updateNearestEvent();
 //		if (mChangeObserver == null) {
 //			mChangeObserver = new ChangeObserver();
