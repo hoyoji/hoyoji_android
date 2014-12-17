@@ -1837,6 +1837,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				moneyIncome.setMoneyIncomeCategoryMain(mMoneyIncomeContainerEditor.getModelCopy().getMoneyIncomeCategoryMain());
 				moneyIncome.setPictureId(mMoneyIncomeContainerEditor.getModelCopy().getPictureId());
 				moneyIncome.setProject(mMoneyIncomeContainerEditor.getModelCopy().getProject());
+				moneyIncome.setEventId(mMoneyIncomeContainerEditor.getModelCopy().getEventId());
 				moneyIncome.save();
 				apportion.save();
 			}

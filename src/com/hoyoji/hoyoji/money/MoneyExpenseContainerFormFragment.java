@@ -1276,6 +1276,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			moneyExpense.setMoneyExpenseCategoryMain(mMoneyExpenseContainerEditor.getModelCopy().getMoneyExpenseCategoryMain());
 			moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 			moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+			moneyExpense.setEventId(mMoneyExpenseContainerEditor.getModelCopy().getEventId());
 			
 			moneyExpense.save();
 			apportion.save();

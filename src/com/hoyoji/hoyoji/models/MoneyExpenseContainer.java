@@ -1064,6 +1064,7 @@ public class MoneyExpenseContainer extends HyjModel{
 		moneyExpense.setAddress(mMoneyExpenseContainerEditor.getModelCopy().getAddress());
 		moneyExpense.setPictureId(mMoneyExpenseContainerEditor.getModelCopy().getPictureId());
 		moneyExpense.setProject(mMoneyExpenseContainerEditor.getModelCopy().getProject());
+		moneyExpense.setEventId(mMoneyExpenseContainerEditor.getModelCopy().getEventId());
 		
 		if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 			// 帮自己生成支出，我们知道自己的支出账户
