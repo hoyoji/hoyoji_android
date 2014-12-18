@@ -436,6 +436,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 					} else {
 						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
 					}
+					
+					mNearestEventLayout.setVisibility(View.VISIBLE);
 			}
 			mNearestEventLoader = null;
 		}
@@ -504,7 +506,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 				textView.setTextColor(Color.BLACK);
-				textView.setText("-");
+				((TextView)textView).setText("-");
 				return true;
 			}
 			Double depositBalance = event.getBalance();
