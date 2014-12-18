@@ -299,8 +299,6 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			} else {
 				((TextView)view).setText("");
 			}
-					
-			
 		}
 		return true;
 	}
