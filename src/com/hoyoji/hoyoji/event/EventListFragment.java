@@ -194,7 +194,7 @@ public class EventListFragment extends HyjUserListFragment {
 			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 				textView.setTextColor(Color.BLACK);
-				textView.setText("-");
+				((TextView) textView).setText("-");
 				return true;
 			}
 			Double depositBalance = event.getBalance();

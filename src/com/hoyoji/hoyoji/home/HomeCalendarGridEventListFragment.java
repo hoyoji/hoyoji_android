@@ -385,7 +385,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					textView.setTextColor(Color.BLACK);
-					textView.setText("-");
+					((TextView) textView).setText("-");
 				} else {
 					Double depositBalance = event.getBalance();
 					if(depositBalance == 0){
