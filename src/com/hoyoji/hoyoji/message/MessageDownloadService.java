@@ -415,7 +415,7 @@ public class MessageDownloadService extends Service {
 	private void removeListModelFromDB(List<Model> list){
 		for(Model m : list){
 			m.setSyncFromServer(true);
-			m.delete();
+			((Model)m).delete();
 		}
 	}
 
