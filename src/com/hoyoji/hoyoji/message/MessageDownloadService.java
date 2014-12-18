@@ -628,6 +628,11 @@ public class MessageDownloadService extends Service {
 				newObj.put("__dataType", "EventMember");
 				newObj.put("evt.projectId", projectIds.get(i));
 				data.put(newObj);
+				newObj = new JSONObject();
+				newObj.put("__dataType", "Exchange");
+				newObj.put("foreignCurrencyId", jsonMsgData.opt("projectCurrencyId"));
+				newObj.put("localCurrencyId", HyjApplication.getInstance().getCurrentUser().getUserData().getActiveCurrencyId());
+				data.put(newObj);
 			}
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
