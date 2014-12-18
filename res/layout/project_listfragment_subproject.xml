@@ -20,14 +20,22 @@
               android:layout_height="43dp"
               android:background="@drawable/line_divider"
               android:text="@string/app_listview_no_content"/> -->
+   
+   
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="48dp"
+        android:background="@color/hoyoji_lightgray" />
               
-   <!--  <LinearLayout
+   <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:background="#88FFFFFF"
+        android:background="#EEFFFFFF"
         android:layout_gravity="bottom">
 
-    </LinearLayout> -->
+    </LinearLayout>
               
         <ImageButton 
             android:id="@+id/project_listfragment_project_addnew"
