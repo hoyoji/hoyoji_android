@@ -327,6 +327,10 @@ public class MessageDownloadService extends Service {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
+				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignIn")) {
+					pem.setState("SignIn");
+					pem.setSyncFromServer(true);
+					pem.save();
 				}
 			} catch (JSONException e1) {
 				e1.printStackTrace();

@@ -123,8 +123,14 @@ public class EventFormFragment extends HyjUserFormFragment {
 				mDateTimeFieldDate.setTextColor(Color.RED);
 				mDateTimeFieldStartDate.setDate(date);
 				mDateTimeFieldStartDate.setTextColor(Color.RED);
-			} 
-			mDateTimeFieldEndDate.setDate(null);
+				mDateTimeFieldEndDate.setTime(date.getTime()+2*60*60*1000);
+				mDateTimeFieldEndDate.setTextColor(Color.RED);
+			} else {
+				Date date = new Date();
+				mDateTimeFieldDate.setDate(date);
+				mDateTimeFieldEndDate.setTime(date.getTime()+2*60*60*1000);
+			}
+//			mDateTimeFieldEndDate.setDate(null);
 		}
 
 		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
