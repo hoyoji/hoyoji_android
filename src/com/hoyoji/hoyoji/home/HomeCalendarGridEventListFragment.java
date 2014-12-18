@@ -37,7 +37,6 @@ import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGrid;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
