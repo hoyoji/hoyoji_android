@@ -960,8 +960,8 @@ public class LoginActivity extends HyjActivity {
 			
 			jsonObj = new JSONObject();
 			jsonObj.put("__dataType", "EventMember");
-//			jsonObj.put("friendUserId", HyjApplication.getInstance()
-//					.getCurrentUser().getId());
+			jsonObj.put("main.friendUserId", HyjApplication.getInstance()
+					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
 			
 			// jsonObj = new JSONObject();

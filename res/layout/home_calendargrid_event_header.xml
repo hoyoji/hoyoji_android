@@ -12,6 +12,7 @@
 	        android:id="@+id/home_listfragment_event_nearestevent"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:visibility="gone"
 		    />
         <!-- <ImageButton 
             android:id="@+id/home_listfragment_event_addnew"
