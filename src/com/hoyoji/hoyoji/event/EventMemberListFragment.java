@@ -42,6 +42,7 @@ import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.money.MoneyAddNewDialogFragment;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -54,9 +55,9 @@ import com.tencent.sample.Util;
 import com.tencent.tauth.UiError;
 
 public class EventMemberListFragment extends HyjUserListFragment {
-	private IWXAPI api;
-	private QQShare mQQShare = null;
-	public static QQAuth mQQAuth;
+//	private IWXAPI api;
+//	private QQShare mQQShare = null;
+//	public static QQAuth mQQAuth;
 	private Button mAllEventMember;
 	private Button mSignUpEventMember;
 	private Button mSignInEventMember;
@@ -139,8 +140,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
-		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
+//		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
+//		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
 		
 		mAllEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_all_event_member);
 		mSignUpEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_sign_up_member);
@@ -313,33 +314,39 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
 			return true;
 		}
-		if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
-			if(mIsSelectSignInEventMembers = true){
-				
-			}
+		if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_add){
 			Bundle bundle = new Bundle();
-			bundle.putLong("EVENT_ID", modelId);
-			openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+			bundle.putLong("eventId", modelId);
+			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "MoneyAddNewDialogFragment");
 			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite){
-			inviteFriend("Other", event, event.getName(), "invite");
-			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite_wxFriend){
-			inviteFriend("WX", event, event.getName(), "invite");
-			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite_qqFriend){
-			inviteFriend("QQ", event, event.getName(), "invite");
-			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn){
-			inviteFriend("Other", event, event.getName(), "signIn");
-			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn_wxFriend){
-			inviteFriend("WX", event, event.getName(), "signIn");
-			return true;
-		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn_qqFriend){
-			inviteFriend("QQ", event, event.getName(), "signIn");
-			return true;
-		}
+		} 
+//		 else if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
+//			if(mIsSelectSignInEventMembers = true){
+//				
+//			}
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("EVENT_ID", modelId);
+//			openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite){
+//			inviteFriend("Other", event, event.getName(), "invite");
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite_wxFriend){
+//			inviteFriend("WX", event, event.getName(), "invite");
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite_qqFriend){
+//			inviteFriend("QQ", event, event.getName(), "invite");
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn){
+//			inviteFriend("Other", event, event.getName(), "signIn");
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn_wxFriend){
+//			inviteFriend("WX", event, event.getName(), "signIn");
+//			return true;
+//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_signIn_qqFriend){
+//			inviteFriend("QQ", event, event.getName(), "signIn");
+//			return true;
+//		}
 //		else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_edit){
 //			Bundle bundle = new Bundle();
 //			bundle.putLong("MODEL_ID", modelId);
@@ -362,149 +369,149 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void inviteFriend(final String way, Event event,final String event_name, final String type) {
-		((HyjActivity) getActivity()).displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);
-		String emTitle = null;
-		String emDescription = null;
-		if(type.equals("invite")){
-			emTitle = "邀请参加活动";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
-		} else if(type.equals("signIn")){
-			emTitle = "活动签到";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name +"签到";
-		}
-		final String emTitleSent = emTitle;
-		final String emDescriptionSent = emDescription;
-		
-		JSONObject inviteFriendObject = new JSONObject();
-		final String id = UUID.randomUUID().toString();
-		try {
-			inviteFriendObject.put("id", id);
-			inviteFriendObject.put("data", event.toJSON().toString());
-			inviteFriendObject.put("__dataType", "InviteLink");
-			inviteFriendObject.put("title", emTitle);
-			inviteFriendObject.put("type", "EventMember");
-			inviteFriendObject.put("date", (new Date()).getTime());
-			inviteFriendObject.put("description", emDescription);
-			inviteFriendObject.put("state", "Open");
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-   	 
-   	// 从服务器上下载用户数据
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				((HyjActivity) getActivity()).dismissProgressDialog();
-				String linkUrl = null;
-				if(type.equals("invite")){
-					linkUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
-				} else if(type.equals("signIn")){
-					linkUrl = HyjApplication.getInstance().getServerUrl()+"m/eventSignIn.html?id=" + id;
-				}
-					if(way.equals("Other")){
-						inviteOtherFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
-					} else if(way.equals("WX")){
-						inviteWXFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
-					} else if(way.equals("QQ")){
-						inviteQQFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
-					}
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				((HyjActivity) getActivity()).dismissProgressDialog();
-				try {
-					JSONObject json = (JSONObject) object;
-					((HyjActivity) getActivity()).displayDialog(null,
-							json.getJSONObject("__summary")
-									.getString("msg"));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-   	 
-   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + inviteFriendObject.toString() + "]", "postData");
-	 }
-
-	public void inviteOtherFriend(String linkUrl, String event_name, String emTitleSent, String emDescriptionSent) {
-		Intent intent=new Intent(Intent.ACTION_SEND);   
-        intent.setType("text/plain");   
-        
-//      File f;
-//		try {
-//			f = HyjUtil.createImageFile("invite_friend", "PNG");
-//			if(!f.exists()){
-//		        Bitmap bmp = HyjUtil.getCommonBitmap(R.drawable.invite_friend);
-//			    FileOutputStream out;
-//				out = new FileOutputStream(f);
-//				bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-//				out.close();
-//			}
-//	        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-
-//		} catch (IOException e) {
-//			e.printStackTrace();
+//	public void inviteFriend(final String way, Event event,final String event_name, final String type) {
+//		((HyjActivity) getActivity()).displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);
+//		String emTitle = null;
+//		String emDescription = null;
+//		if(type.equals("invite")){
+//			emTitle = "邀请参加活动";
+//			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
+//		} else if(type.equals("signIn")){
+//			emTitle = "活动签到";
+//			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name +"签到";
 //		}
-	        intent.putExtra(Intent.EXTRA_TITLE, emTitleSent);  
-	        intent.putExtra(Intent.EXTRA_SUBJECT, emTitleSent);   
-	        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + emTitleSent +event_name+"。\n\n" + linkUrl);  
-	        
-	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-	        startActivity(Intent.createChooser(intent, emTitleSent)); 
-	}
-	
-	public void inviteWXFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
-		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
-		WXWebpageObject webpage = new WXWebpageObject();
-		webpage.webpageUrl = linkUrl;
-		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = emTitleSent;
-		msg.description = emDescriptionSent;
-		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-		msg.thumbData = Util.bmpToByteArray(thumb, true);
-		
-		SendMessageToWX.Req req = new SendMessageToWX.Req();
-		req.transaction = buildTransaction("webpage");
-		req.message = msg;
-//		req.scene = isTimelineCb.isChecked() ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;
-		api.sendReq(req);
-		
-	}
-	
-	private String buildTransaction(final String type) {
-		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
-	}
-	
-	public void inviteQQFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
-		final Bundle params = new Bundle();
-	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-	    params.putString(QQShare.SHARE_TO_QQ_TITLE, emTitleSent);
-	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  emDescriptionSent);
-	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  linkUrl);
-	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
-	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
-//	    params.putInt(QQShare.SHARE_TO_QQ_EXT_INT,  "其他附加功能");		
-	    mQQShare.shareToQQ(getActivity(), params, new BaseUIListener(getActivity()) {
-
-            @Override
-            public void onCancel() {
-//            		Util.toastMessage(getActivity(), "onCancel: ");
-            }
-
-            @Override
-            public void onComplete(Object response) {
-//                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
-            }
-
-            @Override
-            public void onError(UiError e) {
-//                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
-            }
-
-        });
-	}
+//		final String emTitleSent = emTitle;
+//		final String emDescriptionSent = emDescription;
+//		
+//		JSONObject inviteFriendObject = new JSONObject();
+//		final String id = UUID.randomUUID().toString();
+//		try {
+//			inviteFriendObject.put("id", id);
+//			inviteFriendObject.put("data", event.toJSON().toString());
+//			inviteFriendObject.put("__dataType", "InviteLink");
+//			inviteFriendObject.put("title", emTitle);
+//			inviteFriendObject.put("type", "EventMember");
+//			inviteFriendObject.put("date", (new Date()).getTime());
+//			inviteFriendObject.put("description", emDescription);
+//			inviteFriendObject.put("state", "Open");
+//		} catch (JSONException e1) {
+//			e1.printStackTrace();
+//		}
+//   	 
+//   	// 从服务器上下载用户数据
+//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//			@Override
+//			public void finishCallback(Object object) {
+//				((HyjActivity) getActivity()).dismissProgressDialog();
+//				String linkUrl = null;
+//				if(type.equals("invite")){
+//					linkUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
+//				} else if(type.equals("signIn")){
+//					linkUrl = HyjApplication.getInstance().getServerUrl()+"m/eventSignIn.html?id=" + id;
+//				}
+//					if(way.equals("Other")){
+//						inviteOtherFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
+//					} else if(way.equals("WX")){
+//						inviteWXFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
+//					} else if(way.equals("QQ")){
+//						inviteQQFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
+//					}
+//			}
+//
+//			@Override
+//			public void errorCallback(Object object) {
+//				((HyjActivity) getActivity()).dismissProgressDialog();
+//				try {
+//					JSONObject json = (JSONObject) object;
+//					((HyjActivity) getActivity()).displayDialog(null,
+//							json.getJSONObject("__summary")
+//									.getString("msg"));
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+//   	 
+//   	 	HyjHttpPostAsyncTask.newInstance(serverCallbacks, "[" + inviteFriendObject.toString() + "]", "postData");
+//	 }
+//
+//	public void inviteOtherFriend(String linkUrl, String event_name, String emTitleSent, String emDescriptionSent) {
+//		Intent intent=new Intent(Intent.ACTION_SEND);   
+//        intent.setType("text/plain");   
+//        
+////      File f;
+////		try {
+////			f = HyjUtil.createImageFile("invite_friend", "PNG");
+////			if(!f.exists()){
+////		        Bitmap bmp = HyjUtil.getCommonBitmap(R.drawable.invite_friend);
+////			    FileOutputStream out;
+////				out = new FileOutputStream(f);
+////				bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+////				out.close();
+////			}
+////	        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+//
+////		} catch (IOException e) {
+////			e.printStackTrace();
+////		}
+//	        intent.putExtra(Intent.EXTRA_TITLE, emTitleSent);  
+//	        intent.putExtra(Intent.EXTRA_SUBJECT, emTitleSent);   
+//	        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + emTitleSent +event_name+"。\n\n" + linkUrl);  
+//	        
+//	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
+//	        startActivity(Intent.createChooser(intent, emTitleSent)); 
+//	}
+//	
+//	public void inviteWXFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
+//		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
+//		WXWebpageObject webpage = new WXWebpageObject();
+//		webpage.webpageUrl = linkUrl;
+//		WXMediaMessage msg = new WXMediaMessage(webpage);
+//		msg.title = emTitleSent;
+//		msg.description = emDescriptionSent;
+//		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//		msg.thumbData = Util.bmpToByteArray(thumb, true);
+//		
+//		SendMessageToWX.Req req = new SendMessageToWX.Req();
+//		req.transaction = buildTransaction("webpage");
+//		req.message = msg;
+////		req.scene = isTimelineCb.isChecked() ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;
+//		api.sendReq(req);
+//		
+//	}
+//	
+//	private String buildTransaction(final String type) {
+//		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+//	}
+//	
+//	public void inviteQQFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
+//		final Bundle params = new Bundle();
+//	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+//	    params.putString(QQShare.SHARE_TO_QQ_TITLE, emTitleSent);
+//	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  emDescriptionSent);
+//	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  linkUrl);
+//	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
+//	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
+////	    params.putInt(QQShare.SHARE_TO_QQ_EXT_INT,  "其他附加功能");		
+//	    mQQShare.shareToQQ(getActivity(), params, new BaseUIListener(getActivity()) {
+//
+//            @Override
+//            public void onCancel() {
+////            		Util.toastMessage(getActivity(), "onCancel: ");
+//            }
+//
+//            @Override
+//            public void onComplete(Object response) {
+////                Util.toastMessage(getActivity(), "onComplete: " + response.toString());
+//            }
+//
+//            @Override
+//            public void onError(UiError e) {
+////                Util.toastMessage(getActivity(), "onError: " + e.errorMessage, "e");
+//            }
+//
+//        });
+//	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
