@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -43,6 +44,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldDate = null;
 	private HyjDateTimeField mDateTimeFieldStartDate = null;
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
+	
+	private Button cancelBtn = null;
 	
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
@@ -164,7 +167,17 @@ public class EventFormFragment extends HyjUserFormFragment {
 //			}
 //		});
 		
+		
 		if(modelId != -1){
+			cancelBtn = (Button) getView().findViewById(R.id.button_event_cancel);
+			cancelBtn.setVisibility(View.VISIBLE);
+			cancelBtn.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					cancelEvent();
+				}
+			});
+			
 			mRemarkFieldDescription.setText(event.getDescription());
 			mSelectorFieldProject.setEnabled(false);
 			if(!mEventEditor.getModel().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -289,5 +302,9 @@ public class EventFormFragment extends HyjUserFormFragment {
 			break;
 
 		}
+	}
+	
+	protected void cancelEvent() {
+		
 	}
 }
