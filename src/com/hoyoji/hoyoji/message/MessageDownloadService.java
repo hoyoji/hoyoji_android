@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.Model;
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
@@ -414,8 +415,16 @@ public class MessageDownloadService extends Service {
 	
 	private void removeListModelFromDB(List<Model> list){
 		for(Model m : list){
-			m.setSyncFromServer(true);
-			((Model)m).delete();
+//			m.setSyncFromServer(true);
+//			m.delete();
+			Model.delete(m.getClass(), m.get_mId());
+
+			Cache.removeEntity(m);
+			HyjUtil.updateClicentSyncRecord(m.getClass().getName(), m.getId(), "Delete", ((HyjModel)m).getLastServerUpdateTime(), true);
+			Cache.getContext()
+					.getContentResolver()
+					.notifyChange(ContentProvider.createUri(m.getClass(), m.get_mId()),
+							null);
 		}
 	}
 
