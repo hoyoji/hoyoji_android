@@ -494,14 +494,16 @@ public class MoneyApportionField extends GridView {
 	    if(mImageGridAdapter.getCount() == 0){
 	    	MoneyApportion apportion;
 			try {
-				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(toBeDeterminedFriend != null){
+//				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//				if(toBeDeterminedFriend != null){
+				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND toBeDetermined=1", project.getId()).executeSingle();
+				if(projectShareAuthorization != null){
 					apportion = type.newInstance();
 					apportion.setAmount(0.0);
 					apportion.setMoneyId(mMoneyTransactionId);
 					apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-					ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", project.getId(), toBeDeterminedFriend.getId()).executeSingle();
-					if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
+//					ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", project.getId(), toBeDeterminedFriend.getId()).executeSingle();
+					if(projectShareAuthorization.getSharePercentageType().equals("Average")){
 						apportion.setApportionType("Average");
 					} else {
 						apportion.setApportionType("Share");
