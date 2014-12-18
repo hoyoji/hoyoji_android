@@ -340,14 +340,14 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
  				String type = data.getStringExtra("MODEL_TYPE");
  				long _id = data.getLongExtra("MODEL_ID", -1);
  				if(_id != -1){
- 					AddApportionMember(type, _id);
+ 					AddApportionMember(type, _id, new long[0]);
  				} else {
  					long[] _ids = data.getLongArrayExtra("MODEL_IDS");
- 					if(_ids != null){
- 						for(int i=0; i<_ids.length; i++){
- 							AddApportionMember(type, _ids[i]);
- 						}
- 					}
+					if(_ids != null && _ids.length > 0) {
+//						for(int i=0; i<_ids.length; i++){
+							AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
+//						}
+					}
  				}
  				
  			}
@@ -369,7 +369,7 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
           }
     }
 
-	private void AddApportionMember(String type, long _id) {
+	private void AddApportionMember(final String type, final long _id, final long[] _ids) {
 			ProjectShareAuthorization psa = null;
 			if("ProjectShareAuthorization".equalsIgnoreCase(type)){
 				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
@@ -395,11 +395,18 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
 										bundle.putString("LOCAL_FRIENDID", friend.getId());
 									}
 									openActivityWithFragmentForResult(ProjectMemberFormFragment.class, R.string.memberFormFragment_title_addnew, bundle, ADD_AS_PROJECT_MEMBER);
+									if(_ids.length > 0){
+										AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
+									}
 								}
 		
 								@Override
 								public void doNegativeClick() {
-									HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+									if(_ids.length > 0){
+										AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
+									} else {
+										HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+									}
 								}
 							});
 					

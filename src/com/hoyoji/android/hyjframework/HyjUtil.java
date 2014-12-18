@@ -768,4 +768,15 @@ public class HyjUtil {
 				HyjHttpPostAsyncTask.newInstance(serverCallbacks, jsonObj.toString(), "getPicture");
 			}
 		}
+
+		public static long[] arrayTail(long[] _ids) {
+			if(_ids.length == 0){
+				return new long[0];
+			}
+			long tail[] = new long[_ids.length-1];
+			for(int i = 1; i < _ids.length; i++){
+				tail[i-1] = _ids[i];
+			}
+			return tail;
+		}
 }
