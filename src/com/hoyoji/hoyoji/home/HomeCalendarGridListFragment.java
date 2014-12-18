@@ -294,7 +294,11 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 		return view;
 	}
 
-
+	@Override
+	public void onResume(){
+		super.onResume();
+	}
+	
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();

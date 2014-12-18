@@ -21,6 +21,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +51,7 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 
@@ -64,6 +66,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	private Event mNearestEvent;
 
 	private HyjCalendarGrid mCalendarGridView;
+	private Button mDepositExpenseButton;
+	private Button mDepositIncomeButton;
 	
 	@Override
 	public Integer useContentView() {
@@ -204,7 +208,12 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
 			}
 		});
-		getView().findViewById(R.id.homeListFragment_event_action_money_deposit_expense).setOnClickListener(new OnClickListener(){
+		
+		mDepositExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_expense);
+		mDepositIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_income);
+		mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+		mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+		mDepositExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 
@@ -222,7 +231,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
 			}
 		});
-		getView().findViewById(R.id.homeListFragment_event_action_money_deposit_income).setOnClickListener(new OnClickListener(){
+		mDepositIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 
@@ -242,11 +251,11 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		});
 				
 		updateNearestEvent();
-//		if (mChangeObserver == null) {
-//			mChangeObserver = new ChangeObserver();
-//			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(EventMember.class, null), true,
-//					mChangeObserver);
-//		}
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
+					mChangeObserver);
+		}
 		// 加载日历
 		initLoader(-1);
 	}
@@ -604,6 +613,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //					mCalendarGridView.getAdapter().notifyDataSetChanged();
 				}
 			}, 50);
+
+			mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+			mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		}
 	}
 	

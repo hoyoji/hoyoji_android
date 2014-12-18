@@ -1,13 +1,7 @@
 package com.hoyoji.hoyoji.home;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import com.activeandroid.util.Log;
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
 import com.hoyoji.hoyoji_android.R;
 
@@ -15,16 +9,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class HomeCalendarGridEventAdapter extends HyjCalendarGridAdapter {
