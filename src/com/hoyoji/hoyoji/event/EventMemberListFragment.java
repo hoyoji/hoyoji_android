@@ -1,16 +1,8 @@
 package com.hoyoji.hoyoji.event;
 
-import java.util.Date;
-import java.util.UUID;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
@@ -28,31 +20,16 @@ import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.money.MoneyAddNewDialogFragment;
-import com.tencent.connect.auth.QQAuth;
-import com.tencent.connect.share.QQShare;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.SendMessageToWX;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.mm.sdk.openapi.WXMediaMessage;
-import com.tencent.mm.sdk.openapi.WXWebpageObject;
-import com.tencent.sample.BaseUIListener;
-import com.tencent.sample.Util;
-import com.tencent.tauth.UiError;
 
 public class EventMemberListFragment extends HyjUserListFragment {
 //	private IWXAPI api;
@@ -317,7 +294,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_add){
 			Bundle bundle = new Bundle();
 			bundle.putLong("eventId", modelId);
-			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "MoneyAddNewDialogFragment");
+			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "EventMemberDialogFragment");
 			return true;
 		} 
 //		 else if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){

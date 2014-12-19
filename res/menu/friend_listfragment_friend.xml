@@ -6,7 +6,7 @@
         android:title="@string/friendListFragment_action_friend_add"
         android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always">
-        <menu>
+        <!-- <menu>
             <item
 		        android:id="@+id/friendListFragment_action_friend_add"
 		        android:title="@string/friendListFragment_action_friend_add"
@@ -43,6 +43,6 @@
 		        android:icon="@drawable/ic_action_cc_bcc_white"
 		        hoyoji:showAsAction="always"/>
 		    
-        </menu>
+        </menu> -->
 	</item>
 </menu>
