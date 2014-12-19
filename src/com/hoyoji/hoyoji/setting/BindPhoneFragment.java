@@ -115,7 +115,7 @@ public class BindPhoneFragment extends HyjFragment {
 		SmsManager smsManager = SmsManager.getDefault(); 
 		PendingIntent sentPI = PendingIntent.getBroadcast(this.getActivity(), 0, sentIntent, 0);  
 
-		String msg = "尊敬的用户，您正在进行好友记账号（绑定/解绑）手机或找回密码操作，短信验证码为：" + mAuthCodeFromServer;
+		String msg = "尊敬的用户，您正在进行AA活动账号（绑定/解绑）手机或找回密码操作，短信验证码为：" + mAuthCodeFromServer;
 		try{  
 			smsManager.sendTextMessage(mTextViewPhone.getText().toString().trim(), null, msg, sentPI, null); 
         }catch(Exception e){  

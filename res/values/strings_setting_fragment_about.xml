@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="aboutFragment_title">关于好友记</string>
+    <string name="aboutFragment_title">关于AA活动</string>
     
     <string name="aboutFragment_textView_versionLabel">当前版本</string>
     <string name="aboutFragment_textView_version">1.0.2</string>

@@ -206,7 +206,7 @@ public class LoginActivity extends HyjActivity {
 	protected void onInitViewData() {
 		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
 		if(HyjApplication.getIsDebuggable()){
-			actionBar.setTitle("好友记(测试版)");
+			actionBar.setTitle("AA活动(测试版)");
 		}
 		// init view data here
 //		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
