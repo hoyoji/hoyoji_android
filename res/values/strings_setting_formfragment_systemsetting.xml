@@ -48,7 +48,7 @@
     <string name="systemSettingFormFragment_textView_moneyIncomeColor">收入颜色</string>
     <string name="systemSettingFormFragment_button_moneyIncomeColorPicker">请选择收入金额颜色</string>
     
-    <string name="systemSettingFormFragment_textView_about">关于好友记</string>
+    <string name="systemSettingFormFragment_textView_about">关于AA活动</string>
     <string name="systemSettingFormFragment_textView_version"></string>
     
     <string name="systemSettingFormFragment_textView_bindID">绑定账户</string>

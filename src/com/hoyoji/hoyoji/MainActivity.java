@@ -175,7 +175,7 @@ public class MainActivity extends HyjUserActivity {
 
 		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
 		if(HyjApplication.getIsDebuggable()){
-			actionBar.setTitle("好友记(测试版)");
+			actionBar.setTitle("AA活动(测试版)");
 		}
 		
 		// Create the adapter that will return a fragment for each of the three
