@@ -55,6 +55,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private RadioGroup stateRadioGroup = null;
 	private RadioButton unSignUpRadioButton = null;
 	private RadioButton signUpRadioButton = null;
+	private RadioButton unSignInRadioButton = null;
 	private RadioButton signInRadioButton = null;
 	private ProjectShareAuthorization jsonPSA = null;
 
@@ -181,11 +182,14 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		stateRadioGroup = (RadioGroup) getView().findViewById(R.id.projectEventMemberFormFragment_radioGroup_autoHide);
 		unSignUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_unSignUp);
 		signUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signUp);
+		unSignInRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_unSignIn);
 		signInRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signIn);
 		if("SignIn".equals(eventMember.getState())) {
 			signInRadioButton.setChecked(true);
 		} else if("SignUp".equals(eventMember.getState())){
 			signUpRadioButton.setChecked(true);
+		} else if("UnSignIn".equals(eventMember.getState())){
+			unSignInRadioButton.setChecked(true);
 		} else if("UnSignUp".equals(eventMember.getState())){
 			unSignUpRadioButton.setChecked(true);
 		}
@@ -204,6 +208,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				stateRadioGroup.setEnabled(false);
 				unSignUpRadioButton.setEnabled(false);
+				unSignInRadioButton.setEnabled(false);
 				signUpRadioButton.setEnabled(false);
 				signInRadioButton.setEnabled(false);
 				if(this.mOptionsMenu != null){
