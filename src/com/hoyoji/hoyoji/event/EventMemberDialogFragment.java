@@ -84,7 +84,7 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				inviteFriend("WX", event, event.getName(), "invite");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
-				dismiss();
+//				dismiss();
 			}
     	});
     	v.findViewById(R.id.EventMemberDialogFragment_invite_other).setOnClickListener(new OnClickListener(){
@@ -92,7 +92,7 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				inviteFriend("Other", event, event.getName(), "invite");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-				dismiss();
+//				dismiss();
 			}
     	});
     	v.findViewById(R.id.EventMemberDialogFragment_signIn_qq).setOnClickListener(new OnClickListener(){

@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -32,11 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
@@ -45,22 +42,17 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjSimpleCursorTreeAdapter;
 import com.hoyoji.android.hyjframework.HyjSimpleExpandableListAdapter;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserExpandableListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
-import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.FriendCategory;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountChildListLoader;
-import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountGroupListLoader;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -151,30 +143,36 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.friendListFragment_action_friend_create){
-			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_create, null);
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
-			openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_import){
-			openActivityWithFragment(ImportFriendListFragment.class, R.string.friendFormFragment_title_import, null);
-//			Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);  
-//            this.startActivityForResult(intent, 1);  
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
-			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite){
-			inviteFriend("Other");
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_wxFriend){
-			inviteFriend("WX");
-			return true;
-		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_qqFriend){
-			inviteFriend("QQ");
+		if(item.getItemId() == R.id.searchListFragment_action_addfriend){
+			Bundle bundle = new Bundle();
+//			bundle.putLong("eventId", modelId);
+			FriendDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "FriendDialogFragment");
 			return true;
 		}
+//		  else if(item.getItemId() == R.id.friendListFragment_action_friend_create){
+//			openActivityWithFragment(FriendFormFragment.class, R.string.friendFormFragment_title_create, null);
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friend_add){
+//			openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friend_import){
+//			openActivityWithFragment(ImportFriendListFragment.class, R.string.friendFormFragment_title_import, null);
+////			Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);  
+////            this.startActivityForResult(intent, 1);  
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
+//			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite){
+//			inviteFriend("Other");
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_wxFriend){
+//			inviteFriend("WX");
+//			return true;
+//		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite_qqFriend){
+//			inviteFriend("QQ");
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 	
