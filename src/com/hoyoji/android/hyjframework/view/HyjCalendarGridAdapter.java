@@ -39,7 +39,7 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	protected int[] yearNumber; // 一个gridview中的日期存入此数组中
 	// private static String week[] = {"周日","周一","周二","周三","周四","周五","周六"};
 
-	private Resources res = null;
+	protected Resources res = null;
 	// private Drawable drawable = null;
 
 	protected int currentYear = -1;
@@ -193,8 +193,8 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 			viewCache.tvIncome.setVisibility(View.INVISIBLE);
 		}
 
-		
-
+		convertView.setBackgroundColor(Color.TRANSPARENT);
+		viewCache.tvDay.setBackgroundColor(Color.TRANSPARENT);
 		// 显示选定的日期
 		if (this.selectedDay == d && this.selectedMonth == m
 				&& this.selectedYear == y) {
@@ -207,15 +207,13 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 				viewCache.tvDay.setBackground(drawableSelectedBackground);
 			}
 			viewCache.tvDay.setTextColor(Color.WHITE);
-		} else {
-//			convertView.setBackgroundColor(Color.TRANSPARENT);
-			viewCache.tvDay.setBackgroundColor(Color.TRANSPARENT);
+		}  else {
+			// 显示当月的
 			// 显示当天
 			if (this.sys_day == d && this.sys_month == m
 					&& this.sys_year == y) {
-				viewCache.tvDay.setTextColor(Color.BLACK);
+				viewCache.tvDay.setTextColor(res.getColor(R.color.red));
 			} else {
-				// 显示当月的
 				if (currentYear == y && currentMonth == m) {
 					viewCache.tvDay.setTextColor(Color.GRAY);
 				} else {
@@ -223,6 +221,12 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 				}
 			}
 		}
+//			// 显示当天背景
+//			if (this.sys_day == d && this.sys_month == m
+//					&& this.sys_year == y) {
+//				convertView.setBackgroundColor(res.getColor(R.color.hoyoji_lightgray));
+//			}
+		
 		return convertView;
 	}
 
