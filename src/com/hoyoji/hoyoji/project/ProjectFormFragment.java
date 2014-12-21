@@ -112,6 +112,10 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			}
 		} else {
 			project = new Project();
+			String projectName = intent.getStringExtra("PROJECT_NAME");
+			if(projectName != null){
+				project.setName(projectName);
+			}
 		}
 		mProjectEditor = project.newModelEditor();
 
@@ -459,7 +463,14 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 			mProjectEditor.save();
 			HyjUtil.displayToast(R.string.app_save_success);
 			ActiveAndroid.setTransactionSuccessful();
-			getActivity().finish();
+			if(getActivity().getCallingActivity() != null){
+				Intent intent = new Intent();
+				intent.putExtra("MODEL_ID", mProjectEditor.getModel().get_mId());
+				getActivity().setResult(Activity.RESULT_OK, intent);
+				getActivity().finish();
+			} else {
+				getActivity().finish();
+			}
 		} finally {
 			ActiveAndroid.endTransaction();
 		}

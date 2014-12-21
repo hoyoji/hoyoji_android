@@ -53,6 +53,10 @@ public class HyjModelEditor<T extends HyjModel> {
 		return !mValidationErrors.isEmpty();
 	}
 	
+	public int getValidationErrorsCount(){
+		return mValidationErrors.size();
+	}
+	
 	public void setValidationError(String field, String error){
 		mValidationErrors.put(field, error);
 	}	
