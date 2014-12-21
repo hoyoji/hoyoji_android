@@ -99,11 +99,11 @@ public class Event extends HyjModel {
 				modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);
 			}
 		}
-		if(this.getProjectId() == null){
-			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
-		}else{
-			modelEditor.removeValidationError("project");
-		}
+//		if(this.getProjectId() == null){
+//			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+//		}else{
+//			modelEditor.removeValidationError("project");
+//		}
 		if(this.getName() == null || "".equals(this.getName())){
 			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
 		} else {
