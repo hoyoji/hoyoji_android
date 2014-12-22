@@ -11,9 +11,11 @@
     tools:context=".EventMemberDialogFragment" >
 
         <LinearLayout
+            android:id="@+id/EventMemberDialogFragment_linearLayout_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:visibility="gone">
 			<LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
@@ -34,7 +36,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="邀请活动好友"/>
+	                android:text="活动好友"/>
             </LinearLayout>       
  			<LinearLayout
 	            android:layout_width="0dp"
@@ -56,7 +58,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="邀请QQ好友"/>
+	                android:text="QQ好友"/>
             </LinearLayout>        
             <LinearLayout
 	            android:layout_width="0dp"
@@ -78,7 +80,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="邀请微信好友"/>
+	                android:text="微信好友"/>
             </LinearLayout>        
 
             <LinearLayout
@@ -101,20 +103,24 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="邀请其他好友"/>
+	                android:text="其他好友"/>
             </LinearLayout>        
         </LinearLayout>
             <View 
+                android:id="@+id/EventMemberDialogFragment_view"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/lightgray"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
+                android:visibility="gone"
                 />
         <LinearLayout
+            android:id="@+id/EventMemberDialogFragment_linearLayout_signIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:visibility="gone">
             <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
@@ -135,7 +141,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="发送签到链接到QQ"/>
+	                android:text="QQ"/>
             </LinearLayout>
             <LinearLayout
 	            android:layout_width="0dp"
@@ -157,7 +163,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="发送签到链接到微信"/>
+	                android:text="微信"/>
             </LinearLayout>
             <LinearLayout
 	            android:layout_width="0dp"
@@ -179,7 +185,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="其他方式发送链接"/>
+	                android:text="其他方式"/>
             </LinearLayout>
         </LinearLayout>
 

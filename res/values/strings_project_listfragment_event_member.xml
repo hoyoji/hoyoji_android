@@ -15,4 +15,7 @@
     <string name="projectEventMemberListFragment_state_wait">等待接受</string>
     <string name="projectEventMemberListFragment_state_notinvite">尚未邀请</string>
     
+    <string name="projectEventMemberListFragment_invite_friend">邀请好友</string>
+    <string name="projectEventMemberListFragment_signIn_friend">发送签到</string>
+    
 </resources>

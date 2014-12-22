@@ -291,12 +291,19 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
 			return true;
 		}
-		if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_add){
+		if(item.getItemId() == R.id.projectEventMemberListFragment_invite_friend){
 			Bundle bundle = new Bundle();
-			bundle.putLong("eventId", modelId);
+			bundle.putLong("EVENTID", modelId);
+			bundle.putString("DIALOG_TYPE", "invite");
 			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "EventMemberDialogFragment");
 			return true;
-		} 
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_signIn_friend){
+			Bundle bundle = new Bundle();
+			bundle.putLong("EVENTID", modelId);
+			bundle.putString("DIALOG_TYPE", "signIn");
+			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "EventMemberDialogFragment");
+			return true;
+		}
 //		 else if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
 //			if(mIsSelectSignInEventMembers = true){
 //				

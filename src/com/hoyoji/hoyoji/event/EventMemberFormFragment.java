@@ -354,6 +354,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			public void errorCallback(Object object) {
 				JSONObject json = (JSONObject) object;
 				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 			}
 		};
 		String data = "[";

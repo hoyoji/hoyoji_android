@@ -34,6 +34,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 
 public class EventMemberDialogFragment extends DialogFragment {
 	private IWXAPI api;
@@ -58,15 +59,30 @@ public class EventMemberDialogFragment extends DialogFragment {
         
         Intent intent = getActivity().getIntent();
         final Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		final Event event = Event.load(Event.class, modelId);
+//		final Event event = Event.load(Event.class, modelId);
 
 		final Bundle bundle = getArguments();
     	View v = inflater.inflate(R.layout.event_dialogfragment_member, null);
+    	String dialog_type = bundle.getString("DIALOG_TYPE");
+    	final Event event = Event.load(Event.class, bundle.getLong("EVENTID"));
+    	
+    	LinearLayout mInviteLinearLayout = (LinearLayout) v.findViewById(R.id.EventMemberDialogFragment_linearLayout_invite);
+    	LinearLayout mSignInLinearLayout = (LinearLayout) v.findViewById(R.id.EventMemberDialogFragment_linearLayout_signIn);
+//    	View mView = (View) v.findViewById(R.id.EventMemberDialogFragment_view);
+    	if("invite".equals(dialog_type)) {
+    		mInviteLinearLayout.setVisibility(View.VISIBLE);
+//    		mSignInLinearLayout.setVisibility(View.VISIBLE);
+//    		mView.setVisibility(View.VISIBLE);
+    	} else if("signIn".equals(dialog_type)){
+    		mSignInLinearLayout.setVisibility(View.VISIBLE);
+    	}
+    	
     	v.findViewById(R.id.EventMemberDialogFragment_invite_friend).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				bundle.putLong("EVENT_ID", modelId);
-				((HyjActivity)getActivity()).openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				Bundle newBundle = new Bundle();
+				newBundle.putLong("EVENT_ID", modelId);
+				((HyjActivity)getActivity()).openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, newBundle);
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
 				dismiss();
 			}
@@ -126,16 +142,30 @@ public class EventMemberDialogFragment extends DialogFragment {
         builder.setView(v);
 
         // Set title of dialog
-        builder.setTitle("发送链接")
-//                // Set Ok button
-//                .setPositiveButton(R.string.alert_dialog_ok,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//            			        
-//                            }
-//                        })
-                // Set Cancel button
-                .setNegativeButton(R.string.alert_dialog_cancel, null); 
+        if("invite".equals(dialog_type)) {
+        	builder.setTitle("邀请好友")
+//          // Set Ok button
+//          .setPositiveButton(R.string.alert_dialog_ok,
+//                  new DialogInterface.OnClickListener() {
+//                      public void onClick(DialogInterface dialog, int id) {
+//      			        
+//                      }
+//                  })
+          // Set Cancel button
+          .setNegativeButton(R.string.alert_dialog_cancel, null); 
+    	} else if("signIn".equals(dialog_type)){
+    		builder.setTitle("发送链接")
+//          // Set Ok button
+//          .setPositiveButton(R.string.alert_dialog_ok,
+//                  new DialogInterface.OnClickListener() {
+//                      public void onClick(DialogInterface dialog, int id) {
+//      			        
+//                      }
+//                  })
+          // Set Cancel button
+          .setNegativeButton(R.string.alert_dialog_cancel, null); 
+    	}
+        
 
         // Create the AlertDialog object and return it
         return builder.create();
