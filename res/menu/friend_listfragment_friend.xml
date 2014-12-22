@@ -6,8 +6,28 @@
         android:title="@string/friendListFragment_action_friend_add"
         android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always">
-        <!-- <menu>
+        <menu>
             <item
+		        android:id="@+id/friendListFragment_action_friend_add"
+		        android:title="@string/friendListFragment_action_friend_add"
+		        android:icon="@drawable/ic_action_search_white"
+		        hoyoji:showAsAction="always"/>
+		    <item
+		        android:id="@+id/friendListFragment_action_friend_create"
+		        android:title="@string/friendListFragment_action_friend_create"
+		        android:icon="@drawable/ic_action_add_person_white"
+		        hoyoji:showAsAction="always"/>
+		     <item
+		        android:id="@+id/friendListFragment_action_friend_invite"
+		        android:title="@string/friendListFragment_action_friend_invite"
+		        android:icon="@drawable/ic_action_add_person_white"
+		        hoyoji:showAsAction="always"/>
+		     <item
+		        android:id="@+id/friendListFragment_action_friendCategory_create"
+		        android:title="@string/friendCategoryFormFragment_title_create"
+		        android:icon="@drawable/ic_action_add_group_white"
+		        hoyoji:showAsAction="always"/>
+          <!-- <item
 		        android:id="@+id/friendListFragment_action_friend_add"
 		        android:title="@string/friendListFragment_action_friend_add"
 		        android:icon="@drawable/ic_action_search_white"
@@ -41,8 +61,8 @@
 		        android:id="@+id/friendListFragment_action_friend_invite"
 		        android:title="@string/friendListFragment_title_invite"
 		        android:icon="@drawable/ic_action_cc_bcc_white"
-		        hoyoji:showAsAction="always"/>
+		        hoyoji:showAsAction="always"/>-->
 		    
-        </menu> -->
+        </menu> 
 	</item>
 </menu>

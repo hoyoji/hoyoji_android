@@ -11,10 +11,12 @@
     tools:context=".FriendDialogFragment" >
 
         <LinearLayout
+            android:id="@+id/friendDialogFragment_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-			<LinearLayout
+            android:orientation="horizontal"
+            android:visibility="gone" >
+			<!-- <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 		        android:layout_weight="1"
@@ -35,7 +37,7 @@
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
 	                android:text="添加网络好友"/>
-            </LinearLayout>       
+            </LinearLayout> -->       
  			<LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
@@ -81,7 +83,7 @@
 	                android:text="导入通讯录好友"/>
             </LinearLayout>        
 
-            <LinearLayout
+            <!-- <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 		        android:layout_weight="1"
@@ -102,7 +104,7 @@
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
 	                android:text="创建好友分类"/>
-            </LinearLayout>        
+            </LinearLayout> -->        
         </LinearLayout>
             <View 
                 android:layout_width="match_parent"
@@ -110,11 +112,14 @@
                 android:background="@color/lightgray"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
+                android:visibility="gone"
                 />
         <LinearLayout
+            android:id="@+id/friendDialogFragment_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
             <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"

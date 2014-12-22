@@ -143,10 +143,27 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.searchListFragment_action_addfriend){
-			Bundle bundle = new Bundle();
+//		if(item.getItemId() == R.id.searchListFragment_action_addfriend){
+//			Bundle bundle = new Bundle();
 //			bundle.putLong("eventId", modelId);
+//			FriendDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "FriendDialogFragment");
+//			return true;
+//		} else 
+		if(item.getItemId() == R.id.friendListFragment_action_friend_add){
+			openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_create){
+			Bundle bundle = new Bundle();
+			bundle.putString("DIALOG_TYPE", "create");
 			FriendDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "FriendDialogFragment");
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friend_invite){
+			Bundle bundle = new Bundle();
+			bundle.putString("DIALOG_TYPE", "invite");
+			FriendDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "FriendDialogFragment");
+			return true;
+		} else if(item.getItemId() == R.id.friendListFragment_action_friendCategory_create){
+			openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
 			return true;
 		}
 //		  else if(item.getItemId() == R.id.friendListFragment_action_friend_create){

@@ -34,6 +34,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 
 public class FriendDialogFragment extends DialogFragment {
 	private IWXAPI api;
@@ -58,14 +59,26 @@ public class FriendDialogFragment extends DialogFragment {
 
 		final Bundle bundle = getArguments();
     	View v = inflater.inflate(R.layout.friend_dialogfragment_friend, null);
-    	v.findViewById(R.id.friendDialogFragment_add_online).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				((HyjActivity)getActivity()).openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
-//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
-				dismiss();
-			}
-    	});
+    	
+    	String dialog_type = bundle.getString("DIALOG_TYPE");
+    	
+    	LinearLayout mCreateLinearLayout = (LinearLayout) v.findViewById(R.id.friendDialogFragment_create);
+    	LinearLayout mInviteLinearLayout = (LinearLayout) v.findViewById(R.id.friendDialogFragment_invite);
+//    	View mView = (View) v.findViewById(R.id.EventMemberDialogFragment_view);
+    	if("invite".equals(dialog_type)) {
+    		mInviteLinearLayout.setVisibility(View.VISIBLE);
+//    		mView.setVisibility(View.VISIBLE);
+    	} else if("create".equals(dialog_type)){
+    		mCreateLinearLayout.setVisibility(View.VISIBLE);
+    	}
+//    	v.findViewById(R.id.friendDialogFragment_add_online).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				((HyjActivity)getActivity()).openActivityWithFragment(AddFriendListFragment.class, R.string.addFriendListFragment_title_add, null);
+////				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
+//				dismiss();
+//			}
+//    	});
     	v.findViewById(R.id.friendDialogFragment_add_local).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -82,14 +95,14 @@ public class FriendDialogFragment extends DialogFragment {
 				dismiss();
 			}
     	});
-    	v.findViewById(R.id.friendDialogFragment_add_category).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				((HyjActivity)getActivity()).openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
-//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-				dismiss();
-			}
-    	});
+//    	v.findViewById(R.id.friendDialogFragment_add_category).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				((HyjActivity)getActivity()).openActivityWithFragment(FriendCategoryFormFragment.class, R.string.friendCategoryFormFragment_title_create, null);
+////				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
+//				dismiss();
+//			}
+//    	});
     	v.findViewById(R.id.friendDialogFragment_invite_qq).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -119,9 +132,8 @@ public class FriendDialogFragment extends DialogFragment {
     	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Set the layout for the dialog
         builder.setView(v);
-
-        // Set title of dialog
-        builder.setTitle("好友管理")
+        if("invite".equals(dialog_type)) {
+    		 builder.setTitle("邀请好友")
 //                // Set Ok button
 //                .setPositiveButton(R.string.alert_dialog_ok,
 //                        new DialogInterface.OnClickListener() {
@@ -131,6 +143,20 @@ public class FriendDialogFragment extends DialogFragment {
 //                        })
                 // Set Cancel button
                 .setNegativeButton(R.string.alert_dialog_cancel, null); 
+    	} else if("create".equals(dialog_type)){
+    		 builder.setTitle("创建好友")
+//                // Set Ok button
+//                .setPositiveButton(R.string.alert_dialog_ok,
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//            			        
+//                            }
+//                        })
+                // Set Cancel button
+                .setNegativeButton(R.string.alert_dialog_cancel, null); 
+    	}
+        // Set title of dialog
+       
 
         // Create the AlertDialog object and return it
         return builder.create();
