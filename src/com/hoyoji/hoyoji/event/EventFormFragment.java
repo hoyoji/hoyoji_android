@@ -18,6 +18,8 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
+import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -29,11 +31,14 @@ import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 
 public class EventFormFragment extends HyjUserFormFragment {
-	private static final int GET_REMARK = 1;
 	private final static int GET_PROJECT_ID = 0;
+	private static final int GET_REMARK = 1;
+	private static final int CREATE_NEW_PROJECT_AND_SAVE = 2;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -233,7 +238,19 @@ public class EventFormFragment extends HyjUserFormFragment {
 		if (mEventEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
-			 Intent intent = getActivity().getIntent();
+			if(mEventEditor.getModelCopy().getProjectId() == null){
+				((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+						new DialogCallbackListener() {
+							@Override
+							public void doPositiveClick(Object object) {
+								Bundle bundle = new Bundle();
+								bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
+								openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
+							}
+						});
+				return;
+			}
+			Intent intent = getActivity().getIntent();
 			Long modelId = intent.getLongExtra("MODEL_ID", -1);
 			if (modelId == -1) {
 				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
@@ -282,25 +299,37 @@ public class EventFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case GET_REMARK:
-			if (resultCode == Activity.RESULT_OK) {
-				String text = data.getStringExtra("TEXT");
-				mRemarkFieldDescription.setText(text);
-			}
-			break;
-		case GET_PROJECT_ID:
-			if (resultCode == Activity.RESULT_OK) {
-				long _id = data.getLongExtra("MODEL_ID", -1);
-				Project project = Project.load(Project.class, _id);
-				if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-					mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
-					mSelectorFieldProject.setModelId(project.getId());
-				} else {
-					HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+			case GET_REMARK:
+				if (resultCode == Activity.RESULT_OK) {
+					String text = data.getStringExtra("TEXT");
+					mRemarkFieldDescription.setText(text);
 				}
-			}
-			break;
-
+				break;
+			case GET_PROJECT_ID:
+				if (resultCode == Activity.RESULT_OK) {
+					long _id = data.getLongExtra("MODEL_ID", -1);
+					Project project = Project.load(Project.class, _id);
+					if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+						mSelectorFieldProject.setModelId(project.getId());
+					} else {
+						HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+					}
+				}
+				break;
+			case CREATE_NEW_PROJECT_AND_SAVE:
+				if (resultCode == Activity.RESULT_OK) {
+					long _id = data.getLongExtra("MODEL_ID", -1);
+					Project project = Project.load(Project.class, _id);
+					if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
+						mSelectorFieldProject.setModelId(project.getId());
+						onSave();
+					} else {
+						HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+					}
+				}
+				break;
 		}
 	}
 	

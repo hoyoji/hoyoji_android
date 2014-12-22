@@ -466,7 +466,14 @@ public class MoneyAccountFormFragment extends HyjUserFormFragment {
 		
 		mMoneyAccountEditor.save();
 		HyjUtil.displayToast(R.string.app_save_success);
-		getActivity().finish();
+		if(getActivity().getCallingActivity() != null){
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_ID", mMoneyAccountEditor.getModel().get_mId());
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+		} else {
+			getActivity().finish();
+		}
 	}
 
 	@Override

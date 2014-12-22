@@ -69,6 +69,8 @@ public class HomeCalendarGridEventAdapter extends HyjCalendarGridAdapter {
 
 		
 
+		convertView.setBackgroundColor(Color.TRANSPARENT);
+		viewCache.tvDay.setBackgroundColor(Color.TRANSPARENT);
 		// 显示选定的日期
 		if (this.selectedDay == d && this.selectedMonth == m
 				&& this.selectedYear == y) {
@@ -82,13 +84,11 @@ public class HomeCalendarGridEventAdapter extends HyjCalendarGridAdapter {
 			}
 			viewCache.tvDay.setTextColor(Color.WHITE);
 		} else {
-//			convertView.setBackgroundColor(Color.TRANSPARENT);
-			viewCache.tvDay.setBackgroundColor(Color.TRANSPARENT);
 			// 显示当天
 			if (this.sys_day == d && this.sys_month == m
 					&& this.sys_year == y) {
-				viewCache.tvDay.setTextColor(Color.BLACK);
-			} else {
+				viewCache.tvDay.setTextColor(res.getColor(R.color.hoyoji_red));
+			}  else {
 				// 显示当月的
 				if (currentYear == y && currentMonth == m) {
 					viewCache.tvDay.setTextColor(Color.GRAY);
@@ -96,7 +96,13 @@ public class HomeCalendarGridEventAdapter extends HyjCalendarGridAdapter {
 					viewCache.tvDay.setTextColor(Color.LTGRAY);
 				}
 			}
-		}
+		} 
+//		// 显示当天背景
+//		if (this.sys_day == d && this.sys_month == m
+//				&& this.sys_year == y) {
+//			convertView.setBackgroundColor(res.getColor(R.color.hoyoji_lightgray));
+//		} 
+//		
 		return convertView;
 	}
 
