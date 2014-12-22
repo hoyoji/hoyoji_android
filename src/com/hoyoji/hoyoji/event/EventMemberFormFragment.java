@@ -469,6 +469,15 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 						newProjectShareAuthorization.loadFromJSON(
 								jsonObjects.optJSONObject(j), true);
 						newProjectShareAuthorization.save();
+					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						Event newEvent = HyjModel.getModel(Event.class, id);
+						if(newEvent == null){
+							newEvent = new Event();
+						}
+						newEvent.loadFromJSON(
+								jsonObjects.optJSONObject(j), true);
+						newEvent.save();
 					}
 				}
 
