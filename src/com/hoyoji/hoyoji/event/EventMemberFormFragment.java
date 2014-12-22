@@ -37,8 +37,12 @@ import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.money.SelectApportionEventMemberListFragment;
+import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
 public class EventMemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 1;
@@ -172,10 +176,14 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				}
 			}
 		}
+		final Event thisEvent = event;
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				EventMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.projectEventMemberFormFragment_selectorField_hint_friend, null, GET_FRIEND_ID);
+				Bundle bundle = new Bundle();
+				bundle.putLong("MODEL_ID", thisEvent.getProject().get_mId());
+				EventMemberFormFragment.this.openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_FRIEND_ID);
+//				EventMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.projectEventMemberFormFragment_selectorField_hint_friend, null, GET_FRIEND_ID);
 			}
 		});	
 		
