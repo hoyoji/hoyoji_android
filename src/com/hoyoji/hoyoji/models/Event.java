@@ -78,17 +78,17 @@ public class Event extends HyjModel {
 	@Override
 	public void validate(HyjModelEditor<?> modelEditor) {
 		if(this.getDate() == null){
-			modelEditor.setValidationError("date",R.string.projectEventListFragment_hyjDateTimeField_hint_date);
+			modelEditor.setValidationError("date",R.string.projectEventFormFragment_hyjDateTimeField_hint_date);
 		}else{
 			modelEditor.removeValidationError("date");
 		}
 		if(this.getStartDate() == null){
-			modelEditor.setValidationError("startDate",R.string.projectEventListFragment_hyjDateTimeField_hint_startDate);
+			modelEditor.setValidationError("startDate",R.string.projectEventFormFragment_hyjDateTimeField_hint_startDate);
 		}else{
 			modelEditor.removeValidationError("startDate");
 		}
 		if(this.getEndDate() == null){
-			modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_hint_endDate);
+			modelEditor.setValidationError("endDate",R.string.projectEventFormFragment_hyjDateTimeField_hint_endDate);
 		}else{
 			modelEditor.removeValidationError("endDate");
 		}
@@ -96,16 +96,16 @@ public class Event extends HyjModel {
 			if(this.getStartDate() < this.getEndDate()) {
 				modelEditor.removeValidationError("endDate");
 			} else {
-				modelEditor.setValidationError("endDate",R.string.projectEventListFragment_hyjDateTimeField_error_endDate);
+				modelEditor.setValidationError("endDate",R.string.projectEventFormFragment_hyjDateTimeField_error_endDate);
 			}
 		}
 //		if(this.getProjectId() == null){
-//			modelEditor.setValidationError("project",R.string.projectEventListFragment_hyjSelectorField_hint_projectName);
+//			modelEditor.setValidationError("project",R.string.projectEventFormFragment_hyjSelectorField_hint_projectName);
 //		}else{
 //			modelEditor.removeValidationError("project");
 //		}
 		if(this.getName() == null || "".equals(this.getName())){
-			modelEditor.setValidationError("name", R.string.projectEventListFragment_editText_hint_name);
+			modelEditor.setValidationError("name", R.string.projectEventFormFragment_editText_hint_name);
 		} else {
 			modelEditor.removeValidationError("name");
 		}

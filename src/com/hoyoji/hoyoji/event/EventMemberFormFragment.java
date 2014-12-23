@@ -505,7 +505,14 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	 	   	       		mSelectorFieldFriend.setText(null);
 	 	   	       		mSelectorFieldFriend.setModelId(null);
 					} else {
-		         		 Friend friend = Friend.load(Friend.class, _id);
+						String _type = data.getStringExtra("MODEL_TYPE");
+						Friend friend = null;
+						if("Friend".equals(_type)){
+							friend = Friend.load(Friend.class, _id);
+						} else if("ProjectShareAuthorization".equals(_type)){
+							ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+							friend = psa.getFriend();
+						}
 	         			 for(EventMember em : mEventMembers) {
 		       				if(friend.getFriendUserId() != null){
 		       					if(em.getFriendUserId() != null && em.getFriendUserId().equalsIgnoreCase(friend.getFriendUserId())){

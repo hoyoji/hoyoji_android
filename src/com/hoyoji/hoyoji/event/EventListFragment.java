@@ -95,7 +95,7 @@ public class EventListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"_id", "id", "startDate", "name", "id", "ownerUserId" ,"id", "id"},
+				new String[] {"_id", "id", "startDate", "name", "state", "ownerUserId" ,"id", "id"},
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_owner, R.id.homeListItem_amount},
 				0); 
 	}	
@@ -225,18 +225,21 @@ public class EventListFragment extends HyjUserListFragment {
 //			} else {
 //				((TextView)view).setText(cursor.getString(columnIndex));
 //			}
-			
-			long date = cursor.getLong(cursor.getColumnIndex("date"));
-			long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
-			long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 
-			long dt = (new Date()).getTime();
-			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
-			if(dt >= date && dt < startDate) {
-				((TextView)view).setText("[报名中]" + ems.size() + "人");
-			} else if(dt >= startDate && dt < endDate) {
-				((TextView)view).setText("[进行中]" + ems.size() + "人");
-			} else if(dt >= endDate) {
-				((TextView)view).setText("[已结束]" + ems.size() + "人");
+			if("Cancel".equals(cursor.getString(columnIndex))) {
+				((TextView)view).setText("[已取消]" + cursor.getColumnIndex("signUpCount") + "人");
+			} else {
+				long date = cursor.getLong(cursor.getColumnIndex("date"));
+				long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
+				long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 
+				long dt = (new Date()).getTime();
+	//			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
+				if(dt >= date && dt < startDate) {
+					((TextView)view).setText("[报名中]" + cursor.getColumnIndex("signUpCount") + "人");
+				} else if(dt >= startDate && dt < endDate) {
+					((TextView)view).setText("[进行中]" + cursor.getColumnIndex("signUpCount") + "人");
+				} else if(dt >= endDate) {
+					((TextView)view).setText("[已结束]" + cursor.getColumnIndex("signUpCount") + "人");
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){

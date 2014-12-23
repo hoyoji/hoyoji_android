@@ -245,7 +245,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
 					
-					MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventListFragment_action_select, bundle, GET_EVENT_ID);
+					MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventFormFragment_action_select, bundle, GET_EVENT_ID);
 				
 //				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
 //								ProjectEventListFragment.class,

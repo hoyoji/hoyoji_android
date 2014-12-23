@@ -332,6 +332,10 @@ public class MessageDownloadService extends Service {
 					pem.setState("SignIn");
 					pem.setSyncFromServer(true);
 					pem.save();
+				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Cancel")) {
+					pem.getEvent().setState("Cancel");
+					pem.getEvent().setSyncFromServer(true);
+					pem.getEvent().save();
 				}
 			} catch (JSONException e1) {
 				e1.printStackTrace();
@@ -344,15 +348,15 @@ public class MessageDownloadService extends Service {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-					JSONArray jsonArray = ((JSONArray) object).optJSONArray(0);
+				JSONArray jsonArray = ((JSONArray) object).optJSONArray(0);
 
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONObject jsonObj = jsonArray.optJSONObject(i);
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject jsonObj = jsonArray.optJSONObject(i);
 
-						HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.optString("id"));
-						model.loadFromJSON(jsonObj, true);
-						model.save();
-					}
+					HyjModel model = HyjModel.createModel(jsonObj.optString("__dataType"), jsonObj.optString("id"));
+					model.loadFromJSON(jsonObj, true);
+					model.save();
+				}
 			}
 
 			@Override

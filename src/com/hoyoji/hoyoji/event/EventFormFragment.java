@@ -1,6 +1,9 @@
 package com.hoyoji.hoyoji.event;
 
 import java.util.Date;
+
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,12 +19,14 @@ import android.widget.LinearLayout;
 
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
@@ -31,6 +36,7 @@ import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountFormFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -51,6 +57,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
 	
 	private Button cancelBtn = null;
+	
+	private boolean cancel = false;
 	
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
@@ -88,19 +96,19 @@ public class EventFormFragment extends HyjUserFormFragment {
 		}
 		mEventEditor = event.newModelEditor();
 		
-		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_date);
+		mDateTimeFieldDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_date);
 		mDateTimeFieldDate.setEnabled(false);
 		
-		mTextFieldName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_name);
+		mTextFieldName = (HyjTextField) getView().findViewById(R.id.projectEventFormFragment_textField_name);
 		mTextFieldName.setText(event.getName());
 		
-//		mProjectName = (HyjTextField) getView().findViewById(R.id.projectEventListFragment_textField_projectName);
+//		mProjectName = (HyjTextField) getView().findViewById(R.id.projectEventFormFragment_textField_projectName);
 //		if (project != null) {
 //			mProjectName.setText(project.getDisplayName());
 //		}
 //		mProjectName.setEnabled(false);
 		
-		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.projectEventListFragment_hyjSelectorField_projectName);
+		mSelectorFieldProject = (HyjSelectorField) getView().findViewById(R.id.projectEventFormFragment_hyjSelectorField_projectName);
 
 		if (project != null) {
 			mSelectorFieldProject.setModelId(project.getId());
@@ -116,8 +124,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_startDate);
-		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventListFragment_hyjDateTimeField_endDate);
+		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_startDate);
+		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_endDate);
 		
 		if (modelId != -1) {
 			mDateTimeFieldDate.setTime(event.getDate());
@@ -141,7 +149,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 //			mDateTimeFieldEndDate.setDate(null);
 		}
 
-		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventListFragment_HyjRemarkField_description);
+		mRemarkFieldDescription = (HyjRemarkField) getView().findViewById(R.id.projectEventFormFragment_HyjRemarkField_description);
 		
 		mRemarkFieldDescription.setEditable(false);
 		mRemarkFieldDescription.setOnClickListener(new OnClickListener(){
@@ -152,7 +160,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				bundle.putString("HINT", "请输入" + mRemarkFieldDescription.getLabelText());
 				EventFormFragment.this.openActivityWithFragmentForResult(
 								HyjTextInputFormFragment.class,
-								R.string.projectEventListFragment_hyjRemarkField_hint_description,
+								R.string.projectEventFormFragment_hyjRemarkField_hint_description,
 								bundle, GET_REMARK);
 			}
 		});
@@ -174,14 +182,17 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		
 		if(modelId != -1){
-			cancelBtn = (Button) getView().findViewById(R.id.button_event_cancel);
-			cancelBtn.setVisibility(View.VISIBLE);
-			cancelBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					cancelEvent();
-				}
-			});
+			if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+				cancelBtn = (Button) getView().findViewById(R.id.button_event_cancel);
+				cancelBtn.setVisibility(View.VISIBLE);
+				cancelBtn.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						cancel = true;
+						onSave();
+					}
+				});
+			}
 			
 			mRemarkFieldDescription.setText(event.getDescription());
 			mSelectorFieldProject.setEnabled(false);
@@ -216,6 +227,11 @@ public class EventFormFragment extends HyjUserFormFragment {
 		modelCopy.setEndDate(mDateTimeFieldEndDate.getTime());
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setDescription(mRemarkFieldDescription.getText().toString().trim());
+		if(cancel == true) {
+			modelCopy.setState("Cancel");
+		} else {
+			modelCopy.setState("Normal");
+		}
 	}
 
 	private void showValidatioErrors() {
@@ -238,43 +254,47 @@ public class EventFormFragment extends HyjUserFormFragment {
 		if (mEventEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
-			if(mEventEditor.getModelCopy().getProjectId() == null){
-				((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
-						new DialogCallbackListener() {
-							@Override
-							public void doPositiveClick(Object object) {
-								Bundle bundle = new Bundle();
-								bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
-								openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
-							}
-						});
-				return;
-			}
-			Intent intent = getActivity().getIntent();
-			Long modelId = intent.getLongExtra("MODEL_ID", -1);
-			if (modelId == -1) {
-				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(toBeDeterminedFriend != null){
-					EventMember toBeDeterminedFriendEM = new EventMember();
-					toBeDeterminedFriendEM.setEventId(mEventEditor.getModelCopy().getId());
-					toBeDeterminedFriendEM.setState("SignUp");
-					toBeDeterminedFriendEM.setFriendUserId(null);
-					toBeDeterminedFriendEM.setLocalFriendId(toBeDeterminedFriend.getId());
-					toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-					toBeDeterminedFriendEM.setFriendUserName("待定成员");
-					toBeDeterminedFriendEM.setToBeDetermined(true);
-					toBeDeterminedFriendEM.save();
+			if(cancel == true) {
+				cancelEvent();
+			} else {
+				if(mEventEditor.getModelCopy().getProjectId() == null){
+					((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+									Bundle bundle = new Bundle();
+									bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
+									openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
+								}
+							});
+					return;
 				}
-				
-				EventMember currentUserEM= new EventMember();
-				currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
-				currentUserEM.setState("UnSignUp");
-				currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				currentUserEM.setLocalFriendId(null);
-				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-				currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
-				currentUserEM.setToBeDetermined(false);
-				currentUserEM.save();
+				Intent intent = getActivity().getIntent();
+				Long modelId = intent.getLongExtra("MODEL_ID", -1);
+				if (modelId == -1) {
+					Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(toBeDeterminedFriend != null){
+						EventMember toBeDeterminedFriendEM = new EventMember();
+						toBeDeterminedFriendEM.setEventId(mEventEditor.getModelCopy().getId());
+						toBeDeterminedFriendEM.setState("SignUp");
+						toBeDeterminedFriendEM.setFriendUserId(null);
+						toBeDeterminedFriendEM.setLocalFriendId(toBeDeterminedFriend.getId());
+						toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+						toBeDeterminedFriendEM.setFriendUserName("待定成员");
+						toBeDeterminedFriendEM.setToBeDetermined(true);
+						toBeDeterminedFriendEM.save();
+					}
+					
+					EventMember currentUserEM= new EventMember();
+					currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
+					currentUserEM.setState("UnSignUp");
+					currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					currentUserEM.setLocalFriendId(null);
+					currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
+					currentUserEM.setToBeDetermined(false);
+					currentUserEM.save();
+				}
 			}
 			doSave();
 		}
@@ -313,7 +333,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 						mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 						mSelectorFieldProject.setModelId(project.getId());
 					} else {
-						HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+						HyjUtil.displayToast(R.string.projectEventFormFragment_validate_project);
 					}
 				}
 				break;
@@ -326,14 +346,33 @@ public class EventFormFragment extends HyjUserFormFragment {
 						mSelectorFieldProject.setModelId(project.getId());
 						onSave();
 					} else {
-						HyjUtil.displayToast(R.string.projectEventListFragment_validate_project);
+						HyjUtil.displayToast(R.string.projectEventFormFragment_validate_project);
 					}
 				}
 				break;
 		}
 	}
 	
+	
+	
 	protected void cancelEvent() {
-		
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+//				loadProjectProjectShareAuthorizations(object);
+				((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
+				HyjUtil.displayToast(R.string.app_action_event_cancel_success);
+				doSave();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				JSONObject json = (JSONObject) object;
+				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
+			}
+		};
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventEditor.getModelCopy().toJSON() +"]", "eventCancel");
+		((HyjActivity) EventFormFragment.this.getActivity()).displayProgressDialog(R.string.app_action_event_cancel,R.string.app_action_event_canceling);
 	}
 }

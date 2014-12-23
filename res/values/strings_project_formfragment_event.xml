@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="projectEventListFragment_action_addnew">新增账本活动</string>
+    <string name="projectEventFormFragment_action_addnew">新增账本活动</string>
     
-    <string name="projectEventListFragment_action_edit">修改账本活动</string>
+    <string name="projectEventFormFragment_action_edit">修改账本活动</string>
     
-    <string name="projectEventListFragment_action_select">选择活动</string>
+    <string name="projectEventFormFragment_action_select">选择活动</string>
     
-    <string name="projectEventListFragment_editText_hint_name">请输入活动名称</string>
-    <string name="projectEventListFragment_textView_name">活动名称</string>
+    <string name="projectEventFormFragment_editText_hint_name">请输入活动名称</string>
+    <string name="projectEventFormFragment_textView_name">活动名称</string>
     
-    <string name="projectEventListFragment_hyjDateTimeField_hint_date">请输入活动创建时间</string>
-    <string name="projectEventListFragment_hyjDateTimeField_date">创建时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_hint_date">请输入活动创建时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_date">创建时间</string>
     
-    <string name="projectEventListFragment_hyjDateTimeField_hint_startDate">请输入活动开始时间</string>
-    <string name="projectEventListFragment_hyjDateTimeField_startDate">开始时间</string>
-    <string name="projectEventListFragment_hyjDateTimeField_error_startDate">开始时间需在创建时间之后</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_hint_startDate">请输入活动开始时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_startDate">开始时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_error_startDate">开始时间需在创建时间之后</string>
     
-    <string name="projectEventListFragment_hyjDateTimeField_hint_endDate">请输入活动结束时间</string>
-    <string name="projectEventListFragment_hyjDateTimeField_endDate">结束时间</string>
-    <string name="projectEventListFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_hint_endDate">请输入活动结束时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_endDate">结束时间</string>
+    <string name="projectEventFormFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
     
-    <string name="projectEventListFragment_hyjSelectorField_projectName">活动账本</string>
-    <string name="projectEventListFragment_hyjSelectorField_hint_projectName">请选择活动账本</string>
+    <string name="projectEventFormFragment_hyjSelectorField_projectName">活动账本</string>
+    <string name="projectEventFormFragment_hyjSelectorField_hint_projectName">请选择活动账本</string>
     
-    <string name="projectEventListFragment_hyjRemarkField_hint_description">请输入活动内容</string>
-    <string name="projectEventListFragment_hyjRemarkField_description">活动内容</string>
-    <string name="projectEventListFragment_hyjRemarkField_description_default">
+    <string name="projectEventFormFragment_hyjRemarkField_hint_description">请输入活动内容</string>
+    <string name="projectEventFormFragment_hyjRemarkField_description">活动内容</string>
+    <string name="projectEventFormFragment_hyjRemarkField_description_default">
 		小伙伴们，又好久不见了，一起聚聚吧！\n\n
 		地点：老地方\n
 		费用：AA\n
@@ -36,7 +36,10 @@
     <string name="projectEventFormFragment_title_edit">修改账本活动</string>
     
     <string name="app_action_event_cancel">取消活动</string>
+    <string name="app_action_event_canceling">正在取消活动...</string>
     
-    <string name="projectEventListFragment_validate_project">不能在共享的账本新增活动</string>
+    <string name="app_action_event_cancel_success">取消活动成功</string>
+    
+    <string name="projectEventFormFragment_validate_project">不能在共享的账本新增活动</string>
     
 </resources>
