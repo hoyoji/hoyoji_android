@@ -124,7 +124,7 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				inviteFriend("WX", event, event.getName(), "signIn");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
-				dismiss();
+//				dismiss();
 			}
     	});
     	v.findViewById(R.id.EventMemberDialogFragment_signIn_other).setOnClickListener(new OnClickListener(){
@@ -132,7 +132,7 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				inviteFriend("Other", event, event.getName(), "signIn");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
-				dismiss();
+//				dismiss();
 			}
     	});
 
@@ -272,14 +272,14 @@ public class EventMemberDialogFragment extends DialogFragment {
 	}
 	
 	public void inviteWXFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
-		final HyjActivity activity = (HyjActivity) getActivity();
+		HyjActivity activity = (HyjActivity) getActivity();
 		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID);
 		WXWebpageObject webpage = new WXWebpageObject();
 		webpage.webpageUrl = linkUrl;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
 		msg.title = emTitleSent;
 		msg.description = emDescriptionSent;
-		Bitmap thumb = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_launcher);
+		Bitmap thumb = BitmapFactory.decodeResource(((HyjActivity) getActivity()).getBaseContext().getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
 		
 		SendMessageToWX.Req req = new SendMessageToWX.Req();
