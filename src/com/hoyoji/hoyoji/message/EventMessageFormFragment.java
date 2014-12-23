@@ -97,7 +97,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 
 			actionButton.setText(R.string.eventMessageFormFragment_button_accept);
 		}
-		if (memberAddMessage.getType().equalsIgnoreCase("Event.Member.Accept")|| memberAddMessage.getType().equalsIgnoreCase("Event.Member.Delete") || memberAddMessage.getType().equalsIgnoreCase("Event.Member.Edit")) {
+		if (memberAddMessage.getType().equalsIgnoreCase("Event.Member.Accept")|| memberAddMessage.getType().equalsIgnoreCase("Event.Member.SignUp") || memberAddMessage.getType().equalsIgnoreCase("Event.Member.SignIn") || memberAddMessage.getType().equalsIgnoreCase("Event.Member.Cancel")) {
 			actionButton.setVisibility(View.GONE);
 			mEditTextDetail.setEnabled(false);
 		}
