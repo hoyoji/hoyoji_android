@@ -717,7 +717,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 						}
 					}
 				}
-				mLinearLayoutExchangeRate.setVisibility(View.VISIBLE);
 				transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
 				projectTransferInExchangeRate.setNumber(1/transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 
