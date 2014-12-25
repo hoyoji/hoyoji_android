@@ -253,9 +253,9 @@ public class MessageDownloadService extends Service {
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
-					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getToUserId()).executeSingle();
+					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
 					if (newFriend == null) {
-						loadNewlyAddedFriend(newMessage.getToUserId());
+						loadNewlyAddedFriend(newMessage.getFromUserId());
 					}
 					loadSharedProjectData(msgData);
 					
