@@ -143,10 +143,10 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
 			if(type.equals("MoneyExpense")){
-				((TextView)view).setText(jsonObj.optString("moneyExpenseCategoryMain"));
+				((TextView)view).setText(jsonObj.optString("moneyExpenseCategory"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
-				((TextView)view).setText(jsonObj.optString("moneyIncomeCategoryMain"));
+				((TextView)view).setText(jsonObj.optString("moneyIncomeCategory"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			return true;
