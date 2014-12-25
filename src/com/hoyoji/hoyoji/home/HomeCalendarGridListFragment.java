@@ -1686,8 +1686,12 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
 			} else if(msg.getType().equals("Event.Member.Accept") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("Event.Member.SignIn") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
 			} else if(msg.getType().equals("Event.Member.SignUp") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
+			} else if(msg.getType().equals("Event.Member.Cancel") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
 			}
     }  
 	
