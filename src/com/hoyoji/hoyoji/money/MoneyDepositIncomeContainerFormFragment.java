@@ -1428,8 +1428,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
-	         		mApportionFieldApportions.changeProject(project, MoneyDepositIncomeApportion.class);
-					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+//	         		mApportionFieldApportions.changeProject(project, MoneyDepositIncomeApportion.class);
+//					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 					List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
 					if(events.size() > 0) {
 						mSelectorFieldEvent.setVisibility(View.VISIBLE);
@@ -1440,6 +1440,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					}
 					mSelectorFieldEvent.setText(null);
 					mSelectorFieldEvent.setModelId(null);
+					
+					mApportionFieldApportions.removeAll();
 				}
 				break;
 			case GET_EVENT_ID:
@@ -1463,8 +1465,8 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 							return;
 						}
 						
-						mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyDepositIncomeApportion.class);
-						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+//						mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyDepositIncomeApportion.class);
+//						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		
 						if( event.getProject().getFinancialOwnerUserId() != null){
 							mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
@@ -1477,6 +1479,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						mSelectorFieldEvent.setText(event.getName());
 						mSelectorFieldEvent.setModelId(event.getId());
 					}
+					mApportionFieldApportions.removeAll();
 				}
 				break;
      		case GET_REMARK:
@@ -1554,6 +1557,9 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					if(psa.getState().equalsIgnoreCase("Delete")){
 						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
 						return;
+					} if(psa.getToBeDetermined()){
+						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_getToBeDetermined);
+						return;
 					}
 				}  else if("EventMember".equalsIgnoreCase(type)){
 					EventMember em = EventMember.load(EventMember.class, _id);
@@ -1564,6 +1570,15 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 //					}
 					psa = em.getProjectShareAuthorization();
 //					psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+					if(em.getToBeDetermined()){
+						HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_getToBeDetermined);
+						return;
+					} else {
+						if(psa == null){
+							HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
+							return;
+						}
+					}
 				} else {
 					Friend friend = Friend.load(Friend.class, _id);
 					if(friend.getFriendUserId() != null){

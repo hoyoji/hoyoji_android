@@ -237,6 +237,20 @@ public class MoneyApportionField extends GridView {
 		}
 	}
 	
+	public void removeAll(){
+		int i = 0; 
+		while(mImageGridAdapter.getCount() > 0 && i < mImageGridAdapter.getCount()){
+			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
+			if(api.getState() == ApportionItem.NEW){
+				mImageGridAdapter.remove(api);
+			} else{
+				mImageGridAdapter.remove(api);
+				mHiddenApportionItems.add(api);
+				i++;
+			}
+		}
+	}
+	
 	public void changeProject(Project project, Class<? extends MoneyApportion> type){
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 //		Set<String> friendUserSet = new HashSet<String>();
