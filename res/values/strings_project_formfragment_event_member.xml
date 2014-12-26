@@ -36,5 +36,7 @@
     
     <string name="projectEventMemberFormFragment_toast_eventMember_add_projectAuthorization">好友不是共享成员，请先添加共享成员</string>
     
+    <string name="button_cancel_signUp">取消报名</string>
+    
     
 </resources>

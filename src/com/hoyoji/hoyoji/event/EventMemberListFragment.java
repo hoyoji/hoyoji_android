@@ -61,7 +61,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		return new SimpleCursorAdapter(getActivity(),
 				R.layout.home_listitem_row,
 				null,
-				new String[] {"friendUserId", "id", "state", "id", "id"},
+				new String[] {"friendUserId", "id", "id", "id", "id"},
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark},
 				0); 
 	}	
@@ -108,7 +108,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				null,
 				selection, 
 				selectionArgs, 
-				"state LIMIT " + (limit + offset) 
+				"friendUserName LIMIT " + (limit + offset) 
 			);
 		return (Loader<Object>)loader;
 	}
@@ -241,12 +241,15 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			((TextView)view).setText(em.getFriendDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			if("SignUp".equals(cursor.getString(columnIndex))){
-				((TextView)view).setText("已报名");
-			} else if("SignIn".equals(cursor.getString(columnIndex))){
-				((TextView)view).setText("已签到");
-			} else{
-				((TextView)view).setText("未报名");
+			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+			if(!evtMember.getToBeDetermined()){
+				if("SignUp".equals(evtMember.getState())){
+					((TextView)view).setText("已报名");
+				} else if("SignIn".equals(evtMember.getState())){
+					((TextView)view).setText("已签到");
+				} else{
+					((TextView)view).setText("未报名");
+				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount) {

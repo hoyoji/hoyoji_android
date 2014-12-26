@@ -213,8 +213,18 @@
 	    android:id="@id/button_save"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_marginTop="20dp"
         android:background="@drawable/button_rectangle"     
 	    android:text="@string/app_action_save"/>
+	
+	<Button
+	    android:id="@+id/button_cancel_signUp"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="20dp"
+	    android:visibility="gone"
+        android:background="@drawable/button_rectangle"     
+	    android:text="@string/button_cancel_signUp"/>
 	
 </LinearLayout>
 

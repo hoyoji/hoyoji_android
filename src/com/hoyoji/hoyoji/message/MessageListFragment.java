@@ -1,7 +1,5 @@
 package com.hoyoji.hoyoji.message;
 
-import java.text.SimpleDateFormat;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -16,12 +14,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -38,7 +33,6 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Message;
-import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 
 public class MessageListFragment extends HyjUserListFragment{
 	
