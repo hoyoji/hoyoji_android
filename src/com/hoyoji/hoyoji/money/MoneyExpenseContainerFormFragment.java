@@ -333,8 +333,14 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 
 		String friendUserId, localFriendId;
 		if(moneyExpenseContainer.get_mId() == null){
-			friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-			localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(moneyTemplateId == -1){
+				friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+				localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+			} else {
+				friendUserId = moneyExpenseContainer.getFriendUserId();
+				localFriendId = moneyExpenseContainer.getLocalFriendId();
+			}
 		}else{
 			friendUserId = moneyExpenseContainer.getFriendUserId();
 			localFriendId = moneyExpenseContainer.getLocalFriendId();
@@ -426,7 +432,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 //			}
 //		});
 		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
+			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(moneyTemplateId != -1){
+				mSelectorFieldFinancialOwner.setModelId(moneyExpenseContainer.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyExpenseContainer.getFinancialOwnerUserId()));
+			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}

@@ -80,7 +80,6 @@ import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyAddNewDialogFragment;
-import com.hoyoji.hoyoji.money.MoneyApportionEditDialogFragment;
 import com.hoyoji.hoyoji.money.MoneyBorrowFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
@@ -1653,6 +1652,24 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				} else if(msg.getType().startsWith("Money.Share.Add") ){
 					openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
 					return ;
+				} else if(msg.getType().equals("Event.Member.AddRequest") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
+					return ;
+				} else if(msg.getType().equals("Event.Member.Accept") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+					return ;
+				} else if(msg.getType().equals("Event.Member.SignIn") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
+					return ;
+				} else if(msg.getType().equals("Event.Member.SignUp") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
+					return ;
+				} else if(msg.getType().equals("Event.Member.Cancel") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+					return ;
+				} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
+					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+					return ;
 				}
 			}
 		}
@@ -1686,8 +1703,14 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
 			} else if(msg.getType().equals("Event.Member.Accept") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("Event.Member.SignIn") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
 			} else if(msg.getType().equals("Event.Member.SignUp") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
+			} else if(msg.getType().equals("Event.Member.Cancel") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
 			}
     }  
 	

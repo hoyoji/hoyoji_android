@@ -566,6 +566,9 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			} else{
 				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
+			if (moneyTransfer.getTransferOut() == null || moneyTransfer.getTransferIn() == null) {
+				mLinearLayoutExchangeRate.setVisibility(View.GONE);
+			}
 		}
 			setPermission();
 			
@@ -714,7 +717,6 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 						}
 					}
 				}
-				
 				transferOutProjectExchangeRate.setNumber(transferExchangeRate(transferOut.getCurrencyId(),project.getCurrencyId()));
 				projectTransferInExchangeRate.setNumber(1/transferExchangeRate(project.getCurrencyId(),transferIn.getCurrencyId()));
 
@@ -761,6 +763,7 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 					mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
 				}
 				mNumericExchangeRate.setNumber(null);
+				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 			}
 			
 			if(mSelectorFieldTransferOut.getModelId() == null && mSelectorFieldTransferIn.getModelId() != null) {

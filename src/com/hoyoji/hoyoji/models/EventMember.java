@@ -33,6 +33,9 @@ public class EventMember extends HyjModel {
 	@Column(name = "friendUserName")
 	private String mFriendUserName;
 	
+	@Column(name = "nickName")
+	private String mNickName;
+	
 	@Column(name = "state")
 	private String mState;
 
@@ -131,6 +134,14 @@ public class EventMember extends HyjModel {
 		this.mFriendUserName = mFriendUserName;
 	}
 	
+	public String getNickName() {
+		return mNickName;
+	}
+
+	public void setNickName(String mNickName) {
+		this.mNickName = mNickName;
+	}
+
 	public Friend getFriend(){
 		if(mFriendUserId != null){
 			return new Select().from(Friend.class).where("friendUserId=?", mFriendUserId).executeSingle();

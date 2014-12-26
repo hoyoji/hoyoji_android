@@ -466,8 +466,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 						if(newProjectShareAuthorization == null){
 							newProjectShareAuthorization = new ProjectShareAuthorization();
 						}
-						newProjectShareAuthorization.loadFromJSON(
-								jsonObjects.optJSONObject(j), true);
+						newProjectShareAuthorization.loadFromJSON(jsonObjects.optJSONObject(j), true);
 						newProjectShareAuthorization.save();
 					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
 						String id = jsonObjects.optJSONObject(j).optString("id");
@@ -475,8 +474,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 						if(newEvent == null){
 							newEvent = new Event();
 						}
-						newEvent.loadFromJSON(
-								jsonObjects.optJSONObject(j), true);
+						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
 						newEvent.save();
 					}
 				}

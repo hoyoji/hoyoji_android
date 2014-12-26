@@ -531,6 +531,9 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			} else if(moneyTopup.getTransferIn() != null){
 				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
+			if (moneyTopup.getTransferOut() == null || moneyTopup.getTransferIn() == null) {
+				mLinearLayoutExchangeRate.setVisibility(View.GONE);
+			}
 			
 //			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
 //			mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);

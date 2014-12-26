@@ -253,10 +253,23 @@ public class MessageDownloadService extends Service {
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
+					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+					if (newFriend == null) {
+						loadNewlyAddedFriend(newMessage.getFromUserId());
+					}
 					loadSharedProjectData(msgData);
+					
 				} else if(psa == null){
+					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+					if (newFriend == null) {
+						loadNewlyAddedFriend(newMessage.getFromUserId());
+					}
 					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
+					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
+					if (newFriend == null) {
+						loadNewlyAddedFriend(newMessage.getFromUserId());
+					}
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();

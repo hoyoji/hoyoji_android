@@ -40,6 +40,9 @@ public class MoneyDepositReturnContainer extends HyjModel {
 	@Column(name = "projectId")
 	private String mProjectId;
 	
+	@Column(name = "eventId")
+	private String mEventId;
+	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 
@@ -220,6 +223,29 @@ public class MoneyDepositReturnContainer extends HyjModel {
 		this.mProjectId = mProjectId;
 	}
 
+	public Event getEvent(){
+		if(mEventId == null){
+			return null;
+		}
+		return getModel(Event.class, mEventId);
+	}
+	
+	public void setEvent(Event mEvent) {
+		if(mEvent == null){
+			this.mEventId = null;
+		} else {
+			this.mEventId = mEvent.getId();
+		}
+	}
+
+	public String getEventId() {
+		return mEventId;
+	}
+
+	public void setEventId(String mEventId) {
+		this.mEventId = mEventId;
+	}
+	
 	public Double getExchangeRate() {
 		return mExchangeRate;
 	}

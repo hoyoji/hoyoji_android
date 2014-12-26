@@ -44,16 +44,17 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjImageField.PictureItem;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.event.EventListFragment;
+import com.hoyoji.hoyoji.event.EventMemberListFragment;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer.MoneyDepositReturnContainerEditor;
+import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.MoneyReturn;
-import com.hoyoji.hoyoji.models.MoneyDepositIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyPayback;
-import com.hoyoji.hoyoji.models.MoneyPayback;
-import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositReturnContainer;
 import com.hoyoji.hoyoji.models.Picture;
@@ -73,6 +74,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private final static int GET_APPORTION_MEMBER_ID = 4;
 	private static final int GET_REMARK = 5;
 	private final static int GET_AMOUNT = 8;
+	private final static int GET_EVENT_ID = 9;
 	protected static final int GET_FINANCIALOWNER_ID = 0;
 	
 	private int CREATE_EXCHANGE = 0;
@@ -85,6 +87,8 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	private HyjNumericField mNumericAmount = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
+	private HyjSelectorField mSelectorFieldEvent = null;
+	private View mViewSeparatorEvent = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjRemarkField mRemarkFieldRemark = null;
 	private ImageView mImageViewRefreshRate = null;
@@ -166,6 +170,51 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				MoneyDepositReturnContainerFormFragment.this.openActivityWithFragmentForResult(ProjectListFragment.class, R.string.projectListFragment_title_select_project, null, GET_PROJECT_ID);
 			}
 		});	
+
+		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_event);
+		mViewSeparatorEvent = (View) getView().findViewById(R.id.field_separator_event);
+		List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+		if(events.size() > 0) {
+			mSelectorFieldEvent.setVisibility(View.VISIBLE);
+			mViewSeparatorEvent.setVisibility(View.VISIBLE);
+		} else {
+			mSelectorFieldEvent.setVisibility(View.GONE);
+			mViewSeparatorEvent.setVisibility(View.GONE);
+		}
+		
+		Event event;
+		String eventId = intent.getStringExtra("eventId");//从消息导入
+		if(moneyDepositReturnContainer.get_mId() == null && eventId != null){
+			moneyDepositReturnContainer.setEventId(eventId);
+			event = HyjModel.getModel(Event.class, eventId);
+		}else{
+			event = moneyDepositReturnContainer.getEvent();
+		}
+		
+
+		if (event != null) {
+			mSelectorFieldEvent.setModelId(event.getId());
+			mSelectorFieldEvent.setText(event.getName());
+		}
+		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mSelectorFieldProject.getModelId() != null) {
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
+					
+					MoneyDepositReturnContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventFormFragment_action_select, bundle, GET_EVENT_ID);
+				
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+//								ProjectEventListFragment.class,
+//								R.string.projectListFragment_title_select_project,
+//								null, GET_PROJECT_ID);
+				}
+			}
+		});
 		
 		setupApportionField(moneyDepositReturnContainer);
 		
@@ -352,13 +401,37 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		});
 		
 			
+//			getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					Bundle bundle = new Bundle();
+//					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+//					bundle.putLong("MODEL_ID", project.get_mId());
+//					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+//				}
+//			});
+			
 			getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						if(mSelectorFieldEvent.getModelId() != null){
+							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
+							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						} else {
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						}
+					} else {
+						if(mSelectorFieldEvent.getModelId() != null){
+							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
+							openActivityWithFragmentForResult(SelectApportionProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						} else {
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+						}
+					}
 				}
 			});
 			
@@ -443,28 +516,83 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	    }
 	}
 	
+//	private void addAllProjectMemberIntoApportionsField(MoneyDepositReturnContainer moneyIncomeContainer) {
+//		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+//		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+//		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+//			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+//					projectShareAuthorizations.get(i).getToBeDetermined()){
+//				continue;
+//			}
+//			MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+//			apportion.setAmount(0.0);
+//			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+//			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+//			apportion.setMoneyDepositReturnContainerId(moneyIncomeContainer.getId());
+//			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+//				apportion.setApportionType("Average");
+//			} else {
+//				apportion.setApportionType("Share");
+//			}
+//			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+//		}
+//		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+//		
+//	}
+	
 	private void addAllProjectMemberIntoApportionsField(MoneyDepositReturnContainer moneyIncomeContainer) {
-		Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
-		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
-		for (int i = 0; i < projectShareAuthorizations.size(); i++) {
-			if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
-					projectShareAuthorizations.get(i).getToBeDetermined()){
-				continue;
+		if(mSelectorFieldEvent.getModelId() == null){
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+				apportion.setAmount(0.0);
+				apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+				apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+				apportion.setMoneyDepositReturnContainerId(moneyIncomeContainer.getId());
+				if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+					apportion.setApportionType("Average");
+				} else {
+					apportion.setApportionType("Share");
+				}
+				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
 			}
-			MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
-			apportion.setAmount(0.0);
-			apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
-			apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
-			apportion.setMoneyDepositReturnContainerId(moneyIncomeContainer.getId());
-			if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
-				apportion.setApportionType("Average");
-			} else {
-				apportion.setApportionType("Share");
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+		} else {
+//			Event event = HyjModel.getModel(Event.class,mSelectorFieldEvent.getModelId());
+			Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
+			List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
+			for (int i = 0; i < projectShareAuthorizations.size(); i++) {
+				if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
+						projectShareAuthorizations.get(i).getToBeDetermined()){
+					continue;
+				}
+				EventMember em = null;
+				if(projectShareAuthorizations.get(i).getFriendUserId() != null){
+					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getFriendUserId()).executeSingle();
+				} else {
+					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", mSelectorFieldEvent.getModelId(), projectShareAuthorizations.get(i).getLocalFriendId()).executeSingle();
+				}
+				if(em != null) {
+					MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+					apportion.setAmount(0.0);
+					apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+					apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+					apportion.setMoneyDepositReturnContainerId(moneyIncomeContainer.getId());
+					if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+						apportion.setApportionType("Average");
+					} else {
+						apportion.setApportionType("Share");
+					}
+					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				}
 			}
-			mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		}
-		mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-		
 	}
 	
 	private void setupApportionField(MoneyDepositReturnContainer moneyDepositReturnContainer) {
@@ -637,7 +765,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			getView().findViewById(R.id.moneyDepositReturnContainerFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
-			
+			mSelectorFieldEvent.setEnabled(false);
 			mNumericExchangeRate.setEnabled(false);
 			
 			mApportionFieldApportions.setEnabled(false);
@@ -700,6 +828,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		modelCopy.setAmount(mNumericAmount.getNumber());
 		modelCopy.setMoneyAccountId(mSelectorFieldMoneyAccount.getModelId());
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
+		modelCopy.setEventId(mSelectorFieldEvent.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		
@@ -716,6 +845,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		}
 		mSelectorFieldMoneyAccount.setError(mMoneyDepositReturnContainerEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyDepositReturnContainerEditor.getValidationError("project"));
+		mSelectorFieldEvent.setError(mMoneyDepositReturnContainerEditor.getValidationError("Event"));
 		mNumericExchangeRate.setError(mMoneyDepositReturnContainerEditor.getValidationError("exchangeRate"));
 		mRemarkFieldRemark.setError(mMoneyDepositReturnContainerEditor.getValidationError("remark"));
 		mApportionFieldApportions.setError(mMoneyDepositReturnContainerEditor.getValidationError("apportionTotalAmount"));
@@ -1358,9 +1488,55 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 	         		setExchangeRate(false);
 	         		mApportionFieldApportions.changeProject(project, MoneyDepositReturnApportion.class);
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
-	         	 }
-	        	 break;
-
+					List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+					if(events.size() > 0) {
+						mSelectorFieldEvent.setVisibility(View.VISIBLE);
+						mViewSeparatorEvent.setVisibility(View.VISIBLE);
+					} else {
+						mSelectorFieldEvent.setVisibility(View.GONE);
+						mViewSeparatorEvent.setVisibility(View.GONE);
+					}
+					mSelectorFieldEvent.setText(null);
+					mSelectorFieldEvent.setModelId(null);
+				}
+				break;
+			case GET_EVENT_ID:
+				if (resultCode == Activity.RESULT_OK) {
+					long _id = data.getLongExtra("MODEL_ID", -1);
+					if(_id == -1){
+						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+						mSelectorFieldEvent.setText(null);
+						mSelectorFieldEvent.setModelId(null);
+						mApportionFieldApportions.changeProject(project, MoneyDepositReturnApportion.class);
+						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+					} else {
+						Event event = Event.load(Event.class, _id);
+						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=?", event.getProject().getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+						
+						if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() == null && !psa.getProjectShareMoneyExpenseAddNew()){
+							HyjUtil.displayToast(R.string.app_permission_no_addnew);
+							return;
+						}else if(mMoneyDepositReturnContainerEditor.getModelCopy().get_mId() != null && !psa.getProjectShareMoneyExpenseEdit()){
+							HyjUtil.displayToast(R.string.app_permission_no_edit);
+							return;
+						}
+						
+						mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyDepositReturnApportion.class);
+						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
+		
+						if( event.getProject().getFinancialOwnerUserId() != null){
+							mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+							mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+						} else {
+							mSelectorFieldFinancialOwner.setModelId(null);
+							mSelectorFieldFinancialOwner.setText(null);
+						}
+							
+						mSelectorFieldEvent.setText(event.getName());
+						mSelectorFieldEvent.setModelId(event.getId());
+					}
+				}
+				break;
      		case GET_REMARK:
      			if (resultCode == Activity.RESULT_OK) {
      				String text = data.getStringExtra("TEXT");
@@ -1426,15 +1602,19 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		
 		private void AddApportionMember(String type, long _id) {
 			MoneyDepositReturnApportion apportion = new MoneyDepositReturnApportion();
+			ProjectShareAuthorization psa = null;
 			if("ProjectShareAuthorization".equalsIgnoreCase(type)){
-				ProjectShareAuthorization psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
-				apportion.setFriendUserId(psa.getFriendUserId());
-				apportion.setLocalFriendId(psa.getLocalFriendId());
-				if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
-					apportion.setApportionType("Average");
-				} else {
-					apportion.setApportionType("Share");
-				}
+				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
+				
+			} else if("EventMember".equalsIgnoreCase(type)){
+				EventMember em = EventMember.load(EventMember.class, _id);
+//				if(em.getFriendUserId() != null){
+//					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", em.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
+//				} else {
+//					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", em.getLocalFriendId(), mSelectorFieldProject.getModelId()).executeSingle();
+//				}
+				psa = em.getProjectShareAuthorization();
+//				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 			} 
 //			else {
 //				Friend friend = Friend.load(Friend.class, _id);
@@ -1457,6 +1637,13 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 //					apportion.setApportionType("Average");
 //				}
 //			}
+			apportion.setFriendUserId(psa.getFriendUserId());
+			apportion.setLocalFriendId(psa.getLocalFriendId());
+			if(psa.getSharePercentageType() != null && psa.getSharePercentageType().equals("Average")){
+				apportion.setApportionType("Average");
+			} else {
+				apportion.setApportionType("Share");
+			}
 			apportion.setAmount(0.0);
 			apportion.setMoneyDepositReturnContainerId(mMoneyDepositReturnContainerEditor.getModel().getId());
 			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {

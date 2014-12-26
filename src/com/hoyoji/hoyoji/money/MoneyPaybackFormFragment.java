@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import com.hoyoji.android.hyjframework.view.HyjNumericField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.hoyoji.event.EventListFragment;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Exchange;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
@@ -58,6 +61,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 3;
 	private static final int GET_REMARK = 4;
 	private final static int GET_AMOUNT = 8;
+	private final static int GET_EVENT_ID = 9;
 	private static final int TAG_IS_LOCAL_FRIEND = R.id.moneyLendFormFragment_selectorField_friend;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
 	protected static final int GET_FINANCIALOWNER_ID = 5;
@@ -71,6 +75,8 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 	private HyjNumericField mNumericFieldInterest = null;
 	private HyjSelectorField mSelectorFieldMoneyAccount = null;
 	private HyjSelectorField mSelectorFieldProject = null;
+	private HyjSelectorField mSelectorFieldEvent = null;
+	private View mViewSeparatorEvent = null;
 	private HyjNumericField mNumericExchangeRate = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 //	private ImageView mImageViewClearFriend = null;
@@ -188,6 +194,51 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			}
 		});	
 		
+		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_event);
+		mViewSeparatorEvent = (View) getView().findViewById(R.id.field_separator_event);
+		
+		List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+		if(events.size() > 0) {
+			mSelectorFieldEvent.setVisibility(View.VISIBLE);
+			mViewSeparatorEvent.setVisibility(View.VISIBLE);
+		} else {
+			mSelectorFieldEvent.setVisibility(View.GONE);
+			mViewSeparatorEvent.setVisibility(View.GONE);
+		}
+		
+		Event event;
+		String eventId = intent.getStringExtra("eventId");//从消息导入
+		if(moneyPayback.get_mId() == null && eventId != null){
+			moneyPayback.setEventId(eventId);
+			event = HyjModel.getModel(Event.class, eventId);
+		}else{
+			event = moneyPayback.getEvent();
+		}
+		
+
+		if (event != null) {
+			mSelectorFieldEvent.setModelId(event.getId());
+			mSelectorFieldEvent.setText(event.getName());
+		}
+		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mSelectorFieldProject.getModelId() != null) {
+					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+					
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", project.get_mId());
+					bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
+					
+					MoneyPaybackFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventFormFragment_action_select, bundle, GET_EVENT_ID);
+				
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+//								ProjectEventListFragment.class,
+//								R.string.projectListFragment_title_select_project,
+//								null, GET_PROJECT_ID);
+				}
+			}
+		});
 		
 		mNumericExchangeRate = (HyjNumericField) getView().findViewById(R.id.moneyPaybackFormFragment_textField_exchangeRate);		
 		mNumericExchangeRate.setNumber(moneyPayback.getExchangeRate());
@@ -522,7 +573,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			getView().findViewById(R.id.moneyPaybackFormFragment_separatorField_moneyAccount).setVisibility(View.GONE);
 
 			mSelectorFieldProject.setEnabled(false);
-			
+			mSelectorFieldEvent.setEnabled(false);
 			mNumericExchangeRate.setEnabled(false);
 
 			mNumericFieldInterest.setEnabled(false);
@@ -590,6 +641,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 			modelCopy.setMoneyAccountId(null, null);
 		}
 		modelCopy.setProject(HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId()));
+		modelCopy.setEventId(mSelectorFieldEvent.getModelId());
 		modelCopy.setExchangeRate(mNumericExchangeRate.getNumber());
 		
 //		if(mSelectorFieldFriend.getModelId() != null){
@@ -624,6 +676,7 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 		mNumericFieldInterest.setError(mMoneyPaybackEditor.getValidationError("interest"));
 		mSelectorFieldMoneyAccount.setError(mMoneyPaybackEditor.getValidationError("moneyAccount"));
 		mSelectorFieldProject.setError(mMoneyPaybackEditor.getValidationError("project"));
+		mSelectorFieldEvent.setError(mMoneyPaybackEditor.getValidationError("Event"));
 		mNumericExchangeRate.setError(mMoneyPaybackEditor.getValidationError("exchangeRate"));
 		mSelectorFieldFriend.setError(mMoneyPaybackEditor.getValidationError("friend"));
 		mRemarkFieldRemark.setError(mMoneyPaybackEditor.getValidationError("remark"));
@@ -1012,8 +1065,31 @@ public class MoneyPaybackFormFragment extends HyjUserFormFragment {
 							}
 						}
 	        		}
+	         		List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+					if(events.size() > 0) {
+						mSelectorFieldEvent.setVisibility(View.VISIBLE);
+						mViewSeparatorEvent.setVisibility(View.VISIBLE);
+					} else {
+						mSelectorFieldEvent.setVisibility(View.GONE);
+						mViewSeparatorEvent.setVisibility(View.GONE);
+					}
+					mSelectorFieldEvent.setText(null);
+					mSelectorFieldEvent.setModelId(null);
 	        	 }
 	        	 break;
+	         case GET_EVENT_ID:
+	 			if (resultCode == Activity.RESULT_OK) {
+	 				long _id = data.getLongExtra("MODEL_ID", -1);
+	 				if(_id == -1){
+	 					mSelectorFieldEvent.setText(null);
+	 					mSelectorFieldEvent.setModelId(null);
+	 				} else {
+	 					Event event = Event.load(Event.class, _id);
+	 					mSelectorFieldEvent.setText(event.getName());
+	 					mSelectorFieldEvent.setModelId(event.getId());
+	 				}
+	 			}
+	 			break;
              case GET_FRIEND_ID:
               	 if (resultCode == Activity.RESULT_OK) {
             		 long _id = data.getLongExtra("MODEL_ID", -1);

@@ -331,8 +331,14 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		
 		String friendUserId, localFriendId;
 		if(moneyIncomeContainer.get_mId() == null){
-			 friendUserId = intent.getStringExtra("friendUserId");//从消息导入
-			 localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(moneyTemplateId == -1){
+				 friendUserId = intent.getStringExtra("friendUserId");//从消息导入
+				 localFriendId = intent.getStringExtra("localFriendId");//从消息导入
+			} else {
+				friendUserId = moneyIncomeContainer.getFriendUserId();
+				localFriendId = moneyIncomeContainer.getLocalFriendId();
+			}
 		} else {
 			friendUserId = moneyIncomeContainer.getFriendUserId();
 			localFriendId = moneyIncomeContainer.getLocalFriendId();
@@ -415,7 +421,11 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
 		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
+			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(moneyTemplateId != -1){
+				mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
+			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}
