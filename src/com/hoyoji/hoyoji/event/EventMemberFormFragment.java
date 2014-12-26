@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -62,6 +63,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private RadioButton unSignInRadioButton = null;
 	private RadioButton signInRadioButton = null;
 	private ProjectShareAuthorization jsonPSA = null;
+	
+	private Button button_cancel_signUp;
 
 	@Override
 	public Integer useContentView() {
@@ -208,10 +211,20 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 //			signUpRadioButton.setEnabled(false);
 //			signInRadioButton.setEnabled(false);
 //		}
+		button_cancel_signUp = (Button) getView().findViewById(R.id.button_cancel_signUp);
+		button_cancel_signUp.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});	
 		
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
+			if(!"UnSignUp".equals(eventMember.getState()) && eventMember.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+				button_cancel_signUp.setVisibility(View.VISIBLE);
+			}
 			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				stateRadioGroup.setEnabled(false);
@@ -491,6 +504,27 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		}
 		doSave();
 		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+	}
+
+	protected void cancelSignUp() {
+		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+			@Override
+			public void finishCallback(Object object) {
+//				loadProjectProjectShareAuthorizations(object);
+				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+				HyjUtil.displayToast(R.string.app_action_event_cancel_success);
+				doSave();
+			}
+
+			@Override
+			public void errorCallback(Object object) {
+				JSONObject json = (JSONObject) object;
+				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+			}
+		};
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventMemberEditor.getModelCopy().toJSON() +"]", "eventCancel");
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.app_action_event_cancel,R.string.app_action_event_canceling);
 	}
 	
 	@Override

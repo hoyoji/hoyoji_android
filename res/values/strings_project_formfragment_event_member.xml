@@ -38,5 +38,10 @@
     
     <string name="button_cancel_signUp">取消报名</string>
     
+    <string name="projectEventMemberFormFragment_hyjTextField_hint_nickName">无昵称</string>
+    <string name="projectEventMemberFormFragment_hyjTextField_nickName">活动昵称</string>
+    
+    <string name="projectEventMemberFormFragment_button_nickName">设置</string>
+    
     
 </resources>
