@@ -393,11 +393,13 @@ public class Friend extends HyjModel {
 	public void loadFromJSON(JSONObject json, boolean syncFromServer) {
 		super.loadFromJSON(json, syncFromServer);
 		if(this.mNickName_pinYin == null){
-			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
-				this.mNickName_pinYin = " ";
-			} else if(this.getNickName() != null){
-				this.mNickName_pinYin = HyjUtil.convertToPinYin(this.getNickName());
-			}
+//			if(this.getFriendUserId() != null && HyjApplication.getInstance().getCurrentUser().getId().equals(this.getFriendUserId())){
+//				this.mNickName_pinYin = " ";
+//			} else 
+				if(this.getNickName() != null){
+					this.mNickName_pinYin = HyjUtil.convertToPinYin(this.getNickName());
+				}
+//			}
 		}
 	
 	}
