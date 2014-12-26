@@ -432,14 +432,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 //			}
 //		});
 		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
-				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
-			}
 			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
 			if(moneyTemplateId != -1){
 				mSelectorFieldFinancialOwner.setModelId(moneyExpenseContainer.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyExpenseContainer.getFinancialOwnerUserId()));
+			} else if(project.getFinancialOwnerUserId() != null){
+				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
+				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}
 		} else if(moneyExpenseContainer.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(moneyExpenseContainer.getFinancialOwnerUserId());
