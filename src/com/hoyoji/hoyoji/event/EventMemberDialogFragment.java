@@ -183,12 +183,13 @@ public class EventMemberDialogFragment extends DialogFragment {
 		activity.displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);
 		String emTitle = null;
 		String emDescription = null;
+		
 		if(type.equals("invite")){
 			emTitle = "邀请参加活动";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
+			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name + "\n\n" + event.getDescription();
 		} else if(type.equals("signIn")){
 			emTitle = "活动签到";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name +"签到";
+			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到" + "\n\n" + event.getDescription();
 		}
 		final String emTitleSent = emTitle;
 		final String emDescriptionSent = emDescription;
