@@ -65,6 +65,9 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private ProjectShareAuthorization jsonPSA = null;
 	
 	private Button button_cancel_signUp;
+	
+	private Button button_setting_nickName;
+	private HyjTextField mEventMemberNickName = null;
 
 	@Override
 	public Integer useContentView() {
@@ -215,23 +218,41 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		button_cancel_signUp.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				
+				cancelSignUp();
+			}
+		});	
+		
+		mEventMemberNickName = (HyjTextField) getView().findViewById(R.id.projectEventMemberFormFragment_hyjTextField_nickName);
+		mEventMemberNickName.setText(eventMember.getNickName());
+		
+		button_setting_nickName = (Button) getView().findViewById(R.id.projectEventMemberFormFragment_button_nickName);
+		button_setting_nickName.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENTMEMBERID", mEventMemberEditor.getModelCopy().get_mId());
+				EventMemberSetNickNameDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "EventMemberSetNickNameDialogFragment");
 			}
 		});	
 		
 		if (modelId == -1){
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			
+			button_setting_nickName.setVisibility(View.GONE);
 		}else{
 			if(!"UnSignUp".equals(eventMember.getState()) && eventMember.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
 				button_cancel_signUp.setVisibility(View.VISIBLE);
 			}
+			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
+				button_setting_nickName.setVisibility(View.VISIBLE);
 				stateRadioGroup.setEnabled(false);
 				unSignUpRadioButton.setEnabled(false);
 				unSignInRadioButton.setEnabled(false);
 				signUpRadioButton.setEnabled(false);
 				signInRadioButton.setEnabled(false);
+				mEventMemberNickName.setEnabled(false);
 				if(this.mOptionsMenu != null){
 					hideSaveAction();
 				}
@@ -511,8 +532,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			@Override
 			public void finishCallback(Object object) {
 //				loadProjectProjectShareAuthorizations(object);
-				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
-				HyjUtil.displayToast(R.string.app_action_event_cancel_success);
+				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_eventMember_cancel_success);
+				loadEventAndMembers(object);
 				doSave();
 			}
 
@@ -523,8 +544,39 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 			}
 		};
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventMemberEditor.getModelCopy().toJSON() +"]", "eventCancel");
-		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.app_action_event_cancel,R.string.app_action_event_canceling);
+		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventMemberEditor.getModelCopy().toJSON() +"]", "eventMemberUnSignUp");
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.projectEventMemberFormFragment_eventMember_cancel,R.string.projectEventMemberFormFragment_eventMember_canceling);
+	}
+	
+	protected void loadEventAndMembers(Object object) {
+		try {
+			JSONArray jsonObjects = (JSONArray) object;
+			ActiveAndroid.beginTransaction();
+				for (int j = 0; j < jsonObjects.length(); j++) {
+					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
+						if(newEventMember == null){
+							newEventMember = new EventMember();
+						}
+						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEventMember.save();
+					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						Event newEvent = HyjModel.getModel(Event.class, id);
+						if(newEvent == null){
+							newEvent = new Event();
+						}
+						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEvent.save();
+					}
+				}
+
+			ActiveAndroid.setTransactionSuccessful();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 	
 	@Override

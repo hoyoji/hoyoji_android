@@ -43,5 +43,10 @@
     
     <string name="projectEventMemberFormFragment_button_nickName">设置</string>
     
+    <string name="projectEventMemberFormFragment_eventMember_cancel">取消报名</string>
+    <string name="projectEventMemberFormFragment_eventMember_canceling">正在取消报名...</string>
+    
+    <string name="projectEventMemberFormFragment_eventMember_cancel_success">取消报名成功</string>
+    
     
 </resources>
