@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -96,7 +97,9 @@ public class EventListFragment extends HyjUserListFragment {
 				R.layout.home_listitem_row,
 				null,
 				new String[] {"_id", "id", "startDate", "name", "state", "ownerUserId" ,"id", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, R.id.homeListItem_subTitle, R.id.homeListItem_owner, R.id.homeListItem_amount},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_owner, 
+							R.id.homeListItem_date, R.id.homeListItem_title, R.id.homeListItem_remark, 
+							R.id.homeListItem_subTitle, R.id.homeListItem_owner, R.id.homeListItem_amount},
 				0); 
 	}	
 
@@ -160,6 +163,120 @@ public class EventListFragment extends HyjUserListFragment {
 			openActivityWithFragment(EventViewPagerFragment.class, R.string.projectEventMemberViewPagerFragment_title, bundle);
 		}
     }
+	
+	public static boolean setEventViewValue(Fragment f, View view, Object object, String field) {
+		Event event = (Event)object;
+		if(view.getId() == R.id.homeListItem_picture){
+			ImageView imageView= (ImageView)view;
+//			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
+//			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
+//			} else {
+				imageView.setBackgroundColor(f.getResources().getColor(R.color.hoyoji_yellow));
+				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+//			}
+			
+//			if(view.getTag() == null){
+//				view.setOnClickListener(new OnClickListener(){
+//					@Override
+//					public void onClick(View v) {
+//						Bundle bundle = new Bundle();
+//						bundle.putLong("MODEL_ID", (Long) v.getTag());
+//						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+//					}
+//				});
+//			}
+//			view.setTag(cursor.getLong(columnIndex));
+			return true;
+		} else if(view.getId() == R.id.homeListItem_amount){
+			HyjNumericView textView = (HyjNumericView)view;
+			Project project = event.getProject();
+			String projectId = event.getProjectId();
+			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+				textView.setTextColor(Color.BLACK);
+				((TextView) textView).setText("-");
+				return true;
+			}
+			Double depositBalance = event.getBalance();
+			if(depositBalance == 0){
+				textView.setTextColor(Color.BLACK);
+				textView.setPrefix(project.getCurrencySymbol());
+			} else if(depositBalance < 0){
+				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+				textView.setPrefix("支出"+project.getCurrencySymbol());
+			}else{
+				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+				textView.setPrefix("收入"+project.getCurrencySymbol());
+			}
+			
+			textView.setNumber(Math.abs(depositBalance));
+			return true;
+		} else if(view.getId() == R.id.homeListItem_date){
+			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
+			dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+			dateTimeView.setTime(event.getStartDate());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_title){
+			((TextView)view).setText(event.getName());
+			return true;
+		} else if(view.getId() == R.id.homeListItem_remark){
+//			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
+//				((TextView)view).setText("无备注");
+//			} else {
+//				((TextView)view).setText(cursor.getString(columnIndex));
+//			}
+			if("Cancel".equals(event.getState())) {
+				((TextView)view).setText("[已取消]" + event.getSignUpCount() + "人");
+			} else {
+				long date = event.getDate();
+				long startDate = event.getStartDate();
+				long endDate = event.getEndDate(); 
+				long dt = (new Date()).getTime();
+	//			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
+				if(dt >= date && dt < startDate) {
+					((TextView)view).setText("[报名中]" + event.getSignUpCount() + "人");
+				} else if(dt >= startDate && dt < endDate) {
+					((TextView)view).setText("[进行中]" + event.getSignUpCount() + "人");
+				} else if(dt >= endDate) {
+					((TextView)view).setText("[已结束]" + event.getSignUpCount() + "人");
+				}
+			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_subTitle){
+			Friend friend = new Select().from(Friend.class).where("friendUserId=?", event.getOwnerUserId()).executeSingle();
+			((TextView)view).setText(friend.getFriendUserDisplayName(event.getOwnerUserId()));
+//			String date = cursor.getString(cursor.getColumnIndex("date"));
+//			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+//			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
+//			String dt = HyjUtil.formatDateToIOS(new Date());
+//			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
+//				((TextView)view).setText("[报名中]");
+//			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
+//				((TextView)view).setText("[进行中]");
+//			} else if(dt.compareTo(endDate)>=0) {
+//				((TextView)view).setText("[已结束]");
+//			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner){
+			EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(em != null){
+				if("UnSignUp".equals(em.getState())){
+					((TextView)view).setText("[未报名]");
+				} else if("SignUp".equals(em.getState())){
+					((TextView)view).setText("[已报名]");
+				} else if("SignIn".equals(em.getState())){
+					((TextView)view).setText("[已签到]");
+				} 
+			} else {
+				((TextView)view).setText("[未报名]");
+			}
+			return true;
+		} else {
+			return true;
+		}
+	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

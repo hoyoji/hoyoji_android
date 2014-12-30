@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,6 +18,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -38,8 +40,12 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.message.EventMessageFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
+import com.hoyoji.hoyoji.project.ProjectFormFragment;
+import com.hoyoji.hoyoji.project.ProjectListFragment;
+import com.hoyoji.hoyoji.project.SubProjectListFragment;
 
 public class EventViewPagerFragment extends HyjUserFragment {
 	
@@ -67,6 +73,9 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	@Override
 	public void onInitViewData() {
 		mDisplayMetrics = getResources().getDisplayMetrics();
+		
+		setupEventDetail();
+		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -143,7 +152,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									eventMember.setState("SignUp");
 									eventMember.save();
 									mBtnSignUpEvent.setVisibility(View.GONE);
-									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 									HyjUtil.displayToast("报名成功");
 								} else {
 									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
@@ -165,10 +174,10 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	//							HyjUtil.displayToast("报名成功");
 							}
 						});
-						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 					} else if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
 						mBtnSignUpEvent.setVisibility(View.VISIBLE);
-						mBtnSignUpEvent.setText("我要签到");
+						mBtnSignUpEvent.setText("签到");
 						
 						mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 							@Override
@@ -177,7 +186,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									eventMember.setState("SignIn");
 									eventMember.save();
 									mBtnSignUpEvent.setVisibility(View.GONE);
-									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 									HyjUtil.displayToast("签到成功");
 								} else {
 									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
@@ -187,7 +196,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 								}
 							}
 						});
-						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 					}
 					
 				}
@@ -197,6 +206,46 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			}
 		}
 	}
+	
+
+	public void setupEventDetail(){
+			ViewGroup projectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
+	
+			final Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+			
+			Event event = HyjModel.load(Event.class, modelId);
+
+			View view = projectDetailView.findViewById(R.id.homeListItem_title);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_title");
+
+			view = projectDetailView.findViewById(R.id.homeListItem_remark);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_remark");
+			
+			view = projectDetailView.findViewById(R.id.homeListItem_owner);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_owner");
+
+			view = projectDetailView.findViewById(R.id.homeListItem_amount);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_amount");
+
+			view = projectDetailView.findViewById(R.id.homeListItem_picture);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_picture");
+			
+			view = projectDetailView.findViewById(R.id.homeListItem_date);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_date");
+
+			view = projectDetailView.findViewById(R.id.homeListItem_subTitle);
+			EventListFragment.setEventViewValue(this, view, event, "homeListItem_subTitle");
+			
+			projectDetailView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", modelId);
+					openActivityWithFragment(EventFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+				}
+			});
+	}
+	
 	
 	private void sendSignUpMessageToServer(final Event event, EventMember em, ProjectShareAuthorization psa) {
 		try {
@@ -323,7 +372,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			ActiveAndroid.setTransactionSuccessful();
 //			getActivity().finish();
 			mBtnSignUpEvent.setVisibility(View.GONE);
-			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 			HyjUtil.displayToast("报名成功");
 		} finally {
 			ActiveAndroid.endTransaction();
@@ -359,15 +408,15 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				return new EventMemberListFragment();
 			case 1 :
 				return new MoneySearchListFragment();
-			case 2:
-				return new EventFormFragment();
+//			case 2:
+//				return new EventFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -377,8 +426,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				return "成员";
 			case 1 :
 				return "流水";
-			case 2:
-				return "资料";
+//			case 2:
+//				return "资料";
 			}
 			return null;
 		}

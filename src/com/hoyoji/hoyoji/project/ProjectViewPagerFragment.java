@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.project;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,29 +8,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.activeandroid.query.Select;
-import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
-import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.event.EventListFragment;
-import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
@@ -135,16 +123,23 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_depositTotal", null, null);
 
 			view = projectDetailView.findViewById(R.id.projectListItem_picture);
-			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_picture", null, null);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_picture", null, new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", modelId);
+					openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+				}
+			});
 			
 			view = projectDetailView.findViewById(R.id.projectListItem_action_viewSubProjects);
 			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_action_viewSubProjects", new OnClickListener(){
 				@Override
 				public void onClick(View v) {
 					String parentProjectId = v.getTag().toString();
-					Project project = HyjModel.getModel(Project.class, parentProjectId);
-//					mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
-					HyjUtil.displayToast("打开子项目");
+					Bundle bundle = new Bundle();
+					bundle.putString("parentProjectId", parentProjectId);
+					openActivityWithFragment(SubProjectListFragment.class, R.string.projectListFragment_title_subprojects, bundle);
 				}
 			}, null);
 			
