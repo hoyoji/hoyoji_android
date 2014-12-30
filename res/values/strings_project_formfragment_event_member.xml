@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="projectEventMemberFormFragment_action_addnew">邀请活动成员</string>
+    <string name="projectEventMemberFormFragment_action_addnew">邀请活动好友</string>
     
     <string name="projectEventMemberFormFragment_action_edit">修改活动成员</string>
     
