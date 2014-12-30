@@ -156,7 +156,6 @@ public class EventMemberSetNickNameDialogFragment extends DialogFragment {
 //				HyjApplication.getInstance().getCurrentUser().setNickName(mNickName);
 		    	em.setSyncFromServer(true);
 				
-
 		    	em.save();
 		    	activity.dismissProgressDialog();
 				HyjUtil.displayToast(R.string.app_save_success);
