@@ -37,7 +37,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.viewpager_tabstrip;
+		return R.layout.project_viewpager_tabstrip;
 	}
 	
 	@Override

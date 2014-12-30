@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+   		android:paddingBottom="0dp"
+    	android:paddingLeft="0dp"
+    	android:paddingRight="0dp"
+    	android:paddingTop="0dp" >
+
+    <com.hoyoji.android.hyjframework.view.HyjViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="115dp" >
+    </com.hoyoji.android.hyjframework.view.HyjViewPager>
+
+    <com.hoyoji.android.hyjframework.view.HyjTabStrip 
+        android:id="@+id/tabstrip"       
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+        android:paddingTop="35dp"
+    />
+    
+    <include android:id="@+id/project_viewpager_projectdetail"
+        layout="@layout/home_listitem_row"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"/>
+</FrameLayout>
