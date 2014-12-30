@@ -38,6 +38,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -130,12 +131,7 @@ public class EventMemberSetNickNameDialogFragment extends DialogFragment {
         // Set title of dialog
     		builder.setTitle("修改昵称")
 //          // Set Ok button
-          .setPositiveButton(R.string.alert_dialog_ok,
-                  new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int id) {
-                    	  changeNickName();
-                      }
-                  });
+          .setPositiveButton(R.string.alert_dialog_ok, null);
           // Set Cancel button
 //          .setNegativeButton(R.string.alert_dialog_ok, null); 
         
@@ -143,7 +139,22 @@ public class EventMemberSetNickNameDialogFragment extends DialogFragment {
         // Create the AlertDialog object and return it
         return builder.create();
     }
-	
+
+	@Override
+	public void onStart() {
+	    super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
+	    AlertDialog d = (AlertDialog)getDialog();
+	    if(d != null)   {
+	        Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+	        positiveButton.setOnClickListener(new View.OnClickListener(){
+	                    @Override
+	                    public void onClick(View v) {
+	                  	  	changeNickName();
+	                    }
+	                });
+	    }
+	}
+
 	private void changeNickName(){
 		final HyjActivity activity = ((HyjActivity) this.getActivity());
 		Bundle bundle = getArguments();
