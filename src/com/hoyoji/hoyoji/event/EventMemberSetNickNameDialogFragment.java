@@ -153,14 +153,10 @@ public class EventMemberSetNickNameDialogFragment extends DialogFragment {
 			@Override
 			public void finishCallback(Object object) {
 		    	em.setNickName(mEditTextNickName.getText().toString().trim());
-//				HyjApplication.getInstance().getCurrentUser().setNickName(mNickName);
 		    	em.setSyncFromServer(true);
-				
-
 		    	em.save();
 		    	activity.dismissProgressDialog();
 				HyjUtil.displayToast(R.string.app_save_success);
-//				getActivity().finish();
 			}
 
 			@Override
@@ -186,13 +182,6 @@ public class EventMemberSetNickNameDialogFragment extends DialogFragment {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-    
-    protected void openActivityWithFragment(
-			Class<EventMemberFormFragment> class1,
-			int projecteventmemberformfragmentActionAddnew, Bundle bundle) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
