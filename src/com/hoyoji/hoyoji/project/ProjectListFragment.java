@@ -56,7 +56,7 @@ public class ProjectListFragment extends HyjUserFragment implements OnSelectSubP
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setOffscreenPageLimit(100);
-		SubProjectListFragment firstFragment = SubProjectListFragment.newInstance(null, null);
+		SubProjectListFragment firstFragment = SubProjectListFragment.newInstance(getActivity().getIntent().getStringExtra("parentProjectId"), null);
 		firstFragment.setOnSelectSubProjectsListener(this);
 		mSectionsPagerAdapter.addPage(firstFragment);
 		mSectionsPagerAdapter.notifyDataSetChanged();

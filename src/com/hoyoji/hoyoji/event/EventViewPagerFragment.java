@@ -64,6 +64,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 	private Button mBtnSignUpEvent;
 
+	private ViewGroup mProjectDetailView;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -107,8 +109,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			mTabStrip.addTab(title.toString());
 		}
 		
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
-		{
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
 				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("活动"+mSectionsPagerAdapter.getPageTitle(position));
@@ -151,7 +152,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 									eventMember.setState("SignUp");
 									eventMember.save();
-									mBtnSignUpEvent.setVisibility(View.GONE);
+//									mBtnSignUpEvent.setVisibility(View.GONE);
+									setupSignIn(eventMember, event);
 //									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 									HyjUtil.displayToast("报名成功");
 								} else {
@@ -160,43 +162,11 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									sendSignUpMessageToServer(event, eventMember, psa);
 									
 								}
-								
-	//							if(eventMember == null){
-	//								
-	//							} else {
-	//								
-	//							}
-	//							
-	//							
-	//							
-	//							mBtnSignUpEvent.setVisibility(View.GONE);
-	//							mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-	//							HyjUtil.displayToast("报名成功");
 							}
 						});
 //						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-					} else if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
-						mBtnSignUpEvent.setVisibility(View.VISIBLE);
-						mBtnSignUpEvent.setText("签到");
-						
-						mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
-							@Override
-							public void onClick(View v) {
-								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									eventMember.setState("SignIn");
-									eventMember.save();
-									mBtnSignUpEvent.setVisibility(View.GONE);
-//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-									HyjUtil.displayToast("签到成功");
-								} else {
-									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
-									
-									sendSignInMessageToServer(event, eventMember, psa);
-									
-								}
-							}
-						});
-//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+					} else {
+						setupSignIn(eventMember, event);
 					}
 					
 				}
@@ -208,35 +178,61 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	}
 	
 
+	private void setupSignIn(final EventMember eventMember, final Event event) {
+		if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
+			mBtnSignUpEvent.setVisibility(View.VISIBLE);
+			mBtnSignUpEvent.setText("签到");
+			
+			mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+						eventMember.setState("SignIn");
+						eventMember.save();
+						mBtnSignUpEvent.setVisibility(View.GONE);
+//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+						HyjUtil.displayToast("签到成功");
+					} else {
+						ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
+						
+						sendSignInMessageToServer(event, eventMember, psa);
+						
+					}
+				}
+			});
+//			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+		}
+	}
+
 	public void setupEventDetail(){
-			ViewGroup projectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
+			mProjectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
 	
 			final Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
 			
 			Event event = HyjModel.load(Event.class, modelId);
 
-			View view = projectDetailView.findViewById(R.id.homeListItem_title);
+			View view = mProjectDetailView.findViewById(R.id.homeListItem_title);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_title");
 
-			view = projectDetailView.findViewById(R.id.homeListItem_remark);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_remark);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_remark");
 			
-			view = projectDetailView.findViewById(R.id.homeListItem_owner);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_owner);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_owner");
 
-			view = projectDetailView.findViewById(R.id.homeListItem_amount);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_amount);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_amount");
 
-			view = projectDetailView.findViewById(R.id.homeListItem_picture);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_picture);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_picture");
 			
-			view = projectDetailView.findViewById(R.id.homeListItem_date);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_date);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_date");
 
-			view = projectDetailView.findViewById(R.id.homeListItem_subTitle);
+			view = mProjectDetailView.findViewById(R.id.homeListItem_subTitle);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_subTitle");
 			
-			projectDetailView.setOnClickListener(new OnClickListener(){
+			mProjectDetailView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();

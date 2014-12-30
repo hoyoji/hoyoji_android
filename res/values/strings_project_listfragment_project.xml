@@ -2,7 +2,7 @@
 <resources>
 
     <string name="projectListFragment_title">账本列表</string>
-    <string name="projectListFragment_title_subprojects">子账本</string>
+    <string name="projectListFragment_title_subprojects">下级账本</string>
     <string name="projectListFragment_action_project_addnew">创建账本</string>
     <string name="projectListFragment_title_select_project">选择账本</string>
     <string name="projectListFragment_title_select_parent_project">选择上级账本</string>

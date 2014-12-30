@@ -139,7 +139,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 					String parentProjectId = v.getTag().toString();
 					Bundle bundle = new Bundle();
 					bundle.putString("parentProjectId", parentProjectId);
-					openActivityWithFragment(SubProjectListFragment.class, R.string.projectListFragment_title_subprojects, bundle);
+					openActivityWithFragment(ProjectListFragment.class, R.string.projectListFragment_title_subprojects, bundle);
 				}
 			}, null);
 			
