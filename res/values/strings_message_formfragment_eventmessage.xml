@@ -5,6 +5,7 @@
    <string name="eventMessageFormFragment_title_accept">接受活动邀请</string>
    <string name="eventMessageFormFragment_title_signIn">活动签到</string>
    <string name="eventMessageFormFragment_title_Cancel">取消活动</string>
+   <string name="eventMessageFormFragment_title_cancelSignUp">取消报名</string>
    <string name="eventMessageFormFragment_title_signUp">活动报名</string>
    <string name="eventMessageFormFragment_title_edit">修改活动邀请</string>
    <string name="eventMessageFormFragment_title_delete">删除活动邀请</string>
