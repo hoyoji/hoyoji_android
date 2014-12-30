@@ -210,6 +210,8 @@ public class MessageListFragment extends HyjUserListFragment{
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
 			} else if(msg.getType().equals("Event.Member.Cancel") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+			} else if(msg.getType().equals("Event.Member.CancelSignUp") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_cancelSignUp, bundle);
 			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
 			}
