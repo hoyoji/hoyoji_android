@@ -1,5 +1,7 @@
 package com.hoyoji.hoyoji.project;
 
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,14 +10,28 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.activeandroid.query.Select;
+import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
+import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
 import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.event.EventListFragment;
+import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
@@ -37,12 +53,15 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.viewpager_tabstrip;
+		return R.layout.project_viewpager_tabstrip;
 	}
 	
 	@Override
 	public void onInitViewData() {
 		mDisplayMetrics = getResources().getDisplayMetrics();
+		
+		setupProjectDetail();
+		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -100,6 +119,46 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 		mViewPager.setCurrentItem(1);
 	}
 	
+	public void setupProjectDetail(){
+			ViewGroup projectDetailView = (ViewGroup) getView().findViewById(R.id.project_viewpager_projectdetail);
+	
+			final Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+			
+			Project project = HyjModel.load(Project.class, modelId);
+			View view = projectDetailView.findViewById(R.id.projectListItem_name);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_name", null, null);
+
+			view = projectDetailView.findViewById(R.id.projectListItem_owner);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_owner", null, null);
+
+			view = projectDetailView.findViewById(R.id.projectListItem_depositTotal);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_depositTotal", null, null);
+
+			view = projectDetailView.findViewById(R.id.projectListItem_picture);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_picture", null, null);
+			
+			view = projectDetailView.findViewById(R.id.projectListItem_action_viewSubProjects);
+			SubProjectListFragment.setProjectViewValue(this, view, project, "projectListItem_action_viewSubProjects", new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					String parentProjectId = v.getTag().toString();
+					Project project = HyjModel.getModel(Project.class, parentProjectId);
+//					mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
+					HyjUtil.displayToast("打开子项目");
+				}
+			}, null);
+			
+			projectDetailView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", modelId);
+					openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+				}
+			});
+	}
+	
+	
 	
 //	@Override
 //	public boolean handleBackPressed() {
@@ -130,15 +189,15 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 				return new MoneySearchListFragment();
 			case 2:
 				return new ProjectMemberListFragment();
-			case 3:
-				return new ProjectFormFragment();
+//			case 3:
+//				return new ProjectFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 3;
 		}
 
 		@Override
@@ -150,8 +209,8 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 				return "流水";
 			case 2:
 				return "成员";
-			case 3:
-				return "资料";
+//			case 3:
+//				return "资料";
 			}
 			return null;
 		}

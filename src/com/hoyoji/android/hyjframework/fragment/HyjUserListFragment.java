@@ -479,9 +479,6 @@ public abstract class HyjUserListFragment extends ListFragment implements
 		return false;
 	}
 
-
-
-
 	public void openActivityWithFragment(Class<? extends Fragment> fragmentClass, int titleRes, Bundle bundle){
 		openActivityWithFragment(fragmentClass, getString(titleRes), bundle, false, null);
 	}
@@ -504,8 +501,6 @@ public abstract class HyjUserListFragment extends ListFragment implements
 			startActivity(intent);
 		}
 	}
-
-
 
 	public boolean handleBackPressed() {
 		boolean backPressedHandled = false;

@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -282,8 +283,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		numericView.setVisibility(View.GONE);
 	}
 	
-	@Override
-	public boolean setViewValue(View view, Object model, String field) {
+	public static boolean setProjectViewValue(Fragment f, View view, Object model, String field, OnClickListener onSubProjectClickListener, OnClickListener onPictureClickListener) {
 		Project project = (Project)model;
 		if(view.getId() == R.id.projectListItem_name){
 			((TextView)view).setText(project.getDisplayName());
@@ -356,42 +356,49 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				((ImageButton)view).setEnabled(false);
 			}
 			if(view.getTag() == null){
-				view.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v) {
-						String parentProjectId = v.getTag().toString();
-						Project project = HyjModel.getModel(Project.class, parentProjectId);
-						mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
-					}
-				});
+				view.setOnClickListener(onSubProjectClickListener);
 			}
 			view.setTag(project.getId());
 			return true;
 		} else if(view.getId() == R.id.projectListItem_picture){
 			ImageView imageView= (ImageView)view;
 			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+				imageView.setBackgroundColor(f.getResources().getColor(R.color.hoyoji_yellow));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			} else {
-				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
+				imageView.setBackgroundColor(f.getResources().getColor(R.color.hoyoji_green));
 				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
 			}
 			
 			if(view.getTag() == null){
-				view.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v) {
-						Bundle bundle = new Bundle();
-						bundle.putLong("MODEL_ID", (Long) v.getTag());
-						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
-					}
-				});
+				view.setOnClickListener(onPictureClickListener);
 			}
 			view.setTag(project.get_mId());
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public boolean setViewValue(View view, Object model, String field) {
+		return setProjectViewValue(this, view, model, field, 
+				new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					String parentProjectId = v.getTag().toString();
+					Project project = HyjModel.getModel(Project.class, parentProjectId);
+					mOnSelectSubProjectsListener.onSelectSubProjectsListener(parentProjectId, project.getDisplayName());
+				}
+			},
+			new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putLong("MODEL_ID", (Long) v.getTag());
+					openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+				}
+			});
 	}	
 	
 //	@Override

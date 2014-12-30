@@ -44,8 +44,7 @@ public abstract class HyjFragment extends Fragment {
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		if(useContentView() != null){
-			View rootView = inflater.inflate(useContentView(),
-					container, false);
+			View rootView = inflater.inflate(useContentView(), container, false);
 			if(useToolbarView() != null){
 				// populate bottom toolbar
 				
