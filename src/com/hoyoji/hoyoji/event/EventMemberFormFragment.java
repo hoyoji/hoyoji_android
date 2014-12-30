@@ -10,7 +10,9 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -34,16 +37,12 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
-import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.money.SelectApportionEventMemberListFragment;
 import com.hoyoji.hoyoji.money.SelectApportionMemberListFragment;
-import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
 public class EventMemberFormFragment extends HyjUserFormFragment {
 	private final static int GET_FRIEND_ID = 1;
@@ -68,6 +67,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	
 	private Button button_setting_nickName;
 	private HyjTextField mEventMemberNickName = null;
+	private ChangeObserver mChangeObserver;
 
 	@Override
 	public Integer useContentView() {
@@ -257,6 +257,13 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 					hideSaveAction();
 				}
 			}
+		}
+		
+
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(EventMember.class, null), true,
+					mChangeObserver);
 		}
 	}
 
@@ -534,7 +541,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 //				loadProjectProjectShareAuthorizations(object);
 				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_eventMember_cancel_success);
 				loadEventAndMembers(object);
-				doSave();
+//				doSave();
 			}
 
 			@Override
@@ -576,6 +583,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
+		getActivity().finish();
 		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 	
@@ -635,5 +643,35 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	       	 }
 	       	 break;
 		}
+	}
+
+	private class ChangeObserver extends ContentObserver {
+		public ChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mEventMemberEditor.getModel().get_mId() != null){
+				EventMember eventMember = HyjModel.getModel(EventMember.class, mEventMemberEditor.getModel().getId());
+				mEventMemberNickName.setText(eventMember .getNickName());
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+	
+		super.onDestroy();
 	}
 }

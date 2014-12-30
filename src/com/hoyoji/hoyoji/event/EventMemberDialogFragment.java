@@ -186,10 +186,10 @@ public class EventMemberDialogFragment extends DialogFragment {
 		
 		if(type.equals("invite")){
 			emTitle = "邀请参加活动";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name + "\n\n" + event.getDescription();
+			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
 		} else if(type.equals("signIn")){
 			emTitle = "活动签到";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到" + "\n\n" + event.getDescription();
+			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到";
 		}
 		final String emTitleSent = emTitle;
 		final String emDescriptionSent = emDescription;
