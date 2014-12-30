@@ -12,6 +12,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.project.InviteMemberFormFragment;
 import com.hoyoji.hoyoji_android.R;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
@@ -90,15 +91,24 @@ public class EventMemberDialogFragment extends DialogFragment {
     	v.findViewById(R.id.EventMemberDialogFragment_invite_qq).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("QQ", event, event.getName(), "invite");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_TYPE", "QQ");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("QQ", event, event.getName(), "invite");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
-//				dismiss();
 			}
     	});    	
     	v.findViewById(R.id.EventMemberDialogFragment_invite_wx).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("WX", event, event.getName(), "invite");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_TYPE", "WX");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("WX", event, event.getName(), "invite");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
 //				dismiss();
 			}
@@ -106,7 +116,12 @@ public class EventMemberDialogFragment extends DialogFragment {
     	v.findViewById(R.id.EventMemberDialogFragment_invite_other).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("Other", event, event.getName(), "invite");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_TYPE", "Other");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("Other", event, event.getName(), "invite");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
 //				dismiss();
 			}
