@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.event;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONObject;
@@ -8,6 +9,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -125,6 +128,24 @@ public class EventFormFragment extends HyjUserFormFragment {
 		});
 		
 		mDateTimeFieldStartDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_startDate);
+		mDateTimeFieldStartDate.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(mDateTimeFieldStartDate.getTime() >= mDateTimeFieldEndDate.getTime()){
+					mDateTimeFieldEndDate.setTime(mDateTimeFieldStartDate.getTime() + 2*60*60*1000);
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+		});
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_endDate);
 		
 		if (modelId != -1) {
@@ -142,9 +163,21 @@ public class EventFormFragment extends HyjUserFormFragment {
 				mDateTimeFieldEndDate.setTime(date.getTime()+2*60*60*1000);
 				mDateTimeFieldEndDate.setTextColor(Color.RED);
 			} else {
-				Date date = new Date();
-				mDateTimeFieldDate.setDate(date);
-				mDateTimeFieldEndDate.setTime(date.getTime()+2*60*60*1000);
+//				Date date = new Date();
+//				mDateTimeFieldDate.setDate(date);
+//				mDateTimeFieldEndDate.setTime(date.getTime()+2*60*60*1000);
+				
+				Calendar now = Calendar.getInstance();
+				now.setTime(new Date());
+//				now.set(Calendar.HOUR_OF_DAY, 0);
+				now.set(Calendar.MILLISECOND, 0);
+				now.set(Calendar.MINUTE, 0);
+				now.set(Calendar.SECOND, 0);
+//				now.getTimeInMillis();
+				
+				mDateTimeFieldStartDate.setTime(now.getTimeInMillis());
+				mDateTimeFieldEndDate.setTime(now.getTimeInMillis()+2*60*60*1000);
+
 			}
 //			mDateTimeFieldEndDate.setDate(null);
 		}

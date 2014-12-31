@@ -27,6 +27,7 @@ import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -173,5 +174,9 @@ public class HyjDateTimeField extends LinearLayout {
 
 	public void setTextColor(int color) {
 		mEditTextEdit.setTextColor(color);
+	}
+
+	public void addTextChangedListener(TextWatcher watcher){
+		mEditTextEdit.addTextChangedListener(watcher);
 	}
 }
