@@ -47,6 +47,9 @@ public class MoneyLendContainer extends HyjModel{
 	@Column(name = "projectId")
 	private String mProjectId;
 	
+	@Column(name = "eventId")
+	private String mEventId;
+	
 	@Column(name = "exchangeRate")
 	private Double mExchangeRate;
 	
