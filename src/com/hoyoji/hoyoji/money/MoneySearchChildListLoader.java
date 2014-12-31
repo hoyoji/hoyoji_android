@@ -196,7 +196,6 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 	    	List<HyjModel> moneyIncomeContainers = new Select().from(MoneyIncomeContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Income"), dateFrom, dateTo).orderBy("date DESC").execute();
 	    	list.addAll(moneyIncomeContainers);
 	    	
-	    	if(mEventId == null){
 		    	List<HyjModel> moneyDepositExpenses = new Select().from(MoneyDepositExpenseContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("Lend"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyDepositExpenses);
 		    	
@@ -208,9 +207,11 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 		    	
 		    	List<HyjModel> moneyDepositReturns = new Select().from(MoneyDepositReturnContainer.class).as("main").where("date > ? AND date <= ? AND " + buildSearchQuery("DepositReturn"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyDepositReturns);
-		    	
-		    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
-		    	list.addAll(moneyTransfers);
+
+		    	if(mEventId == null){
+			    	List<HyjModel> moneyTransfers = new Select().from(MoneyTransfer.class).as("main").where("date > ? AND date <= ? AND " + buildTransferSearchQuery(), dateFrom, dateTo).orderBy("date DESC").execute();
+			    	list.addAll(moneyTransfers);
+		    	}
 		    	
 		    	List<HyjModel> moneyBorrows = new Select().from(MoneyBorrow.class).as("main").where("ownerFriendId IS NULL AND moneyDepositIncomeApportionId IS NULL AND moneyIncomeApportionId IS NULL AND moneyExpenseApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Borrow"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyBorrows);
@@ -223,7 +224,6 @@ public class MoneySearchChildListLoader extends AsyncTaskLoader<List<HyjModel>> 
 		    	
 		    	List<HyjModel> moneyPaybacks = new Select().from(MoneyPayback.class).as("main").where("ownerFriendId IS NULL AND moneyDepositPaybackContainerId IS NULL AND moneyDepositReturnApportionId IS NULL AND date > ? AND date <= ? AND " + buildSearchQuery("Payback"), dateFrom, dateTo).orderBy("date DESC").execute();
 		    	list.addAll(moneyPaybacks);
-	    	}
 	    	
 	    	Collections.sort(list, mDateComparator);
 	    	return list;

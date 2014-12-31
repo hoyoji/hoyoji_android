@@ -291,7 +291,6 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-				if(mEventId == null){ // 只有收入和支出才有活动
 					cursor = Cache
 							.openDatabase()
 							.rawQuery(
@@ -319,22 +318,24 @@ public class MoneySearchGroupListLoader extends
 						cursor.close();
 						cursor = null;
 					}
-	
-					cursor = Cache
-							.openDatabase()
-							.rawQuery(
-									"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-											+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
-											+ localCurrencyId
-											+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
-											+ localCurrencyId + "') "
-											+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
-					if (cursor != null) {
-						cursor.moveToFirst();
-						count += cursor.getDouble(0);
-						expenseTotal += cursor.getDouble(1);
-						cursor.close();
-						cursor = null;
+
+					if(mEventId == null){ // 只有收入和支出才有活动
+						cursor = Cache
+								.openDatabase()
+								.rawQuery(
+										"SELECT COUNT(*) AS count, SUM(main.transferOutAmount * main.transferOutExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+												+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+												+ localCurrencyId
+												+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+												+ localCurrencyId + "') "
+												+ "WHERE main.transferOutId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
+						if (cursor != null) {
+							cursor.moveToFirst();
+							count += cursor.getDouble(0);
+							expenseTotal += cursor.getDouble(1);
+							cursor.close();
+							cursor = null;
+						}
 					}
 	
 					cursor = Cache
@@ -364,7 +365,6 @@ public class MoneySearchGroupListLoader extends
 						cursor.close();
 						cursor = null;
 					}
-				}
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -392,7 +392,6 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			if(mEventId == null){ // 只有收入和支出才有活动
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -419,21 +418,23 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-				cursor = Cache
-						.openDatabase()
-						.rawQuery(
-								"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
-										+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
-										+ localCurrencyId
-										+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
-										+ localCurrencyId + "') "
-										+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
-				if (cursor != null) {
-					cursor.moveToFirst();
-					count += cursor.getDouble(0);
-					incomeTotal += cursor.getDouble(1);
-					cursor.close();
-					cursor = null;
+				if(mEventId == null){ // 只有收入和支出才有活动
+					cursor = Cache
+							.openDatabase()
+							.rawQuery(
+									"SELECT COUNT(*) AS count, SUM(main.transferInAmount * main.transferInExchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total " 
+											+ "FROM MoneyTransfer main LEFT JOIN Exchange ex ON (ex.foreignCurrencyId = main.projectCurrencyId AND ex.localCurrencyId = '"
+											+ localCurrencyId
+											+ "' ) OR (ex.localCurrencyId = main.projectCurrencyId AND ex.foreignCurrencyId = '"
+											+ localCurrencyId + "') "
+											+ "WHERE main.transferInId IS NOT NULL AND date > ? AND date <= ? AND " + buildTransferSearchQuery(), args);
+					if (cursor != null) {
+						cursor.moveToFirst();
+						count += cursor.getDouble(0);
+						incomeTotal += cursor.getDouble(1);
+						cursor.close();
+						cursor = null;
+					}
 				}
 				cursor = Cache
 						.openDatabase()
@@ -461,7 +462,6 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-			}
 			if (count > 0) {
 				String ds = df.format(calDateFrom.getTime());
 //				ds = ds.replaceAll("Z$", "+0000");
@@ -573,7 +573,6 @@ public class MoneySearchGroupListLoader extends
 			cursor.close();
 			cursor = null;
 		}
-		if(mEventId == null){ // 只有收入和支出才有活动
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -654,21 +653,23 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + buildTransferSearchQuery(),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				if(cursor.getString(0) != null){
-					if(dateString == null
-							|| dateString.compareTo(cursor.getString(0)) < 0){
-						dateString = cursor.getString(0);
+			if(mEventId == null){ // 只有收入和支出才有活动
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT MAX(date) FROM MoneyTransfer main WHERE date <= ? AND " + buildTransferSearchQuery(),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					if(cursor.getString(0) != null){
+						if(dateString == null
+								|| dateString.compareTo(cursor.getString(0)) < 0){
+							dateString = cursor.getString(0);
+						}
 					}
+					cursor.close();
+					cursor = null;
 				}
-				cursor.close();
-				cursor = null;
 			}
 			cursor = Cache
 					.openDatabase()
@@ -718,7 +719,6 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-		}
 		if(dateString != null){
 			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
@@ -798,7 +798,6 @@ public class MoneySearchGroupListLoader extends
 			cursor = null;
 		}
 
-		if(mEventId == null){ // 只有收入和支出才有活动
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -863,21 +862,23 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			cursor = Cache
-					.openDatabase()
-					.rawQuery(
-							"SELECT MAX(date) FROM MoneyTransfer  main WHERE " + buildTransferSearchQuery(),
-							args);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				if(cursor.getString(0) != null){
-					if(dateString == null
-							|| dateString.compareTo(cursor.getString(0)) < 0){
-						dateString = cursor.getString(0);
+			if(mEventId == null){ // 只有收入和支出才有活动
+				cursor = Cache
+						.openDatabase()
+						.rawQuery(
+								"SELECT MAX(date) FROM MoneyTransfer  main WHERE " + buildTransferSearchQuery(),
+								args);
+				if (cursor != null) {
+					cursor.moveToFirst();
+					if(cursor.getString(0) != null){
+						if(dateString == null
+								|| dateString.compareTo(cursor.getString(0)) < 0){
+							dateString = cursor.getString(0);
+						}
 					}
+					cursor.close();
+					cursor = null;
 				}
-				cursor.close();
-				cursor = null;
 			}
 			cursor = Cache
 					.openDatabase()
@@ -927,7 +928,6 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-		}
 		if(dateString != null){
 			Long dateInMillis = Long.valueOf(dateString);
 				Calendar calToday = Calendar.getInstance();
