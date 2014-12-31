@@ -14,6 +14,11 @@
         hoyoji:showAsAction="always">
         <menu>
             <item
+		        android:id="@+id/projectEventMemberListFragment_action_add"
+		        android:title="@string/projectEventMemberListFragment_action_member_addnew"
+		        android:icon="@drawable/ic_action_new_white"
+		        hoyoji:showAsAction="always"/>
+            <item
 		        android:id="@+id/projectEventMemberListFragment_invite_friend"
 		        android:title="@string/projectEventMemberListFragment_invite_friend"
 		        android:icon="@drawable/ic_action_new_white"

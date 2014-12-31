@@ -238,7 +238,11 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
 			EventMember em = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
-			((TextView)view).setText(em.getFriendDisplayName());
+			if("".equals(em.getNickName()) || em.getNickName() == null){
+				((TextView)view).setText(em.getFriendDisplayName());
+			} else {
+				((TextView)view).setText(em.getNickName());
+			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
 			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
@@ -306,16 +310,13 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			bundle.putString("DIALOG_TYPE", "signIn");
 			EventMemberDialogFragment.newInstance(bundle).show(getActivity().getSupportFragmentManager(), "EventMemberDialogFragment");
 			return true;
-		}
-//		 else if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
-//			if(mIsSelectSignInEventMembers = true){
-//				
-//			}
-//			Bundle bundle = new Bundle();
-//			bundle.putLong("EVENT_ID", modelId);
-//			openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
-//			return true;
-//		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite){
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_add){
+			Bundle bundle = new Bundle();
+			bundle.putLong("EVENT_ID", modelId);
+			openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+			return true;
+		} 
+//		else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite){
 //			inviteFriend("Other", event, event.getName(), "invite");
 //			return true;
 //		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_member_invite_wxFriend){

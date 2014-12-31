@@ -102,6 +102,8 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 				|| memberAddMessage.getType().equalsIgnoreCase(
 						"Event.Member.Cancel")
 				|| memberAddMessage.getType().equalsIgnoreCase(
+						"Event.Member.CancelSignUp")
+				|| memberAddMessage.getType().equalsIgnoreCase(
 						"Project.Share.AcceptInviteLink")) {
 			actionButton.setVisibility(View.GONE);
 			mEditTextDetail.setEnabled(false);

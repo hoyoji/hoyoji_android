@@ -78,16 +78,16 @@ public class EventMemberDialogFragment extends DialogFragment {
     		mSignInLinearLayout.setVisibility(View.VISIBLE);
     	}
     	
-    	v.findViewById(R.id.EventMemberDialogFragment_invite_friend).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				Bundle newBundle = new Bundle();
-				newBundle.putLong("EVENT_ID", modelId);
-				((HyjActivity)getActivity()).openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, newBundle);
-//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
-				dismiss();
-			}
-    	});
+//    	v.findViewById(R.id.EventMemberDialogFragment_invite_friend).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				Bundle newBundle = new Bundle();
+//				newBundle.putLong("EVENT_ID", modelId);
+//				((HyjActivity)getActivity()).openActivityWithFragment(EventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, newBundle);
+////				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
+//				dismiss();
+//			}
+//    	});
     	v.findViewById(R.id.EventMemberDialogFragment_invite_qq).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
