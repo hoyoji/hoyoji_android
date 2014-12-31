@@ -1,5 +1,6 @@
 package com.hoyoji.hoyoji.event;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -75,7 +76,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	@Override
 	public void onInitViewData() {
 		mDisplayMetrics = getResources().getDisplayMetrics();
-		
+
+		mProjectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
 		setupEventDetail();
 		
 		// Create the adapter that will return a fragment for each of the three
@@ -154,6 +156,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									eventMember.save();
 //									mBtnSignUpEvent.setVisibility(View.GONE);
 									setupSignIn(eventMember, event);
+									setupEventDetail();
 //									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 									HyjUtil.displayToast("报名成功");
 								} else {
@@ -190,6 +193,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 						eventMember.setState("SignIn");
 						eventMember.save();
 						mBtnSignUpEvent.setVisibility(View.GONE);
+						setupEventDetail();
 //						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 						HyjUtil.displayToast("签到成功");
 					} else {
@@ -205,10 +209,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	}
 
 	public void setupEventDetail(){
-			mProjectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
 	
 			final Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
-			
 			Event event = HyjModel.load(Event.class, modelId);
 
 			View view = mProjectDetailView.findViewById(R.id.homeListItem_title);
