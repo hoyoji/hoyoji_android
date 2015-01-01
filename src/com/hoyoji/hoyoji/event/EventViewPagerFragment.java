@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.event;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
-
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -38,15 +33,10 @@ import com.hoyoji.android.hyjframework.view.HyjViewPager;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip.OnTabSelectedListener;
 import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.hoyoji_android.R;
-import com.hoyoji.hoyoji.message.EventMessageFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
-import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
-import com.hoyoji.hoyoji.project.ProjectFormFragment;
-import com.hoyoji.hoyoji.project.ProjectListFragment;
-import com.hoyoji.hoyoji.project.SubProjectListFragment;
 
 public class EventViewPagerFragment extends HyjUserFragment {
 	
