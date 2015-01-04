@@ -299,6 +299,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			modelCopy.setState("UnSignUp");
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signUp){
 			modelCopy.setState("SignUp");
+		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_unSignIn){
+			modelCopy.setState("UnSignIn");
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signIn){
 			modelCopy.setState("SignIn");
 		}
