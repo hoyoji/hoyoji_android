@@ -337,14 +337,26 @@ public class MessageDownloadService extends Service {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
+					
+					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
+					pem.getEvent().setSyncFromServer(true);
+					pem.getEvent().save();
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignUp")) {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
+					
+					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
+					pem.getEvent().setSyncFromServer(true);
+					pem.getEvent().save();
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignIn")) {
 					pem.setState("SignIn");
 					pem.setSyncFromServer(true);
 					pem.save();
+					
+					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
+					pem.getEvent().setSyncFromServer(true);
+					pem.getEvent().save();
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Cancel")) {
 					pem.getEvent().setState("Cancel");
 					pem.getEvent().setSyncFromServer(true);
@@ -353,6 +365,10 @@ public class MessageDownloadService extends Service {
 					pem.setState("UnSignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
+					
+					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()-1);
+					pem.getEvent().setSyncFromServer(true);
+					pem.getEvent().save();
 				}
 			} catch (JSONException e1) {
 				e1.printStackTrace();
