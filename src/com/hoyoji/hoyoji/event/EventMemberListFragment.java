@@ -286,7 +286,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 					((TextView)view).setText("已报名");
 				} else if("SignIn".equals(evtMember.getState())){
 					((TextView)view).setText("已签到");
-				} else{
+				} else if("UnSignIn".equals(evtMember.getState())){
+					((TextView)view).setText("未签到");
+				} else if("UnSignUp".equals(evtMember.getState())){
 					((TextView)view).setText("未报名");
 				}
 			}
