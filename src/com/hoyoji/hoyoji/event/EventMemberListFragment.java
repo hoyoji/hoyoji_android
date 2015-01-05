@@ -29,7 +29,9 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.project.ProjectMemberListLoader;
 
 public class EventMemberListFragment extends HyjUserListFragment {
 //	private IWXAPI api;
@@ -117,6 +119,33 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				selectionArgs, 
 				"friendUserName LIMIT " + (limit + offset) 
 			);
+//		
+//		arg1.putInt("LIMIT", limit + offset);
+//		
+//		Intent intent = getActivity().getIntent();
+//		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+//		Event event;
+//		String eventId = null;
+//		if(getActivity().getCallingActivity() != null){
+////			Project project =  Model.load(Project.class, modelId);
+////			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
+//			eventId = intent.getStringExtra("EVENTID");
+//		} else {
+//			event =  Model.load(Event.class, modelId);
+//			eventId = event.getId();
+//		}
+////		Project project =  Model.load(Project.class, modelId);
+//		arg1.putString("EVENTID", eventId);
+//		
+//		if(mIsSelectSignUpEventMembers == true){
+//			arg1.putString("STATE", "SignUp");
+//		} else if(mIsSelectUnSignInEventMembers == true){
+//			arg1.putString("STATE", "UnSignIn");
+//		} else if(mIsSelectSignInEventMembers == true){
+//			arg1.putString("STATE", "SignIn");
+//		}
+//		
+//		Object loader = new EventMemberListLoader(getActivity(), arg1);
 		return (Loader<Object>)loader;
 	}
 

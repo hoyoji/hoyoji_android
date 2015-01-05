@@ -253,13 +253,14 @@ public class MessageDownloadService extends Service {
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
-					String eventMemberId = msgData.optString("eventMemberId");
-					EventMember pem = HyjModel.getModel(EventMember.class, eventMemberId);
-					if(pem != null){
-						pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-						pem.getEvent().setSyncFromServer(true);
-						pem.getEvent().save();
-					}
+//					String eventMemberId = msgData.optString("eventMemberId");
+//					EventMember pem = HyjModel.getModel(EventMember.class, eventMemberId);
+//					if(pem != null){
+//						pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
+//						pem.getEvent().setSyncFromServer(true);
+//						pem.getEvent().save();
+//					}
+					loadAllEventMembers(msgData.optString("eventId"));
 					
 					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
 					if (newFriend == null) {
@@ -346,25 +347,19 @@ public class MessageDownloadService extends Service {
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignUp")) {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignIn")) {
 					pem.setState("SignIn");
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Cancel")) {
 					pem.getEvent().setState("Cancel");
 					pem.getEvent().setSyncFromServer(true);
@@ -374,9 +369,7 @@ public class MessageDownloadService extends Service {
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()-1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				}
 			} catch (JSONException e1) {
 				e1.printStackTrace();

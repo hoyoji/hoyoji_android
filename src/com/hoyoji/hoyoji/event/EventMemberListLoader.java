@@ -30,14 +30,16 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    private List<HyjModel> mChildList;
 	    private Integer mLoadLimit = null;
 	    private EventMemberComparator mEventMemberComparator = new EventMemberComparator();
-		private String mProjectId;
+		private String mEventId;
+		private static String mState;
 		private ChangeObserver mChangeObserver;
 		public EventMemberListLoader(Context context, Bundle queryParams) {
 	    	super(context);
 	    	
 			if (queryParams != null) {
 				mLoadLimit = queryParams.getInt("LIMIT", 10);
-				mProjectId = queryParams.getString("PROJECTID");
+				mEventId = queryParams.getString("EVENTID");
+				mState = queryParams.getString("STATE");
 			} else {
 				mLoadLimit += 10;
 			}
@@ -46,7 +48,7 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	context.getContentResolver().registerContentObserver(
 	    			ContentProvider.createUri(UserData.class, null), true, mChangeObserver);
 	    	context.getContentResolver().registerContentObserver(
-	    			ContentProvider.createUri(ProjectShareAuthorization.class, null), true, mChangeObserver);
+	    			ContentProvider.createUri(EventMember.class, null), true, mChangeObserver);
 
 	    }
 	    
@@ -61,8 +63,12 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    public List<HyjModel> loadInBackground() {
 
 	    	List<HyjModel> list;
-    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("projectId=? AND state <> 'Delete'", mProjectId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
-	    	Collections.sort(list, mEventMemberComparator);
+	    	if(mState == null){
+	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=?", mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    	} else {
+	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? AND state=?", mEventId, mState).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    	}
+    		Collections.sort(list, mEventMemberComparator);
 	    	return list;
 		}
 
@@ -75,7 +81,11 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 				if(lhsEventMember.getToBeDetermined()){
 					return -1;
 				} else if(rhsEventMember.getToBeDetermined()){
-					return 1;
+					if (mState == null) {
+						return 1;
+					} else {
+						return -1;
+					}
 				}
 				
 				if(HyjApplication.getInstance().getCurrentUser().getId().equals(lhsEventMember.getFriendUserId())){
