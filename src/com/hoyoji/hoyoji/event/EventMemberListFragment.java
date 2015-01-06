@@ -410,6 +410,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				} else if("UnSignUp".equals(em.getState())){
 					((TextView)view).setText("未报名");
 				}
+			} else {
+				((TextView)view).setText("");
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount) {

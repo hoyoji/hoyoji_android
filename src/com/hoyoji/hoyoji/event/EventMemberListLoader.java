@@ -7,11 +7,7 @@ import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
-import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.EventMember;
-import com.hoyoji.hoyoji.models.Project;
-import com.hoyoji.hoyoji.models.ProjectRemark;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 
 import android.content.Context;
