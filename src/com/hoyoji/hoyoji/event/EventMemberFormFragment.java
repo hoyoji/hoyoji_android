@@ -240,7 +240,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			
 			button_setting_nickName.setVisibility(View.GONE);
 		}else{
-			if(!"UnSignUp".equals(eventMember.getState()) && eventMember.getFriendUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+			if(!"UnSignUp".equals(eventMember.getState()) && HyjApplication.getInstance().getCurrentUser().getId().equals(eventMember.getFriendUserId())) {
 				button_cancel_signUp.setVisibility(View.VISIBLE);
 			}
 			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
