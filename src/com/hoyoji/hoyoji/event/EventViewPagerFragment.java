@@ -132,15 +132,6 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		mViewPager.setCurrentItem(1);
 		
 		mBtnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
-		
-		if (mChangeObserver == null) {
-			mChangeObserver = new ChangeObserver();
-			this.getActivity().getContentResolver().registerContentObserver(
-					ContentProvider.createUri(
-							Event.class, null), true,
-							mChangeObserver);
-		}
-		
 		String subTitle = null;
 		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
 		if(model_id != -1){
@@ -160,7 +151,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									eventMember.save();
 //									mBtnSignUpEvent.setVisibility(View.GONE);
 									setupSignIn(eventMember, event);
-									setupEventDetail();
+//									setupEventDetail();
 //									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 									HyjUtil.displayToast("报名成功");
 								} else {
@@ -182,6 +173,18 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				}
 			}
 		}
+
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(
+					ContentProvider.createUri(
+							Event.class, null), true,
+							mChangeObserver);
+			this.getActivity().getContentResolver().registerContentObserver(
+					ContentProvider.createUri(
+							EventMember.class, null), true,
+							mChangeObserver);
+		}
 	}
 	
 
@@ -197,7 +200,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 						eventMember.setState("SignIn");
 						eventMember.save();
 						mBtnSignUpEvent.setVisibility(View.GONE);
-						setupEventDetail();
+//						setupEventDetail();
 //						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 						HyjUtil.displayToast("签到成功");
 					} else {

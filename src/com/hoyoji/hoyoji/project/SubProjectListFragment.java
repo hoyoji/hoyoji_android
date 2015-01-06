@@ -628,10 +628,16 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	        mViewIds = childTo;
 	        mFields = childFrom;
 		}
-	    
+
+		@Override
 	    public long getItemId(int position) {
 	        return ((HyjModel)getItem(position)).get_mId();
 	    }
+		
+		@Override
+		public boolean hasStableIds(){
+			return true;
+		}
 	    
 		/**
 	     * Populate new items in the list.

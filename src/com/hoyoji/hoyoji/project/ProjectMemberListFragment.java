@@ -97,7 +97,7 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
 				mMemberList,
 				R.layout.project_listitem_member,
-				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "id"},
+				new String[] { "friendUserId", "friendUserId", "sharePercentage", "state", "id", "id", "_id"},
 				new int[] { R.id.memberListItem_picture, R.id.memberListItem_name, R.id.memberListItem_percentage, R.id.memberListItem_remark, R.id.memberListItem_actualTotal, R.id.memberListItem_apportionTotal, R.id.memberListItem_settlement});
 		return adapter;
 	}	
@@ -711,11 +711,17 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 	        mViewIds = childTo;
 	        mFields = childFrom;
 		}
-	    
+
+		@Override
 	    public long getItemId(int position) {
 	        return ((HyjModel)getItem(position)).get_mId();
 	    }
-	    
+
+		@Override
+		public boolean hasStableIds(){
+			return true;
+		}
+		
 		/**
 	     * Populate new items in the list.
 	     */

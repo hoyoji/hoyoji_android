@@ -292,6 +292,7 @@ public class HyjSimpleExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    @Override
     public boolean hasStableIds() {
         return true;
     }

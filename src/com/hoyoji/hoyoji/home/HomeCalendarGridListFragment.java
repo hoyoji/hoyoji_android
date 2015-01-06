@@ -566,7 +566,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				getActivity(), 
 				mListChildData,
 				R.layout.home_listitem_row, 
-				new String[] {"picture", "subTitle", "title", "remark", "date", "amount", "owner"}, 
+				new String[] {"picture", "subTitle", "title", "remark", "date", "amount", "_id"}, 
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_subTitle, R.id.homeListItem_title, 
 							R.id.homeListItem_remark, R.id.homeListItem_date,
 							R.id.homeListItem_amount, R.id.homeListItem_owner});
@@ -1889,10 +1889,16 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	        mViewIds = childTo;
 	        mFields = childFrom;
 		}
-	    
+
+		@Override
 	    public long getItemId(int position) {
 	        return ((HyjModel)getItem(position)).get_mId();
 	    }
+	    
+		@Override
+		public boolean hasStableIds(){
+			return true;
+		}
 	    
 		/**
 	     * Populate new items in the list.
