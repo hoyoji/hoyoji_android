@@ -1587,6 +1587,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						});
 				
 					return;
+				} else {
+					psa = em.getProjectShareAuthorization();
 				}
 			} else {
 				//看一下该好友是不是账本成员
