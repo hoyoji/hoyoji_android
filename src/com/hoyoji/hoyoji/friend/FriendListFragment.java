@@ -433,7 +433,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 				new int[] { R.id.friendListItem_category_name }, 
 				mListChildData, 
 				R.layout.friend_listitem_friend,
-				new String[] { "friendUserId", "nickName" },
+				new String[] { "friendUserId", "_id" },
 				new int[] { R.id.friendListItem_picture, R.id.friendListItem_nickName });
 //		
 		return adapter;

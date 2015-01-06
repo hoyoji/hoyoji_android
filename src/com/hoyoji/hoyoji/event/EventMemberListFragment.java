@@ -8,7 +8,6 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -35,7 +34,6 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 public class EventMemberListFragment extends HyjUserListFragment {
@@ -79,7 +77,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
 				mMemberList,
 				R.layout.home_listitem_row,
-				new String[] {"friendUserId", "id", "id", "id", "id"},
+				new String[] {"friendUserId", "_id", "id", "id", "id"},
 				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark});
 		return adapter;
 	}	
@@ -758,14 +756,22 @@ public class EventMemberListFragment extends HyjUserListFragment {
 	        mFields = childFrom;
 		}
 	    
+		@Override
 	    public long getItemId(int position) {
 	        return ((HyjModel)getItem(position)).get_mId();
 	    }
 	    
+		@Override
+		public boolean hasStableIds(){
+			return true;
+		}
+	    
+	    
 		/**
 	     * Populate new items in the list.
 	     */
-	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	    @Override 
+	    public View getView(int position, View convertView, ViewGroup parent) {
 	        View view = convertView;
 	        View[] viewHolder;
 	        if (view == null) {

@@ -1,6 +1,9 @@
 package com.hoyoji.hoyoji.project;
 
+import android.database.ContentObserver;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,6 +14,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+
+import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.view.HyjTabStrip;
@@ -38,6 +43,8 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 
 	private DisplayMetrics mDisplayMetrics;
 
+	private ChangeObserver mChangeObserver;
+
 	
 	@Override
 	public Integer useContentView() {
@@ -60,7 +67,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 //		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
-		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener(){
+		((HyjViewPager)mViewPager).setOnOverScrollListener(new OnOverScrollListener() {
 			@Override
 			public void onOverScroll(float mOverscroll) {
 //				Log.i("mOverscroll", "" + mOverscroll);
@@ -105,6 +112,15 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 			}
 		});
 		mViewPager.setCurrentItem(1);
+		
+
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(
+					ContentProvider.createUri(
+							Project.class, null), true,
+							mChangeObserver);
+		}
 	}
 	
 	public void setupProjectDetail(){
@@ -209,6 +225,59 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 			}
 			return null;
 		}
+	}
+
+	
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+	
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+	
+	//	@Override
+	//	public void onChange(boolean selfChange, Uri uri) {
+	//		super.onChange(selfChange, uri);
+	//	}
+	
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(200);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+			        	setupProjectDetail();
+	
+	//			    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		
+		super.onDestroy();
 	}
 
 }

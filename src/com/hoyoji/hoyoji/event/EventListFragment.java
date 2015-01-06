@@ -75,7 +75,6 @@ public class EventListFragment extends HyjUserListFragment {
 		imageView.setBackgroundColor(getResources().getColor(R.color.lightgray));
 		imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
 		view.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				if(getActivity().getCallingActivity() != null){
