@@ -1,24 +1,30 @@
 package com.hoyoji.hoyoji.event;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import com.activeandroid.Model;
-import com.activeandroid.content.ContentProvider;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -29,9 +35,8 @@ import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
-import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji.project.ProjectMemberListLoader;
 
 public class EventMemberListFragment extends HyjUserListFragment {
 //	private IWXAPI api;
@@ -44,6 +49,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 	private boolean mIsSelectSignUpEventMembers = false;
 	private boolean mIsSelectUnSignInEventMembers = false;
 	private boolean mIsSelectSignInEventMembers = false;
+	
+	private List<EventMember> mMemberList = new ArrayList<EventMember>();
 
 	@Override
 	public Integer useContentView() {
@@ -62,12 +69,19 @@ public class EventMemberListFragment extends HyjUserListFragment {
 
 	@Override
 	public ListAdapter useListViewAdapter() {
-		return new SimpleCursorAdapter(getActivity(),
+//		return new SimpleCursorAdapter(getActivity(),
+//				R.layout.home_listitem_row,
+//				null,
+//				new String[] {"friendUserId", "id", "id", "id", "id"},
+//				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark},
+//				0); 
+		
+		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
+				mMemberList,
 				R.layout.home_listitem_row,
-				null,
 				new String[] {"friendUserId", "id", "id", "id", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark},
-				0); 
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark});
+		return adapter;
 	}	
 
 	@Override
@@ -83,45 +97,6 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		if(limit == 0){
 			limit = getListPageSize();
 		}
-		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		Event event;
-		String eventId = null;
-		if(getActivity().getCallingActivity() != null){
-//			Project project =  Model.load(Project.class, modelId);
-//			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
-			eventId = intent.getStringExtra("EVENTID");
-		} else {
-			event =  Model.load(Event.class, modelId);
-			eventId = event.getId();
-		}
-		String selection = "eventId = ?";
-		String[] selectionArgs = new String[]{eventId};
-		
-		if(mIsSelectSignUpEventMembers == true){
-			selection = selection + " and state = ?";
-			selectionArgs = new String[]{eventId,"SignUp"};
-		}
-		
-		if(mIsSelectUnSignInEventMembers == true){
-			selection = selection + " and state = ?";
-			selectionArgs = new String[]{eventId,"UnSignIn"};
-		}
-		
-		if(mIsSelectSignInEventMembers == true){
-			selection = selection + " and state = ?";
-			selectionArgs = new String[]{eventId,"SignIn"};
-		}
-		Object loader = new CursorLoader(getActivity(),
-				ContentProvider.createUri(EventMember.class, null),
-				null,
-				selection, 
-				selectionArgs, 
-				"friendUserName LIMIT " + (limit + offset) 
-			);
-//		
-//		arg1.putInt("LIMIT", limit + offset);
-//		
 //		Intent intent = getActivity().getIntent();
 //		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 //		Event event;
@@ -134,18 +109,57 @@ public class EventMemberListFragment extends HyjUserListFragment {
 //			event =  Model.load(Event.class, modelId);
 //			eventId = event.getId();
 //		}
-////		Project project =  Model.load(Project.class, modelId);
-//		arg1.putString("EVENTID", eventId);
+//		String selection = "eventId = ?";
+//		String[] selectionArgs = new String[]{eventId};
 //		
 //		if(mIsSelectSignUpEventMembers == true){
-//			arg1.putString("STATE", "SignUp");
-//		} else if(mIsSelectUnSignInEventMembers == true){
-//			arg1.putString("STATE", "UnSignIn");
-//		} else if(mIsSelectSignInEventMembers == true){
-//			arg1.putString("STATE", "SignIn");
+//			selection = selection + " and state = ?";
+//			selectionArgs = new String[]{eventId,"SignUp"};
 //		}
 //		
-//		Object loader = new EventMemberListLoader(getActivity(), arg1);
+//		if(mIsSelectUnSignInEventMembers == true){
+//			selection = selection + " and state = ?";
+//			selectionArgs = new String[]{eventId,"UnSignIn"};
+//		}
+//		
+//		if(mIsSelectSignInEventMembers == true){
+//			selection = selection + " and state = ?";
+//			selectionArgs = new String[]{eventId,"SignIn"};
+//		}
+//		Object loader = new CursorLoader(getActivity(),
+//				ContentProvider.createUri(EventMember.class, null),
+//				null,
+//				selection, 
+//				selectionArgs, 
+//				"friendUserName LIMIT " + (limit + offset) 
+//			);
+//		
+		arg1.putInt("LIMIT", limit + offset);
+		
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		Event event;
+		String eventId = null;
+		if(getActivity().getCallingActivity() != null){
+//			Project project =  Model.load(Project.class, modelId);
+//			event = new Select().from(Event.class).where("projectId=?", project.getId()).executeSingle();
+			eventId = intent.getStringExtra("EVENTID");
+		} else {
+			event =  Model.load(Event.class, modelId);
+			eventId = event.getId();
+		}
+//		Project project =  Model.load(Project.class, modelId);
+		arg1.putString("EVENTID", eventId);
+		
+		if(mIsSelectSignUpEventMembers == true){
+			arg1.putString("STATE", "SignUp");
+		} else if(mIsSelectUnSignInEventMembers == true){
+			arg1.putString("STATE", "UnSignIn");
+		} else if(mIsSelectSignInEventMembers == true){
+			arg1.putString("STATE", "SignIn");
+		}
+		
+		Object loader = new EventMemberListLoader(getActivity(), arg1);
 		return (Loader<Object>)loader;
 	}
 
@@ -277,13 +291,91 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		}
 	}
 	
+//	@Override
+//	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+//		if(view.getId() == R.id.homeListItem_picture){
+//			String userId = cursor.getString(columnIndex);
+//			HyjImageView imageView = (HyjImageView)view;
+//			imageView.setDefaultImage(R.drawable.ic_action_person_white);
+//			if(cursor.getString(columnIndex) != null){
+//				User user = HyjModel.getModel(User.class, userId);
+//				if(user != null){
+//					imageView.setImage(user.getPictureId());
+//				} else {
+//					imageView.setImage((Picture)null);
+//				}
+//				if(HyjApplication.getInstance().getCurrentUser().getId().equals(userId)){
+//					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+//				} else {
+//					imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_green));
+//				}
+//			} else {
+//				imageView.setImage((Picture)null);
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+//			}
+//			return true;
+//		}else if(view.getId() == R.id.homeListItem_title){
+//			EventMember em = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+//			if("".equals(em.getNickName()) || em.getNickName() == null){
+//				((TextView)view).setText(em.getFriendDisplayName());
+//			} else {
+//				((TextView)view).setText(em.getNickName());
+//			}
+//			return true;
+//		}else if(view.getId() == R.id.homeListItem_subTitle){
+//			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+//			if(!evtMember.getToBeDetermined()){
+//				if("SignUp".equals(evtMember.getState())){
+//					((TextView)view).setText("已报名");
+//				} else if("SignIn".equals(evtMember.getState())){
+//					((TextView)view).setText("已签到");
+//				} else if("UnSignIn".equals(evtMember.getState())){
+//					((TextView)view).setText("未签到");
+//				} else if("UnSignUp".equals(evtMember.getState())){
+//					((TextView)view).setText("未报名");
+//				}
+//			}
+//			return true;
+//		} else if(view.getId() == R.id.homeListItem_amount) {
+//			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			Double apportionTotal = evtMember.getApportionTotal();
+//			String currencySymbol = evtMember.getEvent().getProject().getCurrencySymbol();
+//			if(apportionTotal < 0){
+//				apportionTotal = -apportionTotal;
+//				numericView.setPrefix("活动收入:" + currencySymbol);
+////				numericView.setTextColor(Color.parseColor("#339900"));
+//			}else{
+//				if(apportionTotal.equals(0.0)){
+////					numericView.setTextColor(Color.BLACK);
+//					numericView.setPrefix(currencySymbol);
+//				}else{
+////					numericView.setTextColor(Color.parseColor(R.color.));
+//					numericView.setPrefix("活动支出:" + currencySymbol);
+//				}
+//			} 
+//			numericView.setSuffix(null);
+//			numericView.setNumber(apportionTotal);
+//			return true;
+//		} else if(view.getId() == R.id.homeListItem_remark){
+//			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
+//			if(evtMember.getToBeDetermined()){
+//				((TextView)view).setText("可进行账务拆分");
+//			} else {
+//				((TextView)view).setText("");
+//			}
+//		}
+//		return true;
+//	}
+	
 	@Override
-	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+	public boolean setViewValue(View view, Object model, String field) {
+		EventMember em = (EventMember)model;
 		if(view.getId() == R.id.homeListItem_picture){
-			String userId = cursor.getString(columnIndex);
+			String userId = em.getFriendUserId();
 			HyjImageView imageView = (HyjImageView)view;
 			imageView.setDefaultImage(R.drawable.ic_action_person_white);
-			if(cursor.getString(columnIndex) != null){
+			if(em.getFriendUserId() != null){
 				User user = HyjModel.getModel(User.class, userId);
 				if(user != null){
 					imageView.setImage(user.getPictureId());
@@ -301,7 +393,6 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
-			EventMember em = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
 			if("".equals(em.getNickName()) || em.getNickName() == null){
 				((TextView)view).setText(em.getFriendDisplayName());
 			} else {
@@ -309,24 +400,22 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			}
 			return true;
 		}else if(view.getId() == R.id.homeListItem_subTitle){
-			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
-			if(!evtMember.getToBeDetermined()){
-				if("SignUp".equals(evtMember.getState())){
+			if(!em.getToBeDetermined().booleanValue()){
+				if("SignUp".equals(em.getState())){
 					((TextView)view).setText("已报名");
-				} else if("SignIn".equals(evtMember.getState())){
+				} else if("SignIn".equals(em.getState())){
 					((TextView)view).setText("已签到");
-				} else if("UnSignIn".equals(evtMember.getState())){
+				} else if("UnSignIn".equals(em.getState())){
 					((TextView)view).setText("未签到");
-				} else if("UnSignUp".equals(evtMember.getState())){
+				} else if("UnSignUp".equals(em.getState())){
 					((TextView)view).setText("未报名");
 				}
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount) {
-			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
 			HyjNumericView numericView = (HyjNumericView)view;
-			Double apportionTotal = evtMember.getApportionTotal();
-			String currencySymbol = evtMember.getEvent().getProject().getCurrencySymbol();
+			Double apportionTotal = em.getApportionTotal();
+			String currencySymbol = em.getEvent().getProject().getCurrencySymbol();
 			if(apportionTotal < 0){
 				apportionTotal = -apportionTotal;
 				numericView.setPrefix("活动收入:" + currencySymbol);
@@ -344,8 +433,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			numericView.setNumber(apportionTotal);
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
-			EventMember evtMember = HyjModel.getModel(EventMember.class, cursor.getString(columnIndex));
-			if(evtMember.getToBeDetermined()){
+			if(em.getToBeDetermined()){
 				((TextView)view).setText("可进行账务拆分");
 			} else {
 				((TextView)view).setText("");
@@ -630,6 +718,75 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			}
 		}
 		
+	}
+	
+	@Override
+	public void onLoadFinished(Loader loader, Object list) {
+			Collection<EventMember> childList = (ArrayList<EventMember>) list;
+			mMemberList.clear();
+			mMemberList.addAll(childList);
+
+			((SimpleAdapter)getListAdapter()).notifyDataSetChanged();
+	        setFooterLoadFinished(getListView(), childList.size());
+		
+		// The list should now be shown.
+		if (isResumed()) {
+			// setListShown(true);
+		} else {
+			// setListShownNoAnimation(true);
+		}
+	}
+	
+	private static class MemberListAdapter extends SimpleAdapter{
+		private Context mContext;
+		private int[] mViewIds;
+	    private String[] mFields;
+	    private int mLayoutResource;
+//	    private ViewBinder mViewBinder;
+	    
+		public MemberListAdapter(Context context,
+	                    List<EventMember> childData,
+	                    int childLayout, String[] childFrom,
+	                    int[] childTo) {
+			super(context, (List<? extends Map<String, ?>>) childData, childLayout, childFrom, childTo);
+
+			mContext = context;
+	        mLayoutResource = childLayout;
+	        mViewIds = childTo;
+	        mFields = childFrom;
+		}
+	    
+	    public long getItemId(int position) {
+	        return ((HyjModel)getItem(position)).get_mId();
+	    }
+	    
+		/**
+	     * Populate new items in the list.
+	     */
+	    @Override public View getView(int position, View convertView, ViewGroup parent) {
+	        View view = convertView;
+	        View[] viewHolder;
+	        if (view == null) {
+	        	LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            view = vi.inflate(mLayoutResource, null);
+	            viewHolder = new View[mViewIds.length];
+	            for(int i=0; i<mViewIds.length; i++){
+	            	View v = view.findViewById(mViewIds[i]);
+	            	viewHolder[i] = v;
+	            }
+	            view.setTag(viewHolder);
+	        } else {
+	        	viewHolder = (View[])view.getTag();
+	        }
+
+	        Object item = getItem(position);
+	        for(int i=0; i<mViewIds.length; i++){
+	        	View v = viewHolder[i];
+	        	getViewBinder().setViewValue(v, item, mFields[i]);
+	        }
+	        
+	        return view;
+	    }
 	}
 	
 }

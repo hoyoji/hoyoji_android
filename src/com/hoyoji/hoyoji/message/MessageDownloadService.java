@@ -274,6 +274,10 @@ public class MessageDownloadService extends Service {
 						loadNewlyAddedFriend(newMessage.getFromUserId());
 					}
 					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
+					
+					if(msgData.optString("eventId") != null) {
+						loadAllEventMembers(msgData.optString("eventId"));
+					}
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
 					if (newFriend == null) {
@@ -282,7 +286,9 @@ public class MessageDownloadService extends Service {
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();
-					
+					if(msgData.optString("eventId") != null) {
+						loadAllEventMembers(msgData.optString("eventId"));
+					}
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Edit")) {
 					doEditProjectShareAuthorization(msgData, psa.getProjectShareMoneyExpenseOwnerDataOnly());
@@ -576,14 +582,14 @@ public class MessageDownloadService extends Service {
 				newObj.put("main.projectId", projectIds.get(i));
 //				newObj.put("main.state", "Accept");
 				data.put(newObj);
-				newObj = new JSONObject();
-				newObj.put("__dataType", "Event");
-				newObj.put("main.projectId", projectIds.get(i));
-				data.put(newObj);
-				newObj = new JSONObject();
-				newObj.put("__dataType", "EventMember");
-				newObj.put("evt.projectId", projectIds.get(i));
-				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "Event");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "EventMember");
+//				newObj.put("evt.projectId", projectIds.get(i));
+//				data.put(newObj);
 				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyExpenseContainer");
 				newObj.put("main.projectId", projectIds.get(i));
