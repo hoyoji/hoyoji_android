@@ -155,20 +155,20 @@ public class EventViewPagerFragment extends HyjUserFragment {
 						mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
 							@Override
 							public void onClick(View v) {
-								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									eventMember.setState("SignUp");
-									eventMember.save();
-//									mBtnSignUpEvent.setVisibility(View.GONE);
-									setupSignIn(eventMember, event);
-									setupEventDetail();
-//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-									HyjUtil.displayToast("报名成功");
-								} else {
+//								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//									eventMember.setState("SignUp");
+//									eventMember.save();
+////									mBtnSignUpEvent.setVisibility(View.GONE);
+//									setupSignIn(eventMember, event);
+//									setupEventDetail();
+////									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+//									HyjUtil.displayToast("报名成功");
+//								} else {
 									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
 									
 									sendSignUpMessageToServer(event, eventMember, psa);
 									
-								}
+//								}
 							}
 						});
 //						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
@@ -267,7 +267,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	
 			JSONObject msg = new JSONObject();
 			msg.put("__dataType", "Message");
-			msg.put("id", UUID.randomUUID().toString());
+			
 			msg.put("toUserId", event.getOwnerUserId());
 			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
 			msg.put("type", "Event.Member.SignUp");
@@ -291,6 +291,10 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				msgData.put("eventMemberId", em.getId());
 			}
 			msg.put("messageData", msgData.toString());
+			
+			if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				msg.put("id", UUID.randomUUID().toString());
+			}
 	
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "eventMemberSignUp");
 			((HyjActivity) this.getActivity()).displayProgressDialog(
@@ -344,6 +348,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				msgData.put("eventMemberId", em.getId());
 			}
 			msg.put("messageData", msgData.toString());
+			
+			
 	
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "eventMemberSignIn");
 			((HyjActivity) this.getActivity()).displayProgressDialog(
