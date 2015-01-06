@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.event;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -20,9 +21,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
+import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -215,7 +218,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		
 		if(modelId != -1){
-			if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+			if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && !"Cancel".equals(event.getState())) {
 				cancelBtn = (Button) getView().findViewById(R.id.button_event_cancel);
 				cancelBtn.setVisibility(View.VISIBLE);
 				cancelBtn.setOnClickListener(new OnClickListener(){
@@ -328,8 +331,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 					currentUserEM.setToBeDetermined(false);
 					currentUserEM.save();
 				}
+				doSave();
 			}
-			doSave();
 		}
 //		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
 //			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
@@ -392,10 +395,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 			@Override
 			public void finishCallback(Object object) {
-//				loadProjectProjectShareAuthorizations(object);
-				((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
-				HyjUtil.displayToast(R.string.app_action_event_cancel_success);
-				doSave();
+				loadEventMembers(object);
 			}
 
 			@Override
@@ -407,5 +407,37 @@ public class EventFormFragment extends HyjUserFormFragment {
 		};
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventEditor.getModelCopy().toJSON() +"]", "eventCancel");
 		((HyjActivity) EventFormFragment.this.getActivity()).displayProgressDialog(R.string.app_action_event_cancel,R.string.app_action_event_canceling);
+	}
+	
+	protected void loadEventMembers(Object object) {
+		try {
+			JSONArray jsonObjects = (JSONArray) object;
+			ActiveAndroid.beginTransaction();
+				for (int j = 0; j < jsonObjects.length(); j++) {
+					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
+						if(newEventMember == null){
+							newEventMember = new EventMember();
+						}
+						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEventMember.save();
+					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						Event newEvent = HyjModel.getModel(Event.class, id);
+						if(newEvent == null){
+							newEvent = new Event();
+						}
+						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEvent.save();
+					}
+				}
+
+			ActiveAndroid.setTransactionSuccessful();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+		((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
+		getActivity().finish();
 	}
 }
