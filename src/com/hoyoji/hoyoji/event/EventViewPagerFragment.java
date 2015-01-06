@@ -174,7 +174,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									HyjUtil.displayToast("报名成功");
 								} else {
 									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
-									sendSignUpMessageToServer(event, eventMember, psa);
+									sendSignUpMessageToServer(event, eventMember);
 								}
 							}
 						});
@@ -257,7 +257,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	}
 	
 	
-	private void sendSignUpMessageToServer(final Event event, EventMember em, ProjectShareAuthorization psa) {
+	private void sendSignUpMessageToServer(final Event event, EventMember em) {
 		try {
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
@@ -287,9 +287,6 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			msg.put("ownerUserId", event.getOwnerUserId());
 	
 			JSONObject msgData = new JSONObject();
-			if(psa != null) {
-				msgData.put("projectShareAuthorizationId", psa.getId());
-			}
 			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
 			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
 			msgData.put("eventId", event.getId());
