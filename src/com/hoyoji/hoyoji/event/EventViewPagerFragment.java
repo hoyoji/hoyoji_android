@@ -132,47 +132,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		mViewPager.setCurrentItem(1);
 		
 		mBtnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
-		String subTitle = null;
-		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
-		if(model_id != -1){
-			final Event event = HyjModel.load(Event.class, model_id);
-			if(event != null){
-				if(!"Cancel".equals(event.getState())){
-					subTitle = event.getName();
-					
-					final EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					if(eventMember == null || eventMember.getState().equalsIgnoreCase("UnSignUp")){
-						mBtnSignUpEvent.setVisibility(View.VISIBLE);
-						mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
-							@Override
-							public void onClick(View v) {
-								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-									eventMember.setState("SignUp");
-									eventMember.save();
-//									mBtnSignUpEvent.setVisibility(View.GONE);
-									setupSignIn(eventMember, event);
-//									setupEventDetail();
-//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-									HyjUtil.displayToast("报名成功");
-								} else {
-									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
-									
-									sendSignUpMessageToServer(event, eventMember, psa);
-									
-								}
-							}
-						});
-//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-					} else {
-						setupSignIn(eventMember, event);
-					}
-					
-				}
-				if(subTitle != null){
-					((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
-				}
-			}
-		}
+		setupSignUp();
 
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
@@ -187,6 +147,49 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		}
 	}
 	
+
+	private void setupSignUp() {
+		String subTitle = null;
+		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
+		if(model_id != -1){
+			final Event event = HyjModel.load(Event.class, model_id);
+			if(event != null){
+				if(!"Cancel".equals(event.getState())){
+					subTitle = event.getName();
+					
+					final EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(eventMember == null || eventMember.getState().equalsIgnoreCase("UnSignUp")){
+						mBtnSignUpEvent.setVisibility(View.VISIBLE);
+						mBtnSignUpEvent.setText("报名");
+						mBtnSignUpEvent.setOnClickListener(new OnClickListener(){
+							@Override
+							public void onClick(View v) {
+								if(event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+									eventMember.setState("SignUp");
+									eventMember.save();
+//									mBtnSignUpEvent.setVisibility(View.GONE);
+									setupSignIn(eventMember, event);
+//									setupEventDetail();
+//									mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+									HyjUtil.displayToast("报名成功");
+								} else {
+									ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId = ? AND state <> ?", HyjApplication.getInstance().getCurrentUser().getId(), "Delete").executeSingle();
+									sendSignUpMessageToServer(event, eventMember, psa);
+								}
+							}
+						});
+//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+					} else {
+						setupSignIn(eventMember, event);
+					}
+					
+				}
+				if(subTitle != null){
+					((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
+				}
+			}
+		}
+	}
 
 	private void setupSignIn(final EventMember eventMember, final Event event) {
 		if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
@@ -212,6 +215,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				}
 			});
 //			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+		} else {
+			mBtnSignUpEvent.setVisibility(View.GONE);
 		}
 	}
 
@@ -478,7 +483,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			        @Override
 			        protected void onPostExecute(String result) {
 			        	setupEventDetail();
-	
+			        	setupSignUp();
 	//			    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
 						mTask = null;
 			        }
