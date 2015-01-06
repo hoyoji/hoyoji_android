@@ -218,6 +218,9 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		
 		if(modelId != -1){
+			if("Cancel".equals(event.getState())){
+				cancel = true;
+			}
 			if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && !"Cancel".equals(event.getState())) {
 				cancelBtn = (Button) getView().findViewById(R.id.button_event_cancel);
 				cancelBtn.setVisibility(View.VISIBLE);
