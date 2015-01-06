@@ -7,12 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.ContentObserver;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -20,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -57,6 +62,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 	private ViewGroup mProjectDetailView;
 
+	private ContentObserver mChangeObserver = null;
 	
 	@Override
 	public Integer useContentView() {
@@ -126,6 +132,14 @@ public class EventViewPagerFragment extends HyjUserFragment {
 		mViewPager.setCurrentItem(1);
 		
 		mBtnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
+		
+		if (mChangeObserver == null) {
+			mChangeObserver = new ChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(
+					ContentProvider.createUri(
+							Event.class, null), true,
+							mChangeObserver);
+		}
 		
 		String subTitle = null;
 		long model_id = this.getActivity().getIntent().getLongExtra("MODEL_ID", -1);
@@ -354,6 +368,14 @@ public class EventViewPagerFragment extends HyjUserFragment {
 						}
 						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
 						newEventMember.save();
+					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						Event newEvent = HyjModel.getModel(Event.class, id);
+						if(newEvent == null){
+							newEvent = new Event();
+						}
+						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEvent.save();
 					}
 				}
 
@@ -419,6 +441,58 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			}
 			return null;
 		}
+	}
+	
+	private class ChangeObserver extends ContentObserver {
+		AsyncTask<String, Void, String> mTask = null;
+		public ChangeObserver() {
+			super(new Handler());
+		}
+	
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+	
+	//	@Override
+	//	public void onChange(boolean selfChange, Uri uri) {
+	//		super.onChange(selfChange, uri);
+	//	}
+	
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			if(mTask == null){
+				mTask = new AsyncTask<String, Void, String>() {
+			        @Override
+			        protected String doInBackground(String... params) {
+						try {
+							//等待其他的更新都到齐后再更新界面
+							Thread.sleep(200);
+						} catch (InterruptedException e) {}
+						return null;
+			        }
+			        @Override
+			        protected void onPostExecute(String result) {
+			        	setupEventDetail();
+	
+	//			    	getLoaderManager().restartLoader(0, new Bundle(), SubProjectListFragment.this);
+						mTask = null;
+			        }
+			    };
+			    mTask.execute();
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (mChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mChangeObserver);
+		}
+		
+		super.onDestroy();
 	}
 
 }

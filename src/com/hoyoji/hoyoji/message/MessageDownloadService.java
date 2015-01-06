@@ -253,6 +253,15 @@ public class MessageDownloadService extends Service {
 				psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 				
 				if (newMessage.getType().equalsIgnoreCase("Project.Share.AcceptInviteLink")) {
+//					String eventMemberId = msgData.optString("eventMemberId");
+//					EventMember pem = HyjModel.getModel(EventMember.class, eventMemberId);
+//					if(pem != null){
+//						pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
+//						pem.getEvent().setSyncFromServer(true);
+//						pem.getEvent().save();
+//					}
+					loadAllEventMembers(msgData.optString("eventId"));
+					
 					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
 					if (newFriend == null) {
 						loadNewlyAddedFriend(newMessage.getFromUserId());
@@ -265,6 +274,10 @@ public class MessageDownloadService extends Service {
 						loadNewlyAddedFriend(newMessage.getFromUserId());
 					}
 					loadAllProjectShareAuthorizations(msgData.optJSONArray("projectIds").get(0).toString());
+					
+					if(msgData.optString("eventId") != null) {
+						loadAllEventMembers(msgData.optString("eventId"));
+					}
 				} else if (newMessage.getType().equalsIgnoreCase("Project.Share.Accept")) {
 					Friend newFriend = new Select().from(Friend.class).where("friendUserId=?", newMessage.getFromUserId()).executeSingle();
 					if (newFriend == null) {
@@ -273,7 +286,9 @@ public class MessageDownloadService extends Service {
 					psa.setState("Accept");
 					psa.setSyncFromServer(true);
 					psa.save();
-					
+					if(msgData.optString("eventId") != null) {
+						loadAllEventMembers(msgData.optString("eventId"));
+					}
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Edit")) {
 					doEditProjectShareAuthorization(msgData, psa.getProjectShareMoneyExpenseOwnerDataOnly());
@@ -338,25 +353,19 @@ public class MessageDownloadService extends Service {
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignUp")) {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignIn")) {
 					pem.setState("SignIn");
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()+1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.Cancel")) {
 					pem.getEvent().setState("Cancel");
 					pem.getEvent().setSyncFromServer(true);
@@ -366,9 +375,7 @@ public class MessageDownloadService extends Service {
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					pem.getEvent().setSignUpCount(pem.getEvent().getSignUpCount()-1);
-					pem.getEvent().setSyncFromServer(true);
-					pem.getEvent().save();
+					loadAllEventMembers(msgData.optString("eventId"));
 				}
 			} catch (JSONException e1) {
 				e1.printStackTrace();
@@ -390,6 +397,16 @@ public class MessageDownloadService extends Service {
 					model.loadFromJSON(jsonObj, true);
 					model.save();
 				}
+				
+				JSONArray jsonArrayEvent = ((JSONArray) object).optJSONArray(1);
+
+				for (int i = 0; i < jsonArrayEvent.length(); i++) {
+					JSONObject jsonObjEvent = jsonArrayEvent.optJSONObject(i);
+
+					HyjModel modelEvent = HyjModel.createModel(jsonObjEvent.optString("__dataType"), jsonObjEvent.optString("id"));
+					modelEvent.loadFromJSON(jsonObjEvent, true);
+					modelEvent.save();
+				}
 			}
 
 			@Override
@@ -403,6 +420,10 @@ public class MessageDownloadService extends Service {
 			newObj.put("__dataType", "EventMember");
 			newObj.put("main.eventId", eventId);
 			data.put(newObj);
+			JSONObject newEventObj = new JSONObject();
+			newEventObj.put("__dataType", "Event");
+			newEventObj.put("main.id", eventId);
+			data.put(newEventObj);
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks, data.toString(), "getData");
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -561,14 +582,14 @@ public class MessageDownloadService extends Service {
 				newObj.put("main.projectId", projectIds.get(i));
 //				newObj.put("main.state", "Accept");
 				data.put(newObj);
-				newObj = new JSONObject();
-				newObj.put("__dataType", "Event");
-				newObj.put("main.projectId", projectIds.get(i));
-				data.put(newObj);
-				newObj = new JSONObject();
-				newObj.put("__dataType", "EventMember");
-				newObj.put("evt.projectId", projectIds.get(i));
-				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "Event");
+//				newObj.put("main.projectId", projectIds.get(i));
+//				data.put(newObj);
+//				newObj = new JSONObject();
+//				newObj.put("__dataType", "EventMember");
+//				newObj.put("evt.projectId", projectIds.get(i));
+//				data.put(newObj);
 				newObj = new JSONObject();
 				newObj.put("__dataType", "MoneyExpenseContainer");
 				newObj.put("main.projectId", projectIds.get(i));
