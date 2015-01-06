@@ -105,37 +105,37 @@ public class HyjExpandableListView extends ExpandableListView {
 		return super.getCheckedItemIds().length;
 	}
 	
-//	@Override
-//	public long[] getCheckedItemIds() {
-//		         if (getChoiceMode() == CHOICE_MODE_NONE || getExpandableListAdapter() == null) {
-//		             return new long[0];
+	@Override
+	public long[] getCheckedItemIds() {
+		         if (getChoiceMode() == CHOICE_MODE_NONE || getExpandableListAdapter() == null) {
+		             return new long[0];
+		         }
+		 
+		         SparseBooleanArray checkedItems = this.getCheckedItemPositions();
+		         
+		         final long[] ids = new long[super.getCheckedItemIds().length];
+		         
+		         ExpandableListAdapter adapter = this.getExpandableListAdapter();
+		         int checkedCount = 0;
+//		         for (int pos = 0; pos < count; pos++) {
+//		             if(checkedItems.get(pos)){
+//		            	long packedPosition = this.getExpandableListPosition(pos);
+//		            	ids[checkedCount] = adapter.getChildId(this.get, childPosition);
+//		            	checkedCount++;
+//		             }
 //		         }
-//		 
-//		         SparseBooleanArray checkedItems = this.getCheckedItemPositions();
-//		         
-//		         final long[] ids = new long[super.getCheckedItemIds().length];
-//		         
-//		         ExpandableListAdapter adapter = this.getExpandableListAdapter();
-//		         int checkedCount = 0;
-////		         for (int pos = 0; pos < count; pos++) {
-////		             if(checkedItems.get(pos)){
-////		            	long packedPosition = this.getExpandableListPosition(pos);
-////		            	ids[checkedCount] = adapter.getChildId(this.get, childPosition);
-////		            	checkedCount++;
-////		             }
-////		         }
-//		 
-//		         for(int g = 0; g < this.getExpandableListAdapter().getGroupCount(); g++){
-//						for(int c = 0; c < this.getExpandableListAdapter().getChildrenCount(g); c++){
-//							int position = this.getFlatListPosition(ExpandableListView.getPackedPositionForChild(g, c));
-//							if(checkedItems.get(position)){
-//								ids[checkedCount] = adapter.getChildId(g, c);
-//								checkedCount++;
-//							}
-//						}
-//					}
-//		         return ids;
-//		     }
+		 
+		         for(int g = 0; g < this.getExpandableListAdapter().getGroupCount(); g++){
+						for(int c = 0; c < this.getExpandableListAdapter().getChildrenCount(g); c++){
+							int position = this.getFlatListPosition(ExpandableListView.getPackedPositionForChild(g, c));
+							if(checkedItems.get(position)){
+								ids[checkedCount] = adapter.getChildId(g, c);
+								checkedCount++;
+							}
+						}
+					}
+		         return ids;
+		     }
 
 
 }
