@@ -227,8 +227,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				cancelBtn.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						cancel = true;
-						onSave();
+						cancelEvent();
 					}
 				});
 			}
@@ -293,49 +292,49 @@ public class EventFormFragment extends HyjUserFormFragment {
 		if (mEventEditor.hasValidationErrors()) {
 			showValidatioErrors();
 		} else {
-			if(cancel == true) {
-				cancelEvent();
-			} else {
-				if(mEventEditor.getModelCopy().getProjectId() == null){
-					((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
-							new DialogCallbackListener() {
-								@Override
-								public void doPositiveClick(Object object) {
-									Bundle bundle = new Bundle();
-									bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
-									openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
-								}
-							});
-					return;
-				}
-				Intent intent = getActivity().getIntent();
-				Long modelId = intent.getLongExtra("MODEL_ID", -1);
-				if (modelId == -1) {
-					Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					if(toBeDeterminedFriend != null){
-						EventMember toBeDeterminedFriendEM = new EventMember();
-						toBeDeterminedFriendEM.setEventId(mEventEditor.getModelCopy().getId());
-						toBeDeterminedFriendEM.setState("SignUp");
-						toBeDeterminedFriendEM.setFriendUserId(null);
-						toBeDeterminedFriendEM.setLocalFriendId(toBeDeterminedFriend.getId());
-						toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-						toBeDeterminedFriendEM.setFriendUserName("待定成员");
-						toBeDeterminedFriendEM.setToBeDetermined(true);
-						toBeDeterminedFriendEM.save();
-					}
-					
-					EventMember currentUserEM= new EventMember();
-					currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
-					currentUserEM.setState("UnSignUp");
-					currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-					currentUserEM.setLocalFriendId(null);
-					currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
-					currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
-					currentUserEM.setToBeDetermined(false);
-					currentUserEM.save();
-				}
-				doSave();
+//			if(cancel == true) {
+//				cancelEvent();
+//			} else {
+			if(mEventEditor.getModelCopy().getProjectId() == null){
+				((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+						new DialogCallbackListener() {
+							@Override
+							public void doPositiveClick(Object object) {
+								Bundle bundle = new Bundle();
+								bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
+								openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
+							}
+						});
+				return;
 			}
+			Intent intent = getActivity().getIntent();
+			Long modelId = intent.getLongExtra("MODEL_ID", -1);
+			if (modelId == -1) {
+				Friend toBeDeterminedFriend = new Select().from(Friend.class).where("toBeDetermined = 1 AND ownerUserId = ?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(toBeDeterminedFriend != null){
+					EventMember toBeDeterminedFriendEM = new EventMember();
+					toBeDeterminedFriendEM.setEventId(mEventEditor.getModelCopy().getId());
+					toBeDeterminedFriendEM.setState("SignUp");
+					toBeDeterminedFriendEM.setFriendUserId(null);
+					toBeDeterminedFriendEM.setLocalFriendId(toBeDeterminedFriend.getId());
+					toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+					toBeDeterminedFriendEM.setFriendUserName("待定成员");
+					toBeDeterminedFriendEM.setToBeDetermined(true);
+					toBeDeterminedFriendEM.save();
+				}
+				
+				EventMember currentUserEM= new EventMember();
+				currentUserEM.setEventId(mEventEditor.getModelCopy().getId());
+				currentUserEM.setState("UnSignUp");
+				currentUserEM.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				currentUserEM.setLocalFriendId(null);
+				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
+				currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
+				currentUserEM.setToBeDetermined(false);
+				currentUserEM.save();
+			}
+			doSave();
+//			}
 		}
 //		if(mMoneyAccountEditor.getModelCopy().getAccountType().equalsIgnoreCase("Topup")){
 //			if(mMoneyAccountEditor.getModelCopy().getFriendId() == null){
