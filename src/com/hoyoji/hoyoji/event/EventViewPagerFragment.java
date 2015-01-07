@@ -60,7 +60,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 
 	private Button mBtnSignUpEvent;
 
-	private ViewGroup mProjectDetailView;
+	private ViewGroup mEventDetailView;
 
 	private ContentObserver mChangeObserver = null;
 	
@@ -73,7 +73,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	public void onInitViewData() {
 		mDisplayMetrics = getResources().getDisplayMetrics();
 
-		mProjectDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
+		mEventDetailView = (ViewGroup) getView().findViewById(R.id.event_viewpager_eventdetail);
 		setupEventDetail();
 		
 		// Create the adapter that will return a fragment for each of the three
@@ -224,28 +224,28 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			final Long modelId = getActivity().getIntent().getLongExtra("MODEL_ID", -1);
 			Event event = HyjModel.load(Event.class, modelId);
 
-			View view = mProjectDetailView.findViewById(R.id.homeListItem_title);
+			View view = mEventDetailView.findViewById(R.id.homeListItem_title);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_title");
 
-			view = mProjectDetailView.findViewById(R.id.homeListItem_remark);
+			view = mEventDetailView.findViewById(R.id.homeListItem_remark);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_remark");
 			
-			view = mProjectDetailView.findViewById(R.id.homeListItem_owner);
+			view = mEventDetailView.findViewById(R.id.homeListItem_owner);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_owner");
 
-			view = mProjectDetailView.findViewById(R.id.homeListItem_amount);
+			view = mEventDetailView.findViewById(R.id.homeListItem_amount);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_amount");
 
-			view = mProjectDetailView.findViewById(R.id.homeListItem_picture);
+			view = mEventDetailView.findViewById(R.id.homeListItem_picture);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_picture");
 			
-			view = mProjectDetailView.findViewById(R.id.homeListItem_date);
+			view = mEventDetailView.findViewById(R.id.homeListItem_date);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_date");
 
-			view = mProjectDetailView.findViewById(R.id.homeListItem_subTitle);
+			view = mEventDetailView.findViewById(R.id.homeListItem_subTitle);
 			EventListFragment.setEventViewValue(this, view, event, "homeListItem_subTitle");
 			
-			mProjectDetailView.setOnClickListener(new OnClickListener(){
+			mEventDetailView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();

@@ -44,6 +44,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.hoyoji_android.R;
 import com.hoyoji.hoyoji.event.EventFormFragment;
+import com.hoyoji.hoyoji.event.EventListFragment;
 import com.hoyoji.hoyoji.event.EventViewPagerFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
@@ -375,67 +376,85 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			if(object != null){
 				Event event = (Event)object;
 				mNearestEvent = event;
-				ImageView imageView= (ImageView)mNearestEventLayout.findViewById(R.id.homeListItem_picture);
-				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
-				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
 				
-				HyjNumericView textView = (HyjNumericView)mNearestEventLayout.findViewById(R.id.homeListItem_amount);
-				Project project = event.getProject();
-				String projectId = event.getProjectId();
-				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-					textView.setTextColor(Color.BLACK);
-					((TextView) textView).setText("-");
-				} else {
-					Double depositBalance = event.getBalance();
-					if(depositBalance == 0){
-						textView.setTextColor(Color.BLACK);
-						textView.setPrefix(project.getCurrencySymbol());
-					} else if(depositBalance < 0){
-						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-						textView.setPrefix("支出"+project.getCurrencySymbol());
-					}else{
-						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-						textView.setPrefix("收入"+project.getCurrencySymbol());
-					}
-					
-					textView.setNumber(Math.abs(depositBalance));
-				}
+//				ImageView imageView= (ImageView)mNearestEventLayout.findViewById(R.id.homeListItem_picture);
+//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+//				
+//				HyjNumericView textView = (HyjNumericView)mNearestEventLayout.findViewById(R.id.homeListItem_amount);
+//				Project project = event.getProject();
+//				String projectId = event.getProjectId();
+//				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+//					textView.setTextColor(Color.BLACK);
+//					((TextView) textView).setText("-");
+//				} else {
+//					Double depositBalance = event.getBalance();
+//					if(depositBalance == 0){
+//						textView.setTextColor(Color.BLACK);
+//						textView.setPrefix(project.getCurrencySymbol());
+//					} else if(depositBalance < 0){
+//						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//						textView.setPrefix("支出"+project.getCurrencySymbol());
+//					}else{
+//						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//						textView.setPrefix("收入"+project.getCurrencySymbol());
+//					}
+//					
+//					textView.setNumber(Math.abs(depositBalance));
+//				}
+				View view = mNearestEventLayout.findViewById(R.id.homeListItem_title);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_title");
+
+				view = mNearestEventLayout.findViewById(R.id.homeListItem_remark);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_remark");
+				
+				view = mNearestEventLayout.findViewById(R.id.homeListItem_owner);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_owner");
+
+				view = mNearestEventLayout.findViewById(R.id.homeListItem_amount);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_amount");
+
+				view = mNearestEventLayout.findViewById(R.id.homeListItem_picture);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_picture");
+				
+				view = mNearestEventLayout.findViewById(R.id.homeListItem_subTitle);
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
 				
 				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
 				dateTimeView.setDateFormat("yy-MM-dd ah:mm");
 				dateTimeView.setTime(event.getStartDate());
 				
-				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());
-				
-					
-					long date = event.getDate();
-					long startDate = event.getStartDate();
-					long endDate = event.getEndDate(); 
-					long dt = (new Date()).getTime();
-					if(dt >= date && dt < startDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getSignUpCount() + "人");
-					} else if(dt >= startDate && dt < endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getSignUpCount() + "人");
-					} else if(dt >= endDate) {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getSignUpCount() + "人");
-					}
-
-					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));
-
-
-					EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					if(em != null){
-						if("UnSignUp".equals(em.getState())){
-							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
-						} else if("SignUp".equals(em.getState())){
-							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已报名]");
-						} else if("SignIn".equals(em.getState())){
-							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已签到]");
-						} 
-					} else {
-						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
-					}
+//				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());
+//				
+//					
+//					long date = event.getDate();
+//					long startDate = event.getStartDate();
+//					long endDate = event.getEndDate(); 
+//					long dt = (new Date()).getTime();
+//					if(dt >= date && dt < startDate) {
+//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getSignUpCount() + "人");
+//					} else if(dt >= startDate && dt < endDate) {
+//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getSignUpCount() + "人");
+//					} else if(dt >= endDate) {
+//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getSignUpCount() + "人");
+//					}
+//
+//					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));
+//
+//
+//					EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//					if(em != null){
+//						if("UnSignUp".equals(em.getState())){
+//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
+//						} else if("SignUp".equals(em.getState())){
+//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已报名]");
+//						} else if("SignIn".equals(em.getState())){
+//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已签到]");
+//						} 
+//					} else {
+//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
+//					}
 					
 					mNearestEventLayout.setVisibility(View.VISIBLE);
 			}
@@ -475,111 +494,16 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		if(view.getId() == R.id.homeListItem_picture){
-			ImageView imageView= (ImageView)view;
-//			Project project = HyjModel.getModel(Project.class, cursor.getString(cursor.getColumnIndex("id")));
-//			if(project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
-//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.ic_action_event_white));
-//			} else {
-				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
-				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
-//			}
-			
-//			if(view.getTag() == null){
-//				view.setOnClickListener(new OnClickListener(){
-//					@Override
-//					public void onClick(View v) {
-//						Bundle bundle = new Bundle();
-//						bundle.putLong("MODEL_ID", (Long) v.getTag());
-//						openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
-//					}
-//				});
-//			}
-//			view.setTag(cursor.getLong(columnIndex));
-			return true;
-		} else if(view.getId() == R.id.homeListItem_amount){
-			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
-			HyjNumericView textView = (HyjNumericView)view;
-			Project project = event.getProject();
-			String projectId = event.getProjectId();
-			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-				textView.setTextColor(Color.BLACK);
-				((TextView)textView).setText("-");
-				return true;
-			}
-			Double depositBalance = event.getBalance();
-			if(depositBalance == 0){
-				textView.setTextColor(Color.BLACK);
-				textView.setPrefix(project.getCurrencySymbol());
-			} else if(depositBalance < 0){
-				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-				textView.setPrefix("支出"+project.getCurrencySymbol());
-			}else{
-				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-				textView.setPrefix("收入"+project.getCurrencySymbol());
-			}
-			
-			textView.setNumber(Math.abs(depositBalance));
-			return true;
-		} else if(view.getId() == R.id.homeListItem_date){
-			((HyjDateTimeView)view).setTime(cursor.getLong(columnIndex));
-			return true;
-		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText(cursor.getString(columnIndex));
-			return true;
-		} else if(view.getId() == R.id.homeListItem_remark){
-//			if(cursor.getString(columnIndex) == null || "".equals(cursor.getString(columnIndex))){
-//				((TextView)view).setText("无备注");
-//			} else {
-//				((TextView)view).setText(cursor.getString(columnIndex));
-//			}
-			Event event = HyjModel.getModel(Event.class, cursor.getString(columnIndex));
-			
-			long date = cursor.getLong(cursor.getColumnIndex("date"));
-			long startDate = cursor.getLong(cursor.getColumnIndex("startDate"));
-			long endDate = cursor.getLong(cursor.getColumnIndex("endDate")); 
-			long dt = (new Date()).getTime();
-			if(dt >= date && dt < startDate) {
-				((TextView)view).setText("[报名中]" + event.getSignUpCount() + "人");
-			} else if(dt >= startDate && dt < endDate) {
-				((TextView)view).setText("[进行中]" + event.getSignUpCount() + "人");
-			} else if(dt >= endDate) {
-				((TextView)view).setText("[已结束]" + event.getSignUpCount() + "人");
-			}
-			return true;
-		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(Friend.getFriendUserDisplayName(cursor.getString(columnIndex)));
-//			String date = cursor.getString(cursor.getColumnIndex("date"));
-//			String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
-//			String endDate = cursor.getString(cursor.getColumnIndex("endDate")); 
-//			String dt = HyjUtil.formatDateToIOS(new Date());
-//			if(dt.compareTo(date)>=0 && dt.compareTo(startDate)<0) {
-//				((TextView)view).setText("[报名中]");
-//			} else if(dt.compareTo(startDate)>=0 && dt.compareTo(endDate)<0) {
-//				((TextView)view).setText("[进行中]");
-//			} else if(dt.compareTo(endDate)>=0) {
-//				((TextView)view).setText("[已结束]");
-//			}
-			return true;
-		} else if(view.getId() == R.id.homeListItem_owner){
-			EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", cursor.getString(columnIndex), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-			if(em != null){
-				if("UnSignUp".equals(em.getState())){
-					((TextView)view).setText("[未报名]");
-				} else if("SignUp".equals(em.getState())){
-					((TextView)view).setText("[已报名]");
-				} else if("SignIn".equals(em.getState())){
-					((TextView)view).setText("[已签到]");
-				} 
+			Event event = HyjModel.getModel(Event.class, cursor.getString(cursor.getColumnIndex("id")));
+
+			if(view.getId() == R.id.homeListItem_date){
+				HyjDateTimeView dateTimeView = ((HyjDateTimeView)view);
+//				dateTimeView.setDateFormat("ah:mm");
+				dateTimeView.setTime(event.getStartDate());
 			} else {
-				((TextView)view).setText("[未报名]");
+				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_"+columnIndex);
 			}
 			return true;
-		} else {
-			return true;
-		}
 	}
 	
 
