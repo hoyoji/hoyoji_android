@@ -271,36 +271,41 @@ public class EventViewPagerFragment extends HyjUserFragment {
 					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
 				}
 			};
+			JSONObject evt = new JSONObject();
+			evt.put("eventId", event.getId());
 	
-			JSONObject msg = new JSONObject();
-			msg.put("__dataType", "Message");
+//			JSONObject msg = new JSONObject();
+//			msg.put("__dataType", "Message");
+//			
+//			msg.put("toUserId", event.getOwnerUserId());
+//			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			msg.put("type", "Event.Member.SignUp");
+//			msg.put("messageState", "new");
+//			msg.put("messageTitle", "活动报名");
+//			msg.put("date", (new Date()).getTime());
+//			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "报名参加活动: "+ event.getName());
+//			msg.put("messageBoxId", event.getOwnerUser().getMessageBoxId1());
+//			msg.put("ownerUserId", event.getOwnerUserId());
+//	
+//			JSONObject msgData = new JSONObject();
+//			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+//			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
+//			msgData.put("eventId", event.getId());
+//			if(em == null){
+//				msgData.put("eventMemberId", null);
+//			} else {
+//				msgData.put("eventMemberId", em.getId());
+//			}
+//			msg.put("messageData", msgData.toString());
+//			
+//			if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//				msg.put("id", UUID.randomUUID().toString());
+//			}
+	
+//			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[{eventId:'" + event.getId() + "'}]", "eventMemberSignUp");
 			
-			msg.put("toUserId", event.getOwnerUserId());
-			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			msg.put("type", "Event.Member.SignUp");
-			msg.put("messageState", "new");
-			msg.put("messageTitle", "活动报名");
-			msg.put("date", (new Date()).getTime());
-			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "报名参加活动: "+ event.getName());
-			msg.put("messageBoxId", event.getOwnerUser().getMessageBoxId1());
-			msg.put("ownerUserId", event.getOwnerUserId());
-	
-			JSONObject msgData = new JSONObject();
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
-			msgData.put("eventId", event.getId());
-			if(em == null){
-				msgData.put("eventMemberId", null);
-			} else {
-				msgData.put("eventMemberId", em.getId());
-			}
-			msg.put("messageData", msgData.toString());
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberSignUp");
 			
-			if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				msg.put("id", UUID.randomUUID().toString());
-			}
-	
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "eventMemberSignUp");
 			((HyjActivity) this.getActivity()).displayProgressDialog(
 							R.string.eventListFragment_signUp_request,
 							R.string.eventListFragment_signUp_progress_request);
@@ -325,34 +330,38 @@ public class EventViewPagerFragment extends HyjUserFragment {
 					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
 				}
 			};
-	
-			JSONObject msg = new JSONObject();
-			msg.put("__dataType", "Message");
-			msg.put("toUserId", event.getOwnerUserId());
-			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
-			msg.put("type", "Event.Member.SignIn");
-			msg.put("messageState", "new");
-			msg.put("messageTitle", "活动签到");
-			msg.put("date", (new Date()).getTime());
-			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "签到了活动: "+ event.getName());
-			msg.put("messageBoxId", event.getOwnerUser().getMessageBoxId1());
-			msg.put("ownerUserId", event.getOwnerUserId());
-	
-			JSONObject msgData = new JSONObject();
-			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
-			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
-			msgData.put("eventId", event.getId());
-			if(em == null){
-				msgData.put("eventMemberId", null);
-			} else {
-				msgData.put("eventMemberId", em.getId());
-			}
-			msg.put("messageData", msgData.toString());
 			
-			if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-				msg.put("id", UUID.randomUUID().toString());
-			}
-			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + msg.toString() + "]", "eventMemberSignIn");
+			JSONObject evt = new JSONObject();
+			evt.put("eventId", event.getId());
+	
+//			JSONObject msg = new JSONObject();
+//			msg.put("__dataType", "Message");
+//			msg.put("toUserId", event.getOwnerUserId());
+//			msg.put("fromUserId", HyjApplication.getInstance().getCurrentUser().getId());
+//			msg.put("type", "Event.Member.SignIn");
+//			msg.put("messageState", "new");
+//			msg.put("messageTitle", "活动签到");
+//			msg.put("date", (new Date()).getTime());
+//			msg.put("detail", "用户"+ HyjApplication.getInstance().getCurrentUser().getDisplayName() + "签到了活动: "+ event.getName());
+//			msg.put("messageBoxId", event.getOwnerUser().getMessageBoxId1());
+//			msg.put("ownerUserId", event.getOwnerUserId());
+//	
+//			JSONObject msgData = new JSONObject();
+//			msgData.put("fromUserDisplayName", HyjApplication.getInstance().getCurrentUser().getDisplayName());
+//			msgData.put("projectIds", new JSONArray("[" + event.getProjectId()  + "]"));
+//			msgData.put("eventId", event.getId());
+//			if(em == null){
+//				msgData.put("eventMemberId", null);
+//			} else {
+//				msgData.put("eventMemberId", em.getId());
+//			}
+//			msg.put("messageData", msgData.toString());
+//			
+//			if(!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//				msg.put("id", UUID.randomUUID().toString());
+//			}
+//			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[{eventId:\"" + event.getId() + "\"}]", "eventMemberSignIn");
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberSignIn");
 			((HyjActivity) this.getActivity()).displayProgressDialog(
 							R.string.eventListFragment_signIn_request,
 							R.string.eventListFragment_signIn_progress_request);
@@ -387,10 +396,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				}
 
 			ActiveAndroid.setTransactionSuccessful();
-//			getActivity().finish();
 			mBtnSignUpEvent.setVisibility(View.GONE);
-//			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (35*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-			HyjUtil.displayToast("报名成功");
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
