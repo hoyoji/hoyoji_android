@@ -34,6 +34,9 @@ public class Event extends HyjModel {
 	@Column(name = "projectId")
 	private String mProjectId;
 	
+	@Column(name = "financialOwnerUserId")
+	private String mFinancialOwnerUserId;
+	
 	@Column(name = "description")
 	private String mDescription;
 	
@@ -180,6 +183,14 @@ public class Event extends HyjModel {
 		this.mProjectId = mProjectId;
 	}
 	
+	public String getFinancialOwnerUserId() {
+		return mFinancialOwnerUserId;
+	}
+
+	public void setFinancialOwnerUserId(String mFinancialOwnerUserId) {
+		this.mFinancialOwnerUserId = mFinancialOwnerUserId;
+	}
+
 	public String getDescription() {
 		return mDescription;
 	}

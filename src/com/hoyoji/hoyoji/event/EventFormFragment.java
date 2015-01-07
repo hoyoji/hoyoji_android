@@ -39,13 +39,16 @@ import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
+import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
 
 public class EventFormFragment extends HyjUserFormFragment {
 	private final static int GET_PROJECT_ID = 0;
 	private static final int GET_REMARK = 1;
 	private static final int CREATE_NEW_PROJECT_AND_SAVE = 2;
+	private static final int GET_FINANCIALOWNER_ID = 3;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -61,6 +64,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	
 	private boolean cancel = false;
 	
+	private HyjSelectorField mSelectorFieldFinancialOwner = null;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
 	
@@ -145,6 +149,34 @@ public class EventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		mDateTimeFieldEndDate = (HyjDateTimeField) getView().findViewById(R.id.projectEventFormFragment_hyjDateTimeField_endDate);
+		
+		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
+//		mSelectorFieldFinancialOwner.setEnabled(editPermission);
+		if(event.getFinancialOwnerUserId() != null){
+			mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+			mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+		}
+		
+		mSelectorFieldFinancialOwner.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mEventEditor.getModel().get_mId() == null){
+					if(mSelectorFieldFinancialOwner.getModelId() != null){
+						mSelectorFieldFinancialOwner.setModelId(null);
+						mSelectorFieldFinancialOwner.setText(null);
+					} else {
+						mSelectorFieldFinancialOwner.setModelId(HyjApplication.getInstance().getCurrentUser().getId());
+						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(HyjApplication.getInstance().getCurrentUser().getId()));
+					}
+				} else {
+					Bundle bundle = new Bundle();
+					Event event = HyjModel.getModel(Event.class,mEventEditor.getModelCopy().getId());
+					bundle.putLong("MODEL_ID", event.getProject().get_mId());
+					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+				}
+			}
+		}); 
 		
 		if (modelId != -1) {
 			mDateTimeFieldDate.setTime(event.getDate());
@@ -233,6 +265,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				mDateTimeFieldEndDate.setEnabled(false);
 				mDateTimeFieldStartDate.setEnabled(false);
 				mTextFieldName.setEnabled(false);
+				mSelectorFieldFinancialOwner.setEnabled(false);
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				if(this.mOptionsMenu != null){
 					hideSaveAction();
@@ -260,6 +293,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		modelCopy.setEndDate(mDateTimeFieldEndDate.getTime());
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setDescription(mRemarkFieldDescription.getText().toString().trim());
+		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
 		if(cancel == true) {
 			modelCopy.setState("Cancel");
 		} else {
@@ -370,6 +404,34 @@ public class EventFormFragment extends HyjUserFormFragment {
 					}
 				}
 				break;
+			case GET_FINANCIALOWNER_ID:
+		       	 if(resultCode == Activity.RESULT_OK){
+		       		long _id = data.getLongExtra("MODEL_ID", -1);
+		       		if(_id == -1){
+			       		mSelectorFieldFinancialOwner.setText(null);
+			       		mSelectorFieldFinancialOwner.setModelId(null);
+		       		} else {
+			       		ProjectShareAuthorization psa = HyjModel.load(ProjectShareAuthorization.class, _id);
+		
+			       		if(psa == null){
+							HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_member);
+							return;
+			       		} else if(psa.getFriendUserId() == null){
+							HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_cannot_local);
+							return;
+			       		} else if(!psa.getState().equalsIgnoreCase("Accept")){
+							HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_be_accepted_member);
+							return;
+			       		} else if(psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+							HyjUtil.displayToast(R.string.projectFormFragment_editText_error_financialOwner_must_has_all_auth);
+							return;
+			       		}
+			       		
+			       		mSelectorFieldFinancialOwner.setText(psa.getFriendDisplayName());
+			       		mSelectorFieldFinancialOwner.setModelId(psa.getFriendUserId());
+		       		}
+		       	 }
+		       	 break;
 			case CREATE_NEW_PROJECT_AND_SAVE:
 				if (resultCode == Activity.RESULT_OK) {
 					long _id = data.getLongExtra("MODEL_ID", -1);
