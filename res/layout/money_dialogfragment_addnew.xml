@@ -157,7 +157,7 @@
 		            android:layout_margin="0dp"
 		            android:textSize="11sp"
 		            android:background="@android:color/transparent"
-	                android:text="会费退回"/>
+	                android:text="会费收回"/>
             </LinearLayout>        
         </LinearLayout>
             <View 

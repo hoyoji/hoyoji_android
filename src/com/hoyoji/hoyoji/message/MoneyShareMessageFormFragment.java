@@ -254,7 +254,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 						bundle.putLong("MODEL_ID", container.get_mId());
 						openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_edit, bundle);
 					} else {
-						HyjUtil.displayToast("该会费退回记录尚未下载，请先进行同步。");
+						HyjUtil.displayToast("该会费收回记录尚未下载，请先进行同步。");
 					}
 				} else {
 					openActivityWithFragmentForResult(MoneyDepositReturnContainerFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositReturn, bundle, IMPORT_MONEY);
@@ -340,10 +340,10 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 									bundle.putLong("MODEL_ID", container.get_mId());
 									openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_edit, bundle);
 								} else {
-									HyjUtil.displayToast("该会费还款记录尚未下载，请先进行同步。");
+									HyjUtil.displayToast("该会费退款记录尚未下载，请先进行同步。");
 								}
 							} else {
-								HyjUtil.displayToast("该会费还款录尚未下载，请先进行同步。");
+								HyjUtil.displayToast("该会费退款录尚未下载，请先进行同步。");
 							} 
 						} else {
 							openActivityWithFragmentForResult(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyShareMessageFormFragment_button_import_depositPayback, bundle, IMPORT_MONEY);
