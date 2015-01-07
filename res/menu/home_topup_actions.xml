@@ -10,10 +10,10 @@
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositReturn"
-           android:title="会费还款 (支)"
+           android:title="会费退款 (支)"
            hoyoji:showAsAction="never"/>
        <item
            android:id="@+id/homeTopup_action_money_addnew_depositPayback"
-           android:title="会费退回 (收)"
+           android:title="会费收回 (收)"
            hoyoji:showAsAction="never"/>
 </menu>

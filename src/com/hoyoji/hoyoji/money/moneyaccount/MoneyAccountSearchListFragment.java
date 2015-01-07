@@ -509,7 +509,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((HyjDateTimeView)view).setTime(((MoneyDepositReturnContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("会费还款");
+			((TextView)view).setText("会费退款");
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
@@ -881,7 +881,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((HyjDateTimeView)view).setTime(((MoneyDepositPaybackContainer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("会费退回");
+			((TextView)view).setText("会费收回");
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -937,7 +937,7 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
-				((TextView)view).setText("会费退回");
+				((TextView)view).setText("会费收回");
 			} else {
 				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
 			}

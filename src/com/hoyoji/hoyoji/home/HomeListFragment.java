@@ -961,7 +961,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setTime(((MoneyDepositReturnContainer)object).getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("会费还款");
+			((TextView)view).setText("会费退款");
 			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
@@ -1314,7 +1314,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			((HyjDateTimeView)view).setTime(((MoneyDepositPaybackContainer)object).getDate());
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
-			((TextView)view).setText("会费退回");
+			((TextView)view).setText("会费收回");
 			((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
@@ -1370,7 +1370,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_title){
 			if(((MoneyPayback)object).getMoneyDepositPaybackContainerId() != null){
-				((TextView)view).setText("会费退回");
+				((TextView)view).setText("会费收回");
 			}else{
 				((TextView)view).setText("向" + ((MoneyPayback)object).getFriendDisplayName()+"收款");
 			}

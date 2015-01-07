@@ -63,11 +63,11 @@
                         hoyoji:showAsAction="never"/>
                     <item
                         android:id="@+id/mainActivity_action_money_addnew_depositReturn"
-                        android:title="会费还款"
+                        android:title="会费退款"
                         hoyoji:showAsAction="never"/>
                     <item
                         android:id="@+id/mainActivity_action_money_addnew_depositPayback"
-                        android:title="会费退回"
+                        android:title="会费收回"
                         hoyoji:showAsAction="never"/>
                 </menu>
             </item>
