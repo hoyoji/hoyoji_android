@@ -447,17 +447,18 @@ public class MoneyApportionField extends GridView {
 	        	if(item.getApportion().getFriendUserId() != null){
 					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
 					if(em != null) {
-						gridUserSet.add(item.getApportion().getFriendUserId());
 						mImageGridAdapter.add(item);
+						gridUserSet.add(item.getApportion().getFriendUserId());
+						it.remove();
 					}
 				} else {
 					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), item.getApportion().getLocalFriendId()).executeSingle();
 					if(em != null) {
-						gridUserSet.add(item.getApportion().getLocalFriendId());
 						mImageGridAdapter.add(item);
+						gridUserSet.add(item.getApportion().getLocalFriendId());
+						it.remove();
 					}
 				}
-		        it.remove();
 //	        	if(item.getApportion().getFriendUserId() != null){
 //	        		gridUserSet.add(item.getApportion().getFriendUserId());
 //	        	} else {
