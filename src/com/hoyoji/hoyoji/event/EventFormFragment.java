@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -40,6 +42,8 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
+import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.project.ProjectMemberListFragment;
@@ -65,6 +69,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private boolean cancel = false;
 	
 	private HyjSelectorField mSelectorFieldFinancialOwner = null;
+	private TextView mTextViewFinancialOwner;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
 	
@@ -173,10 +178,18 @@ public class EventFormFragment extends HyjUserFormFragment {
 					Event event = HyjModel.getModel(Event.class,mEventEditor.getModelCopy().getId());
 					bundle.putLong("MODEL_ID", event.getProject().get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		}); 
+		
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+			}
+		});
 		
 		if (modelId != -1) {
 			mDateTimeFieldDate.setTime(event.getDate());

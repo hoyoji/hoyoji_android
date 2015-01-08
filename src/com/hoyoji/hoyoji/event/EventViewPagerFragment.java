@@ -246,7 +246,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
 					bundle.putLong("MODEL_ID", modelId);
-					openActivityWithFragment(EventFormFragment.class, R.string.projectFormFragment_title_edit, bundle);
+					openActivityWithFragment(EventFormFragment.class, R.string.projectEventFormFragment_action_edit, bundle);
 				}
 			});
 	}

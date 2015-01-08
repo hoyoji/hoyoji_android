@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="projectEventFormFragment_action_addnew">新增账本活动</string>
+    <string name="projectEventFormFragment_action_addnew">新增活动</string>
     
-    <string name="projectEventFormFragment_action_edit">修改账本活动</string>
+    <string name="projectEventFormFragment_action_edit">修改活动</string>
     
     <string name="projectEventFormFragment_action_select">选择活动</string>
     
