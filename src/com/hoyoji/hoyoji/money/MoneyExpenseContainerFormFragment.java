@@ -845,7 +845,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 										getActivity().finish();
 									} catch (Exception e) {
 										ActiveAndroid.endTransaction();
-										HyjUtil.displayToast(R.string.app_delete_failed);
+										HyjUtil.displayToast(R.string.app_delete_failed + ": " + e.getLocalizedMessage());
 									} 
 								}
 							});
