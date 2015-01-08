@@ -198,8 +198,8 @@ public class ImportFriendListFragment extends HyjUserListFragment implements OnQ
 		String[] selectionArgs = null;
 		
 		if(searchText != null && searchText.length() > 0){
-			selection = "display_name LIKE ?";
-			selectionArgs = new String[]{"%"+searchText+"%"};
+			selection = "display_name LIKE ? OR " + Phone.NUMBER + " LIKE ?";
+			selectionArgs = new String[]{"%"+searchText+"%", "%"+searchText+"%"};
 		}
 		Object loader = new CursorLoader(getActivity(),
 				Phone.CONTENT_URI, null,
