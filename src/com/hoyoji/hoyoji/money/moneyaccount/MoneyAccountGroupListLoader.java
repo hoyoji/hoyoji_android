@@ -78,7 +78,7 @@ public class MoneyAccountGroupListLoader extends
 				double balanceTotal = 0;
 				int count = 0;
 				String query = "SELECT COUNT(*) AS count, SUM(currentBalance * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) as balanceTotal " +
-						"FROM MoneyAccount ma LEFT JOIN Exchange ex ON (ex.localCurrencyId = ? AND ma.currencyId = ex.foreignCurrencyId) OR (ex.foreignCurrencyId = ? AND ma.currencyId = ex.localCurrencyId) " +
+						"FROM MoneyAccount ma LEFT JOIN  (SELECT * FROM Exchange GROUP BY localCurrencyId) ex ON (ex.localCurrencyId = ? AND ma.currencyId = ex.foreignCurrencyId) OR (ex.foreignCurrencyId = ? AND ma.currencyId = ex.localCurrencyId) " +
 						"WHERE accountType = ?";
 				String[] args = null;
 				Cursor cursor = null;
