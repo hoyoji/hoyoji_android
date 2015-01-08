@@ -68,6 +68,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private Button button_setting_nickName;
 	private HyjTextField mEventMemberNickName = null;
 	private ChangeObserver mChangeObserver;
+	
+	private String oldState;
 
 	@Override
 	public Integer useContentView() {
@@ -243,7 +245,6 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			if(!"UnSignUp".equals(eventMember.getState()) && HyjApplication.getInstance().getCurrentUser().getId().equals(eventMember.getFriendUserId())) {
 				button_cancel_signUp.setVisibility(View.VISIBLE);
 			}
-			getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				button_setting_nickName.setVisibility(View.VISIBLE);
@@ -257,6 +258,10 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 					hideSaveAction();
 				}
 			}
+			oldState = mEventMemberEditor.getModel().getState();
+//			else {
+//				getView().findViewById(R.id.button_save).setVisibility(View.VISIBLE);
+//			}
 		}
 		
 
@@ -352,6 +357,33 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	}
 
 	protected void doSave() {
+		mEventMemberEditor.save();
+		
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		if(modelId != -1){
+			if(oldState.equals("UnSignUp") && !mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()+1);
+				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
+				mEventMemberEditor.getModelCopy().getEvent().save();
+			} else if(!oldState.equals("UnSignUp") && mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()-1);
+				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
+				mEventMemberEditor.getModelCopy().getEvent().save();
+			}
+		} else {
+			if(!mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()+1);
+				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
+				mEventMemberEditor.getModelCopy().getEvent().save();
+			}
+		}
+		
+		HyjUtil.displayToast(R.string.app_save_success);
+		getActivity().finish();
+	}
+	
+	protected void doSaveServer() {
 		mEventMemberEditor.save();
 		HyjUtil.displayToast(R.string.app_save_success);
 		getActivity().finish();
@@ -532,7 +564,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		} finally {
 			ActiveAndroid.endTransaction();
 		}
-		doSave();
+		doSaveServer();
 		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 
