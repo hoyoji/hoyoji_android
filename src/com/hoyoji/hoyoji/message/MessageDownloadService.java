@@ -343,7 +343,8 @@ public class MessageDownloadService extends Service {
 					pem.setSyncFromServer(true);
 					pem.save();
 					
-					loadAllEventMembers(msgData.optString("eventId"));
+					loadSharedProjectData(msgData);
+//					loadAllEventMembers(msgData.optString("eventId"));
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.SignUp")) {
 					pem.setState("SignUp");
 					pem.setSyncFromServer(true);
