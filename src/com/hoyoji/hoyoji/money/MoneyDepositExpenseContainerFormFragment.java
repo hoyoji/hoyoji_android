@@ -1029,6 +1029,17 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
      					mSelectorFieldEvent.setModelId(null);
      				} else {
      					Event event = Event.load(Event.class, _id);
+     					
+     					if(event.getFinancialOwnerUserId() != null){
+    						mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+    						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+    					} else if(event.getProject().getFinancialOwnerUserId() != null){
+    						mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+    						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+    					} else {
+    						mSelectorFieldFinancialOwner.setModelId(null);
+    						mSelectorFieldFinancialOwner.setText(null);
+    					}
      					mSelectorFieldEvent.setText(event.getName());
      					mSelectorFieldEvent.setModelId(event.getId());
      				}

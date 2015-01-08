@@ -389,7 +389,7 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 					&& memberToBeDetermined.getToBeDetermined()){
 				openActivityWithFragment(ProjectMemberTBDViewPagerFragment.class, R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
-				openActivityWithFragment(ProjectMemberViewPagerFragment.class, R.string.memberFormFragment_title_edit, bundle);
+				openActivityWithFragment(ProjectMemberViewPagerFragment.class, R.string.memberFormFragment_textView_projectMoney, bundle);
 			}
 		}
     }  

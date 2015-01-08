@@ -436,7 +436,6 @@ public class MoneyApportionField extends GridView {
 			mHiddenApportionItems.add(api);
 			mImageGridAdapter.remove(api);
 		}
-
 		// 把隐藏掉的分摊添加回去
 	    Iterator<ApportionItem<MoneyApportion>> it = mHiddenApportionItems.iterator();
 	    while (it.hasNext()) {
@@ -445,26 +444,28 @@ public class MoneyApportionField extends GridView {
 	        if(item.getProjectId().equals(project.getId())){
 	        	EventMember em = null;
 	        	if(item.getApportion().getFriendUserId() != null){
-					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
-					if(em != null) {
-						mImageGridAdapter.add(item);
-						gridUserSet.add(item.getApportion().getFriendUserId());
+//					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
+//					if(em != null) {
+//						mImageGridAdapter.add(item);
+//						gridUserSet.add(item.getApportion().getFriendUserId());
 						it.remove();
-					}
+//					}
 				} else {
 					em = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", event.getId(), item.getApportion().getLocalFriendId()).executeSingle();
 					if(em != null) {
-						mImageGridAdapter.add(item);
-						gridUserSet.add(item.getApportion().getLocalFriendId());
+						if(em.getToBeDetermined()) {
+							mImageGridAdapter.add(item);
+							gridUserSet.add(item.getApportion().getLocalFriendId());
+						}
 						it.remove();
 					}
 				}
-//	        	if(item.getApportion().getFriendUserId() != null){
-//	        		gridUserSet.add(item.getApportion().getFriendUserId());
-//	        	} else {
-//	        		gridUserSet.add(item.getApportion().getLocalFriendId());
-//	        	}
-//				item.changeProject(project.getId());
+//		        	if(item.getApportion().getFriendUserId() != null){
+//		        		gridUserSet.add(item.getApportion().getFriendUserId());
+//		        	} else {
+//		        		gridUserSet.add(item.getApportion().getLocalFriendId());
+//		        	}
+//					item.changeProject(project.getId());
 	        }
 	    }
 	    
@@ -513,18 +514,22 @@ public class MoneyApportionField extends GridView {
 //				if(toBeDeterminedFriend != null){
 				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND toBeDetermined=1", project.getId()).executeSingle();
 				if(projectShareAuthorization != null){
-					apportion = type.newInstance();
-					apportion.setAmount(0.0);
-					apportion.setMoneyId(mMoneyTransactionId);
-					apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-//					ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", project.getId(), toBeDeterminedFriend.getId()).executeSingle();
-					if(projectShareAuthorization.getSharePercentageType().equals("Average")){
-						apportion.setApportionType("Average");
-					} else {
-						apportion.setApportionType("Share");
+					EventMember em = new Select().from(EventMember.class).where("eventId=? AND toBeDetermined=1", event.getId()).executeSingle();
+					if(em != null) {
+						apportion = type.newInstance();
+						apportion.setAmount(0.0);
+						apportion.setMoneyId(mMoneyTransactionId);
+						apportion.setFriendUserId(em.getFriendUserId());
+						apportion.setLocalFriendId(em.getLocalFriendId());
+	//					ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=?", project.getId(), toBeDeterminedFriend.getId()).executeSingle();
+						if(projectShareAuthorization.getSharePercentageType().equals("Average")){
+							apportion.setApportionType("Average");
+						} else {
+							apportion.setApportionType("Share");
+						}
+						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+						mImageGridAdapter.add(pi);
 					}
-					ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
-					mImageGridAdapter.add(pi);
 				}
 			} catch (InstantiationException e) {
 			} catch (IllegalAccessException e) {

@@ -21,6 +21,8 @@
    
    <string name="memberFormFragment_textView_projectName">账本名称</string>
    
+   <string name="memberFormFragment_textView_projectMoney">账本流水</string>
+   
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title">账务权限</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_self">只允许查看与自己相关的账务</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_add">允许新增账务</string>

@@ -1930,7 +1930,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	     				mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyIncomeApportion.class);
 	    				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 	
-	     				if( event.getProject().getFinancialOwnerUserId() != null){
+	    				if( event.getFinancialOwnerUserId() != null){
+	     					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+	     					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+	     				} else if( event.getProject().getFinancialOwnerUserId() != null){
 	     					mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
 	     					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
 	     				} else {
