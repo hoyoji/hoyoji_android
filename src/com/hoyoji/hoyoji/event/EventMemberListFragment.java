@@ -496,15 +496,19 @@ public class EventMemberListFragment extends HyjUserListFragment {
 //			return true;
 //		} 
 		else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setUnSignUp){
-			setUnSignUpEventMembers();
+			setUnSignUpEventMembers(event);
 			this.exitMultiChoiceMode(getListView());
 			return true;
 		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setSignUp){
-			setSignUpEventMembers();
+			setSignUpEventMembers(event);
+			this.exitMultiChoiceMode(getListView());
+			return true;
+		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setUnSignIn){
+			setUnSignInEventMembers(event);
 			this.exitMultiChoiceMode(getListView());
 			return true;
 		} else if(item.getItemId() == R.id.projectEventMemberListFragment_action_setSignIn){
-			setSignInEventMembers();
+			setSignInEventMembers(event);
 			this.exitMultiChoiceMode(getListView());
 			return true;
 		}
@@ -672,50 +676,102 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		}
 	}
 
-	private void setUnSignUpEventMembers() {
+	private void setUnSignUpEventMembers(Event event) {
 		long[] ids = this.getListView().getCheckedItemIds();
 		if(ids.length == 0){
 			HyjUtil.displayToast("请选择至少一个活动成员");
 			return;
 		}
+		int updateToUnSignUpCount = 0;
 		for(int i=0; i<ids.length; i++){
 			EventMember em = Model.load(EventMember.class, ids[i]);
 			if(em != null){
+				if (!"UnSignUp".equals(em.getState())) {
+					updateToUnSignUpCount ++;
+				}
 				em.setState("UnSignUp");
 				em.save();
 			}
 		}
+		if(updateToUnSignUpCount > 0){
+			event.setSignUpCount(event.getSignUpCount()-updateToUnSignUpCount);
+			event.setSyncFromServer(true);
+			event.save();
+		}
 		
 	}
 	
-	private void setSignUpEventMembers() {
+	private void setSignUpEventMembers(Event event) {
 		long[] ids = this.getListView().getCheckedItemIds();
 		if(ids.length == 0){
 			HyjUtil.displayToast("请选择至少一个活动成员");
 			return;
 		}
+		int updateToSignUpCount = 0;
 		for(int i=0; i<ids.length; i++){
 			EventMember em = Model.load(EventMember.class, ids[i]);
 			if(em != null){
+				if ("UnSignUp".equals(em.getState())) {
+					updateToSignUpCount ++;
+				}
 				em.setState("SignUp");
 				em.save();
 			}
 		}
+		if(updateToSignUpCount > 0){
+			event.setSignUpCount(event.getSignUpCount()+updateToSignUpCount);
+			event.setSyncFromServer(true);
+			event.save();
+		}
 		
 	}
 	
-	private void setSignInEventMembers() {
+	private void setSignInEventMembers(Event event) {
 		long[] ids = this.getListView().getCheckedItemIds();
 		if(ids.length == 0){
 			HyjUtil.displayToast("请选择至少一个活动成员");
 			return;
 		}
+		int updateToSignInCount = 0;
 		for(int i=0; i<ids.length; i++){
 			EventMember em = Model.load(EventMember.class, ids[i]);
 			if(em != null){
+				if ("UnSignUp".equals(em.getState())) {
+					updateToSignInCount ++;
+				}
 				em.setState("SignIn");
 				em.save();
 			}
+		}
+		if(updateToSignInCount > 0){
+			event.setSignUpCount(event.getSignUpCount()+updateToSignInCount);
+			event.setSyncFromServer(true);
+			event.save();
+		}
+		
+	}
+	
+	private void setUnSignInEventMembers(Event event) {
+		long[] ids = this.getListView().getCheckedItemIds();
+		if(ids.length == 0){
+			HyjUtil.displayToast("请选择至少一个活动成员");
+			return;
+		}
+		int updateToUnSignInCount = 0;
+		for(int i=0; i<ids.length; i++){
+			EventMember em = Model.load(EventMember.class, ids[i]);
+			if(em != null){
+				if ("UnSignUp".equals(em.getState())) {
+					updateToUnSignInCount ++;
+				}
+				em.setState("UnSignIn");
+				em.save();
+			}
+		}
+		if(updateToUnSignInCount > 0){
+			event.setSignUpCount(event.getSignUpCount()+updateToUnSignInCount);
+			event.setSyncFromServer(true);
+			event.save();
 		}
 		
 	}

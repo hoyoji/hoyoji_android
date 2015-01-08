@@ -18,6 +18,11 @@
 		        android:icon="@drawable/ic_action_add_person"
 		        hoyoji:showAsAction="always"/>
             <item
+		        android:id="@+id/projectEventMemberListFragment_action_setUnSignIn"
+		        android:title="设置为未签到"
+		        android:icon="@drawable/ic_action_add_person"
+		        hoyoji:showAsAction="always"/>
+            <item
 		        android:id="@+id/projectEventMemberListFragment_action_setSignIn"
 		        android:title="设置为已签到"
 		        android:icon="@drawable/ic_action_add_person"
