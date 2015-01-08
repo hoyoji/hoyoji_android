@@ -1526,13 +1526,16 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 //						mApportionFieldApportions.changeEvent(event.getProject(), event, MoneyDepositReturnApportion.class);
 //						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		
-						if( event.getProject().getFinancialOwnerUserId() != null){
-							mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
-							mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
-						} else {
-							mSelectorFieldFinancialOwner.setModelId(null);
-							mSelectorFieldFinancialOwner.setText(null);
-						}
+						if(event.getFinancialOwnerUserId() != null){
+    						mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+    						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+    					} else if(event.getProject().getFinancialOwnerUserId() != null){
+    						mSelectorFieldFinancialOwner.setModelId(event.getProject().getFinancialOwnerUserId());
+    						mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getProject().getFinancialOwnerUserId()));
+    					} else {
+    						mSelectorFieldFinancialOwner.setModelId(null);
+    						mSelectorFieldFinancialOwner.setText(null);
+    					}
 							
 						mSelectorFieldEvent.setText(event.getName());
 						mSelectorFieldEvent.setModelId(event.getId());
