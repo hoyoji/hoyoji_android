@@ -42,7 +42,7 @@ import com.hoyoji.android.hyjframework.view.HyjCalendarGrid;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.event.EventFormFragment;
 import com.hoyoji.hoyoji.event.EventListFragment;
 import com.hoyoji.hoyoji.event.EventViewPagerFragment;

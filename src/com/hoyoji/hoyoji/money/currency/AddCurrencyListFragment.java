@@ -26,7 +26,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Currency;
 
 public class AddCurrencyListFragment extends HyjListFragment implements OnQueryTextListener {

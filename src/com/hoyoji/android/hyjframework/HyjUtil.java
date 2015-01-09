@@ -63,7 +63,7 @@ import com.hoyoji.android.hyjframework.HanziToPinyin.Token;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjNumericField;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.RegisterActivity;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.Exchange;

@@ -1,6 +1,6 @@
 package com.hoyoji.hoyoji.setting;
 
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

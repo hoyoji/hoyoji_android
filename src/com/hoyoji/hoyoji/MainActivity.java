@@ -74,7 +74,7 @@ import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragm
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushManager;
 

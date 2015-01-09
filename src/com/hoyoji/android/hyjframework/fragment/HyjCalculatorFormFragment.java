@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public class HyjCalculatorFormFragment extends HyjUserFormFragment implements OnClickListener{
 

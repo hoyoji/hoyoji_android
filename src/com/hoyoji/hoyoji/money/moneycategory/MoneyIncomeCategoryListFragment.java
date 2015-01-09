@@ -32,7 +32,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListen
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjListView;
 import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.MoneyExpenseCategory;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
 

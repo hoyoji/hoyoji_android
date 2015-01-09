@@ -32,7 +32,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public class UserFormFragment extends HyjUserFormFragment {
 

@@ -9,7 +9,7 @@ import com.hoyoji.android.hyjframework.view.HyjListView;
 import com.hoyoji.android.hyjframework.view.HyjListView.OnOverScrollByListener;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;

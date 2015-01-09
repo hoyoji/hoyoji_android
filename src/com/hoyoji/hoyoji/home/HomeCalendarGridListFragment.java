@@ -53,7 +53,7 @@ import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.friend.FriendListFragment;
 import com.hoyoji.hoyoji.message.EventMessageFormFragment;
 import com.hoyoji.hoyoji.message.FriendMessageFormFragment;

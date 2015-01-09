@@ -30,7 +30,7 @@ import android.util.Base64;
 
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.User;
 
 public class HyjServer {

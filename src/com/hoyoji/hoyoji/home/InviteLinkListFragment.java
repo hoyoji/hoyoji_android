@@ -27,7 +27,7 @@ import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.server.HyjHttpPostJSONLoader;
 import com.hoyoji.android.hyjframework.server.HyjJSONListAdapter;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeView;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public class InviteLinkListFragment extends HyjUserListFragment implements OnQueryTextListener{
 	private final static int INVITELINK_CHANGESTATE = 1;

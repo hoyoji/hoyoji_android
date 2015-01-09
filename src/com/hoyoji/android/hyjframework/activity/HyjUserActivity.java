@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.message.PushMessageReceiver;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.tencent.android.tpush.XGPushActivity;
 import com.tencent.android.tpush.XGPushManager;
 

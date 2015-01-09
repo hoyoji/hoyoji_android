@@ -44,7 +44,7 @@ import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.models.WXLogin;
 import com.hoyoji.hoyoji.setting.BindEmailFragment;
 import com.hoyoji.hoyoji.setting.SystemSettingFormFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;

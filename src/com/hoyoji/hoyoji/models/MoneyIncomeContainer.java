@@ -15,7 +15,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 @Table(name = "MoneyIncomeContainer", id = BaseColumns._ID)
 public class MoneyIncomeContainer extends HyjModel {

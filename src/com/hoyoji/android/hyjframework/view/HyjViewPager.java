@@ -1,7 +1,7 @@
 package com.hoyoji.android.hyjframework.view;
 
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 //import com.nineoldandroids.animation.*;
 //import com.nineoldandroids.animation.Animator.AnimatorListener;

@@ -14,7 +14,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListen
 import com.hoyoji.android.hyjframework.fragment.HyjDateTimePickerDialogFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjDialogFragment;
 import com.hoyoji.hoyoji.LoginActivity;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.friend.FriendCategoryListFragment;
 import com.hoyoji.hoyoji.friend.FriendFormFragment;
 

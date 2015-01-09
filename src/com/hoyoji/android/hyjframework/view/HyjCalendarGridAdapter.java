@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.activeandroid.util.Log;
 import com.hoyoji.android.hyjframework.HyjApplication;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;

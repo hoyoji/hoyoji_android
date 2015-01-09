@@ -22,7 +22,7 @@ import android.view.animation.AnimationUtils;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.project.SubProjectListFragment.OnSelectSubProjectsListener;
 
 public class ProjectListFragment extends HyjUserFragment implements OnSelectSubProjectsListener, OnPageChangeListener{

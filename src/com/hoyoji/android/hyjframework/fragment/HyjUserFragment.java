@@ -3,7 +3,7 @@ package com.hoyoji.android.hyjframework.fragment;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.hoyoji.LoginActivity;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.content.Intent;
 import android.os.Bundle;

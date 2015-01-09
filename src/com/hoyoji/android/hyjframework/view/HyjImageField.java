@@ -9,7 +9,7 @@ import java.util.List;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjImagePreviewFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.money.currency.ExchangeFormFragment;
 

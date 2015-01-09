@@ -3,7 +3,7 @@ package com.hoyoji.android.hyjframework.view;
 import java.util.ArrayList;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.jauker.widget.BadgeView;
 
 import android.annotation.TargetApi;

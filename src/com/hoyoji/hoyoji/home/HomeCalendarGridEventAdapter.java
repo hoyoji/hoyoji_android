@@ -3,7 +3,7 @@ package com.hoyoji.hoyoji.home;
 import java.util.Map;
 
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -31,7 +31,7 @@ import android.os.Build;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public class HyjWebServiceExchangeRateAsyncTask extends HyjAsyncTask {
 

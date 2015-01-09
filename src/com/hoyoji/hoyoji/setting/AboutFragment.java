@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public class AboutFragment extends HyjFragment {
 

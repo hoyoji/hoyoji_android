@@ -41,7 +41,7 @@ import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.WBLogin;
 import com.hoyoji.hoyoji.models.WXLogin;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.tencent.mm.sdk.openapi.BaseReq;
 import com.tencent.mm.sdk.openapi.BaseResp;
 import com.tencent.mm.sdk.openapi.SendAuth;

@@ -1,6 +1,6 @@
 package com.hoyoji.android.hyjframework;
 
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.content.Context;
 import android.database.Cursor;

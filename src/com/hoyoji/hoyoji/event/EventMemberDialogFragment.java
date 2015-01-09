@@ -13,7 +13,7 @@ import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.hoyoji.AppConstants;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.project.InviteMemberFormFragment;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;

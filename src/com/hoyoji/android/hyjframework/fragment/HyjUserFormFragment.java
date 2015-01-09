@@ -3,7 +3,7 @@ package com.hoyoji.android.hyjframework.fragment;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 public abstract class HyjUserFormFragment extends HyjUserFragment {
 	private View mSaveButton = null;

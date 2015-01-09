@@ -8,7 +8,7 @@ import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjBlankUserActivity;
 import com.hoyoji.android.hyjframework.view.HyjExpandableListView;
 import com.hoyoji.android.hyjframework.view.HyjExpandableListView.OnOverScrollByListener;
-import com.hoyoji.hoyoji_android.R;
+import com.hoyoji.aaevent_android.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
