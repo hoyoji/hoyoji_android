@@ -27,7 +27,6 @@
 	                android:text="支出"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_expense"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -50,7 +49,6 @@
 	                android:text="收入"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_income"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -85,7 +83,6 @@
 	                android:text="预收"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_deposit_income"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -108,7 +105,6 @@
 	                android:text="预缴"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_deposit_expense"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -131,7 +127,6 @@
 	                android:text="退款"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_deposit_return"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -155,7 +150,6 @@
 	                android:text="退回"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_deposit_payback"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -190,7 +184,6 @@
 	                android:text="借入"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_borrow"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -213,7 +206,6 @@
 	                android:text="借出"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_lend"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -236,7 +228,6 @@
 	                android:text="还款"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_return"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -259,7 +250,6 @@
 	                android:text="收回"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_payback"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -282,7 +272,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
+				<LinearLayout
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:gravity="center_horizontal"
+            	android:orientation="vertical" >
+            </LinearLayout>
             <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
@@ -296,7 +292,6 @@
 	                android:text="转账"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_transfer"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -319,7 +314,6 @@
 	                android:text="充值"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_topup"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
@@ -343,7 +337,6 @@
 	                android:text="快记"
 		            android:textSize="14sp"
 		            android:background="@drawable/money_template"
-	                android:src="@drawable/button_circle_20"
 	                />
 	            <TextView 
 		            android:layout_width="wrap_content"
