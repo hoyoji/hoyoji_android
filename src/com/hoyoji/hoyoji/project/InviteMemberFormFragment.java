@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
@@ -42,7 +43,7 @@ import com.tencent.tauth.UiError;
 
 public class InviteMemberFormFragment extends HyjUserFragment {
 	private HyjTextField sendInviteTitle =null;
-	private HyjRemarkField sendInviteDetail =null;
+	private EditText sendInviteDetail =null;
 	
 	private CheckBox mCheckBoxShareAuthExpenseSelf = null;
 	private CheckBox mCheckBoxShareAuthExpenseAdd = null;
@@ -75,7 +76,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		
 		sendInviteTitle = (HyjTextField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_title);
 		sendInviteTitle.setText("邀请加入账本");
-		sendInviteDetail = (HyjRemarkField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
+		sendInviteDetail = (EditText) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
 		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
 		
 		mCheckBoxShareAuthExpenseSelf = (CheckBox)getView().findViewById(R.id.inviteMemberFormFragment_checkBox_shareAuthorization_expense_self);
@@ -181,7 +182,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
 		msg.title = sendInviteTitle.getText();
-		msg.description = sendInviteDetail.getText();
+		msg.description = sendInviteDetail.getText() + "";
 		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
 		
@@ -198,7 +199,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		final Bundle params = new Bundle();
 	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
 	    params.putString(QQShare.SHARE_TO_QQ_TITLE, sendInviteTitle.getText());
-	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  sendInviteDetail.getText());
+	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  sendInviteDetail.getText() + "");
 	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);
 	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
 	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
