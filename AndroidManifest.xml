@@ -111,7 +111,7 @@
         
         <provider
             android:name="com.activeandroid.content.ContentProvider"
-            android:authorities="com.hoyoji.hoyoji_android"
+            android:authorities="com.hoyoji.aaevent_android"
             android:exported="false"
             android:grantUriPermissions="true"
             android:label="HoYoJiContentProvider" />
