@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.SearchView;
@@ -60,7 +59,7 @@ public class InviteLinkListFragment extends HyjUserListFragment implements OnQue
 			magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
 		}
 
-		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//		this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
 //		onQueryLinkList();
 	}
@@ -222,10 +221,16 @@ public class InviteLinkListFragment extends HyjUserListFragment implements OnQue
 	public boolean setViewValue(View view, Object json, String name) {
 		JSONObject jsonObject = (JSONObject)json;
 		if (view.getId() == R.id.inviteFriendLinkListItem_state) {
-			((TextView) view).setText(jsonObject.optString(name));
+			if ("Open".equals(jsonObject.optString(name))) {
+				((TextView) view).setText("打开");
+			} else if ("Close".equals(jsonObject.optString(name))) {
+				((TextView) view).setText("关闭");
+			} else {
+				((TextView) view).setText("");
+			}
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_date) {
-			((HyjDateTimeView) view).setText(jsonObject.optString(name));
+			((HyjDateTimeView) view).setTime(jsonObject.optLong(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_type) {
 			((TextView) view).setText(jsonObject.optString(name));

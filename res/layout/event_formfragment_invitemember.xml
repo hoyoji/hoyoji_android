@@ -29,13 +29,20 @@
             android:layout_marginTop="5dip"
             android:background="@drawable/line_divider" />
         
-      <com.hoyoji.android.hyjframework.view.HyjRemarkField
+      <!-- <com.hoyoji.android.hyjframework.view.HyjRemarkField
           android:id="@+id/inviteMemberMessageFormFragment_editText_detail"
           hyj:style="no_label"
           android:layout_width="fill_parent"
           android:layout_height="43dp"
           hyj:hintText="@string/inviteMemberMessageFormFragment_editText_hint_detail"
-          hyj:labelText="@string/inviteMemberMessageFormFragment_textView_detail" />
+          hyj:labelText="@string/inviteMemberMessageFormFragment_textView_detail" /> -->
+      
+      <EditText
+          android:id="@+id/inviteMemberMessageFormFragment_editText_detail"
+          android:layout_width="fill_parent"
+          android:layout_height="43dp"
+          android:background="@null"
+          />
         
         <View
             android:id="@id/field_separator"

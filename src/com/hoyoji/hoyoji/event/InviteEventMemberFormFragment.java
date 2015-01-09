@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
@@ -37,7 +39,7 @@ import com.tencent.tauth.UiError;
 
 public class InviteEventMemberFormFragment extends HyjUserFragment {
 	private HyjTextField sendInviteTitle =null;
-	private HyjRemarkField sendInviteDetail =null;
+	private EditText sendInviteDetail =null;
 	private HyjTextField mVerificationCode =null;
 
 	private Button mButtonSendInvite = null;
@@ -66,7 +68,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		
 		sendInviteTitle = (HyjTextField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_title);
 		sendInviteTitle.setText("邀请参加活动");
-		sendInviteDetail = (HyjRemarkField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
+		sendInviteDetail = (EditText) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
 		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event.getName());
 		
 		mVerificationCode = (HyjTextField) getView().findViewById(R.id.inviteEventMemberFormFragment_hyjTextField_verificationCode);
@@ -103,7 +105,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到";
 		}
 		final String emTitleSent = sendInviteTitle.getText();
-		final String emDescriptionSent = sendInviteDetail.getText();
+		final String emDescriptionSent = sendInviteDetail.getText()+"";
 		
 		JSONObject inviteFriendObject = new JSONObject();
 		final String id = UUID.randomUUID().toString();

@@ -63,7 +63,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private RadioButton signInRadioButton = null;
 	private ProjectShareAuthorization jsonPSA = null;
 	
-	private Button button_cancel_signUp;
+//	private Button button_cancel_signUp;
 	
 	private Button button_setting_nickName;
 	private HyjTextField mEventMemberNickName = null;
@@ -216,13 +216,13 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 //			signUpRadioButton.setEnabled(false);
 //			signInRadioButton.setEnabled(false);
 //		}
-		button_cancel_signUp = (Button) getView().findViewById(R.id.button_cancel_signUp);
-		button_cancel_signUp.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				cancelSignUp();
-			}
-		});	
+//		button_cancel_signUp = (Button) getView().findViewById(R.id.button_cancel_signUp);
+//		button_cancel_signUp.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				cancelSignUp();
+//			}
+//		});	
 		
 		mEventMemberNickName = (HyjTextField) getView().findViewById(R.id.projectEventMemberFormFragment_hyjTextField_nickName);
 		mEventMemberNickName.setText(eventMember.getNickName());
@@ -242,9 +242,9 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			
 			button_setting_nickName.setVisibility(View.GONE);
 		}else{
-			if(!"UnSignUp".equals(eventMember.getState()) && HyjApplication.getInstance().getCurrentUser().getId().equals(eventMember.getFriendUserId())) {
-				button_cancel_signUp.setVisibility(View.VISIBLE);
-			}
+//			if(!"UnSignUp".equals(eventMember.getState()) && HyjApplication.getInstance().getCurrentUser().getId().equals(eventMember.getFriendUserId())) {
+//				button_cancel_signUp.setVisibility(View.VISIBLE);
+//			}
 			if(!mEventMemberEditor.getModel().getEvent().getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				button_setting_nickName.setVisibility(View.VISIBLE);
@@ -568,58 +568,58 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
 	}
 
-	protected void cancelSignUp() {
-		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-//				loadProjectProjectShareAuthorizations(object);
-				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_eventMember_cancel_success);
-				loadEventAndMembers(object);
-//				doSave();
-			}
-
-			@Override
-			public void errorCallback(Object object) {
-				JSONObject json = (JSONObject) object;
-				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
-				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
-			}
-		};
-		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventMemberEditor.getModelCopy().toJSON() +"]", "eventMemberUnSignUp");
-		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.projectEventMemberFormFragment_eventMember_cancel,R.string.projectEventMemberFormFragment_eventMember_canceling);
-	}
+//	protected void cancelSignUp() {
+//		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+//			@Override
+//			public void finishCallback(Object object) {
+////				loadProjectProjectShareAuthorizations(object);
+//				HyjUtil.displayToast(R.string.projectEventMemberFormFragment_eventMember_cancel_success);
+//				loadEventAndMembers(object);
+////				doSave();
+//			}
+//
+//			@Override
+//			public void errorCallback(Object object) {
+//				JSONObject json = (JSONObject) object;
+//				HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+//				((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+//			}
+//		};
+//		HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ mEventMemberEditor.getModelCopy().toJSON() +"]", "eventMemberUnSignUp");
+//		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.projectEventMemberFormFragment_eventMember_cancel,R.string.projectEventMemberFormFragment_eventMember_canceling);
+//	}
 	
-	protected void loadEventAndMembers(Object object) {
-		try {
-			JSONArray jsonObjects = (JSONArray) object;
-			ActiveAndroid.beginTransaction();
-				for (int j = 0; j < jsonObjects.length(); j++) {
-					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
-						String id = jsonObjects.optJSONObject(j).optString("id");
-						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
-						if(newEventMember == null){
-							newEventMember = new EventMember();
-						}
-						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
-						newEventMember.save();
-					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
-						String id = jsonObjects.optJSONObject(j).optString("id");
-						Event newEvent = HyjModel.getModel(Event.class, id);
-						if(newEvent == null){
-							newEvent = new Event();
-						}
-						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
-						newEvent.save();
-					}
-				}
-
-			ActiveAndroid.setTransactionSuccessful();
-		} finally {
-			ActiveAndroid.endTransaction();
-		}
-		getActivity().finish();
-		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
-	}
+//	protected void loadEventAndMembers(Object object) {
+//		try {
+//			JSONArray jsonObjects = (JSONArray) object;
+//			ActiveAndroid.beginTransaction();
+//				for (int j = 0; j < jsonObjects.length(); j++) {
+//					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
+//						String id = jsonObjects.optJSONObject(j).optString("id");
+//						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
+//						if(newEventMember == null){
+//							newEventMember = new EventMember();
+//						}
+//						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
+//						newEventMember.save();
+//					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+//						String id = jsonObjects.optJSONObject(j).optString("id");
+//						Event newEvent = HyjModel.getModel(Event.class, id);
+//						if(newEvent == null){
+//							newEvent = new Event();
+//						}
+//						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
+//						newEvent.save();
+//					}
+//				}
+//
+//			ActiveAndroid.setTransactionSuccessful();
+//		} finally {
+//			ActiveAndroid.endTransaction();
+//		}
+//		getActivity().finish();
+//		((HyjActivity) EventMemberFormFragment.this.getActivity()).dismissProgressDialog();
+//	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -70,6 +71,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 	
 	private HyjSelectorField mSelectorFieldFinancialOwner = null;
 	private TextView mTextViewFinancialOwner;
+	
+	private Button button_cancel_signUp;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
 	
@@ -191,6 +194,14 @@ public class EventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		button_cancel_signUp = (Button) getView().findViewById(R.id.button_cancel_signUp);
+		button_cancel_signUp.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				cancelSignUp();
+			}
+		});	
+		
 		if (modelId != -1) {
 			mDateTimeFieldDate.setTime(event.getDate());
 			mDateTimeFieldStartDate.setTime(event.getStartDate());
@@ -258,6 +269,10 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		
 		if(modelId != -1){
+			EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(eventMember != null || !"UnSignUp".equals(eventMember.getState())){
+				button_cancel_signUp.setVisibility(View.VISIBLE);
+			}
 			if("Cancel".equals(event.getState())){
 				cancel = true;
 			}
@@ -461,7 +476,65 @@ public class EventFormFragment extends HyjUserFormFragment {
 		}
 	}
 	
+	protected void cancelSignUp() {
+		try {
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+	//				loadProjectProjectShareAuthorizations(object);
+					HyjUtil.displayToast(R.string.projectEventMemberFormFragment_eventMember_cancel_success);
+					loadEventAndMembers(object);
+	//				doSave();
+				}
 	
+				@Override
+				public void errorCallback(Object object) {
+					JSONObject json = (JSONObject) object;
+					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+					((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
+				}
+			};
+			JSONObject evt = new JSONObject();
+			evt.put("eventId", mEventEditor.getModelCopy().getId());
+			
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks, "["+ evt.toString() +"]", "eventMemberUnSignUp");
+			((HyjActivity) EventFormFragment.this.getActivity()).displayProgressDialog(R.string.projectEventMemberFormFragment_eventMember_cancel,R.string.projectEventMemberFormFragment_eventMember_canceling);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}}
+	
+	protected void loadEventAndMembers(Object object) {
+		try {
+			JSONArray jsonObjects = (JSONArray) object;
+			ActiveAndroid.beginTransaction();
+				for (int j = 0; j < jsonObjects.length(); j++) {
+					if (jsonObjects.optJSONObject(j).optString("__dataType").equals("EventMember")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						EventMember newEventMember = HyjModel.getModel(EventMember.class, id);
+						if(newEventMember == null){
+							newEventMember = new EventMember();
+						}
+						newEventMember.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEventMember.save();
+					} else if (jsonObjects.optJSONObject(j).optString("__dataType").equals("Event")) {
+						String id = jsonObjects.optJSONObject(j).optString("id");
+						Event newEvent = HyjModel.getModel(Event.class, id);
+						if(newEvent == null){
+							newEvent = new Event();
+						}
+						newEvent.loadFromJSON(jsonObjects.optJSONObject(j), true);
+						newEvent.save();
+					}
+				}
+
+			ActiveAndroid.setTransactionSuccessful();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+		getActivity().finish();
+		((HyjActivity) EventFormFragment.this.getActivity()).dismissProgressDialog();
+	}
 	
 	protected void cancelEvent() {
 		HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
