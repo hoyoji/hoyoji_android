@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji_android.wxapi;
+package com.hoyoji.aaevent_android.wxapi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
