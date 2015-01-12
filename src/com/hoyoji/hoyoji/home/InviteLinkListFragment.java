@@ -230,10 +230,19 @@ public class InviteLinkListFragment extends HyjUserListFragment implements OnQue
 			}
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_date) {
-			((HyjDateTimeView) view).setTime(jsonObject.optLong(name));
+//			((HyjDateTimeView) view).setTime(jsonObject.optLong(name));
+			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
+			dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+			dateTimeView.setTime(jsonObject.optLong(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_type) {
-			((TextView) view).setText(jsonObject.optString(name));
+			if("EventMember".equals(jsonObject.optString(name))) {
+				((TextView) view).setText("邀请活动成员");
+			} else if("ProjectShare".equals(jsonObject.optString(name))) {
+				((TextView) view).setText("邀请共享好友");
+			} else if("ProjectShare".equals(jsonObject.optString(name))) {
+				((TextView) view).setText("邀请好友");
+			}
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_description) {
 			((TextView) view).setText(jsonObject.optString(name));

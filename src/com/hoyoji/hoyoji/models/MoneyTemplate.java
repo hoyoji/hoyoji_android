@@ -24,6 +24,9 @@ public class MoneyTemplate extends HyjModel {
 
 	@Column(name = "data")
 	private String mData;
+	
+	@Column(name = "apportionString")
+	private String mApportionString;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -91,8 +94,16 @@ public class MoneyTemplate extends HyjModel {
 	public void setData(String mData) {
 		this.mData = mData;
 	}
-
 	
+	public String getApportionString() {
+		return mApportionString;
+	}
+
+	public void setApportionString(String mApportionString) {
+		this.mApportionString = mApportionString;
+	}
+
+
 	@Override
 	public void save(){
 		if(this.getOwnerUserId() == null){
