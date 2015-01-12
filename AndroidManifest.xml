@@ -200,7 +200,7 @@
             android:exported="true" >
             <intent-filter>
                 <!-- 【必须】 请修改为当前APP包名.PUSH_ACTION-->
-                <action android:name="com.hoyoji.aaevent.PUSH_ACTION" />
+                <action android:name="com.hoyoji.aaevent_android.PUSH_ACTION" />
             </intent-filter>
         </service>
 
