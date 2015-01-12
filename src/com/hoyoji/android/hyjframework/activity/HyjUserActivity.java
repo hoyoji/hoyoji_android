@@ -15,6 +15,7 @@ import com.hoyoji.hoyoji.LoginActivity;
 import com.hoyoji.hoyoji.message.PushMessageReceiver;
 import com.hoyoji.aaevent_android.R;
 import com.tencent.android.tpush.XGPushActivity;
+import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
 public abstract class HyjUserActivity extends HyjActivity {
@@ -32,11 +33,12 @@ public abstract class HyjUserActivity extends HyjActivity {
 		}
 		
 		if(HyjApplication.getInstance().isLoggedIn()) {
-			// 2.30及以上版本
-			enableComponentIfNeeded(getApplicationContext(), XGPushActivity.class.getName());
-			// CustomPushReceiver改为自己继承XGPushBaseReceiver的类，若有的话
-			enableComponentIfNeeded(getApplicationContext(), PushMessageReceiver.class.getName());
-	
+//			// 2.30及以上版本
+//			enableComponentIfNeeded(getApplicationContext(), XGPushActivity.class.getName());
+//			// CustomPushReceiver改为自己继承XGPushBaseReceiver的类，若有的话
+//			enableComponentIfNeeded(getApplicationContext(), PushMessageReceiver.class.getName());
+
+			XGPushConfig.enableDebug(this, true);
 			XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 			super.onStart();
 		} else {
