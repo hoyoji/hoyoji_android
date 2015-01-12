@@ -218,11 +218,11 @@
         <!-- 【必须】 请修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_ID"
-            android:value="2100035022" />
+            android:value="2100078435" />
         <!-- 【必须】 请修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_KEY"
-            android:value="ATF64E86X4KP" />
+            android:value="A5461V6TBPBJ" />
         
     </application>
     
