@@ -1,20 +1,10 @@
 package com.hoyoji.android.hyjframework.activity;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.hoyoji.LoginActivity;
-import com.hoyoji.hoyoji.message.PushMessageReceiver;
 import com.hoyoji.aaevent_android.R;
-import com.tencent.android.tpush.XGPushActivity;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -67,20 +57,20 @@ public abstract class HyjUserActivity extends HyjActivity {
 		mIsFirstTimeStart = false;
 	}
 	
-	// 启用被禁用组件方法
-	private static void enableComponentIfNeeded(Context context,
-			String componentName) {
-	 PackageManager pmManager = context.getPackageManager();
-	 if (pmManager != null) {
-	  ComponentName cnComponentName = new ComponentName(
-	  		context.getPackageName(), componentName);
-	   int status = pmManager
-	   		.getComponentEnabledSetting(cnComponentName);
-	   if (status != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-	   	pmManager.setComponentEnabledSetting(cnComponentName,
-	   			PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-	   			PackageManager.DONT_KILL_APP);
-	   }
-	  }
-	}
+//	// 启用被禁用组件方法
+//	private static void enableComponentIfNeeded(Context context,
+//			String componentName) {
+//	 PackageManager pmManager = context.getPackageManager();
+//	 if (pmManager != null) {
+//	  ComponentName cnComponentName = new ComponentName(
+//	  		context.getPackageName(), componentName);
+//	   int status = pmManager
+//	   		.getComponentEnabledSetting(cnComponentName);
+//	   if (status != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+//	   	pmManager.setComponentEnabledSetting(cnComponentName,
+//	   			PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//	   			PackageManager.DONT_KILL_APP);
+//	   }
+//	  }
+//	}
 }
