@@ -201,7 +201,9 @@ public class EventListFragment extends HyjUserListFragment {
 			Double depositBalance = event.getBalance();
 			if(depositBalance == 0){
 				textView.setTextColor(Color.BLACK);
-				textView.setPrefix(project.getCurrencySymbol());
+				if(project != null){
+					textView.setPrefix(project.getCurrencySymbol());
+				}
 			} else if(depositBalance < 0){
 				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				textView.setPrefix("支出"+project.getCurrencySymbol());
