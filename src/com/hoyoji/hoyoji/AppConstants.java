@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
 
 //    public static class ShowMsgActivity {
-//        public static final String STitle = "showmsg_title";
+//        public static final String STitle = "showmsg_	title";
 //        public static final String SMessage = "showmsg_message";
 //        public static final String BAThumbData = "showmsg_thumb_data";   
 //    }
