@@ -319,7 +319,12 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
 		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
+			if (event != null) {
+				if(event.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+				}
+			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}
@@ -347,7 +352,10 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				Bundle bundle = new Bundle();
+				bundle.putString("FINANCIAL_TYPE", "MoneyDepositPayback");
+				
+				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
 			}
 		});
 		

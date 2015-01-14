@@ -425,6 +425,11 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			if(moneyTemplateId != -1){
 				mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
+			} else if (event != null) {
+				if(event.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+				}
 			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
@@ -453,7 +458,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				Bundle bundle = new Bundle();
+				bundle.putString("FINANCIAL_TYPE", "MoneyIncome");
+				
+				MoneyIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
 			}
 		});
 		
@@ -692,7 +700,26 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyIncomeApportion>();
-			if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
+			if(moneyIncomeContainer.getEvent() != null &&  !moneyIncomeContainer.getIsImported()){
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") || !projectShareAuthorizations.get(i).getToBeDetermined()){
+						continue;
+					} else if(projectShareAuthorizations.get(i).getToBeDetermined()) {
+						MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+						apportion.setAmount(moneyIncomeContainer.getAmount0());
+						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+						apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
+						if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+							apportion.setApportionType("Average");
+						} else {
+							apportion.setApportionType("Share");
+						}
+						moneyApportions.add(apportion);
+					}
+				}
+			} else if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
