@@ -125,7 +125,6 @@ public class EventViewPagerFragment extends HyjUserFragment {
 				mViewPager.setCurrentItem(tag);
 			}
 		});
-		mViewPager.setCurrentItem(1);
 		
 		mBtnSignUpEvent = (Button)getView().findViewById(R.id.eventviewpager_signup_event);
 		setupSignUp();

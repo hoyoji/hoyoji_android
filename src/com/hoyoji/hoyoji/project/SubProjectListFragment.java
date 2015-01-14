@@ -41,6 +41,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjNumericView;
 import com.hoyoji.aaevent_android.R;
@@ -48,6 +49,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
+import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
@@ -191,12 +193,18 @@ public class SubProjectListFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
     		}
 		});
-		getView().findViewById(R.id.projectListFragment_action_money_template).setOnClickListener(new OnClickListener(){
+		getView().findViewById(R.id.homeListFragment_event_action_money_topup).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
-    		}
-		});
+				((HyjActivity)getActivity()).openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
+			}
+    	});	
+//		getView().findViewById(R.id.projectListFragment_action_money_template).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
+//    		}
+//		});
 //		
 //		if (mChangeObserver == null) {
 //			mChangeObserver = new ChangeObserver();

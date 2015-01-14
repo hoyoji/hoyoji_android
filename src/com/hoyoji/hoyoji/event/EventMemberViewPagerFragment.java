@@ -72,7 +72,7 @@ public class EventMemberViewPagerFragment extends HyjUserFragment {
 		{
 			@Override
 			public void onPageSelected(int position) {
-				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("好友"+mSectionsPagerAdapter.getPageTitle(position));
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("成员"+mSectionsPagerAdapter.getPageTitle(position));
 				mTabStrip.setTabSelected(position);
 			}
 

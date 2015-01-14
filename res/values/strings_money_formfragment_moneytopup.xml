@@ -20,7 +20,7 @@
    <string name="moneyTopupFormFragment_editText_hint_transferOut">请选择转出账户</string>
    
    <string name="moneyTopupFormFragment_textView_transferInFriend">商家好友</string>
-   <string name="moneyTopupFormFragment_editText_hint_transferInFriend">请选择商家好友</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferInFriend">请选择商家</string>
    
    <string name="moneyTopupFormFragment_textView_transferIn">充值卡账户</string>
    <string name="moneyTopupFormFragment_editText_hint_transferIn">请选择充值卡账户</string>

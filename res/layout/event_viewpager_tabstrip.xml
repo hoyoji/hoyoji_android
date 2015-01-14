@@ -51,4 +51,6 @@
         android:layout_height="match_parent" >
     </com.hoyoji.android.hyjframework.view.HyjViewPager>
 
+    
 </LinearLayout>
+

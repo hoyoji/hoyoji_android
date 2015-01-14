@@ -57,6 +57,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 	private boolean mHasMoreData = true;
 	private ChangeObserver mChangeObserver;
 	private String mProjectId;
+	private String mEventId;
 	private String mLocalFriendId;
 	private long mDateFrom = 0;
 	private long mDateTo = 0;
@@ -89,6 +90,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 			mDateTo = queryParams.getLong("dateTo", 0);
 			mLoadLimit = queryParams.getInt("LIMIT", 10);
 			mProjectId = queryParams.getString("projectId");
+			mEventId = queryParams.getString("eventId");
 			mLocalFriendId = queryParams.getString("localFriendId");
 			mLoadLimit += queryParams.getInt("pageSize", 10);
 		} else {
@@ -163,6 +165,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 					String.valueOf(calDateFrom.getTimeInMillis()),
 					String.valueOf(dateTo),
 					mProjectId,
+					mEventId,
 					mLocalFriendId};
 			double expenseTotal = 0;
 			double incomeTotal = 0;
@@ -172,7 +175,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN  (SELECT * FROM Exchange GROUP BY localCurrencyId) ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+							"WHERE date > ? AND date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -185,7 +188,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN  (SELECT * FROM Exchange GROUP BY localCurrencyId) ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+							"WHERE date > ? AND date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -198,7 +201,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositIncomeContainer main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN  (SELECT * FROM Exchange GROUP BY localCurrencyId) ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+							"WHERE date > ? AND date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -211,7 +214,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 					.openDatabase()
 					.rawQuery(
 							"SELECT COUNT(*) AS count, SUM(main.amount * main.exchangeRate * CASE WHEN ex.localCurrencyId = '" + localCurrencyId + "' THEN 1/IFNULL(ex.rate,1) ELSE IFNULL(ex.rate, 1) END) AS total FROM MoneyDepositReturnContainer main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId JOIN Project prj1 ON prj1.id = main.projectId LEFT JOIN  (SELECT * FROM Exchange GROUP BY localCurrencyId) ex ON (ex.foreignCurrencyId = prj1.currencyId AND ex.localCurrencyId = '" + localCurrencyId + "' ) OR (ex.localCurrencyId = prj1.currencyId AND ex.foreignCurrencyId = '" + localCurrencyId + "') " +
-							"WHERE date > ? AND date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+							"WHERE date > ? AND date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 							args);
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -269,6 +272,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		String[] args = new String[] {
 				mDateFormat.format(fromDateInMillis),
 				mProjectId,
+				mEventId,
 				mLocalFriendId};
 		String dateString = null;
 		Cursor cursor = null;
@@ -276,7 +280,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(main.date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE date <= ? AND  (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -288,7 +292,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(main.date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE date <= ? AND  (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -305,7 +309,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(main.date) FROM MoneyDepositIncomeContainer main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE date <= ? AND main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyDepositIncomeContainer main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -321,7 +325,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(main.date) FROM MoneyDepositReturnContainer main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE date <= ? AND  main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(main.date) FROM MoneyDepositReturnContainer main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE date <= ? AND (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -355,7 +359,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(date) FROM MoneyExpenseContainer main JOIN MoneyExpenseApportion apr ON main.id = apr.moneyExpenseContainerId WHERE (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -366,7 +370,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE main.projectId = ? AND apr.localFriendId = ? ",
+						"SELECT MAX(date) FROM MoneyIncomeContainer main JOIN MoneyIncomeApportion apr ON main.id = apr.moneyIncomeContainerId WHERE (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ? ",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -382,7 +386,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositIncomeContainer  main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(date) FROM MoneyDepositIncomeContainer  main JOIN MoneyDepositIncomeApportion apr ON main.id = apr.moneyDepositIncomeContainerId WHERE (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -398,7 +402,7 @@ public class ProjectMemberMoneyTBDGroupListLoader extends
 		cursor = Cache
 				.openDatabase()
 				.rawQuery(
-						"SELECT MAX(date) FROM MoneyDepositReturnContainer  main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE main.projectId = ? AND apr.localFriendId = ?",
+						"SELECT MAX(date) FROM MoneyDepositReturnContainer  main JOIN MoneyDepositReturnApportion apr ON main.id = apr.moneyDepositReturnContainerId WHERE (main.projectId = ? OR main.eventId = ?) AND apr.localFriendId = ?",
 						args);
 		if (cursor != null) {
 			cursor.moveToFirst();

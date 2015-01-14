@@ -74,18 +74,18 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_formfragment_member_tbd;
+		return R.layout.event_formfragment_member_tbd;
 	}
 	
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		final Project project;
+		final Event event;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		eventMember =  EventMember.load(EventMember.class, modelId);
-		project = eventMember.getProject();
+		event = eventMember.getEvent();
 		
 		boolean _canNotEdit = false;
 		if(!eventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
@@ -96,13 +96,13 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 //		mProjectShareAuthorizations = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND state <> ? AND id <> ?", project.getId(), "Delete", projectShareAuthorization.getId()).execute();
 //		mProjectShareAuthorizations.add(projectShareAuthorization);
 		
-		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.memberTBDFormFragment_textField_projectName);
-		mTextFieldProjectName.setText(project.getDisplayName());
+		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.eventMemberTBDFormFragment_textField_eventName);
+		mTextFieldProjectName.setText(event.getName());
 		mTextFieldProjectName.setEnabled(false);
 		
-		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.memberTBDFormFragment_apportionField);
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.eventMemberTBDFormFragment_apportionField);
 		mApportionFieldApportions.setHideMoney(true);
-		getView().findViewById(R.id.memberTBDFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.eventMemberTBDFormFragment_imageButton_apportion_add).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
@@ -117,14 +117,14 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			}
 		});
 
-		getView().findViewById(R.id.memberTBDFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.eventMemberTBDFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				addAllEventMemberIntoApportionsField(eventMember.getEvent());
 			}
 		});
 		
-		getView().findViewById(R.id.memberTBDFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
+		getView().findViewById(R.id.eventMemberTBDFormFragment_imageButton_apportion_more_actions).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -163,13 +163,13 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 				});
 
 		
-		getView().findViewById(R.id.memberTBDFormFragment_button_transactions).setOnClickListener(new OnClickListener(){
+		getView().findViewById(R.id.eventMemberTBDFormFragment_button_transactions).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				bundle.putLong("PROJECT_ID", project.get_mId());
+				bundle.putLong("EVENT_ID", event.get_mId());
 				bundle.putString("LOCAL_FRIENDID", eventMember.getLocalFriendId());
-				openActivityWithFragment(ProjectMoneyTBDListFragment.class, R.string.memberTBDFormFragment_title_transactions, bundle);
+				openActivityWithFragment(ProjectMoneyTBDListFragment.class, R.string.eventMemberTBDFormFragment_title_transactions, bundle);
 			}
 		});
 		
@@ -266,15 +266,15 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		if(count > 0){
 			((HyjActivity) getActivity())
 			.displayProgressDialog(
-					R.string.memberTBDFormFragment_title_split,
-					R.string.memberTBDFormFragment_progress_uploading_data);
+					R.string.eventMemberTBDFormFragment_title_split,
+					R.string.eventMemberTBDFormFragment_progress_uploading_data);
 			MainActivity.uploadData(false, getActivity(), null, new HyjAsyncTaskCallbacks(){
 				@Override
 				public void finishCallback(Object object) {
 					((HyjActivity) getActivity())
 					.displayProgressDialog(
-							R.string.memberTBDFormFragment_title_split,
-							R.string.memberTBDFormFragment_progress_splitting);
+							R.string.eventMemberTBDFormFragment_title_split,
+							R.string.eventMemberTBDFormFragment_progress_splitting);
 					doSplitOnServer();
 				}
 				@Override
@@ -285,8 +285,8 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		} else {
 			((HyjActivity) getActivity())
 			.displayProgressDialog(
-					R.string.memberTBDFormFragment_title_split,
-					R.string.memberTBDFormFragment_progress_splitting);
+					R.string.eventMemberTBDFormFragment_title_split,
+					R.string.eventMemberTBDFormFragment_progress_splitting);
 			doSplitOnServer();
 		}
 		
@@ -315,7 +315,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 				@Override
 				public void finishCallback(Object object) {
-					HyjUtil.displayToast(R.string.memberTBDFormFragment_toast_split_success);
+					HyjUtil.displayToast(R.string.eventMemberTBDFormFragment_toast_split_success);
 					MainActivity.uploadData(true, getActivity(), null, null);
 				}
 

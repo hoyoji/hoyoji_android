@@ -251,12 +251,6 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
 			}
 		});
-		getView().findViewById(R.id.homeListFragment_event_action_money_topup).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				((HyjActivity)getActivity()).openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
-			}
-    	});	
 		
 		updateNearestEvent();
 		if (mChangeObserver == null) {
