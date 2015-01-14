@@ -453,7 +453,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				Bundle bundle = new Bundle();
+				bundle.putString("FINANCIAL_TYPE", "MoneyIncome");
+				
+				MoneyIncomeContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
 			}
 		});
 		

@@ -347,7 +347,10 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, null);
+				Bundle bundle = new Bundle();
+				bundle.putString("FINANCIAL_TYPE", "MoneyDeposit");
+				
+				MoneyDepositPaybackContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
 			}
 		});
 		
