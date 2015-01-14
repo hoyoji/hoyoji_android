@@ -700,7 +700,26 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyIncomeApportion>();
-			if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
+			if(moneyIncomeContainer.getEvent() != null &&  !moneyIncomeContainer.getIsImported()){
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") || !projectShareAuthorizations.get(i).getToBeDetermined()){
+						continue;
+					} else if(projectShareAuthorizations.get(i).getToBeDetermined()) {
+						MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+						apportion.setAmount(moneyIncomeContainer.getAmount0());
+						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+						apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
+						if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+							apportion.setApportionType("Average");
+						} else {
+							apportion.setApportionType("Share");
+						}
+						moneyApportions.add(apportion);
+					}
+				}
+			} else if(moneyIncomeContainer.getProject() != null && moneyIncomeContainer.getProject().getAutoApportion() && !moneyIncomeContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||

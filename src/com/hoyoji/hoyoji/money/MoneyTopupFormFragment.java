@@ -533,6 +533,15 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			}
 			if (moneyTopup.getTransferOut() == null || moneyTopup.getTransferIn() == null) {
 				mLinearLayoutExchangeRate.setVisibility(View.GONE);
+			} else {
+				if (moneyTopup.getTransferOut().getCurrencyId().equals(moneyTopup.getTransferIn().getCurrencyId())) {
+					mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
+					mLinearLayoutProjectTransferIn.setVisibility(View.GONE);
+					mLinearLayoutTransferOutProject.setVisibility(View.GONE);
+					mViewSeparatorTransferInAmount.setVisibility(View.GONE);
+					mViewSeparatorExchange.setVisibility(View.GONE);
+					mLinearLayoutExchangeRate.setVisibility(View.GONE);
+				}
 			}
 			
 //			mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);

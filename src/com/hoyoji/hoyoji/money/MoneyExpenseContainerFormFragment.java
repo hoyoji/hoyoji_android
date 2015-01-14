@@ -760,7 +760,26 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null) {
 			
 			moneyApportions = new ArrayList<MoneyExpenseApportion>();
-			if(moneyExpenseContainer.getProject() != null && moneyExpenseContainer.getProject().getAutoApportion() && !moneyExpenseContainer.getIsImported()){
+			if(moneyExpenseContainer.getEvent() != null &&  !moneyExpenseContainer.getIsImported()){
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
+				for(int i=0; i < projectShareAuthorizations.size(); i++){
+					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") || !projectShareAuthorizations.get(i).getToBeDetermined()){
+						continue;
+					} else if(projectShareAuthorizations.get(i).getToBeDetermined()) {
+						MoneyExpenseApportion apportion = new MoneyExpenseApportion();
+						apportion.setAmount(moneyExpenseContainer.getAmount0());
+						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+						apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
+						if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
+							apportion.setApportionType("Average");
+						} else {
+							apportion.setApportionType("Share");
+						}
+						moneyApportions.add(apportion);
+					}
+				}
+			} else if(moneyExpenseContainer.getProject() != null && moneyExpenseContainer.getProject().getAutoApportion() && !moneyExpenseContainer.getIsImported()){
 				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
 				for(int i=0; i < projectShareAuthorizations.size(); i++){
 					if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
