@@ -14,7 +14,6 @@
 	</string>
 	
    <string name="explainFinancialOwnerFragment_textView_explain_project">
-	              账本或者活动中设置财务负责人时的说明：\n
 		\t\t建议多人记账的团体活动时设置\n
 		\t\t支出：记账人代财务负责人付款，财务负责人再把这笔支出分摊给参与者\n
 		\t\t收入：记账人代财务负责人收款，财务负责人再把这笔收入分摊给参与者\n
