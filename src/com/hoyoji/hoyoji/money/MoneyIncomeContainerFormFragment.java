@@ -425,6 +425,11 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			if(moneyTemplateId != -1){
 				mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
+			} else if (event != null) {
+				if(event.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+				}
 			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));

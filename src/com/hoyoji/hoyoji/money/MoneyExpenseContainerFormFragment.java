@@ -481,7 +481,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(moneyExpenseContainer.getFinancialOwnerUserId() != null) {
 					mSelectorFieldFinancialOwner.setModelId(moneyExpenseContainer.getFinancialOwnerUserId());
 					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyExpenseContainer.getFinancialOwnerUserId()));
-					
+				}
+			} else if (event != null) {
+				if(event.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
 				}
 			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());

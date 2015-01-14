@@ -313,7 +313,12 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 		mSelectorFieldFinancialOwner = (HyjSelectorField) getView().findViewById(R.id.projectFormFragment_selectorField_financialOwner);
 		mSelectorFieldFinancialOwner.setEnabled(hasEditPermission);
 		if(modelId == -1){
-			if(project.getFinancialOwnerUserId() != null){
+			if (event != null) {
+				if(event.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(event.getFinancialOwnerUserId()));
+				}
+			} else if(project.getFinancialOwnerUserId() != null){
 				mSelectorFieldFinancialOwner.setModelId(project.getFinancialOwnerUserId());
 				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(project.getFinancialOwnerUserId()));
 			}
