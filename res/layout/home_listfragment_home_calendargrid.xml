@@ -40,13 +40,13 @@
         android:layout_gravity="bottom" >
 
         <Button
-            android:id="@+id/homeListFragment_action_money_account"
+            android:id="@+id/homeListFragment_action_messages"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/actionBarItemBackground"
             android:padding="0dp"
-            android:text="@string/homeListFragment_action_money_account"
+            android:text="消息"
             android:textSize="16sp" />
 
         <!--

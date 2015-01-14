@@ -37,6 +37,7 @@ import com.hoyoji.android.hyjframework.HyjAsyncTask;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
+import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserListFragment;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGrid;
 import com.hoyoji.android.hyjframework.view.HyjCalendarGridAdapter;
@@ -54,6 +55,7 @@ import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
+import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 
 public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
@@ -249,7 +251,13 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
 			}
 		});
-				
+		getView().findViewById(R.id.homeListFragment_event_action_money_topup).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				((HyjActivity)getActivity()).openActivityWithFragment(MoneyTopupFormFragment.class, R.string.moneyTopupFormFragment_title_addnew, null);
+			}
+    	});	
+		
 		updateNearestEvent();
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();

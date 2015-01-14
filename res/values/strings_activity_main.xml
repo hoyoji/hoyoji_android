@@ -15,8 +15,8 @@
     <string name="mainActivity_drawer_close">关闭侧栏</string>
     
     <string-array name="mainActivity_drawer_list_titles">
-        <item>查找流水</item>
-        <item>账务报表</item>
+        <item>财务流水</item>
+        <item>财务报表</item>
         <item>币种汇率</item>
        <!--<item>消息管理</item>
         <item>本币设置</item> 

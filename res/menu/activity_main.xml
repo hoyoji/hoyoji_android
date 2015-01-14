@@ -16,11 +16,11 @@
         <menu>
             <item
                 android:id="@+id/homeListFragment_action_transactions"
-                android:title="查找流水"
+                android:title="财务流水"
                 hoyoji:showAsAction="never"/>
             <item
                 android:id="@+id/homeListFragment_action_report"
-                android:title="账务报表"
+                android:title="财务报表"
                 hoyoji:showAsAction="never"/>
             <item
 		        android:id="@+id/friendListFragment_action_friend_management"

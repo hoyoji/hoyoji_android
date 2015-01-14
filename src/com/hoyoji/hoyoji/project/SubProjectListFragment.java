@@ -47,6 +47,8 @@ import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
 public class SubProjectListFragment extends HyjUserListFragment {
 	
@@ -178,12 +180,22 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		getView().findViewById(R.id.project_listfragment_project_addnew).setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				openActivityWithFragment(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, null);
 			}
-			
+		});
+		getView().findViewById(R.id.projectListFragment_action_money_account).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+    		}
+		});
+		getView().findViewById(R.id.projectListFragment_action_money_template).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
+    		}
 		});
 //		
 //		if (mChangeObserver == null) {

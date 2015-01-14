@@ -140,7 +140,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 
 	@Override
 	protected CharSequence getNoContentText() {
-		return "无账务流水";
+		return "无财务流水";
 	}
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
@@ -345,10 +345,10 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				
-		getView().findViewById(R.id.homeListFragment_action_money_account).setOnClickListener(new OnClickListener(){
+		getView().findViewById(R.id.homeListFragment_action_messages).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyAccountListFragment.class, R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
     		}
 		});
 //		getView().findViewById(R.id.homeListFragment_action_money_transaction).setOnClickListener(new OnClickListener(){

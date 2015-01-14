@@ -44,12 +44,8 @@
                 android:layout_weight="1"
     			android:background="?attr/actionBarItemBackground"
                 android:padding="0dp"
-                android:text="会费预收"
+                android:text="会费\n预收"
                 android:textSize="16sp" />
-           <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
            
             <Button
                 android:id="@+id/homeListFragment_event_action_money_deposit_expense"
@@ -58,9 +54,22 @@
                 android:layout_weight="1"
     			android:background="?attr/actionBarItemBackground"
                 android:padding="0dp"
-                android:text="会费预缴"
+                android:text="会费\n预缴"
                 android:textSize="16sp" />
-
+            
+           <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/homeListFragment_event_action_money_topup"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+    			android:background="?attr/actionBarItemBackground"
+                android:padding="0dp"
+                android:text="充值卡\n充值／预缴"
+                android:textSize="16sp" />
     </LinearLayout>
 
         <ImageButton 
