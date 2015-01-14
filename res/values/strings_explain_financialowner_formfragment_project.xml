@@ -31,8 +31,17 @@
 		\t\t建议多人记账的团体活动时设置，记账人代财务负责人收款，财务负责人再把这笔收入分摊给参与者。\n
 	</string>
 	
-    <string name="explainFinancialOwnerFragment_textView_explain_deposite">
-		\t\t会费记账时财务负责人的设置说明也是只说明当前账务类型的财务负责人的作用\n
+    <string name="explainFinancialOwnerFragment_textView_explain_depositeExpense">
+		\t\t建议多人记账的团体活动时设置，记账人先缴会费给收款人，收款人再把会费缴给财务负责人，即收款人代财务负责人收会费，最终记账人看到自己把会费缴给财务责任人\n
+	</string>
+	<string name="explainFinancialOwnerFragment_textView_explain_depositeIncome">
+		\t\t建议多人记账的团体活动时设置，记账人代财务负责人收款\n
+	</string>
+	<string name="explainFinancialOwnerFragment_textView_explain_depositePayback">
+		\t\t建议多人记账的团体活动时设置，记账人从付款方收回会费，而这会费是财务负责人让付款方代为退回的，即付款方代财务负责人退会费，最终记账人看到自己从财务负责人处收回会费\n
+	</string>
+	<string name="explainFinancialOwnerFragment_textView_explain_depositeReturn">
+		\t\t建议多人记账的团体活动时设置，记账人代财务负责人退款\n
 	</string>
 	
    

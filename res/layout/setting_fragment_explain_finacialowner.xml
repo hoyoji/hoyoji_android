@@ -45,12 +45,37 @@
 		        android:text="@string/explainFinancialOwnerFragment_textView_explain_income" 
 		        android:enabled="false"
 		        android:visibility="gone"/>
+	    
 	    <TextView
-		        android:id="@+id/explainFinancialOwnerFragment_textView_explain_deposite"
+		        android:id="@+id/explainFinancialOwnerFragment_textView_explain_depositeExpense"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:textSize="16sp"
-		        android:text="@string/explainFinancialOwnerFragment_textView_explain_deposite" 
+		        android:text="@string/explainFinancialOwnerFragment_textView_explain_depositeExpense" 
+		        android:enabled="false"
+		        android:visibility="gone"/>
+	    <TextView
+		        android:id="@+id/explainFinancialOwnerFragment_textView_explain_depositeIncome"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:textSize="16sp"
+		        android:text="@string/explainFinancialOwnerFragment_textView_explain_depositeIncome" 
+		        android:enabled="false"
+		        android:visibility="gone"/>
+	    <TextView
+		        android:id="@+id/explainFinancialOwnerFragment_textView_explain_depositePayback"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:textSize="16sp"
+		        android:text="@string/explainFinancialOwnerFragment_textView_explain_depositePayback" 
+		        android:enabled="false"
+		        android:visibility="gone"/>
+	    <TextView
+		        android:id="@+id/explainFinancialOwnerFragment_textView_explain_depositeReturn"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:textSize="16sp"
+		        android:text="@string/explainFinancialOwnerFragment_textView_explain_depositeReturn" 
 		        android:enabled="false"
 		        android:visibility="gone"/>
     </LinearLayout>

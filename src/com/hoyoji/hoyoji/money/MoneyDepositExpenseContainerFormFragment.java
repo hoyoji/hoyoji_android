@@ -381,7 +381,7 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				bundle.putString("FINANCIAL_TYPE", "MoneyDeposit");
+				bundle.putString("FINANCIAL_TYPE", "MoneyDepositExpense");
 				
 				MoneyDepositExpenseContainerFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
 			}
