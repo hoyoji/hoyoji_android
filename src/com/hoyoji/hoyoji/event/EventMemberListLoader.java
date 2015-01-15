@@ -62,7 +62,11 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	if(mState == null){
 	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=?", mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
 	    	} else {
-	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? AND state=? and toBeDetermined='0'", mEventId, mState).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    		if ("SignUp".equals(mState)) {
+	    			list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? AND state<>'UnSignUp' and toBeDetermined='0'", mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    		} else {
+	    			list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? AND state=? and toBeDetermined='0'", mEventId, mState).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    		}
 	    	}
     		Collections.sort(list, mEventMemberComparator);
 	    	return list;

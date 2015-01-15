@@ -1,4 +1,6 @@
 package com.hoyoji.hoyoji.models;
+import org.json.JSONObject;
+
 import com.hoyoji.android.hyjframework.HyjModel;
 
 public interface MoneyApportion {
@@ -22,4 +24,5 @@ public interface MoneyApportion {
 	public Double getExchangeRate();
 	public String getOwnerUserId();
 	public Long getDate();
+	public JSONObject toJSON();
 }

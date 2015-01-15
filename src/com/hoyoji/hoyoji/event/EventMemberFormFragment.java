@@ -451,10 +451,10 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			}
 		} else {
 			jsonPSA = new ProjectShareAuthorization();
-			jsonPSA.setProjectShareMoneyExpenseAddNew(true);
-			jsonPSA.setProjectShareMoneyExpenseDelete(true);
-			jsonPSA.setProjectShareMoneyExpenseEdit(true);
-			jsonPSA.setProjectShareMoneyExpenseOwnerDataOnly(false);
+			jsonPSA.setProjectShareMoneyExpenseAddNew(false);
+			jsonPSA.setProjectShareMoneyExpenseDelete(false);
+			jsonPSA.setProjectShareMoneyExpenseEdit(false);
+			jsonPSA.setProjectShareMoneyExpenseOwnerDataOnly(true);
 			jsonPSA.setShareAllSubProjects(false);
 			jsonPSA.setSharePercentageType("Average");
 			jsonPSA.setProjectId(mEventMemberEditor.getModelCopy().getEvent().getProjectId());
