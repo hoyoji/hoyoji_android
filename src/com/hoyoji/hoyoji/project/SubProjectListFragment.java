@@ -294,7 +294,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 		((TextView)view.findViewById(R.id.projectListItem_name)).setText(R.string.projectListFragment_title_shared_project);
 //		((TextView)view.findViewById(R.id.projectListItem_owner)).setText("系统生成");
 		
-		view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
+//		view.findViewById(R.id.projectListItem_depositTotalLabel).setVisibility(View.GONE);
 		HyjNumericView numericView = (HyjNumericView)view.findViewById(R.id.projectListItem_depositTotal);
 //			numericView.setSuffix(null);
 //			numericView.setTextColor(Color.BLACK);

@@ -37,7 +37,7 @@
 			android:layout_toLeftOf="@id/projectListItem_action_viewSubProjects"
 			android:layout_centerVertical="true"
 	    	android:textColor="@android:color/darker_gray"/>
-	    <TextView 
+<!-- 	    <TextView 
 	        android:id="@+id/projectListItem_depositTotalLabel"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 			android:layout_above="@id/projectListItem_depositTotal"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text="账本结余"/>
+		    android:text="账本结余"/> -->
 	
 	    <TextView
 	        android:id="@+id/projectListItem_name"
@@ -58,16 +58,16 @@
             android:ellipsize="marquee"
             android:maxLines="1"
             android:singleLine="true"/>
+	    
     	<TextView 
 	        android:id="@+id/projectListItem_owner"  
 		    android:layout_width="wrap_content"  
 		    android:layout_height="wrap_content"
 	        android:layout_marginLeft="5dp"
 	        android:layout_toRightOf="@id/projectListItem_picture"
-			android:layout_above="@id/projectListItem_name"
+			android:layout_alignBottom="@id/projectListItem_picture"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text=""
             android:ellipsize="marquee"
             android:maxLines="1"
             android:singleLine="true"/>
