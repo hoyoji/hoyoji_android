@@ -64,6 +64,9 @@ public class MoneyTransfer extends HyjModel{
 	
 	@Column(name = "projectId")
 	private String mProjectId;
+	
+	@Column(name = "eventId")
+	private String mEventId;
 
 	@Column(name = "projectCurrencyId")
 	private String mProjectCurrencyId;
@@ -414,6 +417,29 @@ public class MoneyTransfer extends HyjModel{
 	
 	public Project getProject(){
 		return getModel(Project.class, mProjectId);
+	}
+	
+	public Event getEvent(){
+		if(mEventId == null){
+			return null;
+		}
+		return getModel(Event.class, mEventId);
+	}
+	
+	public void setEvent(Event mEvent) {
+		if(mEvent == null){
+			this.mEventId = null;
+		} else {
+			this.mEventId = mEvent.getId();
+		}
+	}
+
+	public String getEventId() {
+		return mEventId;
+	}
+
+	public void setEventId(String mEventId) {
+		this.mEventId = mEventId;
 	}
 
 	public String getRemark() {
