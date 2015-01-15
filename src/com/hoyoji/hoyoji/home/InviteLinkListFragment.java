@@ -232,7 +232,7 @@ public class InviteLinkListFragment extends HyjUserListFragment implements OnQue
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_date) {
 //			((HyjDateTimeView) view).setTime(jsonObject.optLong(name));
 			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
-			dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+			dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
 			dateTimeView.setTime(jsonObject.optLong(name));
 			return true;
 		} else if (view.getId() == R.id.inviteFriendLinkListItem_type) {
