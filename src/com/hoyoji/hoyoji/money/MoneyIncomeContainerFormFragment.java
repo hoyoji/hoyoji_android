@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +55,7 @@ import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.MoneyAccount;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.MoneyIncome;
 import com.hoyoji.hoyoji.models.MoneyIncomeApportion;
 import com.hoyoji.hoyoji.models.MoneyIncomeCategory;
@@ -130,8 +132,8 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	public void onInitViewData(){
 		super.onInitViewData();
 		final MoneyIncomeContainer moneyIncomeContainer;
-		JSONObject temPlateJso = null;
 		Double presetAmount = null;
+		MoneyTemplate template =null;
 		
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -140,27 +142,24 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyIncomeContainer.hasEditPermission();
 		} else {
 			moneyIncomeContainer = new MoneyIncomeContainer();
-			String temPlateID = intent.getStringExtra("MONEYTEMPLATE_ID");
-			if(temPlateID != null){
-				MoneyTemplate moneyTemplate = HyjModel.getModel(MoneyTemplate.class, temPlateID);
-				moneyTemplate.setDate((new Date()).getTime());
-				moneyTemplate.save();
-			}
-			String temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
-			if (temPlateData != null) {
-				try {
-					temPlateJso = new JSONObject(temPlateData);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				temPlateJso.remove("id");
-				temPlateJso.remove("date");
-				presetAmount = temPlateJso.optDouble("amount", 0.0);
-				temPlateJso.remove("amount");
-				moneyIncomeContainer.loadFromJSON(temPlateJso,false);
-				// 从模版中获取预设金额
-				presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
-			} else{
+			long templateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(templateId != -1){
+				template = new Select().from(MoneyTemplate.class).where("_id=?", templateId).executeSingle();
+				if (template != null) {
+					try {
+						JSONObject temPlateJso = new JSONObject(template.getData());
+						temPlateJso.remove("id");
+						temPlateJso.remove("date");
+						presetAmount = temPlateJso.optDouble("amount", 0.0);
+						temPlateJso.remove("amount");
+						moneyIncomeContainer.loadFromJSON(temPlateJso,false);
+						// 从模版中获取预设金额
+						presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} 
+			} else {
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyIncomeContainer.get_mId() == null && moneyAccountId != null){
 					moneyIncomeContainer.setMoneyAccountId(moneyAccountId);
@@ -257,7 +256,12 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
-		setupApportionField(moneyIncomeContainer);
+		if(template == null) {
+			setupApportionField(moneyIncomeContainer);
+		} else {
+			setTemplateApportion(moneyIncomeContainer,template.getApportionString());
+		}
+		
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_textField_amount);
 		int incomeColor = Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor());
@@ -410,8 +414,27 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				if(validate()){
 					MoneyTemplate moneyTemplate = new MoneyTemplate();
 					moneyTemplate.setDate(mMoneyIncomeContainerEditor.getModelCopy().getDate());
-					moneyTemplate.setType("MoneyIncome");
+					moneyTemplate.setType("MoneyIncomeTemplate");
 					moneyTemplate.setData(mMoneyIncomeContainerEditor.getModelCopy().toJSON().toString());
+					
+					MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
+					int count = adapter.getCount();
+					JSONArray array = new JSONArray();
+					for (int i = 0; i < count; i++) {
+						try {
+							JSONObject evt = new JSONObject();
+							evt.put("amount", adapter.getItem(i).getApportion().getAmount());
+							evt.put("friendUserId", adapter.getItem(i).getApportion().getFriendUserId());
+							evt.put("localFriendId", adapter.getItem(i).getApportion().getLocalFriendId());
+							evt.put("apportionType", adapter.getItem(i).getApportion().getApportionType());
+							array.put(evt);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					moneyTemplate.setApportionString(array.toString());
+					
 					moneyTemplate.save();
 					HyjUtil.displayToast(R.string.app_save_template_success);
 				}
@@ -423,8 +446,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		if(modelId == -1){
 			long moneyTemplateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
 			if(moneyTemplateId != -1){
-				mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
-				mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
+				if(moneyIncomeContainer.getFinancialOwnerUserId() != null) {
+					mSelectorFieldFinancialOwner.setModelId(moneyIncomeContainer.getFinancialOwnerUserId());
+					mSelectorFieldFinancialOwner.setText(Friend.getFriendUserDisplayName(moneyIncomeContainer.getFinancialOwnerUserId()));
+				}
 			} else if (event != null) {
 				if(event.getFinancialOwnerUserId() != null) {
 					mSelectorFieldFinancialOwner.setModelId(event.getFinancialOwnerUserId());
@@ -759,6 +784,58 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 		}
 		
 		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getId());
+	}
+	
+	private void setTemplateApportion(MoneyIncomeContainer moneyIncomeContainer, String apportionString) {
+
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyIncomeContainerFormFragment_apportionField);
+		mTextViewApportionFieldTitle = (TextView) getView().findViewById(R.id.moneyIncomeContainerFormFragment_apportionField_title);
+		mApportionCountObserver = new DataSetObserver(){
+	        @Override
+	        public void onChanged() {
+	    		mTextViewApportionFieldTitle.setText(getString(R.string.moneyApportionField_title)+"("+mApportionFieldApportions.getApportionCount()+")");
+	        }
+		};
+		mApportionFieldApportions.getAdapter().registerDataSetObserver(mApportionCountObserver);
+		
+		List<MoneyIncomeApportion> moneyApportions = new ArrayList<MoneyIncomeApportion>();;
+		
+		if (apportionString != null) {
+			try {
+				JSONArray templateApportions = new JSONArray(apportionString);
+//				JSONObject temPlateApportionJso = null;
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyIncomeContainer.getProject().getShareAuthorizations();
+		        for (int j = 0; j < templateApportions.length(); j++) {
+		        	JSONObject templateApportion = templateApportions.getJSONObject(j);
+//					temPlateApportionJso = new JSONObject(templateApportions[j]);
+					if(moneyIncomeContainer.getProject() != null && !moneyIncomeContainer.getIsImported()){
+						for(int i=0; i < projectShareAuthorizations.size(); i++){
+							if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete")){
+								continue;
+							}
+							if ((projectShareAuthorizations.get(i).getFriendUserId()!=null && projectShareAuthorizations.get(i).getFriendUserId().equals(templateApportion.optString("friendUserId")))
+									|| (projectShareAuthorizations.get(i).getLocalFriendId()!=null && projectShareAuthorizations.get(i).getLocalFriendId().equals(templateApportion.optString("localFriendId")))){
+								MoneyIncomeApportion apportion = new MoneyIncomeApportion();
+								apportion.setAmount(templateApportion.optDouble("amount"));
+								apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
+								apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
+								apportion.setMoneyIncomeContainerId(moneyIncomeContainer.getId());
+								apportion.setApportionType(templateApportion.optString("apportionType"));
+								moneyApportions.add(apportion);
+							}
+							
+						}
+					} 
+		        }
+				
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getId());
+			
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyIncomeContainer> moneyIncomeContainerEditor) {

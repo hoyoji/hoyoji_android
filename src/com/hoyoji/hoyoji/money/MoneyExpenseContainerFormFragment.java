@@ -131,9 +131,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		final MoneyExpenseContainer moneyExpenseContainer;
-		JSONObject temPlateJso = null;
 		Double presetAmount = null;
-		String temPlateData = null;
+		MoneyTemplate template =null;
 		
 		Intent intent = getActivity().getIntent();
 		final long modelId = intent.getLongExtra("MODEL_ID", -1);
@@ -143,21 +142,22 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			hasEditPermission = moneyExpenseContainer.hasEditPermission();
 		} else {
 			moneyExpenseContainer = new MoneyExpenseContainer();
-			temPlateData = intent.getStringExtra("MONEYTEMPLATE_DATA");
-			
-			if (temPlateData != null) {
-				try {
-					temPlateJso = new JSONObject(temPlateData);
-				} catch (JSONException e) {
-					e.printStackTrace();
+			long templateId = intent.getLongExtra("MONEYTEMPLATE_ID", -1);
+			if(templateId != -1){
+				template = new Select().from(MoneyTemplate.class).where("_id=?", templateId).executeSingle();
+				if (template != null) {
+					try {
+						JSONObject temPlateJso = new JSONObject(template.getData());
+						temPlateJso.remove("id");
+						temPlateJso.remove("date");
+						presetAmount = temPlateJso.optDouble("amount", 0.0);
+						temPlateJso.remove("amount");
+						moneyExpenseContainer.loadFromJSON(temPlateJso,false);
+						presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
-				temPlateJso.remove("id");
-				temPlateJso.remove("date");
-				presetAmount = temPlateJso.optDouble("amount", 0.0);
-				temPlateJso.remove("amount");
-				moneyExpenseContainer.loadFromJSON(temPlateJso,false);
-				presetAmount = presetAmount * temPlateJso.optDouble("exchangeRate", 1.0);
-				
 			} else {
 				final String moneyAccountId = intent.getStringExtra("moneyAccountId");
 				if(moneyAccountId != null){
@@ -259,11 +259,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				}
 			}
 		});
-		if(temPlateData == null) {
+		if(template == null) {
 			setupApportionField(moneyExpenseContainer);
 		} else {
-			String apportionData = intent.getStringExtra("APPORTION_DATA");
-			setTemplateApportion(moneyExpenseContainer,apportionData);
+			setTemplateApportion(moneyExpenseContainer,template.getApportionString());
 		}
 		
 		mNumericAmount = (HyjNumericField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_textField_amount);
@@ -424,17 +423,20 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				if(validate()){
 					MoneyTemplate moneyTemplate = new MoneyTemplate();
 					moneyTemplate.setDate(mMoneyExpenseContainerEditor.getModelCopy().getDate());
-					moneyTemplate.setType("MoneyExpense");
+					moneyTemplate.setType("MoneyExpenseTemplate");
 					moneyTemplate.setData(mMoneyExpenseContainerEditor.getModelCopy().toJSON().toString());
 					
-					String data = "";
 					MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 					int count = adapter.getCount();
 					JSONArray array = new JSONArray();
 					for (int i = 0; i < count; i++) {
-//						try {
-							array.put(adapter.getItem(i).getApportion().toJSON());
-////							JSONObject evt = new JSONObject();
+						try {
+							JSONObject evt = new JSONObject();
+							evt.put("amount", adapter.getItem(i).getApportion().getAmount());
+							evt.put("friendUserId", adapter.getItem(i).getApportion().getFriendUserId());
+							evt.put("localFriendId", adapter.getItem(i).getApportion().getLocalFriendId());
+							evt.put("apportionType", adapter.getItem(i).getApportion().getApportionType());
+							array.put(evt);
 //							if("".equals(data)){
 ////								evt.put("amount", adapter.getItem(i).getApportion().getAmount());
 //								if(adapter.getItem(i).getApportion().getFriendUserId() != null) {
@@ -458,10 +460,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 ////								
 ////								data += "," + ((Object) evt);
 //							}
-////						} catch (JSONException e) {
-////							// TODO Auto-generated catch block
-////							e.printStackTrace();
-////						}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					moneyTemplate.setApportionString(array.toString());
 					
@@ -870,24 +872,6 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			else if(moneyExpenseContainer.getProject() != null) {
-//				MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-//				apportion.setAmount(moneyExpenseContainer.getAmount0());
-//				apportion.setFriendUserId(HyjApplication.getInstance().getCurrentUser().getId());
-//				apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
-//				ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", moneyExpenseContainer.getProjectId(), apportion.getFriendUserId()).executeSingle();
-//				if(projectShareAuthorization.getSharePercentageType() != null && projectShareAuthorization.getSharePercentageType().equals("Average")){
-//					apportion.setApportionType("Average");
-//				} else {
-//					apportion.setApportionType("Share");
-//				}
-//				moneyApportions.add(apportion);
-//			}
-			
-//		else {
-//			moneyApportions = moneyExpenseContainer.getApportions();
-//		}
-		
 		}
 		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
 			

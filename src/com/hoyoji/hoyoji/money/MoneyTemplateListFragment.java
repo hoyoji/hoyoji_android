@@ -79,12 +79,10 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
 		bundle.putLong("MONEYTEMPLATE_ID", template.get_mId());
-		bundle.putString("MONEYTEMPLATE_DATA", template.getData());
-		bundle.putString("APPORTION_DATA", template.getApportionString());
 		
-		if(template.getType().equals("MoneyExpense")) {
+		if(template.getType().equals("MoneyExpenseTemplate")) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
-		} else if(template.getType().equals("MoneyIncome")) {
+		} else if(template.getType().equals("MoneyIncomeTemplate")) {
 			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
 		}
 		
