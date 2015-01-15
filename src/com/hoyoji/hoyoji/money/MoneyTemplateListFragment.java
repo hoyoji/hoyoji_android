@@ -121,7 +121,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //			imageView.setImage(cursor.getString(columnIndex));
 			
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			if(type.equals("MoneyExpense")){
+			if(type.equals("MoneyExpenseTemplate")){
 				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			} else {
 				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
@@ -142,7 +142,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			((TextView)view).setText(project.getDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
-			if(type.equals("MoneyExpense")){
+			if(type.equals("MoneyExpenseTemplate")){
 				((TextView)view).setText(jsonObj.optString("moneyExpenseCategory"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
