@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import com.activeandroid.Model;
+import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjUtil;
@@ -34,6 +35,7 @@ import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 public class EventMemberListFragment extends HyjUserListFragment {
@@ -77,8 +79,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		MemberListAdapter adapter = new MemberListAdapter(getActivity(),
 				mMemberList,
 				R.layout.home_listitem_row,
-				new String[] {"friendUserId", "_id", "id", "id", "id"},
-				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark});
+				new String[] {"friendUserId", "_id", "id", "id", "id", "id"},
+				new int[] {R.id.homeListItem_picture, R.id.homeListItem_title, R.id.homeListItem_subTitle, R.id.homeListItem_amount, R.id.homeListItem_remark, R.id.homeListItem_owner});
 		return adapter;
 	}	
 
@@ -438,6 +440,21 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			} else {
 				((TextView)view).setText("");
 			}
+			return true;
+		} else if(view.getId() == R.id.homeListItem_owner) {
+			TextView textView = (TextView)view;
+			ProjectShareAuthorization psa = em.getProjectShareAuthorization();
+			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())) {
+				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true) {
+					textView.setText(null);
+					return true;
+				}
+			}
+			Double settlement = psa.getSettlement();
+			String currencySymbol = psa.getProject().getCurrencySymbol();
+			textView.setText("账本结余:" + currencySymbol + settlement);
+			return true;
 		}
 		return true;
 	}
