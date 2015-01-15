@@ -890,8 +890,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 //			moneyApportions = moneyExpenseContainer.getApportions();
 //		}
 		
-			mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
 		}
+		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
 			
 	}
 
