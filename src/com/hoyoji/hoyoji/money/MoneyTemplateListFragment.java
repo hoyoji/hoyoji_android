@@ -79,12 +79,10 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 
 		MoneyTemplate template = HyjModel.load(MoneyTemplate.class, id);
 		bundle.putLong("MONEYTEMPLATE_ID", template.get_mId());
-		bundle.putString("MONEYTEMPLATE_DATA", template.getData());
-		bundle.putString("APPORTION_DATA", template.getApportionString());
 		
-		if(template.getType().equals("MoneyExpense")) {
+		if(template.getType().equals("MoneyExpenseTemplate")) {
 			openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
-		} else if(template.getType().equals("MoneyIncome")) {
+		} else if(template.getType().equals("MoneyIncomeTemplate")) {
 			openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
 		}
 		
@@ -123,7 +121,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 //			imageView.setImage(cursor.getString(columnIndex));
 			
 			imageView.setDefaultImage(R.drawable.ic_action_picture_white);
-			if(type.equals("MoneyExpense")){
+			if(type.equals("MoneyExpenseTemplate")){
 				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			} else {
 				imageView.setBackgroundColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
@@ -144,7 +142,7 @@ public class MoneyTemplateListFragment extends HyjUserListFragment {
 			((TextView)view).setText(project.getDisplayName());
 			return true;
 		}else if(view.getId() == R.id.homeListItem_title){
-			if(type.equals("MoneyExpense")){
+			if(type.equals("MoneyExpenseTemplate")){
 				((TextView)view).setText(jsonObj.optString("moneyExpenseCategory"));
 				((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			}else{
