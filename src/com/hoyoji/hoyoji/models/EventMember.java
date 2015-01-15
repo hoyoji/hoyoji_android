@@ -47,6 +47,9 @@ public class EventMember extends HyjModel {
 	
 	@Column(name = "toBeDetermined")
 	private Boolean mToBeDetermined = false;
+	
+	@Column(name = "eventShareOwnerDataOnly")
+	private Boolean mEventShareOwnerDataOnly = false;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -140,6 +143,14 @@ public class EventMember extends HyjModel {
 
 	public void setNickName(String mNickName) {
 		this.mNickName = mNickName;
+	}
+
+	public Boolean getEventShareOwnerDataOnly() {
+		return mEventShareOwnerDataOnly;
+	}
+
+	public void setEventShareOwnerDataOnly(Boolean mEventShareOwnerDataOnly) {
+		this.mEventShareOwnerDataOnly = mEventShareOwnerDataOnly;
 	}
 
 	public Friend getFriend(){

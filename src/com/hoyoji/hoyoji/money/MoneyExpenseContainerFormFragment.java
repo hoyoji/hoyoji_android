@@ -841,27 +841,23 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			try {
 				JSONArray templateApportions = new JSONArray(apportionString);
 //				JSONObject temPlateApportionJso = null;
+				List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
 		        for (int j = 0; j < templateApportions.length(); j++) {
+		        	JSONObject templateApportion = templateApportions.getJSONObject(j);
 //					temPlateApportionJso = new JSONObject(templateApportions[j]);
 					if(moneyExpenseContainer.getProject() != null && !moneyExpenseContainer.getIsImported()){
-						List<ProjectShareAuthorization> projectShareAuthorizations = moneyExpenseContainer.getProject().getShareAuthorizations();
 						for(int i=0; i < projectShareAuthorizations.size(); i++){
-							if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete") ||
-									projectShareAuthorizations.get(i).getToBeDetermined()){
+							if(projectShareAuthorizations.get(i).getState().equalsIgnoreCase("Delete")){
 								continue;
 							}
-							if ((projectShareAuthorizations.get(i).getFriendUserId()!=null && projectShareAuthorizations.get(i).getFriendUserId().equals(templateApportions.getJSONObject(j).optString("friendUserId")))
-									|| (projectShareAuthorizations.get(i).getLocalFriendId()!=null && projectShareAuthorizations.get(i).getLocalFriendId().equals(templateApportions.getJSONObject(j).optString("localFriendId")))){
+							if ((projectShareAuthorizations.get(i).getFriendUserId()!=null && projectShareAuthorizations.get(i).getFriendUserId().equals(templateApportion.optString("friendUserId")))
+									|| (projectShareAuthorizations.get(i).getLocalFriendId()!=null && projectShareAuthorizations.get(i).getLocalFriendId().equals(templateApportion.optString("localFriendId")))){
 								MoneyExpenseApportion apportion = new MoneyExpenseApportion();
-								apportion.setAmount(0.0);
+								apportion.setAmount(templateApportion.optDouble("amount"));
 								apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 								apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 								apportion.setMoneyExpenseContainerId(moneyExpenseContainer.getId());
-								if(projectShareAuthorizations.get(i).getSharePercentageType() != null && projectShareAuthorizations.get(i).getSharePercentageType().equals("Average")){
-									apportion.setApportionType("Average");
-								} else {
-									apportion.setApportionType("Share");
-								}
+								apportion.setApportionType(templateApportion.optString("apportionType"));
 								moneyApportions.add(apportion);
 							}
 							

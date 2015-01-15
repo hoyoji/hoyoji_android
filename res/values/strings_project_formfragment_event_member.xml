@@ -48,5 +48,6 @@
     
     <string name="projectEventMemberFormFragment_eventMember_cancel_success">取消报名成功</string>
     
+    <string name="projectEventMemberFormFragment_textView_shareAuthorization_title">活动权限</string>
     
 </resources>

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -62,6 +63,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private RadioButton unSignInRadioButton = null;
 	private RadioButton signInRadioButton = null;
 	private ProjectShareAuthorization jsonPSA = null;
+	
+	private CheckBox mCheckBoxEventShareOwnerDataOnly = null;
 	
 //	private Button button_cancel_signUp;
 	
@@ -223,6 +226,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 //				cancelSignUp();
 //			}
 //		});	
+		mCheckBoxEventShareOwnerDataOnly = (CheckBox)getView().findViewById(R.id.projectEventMemberFormFragment_checkBox_shareAuthorization_self);
+		mCheckBoxEventShareOwnerDataOnly.setChecked(eventMember.getEventShareOwnerDataOnly());
 		
 		mEventMemberNickName = (HyjTextField) getView().findViewById(R.id.projectEventMemberFormFragment_hyjTextField_nickName);
 		mEventMemberNickName.setText(eventMember.getNickName());
@@ -254,6 +259,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				signUpRadioButton.setEnabled(false);
 				signInRadioButton.setEnabled(false);
 				mEventMemberNickName.setEnabled(false);
+				mCheckBoxEventShareOwnerDataOnly.setEnabled(false);
 				if(this.mOptionsMenu != null){
 					hideSaveAction();
 				}
@@ -299,6 +305,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				modelCopy.setFriendUserName(modelCopy.getFriend().getDisplayName());
 			}
 		}
+		modelCopy.setEventShareOwnerDataOnly(mCheckBoxEventShareOwnerDataOnly.isChecked());
+		
 		modelCopy.setNickName(mEventMemberNickName.getText().toString().trim());
 		if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_unSignUp){
 			modelCopy.setState("UnSignUp");
@@ -309,6 +317,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signIn){
 			modelCopy.setState("SignIn");
 		}
+		
 	}
 
 	private void showValidatioErrors() {
@@ -694,7 +703,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			super.onChange(selfChange);
 			if(mEventMemberEditor.getModel().get_mId() != null){
 				EventMember eventMember = HyjModel.getModel(EventMember.class, mEventMemberEditor.getModel().getId());
-				mEventMemberNickName.setText(eventMember .getNickName());
+				mEventMemberNickName.setText(eventMember.getNickName());
 			}
 		}
 	}
