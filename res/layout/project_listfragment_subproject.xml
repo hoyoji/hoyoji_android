@@ -57,7 +57,7 @@
                 android:layout_weight="1"
     			android:background="?attr/actionBarItemBackground"
                 android:padding="0dp"
-                android:text="充值卡\n充值／预缴"
+                android:text="充值卡"
                 android:textSize="16sp" />
     </LinearLayout>
               
