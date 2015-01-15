@@ -416,7 +416,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			if(em.getEventShareOwnerDataOnly() && !HyjApplication.getInstance().getCurrentUser().getId().equals(em.getFriendUserId())){
+			EventMember me = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", em.getEventId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+			if(me != null && me.getEventShareOwnerDataOnly() && !HyjApplication.getInstance().getCurrentUser().getId().equals(em.getFriendUserId())){
 				numericView.setPrefix("");
 				numericView.setText(null);
 			} else {
