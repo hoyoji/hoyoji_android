@@ -416,23 +416,28 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount) {
 			HyjNumericView numericView = (HyjNumericView)view;
-			Double apportionTotal = em.getApportionTotal();
-			String currencySymbol = em.getEvent().getProject().getCurrencySymbol();
-			if(apportionTotal < 0){
-				apportionTotal = -apportionTotal;
-				numericView.setPrefix("活动收入:" + currencySymbol);
-//				numericView.setTextColor(Color.parseColor("#339900"));
-			}else{
-				if(apportionTotal.equals(0.0)){
-//					numericView.setTextColor(Color.BLACK);
-					numericView.setPrefix(currencySymbol);
+			if(em.getEventShareOwnerDataOnly() && !HyjApplication.getInstance().getCurrentUser().getId().equals(em.getFriendUserId())){
+				numericView.setPrefix("");
+				numericView.setText(null);
+			} else {
+				Double apportionTotal = em.getApportionTotal();
+				String currencySymbol = em.getEvent().getProject().getCurrencySymbol();
+				if(apportionTotal < 0){
+					apportionTotal = -apportionTotal;
+					numericView.setPrefix("活动收入:" + currencySymbol);
+	//				numericView.setTextColor(Color.parseColor("#339900"));
 				}else{
-//					numericView.setTextColor(Color.parseColor(R.color.));
-					numericView.setPrefix("活动支出:" + currencySymbol);
-				}
-			} 
-			numericView.setSuffix(null);
-			numericView.setNumber(apportionTotal);
+					if(apportionTotal.equals(0.0)){
+	//					numericView.setTextColor(Color.BLACK);
+						numericView.setPrefix(currencySymbol);
+					}else{
+	//					numericView.setTextColor(Color.parseColor(R.color.));
+						numericView.setPrefix("活动支出:" + currencySymbol);
+					}
+				} 
+				numericView.setNumber(apportionTotal);
+				numericView.setSuffix(null);
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_remark){
 			if(em.getToBeDetermined()){

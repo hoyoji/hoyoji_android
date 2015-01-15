@@ -38,8 +38,8 @@ public class HyjDateTimeView extends TextView {
 	}
 
 	private Date mDate;
-	private String mDateFormatStr = "MEDIUM";
-	private DateFormat mDateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+	private String mDateFormatStr = "HH:mm:ss";
+	private DateFormat mDateFormat = new SimpleDateFormat(mDateFormatStr);
 	public void setTime(Long timeInMillisec){
 		if(timeInMillisec == null){
 			setDate(null);
