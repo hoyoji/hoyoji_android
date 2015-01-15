@@ -96,6 +96,24 @@
                 hyj:editTextBorder="none"
                 hyj:hintText="@string/moneyTopupFormFragment_editText_hint_project"
                 hyj:labelText="@string/moneyTopupFormFragment_textView_project" />
+         
+        <View
+            android:id="@+id/field_separator_event"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:visibility="gone"
+            android:background="@drawable/line_divider" />
+        
+	    <com.hoyoji.android.hyjframework.view.HyjSelectorField
+            android:id="@+id/moneyExpenseContainerFormFragment_selectorField_event"
+            hyj:style="top_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            hyj:hintText="@string/moneyExpenseFormFragment_editText_hint_event"
+            hyj:labelText="@string/moneyExpenseFormFragment_textView_event" />
 
         <View
             android:id="@id/field_separator"
