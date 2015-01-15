@@ -223,7 +223,7 @@ public class MessageListFragment extends HyjUserListFragment{
 		Message message = HyjModel.getModel(Message.class, cursor.getString(cursor.getColumnIndex("id")));
 		if(view.getId() == R.id.homeListItem_date){
 			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
-			dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+			dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
 			dateTimeView.setTime(message.getDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){

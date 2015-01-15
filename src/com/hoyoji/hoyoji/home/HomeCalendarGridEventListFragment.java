@@ -424,7 +424,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
 				
 				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
-				dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+				dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
 				dateTimeView.setTime(event.getStartDate());
 				
 //				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());

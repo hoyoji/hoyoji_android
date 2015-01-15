@@ -216,7 +216,7 @@ public class EventListFragment extends HyjUserListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
 			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;
-			dateTimeView.setDateFormat("yy-MM-dd ah:mm");
+			dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
 			dateTimeView.setTime(event.getStartDate());
 			return true;
 		} else if(view.getId() == R.id.homeListItem_title){
