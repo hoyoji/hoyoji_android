@@ -44,6 +44,24 @@
           android:background="@null"
           android:textColor="@color/gray"
           />
+      <View
+           android:id="@id/field_separator"
+           android:layout_width="match_parent"
+           android:layout_height="1dip"
+           android:layout_marginBottom="5dip"
+           android:layout_marginTop="5dip"
+           android:background="@drawable/line_divider" />
+      
+	    <TextView
+	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	       android:text="@string/projectEventMemberFormFragment_textView_shareAuthorization_title" />
+
+		<CheckBox
+	      android:id="@+id/projectEventMemberFormFragment_checkBox_shareAuthorization_self"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"
+	      android:text="@string/memberFormFragment_textView_shareAuthorization_title_self" />
         
         <View
             android:id="@id/field_separator"

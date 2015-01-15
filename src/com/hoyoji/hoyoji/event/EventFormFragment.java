@@ -380,6 +380,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 					toBeDeterminedFriendEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 					toBeDeterminedFriendEM.setFriendUserName("待定成员");
 					toBeDeterminedFriendEM.setToBeDetermined(true);
+					toBeDeterminedFriendEM.setEventShareOwnerDataOnly(false);
 					toBeDeterminedFriendEM.save();
 				}
 				
@@ -391,6 +392,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				currentUserEM.setOwnerUserId(HyjApplication.getInstance().getCurrentUser().getId());
 				currentUserEM.setFriendUserName(HyjApplication.getInstance().getCurrentUser().getDisplayName());
 				currentUserEM.setToBeDetermined(false);
+				currentUserEM.setEventShareOwnerDataOnly(false);
 				currentUserEM.save();
 			}
 			doSave();

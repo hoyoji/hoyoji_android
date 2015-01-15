@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -41,6 +42,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 	private HyjTextField sendInviteTitle =null;
 	private EditText sendInviteDetail =null;
 	private HyjTextField mVerificationCode =null;
+	private CheckBox mCheckBoxEventShareOwnerDataOnly = null;
 
 	private Button mButtonSendInvite = null;
 	
@@ -72,6 +74,8 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event.getName());
 		
 		mVerificationCode = (HyjTextField) getView().findViewById(R.id.inviteEventMemberFormFragment_hyjTextField_verificationCode);
+		
+		mCheckBoxEventShareOwnerDataOnly = (CheckBox)getView().findViewById(R.id.projectEventMemberFormFragment_checkBox_shareAuthorization_self);
 
 		mButtonSendInvite = (Button)getView().findViewById(R.id.button_send_invite);
 		mButtonSendInvite.setOnClickListener(new OnClickListener(){
@@ -115,6 +119,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 			inviteFriendObject.put("__dataType", "InviteLink");
 			inviteFriendObject.put("title", emTitle);
 			inviteFriendObject.put("type", "EventMember");
+			inviteFriendObject.put("shareOwnerDataOnly", mCheckBoxEventShareOwnerDataOnly.isChecked());
 			inviteFriendObject.put("verificationCode", mVerificationCode.getText().toString().trim());
 			inviteFriendObject.put("date", (new Date()).getTime());
 			inviteFriendObject.put("description", emDescription);
