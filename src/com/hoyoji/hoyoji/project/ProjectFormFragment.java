@@ -215,7 +215,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class,mProjectEditor.getModelCopy().getId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		}); 

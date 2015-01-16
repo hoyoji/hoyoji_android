@@ -748,7 +748,7 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 				((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 			} else {
 				if(moneyTransfer.getTransferIn() != null && moneyTransfer.getTransferOut() != null){
-					((TextView)view).setText("从"+moneyTransfer.getTransferIn().getName()+"转到"+moneyTransfer.getTransferOut().getName());
+					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转到"+moneyTransfer.getTransferIn().getName());
 					((TextView)view).setTextColor(getResources().getColor(R.color.hoyoji_yellow));
 				} else if(moneyTransfer.getTransferOut() != null){
 					((TextView)view).setText("从"+moneyTransfer.getTransferOut().getName()+"转出");
