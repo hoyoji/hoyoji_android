@@ -330,11 +330,12 @@ public class MoneyApportionField extends GridView {
 	        	mImageGridAdapter.add(item);
 	        	if(item.getApportion().getFriendUserId() != null){
 	        		gridUserSet.add(item.getApportion().getFriendUserId());
+	        		it.remove();
 	        	} else {
 	        		gridUserSet.add(item.getApportion().getLocalFriendId());
+	        		it.remove();
 	        	}
 //				item.changeProject(project.getId());
-	        	it.remove();
 	        }
 	        
 //	        if(item.getApportion().getLocalFriendId() != null){

@@ -572,18 +572,23 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		}else{
 //			setExchangeRate(true);
 			if(moneyTopup.getTransferIn() != null){
-				transferInCurrency.setText(moneyTopup.getTransferIn().getCurrency().getName() + "(" + moneyTopup.getTransferIn().getCurrencyId() + ")");
-				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
-//				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
-				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+				if (!moneyTopup.getTransferIn().getCurrencyId().equals(moneyTopup.getProject().getCurrencyId())) {
+					transferInCurrency.setText(moneyTopup.getTransferIn().getCurrency().getName() + "(" + moneyTopup.getTransferIn().getCurrencyId() + ")");
+					mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+	//				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
+					mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+				}
 			}
 			if(moneyTopup.getTransferOut() != null){
-				transferOutCurrency.setText(moneyTopup.getTransferOut().getCurrency().getName() + "(" + moneyTopup.getTransferOut().getCurrencyId() + ")");
-				mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+				if (!moneyTopup.getTransferOut().getCurrencyId().equals(moneyTopup.getProject().getCurrencyId())) {
+					transferOutCurrency.setText(moneyTopup.getTransferOut().getCurrency().getName() + "(" + moneyTopup.getTransferOut().getCurrencyId() + ")");
+					mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+				}
 			} else if(moneyTopup.getTransferIn() != null){
 				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
 			if (moneyTopup.getTransferOut() == null || moneyTopup.getTransferIn() == null) {
+				mViewSeparatorTransferInAmount.setVisibility(View.GONE);
 				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 			} else {
 				if (moneyTopup.getTransferOut().getCurrencyId().equals(moneyTopup.getTransferIn().getCurrencyId())) {

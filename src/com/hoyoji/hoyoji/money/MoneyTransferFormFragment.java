@@ -608,18 +608,23 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			projectTransferInCurrency.setText(moneyTransfer.getProject().getCurrency().getName() + "(" + moneyTransfer.getProject().getCurrencyId() + ")");
 			
 			if(moneyTransfer.getTransferIn() != null){
-				transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
-				mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
-//				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
-				mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+				if (!moneyTransfer.getTransferIn().getCurrencyId().equals(moneyTransfer.getProject().getCurrencyId())) {
+					transferInCurrency.setText(moneyTransfer.getTransferIn().getCurrency().getName() + "(" + moneyTransfer.getTransferIn().getCurrencyId() + ")");
+					mViewSeparatorProjectTransferIn.setVisibility(View.VISIBLE);
+	//				mViewSeparatorProjectTransferIn1.setVisibility(View.VISIBLE);
+					mLinearLayoutProjectTransferIn.setVisibility(View.VISIBLE);
+				}
 			}
 			if(moneyTransfer.getTransferOut() != null){
-				transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
-				mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+				if (!moneyTransfer.getTransferOut().getCurrencyId().equals(moneyTransfer.getProject().getCurrencyId())) {
+					transferOutCurrency.setText(moneyTransfer.getTransferOut().getCurrency().getName() + "(" + moneyTransfer.getTransferOut().getCurrencyId() + ")");
+					mLinearLayoutTransferOutProject.setVisibility(View.VISIBLE);
+				}
 			} else{
 				mViewSeparatorProjectTransferIn.setVisibility(View.GONE);
 			}
 			if (moneyTransfer.getTransferOut() == null || moneyTransfer.getTransferIn() == null) {
+				mViewSeparatorTransferInAmount.setVisibility(View.GONE);
 				mLinearLayoutExchangeRate.setVisibility(View.GONE);
 			} else {
 				if (moneyTransfer.getTransferOut().getCurrencyId().equals(moneyTransfer.getTransferIn().getCurrencyId())) {

@@ -58,6 +58,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 	private HyjDateTimeField mDateTimeFieldEndDate = null;
 	private HyjSelectorField mSelectorFieldFriend = null;
 	private RadioGroup stateRadioGroup = null;
+	private RadioButton cancelSignUpRadioButton = null;
 	private RadioButton unSignUpRadioButton = null;
 	private RadioButton signUpRadioButton = null;
 	private RadioButton unSignInRadioButton = null;
@@ -199,6 +200,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		});	
 		
 		stateRadioGroup = (RadioGroup) getView().findViewById(R.id.projectEventMemberFormFragment_radioGroup_autoHide);
+		cancelSignUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_cancelSignUp);
 		unSignUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_unSignUp);
 		signUpRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_signUp);
 		unSignInRadioButton = (RadioButton) getView().findViewById(R.id.projectEventMemberFormFragment_radioButton_unSignIn);
@@ -211,6 +213,8 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			unSignInRadioButton.setChecked(true);
 		} else if("UnSignUp".equals(eventMember.getState())){
 			unSignUpRadioButton.setChecked(true);
+		} else if("CancelSignUp".equals(eventMember.getState())){
+			cancelSignUpRadioButton.setChecked(true);
 		}
 		
 //		if(eventMember.getLocalFriendId() == null){
@@ -254,6 +258,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 				getView().findViewById(R.id.button_save).setVisibility(View.GONE);
 				button_setting_nickName.setVisibility(View.VISIBLE);
 				stateRadioGroup.setEnabled(false);
+				cancelSignUpRadioButton.setEnabled(false);
 				unSignUpRadioButton.setEnabled(false);
 				unSignInRadioButton.setEnabled(false);
 				signUpRadioButton.setEnabled(false);
@@ -308,7 +313,9 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		modelCopy.setEventShareOwnerDataOnly(mCheckBoxEventShareOwnerDataOnly.isChecked());
 		
 		modelCopy.setNickName(mEventMemberNickName.getText().toString().trim());
-		if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_unSignUp){
+		if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_cancelSignUp){
+			modelCopy.setState("CancelSignUp");
+		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_unSignUp){
 			modelCopy.setState("UnSignUp");
 		} else if(stateRadioGroup.getCheckedRadioButtonId() == R.id.projectEventMemberFormFragment_radioButton_signUp){
 			modelCopy.setState("SignUp");

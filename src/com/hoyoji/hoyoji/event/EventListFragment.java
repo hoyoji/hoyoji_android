@@ -265,7 +265,9 @@ public class EventListFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_owner){
 			EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 			if(em != null){
-				if("UnSignUp".equals(em.getState())){
+				if("CancelSignUp".equals(em.getState())){
+					((TextView)view).setText("[取消报名]");
+				} else if("UnSignUp".equals(em.getState())){
 					((TextView)view).setText("[未报名]");
 				} else if("SignUp".equals(em.getState())){
 					((TextView)view).setText("[已报名]");

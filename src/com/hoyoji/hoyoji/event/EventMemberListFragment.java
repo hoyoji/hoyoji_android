@@ -43,9 +43,11 @@ public class EventMemberListFragment extends HyjUserListFragment {
 //	private QQShare mQQShare = null;
 //	public static QQAuth mQQAuth;
 	private Button mAllEventMember;
+	private Button mCancelSignUpEventMember;
 	private Button mSignUpEventMember;
 	private Button mUnSignInEventMember;
 	private Button mSignInEventMember;
+	private boolean mIsSelectCancelSignUpEventMembers = false;
 	private boolean mIsSelectSignUpEventMembers = false;
 	private boolean mIsSelectUnSignInEventMembers = false;
 	private boolean mIsSelectSignInEventMembers = false;
@@ -151,7 +153,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 //		Project project =  Model.load(Project.class, modelId);
 		arg1.putString("EVENTID", eventId);
 		
-		if(mIsSelectSignUpEventMembers == true){
+		if(mIsSelectCancelSignUpEventMembers == true){
+			arg1.putString("STATE", "CancelSignUp");
+		} else if(mIsSelectSignUpEventMembers == true){
 			arg1.putString("STATE", "SignUp");
 		} else if(mIsSelectUnSignInEventMembers == true){
 			arg1.putString("STATE", "UnSignIn");
@@ -171,6 +175,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 //		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
 		
 		mAllEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_all_event_member);
+		mCancelSignUpEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_cancel_sign_up_member);
 		mSignUpEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_sign_up_member);
 		mUnSignInEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_un_sign_in_member);
 		mSignInEventMember = (Button)getView().findViewById(R.id.eventMemberListFragment_action_sign_in_member);
@@ -178,12 +183,15 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		mAllEventMember.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				mIsSelectCancelSignUpEventMembers = false;
 				mIsSelectSignUpEventMembers = false;
 				mIsSelectSignInEventMembers = false;
 				mIsSelectUnSignInEventMembers = false;
 				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
 				mAllEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 				mAllEventMember.setTextColor(Color.WHITE);
+				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mCancelSignUpEventMember.setTextColor(Color.BLACK);
 				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mSignUpEventMember.setTextColor(Color.BLACK);
 				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
@@ -199,11 +207,14 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			@Override
 			public void onClick(View v) {
 				mIsSelectSignUpEventMembers = true;
+				mIsSelectCancelSignUpEventMembers = false;
 				mIsSelectUnSignInEventMembers = false;
 				mIsSelectSignInEventMembers = false;
 				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
 				mSignUpEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 				mSignUpEventMember.setTextColor(Color.WHITE);
+				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mCancelSignUpEventMember.setTextColor(Color.BLACK);
 				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mAllEventMember.setTextColor(Color.BLACK);
 				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
@@ -218,10 +229,13 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			public void onClick(View v) {
 				mIsSelectSignUpEventMembers = false;
 				mIsSelectSignInEventMembers = false;
+				mIsSelectCancelSignUpEventMembers = false;
 				mIsSelectUnSignInEventMembers = true;
 				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
 				mUnSignInEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 				mUnSignInEventMember.setTextColor(Color.WHITE);
+				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mCancelSignUpEventMember.setTextColor(Color.BLACK);
 				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mSignUpEventMember.setTextColor(Color.BLACK);
 				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
@@ -235,17 +249,41 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			@Override
 			public void onClick(View v) {
 				mIsSelectSignUpEventMembers = false;
+				mIsSelectCancelSignUpEventMembers = false;
 				mIsSelectUnSignInEventMembers = false;
 				mIsSelectSignInEventMembers = true;
 				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
 				mSignInEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
 				mSignInEventMember.setTextColor(Color.WHITE);
+				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mCancelSignUpEventMember.setTextColor(Color.BLACK);
 				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mSignUpEventMember.setTextColor(Color.BLACK);
 				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mAllEventMember.setTextColor(Color.BLACK);
 				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
 				mUnSignInEventMember.setTextColor(Color.BLACK);
+    		}
+		});
+		
+		mCancelSignUpEventMember.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mIsSelectSignUpEventMembers = false;
+				mIsSelectCancelSignUpEventMembers = true;
+				mIsSelectUnSignInEventMembers = false;
+				mIsSelectSignInEventMembers = false;
+				getLoaderManager().restartLoader(0, new Bundle(), EventMemberListFragment.this);
+				mCancelSignUpEventMember.setBackgroundColor(getResources().getColor(R.color.hoyoji_red));
+				mCancelSignUpEventMember.setTextColor(Color.WHITE);
+				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignUpEventMember.setTextColor(Color.BLACK);
+				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mAllEventMember.setTextColor(Color.BLACK);
+				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mUnSignInEventMember.setTextColor(Color.BLACK);
+				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+				mSignInEventMember.setTextColor(Color.BLACK);
     		}
 		});
 	}
@@ -409,6 +447,8 @@ public class EventMemberListFragment extends HyjUserListFragment {
 					((TextView)view).setText("未签到");
 				} else if("UnSignUp".equals(em.getState())){
 					((TextView)view).setText("未报名");
+				} else if("CancelSignUp".equals(em.getState())){
+					((TextView)view).setText("取消报名");
 				}
 			} else {
 				((TextView)view).setText("");
