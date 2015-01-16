@@ -71,12 +71,12 @@ public class MoneyApportionField extends GridView {
         params.height = getMeasuredHeight();
     }
 	
-	public void init(Double totalAmount, List<? extends MoneyApportion> apportions, String projectId, String moneyTransactionId){
+	public void init(Double totalAmount, List<? extends MoneyApportion> apportions, String projectId, String eventId, String moneyTransactionId){
 		mMoneyTransactionId = moneyTransactionId;
 		mTotalAmount = totalAmount;
 		//List<PictureItem> pis = new ArrayList<PictureItem>();
 		for(int i=0; i < apportions.size(); i++){
-			ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportions.get(i), projectId, apportions.get(i).get_mId() == null ? ApportionItem.NEW : ApportionItem.UNCHANGED);
+			ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportions.get(i), projectId, eventId, apportions.get(i).get_mId() == null ? ApportionItem.NEW : ApportionItem.UNCHANGED);
 			mImageGridAdapter.add(pi);
 			//pis.add(pi);
 		}
@@ -98,7 +98,7 @@ public class MoneyApportionField extends GridView {
 		return count;
 	}
 	
-	public boolean addApportion(MoneyApportion apportion, String projectId, int state){
+	public boolean addApportion(MoneyApportion apportion, String projectId, String eventId, int state){
 		for(int i = 0; i < mImageGridAdapter.getCount(); i++){
 			ApportionItem<MoneyApportion> api = (ApportionItem<MoneyApportion>) mImageGridAdapter.getItem(i);
 			if((api.getApportion().getFriendUserId() != null && api.getApportion().getFriendUserId().equalsIgnoreCase(apportion.getFriendUserId())) ||
@@ -106,7 +106,7 @@ public class MoneyApportionField extends GridView {
 				return false;
 			}
 		}
-		ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, projectId, state);
+		ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, projectId, eventId, state);
 		mImageGridAdapter.add(pi);
 		return true;
 	}
@@ -251,7 +251,7 @@ public class MoneyApportionField extends GridView {
 		}
 	}
 	
-	public void changeProject(Project project, Class<? extends MoneyApportion> type){
+	public void changeProject(Project project, String eventId, Class<? extends MoneyApportion> type){
 		List<ProjectShareAuthorization> projectShareAuthorizations = project.getShareAuthorizations();
 //		Set<String> friendUserSet = new HashSet<String>();
 		Set<String> gridUserSet = new HashSet<String>();
@@ -326,7 +326,10 @@ public class MoneyApportionField extends GridView {
 	    while (it.hasNext()) {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
-	        if(item.getProjectId().equals(project.getId())){
+	        if(eventId == null){
+	        	eventId = "";
+	        }
+	        if(item.getProjectId().equals(project.getId()) && eventId.equals(HyjUtil.ifNull(item.getEventId(), ""))){
 	        	mImageGridAdapter.add(item);
 	        	if(item.getApportion().getFriendUserId() != null){
 	        		gridUserSet.add(item.getApportion().getFriendUserId());
@@ -396,7 +399,7 @@ public class MoneyApportionField extends GridView {
 						apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 						apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 						//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
-						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), eventId, ApportionItem.NEW);
 						mImageGridAdapter.add(pi);
 					} catch (InstantiationException e) {
 						e.printStackTrace();
@@ -419,7 +422,7 @@ public class MoneyApportionField extends GridView {
 				} else {
 					apportion.setApportionType("Share");
 				}
-				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+				ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), eventId, ApportionItem.NEW);
 				mImageGridAdapter.add(pi);
 			} catch (InstantiationException e) {
 			} catch (IllegalAccessException e) {
@@ -442,7 +445,11 @@ public class MoneyApportionField extends GridView {
 	    while (it.hasNext()) {
 	        // Get element
 	        ApportionItem<MoneyApportion> item = it.next();
-	        if(item.getProjectId().equals(project.getId())){
+	        String eventId = "";
+	        if(event != null){
+	        	eventId = event.getId();
+	        }
+	        if(item.getProjectId().equals(project.getId()) && eventId.equals(HyjUtil.ifNull(item.getEventId(), ""))){
 	        	EventMember em = null;
 	        	if(item.getApportion().getFriendUserId() != null){
 //					em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), item.getApportion().getFriendUserId()).executeSingle();
@@ -497,7 +504,7 @@ public class MoneyApportionField extends GridView {
 							apportion.setFriendUserId(projectShareAuthorizations.get(i).getFriendUserId());
 							apportion.setLocalFriendId(projectShareAuthorizations.get(i).getLocalFriendId());
 							//this.addApportion(apportion, project.getId(), ApportionItem.NEW);
-							ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+							ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), event.getId(), ApportionItem.NEW);
 							mImageGridAdapter.add(pi);
 						}
 					} catch (InstantiationException e) {
@@ -528,7 +535,7 @@ public class MoneyApportionField extends GridView {
 						} else {
 							apportion.setApportionType("Share");
 						}
-						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), ApportionItem.NEW);
+						ApportionItem<MoneyApportion> pi = new ApportionItem<MoneyApportion>(apportion, project.getId(), event.getId(), ApportionItem.NEW);
 						mImageGridAdapter.add(pi);
 					}
 				}
@@ -694,7 +701,11 @@ public class MoneyApportionField extends GridView {
 						& (~Paint.STRIKE_THRU_TEXT_FLAG));
 			}
 			if(vh.apportionItem.getProjectShareAuthorization() == null){
-				vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_non_project_member));
+				if(vh.apportionItem.getEventId() == null){
+					vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_non_project_member));
+				} else {
+					vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_event_member));
+				}
 			} else {
 				vh.textViewPercentage.setText(self.r.getString(R.string.moneyListItem_apportion_share) + vh.apportionItem.getSharePercentage() + "%");
 			}
@@ -719,24 +730,31 @@ public class MoneyApportionField extends GridView {
 		private int mState = UNCHANGED;
 		private T mApportion;
 		private String mProjectId;
+		private String mEventId;
 		private ProjectShareAuthorization mProjectShareAuthorization = null;
 		private Friend mFriend = null;
 		private Double mAmount;
 		private String mApportionType;
+		private EventMember mEventMember;
 //		
 //		ApportionItem(T apportion, String projectId){
 //			mApportion = apportion;
 //			mProjectId = projectId;
 //		}
 //		
-		public ApportionItem(T apportion, String projectId, int state){
+		public ApportionItem(T apportion, String projectId, String eventId, int state){
 			mApportion = apportion;
 			mState = state;
 			mProjectId = projectId;
+			mEventId = eventId;
 			mAmount = apportion.getAmount();
 			mApportionType = apportion.getApportionType();
 		}
 		
+		public String getEventId() {
+			return mEventId;
+		}
+
 		public Double getSharePercentage() {
 			if(this.getProjectShareAuthorization() != null){
 				return this.getProjectShareAuthorization().getSharePercentage();
@@ -744,9 +762,11 @@ public class MoneyApportionField extends GridView {
 			return 0.0;
 		}
 
-		public void changeProject(String projectId){
+		public void changeProject(String projectId, String eventId){
 			mProjectId = projectId;
 			mProjectShareAuthorization = null;
+			mEventId = eventId;
+			mEventMember = null;
 		}
 		
 		public ProjectShareAuthorization getProjectShareAuthorization(){
@@ -757,13 +777,25 @@ public class MoneyApportionField extends GridView {
 				} else if(mApportion.getLocalFriendId() != null){
 					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId=? AND state <> ?", 
 							mProjectId, mApportion.getLocalFriendId(), "Delete").executeSingle();
-				} else {
-					// 返回 待定成员 ？
-					mProjectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId IS NULL AND friendUserId IS NULL AND state <> ?", 
-							mProjectId, "Delete").executeSingle();
 				}
 			} 
 			return mProjectShareAuthorization;
+		}
+		
+		public EventMember getEventMember(){
+			if(mEventId == null){
+				return null;
+			}
+			if(mEventMember == null){
+				if(mApportion.getFriendUserId() != null) {
+					mEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
+						mEventId, mApportion.getFriendUserId()).executeSingle();
+				} else if(mApportion.getLocalFriendId() != null){
+					mEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
+							mEventId, mApportion.getLocalFriendId()).executeSingle();
+				}
+			} 
+			return mEventMember;
 		}
 		
 		public void setAmount(Double amount){
@@ -789,7 +821,16 @@ public class MoneyApportionField extends GridView {
 			if(this.getFriend() != null){
 				return this.getFriend().getDisplayName();
 			} else if(mApportion.getFriendUserId() == null){
-				return getProjectShareAuthorization().getFriendUserName();
+				EventMember em = getEventMember();
+				if(em != null){
+					return HyjUtil.ifNull(em.getNickName(), em.getFriendDisplayName());
+				}
+				ProjectShareAuthorization psa = getProjectShareAuthorization();
+				if(psa != null){
+					return psa.getFriendUserName();
+				} else {
+					return "NO NAME";
+				}
 			} else {
 				User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
 				if(user != null){

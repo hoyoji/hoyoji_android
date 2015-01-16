@@ -281,7 +281,7 @@ public class MessageDownloadService extends Service {
 					}
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Edit")) {
-					doEditProjectShareAuthorization(msgData, psa.getProjectShareMoneyExpenseOwnerDataOnly());
+					doEditProjectShareAuthorization(msgData, psa);
 					
 				} else if (newMessage.getType().equalsIgnoreCase(
 						"Project.Share.Delete")) {
@@ -422,7 +422,7 @@ public class MessageDownloadService extends Service {
 		
 	}
 
-	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData, final Boolean oldOwnerDataOnly) {
+	private void doEditProjectShareAuthorization(final JSONObject jsonMsgData, final ProjectShareAuthorization psa) {
 		// load new ProjectData from server
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
@@ -430,13 +430,11 @@ public class MessageDownloadService extends Service {
 							JSONArray jsonArray = (JSONArray) object;
 							JSONObject jsonObj = jsonArray.optJSONArray(0).optJSONObject(0);
 
-							String projectShareAuthorizationId = jsonMsgData.optString("projectShareAuthorizationId");
-							ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, projectShareAuthorizationId);
 							if(psa != null){
 								if(psa.getState().equals("Accept") && jsonObj.optString("state").equals("Accept")){
-									if(oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
+									if(psa.getProjectShareMoneyExpenseOwnerDataOnly() && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
 										loadSharedProjectData(jsonMsgData);
-									} else if(!oldOwnerDataOnly && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
+									} else if(!psa.getProjectShareMoneyExpenseOwnerDataOnly() && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
 										removeNonOwnerData(psa.getProjectId());
 										psa.loadFromJSON(jsonObj, true);
 										psa.save();

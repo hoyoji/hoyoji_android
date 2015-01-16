@@ -567,7 +567,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				} else {
 					apportion.setApportionType("Share");
 				}
-				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				mApportionFieldApportions.addApportion(apportion, project.getId(), null, ApportionItem.NEW);
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
@@ -596,7 +596,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					} else {
 						apportion.setApportionType("Share");
 					}
-					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+					mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 				}
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
@@ -660,7 +660,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			moneyApportions = moneyDepositReturnContainer.getApportions();
 		}
 		
-		mApportionFieldApportions.init(moneyDepositReturnContainer.getAmount0(), moneyApportions, moneyDepositReturnContainer.getProjectId(), moneyDepositReturnContainer.getId());
+		mApportionFieldApportions.init(moneyDepositReturnContainer.getAmount0(), moneyApportions, moneyDepositReturnContainer.getProjectId(), moneyDepositReturnContainer.getEventId(), moneyDepositReturnContainer.getId());
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyDepositReturnContainer> moneyDepositIncomeContainerEditor) {
@@ -1517,7 +1517,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 						mSelectorFieldEvent.setText(null);
 						mSelectorFieldEvent.setModelId(null);
-						mApportionFieldApportions.changeProject(project, MoneyDepositReturnApportion.class);
+						mApportionFieldApportions.changeProject(project, mSelectorFieldEvent.getModelId(), MoneyDepositReturnApportion.class);
 						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 					} else {
 						Event event = Event.load(Event.class, _id);
@@ -1675,7 +1675,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			}
 			apportion.setAmount(0.0);
 			apportion.setMoneyDepositReturnContainerId(mMoneyDepositReturnContainerEditor.getModel().getId());
-			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW)) {
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			} else {
 				HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);

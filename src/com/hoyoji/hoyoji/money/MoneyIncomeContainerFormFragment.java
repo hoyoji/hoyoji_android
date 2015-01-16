@@ -672,7 +672,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				} else {
 					apportion.setApportionType("Share");
 				}
-				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
@@ -700,7 +700,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					} else {
 						apportion.setApportionType("Share");
 					}
-					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+					mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 				}
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
@@ -783,7 +783,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			moneyApportions = moneyIncomeContainer.getApportions();
 		}
 		
-		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getId());
+		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getEventId(), moneyIncomeContainer.getId());
 	}
 	
 	private void setTemplateApportion(MoneyIncomeContainer moneyIncomeContainer, String apportionString) {
@@ -834,7 +834,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				e.printStackTrace();
 			}
 		}
-		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getId());
+		mApportionFieldApportions.init(moneyIncomeContainer.getAmount0(), moneyApportions, moneyIncomeContainer.getProjectId(), moneyIncomeContainer.getEventId(), moneyIncomeContainer.getId());
 			
 	}
 	
@@ -1995,7 +1995,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 	         		mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 	         		mSelectorFieldProject.setModelId(project.getId());
 	         		setExchangeRate(false);
-	         		mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);
+	         		mApportionFieldApportions.changeProject(project, mSelectorFieldEvent.getModelId(),MoneyIncomeApportion.class);
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 					
 					List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
@@ -2017,7 +2017,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
     					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
     					mSelectorFieldEvent.setText(null);
     					mSelectorFieldEvent.setModelId(null);
-    					mApportionFieldApportions.changeProject(project, MoneyIncomeApportion.class);
+    					mApportionFieldApportions.changeProject(project,mSelectorFieldEvent.getModelId(), MoneyIncomeApportion.class);
     					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
     				} else {
 	     				Event event = Event.load(Event.class, _id);
@@ -2361,7 +2361,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				apportion.setApportionType("Share");
 			}
 			apportion.setMoneyIncomeContainerId(mMoneyIncomeContainerEditor.getModel().getId());
-			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+			if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW)) {
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			} else {
 				HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
