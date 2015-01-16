@@ -273,7 +273,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		if(modelId != -1){
 			EventMember eventMember = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-			if(eventMember != null || !"UnSignUp".equals(eventMember.getState())){
+			if(eventMember != null && (!"UnSignUp".equals(eventMember.getState()) || !"CancelSignUp".equals(eventMember.getState()))){
 				button_cancel_signUp.setVisibility(View.VISIBLE);
 			}
 			if("Cancel".equals(event.getState())){

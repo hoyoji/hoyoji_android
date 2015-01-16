@@ -150,6 +150,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <RadioButton
+                android:id="@+id/projectEventMemberFormFragment_radioButton_cancelSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消报名" >
+            </RadioButton>
+            
+            <RadioButton
                 android:id="@+id/projectEventMemberFormFragment_radioButton_unSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

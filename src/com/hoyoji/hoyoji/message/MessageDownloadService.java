@@ -362,7 +362,7 @@ public class MessageDownloadService extends Service {
 					pem.getEvent().setSyncFromServer(true);
 					pem.getEvent().save();
 				} else if (newMessage.getType().equalsIgnoreCase("Event.Member.CancelSignUp")) {
-					pem.setState("UnSignUp");
+					pem.setState("CancelSignUp");
 					pem.setSyncFromServer(true);
 					pem.save();
 					
