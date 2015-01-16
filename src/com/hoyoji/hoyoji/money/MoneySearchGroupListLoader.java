@@ -319,7 +319,6 @@ public class MoneySearchGroupListLoader extends
 						cursor = null;
 					}
 
-					if(mEventId == null){ // 只有收入和支出才有活动
 						cursor = Cache
 								.openDatabase()
 								.rawQuery(
@@ -336,8 +335,6 @@ public class MoneySearchGroupListLoader extends
 							cursor.close();
 							cursor = null;
 						}
-					}
-	
 					cursor = Cache
 							.openDatabase()
 							.rawQuery(
@@ -418,7 +415,6 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-				if(mEventId == null){ // 只有收入和支出才有活动
 					cursor = Cache
 							.openDatabase()
 							.rawQuery(
@@ -435,7 +431,6 @@ public class MoneySearchGroupListLoader extends
 						cursor.close();
 						cursor = null;
 					}
-				}
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -653,7 +648,6 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			if(mEventId == null){ // 只有收入和支出才有活动
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -670,7 +664,6 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-			}
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(
@@ -862,7 +855,6 @@ public class MoneySearchGroupListLoader extends
 				cursor.close();
 				cursor = null;
 			}
-			if(mEventId == null){ // 只有收入和支出才有活动
 				cursor = Cache
 						.openDatabase()
 						.rawQuery(
@@ -879,7 +871,6 @@ public class MoneySearchGroupListLoader extends
 					cursor.close();
 					cursor = null;
 				}
-			}
 			cursor = Cache
 					.openDatabase()
 					.rawQuery(

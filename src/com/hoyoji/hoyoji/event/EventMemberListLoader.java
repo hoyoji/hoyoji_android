@@ -62,7 +62,7 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    	String ownerDataOnly = "";
 	    	EventMember me = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", mEventId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 	    	if(me != null && me.getEventShareOwnerDataOnly()){
-	    		ownerDataOnly = " AND (friendUserId='"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId = ownerUserId)";
+	    		ownerDataOnly = " AND (ownerUserId = '"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId='"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId = ownerUserId)";
 	    	}
 	    	if(mState == null){
 	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? " + ownerDataOnly, mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();

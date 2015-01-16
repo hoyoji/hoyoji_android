@@ -614,9 +614,11 @@ public class HyjUtil {
 						JSONArray array = (JSONArray) object;
 						if(array.length() > 0) {
 							JSONObject json = array.optJSONArray(0).optJSONObject(0);
-							HyjModel model = HyjModel.createModel(modelName, id);
-							model.loadFromJSON(json, true);
-							model.save();
+							if(json != null){
+								HyjModel model = HyjModel.createModel(modelName, id);
+								model.loadFromJSON(json, true);
+								model.save();
+							}
 						}
 						asyncLoading.remove(id);
 					}

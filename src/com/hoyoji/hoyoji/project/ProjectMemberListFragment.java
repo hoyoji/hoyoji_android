@@ -529,7 +529,6 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
-					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
 					numericView.setText(null);
 					return true;
@@ -559,7 +558,6 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
 					numericView.setSuffix(null);
-					numericView.setTextColor(Color.BLACK);
 					numericView.setPrefix("-");
 					numericView.setText(null);
 					return true;
