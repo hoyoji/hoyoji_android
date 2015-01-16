@@ -348,7 +348,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 			}
 		});
 		
-		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.projectFormFragment_textView_hint_financialOwner);
+		mTextViewFinancialOwner = (TextView) getView().findViewById(R.id.moneyDepositPaybackFormFragment_textView_hint_financialOwner);
 		mTextViewFinancialOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

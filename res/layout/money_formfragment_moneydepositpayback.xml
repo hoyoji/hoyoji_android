@@ -236,14 +236,13 @@
            </com.hoyoji.android.hyjframework.view.HyjSelectorField>
            
         <TextView
-	        android:id="@+id/projectFormFragment_textView_hint_financialOwner"
+	        android:id="@+id/moneyDepositPaybackFormFragment_textView_hint_financialOwner"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/projectFormFragment_textView_hint_financialOwner"
 	        android:textSize="12sp"
 	        android:padding="5dp"
 	        android:gravity="center"
-	        android:enabled="false"
 	        android:background="@color/hoyoji_lightgray"
 	        android:textColor="@color/gray" />
 
