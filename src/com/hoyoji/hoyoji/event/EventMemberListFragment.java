@@ -490,16 +490,20 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_owner) {
 			TextView textView = (TextView)view;
 			ProjectShareAuthorization psa = em.getProjectShareAuthorization();
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())) {
-				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true) {
-					textView.setText(null);
-					return true;
+			if(psa == null){
+				textView.setText("");
+			} else {
+				if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())) {
+					ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+					if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true) {
+						textView.setText(null);
+						return true;
+					}
 				}
+				Double settlement = psa.getSettlement();
+				String currencySymbol = psa.getProject().getCurrencySymbol();
+				textView.setText("账本结余:" + currencySymbol + settlement);
 			}
-			Double settlement = psa.getSettlement();
-			String currencySymbol = psa.getProject().getCurrencySymbol();
-			textView.setText("账本结余:" + currencySymbol + settlement);
 			return true;
 		}
 		return true;

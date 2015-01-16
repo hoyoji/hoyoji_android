@@ -543,7 +543,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 				} else {
 					apportion.setApportionType("Share");
 				}
-				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				mApportionFieldApportions.addApportion(apportion, project.getId(), null, ApportionItem.NEW);
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
@@ -572,7 +572,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					} else {
 						apportion.setApportionType("Share");
 					}
-					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+					mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 				}
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
@@ -637,7 +637,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 			moneyApportions = moneyDepositIncomeContainer.getApportions();
 		}
 		
-		mApportionFieldApportions.init(moneyDepositIncomeContainer.getAmount0(), moneyApportions, moneyDepositIncomeContainer.getProjectId(), moneyDepositIncomeContainer.getId());
+		mApportionFieldApportions.init(moneyDepositIncomeContainer.getAmount0(), moneyApportions, moneyDepositIncomeContainer.getProjectId(), moneyDepositIncomeContainer.getEventId(), moneyDepositIncomeContainer.getId());
 	}
 	
 	private void setupDeleteButton(HyjModelEditor<MoneyDepositIncomeContainer> moneyDepositIncomeContainerEditor) {
@@ -1459,7 +1459,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 						mSelectorFieldEvent.setText(null);
 						mSelectorFieldEvent.setModelId(null);
-						mApportionFieldApportions.changeProject(project, MoneyDepositIncomeApportion.class);
+						mApportionFieldApportions.changeProject(project, mSelectorFieldEvent.getModelId(), MoneyDepositIncomeApportion.class);
 						mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 					} else {
 						Event event = Event.load(Event.class, _id);
@@ -1615,7 +1615,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					apportion.setApportionType("Share");
 				}
 				apportion.setMoneyDepositIncomeContainerId(mMoneyDepositIncomeContainerEditor.getModel().getId());
-				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+				if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW)) {
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 				} else {
 					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);

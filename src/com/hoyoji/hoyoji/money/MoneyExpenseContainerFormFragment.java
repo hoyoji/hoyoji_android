@@ -713,7 +713,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				} else {
 					apportion.setApportionType("Share");
 				}
-				mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+				mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
@@ -742,7 +742,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					} else {
 						apportion.setApportionType("Share");
 					}
-					mApportionFieldApportions.addApportion(apportion, project.getId(), ApportionItem.NEW);
+					mApportionFieldApportions.addApportion(apportion, project.getId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW);
 				}
 			}
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
@@ -822,7 +822,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			moneyApportions = moneyExpenseContainer.getApportions();
 		}
 		
-		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
+		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getEventId(), moneyExpenseContainer.getId());
 	}
 	
 	private void setTemplateApportion(MoneyExpenseContainer moneyExpenseContainer, String apportionString) {
@@ -873,7 +873,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				e.printStackTrace();
 			}
 		}
-		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(), moneyExpenseContainer.getId());
+		mApportionFieldApportions.init(moneyExpenseContainer.getAmount0(), moneyApportions, moneyExpenseContainer.getProjectId(),  moneyExpenseContainer.getEventId(), moneyExpenseContainer.getId());
 			
 	}
 
@@ -1463,7 +1463,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				mSelectorFieldProject.setText(project.getDisplayName() + "(" + project.getCurrencyId() + ")");
 				mSelectorFieldProject.setModelId(project.getId());
 				setExchangeRate(false);
-				mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
+				mApportionFieldApportions.changeProject(project, mSelectorFieldEvent.getModelId(), MoneyExpenseApportion.class);
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 				List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
 				if(events.size() > 0) {
@@ -1484,7 +1484,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					mSelectorFieldEvent.setText(null);
 					mSelectorFieldEvent.setModelId(null);
-					mApportionFieldApportions.changeProject(project, MoneyExpenseApportion.class);
+					mApportionFieldApportions.changeProject(project, mSelectorFieldEvent.getModelId(), MoneyExpenseApportion.class);
 					mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 				} else {
 					Event event = Event.load(Event.class, _id);
@@ -1778,7 +1778,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			apportion.setApportionType("Share");
 		}
 		apportion.setMoneyExpenseContainerId(mMoneyExpenseContainerEditor.getModel().getId());
-		if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(), ApportionItem.NEW)) {
+		if (mApportionFieldApportions.addApportion(apportion,mSelectorFieldProject.getModelId(),mSelectorFieldEvent.getModelId(), ApportionItem.NEW)) {
 			mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);

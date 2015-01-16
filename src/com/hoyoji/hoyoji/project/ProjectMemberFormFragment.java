@@ -394,6 +394,7 @@ public class ProjectMemberFormFragment extends HyjUserFormFragment {
 			modelCopy.setState("NotInvite");
 		}
 		
+
 		modelCopy.setProjectShareMoneyExpenseOwnerDataOnly(mCheckBoxShareAuthExpenseSelf.isChecked());
 		modelCopy.setProjectShareMoneyExpenseAddNew(mCheckBoxShareAuthExpenseAdd.isChecked());
 		modelCopy.setProjectShareMoneyExpenseEdit(mCheckBoxShareAuthExpenseEdit.isChecked());

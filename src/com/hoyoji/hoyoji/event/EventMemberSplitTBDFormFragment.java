@@ -197,7 +197,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			} else {
 				apportion.setApportionType("Share");
 			}
-			mApportionFieldApportions.addApportion(apportion, projectShareAuthorization.getProjectId(), ApportionItem.NEW);
+			mApportionFieldApportions.addApportion(apportion, projectShareAuthorization.getProjectId(), event.getId(), ApportionItem.NEW);
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		}
 	}
@@ -364,7 +364,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
  				String id = data.getStringExtra("MODELID");
  				ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, id);
  				if(psa != null){
- 					addAsProjectMember(psa);
+ 					addAsProjectMember(psa, eventMember.getEventId());
  				} else {
  					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
  				}
@@ -424,11 +424,11 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 					return;
 				}
 			}
-			addAsProjectMember(psa);
+			addAsProjectMember(psa, eventMember.getEventId());
 		
 	}
 
-	private void addAsProjectMember(ProjectShareAuthorization psa){
+	private void addAsProjectMember(ProjectShareAuthorization psa, String eventId){
 		MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 		apportion.setFriendUserId(psa.getFriendUserId());
 		apportion.setLocalFriendId(psa.getLocalFriendId());
@@ -438,7 +438,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		} else {
 			apportion.setApportionType("Share");
 		}
-		if (mApportionFieldApportions.addApportion(apportion,eventMember.getProjectId(), ApportionItem.NEW)) {
+		if (mApportionFieldApportions.addApportion(apportion,eventMember.getProjectId(), eventId, ApportionItem.NEW)) {
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
