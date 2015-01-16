@@ -44,8 +44,10 @@ import com.hoyoji.hoyoji.models.MoneyLendApportion;
 import com.hoyoji.hoyoji.models.MoneyLendContainer;
 import com.hoyoji.hoyoji.models.MoneyPayback;
 import com.hoyoji.hoyoji.models.MoneyPaybackApportion;
+import com.hoyoji.hoyoji.models.MoneyPaybackContainer;
 import com.hoyoji.hoyoji.models.MoneyReturn;
 import com.hoyoji.hoyoji.models.MoneyReturnApportion;
+import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.MoneyTransfer;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.Project;
@@ -435,7 +437,7 @@ public class MessageDownloadService extends Service {
 									if(psa.getProjectShareMoneyExpenseOwnerDataOnly() && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") != 1){
 										loadSharedProjectData(jsonMsgData);
 									} else if(!psa.getProjectShareMoneyExpenseOwnerDataOnly() && jsonObj.optInt("projectShareMoneyExpenseOwnerDataOnly") == 1){
-										removeNonOwnerData(psa.getProjectId());
+										removeProjectNonOwnerData(psa.getProjectId());
 										psa.loadFromJSON(jsonObj, true);
 										psa.save();
 									}
@@ -475,34 +477,34 @@ public class MessageDownloadService extends Service {
 		}
 	}
 
-	protected void removeNonOwnerData(String projectId) {
+	protected void removeProjectNonOwnerData(String projectId) {
 //		try{
 			ActiveAndroid.beginTransaction();
 			String curUserId = HyjApplication.getInstance().getCurrentUser().getId();
-			removeListModelFromDB(new Select().from(MoneyExpense.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncome.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrow.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLend.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyReturn.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyPayback.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyTransfer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyExpense.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyIncome.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyBorrow.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyLend.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyReturn.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyPayback.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyTransfer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
 			
-			removeListModelFromDB(new Select().from(MoneyExpenseApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositIncomeApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrowApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLendApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositReturnApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyPaybackApportion.class).where("ownerUserId <> ?", curUserId).execute());
-			removeListModelFromDB(new Select().from(Picture.class).where("ownerUserId <> ?", curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyExpenseApportion.class).as("t").join(MoneyExpenseContainer.class).as("t1").on("t.moneyExpenseContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyIncomeApportion.class).as("t").join(MoneyIncomeContainer.class).as("t1").on("t.moneyIncomeContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyDepositIncomeApportion.class).as("t").join(MoneyDepositIncomeContainer.class).as("t1").on("t.moneyDepositIncomeContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyBorrowApportion.class).as("t").join(MoneyBorrowContainer.class).as("t1").on("t.moneyBorrowContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyLendApportion.class).as("t").join(MoneyLendContainer.class).as("t1").on("t.moneyLendContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyReturnApportion.class).as("t").join(MoneyReturnContainer.class).as("t1").on("t.moneyReturnContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyDepositReturnApportion.class).as("t").join(MoneyDepositReturnContainer.class).as("t1").on("t.moneyDepositReturnContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t.*").from(MoneyPaybackApportion.class).as("t").join(MoneyPaybackContainer.class).as("t1").on("t.moneyPaybackContainerId = t1.id").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select().from(Picture.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
 			
-			removeListModelFromDB(new Select().from(MoneyExpenseContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositIncomeContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyLendContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyBorrowContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
-			removeListModelFromDB(new Select().from(MoneyDepositReturnContainer.class).where("projectId=? AND ownerUserId <> ?", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyExpenseContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ?  AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyIncomeContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyDepositIncomeContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyLendContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyBorrowContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
+			removeListModelFromDB(new Select("t1.*").from(MoneyDepositReturnContainer.class).as("t1").leftJoin(EventMember.class).as("t2").on("t1.eventId = t2.eventId AND t2.friendUserId='" + curUserId + "'").where("t1.projectId=? AND t1.ownerUserId <> ? AND (t1.eventId IS NULL OR t2.eventShareOwnerDataOnly = 1) ", projectId, curUserId).execute());
 
 			Project project = HyjModel.getModel(Project.class, projectId);
 			if(!project.getOwnerUserId().equals(curUserId)){
