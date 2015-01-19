@@ -19,6 +19,7 @@ import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
 import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.aaevent_android.R;
+import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.MoneyBorrowApportion;
 import com.hoyoji.hoyoji.models.MoneyDepositExpenseContainer;
@@ -206,6 +207,13 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 				Project project = HyjModel.getModel(Project.class, projectId);
 				if(project != null){
 					bundle.putString("projectId", projectId);
+				}
+			}
+			String eventId = messageData.optString("eventId");
+			if(eventId != null && eventId.length() > 0){
+				Event event = HyjModel.getModel(Event.class, eventId);
+				if(event != null){
+					bundle.putString("eventId", eventId);
 				}
 			}
 			
