@@ -283,6 +283,14 @@ public class HyjUtil {
 			}
 		}
 		
+		public static String ifEmpty(String obj1, String obj2){
+			if(obj1 == null || obj1.length() == 0){
+				return obj2;
+			} else {
+				return obj1;
+			}
+		}
+		
 		public static <T extends Object> T ifJSONNull(JSONObject jsonObj, String field1, T obj){
 			if(jsonObj.isNull(field1)){
 				return obj;

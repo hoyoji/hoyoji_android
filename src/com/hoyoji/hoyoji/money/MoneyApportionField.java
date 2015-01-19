@@ -823,7 +823,7 @@ public class MoneyApportionField extends GridView {
 			} else if(mApportion.getFriendUserId() == null){
 				EventMember em = getEventMember();
 				if(em != null){
-					return HyjUtil.ifNull(em.getNickName(), em.getFriendDisplayName());
+					return HyjUtil.ifEmpty(em.getNickName(), em.getFriendDisplayName());
 				}
 				ProjectShareAuthorization psa = getProjectShareAuthorization();
 				if(psa != null){
