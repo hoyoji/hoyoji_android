@@ -2120,7 +2120,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
     				String id = data.getStringExtra("MODELID");
     				ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, id);
     				if(psa != null){
-    					addAsProjectMember(psa);
+    					addAsProjectMember(psa, "ProjectShareAuthorization", new long[]{});
     				} else {
     					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
     				}
@@ -2347,10 +2347,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					}
 				}
 			}
-			addAsProjectMember(psa);
+			addAsProjectMember(psa, type, _ids);
 		}
 
-		private void addAsProjectMember(ProjectShareAuthorization psa){
+		private void addAsProjectMember(ProjectShareAuthorization psa, final String type, final long _ids[]){
 			MoneyIncomeApportion apportion = new MoneyIncomeApportion();
 			apportion.setFriendUserId(psa.getFriendUserId());
 			apportion.setLocalFriendId(psa.getLocalFriendId());
@@ -2365,6 +2365,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				mApportionFieldApportions.setTotalAmount(mNumericAmount.getNumber());
 			} else {
 				HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
+			}
+			if(_ids.length > 0){
+				AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
 			}
 		}
 		

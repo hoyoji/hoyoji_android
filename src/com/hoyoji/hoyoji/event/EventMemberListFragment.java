@@ -69,6 +69,11 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		return R.menu.project_listfragment_event_member;
 	}
 
+	public Integer useMultiSelectMenuPickerView() {
+		return R.menu.multi_select_menu_picker;
+//		return null;
+	}
+	
 	@Override
 	public ListAdapter useListViewAdapter() {
 //		return new SimpleCursorAdapter(getActivity(),

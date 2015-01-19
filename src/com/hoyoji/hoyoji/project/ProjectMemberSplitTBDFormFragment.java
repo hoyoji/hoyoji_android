@@ -357,7 +357,7 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
  				String id = data.getStringExtra("MODELID");
  				ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, id);
  				if(psa != null){
- 					addAsProjectMember(psa, null);
+ 					addAsProjectMember(psa, null, "ProjectShareAuthorization", new long[]{});
  				} else {
  					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
  				}
@@ -414,11 +414,11 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
 					return;
 				}
 			}
-			addAsProjectMember(psa, null);
+			addAsProjectMember(psa, null, type, _ids);
 		
 	}
 
-	private void addAsProjectMember(ProjectShareAuthorization psa, String eventId){
+	private void addAsProjectMember(ProjectShareAuthorization psa, String eventId, final String type, final long _ids[]){
 		MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 		apportion.setFriendUserId(psa.getFriendUserId());
 		apportion.setLocalFriendId(psa.getLocalFriendId());
@@ -432,6 +432,9 @@ public class ProjectMemberSplitTBDFormFragment extends HyjUserFormFragment {
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
+		}
+		if(_ids.length > 0){
+			AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
 		}
 	}
 

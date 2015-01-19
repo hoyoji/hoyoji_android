@@ -467,11 +467,11 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 							});
 					return;
 				}
-			addAsProjectMember(psa, mEventMember.getEventId());
+			addAsProjectMember(psa, mEventMember.getEventId(), type, _ids);
 		
 	}
 
-	private void addAsProjectMember(ProjectShareAuthorization psa, String eventId){
+	private void addAsProjectMember(ProjectShareAuthorization psa, String eventId, final String type, final long _ids[]){
 		MoneyExpenseApportion apportion = new MoneyExpenseApportion();
 		apportion.setFriendUserId(psa.getFriendUserId());
 		apportion.setLocalFriendId(psa.getLocalFriendId());
@@ -485,6 +485,9 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
+		}
+		if(_ids.length > 0){
+			AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
 		}
 	}
 
