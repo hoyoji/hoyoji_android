@@ -685,32 +685,33 @@ public class MoneyExpenseContainer extends HyjModel{
 									eventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
 											mMoneyExpenseContainerEditor.getModelCopy().getEventId(), apportion.getLocalFriendId()).executeSingle();
 								}
+								if(eventMember != null){
 								HyjModelEditor<EventMember> eventMemberEditor = eventMember.newModelEditor();
-								
-								if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
-										mMoneyExpenseContainerEditor.getModelCopy().getEventId().equals(mMoneyExpenseContainerEditor.getModel().getEventId())){
-									 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
-									eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
-									eventMemberEditor.save();
-								} else {
-									//更新新账本分摊支出
-									eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
-									eventMemberEditor.save();
-									
-									if(mMoneyExpenseContainerEditor.getModel().getEventId() != null){
-										//更新老账本分摊支出
-										EventMember oldEventMember;
-										if(apportion.getFriendUserId() != null){
-											oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
-													mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
-										} else {
-											oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
-													mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
-										}
-										if(oldEventMember != null){
-											HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
-											oldEventMemberEditor.getModelCopy().setApportionedTotalExpense(oldEventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate));
-											oldEventMemberEditor.save();
+									if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null || 
+											mMoneyExpenseContainerEditor.getModelCopy().getEventId().equals(mMoneyExpenseContainerEditor.getModel().getEventId())){
+										 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
+										eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
+										eventMemberEditor.save();
+									} else {
+										//更新新账本分摊支出
+										eventMemberEditor.getModelCopy().setApportionedTotalExpense(eventMember.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
+										eventMemberEditor.save();
+										
+										if(mMoneyExpenseContainerEditor.getModel().getEventId() != null){
+											//更新老账本分摊支出
+											EventMember oldEventMember;
+											if(apportion.getFriendUserId() != null){
+												oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
+														mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getFriendUserId()).executeSingle();
+											} else {
+												oldEventMember = new Select().from(EventMember.class).where("eventId=? AND localFriendId=?", 
+														mMoneyExpenseContainerEditor.getModel().getEventId(), apportion.getLocalFriendId()).executeSingle();
+											}
+											if(oldEventMember != null){
+												HyjModelEditor<EventMember> oldEventMemberEditor = oldEventMember.newModelEditor();
+												oldEventMemberEditor.getModelCopy().setApportionedTotalExpense(oldEventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate));
+												oldEventMemberEditor.save();
+											}
 										}
 									}
 								}

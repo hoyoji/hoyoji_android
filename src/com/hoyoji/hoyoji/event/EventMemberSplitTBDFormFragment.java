@@ -447,7 +447,6 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 									if(psaCopy.getFriendUserId() != null){
 										bundle.putString("FRIEND_USERID", psaCopy.getFriendUserId());
 									} else {
-										
 										bundle.putString("LOCAL_FRIENDID", psaCopy.getLocalFriendId());
 									}
 									
