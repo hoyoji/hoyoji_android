@@ -502,7 +502,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				}
 				Double settlement = psa.getSettlement();
 				String currencySymbol = psa.getProject().getCurrencySymbol();
-				textView.setText("账本结余:" + currencySymbol + settlement);
+				textView.setText("账本结余:" + currencySymbol + HyjUtil.toFixed2(settlement));
 			}
 			return true;
 		}
