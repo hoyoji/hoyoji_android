@@ -66,8 +66,10 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 
 	protected static final int GET_APPORTION_MEMBER_ID = 0;
 	private static final int ADD_AS_PROJECT_MEMBER = 1;
+	protected static final int ADD_AS_EVENT_MEMBER = 0;
 
-	EventMember eventMember;
+	EventMember mEventMember;
+	Event mEvent;
 	private HyjTextField mTextFieldProjectName = null;
 
 	private MoneyApportionField mApportionFieldApportions;
@@ -80,15 +82,14 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData(){
 		super.onInitViewData();
-		final Event event;
 		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		eventMember =  EventMember.load(EventMember.class, modelId);
-		event = eventMember.getEvent();
+		mEventMember =  EventMember.load(EventMember.class, modelId);
+		mEvent = mEventMember.getEvent();
 		
 		boolean _canNotEdit = false;
-		if(!eventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(!mEventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			_canNotEdit = true;
 		}
 		final boolean canNotEdit = _canNotEdit;
@@ -97,7 +98,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 //		mProjectShareAuthorizations.add(projectShareAuthorization);
 		
 		mTextFieldProjectName = (HyjTextField) getView().findViewById(R.id.eventMemberTBDFormFragment_textField_eventName);
-		mTextFieldProjectName.setText(event.getName());
+		mTextFieldProjectName.setText(mEvent.getName());
 		mTextFieldProjectName.setEnabled(false);
 		
 		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.eventMemberTBDFormFragment_apportionField);
@@ -106,7 +107,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				Event event = eventMember.getEvent();
+				Event event = mEventMember.getEvent();
 				bundle.putLong("MODEL_ID", event.getProject().get_mId());
 				if(!event.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
@@ -120,7 +121,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		getView().findViewById(R.id.eventMemberTBDFormFragment_imageButton_apportion_add_all).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addAllEventMemberIntoApportionsField(eventMember.getEvent());
+				addAllEventMemberIntoApportionsField(mEventMember.getEvent());
 			}
 		});
 		
@@ -167,8 +168,8 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				bundle.putLong("EVENT_ID", event.get_mId());
-				bundle.putString("LOCAL_FRIENDID", eventMember.getLocalFriendId());
+				bundle.putLong("EVENT_ID", mEvent.get_mId());
+				bundle.putString("LOCAL_FRIENDID", mEventMember.getLocalFriendId());
 				openActivityWithFragment(ProjectMoneyTBDListFragment.class, R.string.eventMemberTBDFormFragment_title_transactions, bundle);
 			}
 		});
@@ -205,9 +206,9 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		if(eventMember != null && eventMember.get_mId() != null){
+		if(mEventMember != null && mEventMember.get_mId() != null){
 				boolean canNotEdit = false;
-				if(!eventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+				if(!mEventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					canNotEdit = true;
 				} 
 				if(canNotEdit){
@@ -229,7 +230,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 	public void onSave(View v){
 		super.onSave(v);
 		
-		if(!eventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+		if(!mEventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 			HyjUtil.displayToast("只有账本拥有人才能进行拆分");
 			return;
 		}
@@ -328,8 +329,8 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 			
 			JSONObject data = new JSONObject();
 			try {
-				data.put("eventId", eventMember.getEventId());
-				data.put("tbdFriendId", eventMember.getLocalFriendId());
+				data.put("eventId", mEventMember.getEventId());
+				data.put("tbdFriendId", mEventMember.getLocalFriendId());
 				data.put("apportions", jsonArray);
 			} catch (JSONException e) {
 				HyjUtil.displayToast(e.getMessage());
@@ -364,7 +365,8 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
  				String id = data.getStringExtra("MODELID");
  				ProjectShareAuthorization psa = HyjModel.getModel(ProjectShareAuthorization.class, id);
  				if(psa != null){
- 					addAsProjectMember(psa, eventMember.getEventId());
+// 					addAsProjectMember(psa, mEventMember.getEventId());
+ 					AddApportionMember("ProjectShareAuthorization", psa.get_mId().longValue(), new long[]{});
  				} else {
  					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
  				}
@@ -387,9 +389,9 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 				final Friend friend = Friend.load(Friend.class, _id);
 				//看一下该好友是不是账本成员
 				if(friend.getFriendUserId() != null){
-					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), eventMember.getProjectId()).executeSingle();
+					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mEventMember.getProjectId()).executeSingle();
 				} else {
-					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", friend.getId(), eventMember.getProjectId()).executeSingle();
+					psa = new Select().from(ProjectShareAuthorization.class).where("localFriendId=? AND projectId=? AND state <> 'Delete'", friend.getId(), mEventMember.getProjectId()).executeSingle();
 				}
 				
 				if(psa == null){
@@ -398,7 +400,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 								@Override
 								public void doPositiveClick(Object object) {
 									Bundle bundle = new Bundle();
-									bundle.putString("PROJECTID", eventMember.getProjectId());
+									bundle.putString("PROJECTID", mEventMember.getProjectId());
 									if(friend.getFriendUserId() != null){
 										bundle.putString("FRIEND_USERID", friend.getFriendUserId());
 									} else {
@@ -422,9 +424,51 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 					
 //					HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_member);
 					return;
-				}
+				} 
 			}
-			addAsProjectMember(psa, eventMember.getEventId());
+				EventMember em = null;
+				if (psa.getFriendUserId() != null) {
+					em = new Select().from(EventMember.class).where("friendUserId=? AND eventId=?", psa.getFriendUserId(), mEvent.getId()).executeSingle();
+				} else {
+					em = new Select().from(EventMember.class).where("localFriendId=? AND eventId=?", psa.getLocalFriendId(), mEvent.getId()).executeSingle();
+				}
+				if(em == null){
+					final ProjectShareAuthorization psaCopy = psa;
+					
+					((HyjActivity)getActivity()).displayDialog(
+							psa.getFriendDisplayName() + " " +  getString(R.string.moneyApportionField_select_toast_apportion_user_not_event_member), 
+							getString(R.string.moneyApportionField_select_confirm_apportion_add_as_event_member), 
+							R.string.alert_dialog_yes, R.string.alert_dialog_no, -1, 
+							new DialogCallbackListener() {
+								@Override
+								public void doPositiveClick(Object object) {
+									Bundle bundle = new Bundle();
+									bundle.putLong("EVENT_ID", mEvent.get_mId());
+									if(psaCopy.getFriendUserId() != null){
+										bundle.putString("FRIEND_USERID", psaCopy.getFriendUserId());
+									} else {
+										
+										bundle.putString("LOCAL_FRIENDID", psaCopy.getLocalFriendId());
+									}
+									
+									openActivityWithFragmentForResult(EventMemberFormFragment.class, R.string.moneyApportionField_moreActions_event_member_add, bundle, ADD_AS_PROJECT_MEMBER);
+									if(_ids.length > 0){
+										AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
+									}
+								}
+		
+								@Override
+								public void doNegativeClick() {
+									if(_ids.length > 0){
+										AddApportionMember(type, _ids[0], HyjUtil.arrayTail(_ids));
+									} else {
+										HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_not_event_member);
+									}
+								}
+							});
+					return;
+				}
+			addAsProjectMember(psa, mEventMember.getEventId());
 		
 	}
 
@@ -438,7 +482,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		} else {
 			apportion.setApportionType("Share");
 		}
-		if (mApportionFieldApportions.addApportion(apportion,eventMember.getProjectId(), eventId, ApportionItem.NEW)) {
+		if (mApportionFieldApportions.addApportion(apportion,mEventMember.getProjectId(), eventId, ApportionItem.NEW)) {
 //			mApportionFieldApportions.setTotalAmount(0.0);
 		} else {
 			HyjUtil.displayToast(R.string.moneyApportionField_select_toast_apportion_user_already_exists);
