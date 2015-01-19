@@ -238,13 +238,13 @@ public class EventListFragment extends HyjUserListFragment {
 				long endDate = event.getEndDate(); 
 				long dt = (new Date()).getTime();
 	//			List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state <> ?", cursor.getString(columnIndex), "UnSignUp").execute();
-				if(dt >= date && dt < startDate) {
-					((TextView)view).setText("[报名中]" + event.getSignUpCount() + "人");
-				} else if(dt >= startDate && dt < endDate) {
+				if(dt >= startDate && dt < endDate) {
 					((TextView)view).setText("[进行中]" + event.getSignUpCount() + "人");
 				} else if(dt >= endDate) {
 					((TextView)view).setText("[已结束]" + event.getSignUpCount() + "人");
-				}
+				} else if(dt < startDate) {
+					((TextView)view).setText("[报名中]" + event.getSignUpCount() + "人");
+				} 
 			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
