@@ -53,7 +53,7 @@ public class HyjApplication extends Application {
 		if(mIsDebuggable){
 			return "http://hoyojitest.duapp.com/";
 		} else {
-			return "http://hoyoji.duapp.com/";
+			return "http://aaevent.duapp.com/";
 		}
 	}
 	
