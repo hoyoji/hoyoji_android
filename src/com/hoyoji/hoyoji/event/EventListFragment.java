@@ -191,6 +191,9 @@ public class EventListFragment extends HyjUserListFragment {
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView textView = (HyjNumericView)view;
 			Project project = event.getProject();
+			if(project == null){
+				return true;
+			}
 //			String projectId = event.getProjectId();
 //			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 //			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){

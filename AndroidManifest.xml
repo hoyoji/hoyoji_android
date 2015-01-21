@@ -82,14 +82,14 @@
             android:label="@string/loginActivity_title"
             android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait"
-		    android:launchMode="singleTask" >
+		    android:launchMode="singleTask">
         </activity>
         <activity
             android:name="com.hoyoji.hoyoji.RegisterActivity"
             android:label="@string/registerActivity_title"
             android:windowSoftInputMode="adjustPan" 
             android:screenOrientation="portrait"
-		    android:launchMode="singleTop">
+		    android:launchMode="singleTask">
         </activity>
 <!--         <activity
             android:name="com.hoyoji.hoyoji.SettingsActivity"
@@ -129,7 +129,7 @@
 		           <action android:name="android.intent.action.VIEW" />
 		           <category android:name="android.intent.category.DEFAULT" />
 		           <category android:name="android.intent.category.BROWSABLE" />
-		           <data android:scheme="tencent1101515571" />
+		           <data android:scheme="tencent101162541" />
 		    </intent-filter>
 		 </activity>
 		 
