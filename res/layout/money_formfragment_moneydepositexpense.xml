@@ -241,6 +241,8 @@
 	        android:gravity="center"
 	        android:textSize="12sp"
 	        android:padding="5dp"
+		    android:singleLine="true"
+		    android:ellipsize="end"
 	        android:background="@color/hoyoji_lightgray"
 	        android:textColor="@color/gray" />
         

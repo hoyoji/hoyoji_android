@@ -139,7 +139,17 @@ public abstract class HyjActivity extends ActionBarActivity
 		mDialogFragment = HyjDialogFragment.newInstance(title, msg, positiveButton, negativeButton, NeutralButton);
 		mDialogFragment.show(getSupportFragmentManager(), "dialog");
 	} 
-
+	
+	public void displayDialog(DialogFragment dialogFragment, DialogCallbackListener dialogCallback) {
+		this.mDialogCallback = dialogCallback;
+		
+		if(mDialogFragment != null){
+			mDialogFragment.dismiss();
+		}
+		
+		mDialogFragment = dialogFragment;
+		mDialogFragment.show(getSupportFragmentManager(), "dialog");
+	} 
 	
 	public static class DialogCallbackListener {
 		public void doNegativeClick() {}
