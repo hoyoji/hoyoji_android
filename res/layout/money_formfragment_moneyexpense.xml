@@ -241,7 +241,13 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/projectFormFragment_textView_hint_financialOwner"
-	        android:textColor="#999999" />
+	        android:gravity="center"
+	        android:textSize="12sp"
+	        android:padding="5dp"
+		    android:singleLine="true"
+		    android:ellipsize="end"
+	        android:background="@color/hoyoji_lightgray"
+	        android:textColor="@color/gray" />
            
         <View
             android:id="@id/field_separator"

@@ -78,7 +78,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	
 	@Override
 	public Integer useContentView() {
-		return R.layout.project_formfragment_event;
+		return R.layout.event_formfragment_event;
 	}
 
 	@Override
@@ -303,7 +303,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 				}
 			}
 		} else {
-			mRemarkFieldDescription.setText("小伙伴们，又好久不见了，一起聚聚吧！\n\n地点：老地方\n费用：AA\n其他：可以带家属\n\n温馨提示：喝酒的就别开车了");
+			mRemarkFieldDescription.setText("小伙伴们，好久不见了，一起聚聚吧！\n\n地点：老地方\n费用：AA\n其他：可以带家属\n\n温馨提示：喝酒的就别开车了");
 //			mButtonExpandMore.setImageResource(R.drawable.ic_action_collapse);
 //			mLinearLayoutExpandMore.setVisibility(View.VISIBLE);
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -356,13 +356,21 @@ public class EventFormFragment extends HyjUserFormFragment {
 //				cancelEvent();
 //			} else {
 			if(mEventEditor.getModelCopy().getProjectId() == null){
-				((HyjActivity)getActivity()).displayDialog("选择活动账本", "您没有为本活动选择一个账本，是否要创建一个新账本来记录该活动下产生的账务？", R.string.alert_dialog_yes, R.string.alert_dialog_no, -1,
+				EventFormCreateProjectDialogFragment createProjectDialog = EventFormCreateProjectDialogFragment.newInstance(null); 
+				((HyjActivity)getActivity()).displayDialog(createProjectDialog,
 						new DialogCallbackListener() {
 							@Override
 							public void doPositiveClick(Object object) {
 								Bundle bundle = new Bundle();
 								bundle.putString("PROJECT_NAME", mEventEditor.getModelCopy().getName());
 								openActivityWithFragmentForResult(ProjectFormFragment.class, R.string.projectFormFragment_title_addnew, bundle, CREATE_NEW_PROJECT_AND_SAVE);
+							}
+							@Override
+							public void doNeutralClick() {
+								EventFormFragment.this.openActivityWithFragmentForResult(
+										ProjectListFragment.class,
+										R.string.projectListFragment_title_select_project,
+										null, GET_PROJECT_ID);
 							}
 						});
 				return;
