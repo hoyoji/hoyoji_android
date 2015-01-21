@@ -351,7 +351,10 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 
 		mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(localFriendId, friendUserId, projectId));
 		if(friendUserId != null){
-			mSelectorFieldFriend.setModelId(friendUserId);
+			Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+			if(friend != null) {
+				mSelectorFieldFriend.setModelId(friend.getId());
+			}
 		} else {
 			mSelectorFieldFriend.setModelId(localFriendId);
 		}

@@ -1362,5 +1362,13 @@ public class LoginActivity extends HyjActivity {
 		if (mSsoHandler != null) {
 			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
 		}
+		switch(requestCode){
+	        case GET_WELCOME_MESSAGE:
+	       	 if(resultCode == Activity.RESULT_OK){
+	       		 String welcomeMessage = data.getStringExtra("WELCOME_MESSAGE");
+	       		 LoginActivity.this.displayDialog("欢迎使用AA活动", welcomeMessage);
+	       	 }
+	       	 break;
+		}
 	}
 }
