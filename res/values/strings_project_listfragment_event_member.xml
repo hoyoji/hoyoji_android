@@ -2,7 +2,7 @@
 <resources>
 
     <string name="projectEventMemberListFragment_title">活动成员</string>
-    <string name="projectEventMemberViewPagerFragment_title">活动流水</string>
+    <string name="projectEventMemberViewPagerFragment_title">活动成员</string>
     <string name="projectEventMemberListFragment_action_member_addnew">邀请我的好友</string>
     <string name="projectEventMemberListFragment_action_member_invite_qqFriend">邀请QQ好友</string>
     <string name="projectEventMemberListFragment_action_member_invite_wxFriend">邀请微信好友</string>

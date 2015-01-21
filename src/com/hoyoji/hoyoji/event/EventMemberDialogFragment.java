@@ -158,7 +158,7 @@ public class EventMemberDialogFragment extends DialogFragment {
 
         // Set title of dialog
         if("invite".equals(dialog_type)) {
-        	builder.setTitle("邀请好友")
+        	builder.setTitle("发送邀请链接")
 //          // Set Ok button
 //          .setPositiveButton(R.string.alert_dialog_ok,
 //                  new DialogInterface.OnClickListener() {
@@ -169,7 +169,7 @@ public class EventMemberDialogFragment extends DialogFragment {
           // Set Cancel button
           .setNegativeButton(R.string.alert_dialog_cancel, null); 
     	} else if("signIn".equals(dialog_type)){
-    		builder.setTitle("发送链接")
+    		builder.setTitle("发送签到链接")
 //          // Set Ok button
 //          .setPositiveButton(R.string.alert_dialog_ok,
 //                  new DialogInterface.OnClickListener() {

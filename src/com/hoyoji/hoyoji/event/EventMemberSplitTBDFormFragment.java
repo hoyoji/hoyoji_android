@@ -149,8 +149,6 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 								}
 								return false;
 							}
-		
-		
 						});
 						
 						if(canNotEdit){

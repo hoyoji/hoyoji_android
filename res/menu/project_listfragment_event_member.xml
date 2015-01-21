@@ -9,7 +9,7 @@
      -->
     <item
         android:id="@+id/projectEventMemberListFragment_action_member_add"
-        android:title="@string/projectEventMemberListFragment_action_member_addnew"
+        android:title="@string/projectEventMemberListFragment_title"
         android:icon="@drawable/ic_action_new_white"
         hoyoji:showAsAction="always">
         <menu>
