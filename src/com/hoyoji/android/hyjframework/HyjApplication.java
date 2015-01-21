@@ -45,11 +45,11 @@ public class HyjApplication extends Application {
 	private boolean mIsFrontiaInited = false;
 	private static boolean mIsDebuggable;
 	
-	public static boolean getIsDebuggable(){
+	public static boolean getIsDebuggable() {
 		return mIsDebuggable;
 	}
 	
-	public static String getServerUrl(){
+	public static String getServerUrl() {
 		if(mIsDebuggable){
 			return "http://hoyojitest.duapp.com/";
 		} else {
@@ -62,6 +62,15 @@ public class HyjApplication extends Application {
 		super.onCreate();
 		sInstance = this;
 		mIsDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+
+		if(mIsDebuggable){
+				// 测试用
+			//  public static String WX_APP_ID = "wx97c0bcb2e912118a";
+			//  public static String WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
+			AppConstants.WX_APP_ID = "wx97c0bcb2e912118a";
+			AppConstants.WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
+		}
+		
 		XGPushConfig.enableDebug(getApplicationContext(), mIsDebuggable);
 //		XGPushManager.registerPush(getApplicationContext(), HyjApplication.getInstance().getCurrentUser().getId());
 //		XGPushManager.unregisterPush(getApplicationContext());

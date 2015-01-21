@@ -89,6 +89,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/weibo_login"
+                android:visibility="gone"
                 android:text="用Wb帐号登录" />
         </LinearLayout>
 
