@@ -24,6 +24,7 @@ import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.android.tpush.XGPushConfig;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ContentProviderClient;
@@ -33,6 +34,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 
@@ -682,11 +684,11 @@ public class HyjApplication extends Application {
 		}
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static void relogin(Activity activity){
 		Intent i = activity.getPackageManager().getLaunchIntentForPackage(
 				activity.getApplicationContext().getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		activity.startActivity(i);
 		activity.finish();
 	}
@@ -703,7 +705,7 @@ public class HyjApplication extends Application {
 		Intent intent = new Intent(
 				context,
 				LoginActivity.class);
-//		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}
 	
