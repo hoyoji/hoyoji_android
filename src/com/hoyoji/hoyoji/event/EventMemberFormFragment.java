@@ -378,17 +378,19 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		if(modelId != -1){
-			if(oldState.equals("UnSignUp") && !mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+			if((oldState.equals("UnSignUp") || oldState.equals("CancelSignUp")) 
+					&& (!mEventMemberEditor.getModelCopy().getState().equals("UnSignUp") && !mEventMemberEditor.getModelCopy().getState().equals("CancelSignUp"))) {
 				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()+1);
 				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
 				mEventMemberEditor.getModelCopy().getEvent().save();
-			} else if(!oldState.equals("UnSignUp") && mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+			} else if((!oldState.equals("UnSignUp") && !oldState.equals("CancelSignUp")) 
+					&& (mEventMemberEditor.getModelCopy().getState().equals("UnSignUp") || mEventMemberEditor.getModelCopy().getState().equals("CancelSignUp"))) {
 				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()-1);
 				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
 				mEventMemberEditor.getModelCopy().getEvent().save();
 			}
 		} else {
-			if(!mEventMemberEditor.getModelCopy().getState().equals("UnSignUp")) {
+			if(!mEventMemberEditor.getModelCopy().getState().equals("UnSignUp") && !mEventMemberEditor.getModelCopy().getState().equals("CancelSignUp")) {
 				mEventMemberEditor.getModelCopy().getEvent().setSignUpCount(mEventMemberEditor.getModelCopy().getEvent().getSignUpCount()+1);
 				mEventMemberEditor.getModelCopy().getEvent().setSyncFromServer(true);
 				mEventMemberEditor.getModelCopy().getEvent().save();

@@ -940,9 +940,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		int updateToUnSignUpCount = 0;
 		for (int i = 0; i < ids.length; i++) {
 			EventMember em = Model.load(EventMember.class, ids[i]);
-			if (em != null) {
-				if (!"UnSignUp".equals(em.getState())) {
-					updateToUnSignUpCount++;
+			if(em != null){
+				if (!"UnSignUp".equals(em.getState()) && !"CancelSignUp".equals(em.getState())) {
+					updateToUnSignUpCount ++;
 				}
 				em.setState("UnSignUp");
 				em.save();
@@ -965,9 +965,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		int updateToSignUpCount = 0;
 		for (int i = 0; i < ids.length; i++) {
 			EventMember em = Model.load(EventMember.class, ids[i]);
-			if (em != null) {
-				if ("UnSignUp".equals(em.getState())) {
-					updateToSignUpCount++;
+			if(em != null){
+				if ("UnSignUp".equals(em.getState()) || "CancelSignUp".equals(em.getState())) {
+					updateToSignUpCount ++;
 				}
 				em.setState("SignUp");
 				em.save();
@@ -990,9 +990,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		int updateToSignInCount = 0;
 		for (int i = 0; i < ids.length; i++) {
 			EventMember em = Model.load(EventMember.class, ids[i]);
-			if (em != null) {
-				if ("UnSignUp".equals(em.getState())) {
-					updateToSignInCount++;
+			if(em != null){
+				if ("UnSignUp".equals(em.getState()) || "CancelSignUp".equals(em.getState())) {
+					updateToSignInCount ++;
 				}
 				em.setState("SignIn");
 				em.save();
@@ -1015,9 +1015,9 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		int updateToUnSignInCount = 0;
 		for (int i = 0; i < ids.length; i++) {
 			EventMember em = Model.load(EventMember.class, ids[i]);
-			if (em != null) {
-				if ("UnSignUp".equals(em.getState())) {
-					updateToUnSignInCount++;
+			if(em != null){
+				if ("UnSignUp".equals(em.getState()) || "CancelSignUp".equals(em.getState())) {
+					updateToUnSignInCount ++;
 				}
 				em.setState("UnSignIn");
 				em.save();
