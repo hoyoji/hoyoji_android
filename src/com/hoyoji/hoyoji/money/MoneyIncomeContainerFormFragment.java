@@ -190,6 +190,13 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			}
 		}
 		
+		Long dateImport = intent.getLongExtra("date", -1);
+		if(dateImport != -1){
+			Date date= new Date(dateImport);
+			mDateTimeFieldDate.setDate(date);
+			mDateTimeFieldDate.setTextColor(Color.RED);
+		}
+		
 		Project project;
 		String projectId = intent.getStringExtra("projectId");//从消息导入
 		if(moneyIncomeContainer.get_mId() == null && projectId != null){

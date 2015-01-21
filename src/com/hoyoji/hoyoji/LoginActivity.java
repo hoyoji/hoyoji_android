@@ -92,7 +92,7 @@ import android.widget.Toast;
  */
 public class LoginActivity extends HyjActivity {
 	// Values for email and password at the time of the login attempt.
-	private final static int GET_WELCOME_MESSAGE = 0;
+//	private final static int GET_WELCOME_MESSAGE = 0;
 	private String mUserName;
 	private String mPassword;
 
@@ -198,8 +198,8 @@ public class LoginActivity extends HyjActivity {
 					@Override
 					public void onClick(View view) {
 						Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
-//						startActivity(intent);
-						startActivityForResult(intent, GET_WELCOME_MESSAGE);
+						startActivity(intent);
+//						startActivityForResult(intent, GET_WELCOME_MESSAGE);
 					}
 				});
 	}
@@ -1362,13 +1362,13 @@ public class LoginActivity extends HyjActivity {
 		if (mSsoHandler != null) {
 			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
 		}
-		switch(requestCode){
-	        case GET_WELCOME_MESSAGE:
-	       	 if(resultCode == Activity.RESULT_OK){
-	       		 String welcomeMessage = data.getStringExtra("WELCOME_MESSAGE");
-	       		 LoginActivity.this.displayDialog("欢迎使用AA活动", welcomeMessage);
-	       	 }
-	       	 break;
-		}
+//		switch(requestCode){
+//	        case GET_WELCOME_MESSAGE:
+//	       	 if(resultCode == Activity.RESULT_OK){
+//	       		 String welcomeMessage = data.getStringExtra("WELCOME_MESSAGE");
+//	       		 LoginActivity.this.displayDialog("欢迎使用AA活动", welcomeMessage);
+//	       	 }
+//	       	 break;
+//		}
 	}
 }

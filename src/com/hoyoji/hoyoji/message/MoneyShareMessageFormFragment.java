@@ -197,6 +197,7 @@ public class MoneyShareMessageFormFragment extends HyjUserFormFragment {
 		JSONObject messageData;
 		try {
 			messageData = new JSONObject(mMessageEditor.getModel().getMessageData());
+			bundle.putLong("date", messageData.optLong("date"));
 			bundle.putDouble("amount", messageData.optDouble("amount"));
 			bundle.putDouble("exchangeRate", messageData.optDouble("exchangeRate"));
 			bundle.putString("currencyId", messageData.optString("currencyCode"));
