@@ -239,11 +239,11 @@ public class RegisterActivity extends HyjActivity {
 				@Override
 				public void finishCallback(Object object) {
 					progressDialog.dismiss();
-					JSONObject jsonObject = (JSONObject)object;
+//					JSONObject jsonObject = (JSONObject)object;
 					
-					Intent intent = new Intent();
-					intent.putExtra("WELCOME_MESSAGE", jsonObject.optString("welcomeMessage"));
-					RegisterActivity.this.setResult(Activity.RESULT_OK, intent);
+//					Intent intent = new Intent();
+//					intent.putExtra("WELCOME_MESSAGE", jsonObject.optString("welcomeMessage"));
+//					RegisterActivity.this.setResult(Activity.RESULT_OK, intent);
 					
 					HyjUtil.displayToast(R.string.registerActivity_toast_register_success);
 					RegisterActivity.this.finish();
