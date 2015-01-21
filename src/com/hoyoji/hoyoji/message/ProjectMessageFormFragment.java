@@ -109,7 +109,8 @@ public class ProjectMessageFormFragment extends HyjUserFormFragment {
 		if (shareAddMessage.getType().equalsIgnoreCase("Project.Share.Accept")
 				|| shareAddMessage.getType().equalsIgnoreCase(
 						"Project.Share.Delete") || shareAddMessage.getType().equalsIgnoreCase(
-								"Project.Share.Edit")) {
+								"Project.Share.Edit") || shareAddMessage.getType().equalsIgnoreCase(
+										"System.Message.Welcome")) {
 			actionButton.setVisibility(View.GONE);
 			mEditTextDetail.setEnabled(false);
 		}

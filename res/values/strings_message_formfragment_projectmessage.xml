@@ -4,6 +4,9 @@
    <string name="projectMessageFormFragment_title_addrequest">账本共享请求</string>
    <string name="projectMessageFormFragment_title_accept">账本共享回复</string>
    <string name="projectMessageFormFragment_title_edit">修改账本共享</string>
+   
+   <string name="projectMessageFormFragment_title_system_welcome">欢迎使用AA活动</string>
+   
    <string name="projectMessageFormFragment_title_delete">删除账本共享</string>
    
    <string name="projectMessageFormFragment_textView_date_send">发送时间</string>

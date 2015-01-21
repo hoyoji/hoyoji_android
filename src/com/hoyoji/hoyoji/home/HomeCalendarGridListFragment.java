@@ -1730,6 +1730,9 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
 					openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
 					return ;
+				} else if(msg.getType().equals("System.Message.Welcome") ){
+					openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_system_welcome, bundle);
+					return ;
 				}
 			}
 		}
@@ -1773,6 +1776,8 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_cancelSignUp, bundle);
 			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
 				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("System.Message.Welcome") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_system_welcome, bundle);
 			}
     }  
 	
