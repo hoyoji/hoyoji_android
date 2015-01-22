@@ -31,6 +31,12 @@ public class Event extends HyjModel {
 	@Column(name = "state")
 	private String mState;
 
+	@Column(name = "eventSerialId")
+	private String mEventSerialId;
+	
+	@Column(name = "memberCost")
+	private Double mMemberCost = 0.0;
+	
 	@Column(name = "projectId")
 	private String mProjectId;
 	

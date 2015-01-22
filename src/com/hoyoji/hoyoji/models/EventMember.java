@@ -36,6 +36,12 @@ public class EventMember extends HyjModel {
 	@Column(name = "nickName")
 	private String mNickName;
 	
+	@Column(name = "payState")
+	private String mPayState = "UnPaid";
+	
+	@Column(name = "paidAmount")
+	private Double mPaidAmount = 0.0;
+	
 	@Column(name = "state")
 	private String mState;
 
