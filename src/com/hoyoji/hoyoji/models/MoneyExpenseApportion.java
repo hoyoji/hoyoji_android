@@ -314,6 +314,11 @@ public class MoneyExpenseApportion extends HyjModel implements MoneyApportion{
 	public Long getDate() {
 		return this.getMoneyExpenseContainer().getDate();
 	}
+	
+	@Override
+	public String getEventId() {
+		return this.getMoneyExpenseContainer().getEventId();
+	}
 
 //	public String getRemoteLocalFriendName() {
 //		return "本地好友";

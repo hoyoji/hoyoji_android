@@ -1,6 +1,8 @@
 package com.hoyoji.hoyoji.models;
 import org.json.JSONObject;
 
+import android.support.v4.app.Fragment;
+
 import com.hoyoji.android.hyjframework.HyjModel;
 
 public interface MoneyApportion {
@@ -25,4 +27,5 @@ public interface MoneyApportion {
 	public String getOwnerUserId();
 	public Long getDate();
 	public JSONObject toJSON();
+	public String getEventId();
 }

@@ -347,5 +347,10 @@ public class MoneyDepositIncomeApportion extends HyjModel implements MoneyApport
 		}
 		return displayName;
 	}
+	
+	@Override
+	public String getEventId() {
+		return this.getMoneyDepositIncomeContainer().getEventId();
+	}
 
 }

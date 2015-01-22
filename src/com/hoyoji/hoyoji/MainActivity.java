@@ -1061,6 +1061,7 @@ public class MainActivity extends HyjUserActivity {
 									if(model instanceof MoneyApportion){
 										recordData.put("date", ((MoneyApportion)model).getDate());
 										recordData.put("projectId", ((MoneyApportion)model).getProject().getId());
+										recordData.put("eventId", ((MoneyApportion)model).getEventId());
 										recordData.put("currencyId", ((MoneyApportion)model).getCurrencyId());
 										recordData.put("exchangeRate", ((MoneyApportion)model).getExchangeRate());
 										recordData.put("projectCurrencySymbol", ((MoneyApportion)model).getProject().getCurrencySymbol());

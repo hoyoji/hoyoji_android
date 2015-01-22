@@ -345,6 +345,11 @@ public class MoneyDepositReturnApportion extends HyjModel implements MoneyApport
 		}
 		return displayName;
 	}
+	
+	@Override
+	public String getEventId() {
+		return this.getMoneyDepositReturnContainer().getEventId();
+	}
 
 //	public String getRemoteLocalFriendName() {
 //		// TODO Auto-generated method stub
