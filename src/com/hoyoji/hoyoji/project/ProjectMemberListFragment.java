@@ -541,13 +541,10 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 				actualTotal = -actualTotal;
 				numericView.setPrefix("已经收入:" + currencySymbol);
 //				numericView.setTextColor(Color.parseColor("#339900"));
-			}else{
+			}else if(actualTotal > 0){
 				numericView.setPrefix("已经支出:" + currencySymbol);
-//				if(actualTotal.equals(0.0)){
-//					numericView.setTextColor(Color.parseColor("#000000"));
-//				}else{
-//			    	numericView.setTextColor(Color.parseColor("hoyoji_red"));
-//				}
+			} else {
+				numericView.setPrefix("已经收支:" + currencySymbol);
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(actualTotal);
@@ -569,13 +566,10 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 				apportionTotal = -apportionTotal;
 				numericView.setPrefix("分摊收入:" + currencySymbol);
 //				numericView.setTextColor(Color.parseColor("#339900"));
-			}else{
+			} else if(apportionTotal > 0){
 				numericView.setPrefix("分摊支出:" + currencySymbol);
-//				if(apportionTotal.equals(0.0)){
-//					numericView.setTextColor(Color.parseColor("#000000"));
-//				}else{
-//				numericView.setTextColor(Color.parseColor("hoyoji_red"));
-//				}
+			} else {
+				numericView.setPrefix("分摊收支:" + currencySymbol);
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(apportionTotal);
