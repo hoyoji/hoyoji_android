@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +8,6 @@ import org.json.JSONObject;
 
 import android.provider.BaseColumns;
 
-import com.activeandroid.Cache;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
@@ -67,6 +65,9 @@ public class Project extends HyjModel {
 	
 	@Column(name = "depositTotal")
 	private Double mDepositTotal = 0.0;
+	
+	@Column(name = "activeEventId")
+	private String mActiveEventId;
 	
 //	@Column(name = "depositeIncomeCategory")
 //	private String mDepositIncomeCategory;
@@ -179,6 +180,21 @@ public class Project extends HyjModel {
 
 	public void setFinancialOwnerUserId(String financialOwnerUserId) {
 		this.mFinancialOwnerUserId = financialOwnerUserId;
+	}
+	
+	public String getActiveEventId() {
+		return mActiveEventId;
+	}
+	
+	public Event getActiveEvent() {
+		if(mActiveEventId == null){
+			return null;
+		}
+		return HyjModel.getModel(Event.class, mActiveEventId);
+	}
+
+	public void setActiveEventId(String mActiveEventId) {
+		this.mActiveEventId = mActiveEventId;
 	}
 	
 	public String getCurrencyId() {
