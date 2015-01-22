@@ -75,7 +75,7 @@ public class EventMemberTBDViewPagerFragment extends HyjUserFragment {
 				if(position == 0){
 					((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
 				} else {
-					((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("好友"+mSectionsPagerAdapter.getPageTitle(position));
+					((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSectionsPagerAdapter.getPageTitle(position));
 				}
 				mTabStrip.setTabSelected(position);
 			}
@@ -130,7 +130,7 @@ public class EventMemberTBDViewPagerFragment extends HyjUserFragment {
 			case 0 :
 				return "拆分待定成员";
 			case 1:
-				return "流水";
+				return "成员流水";
 			}
 			return null;
 		}
