@@ -366,7 +366,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		if (friendUserId != null) {
 			Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
 			if(friend != null) {
-				mSelectorFieldFriend.setModelId(friendUserId);
+				mSelectorFieldFriend.setModelId(friend.getId());
 			}
 		} else {
 			mSelectorFieldFriend.setModelId(localFriendId);
