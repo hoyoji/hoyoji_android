@@ -273,12 +273,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		if (moneyLend.get_mId() == null) {
 			String friendUserId = intent.getStringExtra("friendUserId");// 从消息导入
 			if (friendUserId != null) {
-				Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-				if(friend != null) {
-					mSelectorFieldFriend.setModelId(friend.getId());
+					mSelectorFieldFriend.setModelId(friendUserId);
 					mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 					mSelectorFieldFriend.setTag(TAG_IS_LOCAL_FRIEND, false);
-				}
 			} else {
 				String localFriendId = intent.getStringExtra("localFriendId");// 从消息导入
 				if (localFriendId != null) {
