@@ -1017,10 +1017,10 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 	        			friendUserId = mSelectorFieldFriend.getModelId();
 	        			ProjectShareAuthorization psaMember = new Select().from(ProjectShareAuthorization.class).where("projectId = ? AND friendUserId=? AND state <> 'Delete'", project.getId(), friendUserId).executeSingle();
 	    				if(psaMember != null){
-	    					Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-	    					if(friend != null) {
-	    						mSelectorFieldFriend.setModelId(friend.getId());
-	    					}
+//	    					Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
+//	    					if(friend != null) {
+	    						mSelectorFieldFriend.setModelId(friendUserId);
+//	    					}
 	    				} else {
     						mSelectorFieldFriend.setText(null);
     						mSelectorFieldFriend.setModelId(null);
