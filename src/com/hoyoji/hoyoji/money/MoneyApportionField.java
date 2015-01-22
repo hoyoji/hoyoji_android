@@ -818,24 +818,20 @@ public class MoneyApportionField extends GridView {
 		}
 		
 		public String getFriendDisplayName(){
+			EventMember em = getEventMember();
+			if(em != null){
+				return HyjUtil.ifEmpty(em.getNickName(), em.getFriendDisplayName());
+			}
 			if(this.getFriend() != null){
 				return this.getFriend().getDisplayName();
-			} else if(mApportion.getFriendUserId() == null){
-				EventMember em = getEventMember();
-				if(em != null){
-					return HyjUtil.ifEmpty(em.getNickName(), em.getFriendDisplayName());
-				}
-				ProjectShareAuthorization psa = getProjectShareAuthorization();
-				if(psa != null){
-					return psa.getFriendUserName();
-				} else {
-					return "NO NAME";
-				}
-			} else {
-				User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
-				if(user != null){
-					return user.getDisplayName();
-				}
+			}
+			User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
+			if(user != null){
+				return user.getDisplayName();
+			}
+			ProjectShareAuthorization psa = getProjectShareAuthorization();
+			if(psa != null){
+				return psa.getFriendUserName();
 			}
 			return "NO NAME";
 		}
