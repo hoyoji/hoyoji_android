@@ -2,7 +2,7 @@
 <resources>
     <string name="projectEventMemberFormFragment_action_addnew">邀请活动好友</string>
     
-    <string name="projectEventMemberFormFragment_action_edit">修改活动成员</string>
+    <string name="projectEventMemberFormFragment_action_edit">成员资料</string>
     
     <string name="projectEventMemberFormFragment_editText_hint_name">请输入账本活动名称</string>
     <string name="projectEventMemberFormFragment_textView_name">账本活动名称</string>

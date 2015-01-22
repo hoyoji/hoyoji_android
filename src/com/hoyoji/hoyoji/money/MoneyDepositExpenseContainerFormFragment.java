@@ -302,11 +302,8 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 			friendUserId = moneyLend.getFriendUserId();
 		}
 		if(friendUserId != null){
-			Friend friend =  new Select().from(Friend.class).where("friendUserId=?", friendUserId).executeSingle();
-			if(friend != null) {
-				mSelectorFieldFriend.setModelId(friend.getId());
-				mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
-			}
+			mSelectorFieldFriend.setModelId(friendUserId);
+			mSelectorFieldFriend.setText(Friend.getFriendUserDisplayName(null, friendUserId, projectId));
 		} 
 		
 		mSelectorFieldFriend.setOnClickListener(new OnClickListener(){
