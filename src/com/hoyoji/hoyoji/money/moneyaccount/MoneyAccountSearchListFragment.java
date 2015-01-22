@@ -347,7 +347,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
+			if (((MoneyExpenseContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyExpenseContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyExpenseContainer)object).getEvent().getName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -402,7 +406,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
+			if(((MoneyIncomeContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyIncomeContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyIncomeContainer)object).getEvent().getName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -456,7 +464,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyDepositIncomeContainer)object).getProject().getDisplayName());
+			if (((MoneyDepositIncomeContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyDepositIncomeContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyDepositIncomeContainer)object).getEvent().getName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -513,7 +525,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyDepositReturnContainer)object).getProject().getDisplayName());
+			if(((MoneyDepositReturnContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyDepositReturnContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyDepositReturnContainer)object).getEvent().getName());
+			}
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -587,7 +603,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			}
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyTransfer)object).getProject().getDisplayName());
+			if(((MoneyTransfer)object).getEvent() == null){
+				((TextView)view).setText(((MoneyTransfer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyTransfer)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -665,7 +685,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
+			if(((MoneyBorrow)object).getEvent() == null){
+				((TextView)view).setText(((MoneyBorrow)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyBorrow)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -719,7 +743,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyDepositExpenseContainer)object).getProject().getDisplayName());
+			if(((MoneyDepositExpenseContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyDepositExpenseContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyDepositExpenseContainer)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -777,7 +805,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
+			if(((MoneyLend)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyLend)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyLend)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -831,7 +863,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());
+			if (((MoneyReturn)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyReturn)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyReturn)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -885,7 +921,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyDepositPaybackContainer)object).getProject().getDisplayName());
+			if (((MoneyDepositPaybackContainer)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyDepositPaybackContainer)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyDepositPaybackContainer)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;
@@ -944,7 +984,11 @@ public class MoneyAccountSearchListFragment extends HyjUserExpandableListFragmen
 			((TextView)view).setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			return true;
 		}  else if(view.getId() == R.id.homeListItem_subTitle){
-			((TextView)view).setText(((MoneyPayback)object).getProject().getDisplayName());
+			if (((MoneyPayback)object).getEvent() == null) {
+				((TextView)view).setText(((MoneyPayback)object).getProject().getDisplayName());
+			} else {
+				((TextView)view).setText(((MoneyPayback)object).getEvent().getName());
+			}
 			return true;
 	    } else if(view.getId() == R.id.homeListItem_amount){
 			HyjNumericView numericView = (HyjNumericView)view;

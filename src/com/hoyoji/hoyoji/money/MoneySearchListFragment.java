@@ -382,9 +382,9 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			MoneyExpense moneyExpense = (MoneyExpense)object;
-			Project project = moneyExpense.getProject();
 			Event event = moneyExpense.getEvent();
 			if(event == null){
+				Project project = moneyExpense.getProject();
 				if(project == null){
 					((TextView)view).setText("共享来的收支");
 				} else {
@@ -461,9 +461,9 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 			return true;
 		} else if(view.getId() == R.id.homeListItem_subTitle){
 			MoneyIncome moneyIncome = (MoneyIncome)object;
-			Project project = moneyIncome.getProject();
 			Event event = moneyIncome.getEvent();
 			if(event == null) {
+				Project project = moneyIncome.getProject();
 				if(project == null){
 					((TextView)view).setText("共享来的收支");
 				} else {
