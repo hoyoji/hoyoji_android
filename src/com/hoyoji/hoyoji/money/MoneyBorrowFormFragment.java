@@ -251,11 +251,16 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyBorrow.get_mId() == null && eventId != null){
-			moneyBorrow.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyBorrow.get_mId() == null){
+			if(eventId != null) {
+				moneyBorrow.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyBorrow.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyBorrow.getEvent();
 		}
@@ -875,6 +880,17 @@ public class MoneyBorrowFormFragment extends HyjUserFormFragment {
 						userDataEditor.getModelCopy().setActiveProjectId(
 								moneyBorrowModel.getProjectId());
 						userDataEditor.save();
+					}
+					
+					//设置默认活动
+					Project project = moneyBorrowModel.getProject();
+					if(moneyBorrowModel.get_mId() == null){
+						if((moneyBorrowModel.getEventId() != null && !moneyBorrowModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(moneyBorrowModel.getEventId()))){
+							HyjModelEditor<Project> projectEditor = project.newModelEditor();
+							projectEditor.getModelCopy().setActiveEventId(moneyBorrowModel.getEventId());
+							projectEditor.save();
+						}
 					}
 
 					String localCurrencyId = moneyBorrowModel.getMoneyAccount()

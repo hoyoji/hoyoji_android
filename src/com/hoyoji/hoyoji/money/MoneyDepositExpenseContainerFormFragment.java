@@ -225,11 +225,16 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyLend.get_mId() == null && eventId != null){
-			moneyLend.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyLend.get_mId() == null){
+			if(eventId != null) {
+				moneyLend.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyLend.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyLend.getEvent();
 		}
@@ -736,6 +741,17 @@ public class MoneyDepositExpenseContainerFormFragment extends HyjUserFormFragmen
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(newMoneyDepositExpenseContainerModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(newMoneyDepositExpenseContainerModel.getProjectId());
 					userDataEditor.save();
+				}
+				
+				//设置默认活动
+				Project project = newMoneyDepositExpenseContainerModel.getProject();
+				if(newMoneyDepositExpenseContainerModel.get_mId() == null){
+					if((newMoneyDepositExpenseContainerModel.getEventId() != null && !newMoneyDepositExpenseContainerModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(newMoneyDepositExpenseContainerModel.getEventId()))){
+						HyjModelEditor<Project> projectEditor = project.newModelEditor();
+						projectEditor.getModelCopy().setActiveEventId(newMoneyDepositExpenseContainerModel.getEventId());
+						projectEditor.save();
+					}
 				}
 				
 				String localCurrencyId = newMoneyDepositExpenseContainerModel.getMoneyAccount().getCurrencyId();

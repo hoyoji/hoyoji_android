@@ -344,11 +344,16 @@ public class MoneyTransferFormFragment extends HyjUserFormFragment {
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyTransfer.get_mId() == null && eventId != null){
-			moneyTransfer.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyTransfer.get_mId() == null){
+			if(eventId != null) {
+				moneyTransfer.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyTransfer.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyTransfer.getEvent();
 		}

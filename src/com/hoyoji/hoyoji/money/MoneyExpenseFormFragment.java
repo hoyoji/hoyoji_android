@@ -716,6 +716,17 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 						userDataEditor.save();
 					}
 					
+					//设置默认活动
+					Project project = moneyExpenseModel.getProject();
+					if(moneyExpenseModel.get_mId() == null){
+						if((moneyExpenseModel.getEventId() != null && !moneyExpenseModel.getEventId().equals(project.getActiveEventId())) 
+								|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(moneyExpenseModel.getEventId()))){
+							HyjModelEditor<Project> projectEditor = project.newModelEditor();
+							projectEditor.getModelCopy().setActiveEventId(moneyExpenseModel.getEventId());
+							projectEditor.save();
+						}
+					}
+					
 					// 更新账本的默认分类
 					if(moneyExpenseModel.get_mId() == null){
 						HyjModelEditor<Project> projectEditor = moneyExpenseModel.getProject().newModelEditor();
@@ -729,7 +740,7 @@ public class MoneyExpenseFormFragment extends HyjUserFormFragment {
 					String foreignCurrencyId = moneyExpenseModel.getProject().getCurrencyId();
 					if(CREATE_EXCHANGE == 1){
 						MoneyAccount moneyAccount = moneyExpenseModel.getMoneyAccount();
-						Project project = moneyExpenseModel.getProject();
+//						Project project = moneyExpenseModel.getProject();
 						
 						Exchange newExchange = new Exchange();
 						newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
