@@ -214,11 +214,16 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyReturn.get_mId() == null && eventId != null){
-			moneyReturn.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyReturn.get_mId() == null){
+			if(eventId != null) {
+				moneyReturn.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyReturn.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyReturn.getEvent();
 		}
@@ -721,6 +726,17 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(moneyReturnModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(moneyReturnModel.getProjectId());
 					userDataEditor.save();
+				}
+				
+				//设置默认活动
+				Project project = moneyReturnModel.getProject();
+				if(moneyReturnModel.get_mId() == null){
+					if((moneyReturnModel.getEventId() != null && !moneyReturnModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(moneyReturnModel.getEventId()))){
+						HyjModelEditor<Project> projectEditor = project.newModelEditor();
+						projectEditor.getModelCopy().setActiveEventId(moneyReturnModel.getEventId());
+						projectEditor.save();
+					}
 				}
 				
 				String localCurrencyId = moneyReturnModel.getMoneyAccount().getCurrencyId();

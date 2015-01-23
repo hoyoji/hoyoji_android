@@ -230,11 +230,16 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyIncomeContainer.get_mId() == null && eventId != null){
-			moneyIncomeContainer.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyIncomeContainer.get_mId() == null){
+			if(eventId != null) {
+				moneyIncomeContainer.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyIncomeContainer.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyIncomeContainer.getEvent();
 		}
@@ -1128,6 +1133,17 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					userDataEditor.save();
 				}
 				
+				//设置默认活动
+				Project project = moneyIncomeContainerModel.getProject();
+				if(moneyIncomeContainerModel.get_mId() == null){
+					if((moneyIncomeContainerModel.getEventId() != null && !moneyIncomeContainerModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(moneyIncomeContainerModel.getEventId()))){
+						HyjModelEditor<Project> projectEditor = project.newModelEditor();
+						projectEditor.getModelCopy().setActiveEventId(moneyIncomeContainerModel.getEventId());
+						projectEditor.save();
+					}
+				}
+				
 				// 更新账本的默认分类
 				if(moneyIncomeContainerModel.get_mId() == null){
 					HyjModelEditor<Project> projectEditor = moneyIncomeContainerModel.getProject().newModelEditor();
@@ -1141,7 +1157,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 				String foreignCurrencyId = moneyIncomeContainerModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = moneyIncomeContainerModel.getMoneyAccount();
-					Project project = moneyIncomeContainerModel.getProject();
+//					Project project = moneyIncomeContainerModel.getProject();
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());

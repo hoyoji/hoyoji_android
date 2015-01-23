@@ -220,11 +220,16 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyDepositPaybackContainer.get_mId() == null && eventId != null){
-			moneyDepositPaybackContainer.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyDepositPaybackContainer.get_mId() == null){
+			if(eventId != null) {
+				moneyDepositPaybackContainer.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyDepositPaybackContainer.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyDepositPaybackContainer.getEvent();
 		}
@@ -698,6 +703,17 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 					userDataEditor.getModelCopy().setActiveMoneyAccountId(newMoneyPaybackModel.getMoneyAccountId());
 					userDataEditor.getModelCopy().setActiveProjectId(newMoneyPaybackModel.getProjectId());
 					userDataEditor.save();
+				}
+				
+				//设置默认活动
+				Project project = newMoneyPaybackModel.getProject();
+				if(newMoneyPaybackModel.get_mId() == null){
+					if((newMoneyPaybackModel.getEventId() != null && !newMoneyPaybackModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(newMoneyPaybackModel.getEventId()))){
+						HyjModelEditor<Project> projectEditor = project.newModelEditor();
+						projectEditor.getModelCopy().setActiveEventId(newMoneyPaybackModel.getEventId());
+						projectEditor.save();
+					}
 				}
 				
 				String localCurrencyId = newMoneyPaybackModel.getMoneyAccount().getCurrencyId();

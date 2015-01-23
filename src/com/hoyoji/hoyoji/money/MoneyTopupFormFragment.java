@@ -306,11 +306,16 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyTopup.get_mId() == null && eventId != null){
-			moneyTopup.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyTopup.get_mId() == null){
+			if(eventId != null) {
+				moneyTopup.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyTopup.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyTopup.getEvent();
 		}

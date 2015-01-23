@@ -189,11 +189,16 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event;
+		Event event = null;
 		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyDepositReturnContainer.get_mId() == null && eventId != null){
-			moneyDepositReturnContainer.setEventId(eventId);
-			event = HyjModel.getModel(Event.class, eventId);
+		if(moneyDepositReturnContainer.get_mId() == null){
+			if(eventId != null) {
+				moneyDepositReturnContainer.setEventId(eventId);
+				event = HyjModel.getModel(Event.class, eventId);
+			} else if(project.getActiveEventId() != null){
+				moneyDepositReturnContainer.setEventId(project.getActiveEventId());
+				event = HyjModel.getModel(Event.class, project.getActiveEventId());
+			}
 		}else{
 			event = moneyDepositReturnContainer.getEvent();
 		}
@@ -914,12 +919,23 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					userDataEditor.save();
 				}
 				
+				//设置默认活动
+				Project project = newMoneyDepositReturnContainerModel.getProject();
+				if(newMoneyDepositReturnContainerModel.get_mId() == null){
+					if((newMoneyDepositReturnContainerModel.getEventId() != null && !newMoneyDepositReturnContainerModel.getEventId().equals(project.getActiveEventId())) 
+							|| (project.getActiveEventId() != null && !project.getActiveEventId().equals(newMoneyDepositReturnContainerModel.getEventId()))){
+						HyjModelEditor<Project> projectEditor = project.newModelEditor();
+						projectEditor.getModelCopy().setActiveEventId(newMoneyDepositReturnContainerModel.getEventId());
+						projectEditor.save();
+					}
+				}
+				
 				//当前汇率不存在时，创建汇率
 				String localCurrencyId = newMoneyDepositReturnContainerModel.getMoneyAccount().getCurrencyId();
 				String foreignCurrencyId = newMoneyDepositReturnContainerModel.getProject().getCurrencyId();
 				if(CREATE_EXCHANGE == 1){
 					MoneyAccount moneyAccount = newMoneyDepositReturnContainerModel.getMoneyAccount();
-					Project project = newMoneyDepositReturnContainerModel.getProject();
+//					Project project = newMoneyDepositReturnContainerModel.getProject();
 					
 					Exchange newExchange = new Exchange();
 					newExchange.setLocalCurrencyId(moneyAccount.getCurrencyId());
