@@ -860,7 +860,7 @@ public class LoginActivity extends HyjActivity {
 	
 
 	public static void downloadUserHeadImage(String figureUrl, final int sampleSize){
-		if(figureUrl != null){
+		if(figureUrl != null && figureUrl.length() != 0){
 		final String figureUrl1 = figureUrl;
 		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
 			@Override
