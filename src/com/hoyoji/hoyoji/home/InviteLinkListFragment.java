@@ -264,10 +264,15 @@ public class InviteLinkListFragment extends HyjUserListFragment implements OnQue
 		case INVITELINK_CHANGESTATE:
 			if (resultCode == Activity.RESULT_OK) {
 				String state = data.getStringExtra("state");
+				String description = data.getStringExtra("description");
+				String verificationCode = data.getStringExtra("verificationCode");
+				
 				int position = data.getIntExtra("position", -1);
 				JSONObject object = ((HyjJSONListAdapter) this.getListAdapter()).getItem(position);
 				try {
 					object.put("state", state);
+					object.put("description", description);
+					object.put("verificationCode", verificationCode);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

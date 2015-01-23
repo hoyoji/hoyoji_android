@@ -73,14 +73,38 @@
       android:layout_marginBottom="5dip"
       android:layout_marginTop="5dip"
       android:background="@drawable/line_divider" />
+        
+     <com.hoyoji.android.hyjframework.view.HyjTextField
+      android:id="@+id/inviteLinkFormFragment_hyjTextField_verificationCode"
+      android:layout_width="fill_parent"
+      android:layout_height="43dp"
+      hyj:hintText="无验证码"
+      hyj:labelText="验证码" >
+   </com.hoyoji.android.hyjframework.view.HyjTextField>
     
-   <com.hoyoji.android.hyjframework.view.HyjRemarkField
+   <View
+      android:id="@id/field_separator"
+      android:layout_width="match_parent"
+      android:layout_height="1dip"
+      android:layout_marginBottom="5dip"
+      android:layout_marginTop="5dip"
+      android:background="@drawable/line_divider" />
+    
+   <!-- <com.hoyoji.android.hyjframework.view.HyjRemarkField
           android:id="@+id/inviteLinkFormFragment_hyjRemarkField_description"
           hyj:style="no_label"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           hyj:hintText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description"
           hyj:labelText="@string/inviteLinkFormFragment_hyjRemarkField_hint_description" />
+    -->
+   <EditText
+          android:id="@+id/inviteLinkFormFragment_hyjRemarkField_description"
+          android:layout_width="fill_parent"
+          android:layout_height="43dp"
+          android:background="@null"
+          android:textColor="@color/gray"
+          />
    
    <View
        android:id="@id/field_separator"
