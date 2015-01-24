@@ -826,14 +826,15 @@ public class LoginActivity extends HyjActivity {
 	private void loginQQUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).loginQQFirstTime(userId, password, jsonUser)) {
-			downloadUserData(this, new HyjAsyncTaskCallbacks(){
-				@Override
-				public void finishCallback(Object object) {
-					// TODO Auto-generated method stub
-					QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					downloadUserHeadImage(qqLogin.getFigureUrl(), 1);
-				}
-			});
+			downloadUserData(this, null);
+//					new HyjAsyncTaskCallbacks(){
+//				@Override
+//				public void finishCallback(Object object) {
+//					// TODO Auto-generated method stub
+////					QQLogin qqLogin = new Select().from(QQLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+////					downloadUserHeadImage(qqLogin.getFigureUrl(), 1);
+//				}
+//			});
 
 		} else {
 			this.dismissProgressDialog();
@@ -844,14 +845,15 @@ public class LoginActivity extends HyjActivity {
 	private void loginWBUserFirstTime(String userId, String password, JSONObject jsonUser)
 			throws JSONException {
 		if (((HyjApplication) getApplication()).loginWBFirstTime(userId, password, jsonUser)) {
-			downloadUserData(this, new HyjAsyncTaskCallbacks(){
-				@Override
-				public void finishCallback(Object object) {
-					// TODO Auto-generated method stub
-					WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					downloadUserHeadImage(wbLogin.getProfile_image_url(), 1);
-				}
-			});
+			downloadUserData(this, null);
+//			new HyjAsyncTaskCallbacks(){
+//				@Override
+//				public void finishCallback(Object object) {
+//					// TODO Auto-generated method stub
+////					WBLogin wbLogin = new Select().from(WBLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+////					downloadUserHeadImage(wbLogin.getProfile_image_url(), 1);
+//				}
+//			});
 		} else {
 			this.dismissProgressDialog();
 		}
@@ -859,58 +861,58 @@ public class LoginActivity extends HyjActivity {
 	
 	
 
-	public static void downloadUserHeadImage(String figureUrl, final int sampleSize){
-		if(figureUrl != null && figureUrl.length() != 0){
-		final String figureUrl1 = figureUrl;
-		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-			@Override
-			public void finishCallback(Object object) {
-				Bitmap thumbnail = null;
-				if(object != null){
-					thumbnail = (Bitmap) object;
-				}
-				
-				FileOutputStream out;
-				try {
-					Picture figure = new Picture();
-					File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-					if(imgFile != null){
-						out = new FileOutputStream(imgFile);
-						thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-						out.close();
-						out = null;
-						
-						figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-						figure.setRecordType("User");
-						figure.setDisplayOrder(0);
-						figure.setPictureType("JPEG");
-						
-						Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
-						if(oldPicture != null){
-							oldPicture.delete();
-						}
-						HyjApplication.getInstance().getCurrentUser().setPicture(figure);
-						HyjApplication.getInstance().getCurrentUser().save();
-						figure.save();								
-					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			@Override
-			public Object doInBackground(String... string) {
-				Bitmap thumbnail = null;
-				thumbnail = Util.getBitmapFromUrl(figureUrl1, sampleSize);
-				return thumbnail;
-			}
-		});
-	}
-	}
+//	public static void downloadUserHeadImage(String figureUrl, final int sampleSize){
+//		if(figureUrl != null && figureUrl.length() != 0){
+//		final String figureUrl1 = figureUrl;
+//		HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+//			@Override
+//			public void finishCallback(Object object) {
+//				Bitmap thumbnail = null;
+//				if(object != null){
+//					thumbnail = (Bitmap) object;
+//				}
+//				
+//				FileOutputStream out;
+//				try {
+//					Picture figure = new Picture();
+//					File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+//					if(imgFile != null){
+//						out = new FileOutputStream(imgFile);
+//						thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//						out.close();
+//						out = null;
+//						
+//						figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+//						figure.setRecordType("User");
+//						figure.setDisplayOrder(0);
+//						figure.setPictureType("JPEG");
+//						
+//						Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+//						if(oldPicture != null){
+//							oldPicture.delete();
+//						}
+//						HyjApplication.getInstance().getCurrentUser().setPicture(figure);
+//						HyjApplication.getInstance().getCurrentUser().save();
+//						figure.save();								
+//					}
+//				} catch (FileNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//
+//			@Override
+//			public Object doInBackground(String... string) {
+//				Bitmap thumbnail = null;
+//				thumbnail = Util.getBitmapFromUrl(figureUrl1, sampleSize);
+//				return thumbnail;
+//			}
+//		});
+//	}
+//	}
 	
 	public static void downloadUserData(final HyjActivity activity, final HyjAsyncTaskCallbacks callback) {
 		User user = HyjApplication.getInstance().getCurrentUser();
@@ -1041,6 +1043,15 @@ public class LoginActivity extends HyjActivity {
 //			jsonObj.put("ownerUserId", HyjApplication.getInstance()
 //					.getCurrentUser().getId());
 			belongsToes.put(jsonObj);
+			
+			String userPictureId = HyjApplication.getInstance()
+					.getCurrentUser().getPictureId();
+			if(userPictureId != null && userPictureId.length() > 0){
+				jsonObj = new JSONObject();
+				jsonObj.put("__dataType", "UserPicture");
+				jsonObj.put("id", userPictureId);
+				belongsToes.put(jsonObj);
+			}
 
 			// 从服务器上下载基础数据
 			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
