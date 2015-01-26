@@ -85,9 +85,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private final static int GET_CATEGORY_ID = 5;
 	private final static int GET_REMARK = 6;
 	private final static int GET_AMOUNT = 8;
+	private final static int GET_FREE_PERSON = 10;
 	private static final int ADD_AS_PROJECT_MEMBER = 0;
 //	private static final int ADD_AS_EVENT_MEMBER = 10;
 	protected static final int GET_FINANCIALOWNER_ID = 7;
+	
 	
 	private int CREATE_EXCHANGE = 0;
 	private int SET_EXCHANGE_RATE_FLAG = 1;
@@ -121,6 +123,8 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	private ImageButton calculatorTextView = null;
 	
 	private Button app_action_save_template = null;
+	private Button app_action_game = null;
+	
 
 	@Override
 	public Integer useContentView() {
@@ -485,6 +489,18 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					moneyTemplate.save();
 					HyjUtil.displayToast(R.string.app_save_template_success);
 				}
+			}
+		});
+		
+		app_action_game = (Button) getView().findViewById(R.id.button_game);
+		app_action_game.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+//				Bundle bundle = new Bundle();
+//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+//							MoneyExpenseGameFormFragment.class,
+//								R.string.app_action_game,
+//								bundle, GET_FREE_PERSON);
 			}
 		});
 
@@ -1647,6 +1663,11 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	       		}
 	       	 }
 	       	 break;
+        case GET_FREE_PERSON:
+			if (resultCode == Activity.RESULT_OK) {
+				
+			}
+			break;
 		}
 	}
 	
