@@ -113,6 +113,19 @@ public class EventMemberDialogFragment extends DialogFragment {
 //				dismiss();
 			}
     	});
+    	v.findViewById(R.id.EventMemberDialogFragment_invite_wxCircle).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_TYPE", "WXCIRCLE");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("WX", event, event.getName(), "invite");
+//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
+//				dismiss();
+			}
+    	});
     	v.findViewById(R.id.EventMemberDialogFragment_invite_other).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

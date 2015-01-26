@@ -90,6 +90,8 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 			mButtonSendInvite.setText("邀请QQ好友");
 		} else if(way.equals("WX")) {
 			mButtonSendInvite.setText("邀请微信好友");
+		} else if(way.equals("WXCIRCLE")) {
+			mButtonSendInvite.setText("邀请微信好友");
 		}
 		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
 		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
@@ -142,6 +144,8 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 						inviteOtherFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
 					} else if(way.equals("WX")){
 						inviteWXFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
+					} else if(way.equals("WXCIRCLE")){
+						inviteWXCircleFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
 					} else if(way.equals("QQ")){
 						inviteQQFriend(linkUrl, event_name, emTitleSent, emDescriptionSent);
 					}
@@ -206,6 +210,31 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		req.transaction = buildTransaction("webpage");
 		req.message = msg;
 //		req.scene = isTimelineCb.isChecked() ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;
+		api.sendReq(req);
+		
+	}
+	
+	public void inviteWXCircleFriend(String linkUrl,String event_name, String emTitleSent, String emDescriptionSent) {
+		api = WXAPIFactory.createWXAPI(getActivity(), AppConstants.WX_APP_ID, false);
+		api.registerApp(AppConstants.WX_APP_ID);
+		WXWebpageObject webpage = new WXWebpageObject();
+		webpage.webpageUrl = linkUrl;
+		WXMediaMessage msg = new WXMediaMessage(webpage);
+		msg.title = emTitleSent;
+		msg.description = emDescriptionSent;
+		try{
+			Bitmap bmp = BitmapFactory.decodeResource(((HyjActivity) getActivity()).getBaseContext().getResources(), R.drawable.ic_launcher);
+			Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+			bmp.recycle();
+			msg.setThumbImage(thumbBmp);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		SendMessageToWX.Req req = new SendMessageToWX.Req();
+		req.transaction = String.valueOf(System.currentTimeMillis());
+		req.message = msg;
+		req.scene = SendMessageToWX.Req.WXSceneTimeline;
 		api.sendReq(req);
 		
 	}

@@ -23,6 +23,11 @@
 		        android:icon="@drawable/ic_action_cc_bcc"
 		        hoyoji:showAsAction="always"/>
 		    <item
+		        android:id="@+id/memberListFragment_action_member_invite_wxCircleFriend"
+		        android:title="@string/memberListFragment_action_member_invite_wxCircleFriend"
+		        android:icon="@drawable/ic_action_cc_bcc"
+		        hoyoji:showAsAction="always"/>
+		    <item
 		        android:id="@+id/memberListFragment_action_member_invite"
 		        android:title="@string/memberListFragment_action_member_invite"
 		        android:icon="@drawable/ic_action_cc_bcc"
