@@ -302,60 +302,60 @@ public class BindIDFragment extends HyjFragment {
 //							mTextFieldNickName.setEnabled(true);
 						}
 					}
-					final String figureUrl1 = jsonObject.optString("figureUrl");
-					if(figureUrl1.length() > 0){
-						LoginActivity.downloadUserHeadImage(figureUrl1, 1);
-						
-//						HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-//							@Override
-//							public void finishCallback(Object object) {
-//								Bitmap thumbnail = null;
-//								if(object != null){
-//									thumbnail = (Bitmap) object;
-//									FileOutputStream out;
-//									try {
-//										Picture figure = new Picture();
-//										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-//										if(imgFile != null){
-//											out = new FileOutputStream(imgFile);
-//											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//											out.close();
-//											out = null;
-//											
-//											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
-//											if(oldPicture != null){
-//												oldPicture.delete();
-//											}
-//											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-//											figure.setRecordType("User");
-//											figure.setDisplayOrder(0);
-//											figure.setPictureType("JPEG");
-//											
-//											user.setPicture(figure);
-//											figure.save();								
-//											
-////											takePictureButton.setImage(figure);
-//										}
-//									} catch (FileNotFoundException e) {
-//										e.printStackTrace();
-//									} catch (IOException e) {
-//										e.printStackTrace();
-//									}
-//								}
-//								
-//								user.save();
-//								HyjUtil.displayToast("QQ帐号绑定成功");
-//								setQQField();
-//							}
-//		
-//							@Override
-//							public Object doInBackground(String... string) {
-//								Bitmap thumbnail = null;
-//								thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
-//								return thumbnail;
-//							}
-//						});
-					}
+//					final String figureUrl1 = jsonObject.optString("figureUrl");
+//					if(figureUrl1.length() > 0){
+//						LoginActivity.downloadUserHeadImage(figureUrl1, 1);
+//						
+////						HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+////							@Override
+////							public void finishCallback(Object object) {
+////								Bitmap thumbnail = null;
+////								if(object != null){
+////									thumbnail = (Bitmap) object;
+////									FileOutputStream out;
+////									try {
+////										Picture figure = new Picture();
+////										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+////										if(imgFile != null){
+////											out = new FileOutputStream(imgFile);
+////											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+////											out.close();
+////											out = null;
+////											
+////											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+////											if(oldPicture != null){
+////												oldPicture.delete();
+////											}
+////											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+////											figure.setRecordType("User");
+////											figure.setDisplayOrder(0);
+////											figure.setPictureType("JPEG");
+////											
+////											user.setPicture(figure);
+////											figure.save();								
+////											
+//////											takePictureButton.setImage(figure);
+////										}
+////									} catch (FileNotFoundException e) {
+////										e.printStackTrace();
+////									} catch (IOException e) {
+////										e.printStackTrace();
+////									}
+////								}
+////								
+////								user.save();
+////								HyjUtil.displayToast("QQ帐号绑定成功");
+////								setQQField();
+////							}
+////		
+////							@Override
+////							public Object doInBackground(String... string) {
+////								Bitmap thumbnail = null;
+////								thumbnail = Util.getBitmapFromUrl(figureUrl1, 1);
+////								return thumbnail;
+////							}
+////						});
+//					}
 					user.save();
 					HyjUtil.displayToast("QQ帐号绑定成功");
 					setQQField();
@@ -634,60 +634,60 @@ public class BindIDFragment extends HyjFragment {
 //							mTextFieldNickName.setText(user.getNickName());
 						}
 					}
-					final String profile_image_url1 = jsonObject.optString("profile_image_url");
-					if(profile_image_url1.length() > 0){
-						LoginActivity.downloadUserHeadImage(profile_image_url1, 1);
-//						HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-//							@Override
-//							public void finishCallback(Object object) {
-//								Bitmap thumbnail = null;
-//								if(object != null){
-//									thumbnail = (Bitmap) object;
-//									FileOutputStream out;
-//									try {
-//										Picture figure = new Picture();
-//										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-//										if(imgFile != null){
-//											out = new FileOutputStream(imgFile);
-//											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//											out.close();
-//											out = null;
-//											
-//											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
-//											if(oldPicture != null){
-//												oldPicture.delete();
-//											}
-//											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
-//											figure.setRecordType("User");
-//											figure.setDisplayOrder(0);
-//											figure.setPictureType("JPEG");
-//											
-//											user.setPicture(figure);
-//											figure.save();								
-//											
-////											takePictureButton.setImage(figure);
-//										}
-//									} catch (FileNotFoundException e) {
-//										e.printStackTrace();
-//									} catch (IOException e) {
-//										e.printStackTrace();
-//									}
-//								}
-//								
-//								user.save();
-//								HyjUtil.displayToast("WB帐号绑定成功");
-//								setWBField();
-//							}
-//		
-//							@Override
-//							public Object doInBackground(String... string) {
-//								Bitmap thumbnail = null;
-//								thumbnail = Util.getBitmapFromUrl(profile_image_url1, 1);
-//								return thumbnail;
-//							}
-//						});
-
-					} 
+//					final String profile_image_url1 = jsonObject.optString("profile_image_url");
+//					if(profile_image_url1.length() > 0){
+//						LoginActivity.downloadUserHeadImage(profile_image_url1, 1);
+////						HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+////							@Override
+////							public void finishCallback(Object object) {
+////								Bitmap thumbnail = null;
+////								if(object != null){
+////									thumbnail = (Bitmap) object;
+////									FileOutputStream out;
+////									try {
+////										Picture figure = new Picture();
+////										File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+////										if(imgFile != null){
+////											out = new FileOutputStream(imgFile);
+////											thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+////											out.close();
+////											out = null;
+////											
+////											Picture oldPicture = HyjApplication.getInstance().getCurrentUser().getPicture();
+////											if(oldPicture != null){
+////												oldPicture.delete();
+////											}
+////											figure.setRecordId(HyjApplication.getInstance().getCurrentUser().getId());
+////											figure.setRecordType("User");
+////											figure.setDisplayOrder(0);
+////											figure.setPictureType("JPEG");
+////											
+////											user.setPicture(figure);
+////											figure.save();								
+////											
+//////											takePictureButton.setImage(figure);
+////										}
+////									} catch (FileNotFoundException e) {
+////										e.printStackTrace();
+////									} catch (IOException e) {
+////										e.printStackTrace();
+////									}
+////								}
+////								
+////								user.save();
+////								HyjUtil.displayToast("WB帐号绑定成功");
+////								setWBField();
+////							}
+////		
+////							@Override
+////							public Object doInBackground(String... string) {
+////								Bitmap thumbnail = null;
+////								thumbnail = Util.getBitmapFromUrl(profile_image_url1, 1);
+////								return thumbnail;
+////							}
+////						});
+//
+//					} 
 					user.save();
 					HyjUtil.displayToast("WB帐号绑定成功");
 					setWBField();

@@ -259,58 +259,58 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 						user.setNickName(jsonObject.optString("nickName"));
 					}
 				}
-				final String headimgurl = jsonObject.optString("headimgurl");
-				if (headimgurl.length() > 0) {
-					LoginActivity.downloadUserHeadImage(headimgurl, 4);
-//					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
-//						@Override
-//						public void finishCallback(Object object) {
-//							Bitmap thumbnail = null;
-//							if (object != null) {
-//								thumbnail = (Bitmap) object;
-//								FileOutputStream out;
-//								try {
-//									Picture figure = new Picture();
-//									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
-//									if (imgFile != null) {
-//										out = new FileOutputStream(imgFile);
-//										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//										out.close();
-//										out = null;
-//
-//										figure.setRecordId(user.getId());
-//										figure.setRecordType("User");
-//										figure.setDisplayOrder(0);
-//										figure.setPictureType("JPEG");
-//
-//										Picture oldPicture = user.getPicture();
-//										if(oldPicture != null){
-//											oldPicture.delete();
-//										}
-//										user.setPicture(figure);
-//										figure.save();
-//
-//									}
-//								} catch (FileNotFoundException e) {
-//									e.printStackTrace();
-//								} catch (IOException e) {
-//									e.printStackTrace();
-//								}
-//							}
-//
-//							user.save();
-//							HyjUtil.displayToast("WX帐号绑定成功");
-//							finish();
-//						}
-//
-//						@Override
-//						public Object doInBackground(String... string) {
-//							Bitmap thumbnail = null;
-//							thumbnail = Util.getBitmapFromUrl(headimgurl, 4);
-//							return thumbnail;
-//						}
-//					});
-				} 
+//				final String headimgurl = jsonObject.optString("headimgurl");
+//				if (headimgurl.length() > 0) {
+//					LoginActivity.downloadUserHeadImage(headimgurl, 4);
+////					HyjAsyncTask.newInstance(new HyjAsyncTaskCallbacks() {
+////						@Override
+////						public void finishCallback(Object object) {
+////							Bitmap thumbnail = null;
+////							if (object != null) {
+////								thumbnail = (Bitmap) object;
+////								FileOutputStream out;
+////								try {
+////									Picture figure = new Picture();
+////									File imgFile = HyjUtil.createImageFile(figure.getId() + "_icon");
+////									if (imgFile != null) {
+////										out = new FileOutputStream(imgFile);
+////										thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, out);
+////										out.close();
+////										out = null;
+////
+////										figure.setRecordId(user.getId());
+////										figure.setRecordType("User");
+////										figure.setDisplayOrder(0);
+////										figure.setPictureType("JPEG");
+////
+////										Picture oldPicture = user.getPicture();
+////										if(oldPicture != null){
+////											oldPicture.delete();
+////										}
+////										user.setPicture(figure);
+////										figure.save();
+////
+////									}
+////								} catch (FileNotFoundException e) {
+////									e.printStackTrace();
+////								} catch (IOException e) {
+////									e.printStackTrace();
+////								}
+////							}
+////
+////							user.save();
+////							HyjUtil.displayToast("WX帐号绑定成功");
+////							finish();
+////						}
+////
+////						@Override
+////						public Object doInBackground(String... string) {
+////							Bitmap thumbnail = null;
+////							thumbnail = Util.getBitmapFromUrl(headimgurl, 4);
+////							return thumbnail;
+////						}
+////					});
+//				} 
 				user.save();
 				HyjUtil.displayToast("WX帐号绑定成功");
 				WXEntryActivity.this.dismissProgressDialog();
@@ -488,8 +488,8 @@ public class WXEntryActivity extends HyjActivity implements IWXAPIEventHandler {
 			LoginActivity.downloadUserData(this, new HyjAsyncTaskCallbacks(){
 				@Override
 				public void finishCallback(Object object) {
-					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl(), 4);
+//					WXLogin wxLogin = new Select().from(WXLogin.class).where("userId=?", HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//					LoginActivity.downloadUserHeadImage(wxLogin.getHeadimgurl(), 4);
 					WXEntryActivity.this.dismissProgressDialog();
 				}
 

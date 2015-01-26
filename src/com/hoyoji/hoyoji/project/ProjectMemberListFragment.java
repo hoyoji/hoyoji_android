@@ -196,6 +196,10 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.multi_select_menu_ok){
+			return super.onOptionsItemSelected(item);
+		}
+		
 		Intent intent = getActivity().getIntent();
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		
