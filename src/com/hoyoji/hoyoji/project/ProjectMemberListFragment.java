@@ -223,6 +223,13 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 			openActivityWithFragment(InviteMemberFormFragment.class, R.string.inviteMemberFormFragment_send_title, bundle);
 //			inviteFriend("WX");
 //			return true;
+		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite_wxCircleFriend){
+			Bundle bundle = new Bundle();
+			bundle.putLong("PROJECT_ID", modelId);
+			bundle.putString("INVITE_TYPE", "WXCIRCLE");
+			openActivityWithFragment(InviteMemberFormFragment.class, R.string.inviteMemberFormFragment_send_title, bundle);
+//			inviteFriend("WX");
+//			return true;
 		} else if(item.getItemId() == R.id.memberListFragment_action_member_invite_qqFriend){
 			Bundle bundle = new Bundle();
 			bundle.putLong("PROJECT_ID", modelId);

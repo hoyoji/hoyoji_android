@@ -102,6 +102,18 @@ public class FriendDialogFragment extends DialogFragment {
 //				dismiss();
 			}
     	});
+    	v.findViewById(R.id.friendDialogFragment_invite_wxCircle).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("INVITE_TYPE", "WXCIRCLE");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteFriendFormFragment.class, R.string.inviteFriendFormFragment_send_title, bundle);
+				dismiss();
+//				inviteFriend("WX");
+//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
+//				dismiss();
+			}
+    	});
     	v.findViewById(R.id.friendDialogFragment_invite_other).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
