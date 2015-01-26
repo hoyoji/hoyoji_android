@@ -1,6 +1,9 @@
 package com.hoyoji.hoyoji.event;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,11 +24,13 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjModel;
+import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
@@ -37,6 +42,7 @@ import com.hoyoji.android.hyjframework.view.HyjViewPager.OnOverScrollListener;
 import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 
 public class EventViewPagerFragment extends HyjUserFragment {
@@ -172,6 +178,18 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									sendSignUpMessageToServer(event, eventMember);
 								}
 						});
+						if (event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+							List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state = ?", event.getId(), "SignUp").execute();
+							for(int i = 0; i < ems.size(); i++){
+								EventMember em = ems.get(i);
+								if(em != null){
+									if(!em.getToBeDetermined()) {
+										em.setState("UnSignIn");
+										em.save();
+									}
+								}
+							}
+						}
 //						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 					} else {
 						setupSignIn(eventMember, event);
@@ -208,6 +226,22 @@ public class EventViewPagerFragment extends HyjUserFragment {
 //					}
 				}
 			});
+			if (!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+				if (eventMember.getState().equalsIgnoreCase("SignUp")){
+					sendUnSignInMessageToServer(event, eventMember);
+				}
+			} else {
+				List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state = ?", event.getId(), "SignUp").execute();
+				for(int i = 0; i < ems.size(); i++){
+					EventMember em = ems.get(i);
+					if(em != null){
+						if(!em.getToBeDetermined()) {
+							em.setState("UnSignIn");
+							em.save();
+						}
+					}
+				}
+			}
 //			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 		} else {
 			mBtnSignUpEvent.setVisibility(View.GONE);
@@ -357,6 +391,34 @@ public class EventViewPagerFragment extends HyjUserFragment {
 //			}
 //			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[{eventId:\"" + event.getId() + "\"}]", "eventMemberSignIn");
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberSignIn");
+			((HyjActivity) this.getActivity()).displayProgressDialog(
+							R.string.eventListFragment_signIn_request,
+							R.string.eventListFragment_signIn_progress_request);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void sendUnSignInMessageToServer(final Event event, EventMember em) {
+		try {
+			HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+				@Override
+				public void finishCallback(Object object) {
+					loadEventMembers(object);
+				}
+	
+				@Override
+				public void errorCallback(Object object) {
+					((HyjActivity) EventViewPagerFragment.this.getActivity()).dismissProgressDialog();
+					JSONObject json = (JSONObject) object;
+					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
+				}
+			};
+			
+			JSONObject evt = new JSONObject();
+			evt.put("eventId", event.getId());
+			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberUnSignIn");
 			((HyjActivity) this.getActivity()).displayProgressDialog(
 							R.string.eventListFragment_signIn_request,
 							R.string.eventListFragment_signIn_progress_request);
