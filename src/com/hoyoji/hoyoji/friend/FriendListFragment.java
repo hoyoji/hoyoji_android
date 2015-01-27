@@ -749,12 +749,16 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			HyjUtil.displayToast("请选择至少一个好友");
 			return;
 		}
-		
-		Intent intent = new Intent();
-		intent.putExtra("MODEL_IDS", ids);
-		intent.putExtra("MODEL_TYPE", "Friend");
-		getActivity().setResult(Activity.RESULT_OK, intent);
-		getActivity().finish();
+		if(getActivity().getCallingActivity() != null){
+			HyjUtil.displayToast("暂不支持多选");
+			return;
+		} else {
+			Intent intent = new Intent();
+			intent.putExtra("MODEL_IDS", ids);
+			intent.putExtra("MODEL_TYPE", "Friend");
+			getActivity().setResult(Activity.RESULT_OK, intent);
+			getActivity().finish();
+		}
 		
 	}
 
