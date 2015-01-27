@@ -178,7 +178,17 @@ public class EventViewPagerFragment extends HyjUserFragment {
 									sendSignUpMessageToServer(event, eventMember);
 								}
 						});
-						if (event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
+					} else {
+						setupSignIn(eventMember, event);
+					}
+					
+					if(event.getStartDate() < (new Date()).getTime()){
+						if (!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+							if (eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp")){
+								sendUnSignInMessageToServer(event, eventMember);
+							}
+						} else {
 							List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state = ? and toBeDetermined = 0", event.getId(), "SignUp").execute();
 							for(int i = 0; i < ems.size(); i++){
 								EventMember em = ems.get(i);
@@ -188,9 +198,6 @@ public class EventViewPagerFragment extends HyjUserFragment {
 								}
 							}
 						}
-//						mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
-					} else {
-						setupSignIn(eventMember, event);
 					}
 					
 				}
@@ -227,22 +234,6 @@ public class EventViewPagerFragment extends HyjUserFragment {
 //			mViewPager.setPadding(mTabStrip.getPaddingLeft(), (int) (103*mDisplayMetrics.density), mViewPager.getPaddingRight(), mViewPager.getPaddingBottom());
 		} else {
 			mBtnSignUpEvent.setVisibility(View.GONE);
-		}
-		if(event.getStartDate() < (new Date()).getTime()){
-			if (!event.getProject().getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-				if (eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp")){
-					sendUnSignInMessageToServer(event, eventMember);
-				}
-			} else {
-				List<EventMember> ems = new Select().from(EventMember.class).where("eventId = ? AND state = ? and toBeDetermined = 0", event.getId(), "SignUp").execute();
-				for(int i = 0; i < ems.size(); i++){
-					EventMember em = ems.get(i);
-					if(em != null){
-						em.setState("UnSignIn");
-						em.save();
-					}
-				}
-			}
 		}
 	}
 
