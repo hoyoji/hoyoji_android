@@ -325,8 +325,8 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberSignUp");
 			
 			((HyjActivity) this.getActivity()).displayProgressDialog(
-							R.string.eventListFragment_signUp_request,
-							R.string.eventListFragment_signUp_progress_request);
+							R.string.eventListFragment_unSignIn_request,
+							R.string.eventListFragment_unSignIn_progress_request);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
