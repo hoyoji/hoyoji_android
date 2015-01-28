@@ -228,54 +228,59 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		
 		mSelectorFieldEvent = (HyjSelectorField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_selectorField_event);
 		mViewSeparatorEvent = (View) getView().findViewById(R.id.field_separator_event);
-		
-		List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
-		if(events.size() > 0) {
-			mSelectorFieldEvent.setVisibility(View.VISIBLE);
-			mViewSeparatorEvent.setVisibility(View.VISIBLE);
+
+		Event event = null;
+		if (project != null) {
+			List<Event> events = new Select().from(Event.class).where("projectId = ?", project.getId()).execute();
+			if(events.size() > 0) {
+				mSelectorFieldEvent.setVisibility(View.VISIBLE);
+				mViewSeparatorEvent.setVisibility(View.VISIBLE);
+			} else {
+				mSelectorFieldEvent.setVisibility(View.GONE);
+				mViewSeparatorEvent.setVisibility(View.GONE);
+			}
+			
+			String eventId = intent.getStringExtra("eventId");//从消息导入
+			if(moneyExpenseContainer.get_mId() == null){
+				if(eventId != null) {
+					moneyExpenseContainer.setEventId(eventId);
+					event = HyjModel.getModel(Event.class, eventId);
+				} else if(project.getActiveEventId() != null){
+					moneyExpenseContainer.setEventId(project.getActiveEventId());
+					event = HyjModel.getModel(Event.class, project.getActiveEventId());
+				}
+			}else{
+				event = moneyExpenseContainer.getEvent();
+			}
+			
+			if (event != null) {
+				mSelectorFieldEvent.setModelId(event.getId());
+				mSelectorFieldEvent.setText(event.getName());
+			}
+			mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mSelectorFieldProject.getModelId() != null) {
+						Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
+						
+						Bundle bundle = new Bundle();
+						bundle.putLong("MODEL_ID", project.get_mId());
+						bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
+						
+						MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventFormFragment_action_select, bundle, GET_EVENT_ID);
+					
+	//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+	//								ProjectEventListFragment.class,
+	//								R.string.projectListFragment_title_select_project,
+	//								null, GET_PROJECT_ID);
+					}
+				}
+			});
 		} else {
 			mSelectorFieldEvent.setVisibility(View.GONE);
 			mViewSeparatorEvent.setVisibility(View.GONE);
 		}
 		
-		Event event = null;
-		String eventId = intent.getStringExtra("eventId");//从消息导入
-		if(moneyExpenseContainer.get_mId() == null){
-			if(eventId != null) {
-				moneyExpenseContainer.setEventId(eventId);
-				event = HyjModel.getModel(Event.class, eventId);
-			} else if(project.getActiveEventId() != null){
-				moneyExpenseContainer.setEventId(project.getActiveEventId());
-				event = HyjModel.getModel(Event.class, project.getActiveEventId());
-			}
-		}else{
-			event = moneyExpenseContainer.getEvent();
-		}
-		
-
-		if (event != null) {
-			mSelectorFieldEvent.setModelId(event.getId());
-			mSelectorFieldEvent.setText(event.getName());
-		}
-		mSelectorFieldEvent.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (mSelectorFieldProject.getModelId() != null) {
-					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
-					
-					Bundle bundle = new Bundle();
-					bundle.putLong("MODEL_ID", project.get_mId());
-					bundle.putString("NULL_ITEM", (String) mSelectorFieldEvent.getHint());
-					
-					MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(EventListFragment.class, R.string.projectEventFormFragment_action_select, bundle, GET_EVENT_ID);
-				
-//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
-//								ProjectEventListFragment.class,
-//								R.string.projectListFragment_title_select_project,
-//								null, GET_PROJECT_ID);
-				}
-			}
-		});
 		if(template == null) {
 			setupApportionField(moneyExpenseContainer);
 		} else {
