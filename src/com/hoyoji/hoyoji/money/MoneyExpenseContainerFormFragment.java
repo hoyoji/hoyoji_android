@@ -39,6 +39,7 @@ import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.activity.HyjActivity.DialogCallbackListener;
 import com.hoyoji.android.hyjframework.fragment.HyjCalculatorFormFragment;
+import com.hoyoji.android.hyjframework.fragment.HyjFreeGameFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjTextInputFormFragment;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.android.hyjframework.view.HyjDateTimeField;
@@ -496,11 +497,30 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		app_action_game.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-//				Bundle bundle = new Bundle();
-//				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
-//							MoneyExpenseGameFormFragment.class,
-//								R.string.app_action_game,
-//								bundle, GET_FREE_PERSON);
+				Bundle bundle = new Bundle();
+				
+				MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
+				int count = adapter.getCount();
+				JSONArray array = new JSONArray();
+				for (int i = 0; i < count; i++) {
+					try {
+						JSONObject evt = new JSONObject();
+						evt.put("amount", adapter.getItem(i).getApportion().getAmount());
+						evt.put("friendUserId", adapter.getItem(i).getApportion().getFriendUserId());
+						evt.put("localFriendId", adapter.getItem(i).getApportion().getLocalFriendId());
+						evt.put("apportionType", adapter.getItem(i).getApportion().getApportionType());
+						array.put(evt);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				bundle.putString("adapterArray", array.toString());
+				
+				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
+							HyjFreeGameFormFragment.class,
+								R.string.app_action_game,
+								bundle, GET_FREE_PERSON);
 			}
 		});
 
@@ -868,7 +888,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		};
 		mApportionFieldApportions.getAdapter().registerDataSetObserver(mApportionCountObserver);
 		
-		List<MoneyExpenseApportion> moneyApportions = new ArrayList<MoneyExpenseApportion>();;
+		List<MoneyExpenseApportion> moneyApportions = new ArrayList<MoneyExpenseApportion>();
 		
 		if (apportionString != null) {
 			try {

@@ -1,15 +1,28 @@
 package com.hoyoji.android.hyjframework.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.TextView;
+
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFormFragment;
 import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Event;
+import com.hoyoji.hoyoji.models.MoneyExpenseApportion;
+import com.hoyoji.hoyoji.models.MoneyExpenseContainer;
 import com.hoyoji.hoyoji.models.Project;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneyApportionField;
 
 public class HyjFreeGameFormFragment extends HyjUserFormFragment {
@@ -23,29 +36,13 @@ public class HyjFreeGameFormFragment extends HyjUserFormFragment {
 	@Override
 	public void onInitViewData() {
 		super.onInitViewData();
-		Event event;
-		Project project = null;
-
 		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		if (modelId != -1) {
-			event = new Select().from(Event.class).where("_id=?", modelId).executeSingle();
-			project = event.getProject();
-		} else {
-			event = new Event();
-			Long project_id = intent.getLongExtra("PROJECT_ID", -1);
-			if(project_id != -1){
-				project = Project.load(Project.class, project_id);
-			} else {
-				String projectId = intent.getStringExtra("PROJECTID");
-				if(projectId != null) {
-					project = Project.getModel(Project.class, projectId);
-				}
-			}
-			if (project != null) {
-				event.setProjectId(project.getId());
-			}
+		String adapter = intent.getStringExtra("adapterArray");
+		List<MoneyExpenseApportion> moneyApportions = new ArrayList<MoneyExpenseApportion>();
+		if (adapter != null){
+			
 		}
+		mApportionFieldApportions = (MoneyApportionField) getView().findViewById(R.id.moneyExpenseContainerFormFragment_apportionField);
 		
 	}
 	
