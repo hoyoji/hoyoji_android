@@ -520,7 +520,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 						e.printStackTrace();
 					}
 				}
-				bundle.putString("adapterArray", array.toString());
+				bundle.putString("adapterJSONArray", array.toString());
 				
 				MoneyExpenseContainerFormFragment.this.openActivityWithFragmentForResult(
 							HyjFreeGameFormFragment.class,
@@ -1690,7 +1690,27 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 	       	 break;
         case GET_FREE_PERSON:
 			if (resultCode == Activity.RESULT_OK) {
+				String friendUserId = data.getStringExtra("friendUserId");
+				String localFriendId = data.getStringExtra("localFriendId");
 				
+				MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
+				int count = adapter.getCount();
+				for (int i = 0; i < count; i++) {
+					if (adapter.getItem(i).getFriend() != null) {
+						if (friendUserId != null && !"".equals(friendUserId)) {
+							if(friendUserId.equals(adapter.getItem(i).getFriend().getFriendUserId())) {
+								adapter.getItem(i).setAmount(0.0);
+								adapter.getItem(i).setApportionType("Fix");
+							}
+						} else if (localFriendId != null && !"".equals(localFriendId)) {
+							if(localFriendId.equals(adapter.getItem(i).getFriend().getId())) {
+								adapter.getItem(i).setAmount(0.0);
+								adapter.getItem(i).setApportionType("Fix");
+							}
+						}
+						
+					}
+				}
 			}
 			break;
 		}
