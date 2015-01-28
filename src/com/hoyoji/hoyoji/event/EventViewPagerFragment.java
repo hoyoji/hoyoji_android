@@ -209,7 +209,9 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	}
 
 	private void setupSignIn(final EventMember eventMember, final Event event) {
-		if(eventMember != null && eventMember.getState().equalsIgnoreCase("SignUp") && event.getStartDate() < (new Date()).getTime()){
+		if(eventMember != null 
+				&& (eventMember.getState().equalsIgnoreCase("SignUp") || eventMember.getState().equalsIgnoreCase("UnSignIn"))
+				&& event.getStartDate() < (new Date()).getTime()){
 			mBtnSignUpEvent.setVisibility(View.VISIBLE);
 			mBtnSignUpEvent.setText("签到");
 			
