@@ -298,6 +298,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 				Project project = HyjModel.getModel(Project.class,mSelectorFieldProject.getModelId());
 				bundle.putLong("MODEL_ID", project.get_mId());
 //				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
+				bundle.putBoolean("disableMultiChoiceMode", true);
 				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FRIEND_ID);
 				} else {
@@ -369,6 +370,7 @@ public class MoneyReturnFormFragment extends HyjUserFormFragment {
 //					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 //					bundle.putLong("MODEL_ID", project.get_mId());
 //					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+//		bundle.putBoolean("disableMultiChoiceMode", true);
 //					openActivityWithFragmentForResult(MemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 //				}
 //			}

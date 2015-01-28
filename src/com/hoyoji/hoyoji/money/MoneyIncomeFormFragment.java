@@ -284,6 +284,7 @@ public class MoneyIncomeFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					bundle.putBoolean("disableMultiChoiceMode", true);
 					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}

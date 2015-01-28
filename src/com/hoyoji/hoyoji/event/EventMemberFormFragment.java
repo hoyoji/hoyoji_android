@@ -194,6 +194,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("MODEL_ID", thisEvent.getProject().get_mId());
+				bundle.putBoolean("disableMultiChoiceMode", true);
 				EventMemberFormFragment.this.openActivityWithFragmentForResult(SelectApportionMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_FRIEND_ID);
 //				EventMemberFormFragment.this.openActivityWithFragmentForResult(FriendListFragment.class, R.string.projectEventMemberFormFragment_selectorField_hint_friend, null, GET_FRIEND_ID);
 			}

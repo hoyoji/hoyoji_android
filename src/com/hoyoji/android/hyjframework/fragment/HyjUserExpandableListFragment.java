@@ -321,6 +321,10 @@ public abstract class HyjUserExpandableListFragment extends Fragment implements
 
 	@SuppressLint("NewApi")
 	public void enterMultiChoiceMode(final HyjExpandableListView listView, int position){
+		if(getActivity().getIntent().getBooleanExtra("disableMultiChoiceMode", false)){
+			return;
+		}
+		
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 //			listView.setItemChecked(position, true);
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

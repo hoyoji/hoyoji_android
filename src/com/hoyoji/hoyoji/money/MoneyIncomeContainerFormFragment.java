@@ -380,6 +380,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putString("NULL_ITEM", (String) mSelectorFieldFriend.getHint());
+				bundle.putBoolean("disableMultiChoiceMode", true);
 				MoneyIncomeContainerFormFragment.this
 				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.friendListFragment_title_select_friend_payer, bundle, GET_FRIEND_ID);
 			}
@@ -494,6 +495,7 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					bundle.putBoolean("disableMultiChoiceMode", true);
 					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
