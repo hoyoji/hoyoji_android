@@ -35,6 +35,9 @@
    <string name="eventListFragment_signUp_request">活动报名</string>
    <string name="eventListFragment_signUp_progress_request">正在接受活动报名&#8230;</string>
    
+   <string name="eventListFragment_unSignIn_request">更新报名状态</string>
+   <string name="eventListFragment_unSignIn_progress_request">更新报名状态，请稍后&#8230;</string>
+   
    <string name="eventListFragment_signIn_request">活动签到</string>
    <string name="eventListFragment_signIn_progress_request">正在接受活动签到&#8230;</string>
    
