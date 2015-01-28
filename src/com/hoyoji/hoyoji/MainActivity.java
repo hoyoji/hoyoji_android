@@ -697,7 +697,7 @@ public class MainActivity extends HyjUserActivity {
 				if(postData == null){
 					postData = "null";
 				}
-				Object result = HyjServer.doHttpPost(null,
+				Object result = HyjServer.doHttpPost("登录",
 						HyjApplication.getServerUrl() + "syncPull.php", postData, true);
 				if (result == null) {
 					errorCallback( HyjApplication.getInstance().getResources()
