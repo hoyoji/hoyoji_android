@@ -252,6 +252,10 @@ public abstract class HyjUserListFragment extends ListFragment implements
 	}
 
 	public void enterMultiChoiceMode(final ListView listView, int position){
+		if(getActivity().getIntent().getBooleanExtra("disableMultiChoiceMode", false)){
+			return;
+		}
+		
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setItemChecked(position, true);
 		((HyjActivity)getActivity()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
