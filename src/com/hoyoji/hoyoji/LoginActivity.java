@@ -68,6 +68,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -924,7 +926,25 @@ public class LoginActivity extends HyjActivity {
 			HyjApplication.relogin(activity);
 			return;
 		}
-
+		
+		// 如果有WIFI，就做一次初始大同步，否则只下载一些必要的数据
+		final ConnectivityManager connectivityManager = (ConnectivityManager)HyjApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if(wifiNetworkInfo != null && wifiNetworkInfo.isConnected()){
+			activity.displayProgressDialog("登录","正在下载用户数据...");
+			MainActivity.downloadData(activity, null, new HyjAsyncTaskCallbacks(){
+				@Override
+				public void finishCallback(Object object) {
+					if(callback != null){
+						callback.finishCallback(null);
+					}
+					HyjApplication.relogin(activity);
+					activity.dismissProgressDialog();
+				}
+			});
+			return;
+		}
+		
 		// UserData userData = HyjApplication.getInstance().getCurrentUser()
 		// .getUserData();
 

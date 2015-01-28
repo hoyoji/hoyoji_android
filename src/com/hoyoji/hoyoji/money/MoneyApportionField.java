@@ -825,9 +825,11 @@ public class MoneyApportionField extends GridView {
 			if(this.getFriend() != null){
 				return this.getFriend().getDisplayName();
 			}
-			User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
-			if(user != null){
-				return user.getDisplayName();
+			if(mApportion.getFriendUserId() != null){
+				User user = HyjModel.getModel(User.class, mApportion.getFriendUserId());
+				if(user != null){
+					return user.getDisplayName();
+				}
 			}
 			ProjectShareAuthorization psa = getProjectShareAuthorization();
 			if(psa != null){

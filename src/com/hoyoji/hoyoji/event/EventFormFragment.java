@@ -181,6 +181,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 					Event event = HyjModel.getModel(Event.class,mEventEditor.getModelCopy().getId());
 					bundle.putLong("MODEL_ID", event.getProject().get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
+					bundle.putBoolean("disableMultiChoiceMode", true);
 					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}

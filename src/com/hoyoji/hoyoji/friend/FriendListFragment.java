@@ -733,6 +733,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			}
 		}
 	}
+	
 	@Override
 	public void onDestroy() {
 		if (mUserChangeObserver != null) {
@@ -749,17 +750,16 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 			HyjUtil.displayToast("请选择至少一个好友");
 			return;
 		}
-		if(getActivity().getCallingActivity() != null){
-			HyjUtil.displayToast("暂不支持多选");
-			return;
-		} else {
+//		if(getActivity().getCallingActivity() != null){
+////			HyjUtil.displayToast("暂不支持多选");
+//			return;
+//		} else {
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_IDS", ids);
 			intent.putExtra("MODEL_TYPE", "Friend");
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
-		}
-		
+//		}
 	}
 
 
@@ -776,7 +776,7 @@ public class FriendListFragment extends HyjUserExpandableListFragment {
 		}
 		
 		@Override
-		public long getGroupId(int pos){
+		public long getGroupId(int pos) {
 			Map<String, Object> data = (Map<String, Object>) this.getGroup(pos);
 			return (Long)data.get("_id");
 		}

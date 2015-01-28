@@ -238,8 +238,10 @@ public class MoneyTopupFormFragment extends HyjUserFormFragment {
 		mSelectorFieldTransferInFriend.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("disableMultiChoiceMode", true);
 				MoneyTopupFormFragment.this
-				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.moneyTopupFormFragment_editText_hint_transferInFriend, null, GET_TRANSFERIN_FRIEND_ID);
+				.openActivityWithFragmentForResult(FriendListFragment.class, R.string.moneyTopupFormFragment_editText_hint_transferInFriend, bundle, GET_TRANSFERIN_FRIEND_ID);
 			}
 		}); 
 		

@@ -687,18 +687,16 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 			HyjUtil.displayToast("请选择至少一个成员");
 			return;
 		}
-		if(getActivity().getCallingActivity() != null){
-			HyjUtil.displayToast("暂不支持多选");
-			return;
-		} else {
+//		if(getActivity().getCallingActivity() != null){
+////			HyjUtil.displayToast("暂不支持多选");
+//			return;
+//		} else {
 			Intent intent = new Intent();
 			intent.putExtra("MODEL_IDS", ids);
 			intent.putExtra("MODEL_TYPE", Cache.getTableName(ProjectShareAuthorization.class));
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
-		}
-		
-		
+//		}
 	}
 	
 	private static class MemberListAdapter extends SimpleAdapter{
