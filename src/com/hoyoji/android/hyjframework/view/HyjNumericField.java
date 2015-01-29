@@ -192,13 +192,14 @@ public class HyjNumericField extends LinearLayout {
 	}
 	
 	public void showSoftKeyboard(){
-		mEditTextEdit.post(
+		mEditTextEdit.postDelayed(
 			new Runnable() {
 			    public void run() {
 			        InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 			        inputMethodManager.toggleSoftInputFromWindow(mEditTextEdit.getApplicationWindowToken(),  InputMethodManager.SHOW_IMPLICIT, 0);
+//			        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			    }
-			});
+			}, 500);
 	}
 
 	@Override
