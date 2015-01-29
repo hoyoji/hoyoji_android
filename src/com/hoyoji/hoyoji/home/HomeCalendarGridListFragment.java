@@ -299,6 +299,20 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	@Override
 	public void onResume(){
 		super.onResume();
+		Calendar calToday = Calendar.getInstance();
+		if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSysYear() 
+				|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSysMonth() - 1
+				|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSysDay() ){
+			mCalendarGridView.getAdapter().setSysYear(calToday.get(Calendar.YEAR));
+			mCalendarGridView.getAdapter().setSysMonth(calToday.get(Calendar.MONTH)+1);
+			mCalendarGridView.getAdapter().setSysDay(calToday.get(Calendar.DAY_OF_MONTH));
+
+			mCalendarGridView.getAdapter().setSelectedYear(calToday.get(Calendar.YEAR));
+			mCalendarGridView.getAdapter().setSelectedMonth(calToday.get(Calendar.MONTH)+1);
+			mCalendarGridView.getAdapter().setSelectedDay(calToday.get(Calendar.DAY_OF_MONTH));
+			
+			initLoader(-1);
+		}
 	}
 	
 	@Override

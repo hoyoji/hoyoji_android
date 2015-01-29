@@ -93,7 +93,6 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 		this(context, rs);
 
 		setCalendar(year, month);
-
 	}
 
 	@Override
@@ -522,7 +521,31 @@ public class HyjCalendarGridAdapter extends BaseAdapter {
 	public int getCurrentMonth() {
 		return currentMonth;
 	}
+	
+	public int getSysYear() {
+		return sys_year;
+	}
+	
+	public int getSysDay() {
+		return sys_day;
+	}
+	
+	public int getSysMonth() {
+		return sys_month;
+	}
 
+	public void setSysYear(int year) {
+		sys_year = year;
+	}
+	
+	public void setSysDay(int day) {
+		sys_day = day;
+	}
+	
+	public void setSysMonth(int month) {
+		sys_month = month;
+	}
+	
 	public String getLeapMonth() {
 		return leapMonth;
 	}
