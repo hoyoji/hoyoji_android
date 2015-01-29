@@ -1703,16 +1703,20 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 							if(friendUserId.equals(adapter.getItem(i).getFriend().getFriendUserId())) {
 								adapter.getItem(i).setAmount(0.0);
 								adapter.getItem(i).setApportionType("Fix");
+								break;
 							}
 						} else if (localFriendId != null && !"".equals(localFriendId)) {
 							if(localFriendId.equals(adapter.getItem(i).getFriend().getId())) {
 								adapter.getItem(i).setAmount(0.0);
 								adapter.getItem(i).setApportionType("Fix");
+								break;
 							}
 						}
 						
 					}
 				}
+				mApportionFieldApportions.setAdapter(adapter);
+				mApportionFieldApportions.setTotalAmount(mMoneyExpenseContainerEditor.getModelCopy().getAmount());
 			}
 			break;
 		}
