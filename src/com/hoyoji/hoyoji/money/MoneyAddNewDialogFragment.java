@@ -35,14 +35,14 @@ public class MoneyAddNewDialogFragment extends DialogFragment {
     	v.findViewById(R.id.moneyDialogFragment_addnew_expense).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
+				((HyjActivity)getActivity()).openActivityWithFragment(MoneyExpenseViewPagerFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
 				dismiss();
 			}
     	});
     	v.findViewById(R.id.moneyDialogFragment_addnew_income).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				((HyjActivity)getActivity()).openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
+				((HyjActivity)getActivity()).openActivityWithFragment(MoneyIncomeViewPagerFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
 				dismiss();
 			}
     	});    	

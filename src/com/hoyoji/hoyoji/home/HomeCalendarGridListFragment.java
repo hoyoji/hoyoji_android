@@ -88,8 +88,10 @@ import com.hoyoji.hoyoji.money.MoneyDepositPaybackContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseViewPagerFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeViewPagerFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -297,6 +299,20 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	@Override
 	public void onResume(){
 		super.onResume();
+		Calendar calToday = Calendar.getInstance();
+		if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSysYear() 
+				|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSysMonth() - 1
+				|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSysDay() ){
+			mCalendarGridView.getAdapter().setSysYear(calToday.get(Calendar.YEAR));
+			mCalendarGridView.getAdapter().setSysMonth(calToday.get(Calendar.MONTH)+1);
+			mCalendarGridView.getAdapter().setSysDay(calToday.get(Calendar.DAY_OF_MONTH));
+
+			mCalendarGridView.getAdapter().setSelectedYear(calToday.get(Calendar.YEAR));
+			mCalendarGridView.getAdapter().setSelectedMonth(calToday.get(Calendar.MONTH)+1);
+			mCalendarGridView.getAdapter().setSelectedDay(calToday.get(Calendar.DAY_OF_MONTH));
+			
+			initLoader(-1);
+		}
 	}
 	
 	@Override
@@ -318,7 +334,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 					
 					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
 				}
-				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
+				openActivityWithFragment(MoneyExpenseViewPagerFragment.class, R.string.moneyExpenseFormFragment_title_addnew, bundle);
     		}
 		});
 		
@@ -337,7 +353,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 					
 					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
 				}
-				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
+				openActivityWithFragment(MoneyIncomeViewPagerFragment.class, R.string.moneyIncomeFormFragment_title_addnew, bundle);
     		}
 		});
 

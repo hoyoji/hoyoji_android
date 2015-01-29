@@ -603,25 +603,18 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 //			TextView labelText = (TextView) ((ViewGroup)view.getParent()).findViewById(R.id.memberListItem_settlement_label);
 
 //			numericView.setPrefix(currencySymbol);
-			if(settlement < 0){
-//				settlement = -settlement;
-//				labelText.setText("还要支付");
-				numericView.setPrefix("结余:" + currencySymbol);
+			if (settlement < 0){
+				settlement = -settlement;
+				numericView.setPrefix("还要支付:" + currencySymbol);
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				}
-
-			}else{
-				if(settlement.equals(0.0)){
-//					labelText.setText("结余");
-					numericView.setPrefix("结余:" + currencySymbol);
-					numericView.setTextColor(Color.parseColor("#000000"));
-				}else if(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-//					labelText.setText("应该收回");
-					numericView.setPrefix("结余:" + currencySymbol);
-					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-				 }
-
+			} else if (settlement.equals(0.0)){
+				numericView.setPrefix("结余:" + currencySymbol);
+				numericView.setTextColor(Color.parseColor("#000000"));
+			} else if (HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
+				numericView.setPrefix("应该收回:" + currencySymbol);
+				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			numericView.setSuffix(null);
 			numericView.setNumber(settlement);

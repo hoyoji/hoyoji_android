@@ -83,8 +83,10 @@ import com.hoyoji.hoyoji.money.MoneyDepositPaybackContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositReturnContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyExpenseFormFragment;
+import com.hoyoji.hoyoji.money.MoneyExpenseViewPagerFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyIncomeFormFragment;
+import com.hoyoji.hoyoji.money.MoneyIncomeViewPagerFragment;
 import com.hoyoji.hoyoji.money.MoneyLendFormFragment;
 import com.hoyoji.hoyoji.money.MoneyPaybackFormFragment;
 import com.hoyoji.hoyoji.money.MoneyReturnFormFragment;
@@ -144,7 +146,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		mExpenseButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyExpenseContainerFormFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
+				openActivityWithFragment(MoneyExpenseViewPagerFragment.class, R.string.moneyExpenseFormFragment_title_addnew, null);
     		}
 		});
 		
@@ -153,7 +155,7 @@ public class HomeListFragment extends HyjUserExpandableListFragment implements O
 		mIncomeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				openActivityWithFragment(MoneyIncomeContainerFormFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
+				openActivityWithFragment(MoneyIncomeViewPagerFragment.class, R.string.moneyIncomeFormFragment_title_addnew, null);
     		}
 		});
 		
