@@ -37,6 +37,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 	private GridView mGridView = null;
 	private Button app_action_game_start = null;
 	private Button app_action_game_free = null;
+	private Button app_action_game_cancel = null;
 	private int oldPosition = -1;
 	ArrayList<HashMap<String, Object>> lstItem = null;
 	
@@ -133,16 +134,37 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 				@Override
 				public void onClick(View v) {
 					app_action_game_free.setEnabled(false);
+					app_action_game_free.setTextColor(getResources().getColor(R.color.gray));
+					app_action_game_start.setEnabled(false);
 					if(mGridView.getCount() == 0){
 						HyjUtil.displayToast("请选择分摊人员，再开始游戏");
 					} else {
-						for (int i = 0; i < 5; i++) {
-							 selectFreePerson();
-							 ((SimpleAdapter) mGridView.getAdapter()).notifyDataSetChanged();
+						for (int i = 0; i < 100; i++) {
+							final int iFinal = i;
+							getView().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									 selectFreePerson();
+									 ((SimpleAdapter) mGridView.getAdapter()).notifyDataSetChanged();
+									 if(iFinal == 99){
+										 app_action_game_free.setEnabled(true);
+										 app_action_game_free.setTextColor(getResources().getColor(R.color.hoyoji_red));
+										 app_action_game_start.setEnabled(true);
+										 app_action_game_start.setText("开始");
+									 }
+								}
+							}, 100 * i);
+						 }
+						for (int i = 1; i < 10; i++) {
+							final int iFinal = i;
+							getView().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									app_action_game_start.setText((10-iFinal)+"");
+								}
+							}, 1000 * i);
 						 }
 					}
-					app_action_game_free.setEnabled(true);
-					 
 				}
 			});
 			
@@ -163,6 +185,14 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 					} else {
 						HyjUtil.displayToast("还没有免单人员，请先开始游戏");
 					}
+				}
+			});
+			
+			app_action_game_cancel = (Button) getView().findViewById(R.id.button_cancel);
+			app_action_game_cancel.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					getActivity().finish();
 				}
 			});
 		 } catch (JSONException e) {
@@ -306,6 +336,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 				}
 				if((Integer)map.get("isSelected") == 1){
 					thisImageView.setBackgroundColor(mContext.getResources().getColor(R.color.hoyoji_red));
+					thisNameTextView.setTextColor(mContext.getResources().getColor(R.color.hoyoji_red));
 				} else {
 					if (thisFriendUserIdTextView.getText() != null && !"".equals(thisFriendUserIdTextView.getText())) {
 						if(HyjApplication.getInstance().getCurrentUser().getId().equals(thisFriendUserIdTextView.getText())){
@@ -316,6 +347,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 					} else {
 						thisImageView.setBackgroundColor(mContext.getResources().getColor(R.color.hoyoji_yellow));
 					}
+					thisNameTextView.setTextColor(mContext.getResources().getColor(R.color.black));
 				}
 				
 	        }
