@@ -735,7 +735,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
 			setExchangeRate(false);
-			this.mNumericAmount.showSoftKeyboard();
+			if(this.getUserVisibleHint()){
+				this.mNumericAmount.showSoftKeyboard();
+			}
 			app_action_game.setVisibility(View.VISIBLE);
 			app_action_save_template.setVisibility(View.VISIBLE);
 //			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

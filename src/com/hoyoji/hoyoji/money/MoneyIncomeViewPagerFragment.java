@@ -114,13 +114,15 @@ public class MoneyIncomeViewPagerFragment extends HyjUserFragment {
 				return new MoneyIncomeContainerFormFragment();
 			case 1 :
 				return new MoneyDepositIncomeContainerFormFragment();
+			case 2 :
+				return new MoneyBorrowFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -130,6 +132,8 @@ public class MoneyIncomeViewPagerFragment extends HyjUserFragment {
 				return "收入";
 			case 1 :
 				return "预收会费";
+			case 2 :
+				return "借入";
 			}
 			return null;
 		}

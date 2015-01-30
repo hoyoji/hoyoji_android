@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -657,7 +658,9 @@ public class MoneyIncomeContainerFormFragment extends HyjUserFormFragment {
 			// 只在新增时才自动打开软键盘， 修改时不自动打开
 			if (modelId == -1) {
 				setExchangeRate(false);
-				this.mNumericAmount.showSoftKeyboard();
+				if(this.getUserVisibleHint()){
+					mNumericAmount.showSoftKeyboard();
+				}
 				app_action_save_template.setVisibility(View.VISIBLE);
 //				this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}else{

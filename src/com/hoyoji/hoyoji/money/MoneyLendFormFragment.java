@@ -446,7 +446,9 @@ public class MoneyLendFormFragment extends HyjUserFormFragment {
 		// 只在新增时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1) {
 			setExchangeRate(false);
-			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			if(this.getUserVisibleHint()){
+				this.mNumericAmount.showSoftKeyboard();
+			}
 		}else{
 			setExchangeRate(true);
 		}
