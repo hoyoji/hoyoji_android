@@ -736,10 +736,13 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 		if (modelId == -1) {
 			setExchangeRate(false);
 			this.mNumericAmount.showSoftKeyboard();
+			app_action_game.setVisibility(View.VISIBLE);
 //			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
 			if(!moneyExpenseContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
 				app_action_save_template.setVisibility(View.GONE);
+			} else {
+				app_action_game.setVisibility(View.VISIBLE);
 			}
 			setExchangeRate(true);
 		}
