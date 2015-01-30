@@ -737,15 +737,15 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			setExchangeRate(false);
 			this.mNumericAmount.showSoftKeyboard();
 			app_action_game.setVisibility(View.VISIBLE);
+			app_action_save_template.setVisibility(View.VISIBLE);
 //			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}else{
 			if(!moneyExpenseContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-				app_action_save_template.setVisibility(View.GONE);
+//				app_action_save_template.setVisibility(View.GONE);
 			} else {
 				if(hasEditPermission){
 					app_action_game.setVisibility(View.VISIBLE);
-				} else {
-					app_action_save_template.setVisibility(View.GONE);
+					app_action_save_template.setVisibility(View.VISIBLE);
 				}
 			}
 			setExchangeRate(true);
