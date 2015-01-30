@@ -8,6 +8,10 @@
    <string name="inviteMemberMessageFormFragment_textView_detail">消息内容</string>
    <string name="inviteMemberMessageFormFragment_editText_hint_detail">请输入消息内容</string>
    
+   <string name="inviteMemberMessageFormFragment_title_eventmember_addnew">添加活动成员</string>
+   
+   <string name="inviteMemberMessageFormFragment_progress_eventmember_adding">正在添加活动成员</string>
+   
     
    <string name="memberFormFragment_title_addnew">添加账本成员</string>
    <string name="memberFormFragment_title_edit">修改账本成员</string>

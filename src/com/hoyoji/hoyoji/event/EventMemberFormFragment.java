@@ -503,7 +503,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 		data += "," + msg.toString() + "]";
 		
 		HyjHttpPostAsyncTask.newInstance(serverCallbacks, data, "eventMemberAdd");
-		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.memberFormFragment_title_addnew,R.string.memberFormFragment_progress_adding);
+		((HyjActivity) EventMemberFormFragment.this.getActivity()).displayProgressDialog(R.string.inviteMemberMessageFormFragment_title_eventmember_addnew,R.string.inviteMemberMessageFormFragment_progress_eventmember_adding);
 	}
 	
 	private JSONObject getInviteMessage() {

@@ -7,7 +7,7 @@
     android:orientation="vertical"
      android:descendantFocusability="blocksDescendants">
 
-    <ImageView 
+    <com.hoyoji.android.hyjframework.view.HyjImageView
 	    android:id="@+id/hyjfreegame_grid_item_imageView"
         android:layout_width="56dp"
         android:layout_height="56dp"

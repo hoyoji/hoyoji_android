@@ -1699,21 +1699,22 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 				int count = adapter.getCount();
 				for (int i = 0; i < count; i++) {
-					if (adapter.getItem(i).getFriend() != null) {
-						if (friendUserId != null && !"".equals(friendUserId)) {
-							if(friendUserId.equals(adapter.getItem(i).getFriend().getFriendUserId())) {
-								adapter.getItem(i).setAmount(0.0);
-								adapter.getItem(i).setApportionType("Fix");
-							}
-						} else if (localFriendId != null && !"".equals(localFriendId)) {
-							if(localFriendId.equals(adapter.getItem(i).getFriend().getId())) {
-								adapter.getItem(i).setAmount(0.0);
-								adapter.getItem(i).setApportionType("Fix");
-							}
+					if (friendUserId != null && !"".equals(friendUserId)) {
+						if(friendUserId.equals(adapter.getItem(i).getApportion().getFriendUserId())) {
+							adapter.getItem(i).setAmount(0.0);
+							adapter.getItem(i).setApportionType("Fix");
+							break;
 						}
-						
+					} else if (localFriendId != null && !"".equals(localFriendId)) {
+						if(localFriendId.equals(adapter.getItem(i).getApportion().getLocalFriendId())) {
+							adapter.getItem(i).setAmount(0.0);
+							adapter.getItem(i).setApportionType("Fix");
+							break;
+						}
 					}
 				}
+				mApportionFieldApportions.setAdapter(adapter);
+				mApportionFieldApportions.setTotalAmount(mMoneyExpenseContainerEditor.getModelCopy().getAmount());
 			}
 			break;
 		}
