@@ -85,13 +85,13 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 			}
 		});
 		if(way.equals("Other")) {
-			mButtonSendInvite.setText("邀请其他好友");
+			mButtonSendInvite.setText("发送到其他好友");
 		} else if(way.equals("QQ")) {
-			mButtonSendInvite.setText("邀请QQ好友");
+			mButtonSendInvite.setText("发送到QQ好友");
 		} else if(way.equals("WX")) {
-			mButtonSendInvite.setText("邀请微信好友");
+			mButtonSendInvite.setText("发送到微信好友");
 		} else if(way.equals("WXCIRCLE")) {
-			mButtonSendInvite.setText("邀请微信好友");
+			mButtonSendInvite.setText("发送到微信朋友圈");
 		}
 		mQQAuth = QQAuth.createInstance(AppConstants.TENTCENT_CONNECT_APP_ID, getActivity());
 		mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
@@ -220,7 +220,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		WXWebpageObject webpage = new WXWebpageObject();
 		webpage.webpageUrl = linkUrl;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = emTitleSent;
+		msg.title = emDescriptionSent;
 		msg.description = emDescriptionSent;
 		try{
 			Bitmap bmp = BitmapFactory.decodeResource(((HyjActivity) getActivity()).getBaseContext().getResources(), R.drawable.ic_launcher);
