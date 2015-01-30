@@ -32,14 +32,14 @@
        android:layout_height="0dp"
        android:layout_gravity="center_vertical"
        android:layout_weight="1" >
-	    <Button
+	    <!-- <Button
 	        android:id="@+id/button_cancel"
 	        android:layout_width="0dp"
 	        android:layout_height="match_parent"
 	   		android:layout_weight="1"
 	   		android:layout_marginRight="1dp"
 	        android:background="@drawable/button_rectangle"  
-	        android:text="取消" />  
+	        android:text="取消" />  --> 
 	    <Button
 	        android:id="@+id/button_start"
 	        android:layout_width="0dp"

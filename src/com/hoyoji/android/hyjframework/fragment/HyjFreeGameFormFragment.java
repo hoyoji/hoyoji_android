@@ -37,7 +37,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 	private GridView mGridView = null;
 	private Button app_action_game_start = null;
 	private Button app_action_game_free = null;
-	private Button app_action_game_cancel = null;
+//	private Button app_action_game_cancel = null;
 	private int oldPosition = -1;
 	ArrayList<HashMap<String, Object>> lstItem = null;
 	
@@ -188,13 +188,13 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 				}
 			});
 			
-			app_action_game_cancel = (Button) getView().findViewById(R.id.button_cancel);
-			app_action_game_cancel.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					getActivity().finish();
-				}
-			});
+//			app_action_game_cancel = (Button) getView().findViewById(R.id.button_cancel);
+//			app_action_game_cancel.setOnClickListener(new OnClickListener(){
+//				@Override
+//				public void onClick(View v) {
+//					getActivity().finish();
+//				}
+//			});
 		 } catch (JSONException e) {
 			// TODO Auto-generated catch block
 			 e.printStackTrace();
