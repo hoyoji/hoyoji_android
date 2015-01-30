@@ -507,6 +507,10 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 				
 				MoneyApportionField.ImageGridAdapter adapter = mApportionFieldApportions.getAdapter();
 				int count = adapter.getCount();
+				if(count < 2){
+					HyjUtil.displayToast("参与成员必须两人以上才能进行看谁免单游戏");
+					return;
+				}
 				JSONArray array = new JSONArray();
 				for (int i = 0; i < count; i++) {
 					try {

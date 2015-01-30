@@ -1,5 +1,6 @@
 package com.hoyoji.android.hyjframework.fragment;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -139,19 +141,37 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 					if(mGridView.getCount() == 0){
 						HyjUtil.displayToast("请选择分摊人员，再开始游戏");
 					} else {
+						final WeakReference<GridView> WR_mGridView = new WeakReference<GridView>(mGridView);
+						final WeakReference<Button> WR_app_action_game_free = new WeakReference<Button>(app_action_game_free);
+						final WeakReference<Button> WR_app_action_game_start = new WeakReference<Button>(app_action_game_start);
+						final WeakReference<HyjFreeGameFormFragment> WR_fragment = new WeakReference<HyjFreeGameFormFragment>(HyjFreeGameFormFragment.this);
+						
 						for (int i = 0; i < 100; i++) {
 							final int iFinal = i;
 							getView().postDelayed(new Runnable() {
 								@Override
 								public void run() {
-									 selectFreePerson();
-									 ((SimpleAdapter) mGridView.getAdapter()).notifyDataSetChanged();
-									 if(iFinal == 99){
-										 app_action_game_free.setEnabled(true);
-										 app_action_game_free.setTextColor(getResources().getColor(R.color.hoyoji_red));
-										 app_action_game_start.setEnabled(true);
-										 app_action_game_start.setText("开始");
-									 }
+									HyjFreeGameFormFragment fragment = WR_fragment.get();
+									if(fragment == null || !fragment.isVisible()){
+										return;
+									}
+									GridView gridView = WR_mGridView.get();
+									if(gridView != null){
+										selectFreePerson();
+										 ((SimpleAdapter) gridView.getAdapter()).notifyDataSetChanged();
+										 if(iFinal == 99){
+											 	Button app_action_game_free = WR_app_action_game_free.get();
+												if(app_action_game_free != null){
+													app_action_game_free.setEnabled(true);
+													app_action_game_free.setTextColor(fragment.getResources().getColor(R.color.hoyoji_red));
+												}
+												Button app_action_game_start = WR_app_action_game_start.get();
+												if(app_action_game_start != null){
+													 app_action_game_start.setEnabled(true);
+													 app_action_game_start.setText("开始");
+												}
+										 }
+									}
 								}
 							}, 100 * i);
 						 }
@@ -160,7 +180,10 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 							getView().postDelayed(new Runnable() {
 								@Override
 								public void run() {
-									app_action_game_start.setText((10-iFinal)+"");
+									Button app_action_game_start = WR_app_action_game_start.get();
+									if(app_action_game_start != null){
+										app_action_game_start.setText((10-iFinal)+"");
+									}
 								}
 							}, 1000 * i);
 						 }
@@ -183,7 +206,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 						getActivity().setResult(Activity.RESULT_OK, intent);
 						getActivity().finish();
 					} else {
-						HyjUtil.displayToast("还没有免单人员，请先开始游戏");
+						HyjUtil.displayToast("还没有选中免单人员，请先开始游戏");
 					}
 				}
 			});
