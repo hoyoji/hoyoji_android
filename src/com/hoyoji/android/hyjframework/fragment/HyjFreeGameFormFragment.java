@@ -31,6 +31,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.User;
 
 public class HyjFreeGameFormFragment extends HyjUserFragment {
 	private GridView mGridView = null;
@@ -60,10 +61,10 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 		      for (int j = 0; j < templateApportions.length(); j++) {
 		        JSONObject templateApportion = templateApportions.getJSONObject(j);
 		        Friend friend = null;
-		        if(templateApportion.optString("friendUserId") != null) {
+		        if(templateApportion.optString("friendUserId") != null && !"".equals(templateApportion.optString("friendUserId"))) {
 		        	friend = new Select().from(Friend.class).where("friendUserId=?",templateApportion.optString("friendUserId")).executeSingle();
-		        } else if(templateApportion.optString("localFriendId") != null) {
-		        	friend = new Select().from(Friend.class).where("localFriendId=?",templateApportion.optString("localFriendId")).executeSingle();
+		        } else if(templateApportion.optString("localFriendId") != null && !"".equals(templateApportion.optString("localFriendId"))) {
+		        	friend = new Select().from(Friend.class).where("id=?",templateApportion.optString("localFriendId")).executeSingle();
 		        }
 		        if (friend != null) {
 			        HashMap<String, Object> map = new HashMap<String, Object>();
@@ -101,7 +102,20 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 			        map.put("friendUserId", templateApportion.optString("friendUserId"));
 			        map.put("localFriendId", templateApportion.optString("localFriendId"));
 			        lstItem.add(map); 
-		        }
+		        } else {
+		        	User user = new Select().from(User.class).where("id=?",templateApportion.optString("friendUserId")).executeSingle();
+		        	if (user != null) {
+		        		HashMap<String, Object> map = new HashMap<String, Object>();
+				        map.put("isSelected", 0);
+						if(user.getPictureId() != null) {
+							map.put("itemImage", user.getPicture());//添加图像资源的ID  
+						} 
+				        map.put("itemText", user.getDisplayName());//按序号做ItemText  
+				        map.put("friendUserId", templateApportion.optString("friendUserId"));
+				        map.put("localFriendId", templateApportion.optString("localFriendId"));
+				        lstItem.add(map); 
+		        	}
+		        } 
 		      }  
 	      //生成适配器的ImageItem <====> 动态数组的元素，两者一一对应  
 		      SimpleAdapter saImageItems = new GameGridAdapter(getActivity(),
@@ -118,6 +132,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 			app_action_game_start.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
+					app_action_game_free.setEnabled(false);
 					if(mGridView.getCount() == 0){
 						HyjUtil.displayToast("请选择分摊人员，再开始游戏");
 					} else {
@@ -126,6 +141,7 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 							 ((SimpleAdapter) mGridView.getAdapter()).notifyDataSetChanged();
 						 }
 					}
+					app_action_game_free.setEnabled(true);
 					 
 				}
 			});
