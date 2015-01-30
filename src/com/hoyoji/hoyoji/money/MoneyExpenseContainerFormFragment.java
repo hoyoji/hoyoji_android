@@ -742,7 +742,9 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 			if(!moneyExpenseContainer.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
 				app_action_save_template.setVisibility(View.GONE);
 			} else {
-				app_action_game.setVisibility(View.VISIBLE);
+				if(hasEditPermission){
+					app_action_game.setVisibility(View.VISIBLE);
+				}
 			}
 			setExchangeRate(true);
 		}
