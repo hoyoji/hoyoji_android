@@ -443,7 +443,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 						R.string.memberTBDFormFragment_title_split, bundle);
 			} else {
 				openActivityWithFragment(EventMemberViewPagerFragment.class,
-						R.string.projectEventMemberFormFragment_title_edit,
+						R.string.memberFormFragment_textView_projectMoney,
 						bundle);
 			}
 		}
