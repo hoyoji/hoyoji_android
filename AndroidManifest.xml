@@ -56,7 +56,7 @@
             android:value="hoyoji.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="2" />
+            android:value="3" />
         
         <!-- v2=>v3 
 			1、增加字段：Project.activeEventId, 
