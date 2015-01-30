@@ -39,12 +39,18 @@ public class FriendDialogFragment extends DialogFragment {
     	
     	LinearLayout mCreateLinearLayout = (LinearLayout) v.findViewById(R.id.friendDialogFragment_create);
     	LinearLayout mInviteLinearLayout = (LinearLayout) v.findViewById(R.id.friendDialogFragment_invite);
+    	
+    	View mView = (View) v.findViewById(R.id.friendDialogFragment_create_view);
+    	
+    	LinearLayout mCreateMessageLinearLayout = (LinearLayout) v.findViewById(R.id.friendDialogFragment_create_message);
 //    	View mView = (View) v.findViewById(R.id.EventMemberDialogFragment_view);
     	if("invite".equals(dialog_type)) {
     		mInviteLinearLayout.setVisibility(View.VISIBLE);
 //    		mView.setVisibility(View.VISIBLE);
     	} else if("create".equals(dialog_type)){
     		mCreateLinearLayout.setVisibility(View.VISIBLE);
+    		mCreateMessageLinearLayout.setVisibility(View.VISIBLE);
+    		mView.setVisibility(View.VISIBLE);
     	}
 //    	v.findViewById(R.id.friendDialogFragment_add_online).setOnClickListener(new OnClickListener(){
 //			@Override

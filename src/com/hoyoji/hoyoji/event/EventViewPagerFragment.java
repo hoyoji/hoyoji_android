@@ -401,7 +401,7 @@ public class EventViewPagerFragment extends HyjUserFragment {
 	
 				@Override
 				public void errorCallback(Object object) {
-					((HyjActivity) EventViewPagerFragment.this.getActivity()).dismissProgressDialog();
+//					((HyjActivity) EventViewPagerFragment.this.getActivity()).dismissProgressDialog();
 					JSONObject json = (JSONObject) object;
 					HyjUtil.displayToast(json.optJSONObject("__summary").optString("msg"));
 				}
@@ -410,9 +410,9 @@ public class EventViewPagerFragment extends HyjUserFragment {
 			JSONObject evt = new JSONObject();
 			evt.put("eventId", event.getId());
 			HyjHttpPostAsyncTask.newInstance(serverCallbacks,"[" + evt.toString() + "]", "eventMemberUnSignIn");
-			((HyjActivity) this.getActivity()).displayProgressDialog(
-							R.string.eventListFragment_signIn_request,
-							R.string.eventListFragment_signIn_progress_request);
+//			((HyjActivity) this.getActivity()).displayProgressDialog(
+//							R.string.eventListFragment_signIn_request,
+//							R.string.eventListFragment_signIn_progress_request);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -71,7 +71,7 @@
 	                android:layout_width="45dp"
 	                android:layout_height="45dp"
 	                android:text="通讯录"
-		            android:textSize="14sp"
+		            android:textSize="12sp"
 	                android:background="@drawable/button_circle_20"
 	                />
 	            <TextView 
@@ -106,6 +106,31 @@
 	                android:text="创建好友分类"/>
             </LinearLayout> -->        
         </LinearLayout>
+        
+        <View 
+            android:id="@+id/friendDialogFragment_create_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightgray"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+             />
+        
+         <LinearLayout
+            android:id="@+id/friendDialogFragment_create_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+	        android:gravity="center_horizontal"
+	        android:visibility="gone">
+            <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="0dp"
+	            android:textSize="12sp"
+	            android:background="@android:color/transparent"
+                android:text="创建的本地好友和通讯录好友都只能用于记账，无法用于共享活动、账务等内容"/>
+         </LinearLayout> 
+            
             <View 
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
