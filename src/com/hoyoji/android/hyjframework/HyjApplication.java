@@ -63,10 +63,10 @@ public class HyjApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
-		mIsDebuggable =  ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+		mIsDebuggable = ( 0 != ( HyjApplication.getInstance().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
 		if(mIsDebuggable){
-				// 测试用
+			// 测试用
 			//  public static String WX_APP_ID = "wx97c0bcb2e912118a";
 			//  public static String WX_APP_SECRET = "9baed53876474d4d2d0684da9ddbe78f";
 			AppConstants.WX_APP_ID = "wx97c0bcb2e912118a";

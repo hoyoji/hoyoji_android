@@ -599,7 +599,9 @@ public class MoneyExpenseContainer extends HyjModel{
 							Double oldRate = mMoneyExpenseContainerEditor.getModel().getExchangeRate(); 
 							Double rate = mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate();
 							Double oldApportionAmount = apportionEditor.getModel().getAmount0();
-							
+							if(mMoneyExpenseContainerEditor.getModelCopy().get_mId() == null){
+								oldApportionAmount = 0.0;
+							}
 							ProjectShareAuthorization projectShareAuthorization = null;
 							//维护账本成员金额
 							if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -784,7 +786,7 @@ public class MoneyExpenseContainer extends HyjModel{
 										// 新账户不存在：更新老账户，创建新账户
 										if(oldDebtAccount != null){
 											HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 											oldDebtAccountEditor.save();
 										}
 										// 创建新的借贷账户
@@ -800,13 +802,13 @@ public class MoneyExpenseContainer extends HyjModel{
 									}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
 										// 新老借贷账户一样
 					                	HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
+										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldApportionAmount*apportionEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyExpenseContainerEditor.getModelCopy().getExchangeRate());
 										oldDebtAccountEditor.save();
 									}else{
 										// 新账户存在，更新新账户
 										if(oldDebtAccount != null){
 											HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+											oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() - oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 											oldDebtAccountEditor.save();
 										}	
 

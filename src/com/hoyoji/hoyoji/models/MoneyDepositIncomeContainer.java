@@ -1,6 +1,5 @@
 package com.hoyoji.hoyoji.models;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +12,6 @@ import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.android.hyjframework.HyjModelEditor;
 import com.hoyoji.android.hyjframework.HyjUtil;
-import com.hoyoji.hoyoji.models.MoneyDepositIncomeContainer.MoneyDepositIncomeContainerEditor;
-import com.hoyoji.hoyoji.models.MoneyIncomeContainer.MoneyIncomeContainerEditor;
 import com.hoyoji.hoyoji.money.MoneyApportionField.ApportionItem;
 import com.hoyoji.aaevent_android.R;
 
@@ -601,6 +598,10 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 //					apportion.delete();
 				} else {
 					HyjModelEditor<MoneyDepositIncomeApportion> apportionEditor = apportion.newModelEditor();
+					Double oldApportionAmount = apportionEditor.getModel().getAmount0();
+					if(mMoneyDepositIncomeContainerEditor.getModelCopy().get_mId() == null){
+						oldApportionAmount = 0.0;
+					}
 					if(api.getState() != ApportionItem.UNCHANGED		
 							|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())
 							|| !mMoneyDepositIncomeContainerEditor.getModelCopy().getMoneyAccountId().equals(mMoneyDepositIncomeContainerEditor.getModel().getMoneyAccountId())) {
@@ -648,7 +649,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 						if(debtAccount == null){
 							if(oldDebtAccount != null){
 								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 								oldDebtAccountEditor.save();
 							}
 							if(mMoneyDepositIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
@@ -662,12 +663,12 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 							}
 						}else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
 								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() - apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate() - apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
 								oldDebtAccountEditor.save();
 						}else {
 							if(oldDebtAccount != null){
 								HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+								oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 								oldDebtAccountEditor.save();
 							}
 							HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
@@ -682,7 +683,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 					if(apportion.get_mId() == null) {
 						newPsaEditor.getModelCopy().setActualTotalLend(newPsa.getActualTotalLend() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
 					} else if(mMoneyDepositIncomeContainerEditor.getModelCopy().getProjectId().equals(mMoneyDepositIncomeContainerEditor.getModel().getProjectId())){
-						newPsaEditor.getModelCopy().setActualTotalLend(newPsa.getActualTotalLend() - apportionEditor.getModel().getAmount0()*mMoneyDepositIncomeContainerEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
+						newPsaEditor.getModelCopy().setActualTotalLend(newPsa.getActualTotalLend() - oldApportionAmount*mMoneyDepositIncomeContainerEditor.getModel().getExchangeRate() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
 					} else {
 						ProjectShareAuthorization oldPsa;
 						if(apportion.getFriendUserId() != null){
@@ -691,7 +692,7 @@ public class MoneyDepositIncomeContainer extends HyjModel {
 							oldPsa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND localFriendId AND state <> 'Delete'", mMoneyDepositIncomeContainerEditor.getModel().getProjectId(), apportion.getLocalFriendId()).executeSingle();
 						}
 						HyjModelEditor<ProjectShareAuthorization> oldPsaEditor = oldPsa.newModelEditor();
-						oldPsaEditor.getModelCopy().setActualTotalLend(oldPsa.getActualTotalLend() - apportionEditor.getModel().getAmount0()*mMoneyDepositIncomeContainerEditor.getModel().getExchangeRate());
+						oldPsaEditor.getModelCopy().setActualTotalLend(oldPsa.getActualTotalLend() - oldApportionAmount*mMoneyDepositIncomeContainerEditor.getModel().getExchangeRate());
 						newPsaEditor.getModelCopy().setActualTotalLend(newPsa.getActualTotalLend() + apportionEditor.getModelCopy().getAmount0()*mMoneyDepositIncomeContainerEditor.getModelCopy().getExchangeRate());
 					}
 					newPsaEditor.save();

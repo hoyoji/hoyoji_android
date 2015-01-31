@@ -238,7 +238,7 @@
             android:layout_toLeftOf="@id/home_stat_group_calendarMode" 
             android:gravity="center_vertical"
             android:textColor="@color/gray"
-            android:text="好友为你记一笔相关收入"
+            android:text=""
             />
         
     </RelativeLayout>

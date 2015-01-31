@@ -739,7 +739,9 @@ public class MoneyIncomeContainer extends HyjModel {
 					Double oldRate = mMoneyIncomeContainerEditor.getModel().getExchangeRate(); 
 					Double rate = mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate();
 					Double oldApportionAmount = apportionEditor.getModel().getAmount0();
-					
+					if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null){
+						oldApportionAmount = 0.0;
+					}
 					ProjectShareAuthorization projectShareAuthorization;
 						//维护账本成员金额
 					if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -924,7 +926,7 @@ public class MoneyIncomeContainer extends HyjModel {
 								if(debtAccount == null){
 				                	if(oldDebtAccount != null){
 										HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 										oldDebtAccountEditor.save();
 				                	}// 创建新的借贷账户
 				                	if(mMoneyIncomeContainerEditor.getModelCopy().getFinancialOwnerUserId() != null){
@@ -938,12 +940,12 @@ public class MoneyIncomeContainer extends HyjModel {
 				                	}
 								} else if(oldDebtAccount != null && debtAccount.getId().equals(oldDebtAccount.getId())){
 				                	HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate() - apportionEditor.getModelCopy().getAmount0()*mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
+									oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate() - apportionEditor.getModelCopy().getAmount0()*mMoneyIncomeContainerEditor.getModelCopy().getExchangeRate());
 				                	oldDebtAccountEditor.save();
 				                } else {
 				                	if(oldDebtAccount != null){
 					                	HyjModelEditor<MoneyAccount> oldDebtAccountEditor = oldDebtAccount.newModelEditor();
-										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + apportionEditor.getModel().getAmount0()*apportionEditor.getModel().getExchangeRate());
+										oldDebtAccountEditor.getModelCopy().setCurrentBalance(oldDebtAccount.getCurrentBalance() + oldApportionAmount*apportionEditor.getModel().getExchangeRate());
 					                	oldDebtAccountEditor.save();
 				                	}
 						    		HyjModelEditor<MoneyAccount> debtAccountEditor = debtAccount.newModelEditor();
