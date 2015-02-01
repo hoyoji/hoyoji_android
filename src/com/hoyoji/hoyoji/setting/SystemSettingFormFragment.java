@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,13 +41,16 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.activity.HyjActivity;
 import com.hoyoji.android.hyjframework.HyjApplication;
+import com.hoyoji.android.hyjframework.HyjAsyncTaskCallbacks;
 import com.hoyoji.android.hyjframework.HyjUtil;
 import com.hoyoji.android.hyjframework.fragment.HyjUserFragment;
+import com.hoyoji.android.hyjframework.server.HyjHttpPostAsyncTask;
 import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.PictureUploadService;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
+import com.hoyoji.hoyoji.models.UserData;
 
 
 public class SystemSettingFormFragment extends HyjUserFragment {
@@ -66,6 +73,7 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	private int mIncomeColor = 0;
 	
 	private FrameLayout mLinearLayoutChangeNickName = null;
+	private TextView versionText;
 	
 	
 	@Override
@@ -161,17 +169,20 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		});
 		
 		
-//		mLnearLayoutAbout = (LinearLayout) getView().findViewById(R.id.systemSettingFormFragment_linearLayout_about);
-//		mLnearLayoutAbout.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-////				SystemSettingFormFragment.this.openActivityWithFragment(AboutFragment.class, R.string.aboutFragment_title, null);
-//			}
-//		});
-		TextView versionText = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textView_version);
+		getView().findViewById(R.id.systemSettingFormFragment_linearLayout_about).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				SystemSettingFormFragment.this.openActivityWithFragment(AboutFragment.class, R.string.aboutFragment_title, null);
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.hoyoji.aaevent_android"));
+				intent.addCategory(Intent.CATEGORY_BROWSABLE);
+				startActivity(intent);
+			}
+		});
+		versionText = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textView_version);
 		Context appContext = HyjApplication.getInstance().getApplicationContext();
 		try {
 			versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
+			checkLatestVersion();
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -254,6 +265,43 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 		});
 	}
 	
+	private void checkLatestVersion() {
+		// 从服务器上下载用户数据
+				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
+					@Override
+					public void finishCallback(Object object) {
+						JSONObject jsonObject = (JSONObject) object;
+						Context appContext = HyjApplication.getInstance().getApplicationContext();
+						int versionCode;
+						try {
+							versionCode = appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionCode;
+							if(versionCode < jsonObject.getInt("versionCode")){
+								versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName + " (有新版本)");
+								versionText.setTextColor(Color.RED);
+							}
+						} catch (NameNotFoundException e) {
+							e.printStackTrace();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void errorCallback(Object object) {
+//						try {
+//							JSONObject json = (JSONObject) object;
+//							((HyjActivity) getActivity()).displayDialog(null,
+//									json.getJSONObject("__summary")
+//											.getString("msg"));
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+					}
+				};
+		    	 
+		    	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, "", "getAppVersionCode");
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
