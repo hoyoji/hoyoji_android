@@ -430,7 +430,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 			Bundle bundle = new Bundle();
 			bundle.putLong("MODEL_ID", mEventEditor.getModel().get_mId());
 				openActivityWithFragment(EventViewPagerFragment.class,
-						R.string.memberFormFragment_textView_projectMoney,
+						R.string.projectEventMemberViewPagerFragment_title,
 						bundle);
 		}
 	}
