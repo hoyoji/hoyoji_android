@@ -93,7 +93,8 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("EVENT_ID", modelId);
-				bundle.putString("INVITE_TYPE", "QQ");
+				bundle.putString("INVITE_WAY", "QQ");
+				bundle.putString("INVITE_TYPE", "invite");
 				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 				dismiss();
 //				inviteFriend("QQ", event, event.getName(), "invite");
@@ -105,7 +106,8 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("EVENT_ID", modelId);
-				bundle.putString("INVITE_TYPE", "WX");
+				bundle.putString("INVITE_WAY", "WX");
+				bundle.putString("INVITE_TYPE", "invite");
 				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 				dismiss();
 //				inviteFriend("WX", event, event.getName(), "invite");
@@ -118,7 +120,8 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("EVENT_ID", modelId);
-				bundle.putString("INVITE_TYPE", "WXCIRCLE");
+				bundle.putString("INVITE_WAY", "WXCIRCLE");
+				bundle.putString("INVITE_TYPE", "invite");
 				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 				dismiss();
 //				inviteFriend("WX", event, event.getName(), "invite");
@@ -131,7 +134,8 @@ public class EventMemberDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putLong("EVENT_ID", modelId);
-				bundle.putString("INVITE_TYPE", "Other");
+				bundle.putString("INVITE_WAY", "Other");
+				bundle.putString("INVITE_TYPE", "invite");
 				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
 				dismiss();
 //				inviteFriend("Other", event, event.getName(), "invite");
@@ -142,7 +146,13 @@ public class EventMemberDialogFragment extends DialogFragment {
     	v.findViewById(R.id.EventMemberDialogFragment_signIn_qq).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("QQ", event, event.getName(), "signIn");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_WAY", "QQ");
+				bundle.putString("INVITE_TYPE", "signIn");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("QQ", event, event.getName(), "signIn");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositReturnContainerFormFragment.class, R.string.moneyDepositReturnContainerFormFragment_title_addnew, bundle);
 //				dismiss();
 			}
@@ -150,15 +160,41 @@ public class EventMemberDialogFragment extends DialogFragment {
     	v.findViewById(R.id.EventMemberDialogFragment_signIn_wx).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("WX", event, event.getName(), "signIn");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_WAY", "WX");
+				bundle.putString("INVITE_TYPE", "signIn");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("WX", event, event.getName(), "signIn");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositPaybackContainerFormFragment.class, R.string.moneyDepositPaybackFormFragment_title_addnew, bundle);
+//				dismiss();
+			}
+    	});
+    	v.findViewById(R.id.EventMemberDialogFragment_signIn_wxCircle).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_WAY", "WXCIRCLE");
+				bundle.putString("INVITE_TYPE", "signIn");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("WX", event, event.getName(), "invite");
+//				((HyjActivity)getActivity()).openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
 //				dismiss();
 			}
     	});
     	v.findViewById(R.id.EventMemberDialogFragment_signIn_other).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend("Other", event, event.getName(), "signIn");
+				Bundle bundle = new Bundle();
+				bundle.putLong("EVENT_ID", modelId);
+				bundle.putString("INVITE_WAY", "Other");
+				bundle.putString("INVITE_TYPE", "signIn");
+				((HyjActivity)getActivity()).openActivityWithFragment(InviteEventMemberFormFragment.class, R.string.projectEventMemberFormFragment_action_addnew, bundle);
+				dismiss();
+//				inviteFriend("Other", event, event.getName(), "signIn");
 //				((HyjActivity)getActivity()).openActivityWithFragment(MoneyTemplateListFragment.class, R.string.moneyTemplateListFragment_title, null);
 //				dismiss();
 			}
