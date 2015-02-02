@@ -314,6 +314,11 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			mTextFieldNickName.setEnabled(true);
 		}
 //		takePictureButton.setImage(user.getPicture());
+		if(!HyjApplication.getInstance().getCurrentUser().getUserData().getHasPassword()){
+			mButtonChangePassword.setText("设置密码");
+		} else {
+			mButtonChangePassword.setText("修改密码");
+		}
     }
 	
 	@Override
