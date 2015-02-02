@@ -446,16 +446,16 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 						if(mSelectorFieldEvent.getModelId() != null){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
-							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
-							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						}
 					} else {
 						if(mSelectorFieldEvent.getModelId() != null){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
-							openActivityWithFragmentForResult(SelectApportionProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(SelectApportionProjectEventMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
-							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositReturnContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						}
 					}
 				}
