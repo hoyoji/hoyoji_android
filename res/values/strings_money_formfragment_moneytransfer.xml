@@ -16,6 +16,8 @@
    <string name="moneyTransferFormFragment_editText_validationError_negative_transferOutAmount">金额不能为负数</string>
    <string name="moneyTransferFormFragment_editText_validationError_beyondMAX_transferOutAmount">金额超出范围</string>
    
+   <string name="moneyTransferFormFragment_textView_transferDescription">转账不计算收支，只是资产调拨</string>
+   
    <string name="moneyTransferFormFragment_textView_transferOutFriend">转出人</string>
    <string name="moneyTransferFormFragment_editText_hint_transferOutFriend">自己</string>
    
