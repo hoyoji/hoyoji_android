@@ -33,6 +33,7 @@ import com.hoyoji.android.hyjframework.view.HyjImageView;
 import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Picture;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.User;
 
 public class HyjFreeGameFormFragment extends HyjUserFragment {
@@ -117,6 +118,19 @@ public class HyjFreeGameFormFragment extends HyjUserFragment {
 				        map.put("friendUserId", templateApportion.optString("friendUserId"));
 				        map.put("localFriendId", templateApportion.optString("localFriendId"));
 				        lstItem.add(map); 
+		        	} else {
+		        		ProjectShareAuthorization projectShareAuthorization = new Select().from(ProjectShareAuthorization.class).where("localFriendId=?", templateApportion.optString("localFriendId")).executeSingle();
+			        	if (projectShareAuthorization != null) {
+			        		HashMap<String, Object> map = new HashMap<String, Object>();
+					        map.put("isSelected", 0);
+//							if(user.getPictureId() != null) {
+//								map.put("itemImage", user.getPicture());//添加图像资源的ID  
+//							} 
+					        map.put("itemText", projectShareAuthorization.getFriendDisplayName());//按序号做ItemText  
+					        map.put("friendUserId", templateApportion.optString("friendUserId"));
+					        map.put("localFriendId", templateApportion.optString("localFriendId"));
+					        lstItem.add(map); 
+			        	}
 		        	}
 		        } 
 		      }  
