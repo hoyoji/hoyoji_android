@@ -43,7 +43,6 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -75,6 +74,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private Button button_cancel_signUp;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
+	private TextView mAddress;
 	
 	@Override
 	public Integer useContentView() {
@@ -195,6 +195,16 @@ public class EventFormFragment extends HyjUserFormFragment {
 				bundle.putString("FINANCIAL_TYPE", "Project");
 				
 				EventFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
+			}
+		});
+		
+		mAddress = (TextView) getView().findViewById(R.id.projectEventFormFragment_textView_address);
+		mAddress.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),BaseMapDemo.class);
+//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
 			}
 		});
 		
