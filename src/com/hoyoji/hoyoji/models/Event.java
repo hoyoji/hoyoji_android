@@ -60,6 +60,15 @@ public class Event extends HyjModel {
 	
 	@Column(name = "expenseTotal")
 	private Double mExpenseTotal = 0.0;
+	
+	@Column(name = "latitude")
+	private Double mLatitude = 0.0;
+	
+	@Column(name = "longitude")
+	private Double mLongitude = 0.0;
+	
+	@Column(name = "address")
+	private String mAddress;
 
 	@Column(name = "ownerUserId")
 	private String mOwnerUserId;
@@ -249,6 +258,30 @@ public class Event extends HyjModel {
 		return this.mIncomeTotal;
 	}
 	
+	public Double getLatitude() {
+		return this.mLatitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.mLatitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return this.mLongitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.mLongitude = longitude;
+	}
+
+	public String getAddress() {
+		return mAddress;
+	}
+
+	public void setAddress(String mAddress) {
+		this.mAddress = mAddress;
+	}
+
 	public Double getBalance(){
         Double eventBalance = this.mIncomeTotal - this.mExpenseTotal;
 		return HyjUtil.toFixed2(eventBalance);

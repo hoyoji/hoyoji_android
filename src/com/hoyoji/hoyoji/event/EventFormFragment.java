@@ -53,6 +53,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
 	private static final int CREATE_NEW_PROJECT_AND_SAVE = 2;
 	private static final int GET_FINANCIALOWNER_ID = 3;
+	private static final int GET_ADDRESS_MAP = 4;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -202,9 +203,11 @@ public class EventFormFragment extends HyjUserFormFragment {
 		mAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),BaseMapDemo.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
+//				Intent intent = new Intent(getActivity(),BaseMapDemo.class);
+//				startActivity(intent);
+				Bundle bundle = new Bundle();
+				bundle.putString("ADDRESS", "Project");
+				openActivityWithFragmentForResult(BaseMapFragment.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
 			}
 		});
 		
@@ -505,6 +508,13 @@ public class EventFormFragment extends HyjUserFormFragment {
 					} else {
 						HyjUtil.displayToast(R.string.projectEventFormFragment_validate_project);
 					}
+				}
+				break;
+			case GET_ADDRESS_MAP:
+				if (resultCode == Activity.RESULT_OK) {
+					long latitude = data.getLongExtra("LATITUDE", -1);
+					long longitude = data.getLongExtra("LONGITUDE", -1);
+					String address = data.getStringExtra("ADDRESS");
 				}
 				break;
 		}
