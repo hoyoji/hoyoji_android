@@ -38,6 +38,7 @@ import com.hoyoji.android.hyjframework.view.HyjRemarkField;
 import com.hoyoji.android.hyjframework.view.HyjSelectorField;
 import com.hoyoji.android.hyjframework.view.HyjTextField;
 import com.hoyoji.aaevent_android.R;
+import com.hoyoji.hoyoji.map.PoiSearchDemo;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
@@ -203,11 +204,11 @@ public class EventFormFragment extends HyjUserFormFragment {
 		mAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(getActivity(),BaseMapDemo.class);
-//				startActivity(intent);
-				Bundle bundle = new Bundle();
-				bundle.putString("ADDRESS", "Project");
-				openActivityWithFragmentForResult(BaseMapFragment.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
+				Intent intent = new Intent(getActivity(),PoiSearchDemo.class);
+				startActivity(intent);
+//				Bundle bundle = new Bundle();
+//				bundle.putString("ADDRESS", "Project");
+//				openActivityWithFragmentForResult(BaseMapFragment.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
 			}
 		});
 		

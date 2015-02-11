@@ -110,8 +110,9 @@
             android:value="KKVICABkqivEkRCoeLyOeOFi" />
         
         <!-- v2=>v3 
-			1、增加字段：Project.activeEventId, 
-			2、增加表: 
+			1、增加字段：Event.latitude, 
+			2、增加字段：Event.longitude,
+			3、增加字段：Event.address,
          -->
          
         <activity
@@ -205,7 +206,14 @@
         </activity>
 
         <activity
-            android:name="com.hoyoji.hoyoji.event.BaseMapDemo"
+            android:name="com.hoyoji.hoyoji.map.BaseMapDemo"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/demo_name_basemap" >
+        </activity>
+        
+        <activity
+            android:name="com.hoyoji.hoyoji.map.PoiSearchDemo"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/demo_name_basemap" >

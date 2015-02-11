@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.event;
+package com.hoyoji.hoyoji.map;
 
 import android.content.Intent;
 import android.view.Menu;
@@ -47,57 +47,10 @@ public class BaseMapFragment extends HyjUserFragment {
 		Intent intent = getActivity().getIntent();
 		String adapterString = intent.getStringExtra("adapterJSONArray");
 		
-//		locationClient = new LocationClient(getActivity());
-//		// 设置定位条件
-//		LocationClientOption option = new LocationClientOption();
-//		option.setOpenGps(true); // 是否打开GPS
-//		option.setCoorType("bd09ll"); // 设置返回值的坐标类型。
-////		option.setPriority(LocationClientOption.MIN_SCAN_SPAN); // 设置定位优先级
-//		// option.setProdName("LocationDemo"); //
-//		// 设置产品线名称。强烈建议您使用自定义的产品线名称，方便我们以后为您提供更高效准确的定位服务。
-//		// option.setScanSpan(UPDATE_TIME);// 设置定时定位的时间间隔。单位毫秒
-//		locationClient.setLocOption(option);
-//
-//		// 注册位置监听器
-//		locationClient.registerLocationListener(new BDLocationListener() {
-//
-//			@Override
-//			public void onReceiveLocation(BDLocation location) {
-//				// TODO Auto-generated method stub
-//				if (location == null) {
-//					return;
-//				}
-//				latitude = location.getLatitude();
-//				longitude = location.getLongitude();
-//			}
-//		});
-		
-		
-//		app_action_game_free = (Button) getView().findViewById(R.id.button_free);
-//		app_action_game_free.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				if (oldPosition != -1) {
-//					TextView friendUserIdTextView =(TextView) mGridView.getChildAt(oldPosition).findViewById(R.id.hyjfreegame_grid_item_textView_friendUserId);
-//					TextView localFriendIdTextView =(TextView) mGridView.getChildAt(oldPosition).findViewById(R.id.hyjfreegame_grid_item_textView_localFriendId);
-//					
-//					Intent intent = new Intent();
-//					intent.putExtra("friendUserId", friendUserIdTextView.getText());
-//					intent.putExtra("localFriendId", localFriendIdTextView.getText());
-//					
-//					getActivity().setResult(Activity.RESULT_OK, intent);
-//					getActivity().finish();
-//				} else {
-//					HyjUtil.displayToast("还没有选中免单人员，请先开始游戏");
-//				}
-//			}
-//		});
 		mMapView = (MapView) getView().findViewById(R.id.bmapView);
 		MapStatusUpdate u4 = MapStatusUpdateFactory.newLatLng(GEO_SHENGZHENG);
 		mBaiduMap = mMapView.getMap();  
-		//普通地图  
 		mBaiduMap.setMapStatus(u4);
-		
 		
 //		mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL); 
 //		SupportMapFragment map4 = (SupportMapFragment) (getSupportFragmentManager().findFragmentById(R.id.map4));
@@ -123,7 +76,7 @@ public class BaseMapFragment extends HyjUserFragment {
             	}
             	LatLng latLng = mBaiduMap.getMapStatus().target;  
         		//准备 marker 的图片  
-        		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);  
+            	BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
         		//准备 marker option 添加 marker 使用  
         		MarkerOptions markerOptions = new MarkerOptions().icon(bitmap).position(latLng);  
         		//获取添加的 marker 这样便于后续的操作  
@@ -147,6 +100,27 @@ public class BaseMapFragment extends HyjUserFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		// activity 暂停时同时暂停地图控件
+		mMapView.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		// activity 恢复时同时恢复地图控件
+		mMapView.onResume();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// activity 销毁时同时销毁地图控件
+		mMapView.onDestroy();
 	}
 	
 }

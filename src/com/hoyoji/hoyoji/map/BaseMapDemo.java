@@ -1,4 +1,4 @@
-package com.hoyoji.hoyoji.event;
+package com.hoyoji.hoyoji.map;
 
 import android.app.Activity;
 import android.os.Bundle;
