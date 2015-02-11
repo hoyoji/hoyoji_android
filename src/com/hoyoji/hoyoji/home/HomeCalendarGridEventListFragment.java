@@ -104,7 +104,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 
 		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日");
+		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
 		
 		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -115,7 +115,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition(arg2));
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
 
-				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日");
+				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
 				
 				getLoaderManager().restartLoader(0, null, HomeCalendarGridEventListFragment.this);
 				
@@ -156,7 +156,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 							
 							mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 							mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-							mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日");
+							mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
 							
 							mListGroupData.clear();
 							mCalendarGridView.getAdapter().notifyDataSetChanged();
@@ -333,8 +333,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			loader = new CursorLoader(getActivity(),
 				ContentProvider.createUri(Event.class, null),
 				null,
-				"startDate > ? AND startDate <= ?",
-				new String[]{String.valueOf(dateFrom), String.valueOf(dateTo)}, 
+				"startDate > ?",
+				new String[]{String.valueOf(dateFrom)}, 
 				"startDate DESC LIMIT " + (limit + offset) 
 			);
 		}
@@ -518,7 +518,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 
 			if(view.getId() == R.id.homeListItem_date){
 				HyjDateTimeView dateTimeView = ((HyjDateTimeView)view);
-//				dateTimeView.setDateFormat("ah:mm");
+				dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
 				dateTimeView.setTime(event.getStartDate());
 			} else {
 				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_"+columnIndex);
