@@ -3,6 +3,7 @@ package com.hoyoji.hoyoji.setting;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import org.json.JSONException;
@@ -13,6 +14,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -51,6 +54,7 @@ import com.hoyoji.hoyoji.PictureUploadService;
 import com.hoyoji.hoyoji.models.Picture;
 import com.hoyoji.hoyoji.models.User;
 import com.hoyoji.hoyoji.models.UserData;
+import com.szy.update.UpdateManager;
 
 
 public class SystemSettingFormFragment extends HyjUserFragment {
@@ -173,19 +177,16 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 			@Override
 			public void onClick(View v) {
 //				SystemSettingFormFragment.this.openActivityWithFragment(AboutFragment.class, R.string.aboutFragment_title, null);
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.hoyoji.aaevent_android"));
-				intent.addCategory(Intent.CATEGORY_BROWSABLE);
-				startActivity(intent);
+//				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.hoyoji.aaevent_android"));
+//				intent.addCategory(Intent.CATEGORY_BROWSABLE);
+//				startActivity(intent);
+	            
+					UpdateManager um = new UpdateManager(getActivity());
+					um.doUpdate();
 			}
 		});
 		versionText = (TextView) getView().findViewById(R.id.systemSettingFormFragment_textView_version);
-		Context appContext = HyjApplication.getInstance().getApplicationContext();
-		try {
-			versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
-			checkLatestVersion();
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+		checkLatestVersion();
 		
 		takePictureButton = (HyjImageView) getView().findViewById(R.id.systemSettingFormFragment_imageView_camera);	
 		takePictureButton.setDefaultImage(R.drawable.ic_action_person_white);
@@ -266,18 +267,34 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 	}
 	
 	private void checkLatestVersion() {
-		// 从服务器上下载用户数据
+        final SharedPreferences appInfo = HyjApplication.getInstance().getSharedPreferences("app_info", 0); 
+        int latestVersionCode = appInfo.getInt("latestVersionCode", 0);
+        int currentVersionCode = UpdateManager.getVersionCode();
+		final Context appContext = HyjApplication.getInstance().getApplicationContext();
+		try {
+	        if(latestVersionCode > currentVersionCode){
+				versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName + " (有新版本)");
+				versionText.setTextColor(Color.RED);
+			} else {
+				versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName);
+				// 从服务器上下载用户数据
+				final WeakReference<TextView> WR_versionText = new WeakReference<TextView>(versionText);
 				HyjAsyncTaskCallbacks serverCallbacks = new HyjAsyncTaskCallbacks() {
 					@Override
 					public void finishCallback(Object object) {
 						JSONObject jsonObject = (JSONObject) object;
-						Context appContext = HyjApplication.getInstance().getApplicationContext();
 						int versionCode;
 						try {
-							versionCode = appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionCode;
-							if(versionCode < jsonObject.getInt("versionCode")){
-								versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName + " (有新版本)");
-								versionText.setTextColor(Color.RED);
+							TextView versionText = WR_versionText.get();
+							if(versionText != null){
+								versionCode = appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionCode;
+								if(versionCode < jsonObject.getInt("versionCode")){
+									versionText.setText(appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0).versionName + " (有新版本)");
+									versionText.setTextColor(Color.RED);
+									Editor editor = appInfo.edit();
+									editor.putInt("latestVersionCode", jsonObject.getInt("versionCode"));
+									editor.commit();
+								}
 							}
 						} catch (NameNotFoundException e) {
 							e.printStackTrace();
@@ -288,18 +305,23 @@ public class SystemSettingFormFragment extends HyjUserFragment {
 
 					@Override
 					public void errorCallback(Object object) {
-//						try {
-//							JSONObject json = (JSONObject) object;
-//							((HyjActivity) getActivity()).displayDialog(null,
-//									json.getJSONObject("__summary")
-//											.getString("msg"));
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
+//								try {
+//									JSONObject json = (JSONObject) object;
+//									((HyjActivity) getActivity()).displayDialog(null,
+//											json.getJSONObject("__summary")
+//													.getString("msg"));
+//								} catch (Exception e) {
+//									e.printStackTrace();
+//								}
 					}
 				};
 		    	 
 		    	 HyjHttpPostAsyncTask.newInstance(serverCallbacks, "", "getAppVersionCode");
+			}
+		} catch (NameNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
