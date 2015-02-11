@@ -288,7 +288,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 				bundle.putLong("MODEL_ID", project.get_mId());
 				bundle.putBoolean("disableMultiChoiceMode", true);
 				MoneyDepositPaybackContainerFormFragment.this
-				.openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_debtor, bundle, GET_FRIEND_ID);
+				.openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositPaybackFormFragment_textView_friend, bundle, GET_FRIEND_ID);
 			}
 		}); 
 		
@@ -360,7 +360,7 @@ public class MoneyDepositPaybackContainerFormFragment extends HyjUserFormFragmen
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					bundle.putBoolean("disableMultiChoiceMode", true);
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.explainFinancialOwnerFragment_title, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		});

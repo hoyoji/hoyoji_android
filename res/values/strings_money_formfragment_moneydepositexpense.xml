@@ -30,6 +30,9 @@
    
    <string name="moneyDepositExpenseFormFragment_textView_friend">收款方</string>
    <string name="moneyDepositExpenseFormFragment_editText_hint_friend">请选择会费收款人</string>
+   
+   <string name="moneyDepositExpenseFormFragment_select_friend">会费收款人</string>
+   
    <string name="moneyDepositExpenseFormFragment_editText_error_not_member">该好友不是已接受的账本成员，请重新选择</string>
    
    <string name="moneyDepositExpenseFormFragment_textView_remark">备注</string>

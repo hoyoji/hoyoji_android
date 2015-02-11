@@ -387,7 +387,7 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					bundle.putBoolean("disableMultiChoiceMode", true);
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.friendListFragment_title_select_friend_creditor, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.explainFinancialOwnerFragment_title, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		});
@@ -446,16 +446,16 @@ public class MoneyDepositIncomeContainerFormFragment extends HyjUserFormFragment
 					if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
 						if(mSelectorFieldEvent.getModelId() != null){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
-							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(EventMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
-							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						}
 					} else {
 						if(mSelectorFieldEvent.getModelId() != null){
 							bundle.putString("EVENTID", mSelectorFieldEvent.getModelId());
-							openActivityWithFragmentForResult(SelectApportionProjectEventMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(SelectApportionProjectEventMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						} else {
-							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyApportionField_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
+							openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.moneyDepositIncomeContainerFormFragment_select_apportion_member, bundle, GET_APPORTION_MEMBER_ID);
 						}
 					}
 				}

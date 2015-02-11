@@ -65,14 +65,19 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		Long event_id = intent.getLongExtra("EVENT_ID", -1);
 		event = Event.load(Event.class, event_id);
 		
-		final String way = intent.getStringExtra("INVITE_TYPE");
+		final String way = intent.getStringExtra("INVITE_WAY");
+		final String type = intent.getStringExtra("INVITE_TYPE");
 		
 		
 		sendInviteTitle = (HyjTextField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_title);
-		sendInviteTitle.setText("邀请参加活动");
 		sendInviteDetail = (EditText) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
-		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event.getName());
-		
+		if(type.equals("invite")){
+			sendInviteTitle.setText("邀请参加活动");
+			sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event.getName());
+		} else if(type.equals("signIn")){
+			sendInviteTitle.setText("活动签到");
+			sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event.getName() + "签到");
+		}
 		mVerificationCode = (HyjTextField) getView().findViewById(R.id.inviteEventMemberFormFragment_hyjTextField_verificationCode);
 		
 		mCheckBoxEventShareOwnerDataOnly = (CheckBox)getView().findViewById(R.id.projectEventMemberFormFragment_checkBox_shareAuthorization_self);
@@ -81,7 +86,7 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 		mButtonSendInvite.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				inviteFriend(way, event, event.getName(), "invite");
+				inviteFriend(way, event, event.getName(), type);
 			}
 		});
 		if(way.equals("Other")) {
@@ -100,16 +105,16 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 	public void inviteFriend(final String way, Event event,final String event_name, final String type) {
    	 	final HyjActivity activity = (HyjActivity) getActivity();
 		activity.displayProgressDialog(R.string.friendListFragment__action_invite_title,R.string.friendListFragment__action_invite_content);
-		String emTitle = null;
-		String emDescription = null;
-		
-		if(type.equals("invite")){
-			emTitle = "邀请参加活动";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
-		} else if(type.equals("signIn")){
-			emTitle = "活动签到";
-			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到";
-		}
+//		String emTitle = null;
+//		String emDescription = null;
+//		
+//		if(type.equals("invite")){
+//			emTitle = "邀请参加活动";
+//			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您参加活动    " +event_name;
+//		} else if(type.equals("signIn")){
+//			emTitle = "活动签到";
+//			emDescription = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您进行活动    " +event_name + "签到";
+//		}
 		final String emTitleSent = sendInviteTitle.getText();
 		final String emDescriptionSent = sendInviteDetail.getText()+"";
 		
@@ -119,12 +124,12 @@ public class InviteEventMemberFormFragment extends HyjUserFragment {
 			inviteFriendObject.put("id", id);
 			inviteFriendObject.put("data", event.toJSON().toString());
 			inviteFriendObject.put("__dataType", "InviteLink");
-			inviteFriendObject.put("title", emTitle);
+			inviteFriendObject.put("title", emTitleSent);
 			inviteFriendObject.put("type", "EventMember");
 			inviteFriendObject.put("shareOwnerDataOnly", mCheckBoxEventShareOwnerDataOnly.isChecked());
 			inviteFriendObject.put("verificationCode", mVerificationCode.getText().toString().trim());
 			inviteFriendObject.put("date", (new Date()).getTime());
-			inviteFriendObject.put("description", emDescription);
+			inviteFriendObject.put("description", emDescriptionSent);
 			inviteFriendObject.put("state", "Open");
 		} catch (JSONException e1) {
 			e1.printStackTrace();

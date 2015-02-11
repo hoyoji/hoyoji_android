@@ -573,7 +573,7 @@ public class MoneyExpenseContainerFormFragment extends HyjUserFormFragment {
 					bundle.putLong("MODEL_ID", project.get_mId());
 					bundle.putString("NULL_ITEM", (String)mSelectorFieldFinancialOwner.getHint());
 					bundle.putBoolean("disableMultiChoiceMode", true);
-					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.projectFormFragment_textView_financialOwner, bundle, GET_FINANCIALOWNER_ID);
+					openActivityWithFragmentForResult(ProjectMemberListFragment.class, R.string.explainFinancialOwnerFragment_title, bundle, GET_FINANCIALOWNER_ID);
 				}
 			}
 		});

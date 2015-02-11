@@ -193,6 +193,28 @@
 		        android:gravity="center_horizontal"
             	android:orientation="vertical" >
 	            <Button 
+			    android:id="@+id/EventMemberDialogFragment_signIn_wxCircle"
+	                android:layout_width="45dp"
+	                android:layout_height="45dp"
+	                android:text="朋友圈"
+		            android:textSize="12sp"
+	                android:background="@drawable/button_circle_20"
+	                />
+	            <TextView 
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_margin="0dp"
+		            android:textSize="11sp"
+		            android:background="@android:color/transparent"
+	                android:text="微信朋友圈"/>
+            </LinearLayout> 
+            <LinearLayout
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:gravity="center_horizontal"
+            	android:orientation="vertical" >
+	            <Button 
 			    android:id="@+id/EventMemberDialogFragment_signIn_other"
 	                android:layout_width="45dp"
 	                android:layout_height="45dp"

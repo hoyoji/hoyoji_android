@@ -23,7 +23,8 @@
    <string name="moneyDepositReturnContainerFormFragment_editText_hint_project">请选择账本</string>
    
    <string name="moneyDepositReturnContainerFormFragment_moneyApportionField_title">收款成员</string>
-   <string name="moneyDepositReturnContainerFormFragment_moneyApportionField_select_apportion_member">请选择退款成员</string>
+   <string name="moneyDepositReturnContainerFormFragment_moneyApportionField_select_apportion_member">请选择收款成员</string>
+   <string name="moneyDepositReturnContainerFormFragment_select_apportion_member">选择收款成员</string>
    
    <string name="moneyDepositReturnContainerFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyDepositReturnContainerFormFragment_editText_hint_exchangeRate">请输入汇率</string>

@@ -24,6 +24,7 @@
    
    <string name="moneyDepositIncomeContainerFormFragment_moneyApportionField_title">缴费成员</string>
    <string name="moneyDepositIncomeContainerFormFragment_moneyApportionField_select_apportion_member">请选择缴费成员</string>
+   <string name="moneyDepositIncomeContainerFormFragment_select_apportion_member">选择缴费成员</string>
    
    <string name="moneyDepositIncomeContainerFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyDepositIncomeContainerFormFragment_editText_hint_exchangeRate">请输入汇率</string>

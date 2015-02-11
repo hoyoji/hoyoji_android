@@ -43,7 +43,6 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -54,6 +53,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private static final int GET_REMARK = 1;
 	private static final int CREATE_NEW_PROJECT_AND_SAVE = 2;
 	private static final int GET_FINANCIALOWNER_ID = 3;
+	private static final int GET_ADDRESS_MAP = 4;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -75,6 +75,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private Button button_cancel_signUp;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
+	private TextView mAddress;
 	
 	@Override
 	public Integer useContentView() {
@@ -195,6 +196,18 @@ public class EventFormFragment extends HyjUserFormFragment {
 				bundle.putString("FINANCIAL_TYPE", "Project");
 				
 				EventFormFragment.this.openActivityWithFragment(ExplainFinancialOwnerFragment.class, R.string.explainFinancialOwnerFragment_title, bundle);
+			}
+		});
+		
+		mAddress = (TextView) getView().findViewById(R.id.projectEventFormFragment_textView_address);
+		mAddress.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				Intent intent = new Intent(getActivity(),BaseMapDemo.class);
+//				startActivity(intent);
+				Bundle bundle = new Bundle();
+				bundle.putString("ADDRESS", "Project");
+				openActivityWithFragmentForResult(BaseMapFragment.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
 			}
 		});
 		
@@ -423,6 +436,16 @@ public class EventFormFragment extends HyjUserFormFragment {
 		mEventEditor.save();
 		HyjUtil.displayToast(R.string.app_save_success);
 		getActivity().finish();
+		
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		if (modelId == -1) {
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", mEventEditor.getModel().get_mId());
+				openActivityWithFragment(EventViewPagerFragment.class,
+						R.string.projectEventMemberViewPagerFragment_title,
+						bundle);
+		}
 	}
 //	
 	@Override
@@ -485,6 +508,13 @@ public class EventFormFragment extends HyjUserFormFragment {
 					} else {
 						HyjUtil.displayToast(R.string.projectEventFormFragment_validate_project);
 					}
+				}
+				break;
+			case GET_ADDRESS_MAP:
+				if (resultCode == Activity.RESULT_OK) {
+					long latitude = data.getLongExtra("LATITUDE", -1);
+					long longitude = data.getLongExtra("LONGITUDE", -1);
+					String address = data.getStringExtra("ADDRESS");
 				}
 				break;
 		}
