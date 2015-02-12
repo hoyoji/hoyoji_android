@@ -77,6 +77,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
 	private TextView mAddress;
+	private double mLatitude;
+	private double mLongitude;
 	
 	@Override
 	public Integer useContentView() {
@@ -200,15 +202,37 @@ public class EventFormFragment extends HyjUserFormFragment {
 			}
 		});
 		
+		mLatitude = mEventEditor.getModel().getLatitude();
+		mLongitude = mEventEditor.getModel().getLongitude();
 		mAddress = (TextView) getView().findViewById(R.id.projectEventFormFragment_textView_address);
+		if(mEventEditor.getModel().getAddress() != null && !"".equals(mEventEditor.getModel().getAddress())) {
+			mAddress.setText(mEventEditor.getModel().getAddress());
+		}
+		
+		final boolean isOwnerProject;
+		if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+			isOwnerProject = true;
+		} else {
+			isOwnerProject = false;
+		}
 		mAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),PoiSearchDemo.class);
-				startActivity(intent);
-//				Bundle bundle = new Bundle();
-//				bundle.putString("ADDRESS", "Project");
-//				openActivityWithFragmentForResult(BaseMapFragment.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
+//				Intent intent = new Intent(getActivity(),PoiSearchDemo.class);
+//				startActivity(intent);
+				Bundle bundle = new Bundle();
+				bundle.putString("ADDRESS", mAddress.getText().toString().trim());
+				double getLatitude = mLatitude;
+				double getLongitude = mLongitude;
+				if (getLatitude != 0) {
+					bundle.putDouble("LATITUDE", getLatitude);
+				}
+				if (getLongitude != 0) {
+					bundle.putDouble("LONGITUDE", getLongitude);
+				}
+				bundle.putBoolean("ISOWNERPROJECT", isOwnerProject);
+				
+				openActivityWithFragmentForResult(PoiSearchDemo.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
 			}
 		});
 		
@@ -340,6 +364,9 @@ public class EventFormFragment extends HyjUserFormFragment {
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setDescription(mRemarkFieldDescription.getText().toString().trim());
 		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
+		modelCopy.setAddress(mAddress.getText().toString().trim());
+		modelCopy.setLatitude(mLatitude);
+		modelCopy.setLongitude(mLongitude);
 		if(cancel == true) {
 			modelCopy.setState("Cancel");
 		} else {
@@ -513,9 +540,19 @@ public class EventFormFragment extends HyjUserFormFragment {
 				break;
 			case GET_ADDRESS_MAP:
 				if (resultCode == Activity.RESULT_OK) {
-					long latitude = data.getLongExtra("LATITUDE", -1);
-					long longitude = data.getLongExtra("LONGITUDE", -1);
+					double latitude = data.getDoubleExtra("LATITUDE", -1);
+					double longitude = data.getDoubleExtra("LONGITUDE", -1);
 					String address = data.getStringExtra("ADDRESS");
+					if(latitude != -1){
+						mLatitude = latitude;
+					}
+					if(longitude != -1){
+						mLongitude = longitude;
+					}
+					if(address != null && !"".equals(address)) {
+						mAddress.setText(address);
+					}
+					
 				}
 				break;
 		}

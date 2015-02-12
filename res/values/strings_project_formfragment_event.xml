@@ -42,9 +42,14 @@
     
     <string name="projectEventFormFragment_validate_project">不能在共享的账本新增活动</string>
     
-    <string name="demo_name_basemap">基本地图功能</string>
+    <string name="demo_name_basemap">地址</string>
     <string name="demo_title_basemap">基本地图功能--BaseMapDemo</string>
     <string name="demo_desc_basemap">创建一张百度地图并管理地图的生命周期</string>
+    
+    <string name="projectEventFormFragment_textView_address">地址</string>
+    <string name="projectEventFormFragment_editText_hint_address">获取地址</string>
+    
+    
     
     
 </resources>

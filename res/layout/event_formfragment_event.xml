@@ -213,7 +213,7 @@
      <TextView
 	    android:id="@+id/projectEventFormFragment_textView_address"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="43dp"
 	    android:text="获取地址"
 	    android:gravity="center"
 	        android:textSize="12sp"
@@ -223,6 +223,15 @@
 	        android:background="@color/hoyoji_lightgray"
 	        android:textColor="@color/gray"/>
      
+     <!-- <com.hoyoji.android.hyjframework.view.HyjSelectorField
+        android:id="@+id/projectEventFormFragment_textView_address"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:textSize="12sp"
+        hyj:hintText="@string/projectEventFormFragment_editText_hint_address"
+        hyj:labelText="@string/projectEventFormFragment_textView_address" >
+     </com.hoyoji.android.hyjframework.view.HyjSelectorField>
+      -->
      <View 
         android:id="@id/field_separator"
         android:layout_width="match_parent"

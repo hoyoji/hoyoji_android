@@ -5,9 +5,11 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/map_linerLayout_city"
         android:layout_width="fill_parent"
         android:layout_height="50dip"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="0dp"
@@ -39,27 +41,36 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/map_linerLayout_button"
         android:layout_width="fill_parent"
         android:layout_height="50dip"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:visibility="gone">
 
         <Button
             android:id="@+id/search"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="12"
-            android:onClick="searchButtonProcess"
             android:padding="10dip"
             android:text="开始" />
-
+        
         <Button
+            android:id="@+id/map_get_address"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="12"
+            android:padding="10dip"
+            android:text="保存地址" />
+
+        <!-- <Button
             android:id="@+id/map_next_data"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="12"
             android:onClick="goToNextPage"
             android:padding="10dip"
-            android:text="下一组数据" />
+            android:text="下一组数据" /> -->
     </LinearLayout>
 
     <fragment

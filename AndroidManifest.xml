@@ -212,13 +212,13 @@
             android:label="@string/demo_name_basemap" >
         </activity>
         
-        <activity
+        <!-- <activity
             android:name="com.hoyoji.hoyoji.map.PoiSearchDemo"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/demo_name_basemap" >
         </activity>
-       
+        -->
         
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
