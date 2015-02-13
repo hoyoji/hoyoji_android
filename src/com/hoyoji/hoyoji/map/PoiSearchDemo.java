@@ -38,6 +38,7 @@ import com.baidu.mapapi.overlayutil.PoiOverlay;
 import com.baidu.mapapi.search.core.CityInfo;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
@@ -76,7 +77,8 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	private LatLng SHEN_ZHEN = new LatLng(22.560, 114.064);
 	private LatLng THIS_POINT = null;
 	private LatLng SELECT_POINT = null;
-	private Marker marker,thisMarker;
+	private Marker marker = null;
+	private Marker thisMarker = null;
 	private double mLatitude = 0.0;
 	private double mLongitude = 0.0;
 	private String mAddress;
@@ -99,6 +101,8 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	
 	private EditText editCity;
 	private EditText editSearchKey;
+	
+	private boolean isFirstOpen = true;
 	
 	@Override
 	public Integer useContentView() {
@@ -135,18 +139,20 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 		keyWorldsView.setAdapter(sugAdapter);
 		mBaiduMap = ((SupportMapFragment) (getActivity().getSupportFragmentManager().findFragmentById(R.id.map))).getBaiduMap();
 		
+		setLocation();
+		
 		if(latitude != -1 && longitude != -1){
 			mLatitude = latitude;
 			mLongitude = longitude;
 			SELECT_POINT = new LatLng(mLatitude, mLongitude);
-			geo(SELECT_POINT);
+			reverseGeoCodeOption(SELECT_POINT);
 			
 			MapStatusUpdate u4 = MapStatusUpdateFactory.newLatLng(SELECT_POINT);
 			mBaiduMap.setMapStatus(u4);
+		} else if(mAddress != null &&!"".equals(mAddress)) {
+			geoCodeOption(editCity.getText().toString(), mAddress);
 		}
 
-		
-		setLocation();
 		
 		
 		if(SELECT_POINT != null) {
@@ -185,7 +191,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	            	}
 	            	LatLng latLng = mBaiduMap.getMapStatus().target;  
 	            	
-	            	geo(latLng);
+	            	reverseGeoCodeOption(latLng);
 	        		//准备 marker 的图片  
 	//        		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
 	        		//准备 marker option 添加 marker 使用  
@@ -472,11 +478,6 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 
 	}
 	
-	
-	/**
-	 * ��ʾ�����ַ�
-	 * @param str
-	 */
 	public void logMsg() {
 //		MapStatusUpdate u4 = MapStatusUpdateFactory.newLatLng(THIS_POINT);
 //    	mBaiduMap.setMapStatus(u4); 
@@ -494,21 +495,41 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 //		Log.i("BaiduLocationApiDem", sb.toString());
 		Intent intent = getActivity().getIntent();
 		double latitude = intent.getDoubleExtra("LATITUDE", -1);
-		if(latitude == -1){
+		if(latitude == -1 && marker == null && isFirstOpen){
 			MapStatusUpdate u4 = MapStatusUpdateFactory.newLatLng(THIS_POINT);
 			mBaiduMap.setMapStatus(u4);
+			isFirstOpen = false;
 		}
 	}
 	
-	private void geo(LatLng point) {
+	private void reverseGeoCodeOption(LatLng point) {
 		// 反Geo搜索
 		mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(point));
+	}
+	
+	private void geoCodeOption(String city, String editGeoCodeKey) {
+		// Geo搜索
+		mSearch.geocode(new GeoCodeOption().city(city).address(editGeoCodeKey));
 	}
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult arg0) {
 		// TODO Auto-generated method stub
-		mAddress = arg0.getAddress();
+		if(arg0.getLocation() != null) {
+			mLatitude = arg0.getLocation().latitude;
+        	mLongitude = arg0.getLocation().longitude;
+        	
+			MapStatusUpdate u4 = MapStatusUpdateFactory.newLatLng(arg0.getLocation());
+        	mBaiduMap.setMapStatus(u4); 
+        	if(marker != null){
+        		marker.remove();
+        	}
+    		MarkerOptions markerOptions = new MarkerOptions().icon(bitmap).position(arg0.getLocation());  
+    		//获取添加的 marker 这样便于后续的操作  
+    		marker = (Marker) mBaiduMap.addOverlay(markerOptions);  
+		} else {
+			HyjUtil.displayToast("没有地图上找到地址");
+		}
 	}
 
 	@Override

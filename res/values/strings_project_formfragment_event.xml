@@ -49,7 +49,7 @@
     <string name="projectEventFormFragment_textView_address">地址</string>
     <string name="projectEventFormFragment_editText_hint_address">获取地址</string>
     
-    
+    <string name="projectEventFormFragment_hyjRemarkField_address">地址</string>
     
     
 </resources>

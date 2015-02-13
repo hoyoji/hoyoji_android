@@ -44,6 +44,7 @@ import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
+import com.hoyoji.hoyoji.money.MoneyExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.project.ExplainFinancialOwnerFragment;
 import com.hoyoji.hoyoji.project.ProjectFormFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -55,6 +56,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private static final int CREATE_NEW_PROJECT_AND_SAVE = 2;
 	private static final int GET_FINANCIALOWNER_ID = 3;
 	private static final int GET_ADDRESS_MAP = 4;
+	private static final int GET_ADDRESS = 5;
 
 	private HyjModelEditor<Event> mEventEditor = null;
 	private HyjTextField mTextFieldName = null;
@@ -76,7 +78,8 @@ public class EventFormFragment extends HyjUserFormFragment {
 	private Button button_cancel_signUp;
 //	private ImageButton mButtonExpandMore;
 //	private LinearLayout mLinearLayoutExpandMore;   
-	private TextView mAddress;
+	private HyjRemarkField mHyjRemarkFieldAddress;
+	private Button mButtonAddress;
 	private double mLatitude;
 	private double mLongitude;
 	
@@ -204,24 +207,39 @@ public class EventFormFragment extends HyjUserFormFragment {
 		
 		mLatitude = mEventEditor.getModel().getLatitude();
 		mLongitude = mEventEditor.getModel().getLongitude();
-		mAddress = (TextView) getView().findViewById(R.id.projectEventFormFragment_textView_address);
+		mHyjRemarkFieldAddress = (HyjRemarkField) getView().findViewById(R.id.projectEventFormFragment_textView_address);
 		if(mEventEditor.getModel().getAddress() != null && !"".equals(mEventEditor.getModel().getAddress())) {
-			mAddress.setText(mEventEditor.getModel().getAddress());
+			mHyjRemarkFieldAddress.setText(mEventEditor.getModel().getAddress());
 		}
-		
-		final boolean isOwnerProject;
-		if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			isOwnerProject = true;
-		} else {
-			isOwnerProject = false;
-		}
-		mAddress.setOnClickListener(new OnClickListener() {
+		mHyjRemarkFieldAddress.setEditable(false);
+		mHyjRemarkFieldAddress.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("TEXT", mHyjRemarkFieldAddress.getText());
+				bundle.putString("HINT", "请输入" + mHyjRemarkFieldAddress.getLabelText());
+				EventFormFragment.this
+						.openActivityWithFragmentForResult(
+								HyjTextInputFormFragment.class,
+								R.string.projectEventFormFragment_hyjRemarkField_address,
+								bundle, GET_ADDRESS);
+			}
+		});
+//		
+//		final boolean isOwnerProject;
+//		if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+//			isOwnerProject = true;
+//		} else {
+//			isOwnerProject = false;
+//		}
+		mButtonAddress = (Button) getView().findViewById(R.id.projectEventFormFragment_button_address);
+		mButtonAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 //				Intent intent = new Intent(getActivity(),PoiSearchDemo.class);
 //				startActivity(intent);
 				Bundle bundle = new Bundle();
-				bundle.putString("ADDRESS", mAddress.getText().toString().trim());
+				bundle.putString("ADDRESS", mHyjRemarkFieldAddress.getText().toString().trim());
 				double getLatitude = mLatitude;
 				double getLongitude = mLongitude;
 				if (getLatitude != 0) {
@@ -230,7 +248,18 @@ public class EventFormFragment extends HyjUserFormFragment {
 				if (getLongitude != 0) {
 					bundle.putDouble("LONGITUDE", getLongitude);
 				}
-				bundle.putBoolean("ISOWNERPROJECT", isOwnerProject);
+				String projectId = mSelectorFieldProject.getModelId();
+				if(projectId == null){
+					bundle.putBoolean("ISOWNERPROJECT", true);
+				} else {
+					Project project = Project.getModel(Project.class, projectId);
+					if(project != null && project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())) {
+						bundle.putBoolean("ISOWNERPROJECT", true);
+					} else {
+						bundle.putBoolean("ISOWNERPROJECT", false);
+					}
+				}
+					
 				
 				openActivityWithFragmentForResult(PoiSearchDemo.class, R.string.demo_name_basemap, bundle, GET_ADDRESS_MAP);
 			}
@@ -364,7 +393,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 		modelCopy.setName(mTextFieldName.getText().toString().trim());
 		modelCopy.setDescription(mRemarkFieldDescription.getText().toString().trim());
 		modelCopy.setFinancialOwnerUserId(mSelectorFieldFinancialOwner.getModelId());
-		modelCopy.setAddress(mAddress.getText().toString().trim());
+		modelCopy.setAddress(mHyjRemarkFieldAddress.getText().toString().trim());
 		modelCopy.setLatitude(mLatitude);
 		modelCopy.setLongitude(mLongitude);
 		if(cancel == true) {
@@ -485,6 +514,14 @@ public class EventFormFragment extends HyjUserFormFragment {
 					mRemarkFieldDescription.setText(text);
 				}
 				break;
+			case GET_ADDRESS:
+				if (resultCode == Activity.RESULT_OK) {
+					String text = data.getStringExtra("TEXT");
+					mHyjRemarkFieldAddress.setText(text);
+					mLatitude = 0.0;
+					mLongitude = 0.0;
+				}
+				break;
 			case GET_PROJECT_ID:
 				if (resultCode == Activity.RESULT_OK) {
 					long _id = data.getLongExtra("MODEL_ID", -1);
@@ -550,7 +587,7 @@ public class EventFormFragment extends HyjUserFormFragment {
 						mLongitude = longitude;
 					}
 					if(address != null && !"".equals(address)) {
-						mAddress.setText(address);
+						mHyjRemarkFieldAddress.setText(address);
 					}
 					
 				}
