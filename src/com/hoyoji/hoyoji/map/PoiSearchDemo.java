@@ -85,17 +85,20 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	private LocationClient mLocationClient;
 	public MyLocationListener mMyLocationListener;
 	
-	GeoCoder mSearch = null;
+	private GeoCoder mSearch = null;
 	
 	private Button mSearchButton;
 	
 	private Button mSaveAddressButton;
 	
-	BitmapDescriptor bitmap;
+	private BitmapDescriptor bitmap;
 	
 	private InfoWindow mInfoWindow;
 	
-	boolean isOwnerProject;
+	private boolean isOwnerProject;
+	
+	private EditText editCity;
+	private EditText editSearchKey;
 	
 	@Override
 	public Integer useContentView() {
@@ -119,7 +122,8 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
 		
-		
+		editCity = (EditText) getView().findViewById(R.id.city);
+		editSearchKey = (EditText) getView().findViewById(R.id.searchkey);
 		
 		// 初始化搜索模块，注册搜索事件监听
 		mPoiSearch = PoiSearch.newInstance();
@@ -222,6 +226,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 			}
 		});
 		
+		
 		mSearchButton = (Button) getView().findViewById(R.id.search);
 		mSearchButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -304,8 +309,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	 * @param v
 	 */
 	public void searchButtonProcess(View v) {
-		EditText editCity = (EditText) getView().findViewById(R.id.city);
-		EditText editSearchKey = (EditText) getView().findViewById(R.id.searchkey);
+		
 		mPoiSearch.searchInCity((new PoiCitySearchOption())
 				.city(editCity.getText().toString())
 				.keyword(editSearchKey.getText().toString())
@@ -460,6 +464,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 		public void onReceiveLocation(BDLocation location) {
 			//Receive Location 
 			THIS_POINT = new LatLng(location.getLatitude(), location.getLongitude());
+			editCity.setText(location.getCity());
 			logMsg();
 			
 		}
@@ -510,5 +515,6 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
 		// TODO Auto-generated method stub
 		mAddress = arg0.getAddress();
+		editCity.setText(arg0.getAddressDetail().city);
 	}
 }
