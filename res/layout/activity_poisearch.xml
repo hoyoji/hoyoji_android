@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="12"
             android:padding="10dip"
-            android:text="开始" />
+            android:text="查找地址" />
         
         <Button
             android:id="@+id/map_get_address"
