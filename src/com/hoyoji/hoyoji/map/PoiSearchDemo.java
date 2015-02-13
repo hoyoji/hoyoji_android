@@ -199,6 +199,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	        		MarkerOptions markerOptions = new MarkerOptions().icon(bitmap).position(latLng);  
 	        		//获取添加的 marker 这样便于后续的操作  
 	        		marker = (Marker) mBaiduMap.addOverlay(markerOptions);  
+	        		
             	}
             }
 		});
@@ -471,7 +472,9 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 		public void onReceiveLocation(BDLocation location) {
 			//Receive Location 
 			THIS_POINT = new LatLng(location.getLatitude(), location.getLongitude());
-			editCity.setText(location.getCity());
+			if(editCity.getText().toString() == null || "".equals(editCity.getText().toString())) {
+				editCity.setText(location.getCity());
+			}
 			logMsg();
 			
 		}
@@ -536,7 +539,10 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
 		// TODO Auto-generated method stub
-		mAddress = arg0.getAddress();
-		editCity.setText(arg0.getAddressDetail().city);
+		if(arg0.getLocation() != null) {
+			mAddress = arg0.getAddress();
+			editCity.setText(arg0.getAddressDetail().city);
+			editSearchKey.setText(arg0.getAddressDetail().district + arg0.getAddressDetail().street + arg0.getAddressDetail().streetNumber);
+		}
 	}
 }
