@@ -151,6 +151,7 @@ public class PoiSearchDemo extends HyjUserFragment implements OnGetPoiSearchResu
 			mBaiduMap.setMapStatus(u4);
 		} else if(mAddress != null &&!"".equals(mAddress)) {
 			geoCodeOption(editCity.getText().toString(), mAddress);
+			editSearchKey.setText(mAddress);
 		}
 
 		
