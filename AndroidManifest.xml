@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.hoyoji.aaevent_android"
-    android:versionCode="2303"
-    android:versionName="2.3.0.3" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:versionCode="2400"
+    android:versionName="2.4.0.0" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -104,12 +104,12 @@
             android:value="hoyoji.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="3" />
+            android:value="4" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="KKVICABkqivEkRCoeLyOeOFi" />
         
-        <!-- v2=>v3 
+        <!-- v3=>v4 
 			1、增加字段：Event.latitude, 
 			2、增加字段：Event.longitude,
 			3、增加字段：Event.address,
