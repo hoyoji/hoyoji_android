@@ -8,6 +8,7 @@ import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
 import com.hoyoji.hoyoji.models.EventMember;
+import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 
 import android.content.Context;
@@ -45,6 +46,8 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    			ContentProvider.createUri(UserData.class, null), true, mChangeObserver);
 	    	context.getContentResolver().registerContentObserver(
 	    			ContentProvider.createUri(EventMember.class, null), true, mChangeObserver);
+	    	context.getContentResolver().registerContentObserver(
+	    			ContentProvider.createUri(ProjectShareAuthorization.class, null), true, mChangeObserver);
 
 	    }
 	    
