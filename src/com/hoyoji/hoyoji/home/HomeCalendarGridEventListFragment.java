@@ -104,38 +104,30 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 
 		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
+		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 		
 		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getYearAtPosition(arg2));
-				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getMonthAtPosition(arg2));
-				mCalendarGridView.getAdapter().setSelectedDay(mCalendarGridView.getAdapter().getDayAtPosition(arg2));
+				int year = mCalendarGridView.getAdapter().getYearAtPosition(arg2);
+				int month = mCalendarGridView.getAdapter().getMonthAtPosition(arg2);
+				int day = mCalendarGridView.getAdapter().getDayAtPosition(arg2);
+				mCalendarGridView.getAdapter().setSelectedYear(year);
+				mCalendarGridView.getAdapter().setSelectedMonth(month);
+				mCalendarGridView.getAdapter().setSelectedDay(day);
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
-
-				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
+//				if(isBeforeToday(year, month, day)){
+//					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及以前的活动");
+//				} else {
+					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//				}
 				
 				getLoaderManager().restartLoader(0, null, HomeCalendarGridEventListFragment.this);
 				
 			}
 		});
-		view.findViewById(R.id.home_stat_group_calendarMode).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if(mCalendarGridView.getAdapter().getCalendarMode() == HyjCalendarGridAdapter.CALENDAR_MODE_MONTH){
-					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_WEEK);
-				} else {
-					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_MONTH);
-				}
-				mCalendarGridView.getAdapter().getDayNumber();
-
-				mListGroupData.clear();
-				mCalendarGridView.getAdapter().notifyDataSetChanged();
-				getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
-			}
-		});
+		
 
 		view.findViewById(R.id.home_stat_center).setOnClickListener(new OnClickListener(){
 			@Override
@@ -150,13 +142,17 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				    			|| mCalendarGridView.getAdapter().getSelectedDay() != dayOfMonth){
 							
 							mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
-							
 							mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
 							
 							
 							mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
 							mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-							mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日往后的活动");
+
+//							if(isBeforeToday(year, mCalendarGridView.getAdapter().getCurrentMonth(), mCalendarGridView.getAdapter().getSelectedDay())){
+//								mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及以前的活动");
+//							} else {
+								mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//							}
 							
 							mListGroupData.clear();
 							mCalendarGridView.getAdapter().notifyDataSetChanged();
@@ -173,7 +169,85 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				dialog.show();
 			}
 		});
-		
+		view.findViewById(R.id.home_calendar_control_today).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Calendar today = Calendar.getInstance();
+				
+				int year = today.get(Calendar.YEAR);
+		    	int monthOfYear = today.get(Calendar.MONTH);
+		    	int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
+		    	if(monthOfYear + 1 != mCalendarGridView.getAdapter().getCurrentMonth() 
+		    			|| mCalendarGridView.getAdapter().getCurrentYear() != year
+		    			|| mCalendarGridView.getAdapter().getSelectedDay() != dayOfMonth){
+					
+					mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
+					mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
+					
+					mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+					mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+					
+					mListGroupData.clear();
+//					updateHeaderStat();
+//					updateGroupHeader();
+					mCalendarGridView.getAdapter().notifyDataSetChanged();
+					getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
+		    	}
+			}
+		});
+		final View calendarControl = view.findViewById(R.id.home_calendar_control);
+		view.findViewById(R.id.home_stat_group_calendarMode).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mCalendarGridView.getAdapter().getCalendarMode() == HyjCalendarGridAdapter.CALENDAR_MODE_MONTH){
+					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_WEEK);
+					calendarControl.setVisibility(View.GONE);
+				} else {
+					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_MONTH);
+					calendarControl.setVisibility(View.VISIBLE);
+				}
+				mCalendarGridView.getAdapter().getDayNumber();
+
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
+			}
+		});
+		view.findViewById(R.id.home_calendar_control_previous_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+//				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
+//				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
+				mCalendarGridView.getAdapter().setJumpCalendar(-1, 0);
+
+				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+				
+				mListGroupData.clear();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
+			}
+		});
+		view.findViewById(R.id.home_calendar_control_next_month).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+//				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
+//				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
+				mCalendarGridView.getAdapter().setJumpCalendar(1, 0);
+				
+				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+				
+				mListGroupData.clear();
+//				GStat();
+//				updateGroupHeader();
+				mCalendarGridView.getAdapter().notifyDataSetChanged();
+				getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
+			}
+		});
 		mNearestEventLayout = (RelativeLayout) view.findViewById(R.id.home_listfragment_event_nearestevent);
 		mNearestEventLayout.setOnClickListener(new OnClickListener(){
 			@Override
@@ -187,6 +261,24 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		return view;
 	}
 
+//	private boolean isBeforeToday(int year, int month, int day){
+//		Calendar calendar = Calendar.getInstance();
+//		if(year < calendar.get(Calendar.YEAR)){
+//			return true;
+//		} else if(year > calendar.get(Calendar.YEAR)){
+//			return false;
+//		}
+//		if(month < calendar.get(Calendar.MONTH)+1){
+//			return true;
+//		} else if(month > calendar.get(Calendar.MONTH)+1){
+//			return false;
+//		}
+//		if(day < calendar.get(Calendar.DAY_OF_MONTH)){
+//			return true;
+//		}
+//		return false;
+//	}
+	
 	@Override
 	public void onResume(){
 		super.onResume();

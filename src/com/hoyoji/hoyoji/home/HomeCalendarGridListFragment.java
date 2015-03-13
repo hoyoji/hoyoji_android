@@ -147,7 +147,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	}
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
-		LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendargrid_header, null);
+		final LinearLayout view =  (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.home_calendargrid_header, null);
 		mExpenseStat = (TextView) view.findViewById(R.id.home_stat_expenseStat);
 		mIncomeStat = (TextView) view.findViewById(R.id.home_stat_incomeStat);
 		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
@@ -188,14 +188,42 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(0, null, HomeCalendarGridListFragment.this);
 			}
 		});
-
+		view.findViewById(R.id.home_calendar_control_today).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Calendar today = Calendar.getInstance();
+				
+				int year = today.get(Calendar.YEAR);
+		    	int monthOfYear = today.get(Calendar.MONTH);
+		    	int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
+		    	if(monthOfYear + 1 != mCalendarGridView.getAdapter().getCurrentMonth() 
+		    			|| mCalendarGridView.getAdapter().getCurrentYear() != year
+		    			|| mCalendarGridView.getAdapter().getSelectedDay() != dayOfMonth){
+					
+					mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
+					mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
+					
+					mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+					mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"");
+					
+					mListGroupData.clear();
+//					updateHeaderStat();
+//					updateGroupHeader();
+					mCalendarGridView.getAdapter().notifyDataSetChanged();
+					getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
+		    	}
+			}
+		});
+		final View calendarControl = view.findViewById(R.id.home_calendar_control);
 		view.findViewById(R.id.home_stat_group_calendarMode).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				if(mCalendarGridView.getAdapter().getCalendarMode() == HyjCalendarGridAdapter.CALENDAR_MODE_MONTH){
 					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_WEEK);
+					calendarControl.setVisibility(View.GONE);
 				} else {
 					mCalendarGridView.getAdapter().setCalendarMode(HyjCalendarGridAdapter.CALENDAR_MODE_MONTH);
+					calendarControl.setVisibility(View.VISIBLE);
 				}
 				mCalendarGridView.getAdapter().getDayNumber();
 
@@ -204,7 +232,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 			}
 		});
-		view.findViewById(R.id.home_stat_layout_income).setOnClickListener(new OnClickListener(){
+		view.findViewById(R.id.home_calendar_control_previous_month).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 //				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
@@ -219,7 +247,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 				getLoaderManager().restartLoader(-1, null, HomeCalendarGridListFragment.this);
 			}
 		});
-		view.findViewById(R.id.home_stat_layout_expense).setOnClickListener(new OnClickListener(){
+		view.findViewById(R.id.home_calendar_control_next_month).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 //				mCalendarGridView.getAdapter().setSelectedYear(mCalendarGridView.getAdapter().getCurrentYear());
