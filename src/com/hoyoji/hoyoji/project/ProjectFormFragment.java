@@ -299,7 +299,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						HyjApplication.getInstance().getCurrentUser()
 								.getUserData().getActiveCurrencyId());
 				if (rate != null) {
-					// 汇率已经存在，直接保存新账本
+					// 汇率已经存在，直接保存新社团
 					doSave();
 					return;
 				}
@@ -367,7 +367,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 
 											@Override
 											public void doNegativeClick() {
-												HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+												HyjUtil.displayToast("未能获取社团币种到本币的汇率");
 											}
 
 										});
@@ -520,10 +520,10 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						.where("_id=?", data.getLongExtra("MODEL_ID", -1))
 						.executeSingle();
 				if (project.getId().equals(mProjectEditor.getModel().getId())) {
-					HyjUtil.displayToast("不能添加自己为上级账本");
+					HyjUtil.displayToast("不能添加自己为上级社团");
 					break;
 				}
-				// 检查要增加的上级账本是不是已经是当前账本的下级账本
+				// 检查要增加的上级社团是不是已经是当前社团的下级社团
 				ParentProject pp = new Select()
 						.from(ParentProject.class)
 						.as("main")
@@ -532,14 +532,14 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 								project.getId(), project.getId())
 						.executeSingle();
 				if (pp != null) {
-					HyjUtil.displayToast("该账本已经是当前账本的下级账本，不能添加！");
+					HyjUtil.displayToast("该社团已经是当前社团的下级社团，不能添加！");
 				} else {
 					for (int i = 0; i < mParentProjectListAdapter.getCount(); i++) {
 						ParentProjectListItem ppi = mParentProjectListAdapter
 								.getItem(i);
 						if (ppi.getParentProject().getParentProjectId()
 								.equals(project.getId())) {
-							HyjUtil.displayToast("该账本已经是上级账本，不能重复添加！");
+							HyjUtil.displayToast("该社团已经是上级社团，不能重复添加！");
 							return;
 						}
 						// else {
@@ -548,7 +548,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 						// project.getId(), mProjectEditor.getModel().getId(),
 						// mProjectEditor.getModel().getId()).executeSingle();
 						// if(pp1 != null){
-						// HyjUtil.displayToast("该账本已经是上级账本，不能重复添加！");
+						// HyjUtil.displayToast("该社团已经是上级社团，不能重复添加！");
 						// break;
 						// }
 						// }
@@ -567,7 +567,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 								project.getCurrencyId(),
 								mSelectorFieldProjectCurrency.getModelId());
 						if (rate != null) {
-							// 汇率已经存在，直接保存新账本
+							// 汇率已经存在，直接保存新社团
 							ParentProject parentProject = new ParentProject();
 							parentProject.setParentProjectId(project.getId());
 							parentProject.setSubProjectId(mProjectEditor
@@ -659,7 +659,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 
 													@Override
 													public void doNegativeClick() {
-														HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+														HyjUtil.displayToast("未能获取社团币种到本币的汇率");
 													}
 
 												});
@@ -695,7 +695,7 @@ public class ProjectFormFragment extends HyjUserFormFragment {
 				if (exchange != null) {
 					doSave();
 				} else {
-					HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+					HyjUtil.displayToast("未能获取社团币种到本币的汇率");
 				}
 			}
 			break;

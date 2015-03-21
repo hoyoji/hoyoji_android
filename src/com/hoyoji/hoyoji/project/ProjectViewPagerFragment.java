@@ -92,7 +92,7 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 		{
 			@Override
 			public void onPageSelected(int position) {
-				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("账本"+mSectionsPagerAdapter.getPageTitle(position));
+				((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("社团"+mSectionsPagerAdapter.getPageTitle(position));
 				mTabStrip.setTabSelected(position);
 			}
 

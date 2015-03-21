@@ -36,6 +36,7 @@
 		    android:layout_height="wrap_content"
 			android:layout_toLeftOf="@id/projectListItem_action_viewSubProjects"
 			android:layout_centerVertical="true"
+			android:visibility="gone"
 	    	android:textColor="@android:color/darker_gray"/>
 <!-- 	    <TextView 
 	        android:id="@+id/projectListItem_depositTotalLabel"  
@@ -45,7 +46,7 @@
 			android:layout_above="@id/projectListItem_depositTotal"
 		    android:textSize="10sp"
 		    android:textColor="@android:color/darker_gray"
-		    android:text="账本结余"/> -->
+		    android:text="社团结余"/> -->
 	
 	    <TextView
 	        android:id="@+id/projectListItem_name"

@@ -210,7 +210,7 @@ public class LoginActivity extends HyjActivity {
 	protected void onInitViewData() {
 		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
 		if(HyjApplication.getIsDebuggable()){
-			actionBar.setTitle("AA活动(测试版)");
+			actionBar.setTitle("团团转(测试版)");
 		}
 		// init view data here
 //		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -1397,7 +1397,7 @@ public class LoginActivity extends HyjActivity {
 //	        case GET_WELCOME_MESSAGE:
 //	       	 if(resultCode == Activity.RESULT_OK){
 //	       		 String welcomeMessage = data.getStringExtra("WELCOME_MESSAGE");
-//	       		 LoginActivity.this.displayDialog("欢迎使用AA活动", welcomeMessage);
+//	       		 LoginActivity.this.displayDialog("欢迎使用团团转", welcomeMessage);
 //	       	 }
 //	       	 break;
 //		}

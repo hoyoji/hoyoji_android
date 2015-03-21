@@ -229,7 +229,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 		super.onSave(v);
 		
 		if(!mEventMember.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			HyjUtil.displayToast("只有账本拥有人才能进行拆分");
+			HyjUtil.displayToast("只有社团拥有人才能进行拆分");
 			return;
 		}
 		if(mApportionFieldApportions.getAdapter().getCount() == 0){
@@ -385,7 +385,7 @@ public class EventMemberSplitTBDFormFragment extends HyjUserFormFragment {
 				psa = ProjectShareAuthorization.load(ProjectShareAuthorization.class, _id);
 			} else {
 				final Friend friend = Friend.load(Friend.class, _id);
-				//看一下该好友是不是账本成员
+				//看一下该好友是不是社团成员
 				if(friend.getFriendUserId() != null){
 					psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mEventMember.getProjectId()).executeSingle();
 				} else {

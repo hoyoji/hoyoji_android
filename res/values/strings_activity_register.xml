@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="registerActivity_title">AA活动 注册</string>
+    <string name="registerActivity_title">团团转 注册</string>
     
     <string name="registerActivity_action_register">注册</string>
     <string name="registerActivity_ime_sign_in_short">注册</string>

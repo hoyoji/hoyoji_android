@@ -133,7 +133,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 								Event event = Event.load(Event.class, modelId);
 								if (!event.getProject().getOwnerUserId()
 										.equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-									HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
+									HyjUtil.displayToast("您不能在共享来的社团添加活动成员");
 									return;
 								}
 								if (which == 1) {
@@ -648,7 +648,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				}
 				Double settlement = psa.getSettlement();
 				String currencySymbol = psa.getProject().getCurrencySymbol();
-				textView.setText("账本结余:" + currencySymbol
+				textView.setText("社团结余:" + currencySymbol
 						+ HyjUtil.toFixed2(settlement));
 			}
 			return true;
@@ -687,7 +687,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		}
 		if (!event.getProject().getOwnerUserId()
 				.equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-			HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
+			HyjUtil.displayToast("您不能在共享来的社团添加活动成员");
 			return true;
 		}
 		if (item.getItemId() == R.id.projectEventMemberListFragment_invite_friend) {

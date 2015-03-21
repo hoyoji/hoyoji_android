@@ -78,7 +78,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public String getTitle(){
 		String title = getArguments().getString("title");
 		if(title == null){
-			return "顶级账本";
+			return "顶级社团";
 		}
 		return title;
 	}
@@ -104,27 +104,27 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	
 	@Override
 	protected View useHeaderView(Bundle savedInstanceState){
-		String parentProjectId = getArguments().getString("parentProjectId");
-		if(parentProjectId == null && getActivity().getCallingActivity() == null){
-			ViewGroup view = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listfragment_header, null);
-			
-			// 添加 "共享来的收支" 到 headerView
-			mHeaderViewSharedProject = (ViewGroup) view.findViewById(R.id.project_listitem_shared_project);
-			mHeaderViewSharedProject.findViewById(R.id.projectListItem_action_viewSubProjects).setVisibility(View.GONE);
-			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-					if(getActivity().getCallingActivity() == null){
-						openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
-					}
-				}
-		    });
-			setSharedProjectHeaderView(mHeaderViewSharedProject);
-			
-			return view;
-		} else {
+//		String parentProjectId = getArguments().getString("parentProjectId");
+//		if(parentProjectId == null && getActivity().getCallingActivity() == null){
+//			ViewGroup view = (ViewGroup)getLayoutInflater(savedInstanceState).inflate(R.layout.project_listfragment_header, null);
+//			
+//			// 添加 "共享来的收支" 到 headerView
+//			mHeaderViewSharedProject = (ViewGroup) view.findViewById(R.id.project_listitem_shared_project);
+//			mHeaderViewSharedProject.findViewById(R.id.projectListItem_action_viewSubProjects).setVisibility(View.GONE);
+//			mHeaderViewSharedProject.setOnClickListener(new OnClickListener(){
+//				@Override
+//				public void onClick(View arg0) {
+//					if(getActivity().getCallingActivity() == null){
+//						openActivityWithFragment(SharedProjectMoneySearchListFragment.class, R.string.projectListFragment_title_shared_project, null);
+//					}
+//				}
+//		    });
+//			setSharedProjectHeaderView(mHeaderViewSharedProject);
+//			
+//			return view;
+//		} else {
 			return null;
-		}
+//		}
 	}
 
 	@Override
@@ -275,10 +275,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //		if(mi.id == -1){
 //			return;
 //		}
-//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "账本资料");
-//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "账本成员");
+//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "社团资料");
+//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "社团成员");
 //		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子账本");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子社团");
 //	}
 	
 	private void setSharedProjectHeaderView(ViewGroup view) {

@@ -175,7 +175,7 @@ public class MainActivity extends HyjUserActivity {
 
 		ActionBar actionBar = ((ActionBarActivity)this).getSupportActionBar();
 		if(HyjApplication.getIsDebuggable()){
-			actionBar.setTitle("AA活动(测试版)");
+			actionBar.setTitle("团团转(测试版)");
 		}
 		
 		// Create the adapter that will return a fragment for each of the three
@@ -216,7 +216,7 @@ public class MainActivity extends HyjUserActivity {
 			}
 		});
 		
-		mViewPager.setCurrentItem(1, false);
+//		mViewPager.setCurrentItem(1, false);
 
 	}
 
@@ -438,13 +438,13 @@ public class MainActivity extends HyjUserActivity {
 //				fragment = new MoneyAccountListFragment();
 //				break;
 			case 0:
-				fragment = new ProjectListFragment();
-				break;
-			case 1:
-				fragment = new HomeCalendarGridListFragment();
-				break;
-			case 2:
 				fragment = new HomeCalendarGridEventListFragment();
+				break;
+//			case 1:
+//				fragment = new HomeCalendarGridListFragment();
+//				break;
+			case 1:
+				fragment = new ProjectListFragment();
 				break;
 //			case 4:
 //				fragment = new MessageListFragment();
@@ -455,7 +455,7 @@ public class MainActivity extends HyjUserActivity {
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -467,13 +467,13 @@ public class MainActivity extends HyjUserActivity {
 //						R.string.mainActivity_section_title_moneyaccount)
 //						.toUpperCase(l);
 			case 0:
-				return getString(R.string.mainActivity_section_title_project)
-						.toUpperCase(l);
-			case 1:
-				return getString(R.string.mainActivity_section_title_home)
-						.toUpperCase(l);
-			case 2:
 				return getString(R.string.mainActivity_section_title_event)
+					.toUpperCase(l);
+//			case 1:
+//				return getString(R.string.mainActivity_section_title_home)
+//						.toUpperCase(l);
+			case 1:
+				return getString(R.string.mainActivity_section_title_project)
 						.toUpperCase(l);
 //			case 4:
 //				return getString(R.string.mainActivity_section_title_message)

@@ -656,7 +656,7 @@ public class MoneyIncomeContainer extends HyjModel {
 	public static void deleteApportion(MoneyIncomeApportion apportion, MoneyIncomeContainerEditor mMoneyIncomeContainerEditor){
 		ProjectShareAuthorization oldProjectShareAuthorization;
 		if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
-			// 更新旧账本的分摊支出
+			// 更新旧社团的分摊支出
 			oldProjectShareAuthorization = mMoneyIncomeContainerEditor.getOldSelfProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 			oldProjectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(oldProjectShareAuthorization.getApportionedTotalIncome() - (apportion.getAmount0() * apportion.getMoneyIncomeContainer().getExchangeRate()));
@@ -668,7 +668,7 @@ public class MoneyIncomeContainer extends HyjModel {
 				moneyIncome.delete();
 			}
 		} else {
-			// 更新旧账本分摊支出
+			// 更新旧社团分摊支出
 			oldProjectShareAuthorization = apportion.getProjectShareAuthorization();
 			HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 			
@@ -685,7 +685,7 @@ public class MoneyIncomeContainer extends HyjModel {
 		}
 		
 		if(mMoneyIncomeContainerEditor.getModel().getEventId() != null){
-			//更新老账本分摊支出
+			//更新老社团分摊支出
 			EventMember oldEventMember;
 			if(apportion.getFriendUserId() != null){
 				oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
@@ -743,7 +743,7 @@ public class MoneyIncomeContainer extends HyjModel {
 						oldApportionAmount = 0.0;
 					}
 					ProjectShareAuthorization projectShareAuthorization;
-						//维护账本成员金额
+						//维护社团成员金额
 					if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
 						projectShareAuthorization = mMoneyIncomeContainerEditor.getNewSelfProjectShareAuthorization();
 					} else if(apportion.getLocalFriendId() != null){
@@ -758,7 +758,7 @@ public class MoneyIncomeContainer extends HyjModel {
 						
 						if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
 								mMoneyIncomeContainerEditor.getModel().getProjectId().equals(mMoneyIncomeContainerEditor.getModelCopy().getProjectId())){
-							 // 无旧账本可更新
+							 // 无旧社团可更新
 							projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 							projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 							if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -774,7 +774,7 @@ public class MoneyIncomeContainer extends HyjModel {
 							}
 						
 						}else{
-							//更新新账本分摊支出
+							//更新新社团分摊支出
 							projectShareAuthorizationEditor.getModelCopy().setApportionedTotalIncome(projectShareAuthorization.getApportionedTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
 							projectShareAuthorizationEditor.getModelCopy().setActualTotalIncome(projectShareAuthorization.getActualTotalIncome() + (apportionEditor.getModelCopy().getAmount0() * rate));
 							if(!HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -789,7 +789,7 @@ public class MoneyIncomeContainer extends HyjModel {
 								projectShareAuthorizationEditor.save();
 							}
 							
-							//更新老账本分摊支出
+							//更新老社团分摊支出
 							ProjectShareAuthorization oldProjectAuthorization;
 
 							if(HyjApplication.getInstance().getCurrentUser().getId().equals(apportion.getFriendUserId())){
@@ -835,15 +835,15 @@ public class MoneyIncomeContainer extends HyjModel {
 							
 							if(mMoneyIncomeContainerEditor.getModelCopy().get_mId() == null || 
 									mMoneyIncomeContainerEditor.getModelCopy().getEventId().equals(mMoneyIncomeContainerEditor.getModel().getEventId())){
-								 // 该支出是新的，或者该支出的账本没有改变：无旧账本需要更新，只需更新新账本的projectShareAuthorization
+								 // 该支出是新的，或者该支出的社团没有改变：无旧社团需要更新，只需更新新社团的projectShareAuthorization
 								eventMemberEditor.getModelCopy().setApportionedTotalIncome(eventMember.getApportionedTotalExpense() - (oldApportionAmount * oldRate) + (apportionEditor.getModelCopy().getAmount0() * rate));
 								eventMemberEditor.save();
 							} else {
-								//更新新账本分摊支出
+								//更新新社团分摊支出
 								eventMemberEditor.getModelCopy().setApportionedTotalIncome(eventMember.getApportionedTotalExpense() + (apportionEditor.getModelCopy().getAmount0() * rate));
 								eventMemberEditor.save();
 								if(mMoneyIncomeContainerEditor.getModel().getEventId() != null){
-									//更新老账本分摊支出
+									//更新老社团分摊支出
 									EventMember oldEventMember;
 									if(apportion.getFriendUserId() != null){
 										oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 
@@ -865,7 +865,7 @@ public class MoneyIncomeContainer extends HyjModel {
 								// 新增的收入，又没有活动，什么都不用做
 							} else if(mMoneyIncomeContainerEditor.getModel().getEventId() != null){
 								// 不是新增的收入，当前没有活动，看老的收入记录有没有活动
-								//更新老账本分摊支出
+								//更新老社团分摊支出
 								EventMember oldEventMember;
 								if(apportion.getFriendUserId() != null){
 									oldEventMember = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", 

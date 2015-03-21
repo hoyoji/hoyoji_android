@@ -504,7 +504,7 @@ public class ProjectMemberFormFragment extends HyjUserFormFragment {
 			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
 			data += jsonPSA.toString();
 			
-			//如果账本也是新建的，一同保存到服务器
+			//如果社团也是新建的，一同保存到服务器
 			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
 				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 			}
@@ -542,7 +542,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 			JSONObject jsonPSA = mProjectShareAuthorizationEditor.getModelCopy().toJSON();
 			data += jsonPSA.toString();
 			
-			//如果账本也是新建的，一同保存到服务器
+			//如果社团也是新建的，一同保存到服务器
 			if(mProjectShareAuthorizationEditor.getModelCopy().getProject().isClientNew()){
 				data += "," + mProjectShareAuthorizationEditor.getModelCopy().getProject().toJSON().toString();
 			}
@@ -555,11 +555,11 @@ private void sendEditProjectShareAuthorizationToServer() {
 						.getCurrentUser().getId());
 				msg.put("type", "Project.Share.Edit");
 				msg.put("messageState", "new");
-				msg.put("messageTitle", "修改账本共享");
+				msg.put("messageTitle", "修改社团共享");
 				msg.put("date", (new Date()).getTime());
 				msg.put("detail", "用户"
 						+ HyjApplication.getInstance().getCurrentUser()
-								.getDisplayName() + "修改了账本共享权限: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+								.getDisplayName() + "修改了社团共享权限: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
 		//		msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
 				msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
 				
@@ -575,7 +575,7 @@ private void sendEditProjectShareAuthorizationToServer() {
 				msg.put("messageData", msgData.toString());
 				
 				if(mProjectShareAuthorizationEditor.getModelCopy().getState().equals("Accept")){
-					//只有接受了的账本，我们才发送修改消息
+					//只有接受了的社团，我们才发送修改消息
 					msg.put("id", UUID.randomUUID().toString());
 				}
 			} catch (JSONException e1) {
@@ -600,11 +600,11 @@ private void sendEditProjectShareAuthorizationToServer() {
 					.getCurrentUser().getId());
 			msg.put("type", "Project.Share.AddRequest");
 			msg.put("messageState", "new");
-			msg.put("messageTitle", "账本共享请求");
+			msg.put("messageTitle", "社团共享请求");
 			msg.put("date", (new Date()).getTime());
 			msg.put("detail", "用户"
 					+ HyjApplication.getInstance().getCurrentUser()
-							.getDisplayName() + "给您共享账本: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
+							.getDisplayName() + "给您共享社团: " + mProjectShareAuthorizationEditor.getModelCopy().getProject().getName());
 	//		msg.put("messageBoxId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUser().getMessageBoxId());
 			msg.put("ownerUserId", mProjectShareAuthorizationEditor.getModelCopy().getFriendUserId());
 			

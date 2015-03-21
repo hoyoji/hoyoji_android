@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    
-   <string name="moneyShareMessageFormFragment_title_addrequest">账本共享请求</string>
-   <string name="moneyShareMessageFormFragment_title_accept">账本共享回复</string>
-   <string name="moneyShareMessageFormFragment_title_delete">删除账本共享</string>
+   <string name="moneyShareMessageFormFragment_title_addrequest">社团共享请求</string>
+   <string name="moneyShareMessageFormFragment_title_accept">社团共享回复</string>
+   <string name="moneyShareMessageFormFragment_title_delete">删除社团共享</string>
    
    <string name="moneyShareMessageFormFragment_textView_date_send">发送时间</string>
    <string name="moneyShareMessageFormFragment_textView_date_receive">接收时间</string>

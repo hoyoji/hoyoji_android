@@ -13,17 +13,17 @@
    <string name="inviteMemberMessageFormFragment_progress_eventmember_adding">正在添加活动成员</string>
    
     
-   <string name="memberFormFragment_title_addnew">添加账本成员</string>
-   <string name="memberFormFragment_title_edit">修改账本成员</string>
+   <string name="memberFormFragment_title_addnew">添加社团成员</string>
+   <string name="memberFormFragment_title_edit">修改社团成员</string>
    
-   <string name="memberFormFragment_progress_adding">正在添加账本成员</string>
+   <string name="memberFormFragment_progress_adding">正在添加社团成员</string>
    <string name="memberFormFragment_progress_saving">正在保存&#8230;</string>
    <string name="memberFormFragment_progress_inviting">正在邀請&#8230;</string>
-   <string name="memberFormFragment_toast_share_request_sent_success">账本共享请求发送成功，请等待回复</string>
+   <string name="memberFormFragment_toast_share_request_sent_success">社团共享请求发送成功，请等待回复</string>
    <string name="memberFormFragment_toast_share_edit_success">保存成功</string>
-   <string name="memberFormFragment_toast_share_add_success">成功添加账本成员</string>
+   <string name="memberFormFragment_toast_share_add_success">成功添加社团成员</string>
    
-   <string name="memberFormFragment_textView_projectName">账本名称</string>
+   <string name="memberFormFragment_textView_projectName">社团名称</string>
    
    <string name="memberFormFragment_textView_projectMoney">成员流水</string>
    
@@ -33,8 +33,8 @@
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_edit">允许修改自己的账务</string>
    <string name="inviteMemberFormFragment_textView_shareAuthorization_title_delete">允许删除自己的账务</string>
    
-   <string name="memberFormFragment_textView_send_invite">发送消息给邀请好友共享账本。\n如果不发送，您可以在该账本下记录与该好友相关的账务，但是该好友将看不到该账本的数据。</string>
-   <string name="app_action_send_invite">邀请好友共享账本</string>
+   <string name="memberFormFragment_textView_send_invite">发送消息给邀请好友共享社团。\n如果不发送，您可以在该社团下记录与该好友相关的账务，但是该好友将看不到该社团的数据。</string>
+   <string name="app_action_send_invite">邀请好友共享社团</string>
    
    <string name="inviteMemberFormFragment_action_invite_title">邀请成员</string>
    <string name="inviteMemberFormFragment_action_invite_content">正在邀请&#8230;</string>

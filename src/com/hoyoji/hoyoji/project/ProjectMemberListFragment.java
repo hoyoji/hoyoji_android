@@ -205,7 +205,7 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 		
 		Project project = Project.load(Project.class, modelId);
 		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			HyjUtil.displayToast("您不能在共享来的账本添加共享成员");
+			HyjUtil.displayToast("您不能在共享来的社团添加共享成员");
 			return true;
 		}
 		if(item.getItemId() == R.id.memberListFragment_action_member_addnew){
@@ -255,9 +255,9 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 	   			inviteFriendObject.put("data", project.getId());
 	   			inviteFriendObject.put("id", id);
 				inviteFriendObject.put("__dataType", "InviteLink");
-				inviteFriendObject.put("title", "邀请加入账本");
+				inviteFriendObject.put("title", "邀请加入社团");
 				inviteFriendObject.put("type", "ProjectShare");
-				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
+				inviteFriendObject.put("description", HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入社团: "+project.getName()+"，一起参与记账。");
 				inviteFriendObject.put("state", "Open");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -300,12 +300,12 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 			
 		Intent intent=new Intent(Intent.ACTION_SEND);   
         intent.setType("image/*");   
-        intent.putExtra(Intent.EXTRA_TITLE, "邀请加入账本");  
-        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请加入账本");   
-        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
+        intent.putExtra(Intent.EXTRA_TITLE, "邀请加入社团");  
+        intent.putExtra(Intent.EXTRA_SUBJECT, "邀请加入社团");   
+        intent.putExtra(Intent.EXTRA_TEXT, HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入社团: "+project.getName()+"，一起参与记账。\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-        startActivity(Intent.createChooser(intent, "邀请账本成员")); 
+        startActivity(Intent.createChooser(intent, "邀请社团成员")); 
 	}
 	
 	public void inviteWXFriend(String id) {
@@ -318,8 +318,8 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 		WXWebpageObject webpage = new WXWebpageObject();
 		webpage.webpageUrl = HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id;
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		msg.title = "邀请加入账本";
-		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。";
+		msg.title = "邀请加入社团";
+		msg.description = HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入社团: "+project.getName()+"，一起参与记账。";
 		Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 		msg.thumbData = Util.bmpToByteArray(thumb, true);
 		
@@ -338,8 +338,8 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 		
 		final Bundle params = new Bundle();
 	    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请加入账本");
-	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
+	    params.putString(QQShare.SHARE_TO_QQ_TITLE, "邀请加入社团");
+	    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入社团: "+project.getName()+"，一起参与记账。");
 	    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);
 	    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, HyjApplication.getInstance().getServerUrl() + "imgs/invite_friend.png");
 	    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "好友AA记账");
@@ -409,7 +409,7 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 //	public void onDeleteListItem(Long id){
 //		Project project = Project.load(Project.class, id);
 //		project.delete();
-//	    HyjUtil.displayToast("账本删除成功");
+//	    HyjUtil.displayToast("社团删除成功");
 //	}
 //	
 //	@Override
@@ -421,10 +421,10 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 //	    Long itemId = getListAdapter().getItemId(info.position);
 //		switch (item.getItemId()) {
 //			case ADD_SUB_PROJECT:
-//			    HyjUtil.displayToast("创建子账本" + itemId);
+//			    HyjUtil.displayToast("创建子社团" + itemId);
 //				break;
 //			case VIEW_PROJECT_MEMBERS:
-//			    HyjUtil.displayToast("账本成员" + itemId);
+//			    HyjUtil.displayToast("社团成员" + itemId);
 //				break;
 //		}
 //		return super.onContextItemSelected(item);
@@ -433,8 +433,8 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 //	@Override
 //	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 ////		super.onCreateContextMenu(menu, v, menuInfo);
-////		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "账本成员");
-////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子账本");
+////		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "社团成员");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子社团");
 ////		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 //	}
 	

@@ -491,7 +491,7 @@ public class EventMemberFormFragment extends HyjUserFormFragment {
 			}
 		}
 		
-		//如果账本也是新建的，一同保存到服务器
+		//如果社团也是新建的，一同保存到服务器
 		if(mEventMemberEditor.getModelCopy().getEvent().getProject().isClientNew()){
 			data += "," + mEventMemberEditor.getModelCopy().getEvent().getProject().toJSON().toString();
 		}

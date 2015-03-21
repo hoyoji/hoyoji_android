@@ -14,7 +14,7 @@
 	    android:id="@+id/eventFormCreateProjectDialogFragment_textView_msg"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:text="请选择一个账本来记录在该活动下产生的账务"
+	    android:text="请选择一个社团来记录在该活动下产生的账务"
 	    android:gravity="center"
 	    android:textSize="16sp"/>
       
@@ -25,7 +25,7 @@
 	    android:layout_marginTop="20dp"
         android:background="@drawable/button_rectangle_round_5"     
 	    android:textSize="14sp"
-	    android:text="新建活动账本"/>
+	    android:text="新建活动社团"/>
 	
 	<Button
 	    android:id="@+id/eventFormCreateProjectDialogFragment_button_selectProject"
@@ -34,14 +34,14 @@
 	    android:layout_marginTop="10dp"
         android:background="@drawable/button_rectangle_round_5"    
 	    android:textSize="14sp" 
-	    android:text="选择现有账本"/>
+	    android:text="选择现有社团"/>
 	
     <TextView
         android:id="@+id/eventFormCreateProjectDialogFragment_textView_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="选择活动账本后，所有活动成员将会成为账本成员，请谨慎选择!"
+        android:text="选择活动社团后，所有活动成员将会成为社团成员，请谨慎选择!"
         android:textSize="13sp" 
         android:textColor="#008FDB"/>
 

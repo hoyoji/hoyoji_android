@@ -4,8 +4,8 @@
     
     <string name="projectEventMemberFormFragment_action_edit">成员资料</string>
     
-    <string name="projectEventMemberFormFragment_editText_hint_name">请输入账本活动名称</string>
-    <string name="projectEventMemberFormFragment_textView_name">账本活动名称</string>
+    <string name="projectEventMemberFormFragment_editText_hint_name">请输入社团活动名称</string>
+    <string name="projectEventMemberFormFragment_textView_name">社团活动名称</string>
     
     <string name="projectEventMemberFormFragment_hyjDateTimeField_hint_date">请输入活动创建时间</string>
     <string name="projectEventMemberFormFragment_hyjDateTimeField_date">活动创建时间</string>
@@ -18,7 +18,7 @@
     <string name="projectEventMemberFormFragment_hyjDateTimeField_endDate">活动结束时间</string>
     <string name="projectEventMemberFormFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
     
-    <string name="projectEventMemberFormFragment_textView_projectName">账本</string>
+    <string name="projectEventMemberFormFragment_textView_projectName">社团</string>
     
     <string name="projectEventMemberFormFragment_textView_eventName">活动</string>
     
@@ -28,7 +28,7 @@
     <string name="projectEventMemberFormFragment_selectorField_hint_friend">请选择活动好友</string>
     <string name="projectEventMemberFormFragment_selectorField_friend">好友</string>
     
-    <string name="projectEventMemberFormFragment_title_edit">修改账本成员</string>
+    <string name="projectEventMemberFormFragment_title_edit">修改社团成员</string>
     
     <string name="projectEventMemberFormFragment_toast_friend_already_exists">该好友已经是活动成员</string>
     

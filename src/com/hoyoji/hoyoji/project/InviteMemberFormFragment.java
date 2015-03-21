@@ -72,9 +72,9 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 		
 		
 		sendInviteTitle = (HyjTextField) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_title);
-		sendInviteTitle.setText("邀请加入账本");
+		sendInviteTitle.setText("邀请加入社团");
 		sendInviteDetail = (EditText) getView().findViewById(R.id.inviteMemberMessageFormFragment_editText_detail);
-		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入账本: "+project.getName()+"，一起参与记账。");
+		sendInviteDetail.setText(HyjApplication.getInstance().getCurrentUser().getDisplayName() + " 邀请您加入社团: "+project.getName()+"，一起参与记账。");
 		
 		mVerificationCode = (HyjTextField) getView().findViewById(R.id.inviteMemberFormFragment_hyjTextField_verificationCode);
 		
@@ -123,7 +123,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
 	   			inviteFriendObject.put("data", projectData.toString());
 	   			inviteFriendObject.put("id", id);
 				inviteFriendObject.put("__dataType", "InviteLink");
-				inviteFriendObject.put("title", "邀请加入账本");
+				inviteFriendObject.put("title", "邀请加入社团");
 				inviteFriendObject.put("type", "ProjectShare");
 				inviteFriendObject.put("date", (new Date()).getTime());
 				inviteFriendObject.put("verificationCode", mVerificationCode.getText().toString().trim());
@@ -175,7 +175,7 @@ public class InviteMemberFormFragment extends HyjUserFragment {
         intent.putExtra(Intent.EXTRA_TEXT, sendInviteDetail.getText()+"\n\n" + HyjApplication.getInstance().getServerUrl()+"m/invite.html?id=" + id);   
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);   
-        startActivity(Intent.createChooser(intent, "邀请账本成员")); 
+        startActivity(Intent.createChooser(intent, "邀请社团成员")); 
         getActivity().finish();
 	}
 	

@@ -8,8 +8,8 @@
    <string name="searchDialogFragment_textView_endTime">结束时间</string>
    <string name="searchDialogFragment_editText_hint_endTime">结束时间</string>
    
-   <string name="searchDialogFragment_textView_project">账本</string>
-   <string name="searchDialogFragment_editText_hint_project">所有账本</string>
+   <string name="searchDialogFragment_textView_project">社团</string>
+   <string name="searchDialogFragment_editText_hint_project">所有社团</string>
    
    <string name="searchDialogFragment_textView_moneyAccount">账户</string>
    <string name="searchDialogFragment_editText_hint_moneyAccount">所有账户</string>
@@ -20,7 +20,7 @@
    <string name="searchDialogFragment_spinnerField_displayType">流水类型</string>
     
    <string-array name="searchDialogFragment_spinnerField_displayType_array">
-        <item>账本流水</item>
+        <item>社团流水</item>
         <item>个人流水</item>
     </string-array>
 </resources>

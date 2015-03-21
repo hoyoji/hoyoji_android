@@ -37,10 +37,10 @@
    <string name="moneyTopupFormFragment_editText_validationError_beyondMAX_exchangeRate">汇率超出范围</string>
    
    <string name="moneyTopupFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
-   <string name="moneyTopupFormFragment_toast_select_currency">请先选择账户和账本</string> 
+   <string name="moneyTopupFormFragment_toast_select_currency">请先选择账户和社团</string> 
    
-   <string name="moneyTopupFormFragment_textView_project">账本</string>
-   <string name="moneyTopupFormFragment_editText_hint_project">请选择账本</string>
+   <string name="moneyTopupFormFragment_textView_project">社团</string>
+   <string name="moneyTopupFormFragment_editText_hint_project">请选择社团</string>
    
    <string name="moneyTopupFormFragment_textView_remark">备注</string>
    <string name="moneyTopupFormFragment_editText_hint_remark">无备注</string>
@@ -53,8 +53,8 @@
    <string name="moneyTopupFormFragment_textView_transferInCurrency">转入币种</string>
    <string name="moneyTopupFormFragment_editText_hint_transferInCurrency">请输入转入币种</string>
    
-   <string name="moneyTopupFormFragment_textView_transferProjectCurrency">账本币种</string>
-   <string name="moneyTopupFormFragment_editText_hint_transferProjectCurrency">请输入账本币种</string>
+   <string name="moneyTopupFormFragment_textView_transferProjectCurrency">社团币种</string>
+   <string name="moneyTopupFormFragment_editText_hint_transferProjectCurrency">请输入社团币种</string>
    
    <string name="moneyTopupFormFragment_textView_transferOutProjectExchangeRate">汇率</string>
    <string name="moneyTopupFormFragment_editText_hint_transferOutProjectExchangeRate">请输入汇率</string>
