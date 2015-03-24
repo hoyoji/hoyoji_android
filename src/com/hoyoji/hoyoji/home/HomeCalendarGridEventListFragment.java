@@ -531,7 +531,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_picture");
 				
 				view = mNearestEventLayout.findViewById(R.id.homeListItem_subTitle);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
+				((TextView)view).setText(event.getProject().getName());
 				
 				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
 				dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
@@ -568,7 +569,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
 //					}
 					
-					mNearestEventLayout.setVisibility(View.VISIBLE);
+//					mNearestEventLayout.setVisibility(View.VISIBLE);
 			}
 			mNearestEventLoader = null;
 		}
@@ -614,6 +615,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				dateTimeView.setTime(event.getStartDate());
 			} else {
 				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_"+columnIndex);
+				if(view.getId() == R.id.homeListItem_subTitle){
+					((TextView)view).setText(event.getProject().getName());
+				}
 			}
 			return true;
 	}

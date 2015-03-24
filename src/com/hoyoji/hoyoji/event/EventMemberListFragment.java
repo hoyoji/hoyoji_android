@@ -630,27 +630,28 @@ public class EventMemberListFragment extends HyjUserListFragment {
 			ProjectShareAuthorization psa = em.getProjectShareAuthorization();
 			if (psa == null) {
 				textView.setText("");
-			} else {
-				if (!HyjApplication.getInstance().getCurrentUser().getId()
-						.equals(psa.getFriendUserId())) {
-					ProjectShareAuthorization psa1 = new Select()
-							.from(ProjectShareAuthorization.class)
-							.where("projectId=? AND friendUserId=?",
-									psa.getProjectId(),
-									HyjApplication.getInstance()
-											.getCurrentUser().getId())
-							.executeSingle();
-					if (psa1 != null
-							&& psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true) {
-						textView.setText(null);
-						return true;
-					}
-				}
-				Double settlement = psa.getSettlement();
-				String currencySymbol = psa.getProject().getCurrencySymbol();
-				textView.setText("社团结余:" + currencySymbol
-						+ HyjUtil.toFixed2(settlement));
-			}
+			} 
+//			else {
+//				if (!HyjApplication.getInstance().getCurrentUser().getId()
+//						.equals(psa.getFriendUserId())) {
+//					ProjectShareAuthorization psa1 = new Select()
+//							.from(ProjectShareAuthorization.class)
+//							.where("projectId=? AND friendUserId=?",
+//									psa.getProjectId(),
+//									HyjApplication.getInstance()
+//											.getCurrentUser().getId())
+//							.executeSingle();
+//					if (psa1 != null
+//							&& psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true) {
+//						textView.setText(null);
+//						return true;
+//					}
+//				}
+//				Double settlement = psa.getSettlement();
+//				String currencySymbol = psa.getProject().getCurrencySymbol();
+//				textView.setText("社团结余:" + currencySymbol
+//						+ HyjUtil.toFixed2(settlement));
+//			}
 			return true;
 		}
 		return true;

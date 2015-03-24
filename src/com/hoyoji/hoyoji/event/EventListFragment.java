@@ -189,35 +189,37 @@ public class EventListFragment extends HyjUserListFragment {
 //			view.setTag(cursor.getLong(columnIndex));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_amount){
-			HyjNumericView textView = (HyjNumericView)view;
-			Project project = event.getProject();
-			if(project == null){
-				return true;
-			}
-//			String projectId = event.getProjectId();
-//			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-//			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-			EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-			if(em != null && em.getEventShareOwnerDataOnly()){
-				textView.setTextColor(Color.BLACK);
-				((TextView) textView).setText("-");
-				return true;
-			}
-			Double depositBalance = event.getBalance();
-			if(depositBalance == 0){
-				textView.setTextColor(Color.BLACK);
-				if(project != null){
-					textView.setPrefix(project.getCurrencySymbol());
-				}
-			} else if(depositBalance < 0){
-				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-				textView.setPrefix("支出"+project.getCurrencySymbol());
-			}else{
-				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-				textView.setPrefix("收入"+project.getCurrencySymbol());
-			}
+//			HyjNumericView textView = (HyjNumericView)view;
+//			textView.setText("");
+//			Project project = event.getProject();
+//			if(project == null){
+//				return true;
+//			}
+////			String projectId = event.getProjectId();
+////			ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+////			if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+//			EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//			if(em != null && em.getEventShareOwnerDataOnly()){
+//				textView.setTextColor(Color.BLACK);
+//				((TextView) textView).setText("-");
+//				return true;
+//			}
+//			Double depositBalance = event.getBalance();
+//			if(depositBalance == 0){
+//				textView.setTextColor(Color.BLACK);
+//				if(project != null){
+//					textView.setPrefix(project.getCurrencySymbol());
+//				}
+//			} else if(depositBalance < 0){
+//				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//				textView.setPrefix("支出"+project.getCurrencySymbol());
+//			}else{
+//				textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//				textView.setPrefix("收入"+project.getCurrencySymbol());
+//			}
+//			
+//			textView.setNumber(Math.abs(depositBalance));
 			
-			textView.setNumber(Math.abs(depositBalance));
 			return true;
 		} else if(view.getId() == R.id.homeListItem_date){
 			HyjDateTimeView dateTimeView = (HyjDateTimeView)view;

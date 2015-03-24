@@ -193,22 +193,22 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			switch(position){
-			case 0 :
-				return new EventListFragment();
-			case 1 :
-				return new MoneySearchListFragment();
-			case 2:
-				return new ProjectMemberListFragment();
-//			case 3:
-//				return new ProjectFormFragment();
+			switch(position) {
+				case 0:
+					return new EventListFragment();
+				case 1:
+	//				return new MoneySearchListFragment();
+	//			case 2:
+					return new ProjectMemberListFragment();
+	//			case 3:
+	//				return new ProjectFormFragment();
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -216,9 +216,9 @@ public class ProjectViewPagerFragment extends HyjUserFragment {
 			switch(position){
 			case 0 :
 				return "活动";
-			case 1 :
-				return "流水";
-			case 2:
+//			case 1 :
+//				return "流水";
+			case 1:
 				return "成员";
 //			case 3:
 //				return "资料";

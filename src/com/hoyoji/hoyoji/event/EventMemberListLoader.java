@@ -63,12 +63,12 @@ public class EventMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 
 	    	List<HyjModel> list;
 	    	String ownerDataOnly = "";
-	    	EventMember me = new Select().from(EventMember.class).where("eventId = ? AND friendUserId = ?", mEventId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+	    	EventMember me = new Select().from(EventMember.class).where("toBeDetermined=0 AND eventId = ? AND friendUserId = ?", mEventId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
 	    	if(me != null && me.getEventShareOwnerDataOnly()){
-	    		ownerDataOnly = " AND (ownerUserId = '"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId='"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId = ownerUserId)";
+	    		ownerDataOnly = "toBeDetermined=0 AND (ownerUserId = '"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId='"+HyjApplication.getInstance().getCurrentUser().getId()+"' OR friendUserId = ownerUserId)";
 	    	}
 	    	if(mState == null){
-	    		list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? " + ownerDataOnly, mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+	    		list = new Select("main.*").from(EventMember.class).as("main").where("toBeDetermined=0 AND eventId=? " + ownerDataOnly, mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
 	    	} else {
 	    		if ("SignUp".equals(mState)) {
 	    			list = new Select("main.*").from(EventMember.class).as("main").where("eventId=? AND state<>'UnSignUp' AND state<>'CancelSignUp' AND toBeDetermined=0 " + ownerDataOnly, mEventId).orderBy("friendUserId").limit(this.mLoadLimit).execute();

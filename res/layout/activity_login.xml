@@ -22,7 +22,8 @@
                 android:hint="@string/loginActivity_editText_hint_username"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:singleLine="true" >
+                android:singleLine="true" 
+    			android:visibility="gone">
 
                 <requestFocus />
             </EditText>
@@ -31,6 +32,7 @@
                 android:id="@+id/editText_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+    			android:visibility="gone"
                 android:hint="@string/loginActivity_editText_hint_password"
                 android:imeActionId="@+id/imeAction_login"
                 android:imeActionLabel="@string/loginActivity_ime_sign_in_short"
@@ -50,6 +52,7 @@
                 android:id="@+id/button_sign_in"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
+    			android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
             	android:background="@drawable/button_rectangle"     
@@ -61,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+    			android:visibility="gone"
             	android:background="@drawable/button_rectangle"     
                 android:text="@string/loginActivity_button_register" />
 
@@ -70,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
+    			android:visibility="gone"
                 android:background="@drawable/qq_login"
                 android:text="用QQ帐号登录" />
 

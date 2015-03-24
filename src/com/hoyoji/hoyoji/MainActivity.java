@@ -467,14 +467,12 @@ public class MainActivity extends HyjUserActivity {
 //						R.string.mainActivity_section_title_moneyaccount)
 //						.toUpperCase(l);
 			case 0:
-				return getString(R.string.mainActivity_section_title_event)
-					.toUpperCase(l);
+				return "我的活动";
 //			case 1:
 //				return getString(R.string.mainActivity_section_title_home)
 //						.toUpperCase(l);
 			case 1:
-				return getString(R.string.mainActivity_section_title_project)
-						.toUpperCase(l);
+				return "我的社团";
 //			case 4:
 //				return getString(R.string.mainActivity_section_title_message)
 //						.toUpperCase(l);

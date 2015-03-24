@@ -535,55 +535,58 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 			}
 			return true;
 		} else if(view.getId() == R.id.memberListItem_actualTotal) {
-			HyjNumericView numericView = (HyjNumericView)view;
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
-				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-					numericView.setSuffix(null);
-					numericView.setPrefix("-");
-					numericView.setText(null);
-					return true;
-				}
-			}
-			
-			Double actualTotal = psa.getActualTotal();
-			String currencySymbol = psa.getProject().getCurrencySymbol();
-			if(actualTotal < 0){
-				actualTotal = -actualTotal;
-				numericView.setPrefix("已经收入:" + currencySymbol);
-//				numericView.setTextColor(Color.parseColor("#339900"));
-			}else if(actualTotal > 0){
-				numericView.setPrefix("已经支出:" + currencySymbol);
-			} else {
-				numericView.setPrefix("已经收支:" + currencySymbol);
-			}
-			numericView.setSuffix(null);
-			numericView.setNumber(actualTotal);
+//			HyjNumericView numericView = (HyjNumericView)view;
+//			numericView.setText("");
+//			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+//				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+//					numericView.setSuffix(null);
+//					numericView.setPrefix("-");
+//					numericView.setText(null);
+//					return true;
+//				}
+//			}
+//			
+//			Double actualTotal = psa.getActualTotal();
+//			String currencySymbol = psa.getProject().getCurrencySymbol();
+//			if(actualTotal < 0){
+//				actualTotal = -actualTotal;
+//				numericView.setPrefix("已经收入:" + currencySymbol);
+////				numericView.setTextColor(Color.parseColor("#339900"));
+//			}else if(actualTotal > 0){
+//				numericView.setPrefix("已经支出:" + currencySymbol);
+//			} else {
+//				numericView.setPrefix("已经收支:" + currencySymbol);
+//			}
+//			numericView.setSuffix(null);
+//			numericView.setNumber(actualTotal);
 			return true;
 		} else if(view.getId() == R.id.memberListItem_apportionTotal) {
-			HyjNumericView numericView = (HyjNumericView)view;
-			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
-				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-					numericView.setSuffix(null);
-					numericView.setPrefix("-");
-					numericView.setText(null);
-					return true;
-				}
-			}
-			Double apportionTotal = psa.getApportionTotal();
-			String currencySymbol = psa.getProject().getCurrencySymbol();
-			if(apportionTotal < 0){
-				apportionTotal = -apportionTotal;
-				numericView.setPrefix("分摊收入:" + currencySymbol);
-//				numericView.setTextColor(Color.parseColor("#339900"));
-			} else if(apportionTotal > 0){
-				numericView.setPrefix("分摊支出:" + currencySymbol);
-			} else {
-				numericView.setPrefix("分摊收支:" + currencySymbol);
-			}
-			numericView.setSuffix(null);
-			numericView.setNumber(apportionTotal);
+//			HyjNumericView numericView = (HyjNumericView)view;
+//
+//			numericView.setText("");
+//			if(!HyjApplication.getInstance().getCurrentUser().getId().equals(psa.getFriendUserId())){
+//				ProjectShareAuthorization psa1 = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", psa.getProjectId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+//				if(psa1 != null && psa1.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+//					numericView.setSuffix(null);
+//					numericView.setPrefix("-");
+//					numericView.setText(null);
+//					return true;
+//				}
+//			}
+//			Double apportionTotal = psa.getApportionTotal();
+//			String currencySymbol = psa.getProject().getCurrencySymbol();
+//			if(apportionTotal < 0){
+//				apportionTotal = -apportionTotal;
+//				numericView.setPrefix("分摊收入:" + currencySymbol);
+////				numericView.setTextColor(Color.parseColor("#339900"));
+//			} else if(apportionTotal > 0){
+//				numericView.setPrefix("分摊支出:" + currencySymbol);
+//			} else {
+//				numericView.setPrefix("分摊收支:" + currencySymbol);
+//			}
+//			numericView.setSuffix(null);
+//			numericView.setNumber(apportionTotal);
 			return true;
 		}
 		else if(view.getId() == R.id.memberListItem_settlement) {
@@ -604,8 +607,8 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 
 //			numericView.setPrefix(currencySymbol);
 			if (settlement < 0){
-				settlement = -settlement;
-				numericView.setPrefix("还要支付:" + currencySymbol);
+//				settlement = -settlement;
+				numericView.setPrefix("结余:" + currencySymbol);
 				if(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor() != null){
 					numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 				}
@@ -613,7 +616,7 @@ public class ProjectMemberListFragment extends HyjUserListFragment{
 				numericView.setPrefix("结余:" + currencySymbol);
 				numericView.setTextColor(Color.parseColor("#000000"));
 			} else if (HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor() != null){
-				numericView.setPrefix("应该收回:" + currencySymbol);
+				numericView.setPrefix("结余:" + currencySymbol);
 				numericView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 			}
 			numericView.setSuffix(null);

@@ -60,7 +60,7 @@ public class ProjectMemberListLoader extends AsyncTaskLoader<List<HyjModel>> {
 	    public List<HyjModel> loadInBackground() {
 
 	    	List<HyjModel> list;
-    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("projectId=? AND state <> 'Delete'", mProjectId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
+    		list = new Select("main.*").from(ProjectShareAuthorization.class).as("main").where("toBeDetermined=0 AND projectId=? AND state <> 'Delete'", mProjectId).orderBy("friendUserId").limit(this.mLoadLimit).execute();
 	    	Collections.sort(list, mProjectShareAuthorizationComparator);
 	    	return list;
 		}
