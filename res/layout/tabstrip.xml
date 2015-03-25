@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="账本"
+                android:text="圈子"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>

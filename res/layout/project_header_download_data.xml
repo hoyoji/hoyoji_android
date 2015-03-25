@@ -15,5 +15,5 @@
         android:background="@drawable/line_divider"
         android:textSize="14sp"
         android:textColor="@color/hoyoji_red"
-        android:text="该账本尚有流水未从服务器上下载"/>
+        android:text="该圈子尚有流水未从服务器上下载"/>
 </FrameLayout>

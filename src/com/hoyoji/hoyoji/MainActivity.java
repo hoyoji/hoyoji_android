@@ -47,6 +47,7 @@ import com.hoyoji.hoyoji.home.HomeCalendarGridEventListFragment;
 import com.hoyoji.hoyoji.home.HomeCalendarGridListFragment;
 import com.hoyoji.hoyoji.home.InviteLinkListFragment;
 import com.hoyoji.hoyoji.message.MessageDownloadService;
+import com.hoyoji.hoyoji.message.MessageListFragment;
 import com.hoyoji.hoyoji.models.ClientSyncRecord;
 import com.hoyoji.hoyoji.models.MoneyApportion;
 import com.hoyoji.hoyoji.models.MoneyBorrow;
@@ -70,6 +71,7 @@ import com.hoyoji.hoyoji.models.MoneyReturnContainer;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.money.MoneySearchListFragment;
 import com.hoyoji.hoyoji.money.currency.CurrencyExchangeViewPagerFragment;
+import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 import com.hoyoji.hoyoji.money.moneycategory.ExpenseIncomeCategoryViewPagerFragment;
 import com.hoyoji.hoyoji.money.report.MoneyReportFragment;
 import com.hoyoji.hoyoji.project.ProjectListFragment;
@@ -216,7 +218,7 @@ public class MainActivity extends HyjUserActivity {
 			}
 		});
 		
-		mViewPager.setCurrentItem(1, false);
+//		mViewPager.setCurrentItem(0, false);
 
 	}
 
@@ -385,6 +387,10 @@ public class MainActivity extends HyjUserActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		 case R.id.homeListFragment_action_message :
+			 openActivityWithFragment(MessageListFragment.class,
+			 R.string.messageListFragment_title, null);
+			return true;
 		 case R.id.homeListFragment_action_transactions :
 				 openActivityWithFragment(MoneySearchListFragment.class,
 				 R.string.moneySearchListFragment_title, null);
@@ -392,7 +398,11 @@ public class MainActivity extends HyjUserActivity {
 		 case R.id.homeListFragment_action_report :
 				 openActivityWithFragment(MoneyReportFragment.class,
 				 R.string.moneyReportFragment_title, null);
-					return true;
+				return true;
+		case R.id.homeListFragment_action_account :
+			 openActivityWithFragment(MoneyAccountListFragment.class,
+					 R.string.moneyAccountListFragment_title_manage_moneyAccount, null);
+				return true;
 		case R.id.homeListFragment_action_currency:
 			openActivityWithFragment(CurrencyExchangeViewPagerFragment.class,
 					R.string.currency_exchang_eviewpager_listFragment_title, null);
@@ -441,10 +451,10 @@ public class MainActivity extends HyjUserActivity {
 				fragment = new ProjectListFragment();
 				break;
 			case 1:
-				fragment = new HomeCalendarGridListFragment();
+				fragment = new HomeCalendarGridEventListFragment();
 				break;
 			case 2:
-				fragment = new HomeCalendarGridEventListFragment();
+				fragment = new HomeCalendarGridListFragment();
 				break;
 //			case 4:
 //				fragment = new MessageListFragment();
@@ -470,10 +480,10 @@ public class MainActivity extends HyjUserActivity {
 				return getString(R.string.mainActivity_section_title_project)
 						.toUpperCase(l);
 			case 1:
-				return getString(R.string.mainActivity_section_title_home)
+				return getString(R.string.mainActivity_section_title_event)
 						.toUpperCase(l);
 			case 2:
-				return getString(R.string.mainActivity_section_title_event)
+				return getString(R.string.mainActivity_section_title_home)
 						.toUpperCase(l);
 //			case 4:
 //				return getString(R.string.mainActivity_section_title_message)

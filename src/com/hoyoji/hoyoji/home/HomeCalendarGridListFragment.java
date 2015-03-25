@@ -104,7 +104,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private List<HyjModel> mListChildData = new ArrayList<HyjModel>();
 	private ContentObserver mChangeObserver = null;
-	private ContentObserver mMessageChangeObserver;
+//	private ContentObserver mMessageChangeObserver;
 	private Button mExpenseButton;
 	private Button mIncomeButton;
 	private TextView mIncomeStat;
@@ -117,7 +117,7 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 //	private TextView mGroupHeaderDate;
 	
 	private HyjCalendarGrid mCalendarGridView;
-	private TextView mTextViewLatestNewMessage;
+//	private TextView mTextViewLatestNewMessage;
 	private FrameLayout mLayoutActionMessage;
 	
 	DateFormat df = SimpleDateFormat.getDateInstance();
@@ -304,22 +304,22 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 			}
 		});
 
-		view.findViewById(R.id.homeListFragment_action_message).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
-    		}
-		});
-		mTextViewLatestNewMessage = (TextView)view.findViewById(R.id.homeListFragment_new_message);
-		mLayoutActionMessage = (FrameLayout)view.findViewById(R.id.homeListFragment_action_message_layout);
-		mTextViewLatestNewMessage.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if(mLatestNewMessage != null){
-					onLatestModifiedModelClick();
-				}
-			}
-		});
+//		view.findViewById(R.id.homeListFragment_action_message).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
+//    		}
+//		});
+//		mTextViewLatestNewMessage = (TextView)view.findViewById(R.id.homeListFragment_new_message);
+//		mLayoutActionMessage = (FrameLayout)view.findViewById(R.id.homeListFragment_action_message_layout);
+//		mTextViewLatestNewMessage.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				if(mLatestNewMessage != null){
+//					onLatestModifiedModelClick();
+//				}
+//			}
+//		});
 		
 		return view;
 	}
@@ -390,24 +390,24 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 		mExpenseStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
 		mIncomeStat.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 				
-		getView().findViewById(R.id.homeListFragment_action_messages).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
-    		}
-		});
-//		getView().findViewById(R.id.homeListFragment_action_money_transaction).setOnClickListener(new OnClickListener(){
+//		getView().findViewById(R.id.homeListFragment_action_messages).setOnClickListener(new OnClickListener(){
 //			@Override
 //			public void onClick(View v) {
-//				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, null);
+//				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
 //    		}
 //		});
-		getView().findViewById(R.id.homeListFragment_action_friend).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
-    		}
-		});
+////		getView().findViewById(R.id.homeListFragment_action_money_transaction).setOnClickListener(new OnClickListener(){
+////			@Override
+////			public void onClick(View v) {
+////				openActivityWithFragment(MoneySearchListFragment.class, R.string.moneySearchListFragment_title, null);
+////    		}
+////		});
+//		getView().findViewById(R.id.homeListFragment_action_friend).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//				openActivityWithFragment(FriendListFragment.class, R.string.friendListFragment_title, null);
+//    		}
+//		});
 		getView().findViewById(R.id.homelistfragment_money_addnew).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -437,16 +437,16 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(User.class, null), true,
 					mChangeObserver);
 		}
-		if (mMessageChangeObserver == null) {
-			mMessageChangeObserver = new MessageChangeObserver();
-			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
-					mMessageChangeObserver);
-		}
+//		if (mMessageChangeObserver == null) {
+//			mMessageChangeObserver = new MessageChangeObserver();
+//			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
+//					mMessageChangeObserver);
+//		}
 		
 		
 		// 加载日历
 		initLoader(-1);
-		updateLatestModifiedModel();
+//		updateLatestModifiedModel();
 	}
 	
 
@@ -1782,48 +1782,48 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 		}
 		return ;
     } 
-
-    public void onLatestModifiedModelClick() { 
-		if(mLatestNewMessage == null) {
-			 return;
-		}
-			Bundle bundle = new Bundle();
-			bundle.putLong("MODEL_ID", mLatestNewMessage.get_mId());
-			Message msg = mLatestNewMessage;
-			if(msg.getType().equals("System.Friend.AddRequest") ){
-				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
-			} else if(msg.getType().equals("System.Friend.AddResponse") ){
-				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
-			} else if(msg.getType().equals("System.Friend.Delete") ){
-				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
-			} else if(msg.getType().equals("Project.Share.AddRequest") ){
-				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
-			} else if(msg.getType().equals("Project.Share.Accept") ){
-				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
-			} else if(msg.getType().equals("Project.Share.Delete") ){
-				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
-			} else if(msg.getType().equals("Project.Share.Edit") ){
-				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_edit, bundle);
-			} else if(msg.getType().startsWith("Money.Share.Add") ){
-				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
-			} else if(msg.getType().equals("Event.Member.AddRequest") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
-			} else if(msg.getType().equals("Event.Member.Accept") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
-			} else if(msg.getType().equals("Event.Member.SignIn") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
-			} else if(msg.getType().equals("Event.Member.SignUp") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
-			} else if(msg.getType().equals("Event.Member.Cancel") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
-			} else if(msg.getType().equals("Event.Member.CancelSignUp") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_cancelSignUp, bundle);
-			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
-				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
-			} else if(msg.getType().equals("System.Message.Welcome") ){
-				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_system_welcome, bundle);
-			}
-    }  
+//
+//    public void onLatestModifiedModelClick() { 
+//		if(mLatestNewMessage == null) {
+//			 return;
+//		}
+//			Bundle bundle = new Bundle();
+//			bundle.putLong("MODEL_ID", mLatestNewMessage.get_mId());
+//			Message msg = mLatestNewMessage;
+//			if(msg.getType().equals("System.Friend.AddRequest") ){
+//				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+//			} else if(msg.getType().equals("System.Friend.AddResponse") ){
+//				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+//			} else if(msg.getType().equals("System.Friend.Delete") ){
+//				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+//			} else if(msg.getType().equals("Project.Share.AddRequest") ){
+//				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
+//			} else if(msg.getType().equals("Project.Share.Accept") ){
+//				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
+//			} else if(msg.getType().equals("Project.Share.Delete") ){
+//				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
+//			} else if(msg.getType().equals("Project.Share.Edit") ){
+//				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_edit, bundle);
+//			} else if(msg.getType().startsWith("Money.Share.Add") ){
+//				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
+//			} else if(msg.getType().equals("Event.Member.AddRequest") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
+//			} else if(msg.getType().equals("Event.Member.Accept") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+//			} else if(msg.getType().equals("Event.Member.SignIn") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
+//			} else if(msg.getType().equals("Event.Member.SignUp") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
+//			} else if(msg.getType().equals("Event.Member.Cancel") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+//			} else if(msg.getType().equals("Event.Member.CancelSignUp") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_cancelSignUp, bundle);
+//			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
+//				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+//			} else if(msg.getType().equals("System.Message.Welcome") ){
+//				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_system_welcome, bundle);
+//			}
+//    }  
 	
 	private class ChangeObserver extends ContentObserver {
 		public ChangeObserver() {
@@ -1857,125 +1857,125 @@ public class HomeCalendarGridListFragment extends HyjUserListFragment {
 			}, 50);
 		}
 	}
-	private class MessageChangeObserver extends ContentObserver {
-		public MessageChangeObserver() {
-			super(new Handler());
-		}
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return true;
-		}
-
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-
-			Handler handler = new Handler(Looper.getMainLooper());
-			handler.postDelayed(new Runnable() {
-				public void run() {
-					updateLatestModifiedModel();
-				}
-			}, 50);
-		}
-	}
+//	private class MessageChangeObserver extends ContentObserver {
+//		public MessageChangeObserver() {
+//			super(new Handler());
+//		}
+//
+//		@Override
+//		public boolean deliverSelfNotifications() {
+//			return true;
+//		}
+//
+//
+//		@Override
+//		public void onChange(boolean selfChange) {
+//			super.onChange(selfChange);
+//
+//			Handler handler = new Handler(Looper.getMainLooper());
+//			handler.postDelayed(new Runnable() {
+//				public void run() {
+//					updateLatestModifiedModel();
+//				}
+//			}, 50);
+//		}
+//	}
 	@Override
 	public void onDestroy() {
 		if (mChangeObserver != null) {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
 		}
-		if (mMessageChangeObserver != null) {
-			this.getActivity().getContentResolver()
-					.unregisterContentObserver(mMessageChangeObserver);
-		}
+//		if (mMessageChangeObserver != null) {
+//			this.getActivity().getContentResolver()
+//					.unregisterContentObserver(mMessageChangeObserver);
+//		}
 	
 		super.onDestroy();
 	}
-	
-	Message mLatestNewMessage;
-	HyjAsyncTask mLatestNewMessageLoader = null;
-	HyjAsyncTaskCallbacks mLatestNewMessageLoaderCallback = new HyjAsyncTaskCallbacks(){
-
-		@Override
-		public void finishCallback(Object object) {
-			HashMap<String, Object> map = (HashMap<String, Object>)object;
-			if(map.get("message") != null){
-				mTextViewLatestNewMessage.setVisibility(View.VISIBLE);
-				mLatestNewMessage = (Message)map.get("message");
-				try {
-					JSONObject messageData = null;
-					messageData = new JSONObject(mLatestNewMessage.getMessageData());
-					double amount = 0;
-					try{
-						amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
-					} catch(Exception e) {
-						amount = messageData.optDouble("amount");
-					}
-					java.util.Currency localeCurrency = java.util.Currency
-							.getInstance(messageData.optString("currencyCode"));
-					String currencySymbol = "";
-					currencySymbol = localeCurrency.getSymbol();
-					if(currencySymbol.length() == 0){
-						currencySymbol = messageData.optString("currencyCode");
-					}
-							
-					mTextViewLatestNewMessage.setText(String.format(mLatestNewMessage.getMessageDetail(), mLatestNewMessage.getFromUserDisplayName(), currencySymbol, amount));
-				} catch (Exception e){
-					mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
-				}
-			} else {
-				mTextViewLatestNewMessage.setVisibility(View.GONE);
-			}
-			mLatestNewMessageLoader = null;
-			
-			BadgeView badgeView = (BadgeView)(mLayoutActionMessage.getTag());
-			if(badgeView == null){
-				badgeView = new BadgeView(getActivity());
-				badgeView.setHideOnNull(true);
-				badgeView.setBadgeCount(0);
-//				badgeView.setMaxLines(1);
-				badgeView.setSingleLine();
-				badgeView.setEllipsize(TruncateAt.END);
-//				tab.removeView(badgeView);
-				mLayoutActionMessage.addView(badgeView);
-				mLayoutActionMessage.setTag(badgeView);
-			}
-
-			badgeView.setBadgeCount((Integer) map.get("count"));
-		}
-
-		@Override
-		public Object doInBackground(String... string) {
-			HyjModel message;
-			message = new Select().from(Message.class).where("messageState = 'new' OR messageState = 'unread'").orderBy("date DESC").limit(1).executeSingle();
-			
-			int count = 0;
-			Cursor cursor = Cache.openDatabase().rawQuery(
-					"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
-					null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				count = cursor.getInt(0);
-				cursor.close();
-				cursor = null;
-			}
-
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("count", count);
-			map.put("message", message);
-	    	return map;
-		}
-	};
-	
-	public void updateLatestModifiedModel(){
-		if(mLatestNewMessageLoader == null){
-			mLatestNewMessageLoader = HyjAsyncTask.newInstance(mLatestNewMessageLoaderCallback);
-		}
-	}
-	
-	
+//	
+//	Message mLatestNewMessage;
+//	HyjAsyncTask mLatestNewMessageLoader = null;
+//	HyjAsyncTaskCallbacks mLatestNewMessageLoaderCallback = new HyjAsyncTaskCallbacks(){
+//
+//		@Override
+//		public void finishCallback(Object object) {
+//			HashMap<String, Object> map = (HashMap<String, Object>)object;
+//			if(map.get("message") != null){
+//				mTextViewLatestNewMessage.setVisibility(View.VISIBLE);
+//				mLatestNewMessage = (Message)map.get("message");
+//				try {
+//					JSONObject messageData = null;
+//					messageData = new JSONObject(mLatestNewMessage.getMessageData());
+//					double amount = 0;
+//					try{
+//						amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+//					} catch(Exception e) {
+//						amount = messageData.optDouble("amount");
+//					}
+//					java.util.Currency localeCurrency = java.util.Currency
+//							.getInstance(messageData.optString("currencyCode"));
+//					String currencySymbol = "";
+//					currencySymbol = localeCurrency.getSymbol();
+//					if(currencySymbol.length() == 0){
+//						currencySymbol = messageData.optString("currencyCode");
+//					}
+//							
+//					mTextViewLatestNewMessage.setText(String.format(mLatestNewMessage.getMessageDetail(), mLatestNewMessage.getFromUserDisplayName(), currencySymbol, amount));
+//				} catch (Exception e){
+//					mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
+//				}
+//			} else {
+//				mTextViewLatestNewMessage.setVisibility(View.GONE);
+//			}
+//			mLatestNewMessageLoader = null;
+//			
+//			BadgeView badgeView = (BadgeView)(mLayoutActionMessage.getTag());
+//			if(badgeView == null){
+//				badgeView = new BadgeView(getActivity());
+//				badgeView.setHideOnNull(true);
+//				badgeView.setBadgeCount(0);
+////				badgeView.setMaxLines(1);
+//				badgeView.setSingleLine();
+//				badgeView.setEllipsize(TruncateAt.END);
+////				tab.removeView(badgeView);
+//				mLayoutActionMessage.addView(badgeView);
+//				mLayoutActionMessage.setTag(badgeView);
+//			}
+//
+//			badgeView.setBadgeCount((Integer) map.get("count"));
+//		}
+//
+//		@Override
+//		public Object doInBackground(String... string) {
+//			HyjModel message;
+//			message = new Select().from(Message.class).where("messageState = 'new' OR messageState = 'unread'").orderBy("date DESC").limit(1).executeSingle();
+//			
+//			int count = 0;
+//			Cursor cursor = Cache.openDatabase().rawQuery(
+//					"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
+//					null);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				count = cursor.getInt(0);
+//				cursor.close();
+//				cursor = null;
+//			}
+//
+//			HashMap<String, Object> map = new HashMap<String, Object>();
+//			map.put("count", count);
+//			map.put("message", message);
+//	    	return map;
+//		}
+//	};
+//	
+//	public void updateLatestModifiedModel(){
+//		if(mLatestNewMessageLoader == null){
+//			mLatestNewMessageLoader = HyjAsyncTask.newInstance(mLatestNewMessageLoaderCallback);
+//		}
+//	}
+//	
+//	
 	
 	private static class HomeListAdapter extends SimpleAdapter{
 		private Context mContext;

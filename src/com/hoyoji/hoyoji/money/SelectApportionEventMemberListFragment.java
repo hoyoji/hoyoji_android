@@ -152,9 +152,9 @@ public class SelectApportionEventMemberListFragment extends HyjUserFragment {
 			case 0 :
 				return "活动成员";
 			case 1 :
-				return "账本成员";
+				return "圈子成员";
 			case 2:
-				return "非账本成员";
+				return "非圈子成员";
 			}
 			return null;
 		}

@@ -120,10 +120,10 @@ public class ExchangeListFragment extends HyjUserListFragment{
 //	    Long itemId = getListAdapter().getItemId(info.position);
 //		switch (item.getItemId()) {
 //			case ADD_SUB_PROJECT:
-//			    HyjUtil.displayToast("创建子账本" + itemId);
+//			    HyjUtil.displayToast("创建子圈子" + itemId);
 //				break;
 //			case VIEW_PROJECT_MEMBERS:
-//			    HyjUtil.displayToast("账本成员" + itemId);
+//			    HyjUtil.displayToast("圈子成员" + itemId);
 //				break;
 //		}
 		return true;
@@ -132,8 +132,8 @@ public class ExchangeListFragment extends HyjUserListFragment{
 //	@Override
 //	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 //		//super.onCreateContextMenu(menu, v, menuInfo);
-////		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "账本成员");
-////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子账本");
+////		menu.add(0, VIEW_PROJECT_MEMBERS, 0, "圈子成员");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子圈子");
 ////		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
 //	}
 	

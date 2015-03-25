@@ -133,6 +133,21 @@ public class EventListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 		
+		getView().findViewById(R.id.event_listfragment_addnew).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Intent intent = getActivity().getIntent();
+				Long modelId = intent.getLongExtra("MODEL_ID", -1);
+				Project project = Project.load(Project.class, modelId);
+				if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
+					HyjUtil.displayToast("您不能在共享来的圈子添加活动");
+				}
+				Bundle bundle = new Bundle();
+				bundle.putLong("PROJECT_ID", modelId);
+				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+			}
+		});
+		
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(
@@ -302,6 +317,7 @@ public class EventListFragment extends HyjUserListFragment {
 		Project project = Project.load(Project.class, modelId);
 		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId()) && getOptionsMenu().findItem(R.id.projectEventListFragment_action_add) != null){
 			getOptionsMenu().findItem(R.id.projectEventListFragment_action_add).setVisible(false);
+			getView().findViewById(R.id.event_listfragment_addnew).setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -311,7 +327,7 @@ public class EventListFragment extends HyjUserListFragment {
 		Long modelId = intent.getLongExtra("MODEL_ID", -1);
 		Project project = Project.load(Project.class, modelId);
 		if(!project.getOwnerUserId().equals(HyjApplication.getInstance().getCurrentUser().getId())){
-			HyjUtil.displayToast("您不能在共享来的账本添加活动");
+			HyjUtil.displayToast("您不能在共享来的圈子添加活动");
 			return true;
 		}
 		if(item.getItemId() == R.id.projectEventListFragment_action_add){

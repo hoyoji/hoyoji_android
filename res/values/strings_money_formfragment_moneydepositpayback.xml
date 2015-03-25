@@ -19,8 +19,8 @@
    <string name="moneyDepositPaybackFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyDepositPaybackFormFragment_editText_hint_moneyAccount">请选择账户</string>
    
-   <string name="moneyDepositPaybackFormFragment_textView_project">账本</string>
-   <string name="moneyDepositPaybackFormFragment_editText_hint_project">请选择账本</string>
+   <string name="moneyDepositPaybackFormFragment_textView_project">圈子</string>
+   <string name="moneyDepositPaybackFormFragment_editText_hint_project">请选择圈子</string>
    
    <string name="moneyDepositPaybackFormFragment_textView_exchangeRate">汇率</string>
    <string name="moneyDepositPaybackFormFragment_editText_hint_exchangeRate">请输入汇率</string>
@@ -34,12 +34,12 @@
    <string name="moneyDepositPaybackFormFragment_textView_friend">付款方</string>
    <string name="moneyDepositPaybackFormFragment_editText_hint_friend">请选择付款方</string>
    <string name="moneyDepositPaybackFormFragment_editText_error_friend">自己不能作为付款方，请重新选择</string>
-   <string name="moneyDepositPaybackFormFragment_editText_error_not_member">该好友不是账本成员，请重新选择</string>
+   <string name="moneyDepositPaybackFormFragment_editText_error_not_member">该好友不是圈子成员，请重新选择</string>
    
    <string name="moneyDepositPaybackFormFragment_textView_remark">备注</string>
    <string name="moneyDepositPaybackFormFragment_editText_hint_remark">无备注</string>
     
       <string name="moneyDepositPaybackFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
-   <string name="moneyDepositPaybackFormFragment_toast_select_currency">请先选择账户和账本</string> 
+   <string name="moneyDepositPaybackFormFragment_toast_select_currency">请先选择账户和圈子</string> 
     
 </resources>

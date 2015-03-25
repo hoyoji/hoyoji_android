@@ -53,7 +53,7 @@ public class EventFormCreateProjectDialogFragment extends DialogFragment {
     	
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setView(v);
-		builder.setTitle("选择活动账本");
+		builder.setTitle("选择活动圈子");
 			builder.setNegativeButton("取消",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,

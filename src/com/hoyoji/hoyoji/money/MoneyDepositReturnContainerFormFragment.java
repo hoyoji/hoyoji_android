@@ -348,7 +348,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 			@Override
 			public void onClick(View v) {
 				if(mSelectorFieldProject.getModelId() == null){
-					HyjUtil.displayToast("请先选择一个账本。");
+					HyjUtil.displayToast("请先选择一个圈子。");
 				} else {
 					Bundle bundle = new Bundle();
 					Project project = HyjModel.getModel(Project.class, mSelectorFieldProject.getModelId());
@@ -705,13 +705,13 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 										HyjModelEditor<MoneyAccount> moneyAccountEditor = moneyAccount.newModelEditor();
 										moneyAccountEditor.getModelCopy().setCurrentBalance(moneyAccount.getCurrentBalance() + moneyDepositReturnContainer.getAmount0());
 
-										//更新账本余额
+										//更新圈子余额
 										Project oldProject = moneyDepositReturnContainer.getProject();
 										HyjModelEditor<Project> oldProjectEditor = oldProject.newModelEditor();
 										oldProjectEditor.getModelCopy().setDepositTotal(oldProject.getDepositTotal() + moneyDepositReturnContainer.getAmount0()*moneyDepositReturnContainer.getExchangeRate());
 										oldProjectEditor.save();
 										
-										// 更新旧账本收入所有者的实际借入
+										// 更新旧圈子收入所有者的实际借入
 										ProjectShareAuthorization oldProjectShareAuthorization = ProjectShareAuthorization.getSelfProjectShareAuthorization(oldProject.getId());
 										HyjModelEditor<ProjectShareAuthorization> oldProjectShareAuthorizationEditor = oldProjectShareAuthorization.newModelEditor();
 										oldProjectShareAuthorizationEditor.getModelCopy().setActualTotalReturn(oldProjectShareAuthorizationEditor.getModelCopy().getActualTotalReturn() - (moneyDepositReturnContainer.getAmount0() * moneyDepositReturnContainer.getExchangeRate()));
@@ -916,7 +916,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 				MoneyDepositReturnContainer oldMoneyDepositReturnContainerModel = mMoneyDepositReturnContainerEditor.getModel();
 				MoneyDepositReturnContainer newMoneyDepositReturnContainerModel = mMoneyDepositReturnContainerEditor.getModelCopy();
 				
-				//设置默认账本和账户
+				//设置默认圈子和账户
 				UserData userData = HyjApplication.getInstance().getCurrentUser().getUserData();
 				if(newMoneyDepositReturnContainerModel.get_mId() == null && !userData.getActiveMoneyAccountId().equals(newMoneyDepositReturnContainerModel.getMoneyAccountId()) || !userData.getActiveProjectId().equals(newMoneyDepositReturnContainerModel.getProjectId())){
 					HyjModelEditor<UserData> userDataEditor = userData.newModelEditor();
@@ -994,7 +994,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 					Project newProject = newMoneyDepositReturnContainerModel.getProject();
 					HyjModelEditor<Project> newProjectEditor = newProject.newModelEditor();
 					
-					//更新账本余额
+					//更新圈子余额
 					if(newMoneyDepositReturnContainerModel.get_mId() == null || oldProject.getId().equals(newProject.getId())){
 						newProjectEditor.getModelCopy().setDepositTotal(newProject.getDepositTotal() + oldMoneyDepositReturnContainerModel.getAmount0()*oldMoneyDepositReturnContainerModel.getExchangeRate() - newMoneyDepositReturnContainerModel.getAmount0()*newMoneyDepositReturnContainerModel.getExchangeRate());
 					} else {
@@ -1677,7 +1677,7 @@ public class MoneyDepositReturnContainerFormFragment extends HyjUserFormFragment
 //			else {
 //				Friend friend = Friend.load(Friend.class, _id);
 //				if(friend.getFriendUserId() != null){
-//					//看一下该好友是不是账本成员, 如果是，作为账本成员添加
+//					//看一下该好友是不是圈子成员, 如果是，作为圈子成员添加
 //					ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("friendUserId=? AND projectId=? AND state <> 'Delete'", friend.getFriendUserId(), mSelectorFieldProject.getModelId()).executeSingle();
 //					if(psa != null){
 //						apportion.setFriendUserId(psa.getFriendUserId());

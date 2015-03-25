@@ -112,7 +112,7 @@ public class ExchangeFormFragment extends HyjUserFormFragment {
 		
 		setupRefreshRateButton();
 		
-		// 只在无网络下新增账本和账户时手动新增汇率时才自动打开软键盘， 修改时不自动打开
+		// 只在无网络下新增圈子和账户时手动新增汇率时才自动打开软键盘， 修改时不自动打开
 		if (modelId == -1 && mSelectorFieldForeignCurrency.getModelId() != null) {
 			this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}

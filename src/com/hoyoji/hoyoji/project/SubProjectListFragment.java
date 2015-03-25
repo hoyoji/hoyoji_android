@@ -2,32 +2,21 @@ package com.hoyoji.hoyoji.project;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -36,7 +25,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
 import com.hoyoji.android.hyjframework.HyjModel;
@@ -48,7 +36,6 @@ import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.models.Friend;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
-import com.hoyoji.hoyoji.money.MoneyTemplateListFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
 import com.hoyoji.hoyoji.money.moneyaccount.MoneyAccountListFragment;
 
@@ -78,7 +65,7 @@ public class SubProjectListFragment extends HyjUserListFragment {
 	public String getTitle(){
 		String title = getArguments().getString("title");
 		if(title == null){
-			return "顶级账本";
+			return "顶级圈子";
 		}
 		return title;
 	}
@@ -275,10 +262,10 @@ public class SubProjectListFragment extends HyjUserListFragment {
 //		if(mi.id == -1){
 //			return;
 //		}
-//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "账本资料");
-//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "账本成员");
+//		menu.add(0, EDIT_PROJECT_DETAILS, 0, "圈子资料");
+//		menu.add(0, VIEW_PROJECT_MEMBERS, 1, "圈子成员");
 //		menu.add(CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, CANCEL_LIST_ITEM, R.string.app_action_cancel_list_item);
-////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子账本");
+////		menu.add(0, ADD_SUB_PROJECT, 1, "创建子圈子");
 //	}
 	
 	private void setSharedProjectHeaderView(ViewGroup view) {

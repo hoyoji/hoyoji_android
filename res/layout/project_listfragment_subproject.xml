@@ -43,6 +43,7 @@
             android:background="?attr/actionBarItemBackground"
             android:padding="0dp"
             android:text="@string/homeListFragment_action_money_account"
+            android:visibility="gone"
             android:textSize="16sp" />
        
         <View
@@ -58,6 +59,7 @@
     			android:background="?attr/actionBarItemBackground"
                 android:padding="0dp"
                 android:text="充值卡"
+            android:visibility="gone"
                 android:textSize="16sp" />
     </LinearLayout>
               

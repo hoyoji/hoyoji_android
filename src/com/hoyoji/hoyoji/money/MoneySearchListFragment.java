@@ -1,6 +1,7 @@
 package com.hoyoji.hoyoji.money;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -135,7 +136,13 @@ public class MoneySearchListFragment extends HyjUserExpandableListFragment {
 		if(subTitle != null){
 			((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
 		}
-		
+		getView().findViewById(R.id.moneysearch_listfragment_addnew).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle queryParams = buildQueryParams();
+				MoneyAddNewDialogFragment.newInstance(queryParams).show(getActivity().getSupportFragmentManager(), "MoneyAddNewDialogFragment");
+    		}
+		});
 //		((HyjSimpleExpandableListAdapter)getListView().getExpandableListAdapter()).setOnFetchMoreListener(this);
 		getListView().setGroupIndicator(null);
 	}

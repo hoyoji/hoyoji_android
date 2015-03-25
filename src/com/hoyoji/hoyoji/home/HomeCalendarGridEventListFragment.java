@@ -3,8 +3,12 @@ package com.hoyoji.hoyoji.home;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -18,11 +22,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -30,6 +36,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.activeandroid.Cache;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Select;
 import com.hoyoji.android.hyjframework.HyjApplication;
@@ -47,29 +55,40 @@ import com.hoyoji.aaevent_android.R;
 import com.hoyoji.hoyoji.event.EventFormFragment;
 import com.hoyoji.hoyoji.event.EventListFragment;
 import com.hoyoji.hoyoji.event.EventViewPagerFragment;
+import com.hoyoji.hoyoji.friend.FriendListFragment;
+import com.hoyoji.hoyoji.message.EventMessageFormFragment;
+import com.hoyoji.hoyoji.message.FriendMessageFormFragment;
+import com.hoyoji.hoyoji.message.MessageListFragment;
+import com.hoyoji.hoyoji.message.MoneyShareMessageFormFragment;
+import com.hoyoji.hoyoji.message.ProjectMessageFormFragment;
 import com.hoyoji.hoyoji.models.Event;
 import com.hoyoji.hoyoji.models.EventMember;
 import com.hoyoji.hoyoji.models.Friend;
+import com.hoyoji.hoyoji.models.Message;
 import com.hoyoji.hoyoji.models.Project;
 import com.hoyoji.hoyoji.models.ProjectShareAuthorization;
 import com.hoyoji.hoyoji.models.UserData;
 import com.hoyoji.hoyoji.money.MoneyDepositExpenseContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyDepositIncomeContainerFormFragment;
 import com.hoyoji.hoyoji.money.MoneyTopupFormFragment;
+import com.jauker.widget.BadgeView;
 
 public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	private List<Map<String, Object>> mListGroupData = new ArrayList<Map<String, Object>>();
 	private ContentObserver mChangeObserver = null;
+	private ContentObserver mMessageChangeObserver;
 
-	private TextView mCurrentMonth;
-	private TextView mCurrentYear;
-	private TextView mSelectedDay;
+//	private TextView mCurrentMonth;
+//	private TextView mCurrentYear;
+//	private TextView mSelectedDay;
 	private RelativeLayout mNearestEventLayout;
 	private Event mNearestEvent;
 
 	private HyjCalendarGrid mCalendarGridView;
-	private Button mDepositExpenseButton;
-	private Button mDepositIncomeButton;
+//	private Button mDepositExpenseButton;
+//	private Button mDepositIncomeButton;
+	private TextView mTextViewLatestNewMessage;
+	private FrameLayout mLayoutActionMessage;
 	
 	@Override
 	public Integer useContentView() {
@@ -98,13 +117,13 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		mCalendarGridView = (HyjCalendarGrid) view.findViewById(R.id.home_calendar_grid);
 		mCalendarGridView.setAdapter(new HomeCalendarGridEventAdapter(getActivity(), getResources()));
 		mCalendarGridView.getAdapter().setData(mListGroupData);
-		mCurrentMonth = (TextView) view.findViewById(R.id.home_stat_month);
-		mCurrentYear = (TextView) view.findViewById(R.id.home_stat_year);
-		mSelectedDay = (TextView) view.findViewById(R.id.home_stat_day);
+//		mCurrentMonth = (TextView) view.findViewById(R.id.home_stat_month);
+//		mCurrentYear = (TextView) view.findViewById(R.id.home_stat_year);
+//		mSelectedDay = (TextView) view.findViewById(R.id.home_stat_day);
 
-		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
-		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//		mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+//		mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+//		mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 		
 		mCalendarGridView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -120,7 +139,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //				if(isBeforeToday(year, month, day)){
 //					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及以前的活动");
 //				} else {
-					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 //				}
 				
 				getLoaderManager().restartLoader(0, null, HomeCalendarGridEventListFragment.this);
@@ -128,47 +147,6 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			}
 		});
 		
-
-		view.findViewById(R.id.home_stat_center).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {  
-				    //下面的参数是用户设置完之后的时间  
-				    @Override  
-				    public void onDateSet(DatePicker view, int year, int monthOfYear,  
-				            int dayOfMonth) {  
-				    	if(monthOfYear + 1 != mCalendarGridView.getAdapter().getCurrentMonth() 
-				    			|| mCalendarGridView.getAdapter().getCurrentYear() != year
-				    			|| mCalendarGridView.getAdapter().getSelectedDay() != dayOfMonth){
-							
-							mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
-							mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
-							
-							
-							mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
-							mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-
-//							if(isBeforeToday(year, mCalendarGridView.getAdapter().getCurrentMonth(), mCalendarGridView.getAdapter().getSelectedDay())){
-//								mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及以前的活动");
-//							} else {
-								mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
-//							}
-							
-							mListGroupData.clear();
-							mCalendarGridView.getAdapter().notifyDataSetChanged();
-							getLoaderManager().restartLoader(-1, null, HomeCalendarGridEventListFragment.this);
-				    	}
-				    }  
-				};  
-				Calendar calendar = Calendar.getInstance();
-				DatePickerDialog dialog = new DatePickerDialog(getActivity(),  
-	                    mDateSetListener,  
-	                    calendar.get(Calendar.YEAR), 
-	                    calendar.get(Calendar.MONTH),
-	                    calendar.get(Calendar.DAY_OF_MONTH));
-				dialog.show();
-			}
-		});
 		view.findViewById(R.id.home_calendar_control_today).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -184,9 +162,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 					mCalendarGridView.getAdapter().setSelectedDay(dayOfMonth);
 					mCalendarGridView.getAdapter().setCalendar(year, monthOfYear+1);
 					
-					mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
-					mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//					mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+//					mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+//					mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 					
 					mListGroupData.clear();
 //					updateHeaderStat();
@@ -221,9 +199,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
 				mCalendarGridView.getAdapter().setJumpCalendar(-1, 0);
 
-				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
-				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+//				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+//				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 				
 				mListGroupData.clear();
 				mCalendarGridView.getAdapter().notifyDataSetChanged();
@@ -237,9 +215,9 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 //				mCalendarGridView.getAdapter().setSelectedMonth(mCalendarGridView.getAdapter().getCurrentMonth());
 				mCalendarGridView.getAdapter().setJumpCalendar(1, 0);
 				
-				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
-				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
-				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
+//				mCurrentMonth.setText(mCalendarGridView.getAdapter().getCurrentMonth() + "月");
+//				mCurrentYear.setText(mCalendarGridView.getAdapter().getCurrentYear()+"年");
+//				mSelectedDay.setText(mCalendarGridView.getAdapter().getSelectedDay()+"日及往后的活动");
 				
 				mListGroupData.clear();
 //				GStat();
@@ -257,7 +235,24 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				}
 			}
 		});
-		
+
+		mTextViewLatestNewMessage = (TextView)view.findViewById(R.id.homeListFragment_new_message);
+		mLayoutActionMessage = (FrameLayout)view.findViewById(R.id.homeListFragment_action_message_layout);
+		mTextViewLatestNewMessage.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(mLatestNewMessage != null){
+					onLatestModifiedModelClick();
+				}
+			}
+		});
+
+		view.findViewById(R.id.homeListFragment_action_message).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openActivityWithFragment(MessageListFragment.class, R.string.messageListFragment_title, null);
+    		}
+		});
 		return view;
 	}
 
@@ -302,74 +297,81 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 	public void onInitViewData() {
 		super.onInitViewData();
 
-		getView().findViewById(R.id.homelistfragment_event_addnew).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-
-				Bundle bundle = new Bundle();
-				Calendar calToday = Calendar.getInstance();
-				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-					
-					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-				}
-				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
-			}
-		});
-		
-		mDepositExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_expense);
-		mDepositIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_income);
-		mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-		mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-		mDepositExpenseButton.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-
-				Bundle bundle = new Bundle();
-				Calendar calToday = Calendar.getInstance();
-				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-					
-					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-				}
-				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
-			}
-		});
-		mDepositIncomeButton.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-
-				Bundle bundle = new Bundle();
-				Calendar calToday = Calendar.getInstance();
-				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
-						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
-						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
-					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
-					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
-					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
-					
-					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
-				}
-				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
-			}
-		});
-		
-		updateNearestEvent();
+//		getView().findViewById(R.id.homelistfragment_event_addnew).setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//
+//				Bundle bundle = new Bundle();
+//				Calendar calToday = Calendar.getInstance();
+//				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+//						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+//						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+//					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+//					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+//					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+//					
+//					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+//				}
+//				openActivityWithFragment(EventFormFragment.class, R.string.projectEventListFragment_action_addnew, bundle);
+//			}
+//		});
+//		
+//		mDepositExpenseButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_expense);
+//		mDepositIncomeButton = (Button)getView().findViewById(R.id.homeListFragment_event_action_money_deposit_income);
+//		mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//		mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//		mDepositExpenseButton.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//
+//				Bundle bundle = new Bundle();
+//				Calendar calToday = Calendar.getInstance();
+//				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+//						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+//						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+//					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+//					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+//					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+//					
+//					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+//				}
+//				openActivityWithFragment(MoneyDepositExpenseContainerFormFragment.class, R.string.moneyDepositExpenseFormFragment_title_addnew, bundle);
+//			}
+//		});
+//		mDepositIncomeButton.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+//
+//				Bundle bundle = new Bundle();
+//				Calendar calToday = Calendar.getInstance();
+//				if(calToday.get(Calendar.YEAR) != mCalendarGridView.getAdapter().getSelectedYear() 
+//						|| calToday.get(Calendar.MONTH) != mCalendarGridView.getAdapter().getSelectedMonth() - 1 
+//						|| calToday.get(Calendar.DAY_OF_MONTH) != mCalendarGridView.getAdapter().getSelectedDay() ){
+//					calToday.set(Calendar.YEAR, mCalendarGridView.getAdapter().getSelectedYear());
+//					calToday.set(Calendar.MONTH, mCalendarGridView.getAdapter().getSelectedMonth()-1);
+//					calToday.set(Calendar.DAY_OF_MONTH, mCalendarGridView.getAdapter().getSelectedDay());
+//					
+//					bundle.putLong("DATE_IN_MILLISEC", calToday.getTimeInMillis());
+//				}
+//				openActivityWithFragment(MoneyDepositIncomeContainerFormFragment.class, R.string.moneyDepositIncomeContainerFormFragment_title_addnew, bundle);
+//			}
+//		});
+//		
+//		updateNearestEvent();
 		if (mChangeObserver == null) {
 			mChangeObserver = new ChangeObserver();
 			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(UserData.class, null), true,
 					mChangeObserver);
 		}
+		if (mMessageChangeObserver == null) {
+			mMessageChangeObserver = new MessageChangeObserver();
+			this.getActivity().getContentResolver().registerContentObserver(ContentProvider.createUri(Message.class, null), true,
+					mMessageChangeObserver);
+		}
+		
 		// 加载日历
 		initLoader(-1);
+		updateLatestModifiedModel();
 	}
 	
 	
@@ -445,7 +447,7 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			mCalendarGridView.getAdapter().notifyDataSetChanged();
 			getLoaderManager().restartLoader(0, null, this);
 		} else {
-			updateNearestEvent();
+//			updateNearestEvent();
 	        super.onLoadFinished(loader, list);
 //			((CursorAdapter)getListAdapter()).notifyDataSetChanged();
 		}
@@ -481,128 +483,128 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 		}
     }
 	
-	HyjAsyncTask mNearestEventLoader = null;
-	HyjAsyncTaskCallbacks mNearestEventLoaderCallback = new HyjAsyncTaskCallbacks(){
-		@Override
-		public void finishCallback(Object object) {
-			if(object != null){
-				Event event = (Event)object;
-				mNearestEvent = event;
-				
-//				ImageView imageView= (ImageView)mNearestEventLayout.findViewById(R.id.homeListItem_picture);
-//				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
-//				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+//	HyjAsyncTask mNearestEventLoader = null;
+//	HyjAsyncTaskCallbacks mNearestEventLoaderCallback = new HyjAsyncTaskCallbacks(){
+//		@Override
+//		public void finishCallback(Object object) {
+//			if(object != null){
+//				Event event = (Event)object;
+//				mNearestEvent = event;
 //				
-//				HyjNumericView textView = (HyjNumericView)mNearestEventLayout.findViewById(R.id.homeListItem_amount);
-//				Project project = event.getProject();
-//				String projectId = event.getProjectId();
-//				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-//				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
-//					textView.setTextColor(Color.BLACK);
-//					((TextView) textView).setText("-");
-//				} else {
-//					Double depositBalance = event.getBalance();
-//					if(depositBalance == 0){
-//						textView.setTextColor(Color.BLACK);
-//						textView.setPrefix(project.getCurrencySymbol());
-//					} else if(depositBalance < 0){
-//						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-//						textView.setPrefix("支出"+project.getCurrencySymbol());
-//					}else{
-//						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
-//						textView.setPrefix("收入"+project.getCurrencySymbol());
-//					}
+////				ImageView imageView= (ImageView)mNearestEventLayout.findViewById(R.id.homeListItem_picture);
+////				imageView.setBackgroundColor(getResources().getColor(R.color.hoyoji_yellow));
+////				imageView.setImageBitmap(HyjUtil.getCommonBitmap(R.drawable.event));
+////				
+////				HyjNumericView textView = (HyjNumericView)mNearestEventLayout.findViewById(R.id.homeListItem_amount);
+////				Project project = event.getProject();
+////				String projectId = event.getProjectId();
+////				ProjectShareAuthorization psa = new Select().from(ProjectShareAuthorization.class).where("projectId=? AND friendUserId=?", projectId, HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+////				if(psa != null && psa.getProjectShareMoneyExpenseOwnerDataOnly() == true){
+////					textView.setTextColor(Color.BLACK);
+////					((TextView) textView).setText("-");
+////				} else {
+////					Double depositBalance = event.getBalance();
+////					if(depositBalance == 0){
+////						textView.setTextColor(Color.BLACK);
+////						textView.setPrefix(project.getCurrencySymbol());
+////					} else if(depositBalance < 0){
+////						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+////						textView.setPrefix("支出"+project.getCurrencySymbol());
+////					}else{
+////						textView.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+////						textView.setPrefix("收入"+project.getCurrencySymbol());
+////					}
+////					
+////					textView.setNumber(Math.abs(depositBalance));
+////				}
+//				View view = mNearestEventLayout.findViewById(R.id.homeListItem_title);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_title");
+//
+//				view = mNearestEventLayout.findViewById(R.id.homeListItem_remark);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_remark");
+//				
+//				view = mNearestEventLayout.findViewById(R.id.homeListItem_owner);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_owner");
+//
+//				view = mNearestEventLayout.findViewById(R.id.homeListItem_amount);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_amount");
+//
+//				view = mNearestEventLayout.findViewById(R.id.homeListItem_picture);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_picture");
+//				
+//				view = mNearestEventLayout.findViewById(R.id.homeListItem_subTitle);
+//				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
+//				
+//				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
+//				dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
+//				dateTimeView.setTime(event.getStartDate());
+//				
+////				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());
+////				
+////					
+////					long date = event.getDate();
+////					long startDate = event.getStartDate();
+////					long endDate = event.getEndDate(); 
+////					long dt = (new Date()).getTime();
+////					if(dt >= date && dt < startDate) {
+////						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getSignUpCount() + "人");
+////					} else if(dt >= startDate && dt < endDate) {
+////						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getSignUpCount() + "人");
+////					} else if(dt >= endDate) {
+////						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getSignUpCount() + "人");
+////					}
+////
+////					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));
+////
+////
+////					EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
+////					if(em != null){
+////						if("UnSignUp".equals(em.getState())){
+////							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
+////						} else if("SignUp".equals(em.getState())){
+////							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已报名]");
+////						} else if("SignIn".equals(em.getState())){
+////							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已签到]");
+////						} 
+////					} else {
+////						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
+////					}
 //					
-//					textView.setNumber(Math.abs(depositBalance));
+//					mNearestEventLayout.setVisibility(View.VISIBLE);
+//			}
+//			mNearestEventLoader = null;
+//		}
+//
+//		@Override
+//		public Object doInBackground(String... string) {
+//			long currentTime = (new Date()).getTime();
+//			Event event;
+//			// 我报了名，而且进行中的活动
+//			event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("startDate < ? AND endDate > ?", currentTime, currentTime).orderBy("startDate DESC").limit(1).executeSingle();
+//			if(event == null){
+//				// 我报了名，下一个开始的活动
+//				event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("startDate > ?", currentTime).orderBy("startDate").limit(1).executeSingle();
+//				if(event == null){
+//					// 我没报名，下一个开始的活动
+//					event = new Select().from(Event.class).where("startDate > ?", currentTime).orderBy("startDate").limit(1).executeSingle();
+//					if(event == null){
+//						// 我报了名，刚结束的活动
+//						event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("endDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
+//						if(event == null){
+//							// 我没报名，刚开始的活动
+//							event = new Select().from(Event.class).where("startDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
+//						}
+//					}
 //				}
-				View view = mNearestEventLayout.findViewById(R.id.homeListItem_title);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_title");
-
-				view = mNearestEventLayout.findViewById(R.id.homeListItem_remark);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_remark");
-				
-				view = mNearestEventLayout.findViewById(R.id.homeListItem_owner);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_owner");
-
-				view = mNearestEventLayout.findViewById(R.id.homeListItem_amount);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_amount");
-
-				view = mNearestEventLayout.findViewById(R.id.homeListItem_picture);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_picture");
-				
-				view = mNearestEventLayout.findViewById(R.id.homeListItem_subTitle);
-				EventListFragment.setEventViewValue(HomeCalendarGridEventListFragment.this, view, event, "homeListItem_subTitle");
-				
-				HyjDateTimeView dateTimeView = ((HyjDateTimeView)mNearestEventLayout.findViewById(R.id.homeListItem_date));
-				dateTimeView.setDateFormat("yyyy-MM-dd HH:mm");
-				dateTimeView.setTime(event.getStartDate());
-				
-//				((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_title)).setText(event.getName());
-//				
-//					
-//					long date = event.getDate();
-//					long startDate = event.getStartDate();
-//					long endDate = event.getEndDate(); 
-//					long dt = (new Date()).getTime();
-//					if(dt >= date && dt < startDate) {
-//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[报名中]" + event.getSignUpCount() + "人");
-//					} else if(dt >= startDate && dt < endDate) {
-//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[进行中]" + event.getSignUpCount() + "人");
-//					} else if(dt >= endDate) {
-//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_remark)).setText("[已结束]" + event.getSignUpCount() + "人");
-//					}
-//
-//					((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_subTitle)).setText(Friend.getFriendUserDisplayName(event.getOwnerUserId()));
-//
-//
-//					EventMember em = new Select().from(EventMember.class).where("eventId=? AND friendUserId=?", event.getId(), HyjApplication.getInstance().getCurrentUser().getId()).executeSingle();
-//					if(em != null){
-//						if("UnSignUp".equals(em.getState())){
-//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
-//						} else if("SignUp".equals(em.getState())){
-//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已报名]");
-//						} else if("SignIn".equals(em.getState())){
-//							((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[已签到]");
-//						} 
-//					} else {
-//						((TextView)mNearestEventLayout.findViewById(R.id.homeListItem_owner)).setText("[未报名]");
-//					}
-					
-					mNearestEventLayout.setVisibility(View.VISIBLE);
-			}
-			mNearestEventLoader = null;
-		}
-
-		@Override
-		public Object doInBackground(String... string) {
-			long currentTime = (new Date()).getTime();
-			Event event;
-			// 我报了名，而且进行中的活动
-			event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("startDate < ? AND endDate > ?", currentTime, currentTime).orderBy("startDate DESC").limit(1).executeSingle();
-			if(event == null){
-				// 我报了名，下一个开始的活动
-				event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("startDate > ?", currentTime).orderBy("startDate").limit(1).executeSingle();
-				if(event == null){
-					// 我没报名，下一个开始的活动
-					event = new Select().from(Event.class).where("startDate > ?", currentTime).orderBy("startDate").limit(1).executeSingle();
-					if(event == null){
-						// 我报了名，刚结束的活动
-						event = new Select("ev.*").from(Event.class).as("ev").join(EventMember.class).as("em").on("ev.id = em.eventId AND em.state <> 'UnSignUp'").where("endDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
-						if(event == null){
-							// 我没报名，刚开始的活动
-							event = new Select().from(Event.class).where("startDate < ?", currentTime).orderBy("endDate DESC").limit(1).executeSingle();
-						}
-					}
-				}
-			}
-			return event;
-		}
-	};
-	public void updateNearestEvent(){
-		if(mNearestEventLoader == null){
-			mNearestEventLoader = HyjAsyncTask.newInstance(mNearestEventLoaderCallback);
-		}
-	}
+//			}
+//			return event;
+//		}
+//	};
+//	public void updateNearestEvent(){
+//		if(mNearestEventLoader == null){
+//			mNearestEventLoader = HyjAsyncTask.newInstance(mNearestEventLoaderCallback);
+//		}
+//	}
 	
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -651,8 +653,8 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 				}
 			}, 50);
 
-			mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
-			mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
+//			mDepositExpenseButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getExpenseColor()));
+//			mDepositIncomeButton.setTextColor(Color.parseColor(HyjApplication.getInstance().getCurrentUser().getUserData().getIncomeColor()));
 		}
 	}
 	
@@ -662,7 +664,159 @@ public class HomeCalendarGridEventListFragment extends HyjUserListFragment {
 			this.getActivity().getContentResolver()
 					.unregisterContentObserver(mChangeObserver);
 		}
-	
+
+		if (mMessageChangeObserver != null) {
+			this.getActivity().getContentResolver()
+					.unregisterContentObserver(mMessageChangeObserver);
+		}
 		super.onDestroy();
+	}
+	
+
+	Message mLatestNewMessage;
+	HyjAsyncTask mLatestNewMessageLoader = null;
+	HyjAsyncTaskCallbacks mLatestNewMessageLoaderCallback = new HyjAsyncTaskCallbacks(){
+
+		@Override
+		public void finishCallback(Object object) {
+			HashMap<String, Object> map = (HashMap<String, Object>)object;
+			if(map.get("message") != null){
+				mTextViewLatestNewMessage.setVisibility(View.VISIBLE);
+				mLatestNewMessage = (Message)map.get("message");
+				try {
+					JSONObject messageData = null;
+					messageData = new JSONObject(mLatestNewMessage.getMessageData());
+					double amount = 0;
+					try{
+						amount = messageData.getDouble("amount") * messageData.getDouble("exchangeRate");
+					} catch(Exception e) {
+						amount = messageData.optDouble("amount");
+					}
+					java.util.Currency localeCurrency = java.util.Currency
+							.getInstance(messageData.optString("currencyCode"));
+					String currencySymbol = "";
+					currencySymbol = localeCurrency.getSymbol();
+					if(currencySymbol.length() == 0){
+						currencySymbol = messageData.optString("currencyCode");
+					}
+							
+					mTextViewLatestNewMessage.setText(String.format(mLatestNewMessage.getMessageDetail(), mLatestNewMessage.getFromUserDisplayName(), currencySymbol, amount));
+				} catch (Exception e){
+					mTextViewLatestNewMessage.setText(mLatestNewMessage.getMessageDetail());
+				}
+			} else {
+				mTextViewLatestNewMessage.setVisibility(View.GONE);
+			}
+			mLatestNewMessageLoader = null;
+			
+			BadgeView badgeView = (BadgeView)(mLayoutActionMessage.getTag());
+			if(badgeView == null){
+				badgeView = new BadgeView(getActivity());
+				badgeView.setHideOnNull(true);
+				badgeView.setBadgeCount(0);
+//				badgeView.setMaxLines(1);
+				badgeView.setSingleLine();
+				badgeView.setEllipsize(TruncateAt.END);
+//				tab.removeView(badgeView);
+				mLayoutActionMessage.addView(badgeView);
+				mLayoutActionMessage.setTag(badgeView);
+			}
+
+			badgeView.setBadgeCount((Integer) map.get("count"));
+		}
+
+		@Override
+		public Object doInBackground(String... string) {
+			HyjModel message;
+			message = new Select().from(Message.class).where("messageState = 'new' OR messageState = 'unread'").orderBy("date DESC").limit(1).executeSingle();
+			
+			int count = 0;
+			Cursor cursor = Cache.openDatabase().rawQuery(
+					"SELECT COUNT(*) FROM Message WHERE messageState = 'new' OR messageState = 'unread'",
+					null);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				count = cursor.getInt(0);
+				cursor.close();
+				cursor = null;
+			}
+
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("count", count);
+			map.put("message", message);
+	    	return map;
+		}
+	};
+	
+	public void updateLatestModifiedModel(){
+		if(mLatestNewMessageLoader == null){
+			mLatestNewMessageLoader = HyjAsyncTask.newInstance(mLatestNewMessageLoaderCallback);
+		}
+	}
+
+    public void onLatestModifiedModelClick() { 
+		if(mLatestNewMessage == null) {
+			 return;
+		}
+			Bundle bundle = new Bundle();
+			bundle.putLong("MODEL_ID", mLatestNewMessage.get_mId());
+			Message msg = mLatestNewMessage;
+			if(msg.getType().equals("System.Friend.AddRequest") ){
+				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addrequest, bundle);
+			} else if(msg.getType().equals("System.Friend.AddResponse") ){
+				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_addresponse, bundle);
+			} else if(msg.getType().equals("System.Friend.Delete") ){
+				openActivityWithFragment(FriendMessageFormFragment.class, R.string.friendAddRequestMessageFormFragment_title_delete, bundle);
+			} else if(msg.getType().equals("Project.Share.AddRequest") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_addrequest, bundle);
+			} else if(msg.getType().equals("Project.Share.Accept") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("Project.Share.Delete") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_delete, bundle);
+			} else if(msg.getType().equals("Project.Share.Edit") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_edit, bundle);
+			} else if(msg.getType().startsWith("Money.Share.Add") ){
+				openActivityWithFragment(MoneyShareMessageFormFragment.class, msg.getMessageTitle(), bundle, false, null);
+			} else if(msg.getType().equals("Event.Member.AddRequest") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_addrequest, bundle);
+			} else if(msg.getType().equals("Event.Member.Accept") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("Event.Member.SignIn") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signIn, bundle);
+			} else if(msg.getType().equals("Event.Member.SignUp") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_signUp, bundle);
+			} else if(msg.getType().equals("Event.Member.Cancel") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_Cancel, bundle);
+			} else if(msg.getType().equals("Event.Member.CancelSignUp") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_cancelSignUp, bundle);
+			} else if(msg.getType().equals("Project.Share.AcceptInviteLink") ){
+				openActivityWithFragment(EventMessageFormFragment.class, R.string.eventMessageFormFragment_title_accept, bundle);
+			} else if(msg.getType().equals("System.Message.Welcome") ){
+				openActivityWithFragment(ProjectMessageFormFragment.class, R.string.projectMessageFormFragment_title_system_welcome, bundle);
+			}
+    }  
+
+	private class MessageChangeObserver extends ContentObserver {
+		public MessageChangeObserver() {
+			super(new Handler());
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
+
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.postDelayed(new Runnable() {
+				public void run() {
+					updateLatestModifiedModel();
+				}
+			}, 50);
+		}
 	}
 }

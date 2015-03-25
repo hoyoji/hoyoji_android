@@ -9,6 +9,6 @@
     <string name="homeListFragment_action_money_transaction">流水</string>
     <string name="homeListFragment_action_money_account">资产账户</string>
     <string name="homeListFragment_action_display_transaction_type_personal">显示个人流水</string>
-    <string name="homeListFragment_action_display_transaction_type_project">显示账本流水</string>
+    <string name="homeListFragment_action_display_transaction_type_project">显示圈子流水</string>
 
 </resources>

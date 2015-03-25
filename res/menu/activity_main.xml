@@ -15,12 +15,20 @@
         hoyoji:showAsAction="always">
         <menu>
             <item
+                android:id="@+id/homeListFragment_action_message"
+                android:title="消息管理"
+                hoyoji:showAsAction="never"/>
+            <item
                 android:id="@+id/homeListFragment_action_transactions"
                 android:title="财务流水"
                 hoyoji:showAsAction="never"/>
             <item
                 android:id="@+id/homeListFragment_action_report"
                 android:title="财务报表"
+                hoyoji:showAsAction="never"/>
+            <item
+                android:id="@+id/homeListFragment_action_account"
+                android:title="资产账户"
                 hoyoji:showAsAction="never"/>
             <item
 		        android:id="@+id/friendListFragment_action_friend_management"

@@ -264,6 +264,20 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:background="@drawable/line_divider" />
+
+        <CheckBox
+            android:id="@+id/systemSettingFormFragment_checkBox_validation_addFriend"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:text="@string/systemSettingFormFragment_checkBox_validation_addFriend" />
+        
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/line_divider" />
         
      	<LinearLayout
             android:layout_width="match_parent"
@@ -287,19 +301,6 @@
                 android:text="@string/systemSettingFormFragment_button_uploadPicture" />
         </LinearLayout> 
      	
-        <View
-            android:id="@id/field_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:background="@drawable/line_divider" />
-
-        <CheckBox
-            android:id="@+id/systemSettingFormFragment_checkBox_validation_addFriend"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:text="@string/systemSettingFormFragment_checkBox_validation_addFriend" />
 
         <View
             android:id="@id/field_separator"
@@ -357,6 +358,33 @@
                 android:text="@string/systemSettingFormFragment_button_moneyIncomeColorPicker" />
         </LinearLayout>
 
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/line_divider" />
+
+        <CheckBox
+            android:id="@+id/systemSettingFormFragment_checkBox_validation_showHomeMoney"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:text="在主页显示 [我的账务] 版块" />
+        <View
+            android:id="@id/field_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/line_divider" />
+
+        <CheckBox
+            android:id="@+id/systemSettingFormFragment_checkBox_validation_showHomeEvent"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:text="在主页显示 [我的活动] 版块" />
+        
         <View
             android:id="@id/field_separator"
             android:layout_width="match_parent"

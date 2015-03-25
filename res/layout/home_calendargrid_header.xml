@@ -236,7 +236,7 @@
         android:layout_height="45dp"
         android:background="@color/hoyoji_lightgray"
         android:descendantFocusability="blocksDescendants" >
-        <FrameLayout
+        <!-- <FrameLayout
            	android:id="@+id/homeListFragment_action_message_layout"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
@@ -252,7 +252,7 @@
 	            android:src="@drawable/ic_action_email"
 	    		android:background="?attr/actionBarItemBackground"
 	            android:text="@string/homeListFragment_action_message" />
-        </FrameLayout>
+        </FrameLayout> -->
         <ImageButton
             android:id="@+id/home_stat_group_calendarMode"
             android:layout_width="45dp"
@@ -261,7 +261,7 @@
             android:layout_centerVertical="true"
     		android:background="?attr/actionBarItemBackground"
             android:src="@drawable/ic_action_go_to_today" />
-        <TextView
+        <!-- <TextView
             android:id="@+id/homeListFragment_new_message"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -270,7 +270,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/gray"
             android:text=""
-            />
+            /> -->
         
     </RelativeLayout>
 </LinearLayout>

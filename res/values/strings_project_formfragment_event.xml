@@ -20,8 +20,8 @@
     <string name="projectEventFormFragment_hyjDateTimeField_endDate">结束时间</string>
     <string name="projectEventFormFragment_hyjDateTimeField_error_endDate">结束时间需在开始时间之后</string>
     
-    <string name="projectEventFormFragment_hyjSelectorField_projectName">活动账本</string>
-    <string name="projectEventFormFragment_hyjSelectorField_hint_projectName">请选择活动账本</string>
+    <string name="projectEventFormFragment_hyjSelectorField_projectName">活动圈子</string>
+    <string name="projectEventFormFragment_hyjSelectorField_hint_projectName">请选择活动圈子</string>
     
     <string name="projectEventFormFragment_hyjRemarkField_hint_description">请输入活动内容</string>
     <string name="projectEventFormFragment_hyjRemarkField_description">活动内容</string>
@@ -33,14 +33,14 @@
 		温馨提示：喝酒的就别开车了
 	</string>
     
-    <string name="projectEventFormFragment_title_edit">修改账本活动</string>
+    <string name="projectEventFormFragment_title_edit">修改圈子活动</string>
     
     <string name="app_action_event_cancel">取消活动</string>
     <string name="app_action_event_canceling">正在取消活动...</string>
     
     <string name="app_action_event_cancel_success">取消活动成功</string>
     
-    <string name="projectEventFormFragment_validate_project">不能在共享的账本新增活动</string>
+    <string name="projectEventFormFragment_validate_project">不能在共享的圈子新增活动</string>
     
     <string name="demo_name_basemap">地址</string>
     <string name="demo_title_basemap">基本地图功能--BaseMapDemo</string>

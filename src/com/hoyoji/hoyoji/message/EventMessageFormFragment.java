@@ -138,7 +138,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 //				if (newPSA != null && newPSA.getState().equals("Accept")) {
 //					sendAcceptMessageToServer(jsonMsgData);
 //				} else {
-					//账本存在才允许去接受活动邀请
+					//圈子存在才允许去接受活动邀请
 					EventMember newEM = HyjModel.getModel(EventMember.class,jsonMsgData.optString("eventMemberId"));
 //					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
 					if (newEM != null && (newEM.getState().equals("SignUp") || newEM.getState().equals("SignIn"))) {
@@ -188,7 +188,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 										}
 										@Override
 										public void doNegativeClick(){
-											HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+											HyjUtil.displayToast("未能获取圈子币种到本币的汇率");
 										}
 									});
 								}
@@ -421,7 +421,7 @@ public class EventMessageFormFragment extends HyjUserFormFragment {
 							sendAcceptMessageToServer(jsonMsgData);
 							return;
 						} else {
-							HyjUtil.displayToast("未能获取账本币种到本币的汇率");
+							HyjUtil.displayToast("未能获取圈子币种到本币的汇率");
 						}
 					} catch (JSONException e) {}
 	         	 }

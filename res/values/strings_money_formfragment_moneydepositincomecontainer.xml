@@ -19,8 +19,8 @@
    <string name="moneyDepositIncomeContainerFormFragment_textView_moneyAccount">账户</string>
    <string name="moneyDepositIncomeContainerFormFragment_editText_hint_moneyAccount">请选择账户</string>
    
-   <string name="moneyDepositIncomeContainerFormFragment_textView_project">账本</string>
-   <string name="moneyDepositIncomeContainerFormFragment_editText_hint_project">请选择账本</string>
+   <string name="moneyDepositIncomeContainerFormFragment_textView_project">圈子</string>
+   <string name="moneyDepositIncomeContainerFormFragment_editText_hint_project">请选择圈子</string>
    
    <string name="moneyDepositIncomeContainerFormFragment_moneyApportionField_title">缴费成员</string>
    <string name="moneyDepositIncomeContainerFormFragment_moneyApportionField_select_apportion_member">请选择缴费成员</string>
@@ -36,6 +36,6 @@
    <string name="moneyDepositIncomeContainerFormFragment_editText_hint_remark">无备注</string>
     
       <string name="moneyDepositIncomeContainerFormFragment_toast_cannot_refresh_rate">无法获取汇率，请手工输入</string>
-   <string name="moneyDepositIncomeContainerFormFragment_toast_select_currency">请先选择账户和账本</string> 
+   <string name="moneyDepositIncomeContainerFormFragment_toast_select_currency">请先选择账户和圈子</string> 
     
 </resources>

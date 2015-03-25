@@ -204,7 +204,7 @@ public class MoneyIncomeApportion extends HyjModel implements MoneyApportion{
 //			    debtAccount = MoneyAccount.getDebtAccount(this.getMoneyIncomeContainer().getProject().getCurrencyId(), this.getFriendUserId());
 //			}
 //		}else{
-//			// 该好友不是账本成员
+//			// 该好友不是圈子成员
 //			Friend friend = HyjModel.getModel(Friend.class, this.getLocalFriendId());
 //			// 该好友是本地好友 或 该好友是网络好友（不是自己） 
 //			if(this.getFriendUserId() == null){

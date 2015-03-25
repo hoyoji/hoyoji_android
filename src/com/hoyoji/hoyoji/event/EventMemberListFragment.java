@@ -23,10 +23,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
@@ -79,84 +83,13 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		// return null;
 	}
 
-	@Override
-	protected View useHeaderView(Bundle savedInstanceState) {
-		Intent intent = getActivity().getIntent();
-		Long modelId = intent.getLongExtra("MODEL_ID", -1);
-		String eventId = intent.getStringExtra("EVENTID");
-		Event event = null;
-		if (eventId != null) {
-			event = Event.getModel(Event.class, eventId);
-		} else {
-			event = Event.load(Event.class, modelId);
-		}
-		if (!event.getOwnerUserId().equals(
-				HyjApplication.getInstance().getCurrentUser().getId())) {
-			return null;
-		}
-
-		Button btnInviteFriend = new Button(this.getActivity());
-		btnInviteFriend
-				.setBackgroundResource(R.drawable.button_rectangle_round_5);
-		btnInviteFriend.setText("邀请好友参加活动");
-		btnInviteFriend.setTextSize(14.0f);
-		// btnInviteFriend.setLayoutParams(new
-		// ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-		// ViewGroup.LayoutParams.WRAP_CONTENT));
-		btnInviteFriend.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// PopupMenu popup = new PopupMenu(getActivity(), v);
-				// popup.getMenu().add(0,
-				// R.id.projectEventMemberListFragment_action_add, 0,
-				// R.string.projectEventMemberListFragment_action_member_addnew);
-				// popup.getMenu().add(0,
-				// R.id.projectEventMemberListFragment_invite_friend, 0,
-				// R.string.projectEventMemberListFragment_invite_friend);
-				// popup.setOnMenuItemClickListener(new
-				// OnMenuItemClickListener() {
-				// @Override
-				// public boolean onMenuItemClick(MenuItem item) {
-				// return onOptionsItemSelected(item);
-				// }
-				// });
-				// popup.show();
-				//
-				final String[] names = { getString(R.string.projectEventMemberListFragment_action_member_addnew), getString(R.string.projectEventMemberListFragment_invite_friend) };
-				new AlertDialog.Builder(getActivity()).setTitle("邀请好友参加活动")
-						.setItems(names, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent intent = getActivity().getIntent();
-								Long modelId = intent.getLongExtra("MODEL_ID", -1);
-								Event event = Event.load(Event.class, modelId);
-								if (!event.getProject().getOwnerUserId()
-										.equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-									HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
-									return;
-								}
-								if (which == 1) {
-									Bundle bundle = new Bundle();
-									bundle.putLong("EVENTID", modelId);
-									bundle.putString("DIALOG_TYPE", "invite");
-									EventMemberDialogFragment.newInstance(bundle).show(
-											getActivity().getSupportFragmentManager(),
-											"EventMemberDialogFragment");
-								} else if (which == 0) {
-									Bundle bundle = new Bundle();
-									bundle.putLong("EVENT_ID", modelId);
-									openActivityWithFragment(EventMemberFormFragment.class,
-											R.string.projectEventMemberFormFragment_action_addnew,
-											bundle);
-								}
-							}
-						}).setNegativeButton("取消", null).show();
-
-			}
-		});
-		return btnInviteFriend;
-	}
+//	@Override
+//	protected View useHeaderView(Bundle savedInstanceState) {
+//		
+//
+//
+//		return null;
+//	}
 
 	@Override
 	public ListAdapter useListViewAdapter() {
@@ -268,134 +201,221 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		// getActivity());
 		// mQQShare = new QQShare(getActivity(), mQQAuth.getQQToken());
 
-		mAllEventMember = (Button) getView().findViewById(
-				R.id.eventMemberListFragment_action_all_event_member);
-		mCancelSignUpEventMember = (Button) getView().findViewById(
-				R.id.eventMemberListFragment_action_cancel_sign_up_member);
-		mSignUpEventMember = (Button) getView().findViewById(
-				R.id.eventMemberListFragment_action_sign_up_member);
-		mUnSignInEventMember = (Button) getView().findViewById(
-				R.id.eventMemberListFragment_action_un_sign_in_member);
-		mSignInEventMember = (Button) getView().findViewById(
-				R.id.eventMemberListFragment_action_sign_in_member);
-
-		mAllEventMember.setOnClickListener(new OnClickListener() {
+//		mAllEventMember = (Button) getView().findViewById(
+//				R.id.eventMemberListFragment_action_all_event_member);
+//		mCancelSignUpEventMember = (Button) getView().findViewById(
+//				R.id.eventMemberListFragment_action_cancel_sign_up_member);
+//		mSignUpEventMember = (Button) getView().findViewById(
+//				R.id.eventMemberListFragment_action_sign_up_member);
+//		mUnSignInEventMember = (Button) getView().findViewById(
+//				R.id.eventMemberListFragment_action_un_sign_in_member);
+//		mSignInEventMember = (Button) getView().findViewById(
+//				R.id.eventMemberListFragment_action_sign_in_member);
+//
+//		mAllEventMember.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mIsSelectCancelSignUpEventMembers = false;
+//				mIsSelectSignUpEventMembers = false;
+//				mIsSelectSignInEventMembers = false;
+//				mIsSelectUnSignInEventMembers = false;
+//				getLoaderManager().restartLoader(0, new Bundle(),
+//						EventMemberListFragment.this);
+//				mAllEventMember.setBackgroundColor(getResources().getColor(
+//						R.color.hoyoji_red));
+//				mAllEventMember.setTextColor(Color.WHITE);
+//				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mCancelSignUpEventMember.setTextColor(Color.BLACK);
+//				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignUpEventMember.setTextColor(Color.BLACK);
+//				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mUnSignInEventMember.setTextColor(Color.BLACK);
+//				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignInEventMember.setTextColor(Color.BLACK);
+//			}
+//		});
+//		mAllEventMember.setBackgroundColor(getResources().getColor(
+//				R.color.hoyoji_red));
+//		mAllEventMember.setTextColor(Color.WHITE);
+//
+//		mSignUpEventMember.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mIsSelectSignUpEventMembers = true;
+//				mIsSelectCancelSignUpEventMembers = false;
+//				mIsSelectUnSignInEventMembers = false;
+//				mIsSelectSignInEventMembers = false;
+//				getLoaderManager().restartLoader(0, new Bundle(),
+//						EventMemberListFragment.this);
+//				mSignUpEventMember.setBackgroundColor(getResources().getColor(
+//						R.color.hoyoji_red));
+//				mSignUpEventMember.setTextColor(Color.WHITE);
+//				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mCancelSignUpEventMember.setTextColor(Color.BLACK);
+//				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mAllEventMember.setTextColor(Color.BLACK);
+//				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mUnSignInEventMember.setTextColor(Color.BLACK);
+//				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignInEventMember.setTextColor(Color.BLACK);
+//			}
+//		});
+//
+//		mUnSignInEventMember.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mIsSelectSignUpEventMembers = false;
+//				mIsSelectSignInEventMembers = false;
+//				mIsSelectCancelSignUpEventMembers = false;
+//				mIsSelectUnSignInEventMembers = true;
+//				getLoaderManager().restartLoader(0, new Bundle(),
+//						EventMemberListFragment.this);
+//				mUnSignInEventMember.setBackgroundColor(getResources()
+//						.getColor(R.color.hoyoji_red));
+//				mUnSignInEventMember.setTextColor(Color.WHITE);
+//				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mCancelSignUpEventMember.setTextColor(Color.BLACK);
+//				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignUpEventMember.setTextColor(Color.BLACK);
+//				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mAllEventMember.setTextColor(Color.BLACK);
+//				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignInEventMember.setTextColor(Color.BLACK);
+//			}
+//		});
+//
+//		mSignInEventMember.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mIsSelectSignUpEventMembers = false;
+//				mIsSelectCancelSignUpEventMembers = false;
+//				mIsSelectUnSignInEventMembers = false;
+//				mIsSelectSignInEventMembers = true;
+//				getLoaderManager().restartLoader(0, new Bundle(),
+//						EventMemberListFragment.this);
+//				mSignInEventMember.setBackgroundColor(getResources().getColor(
+//						R.color.hoyoji_red));
+//				mSignInEventMember.setTextColor(Color.WHITE);
+//				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mCancelSignUpEventMember.setTextColor(Color.BLACK);
+//				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignUpEventMember.setTextColor(Color.BLACK);
+//				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mAllEventMember.setTextColor(Color.BLACK);
+//				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mUnSignInEventMember.setTextColor(Color.BLACK);
+//			}
+//		});
+//
+//		mCancelSignUpEventMember.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mIsSelectSignUpEventMembers = false;
+//				mIsSelectCancelSignUpEventMembers = true;
+//				mIsSelectUnSignInEventMembers = false;
+//				mIsSelectSignInEventMembers = false;
+//				getLoaderManager().restartLoader(0, new Bundle(),
+//						EventMemberListFragment.this);
+//				mCancelSignUpEventMember.setBackgroundColor(getResources()
+//						.getColor(R.color.hoyoji_red));
+//				mCancelSignUpEventMember.setTextColor(Color.WHITE);
+//				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignUpEventMember.setTextColor(Color.BLACK);
+//				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mAllEventMember.setTextColor(Color.BLACK);
+//				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mUnSignInEventMember.setTextColor(Color.BLACK);
+//				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
+//				mSignInEventMember.setTextColor(Color.BLACK);
+//			}
+//		});
+		
+		Spinner spinner = (Spinner) getView().findViewById(R.id.spinner1);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+				android.R.layout.simple_spinner_item, 
+				new ArrayList<String>(){{
+						add("全部");
+						add("已报名");
+						add("未签到");
+						add("已签到");
+						add("已取消");
+				}});
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		spinner.setAdapter(adapter);
+		Spinner btnInviteFriend = (Spinner)getView().findViewById(R.id.spinner1);
+		//		new Button(this.getActivity());
+		//btnInviteFriend
+		//		.setBackgroundResource(R.drawable.button_rectangle_round_5);
+		//btnInviteFriend.setText("邀请好友参加活动");
+		//btnInviteFriend.setTextSize(14.0f);
+		// btnInviteFriend.setLayoutParams(new
+		// ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+		// ViewGroup.LayoutParams.WRAP_CONTENT));
+		btnInviteFriend.setOnItemSelectedListener(new OnItemSelectedListener() {
+		
 			@Override
-			public void onClick(View v) {
-				mIsSelectCancelSignUpEventMembers = false;
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
 				mIsSelectSignUpEventMembers = false;
-				mIsSelectSignInEventMembers = false;
-				mIsSelectUnSignInEventMembers = false;
-				getLoaderManager().restartLoader(0, new Bundle(),
-						EventMemberListFragment.this);
-				mAllEventMember.setBackgroundColor(getResources().getColor(
-						R.color.hoyoji_red));
-				mAllEventMember.setTextColor(Color.WHITE);
-				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mCancelSignUpEventMember.setTextColor(Color.BLACK);
-				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignUpEventMember.setTextColor(Color.BLACK);
-				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mUnSignInEventMember.setTextColor(Color.BLACK);
-				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignInEventMember.setTextColor(Color.BLACK);
-			}
-		});
-		mAllEventMember.setBackgroundColor(getResources().getColor(
-				R.color.hoyoji_red));
-		mAllEventMember.setTextColor(Color.WHITE);
-
-		mSignUpEventMember.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mIsSelectSignUpEventMembers = true;
 				mIsSelectCancelSignUpEventMembers = false;
 				mIsSelectUnSignInEventMembers = false;
 				mIsSelectSignInEventMembers = false;
+				switch(position){
+					case 1:
+						mIsSelectSignUpEventMembers = true;
+						break;
+					case 2:
+						mIsSelectUnSignInEventMembers = true;
+						break;
+					case 3:
+						mIsSelectSignInEventMembers = true;
+						break;
+					case 4:
+						mIsSelectCancelSignUpEventMembers = true;
+						break;
+					
+				}
 				getLoaderManager().restartLoader(0, new Bundle(),
 						EventMemberListFragment.this);
-				mSignUpEventMember.setBackgroundColor(getResources().getColor(
-						R.color.hoyoji_red));
-				mSignUpEventMember.setTextColor(Color.WHITE);
-				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mCancelSignUpEventMember.setTextColor(Color.BLACK);
-				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mAllEventMember.setTextColor(Color.BLACK);
-				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mUnSignInEventMember.setTextColor(Color.BLACK);
-				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignInEventMember.setTextColor(Color.BLACK);
 			}
-		});
-
-		mUnSignInEventMember.setOnClickListener(new OnClickListener() {
+		
 			@Override
-			public void onClick(View v) {
-				mIsSelectSignUpEventMembers = false;
-				mIsSelectSignInEventMembers = false;
-				mIsSelectCancelSignUpEventMembers = false;
-				mIsSelectUnSignInEventMembers = true;
-				getLoaderManager().restartLoader(0, new Bundle(),
-						EventMemberListFragment.this);
-				mUnSignInEventMember.setBackgroundColor(getResources()
-						.getColor(R.color.hoyoji_red));
-				mUnSignInEventMember.setTextColor(Color.WHITE);
-				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mCancelSignUpEventMember.setTextColor(Color.BLACK);
-				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignUpEventMember.setTextColor(Color.BLACK);
-				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mAllEventMember.setTextColor(Color.BLACK);
-				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignInEventMember.setTextColor(Color.BLACK);
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
-
-		mSignInEventMember.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mIsSelectSignUpEventMembers = false;
-				mIsSelectCancelSignUpEventMembers = false;
-				mIsSelectUnSignInEventMembers = false;
-				mIsSelectSignInEventMembers = true;
-				getLoaderManager().restartLoader(0, new Bundle(),
-						EventMemberListFragment.this);
-				mSignInEventMember.setBackgroundColor(getResources().getColor(
-						R.color.hoyoji_red));
-				mSignInEventMember.setTextColor(Color.WHITE);
-				mCancelSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mCancelSignUpEventMember.setTextColor(Color.BLACK);
-				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignUpEventMember.setTextColor(Color.BLACK);
-				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mAllEventMember.setTextColor(Color.BLACK);
-				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mUnSignInEventMember.setTextColor(Color.BLACK);
-			}
-		});
-
-		mCancelSignUpEventMember.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mIsSelectSignUpEventMembers = false;
-				mIsSelectCancelSignUpEventMembers = true;
-				mIsSelectUnSignInEventMembers = false;
-				mIsSelectSignInEventMembers = false;
-				getLoaderManager().restartLoader(0, new Bundle(),
-						EventMemberListFragment.this);
-				mCancelSignUpEventMember.setBackgroundColor(getResources()
-						.getColor(R.color.hoyoji_red));
-				mCancelSignUpEventMember.setTextColor(Color.WHITE);
-				mSignUpEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignUpEventMember.setTextColor(Color.BLACK);
-				mAllEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mAllEventMember.setTextColor(Color.BLACK);
-				mUnSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mUnSignInEventMember.setTextColor(Color.BLACK);
-				mSignInEventMember.setBackgroundColor(Color.TRANSPARENT);
-				mSignInEventMember.setTextColor(Color.BLACK);
-			}
-		});
+		Intent intent = getActivity().getIntent();
+		Long modelId = intent.getLongExtra("MODEL_ID", -1);
+		String eventId = intent.getStringExtra("EVENTID");
+		Event event = null;
+		if (eventId != null) {
+			event = Event.getModel(Event.class, eventId);
+		} else {
+			event = Event.load(Event.class, modelId);
+		}
+		View addNewButton = getView().findViewById(R.id.eventmember_listfragment_addnew);
+		if (!event.getOwnerUserId().equals(
+				HyjApplication.getInstance().getCurrentUser().getId())) {
+			addNewButton.setVisibility(View.GONE);
+		} else {
+			addNewButton.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Intent intent = getActivity().getIntent();
+					Long modelId = intent.getLongExtra("MODEL_ID", -1);
+						Bundle bundle = new Bundle();
+						bundle.putLong("EVENTID", modelId);
+						bundle.putString("DIALOG_TYPE", "invite");
+						EventMemberDialogFragment.newInstance(bundle).show(
+								getActivity().getSupportFragmentManager(),
+								"EventMemberDialogFragment");
+				}
+			});
+		}
 	}
 
 	@Override
@@ -648,7 +668,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 				}
 				Double settlement = psa.getSettlement();
 				String currencySymbol = psa.getProject().getCurrencySymbol();
-				textView.setText("账本结余:" + currencySymbol
+				textView.setText("圈子结余:" + currencySymbol
 						+ HyjUtil.toFixed2(settlement));
 			}
 			return true;
@@ -687,7 +707,7 @@ public class EventMemberListFragment extends HyjUserListFragment {
 		}
 		if (!event.getProject().getOwnerUserId()
 				.equals(HyjApplication.getInstance().getCurrentUser().getId())) {
-			HyjUtil.displayToast("您不能在共享来的账本添加活动成员");
+			HyjUtil.displayToast("您不能在共享来的圈子添加活动成员");
 			return true;
 		}
 		if (item.getItemId() == R.id.projectEventMemberListFragment_invite_friend) {

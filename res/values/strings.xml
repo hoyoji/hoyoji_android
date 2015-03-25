@@ -46,9 +46,9 @@
     <string name="app_action_money_template">快记</string>
     <string name="app_action_money_topup">会费</string>
     
-    <string name="app_permission_no_addnew">抱歉，您在该账本没有新增权限</string>
-    <string name="app_permission_no_edit">抱歉，这笔账务不是您的或者您在该账本没有修改权限</string>
-    <string name="app_permission_no_delete">抱歉，您没有删除该账本相关账务的权限</string>
+    <string name="app_permission_no_addnew">抱歉，您在该圈子没有新增权限</string>
+    <string name="app_permission_no_edit">抱歉，这笔账务不是您的或者您在该圈子没有修改权限</string>
+    <string name="app_permission_no_delete">抱歉，您没有删除该圈子相关账务的权限</string>
     
     <string name="app_toast_new_messages">您有 %1$d 条新消息</string>
     

@@ -24,7 +24,7 @@
 	    	android:layout_gravity="left" 
 	    	android:textSize="12sp"
 	    	android:textColor="@android:color/darker_gray"
-	    	android:text="账本名称" />
+	    	android:text="圈子名称" />
 		
 		<TextView android:id="@+id/moneyIncomeListItem_category"  
 		    android:layout_width="wrap_content"  
